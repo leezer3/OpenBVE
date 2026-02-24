@@ -228,7 +228,22 @@ namespace CsvRwRouteParser {
 							Command = null;
 						} else {
 							if (Command.StartsWith(".")) {
-								Command = Section + Command;
+								if (Plugin.CurrentOptions.EnableBveTsHacks && (Command.StartsWith(".run", StringComparison.InvariantCultureIgnoreCase) || Command.StartsWith(".flange", StringComparison.InvariantCultureIgnoreCase)) && Section != "train")
+								{
+									/*
+									 * Handle run / flange sounds in the following format:
+									 *
+									 *  Train.Folder X911_3
+									 *  .Run(0) 0
+									 *
+									 */
+									Section = "train" + Command;
+								}
+								else
+								{
+									Command = Section + Command;
+								}
+									
 							} else if (SectionAlwaysPrefix) {
 								Command = Section + "." + Command;
 							}

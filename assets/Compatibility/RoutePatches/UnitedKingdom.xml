@@ -51,6 +51,45 @@
 		<CylinderHack>true</CylinderHack>
 		<Message>Bakerloo v3 routefile detected- Applying cylinder hack.</Message>
 	</Patch>
+	<!-- Northern Line v4 -->
+	<!-- 1938TS -->
+	<Patch>
+		<Hash>842B3E0848DFFA9BA387B3E0A31604459549EC99761A7594C2EF16DF468E76B4</Hash>
+		<FileName>Edgware-Kennington via ChX 1974.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<Message>Northern Line v4 routefile detected- Applying cylinder hack.</Message>
+	</Patch>
+	<Patch>
+		<Hash>FBA1A71D4CC35A17C56D6E8F9FDE5815347C21C50113B29944680307ED767ADB</Hash>
+		<FileName>Edgware-Morden via Bank 1974.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<Message>Northern Line v4 routefile detected- Applying cylinder hack.</Message>
+	</Patch>
+	<Patch>
+		<Hash>F4C3184B6AA622A2044AFB15266A9006423191875F0A63E15C2467AAA5583AA9</Hash>
+		<FileName>Kennington-High Barnet 1974.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<Message>Northern Line v4 routefile detected- Applying cylinder hack.</Message>
+	</Patch>
+	<!-- 1995TS -->
+	<Patch>
+		<Hash>681894EC8AC08D5F8DF8EFE4A4CA5B412A15A389421AF1E1E2857FB5FBA52586</Hash>
+		<FileName>Edgware-Kennington via ChX 1998.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<Message>Northern Line v4 routefile detected- Applying cylinder hack.</Message>
+	</Patch>
+	<Patch>
+		<Hash>302088CB983164ECBEAA04C3B747D6776A30A04A376681B505CC121BFA94E61C</Hash>
+		<FileName>Edgware-Morden via Bank 1995.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<Message>Northern Line v4 routefile detected- Applying cylinder hack.</Message>
+	</Patch>
+	<Patch>
+		<Hash>AE7A000D2CD28407E1F26C3688F46DB21048AF5B18C11D5BD56C70CDC2CC2949</Hash>
+		<FileName>Kennington-High Barnet 1998.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<Message>Northern Line v4 routefile detected- Applying cylinder hack.</Message>
+	</Patch>
 	<!-- Picadilly Line -->
 	<!-- Tweak dummy signalling stations so they don't show on timetable -->
 	<Patch>
@@ -329,11 +368,13 @@
 		<Hash>FA18FCFEFAAF29FB14156DF78C1DAB4DFBF4EC6644B6CD6513BB872C47632F5F</Hash>
 		<FileName>MGtoDP.csv</FileName>
 		<DisableSemiTransparentFaces>true</DisableSemiTransparentFaces>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
 	<Patch>
 		<Hash>75585130809679CBB658BB9FDCEE8C7B1B0DDEB1D8A72D28A5C60A953EF2DD73</Hash>
 		<FileName>MGtoFP.csv</FileName>
 		<DisableSemiTransparentFaces>true</DisableSemiTransparentFaces>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
 	<!-- Blighton- Treston Park v2-->
 	<!-- 2000s -->
