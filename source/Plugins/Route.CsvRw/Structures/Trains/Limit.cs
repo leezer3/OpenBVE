@@ -35,14 +35,13 @@ namespace CsvRwRouteParser
 			double dx = 2.2 * Direction;
 			double dz = TrackPosition - StartingDistance;
 			wpos += dx * RailTransformation.X + dz * RailTransformation.Z;
-			double tpos = TrackPosition;
-			if (Speed <= 0.0 | Speed >= 1000.0)
+			if (Speed <= 0.0 || Speed >= 1000.0)
 			{
 				if (CompatibilityObjects.LimitPostInfinite == null)
 				{
 					return;
 				}
-				CompatibilityObjects.LimitPostInfinite.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
+				CompatibilityObjects.LimitPostInfinite.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, TrackPosition, b);
 			}
 			else
 			{
@@ -52,7 +51,7 @@ namespace CsvRwRouteParser
 					{
 						return;
 					}
-					CompatibilityObjects.LimitPostLeft.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
+					CompatibilityObjects.LimitPostLeft.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, TrackPosition, b);
 				}
 				else if (Cource > 0)
 				{
@@ -60,7 +59,7 @@ namespace CsvRwRouteParser
 					{
 						return;
 					}
-					CompatibilityObjects.LimitPostRight.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
+					CompatibilityObjects.LimitPostRight.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, TrackPosition, b);
 				}
 				else
 				{
@@ -68,7 +67,7 @@ namespace CsvRwRouteParser
 					{
 						return;
 					}
-					CompatibilityObjects.LimitPostStraight.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
+					CompatibilityObjects.LimitPostStraight.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, TrackPosition, b);
 				}
 
 				double lim = Speed / UnitOfSpeed;
@@ -87,7 +86,7 @@ namespace CsvRwRouteParser
 							Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(CompatibilityObjects.LimitGraphicsPath, "limit_" + d0 + ".png"), TextureParameters.NoChange, out o.Mesh.Materials[0].DaytimeTexture);
 						}
 
-						o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
+						o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, TrackPosition, b);
 					}
 					else
 					{
@@ -117,7 +116,7 @@ namespace CsvRwRouteParser
 							Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(CompatibilityObjects.LimitGraphicsPath, "limit_" + d0 + ".png"), TextureParameters.NoChange, out o.Mesh.Materials[1].DaytimeTexture);
 						}
 
-						o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
+						o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, TrackPosition, b);
 					}
 					else
 					{
@@ -152,7 +151,7 @@ namespace CsvRwRouteParser
 							Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(CompatibilityObjects.LimitGraphicsPath, "limit_" + d0 + ".png"), TextureParameters.NoChange, out o.Mesh.Materials[2].DaytimeTexture);
 						}
 
-						o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
+						o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, TrackPosition, b);
 					}
 					else
 					{

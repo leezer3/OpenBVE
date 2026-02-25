@@ -21,11 +21,9 @@ namespace OpenBveApi.Trains
 		public bool PointSoundTriggered;
 		/// <summary>A reference to the base car</summary>
 		protected readonly AbstractCar baseCar;
-
 		
-
 		/// <summary>Creates a new axle</summary>
-		public AbstractAxle(Hosts.HostInterface currentHost, AbstractTrain Train, AbstractCar Car)
+		protected AbstractAxle(Hosts.HostInterface currentHost, AbstractTrain Train, AbstractCar Car)
 		{
 			Follower = new TrackFollower(currentHost, Train, Car);
 			baseCar = Car;

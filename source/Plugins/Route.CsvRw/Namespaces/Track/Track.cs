@@ -148,7 +148,7 @@ namespace CsvRwRouteParser
 						double cant = 0.0;
 						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out cant))
 						{
-							if (Arguments[4] != "id 0") //RouteBuilder inserts these, harmless so let's ignore
+							if (Arguments[4] != "id 0" && Arguments[4] != "id=0") //RouteBuilder inserts these, harmless so let's ignore
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CantInMillimeters is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
@@ -1262,7 +1262,7 @@ namespace CsvRwRouteParser
 						}
 					}
 
-					if (Arguments.Length >= 3 && (Arguments[2].Length > 0))
+					if (Arguments.Length >= 3 && Arguments[2].Length > 0)
 					{
 						if (string.Equals(Arguments[2], "T", StringComparison.OrdinalIgnoreCase) | string.Equals(Arguments[2], "=", StringComparison.OrdinalIgnoreCase))
 						{
@@ -1394,7 +1394,10 @@ namespace CsvRwRouteParser
 								string f = Path.CombineFile(SoundPath, Arguments[7]);
 								if (!System.IO.File.Exists(f))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "ArrivalSound " + f + " not found in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									if (Arguments[7] != "0") // RouteBuilder...
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, true, "ArrivalSound " + f + " not found in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									}
 								}
 								else
 								{
@@ -1772,7 +1775,7 @@ namespace CsvRwRouteParser
 					CurrentStop = -1;
 					DepartureSignalUsed = false;
 					//Detect common BVE2 / BVE4 dummy stations, missing names etc.
-					if (CurrentRoute.Stations[CurrentStation].Name.Length == 0 & (CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.PlayerStop | CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.AllStop))
+					if (CurrentRoute.Stations[CurrentStation].Name.Length == 0 && (CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.PlayerStop | CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.AllStop))
 					{
 						//Set default name
 						CurrentRoute.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1).ToString(Culture);
@@ -1783,7 +1786,7 @@ namespace CsvRwRouteParser
 								/*
 								 * NOTE: The Track.Sta command is not valid in RW format routes (and this is what allows the
 								 * door direction to be set). Let's assume that no name and a forced red signal
-								 * is actualy a signalling control station
+								 * is actually a signalling control station
 								 * e.g. Rocky Mountains Express
 								 *
 								 * However, the Station format command can *also* be used in a CSV route,
@@ -2276,7 +2279,7 @@ namespace CsvRwRouteParser
 						}
 						else
 						{
-							if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || (!Data.Blocks[BlockIndex].Rails[idx].RailStarted & !Data.Blocks[BlockIndex].Rails[idx].RailEnded))
+							if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || (!Data.Blocks[BlockIndex].Rails[idx].RailStarted && !Data.Blocks[BlockIndex].Rails[idx].RailEnded))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.DikeEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
@@ -3414,7 +3417,7 @@ namespace CsvRwRouteParser
 						}
 
 						string switchName = string.Empty;
-						string[] trackNames = new string[]
+						string[] trackNames =
 						{
 							string.Empty,
 							string.Empty

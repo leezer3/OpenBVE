@@ -46,7 +46,7 @@ namespace OpenBveApi.Sounds {
 			}
 			for (int i = 0; i < bytes.Length; i++) {
 				if (bytes[i] == null) {
-					throw new ArgumentNullException("The data bytes channel " + i.ToString() + " are a null reference.");
+					throw new ArgumentNullException("The data bytes for channel " + i + " are a null reference.");
 				}
 			}
 			for (int i = 1; i < bytes.Length; i++) {

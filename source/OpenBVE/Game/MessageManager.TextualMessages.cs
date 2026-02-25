@@ -65,7 +65,7 @@ namespace OpenBve
 							nextLim = Math.Round(nextLim * Interface.CurrentOptions.SpeedConversionFactor);
 						}
 
-						if (lim == double.PositiveInfinity)
+						if (double.IsPositiveInfinity(lim))
 						{
 							s = s.Replace("[limit]", "unlimited");
 							s = s.Replace("[unit]", string.Empty);
@@ -79,7 +79,7 @@ namespace OpenBve
 							s = s.Replace("[unit]", Interface.CurrentOptions.UnitOfSpeed);
 						}
 
-						if (nextLim == double.PositiveInfinity)
+						if (double.IsPositiveInfinity(nextLim))
 						{
 							s = s.Replace("[nextlimit]", "n/a");
 							s = s.Replace("[limitdistance]", "n/a");
@@ -133,7 +133,7 @@ namespace OpenBve
 						}
 						else
 						{
-							//Queue the mesasge for removal if we have completed the station stop for this message
+							//Queue the message for removal if we have completed the station stop for this message
 							remove = true;
 						}
 					} break;
@@ -152,7 +152,7 @@ namespace OpenBve
 				}
 				if (remove)
 				{
-					if (Timeout == double.PositiveInfinity)
+					if (double.IsPositiveInfinity(Timeout))
 					{
 						Timeout = -1.0;
 					}

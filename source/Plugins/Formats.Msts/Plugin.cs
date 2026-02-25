@@ -389,6 +389,12 @@ namespace OpenBve.Formats.MsTs
 			{
 				return KujuTokenID.Skip;
 			}
+
+			if (s == "\"MTWW")
+			{
+				// A lot of MakingTracks stuff seems to have the same C+P error
+				return KujuTokenID.Skip;
+			}
 #if DEBUG 
 			// In debug mode, always throw an exception
 			// this way, any new parameters can be added to our list for future
@@ -417,7 +423,7 @@ namespace OpenBve.Formats.MsTs
 			{
 				char[] fixedText = new char[text.Length];
 				int newTextLength = 0;
-				text = text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim(new char[] { });
+				text = text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
 				text = text.Replace(@"\(", "[").Replace(@"\)", "]");
 				bool lastWhiteSpace = false;
 				for (int i = 0; i < text.Length; i++)
@@ -456,6 +462,10 @@ namespace OpenBve.Formats.MsTs
 			{
 				myText = text;
 			}
+			if (string.IsNullOrEmpty(myText))
+			{
+				Token = KujuTokenID.Skip;
+			}
 			currentPosition = 0;
 		}
 
@@ -470,7 +480,7 @@ namespace OpenBve.Formats.MsTs
 			{
 				char[] fixedText = new char[text.Length];
 				int newTextLength = 0;
-				text = text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim(new char[] { });
+				text = text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
 				text = text.Replace(@"\(", "[").Replace(@"\)", "]");
 				bool lastWhiteSpace = false;
 				for (int i = 0; i < text.Length; i++)
@@ -528,7 +538,7 @@ namespace OpenBve.Formats.MsTs
 			if (ws != -1)
 			{
 				//The block has the optional label
-				Label = s.Substring(ws, s.Length - ws).Trim(new char[] { });
+				Label = s.Substring(ws, s.Length - ws).Trim();
 				s = s.Substring(0, ws);
 			}
 
@@ -590,7 +600,7 @@ namespace OpenBve.Formats.MsTs
 				if (myText[currentPosition] == '(')
 				{
 					int l = currentPosition - startPosition;
-					s = myText.Substring(startPosition, l).Trim(new char[] { });
+					s = myText.Substring(startPosition, l).Trim();
 					currentPosition++;
 					break;
 				}
@@ -602,7 +612,7 @@ namespace OpenBve.Formats.MsTs
 			if (ws != -1)
 			{
 				//The block has the optional label
-				Label = s.Substring(ws, s.Length - ws).Trim(new char[] { });
+				Label = s.Substring(ws, s.Length - ws).Trim();
 				s = s.Substring(0, ws);
 			}
 
@@ -626,7 +636,7 @@ namespace OpenBve.Formats.MsTs
 					currentPosition++;
 					if (level == 0)
 					{
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), newToken, true, this);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(), newToken, true, this);
 					}
 
 					level--;
@@ -642,7 +652,7 @@ namespace OpenBve.Formats.MsTs
 		public override Block GetSubBlock(KujuTokenID newToken)
 		{
 			int position = currentPosition;
-			while (double.TryParse(getNextValue(), out _))
+			while (double.TryParse(GetNextValue(), out _))
 			{
 				position = currentPosition;
 			}
@@ -660,7 +670,7 @@ namespace OpenBve.Formats.MsTs
 				if (myText[currentPosition] == '(')
 				{
 					int l = currentPosition - startPosition;
-					s = myText.Substring(startPosition, l).Trim(new char[] { });
+					s = myText.Substring(startPosition, l).Trim();
 					currentPosition++;
 					break;
 				}
@@ -672,7 +682,7 @@ namespace OpenBve.Formats.MsTs
 			if (ws != -1)
 			{
 				//The block has the optional label
-				Label = s.Substring(ws, s.Length - ws).Trim(new char[] { });
+				Label = s.Substring(ws, s.Length - ws).Trim();
 				s = s.Substring(0, ws);
 			}
 
@@ -706,7 +716,7 @@ namespace OpenBve.Formats.MsTs
 							return ReadSubBlock(validTokens);
 						}
 
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken, true, this);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(), currentToken, true, this);
 					}
 
 					level--;
@@ -728,7 +738,7 @@ namespace OpenBve.Formats.MsTs
 				if (myText[currentPosition] == '(')
 				{
 					int l = currentPosition - startPosition;
-					s = myText.Substring(startPosition, l).Trim(new char[] { });
+					s = myText.Substring(startPosition, l).Trim();
 					currentPosition++;
 					break;
 				}
@@ -753,12 +763,11 @@ namespace OpenBve.Formats.MsTs
 			s = s.TrimStart(')').TrimStart(); // remove all other extraneous brackets + whitespace
 			startPosition += sl - s.Length;
 
-			string ns = s;
 			int ws = s.IndexOf(' ');
 			if (ws != -1)
 			{
 				//The block has the optional label
-				Label = s.Substring(ws, s.Length - ws).Trim(new char[] { });
+				Label = s.Substring(ws, s.Length - ws).Trim();
 				if (Label[0] == ')')
 				{
 					if (allowEmptyBlock)
@@ -792,7 +801,7 @@ namespace OpenBve.Formats.MsTs
 							return new TextualBlock(string.Empty, true);
 						}
 
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken, true, this);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(), currentToken, true, this);
 					}
 					level--;
 				}
@@ -802,7 +811,7 @@ namespace OpenBve.Formats.MsTs
 			if (currentPosition == myText.Length)
 			{
 				// Missing one or more block terminators- PadRight with appropriate number
-				return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }).PadRight(currentPosition - startPosition + level, ')'), currentToken, true, this);
+				return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim().PadRight(currentPosition - startPosition + level, ')'), currentToken, true, this);
 			}
 			throw new InvalidDataException("Unexpected end of block in " + Token);
 		}
@@ -822,7 +831,7 @@ namespace OpenBve.Formats.MsTs
 				}
 			}
 
-			string s = getNextValue();
+			string s = GetNextValue();
 			if (int.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out int val))
 			{
 				return (ushort) val;
@@ -843,7 +852,7 @@ namespace OpenBve.Formats.MsTs
 				}
 			}
 
-			string s = getNextValue();
+			string s = GetNextValue();
 			if (uint.TryParse(s, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint val))
 			{
 				return val;
@@ -865,7 +874,7 @@ namespace OpenBve.Formats.MsTs
 			}
 
 
-			string s = getNextValue();
+			string s = GetNextValue();
 			if (NumberFormats.TryParseIntVb6(s, out int val))
 			{
 				return val;
@@ -886,7 +895,7 @@ namespace OpenBve.Formats.MsTs
 				}
 			}
 
-			string s = getNextValue();
+			string s = GetNextValue();
 			if (NumberFormats.TryParseIntVb6(s, out int val))
 			{
 				return val;
@@ -903,7 +912,7 @@ namespace OpenBve.Formats.MsTs
 				currentPosition++;
 			}
 
-			string s = getNextValue();
+			string s = GetNextValue();
 			if (s[s.Length -1] == ',')
 			{
                 // SMS files contain comma separated numbers in a textual CurvePoints block
@@ -934,6 +943,28 @@ namespace OpenBve.Formats.MsTs
 				}
 			}
 
+			if (s.IndexOf('/') != -1)
+			{
+				string[] splitS = s.Split('/');
+				if (splitS.Length == 2 && NumberFormats.TryParseDoubleVb6(splitS[1], out double s2) && s2 == 1)
+				{
+					// Friction and adheasion blocks seem to often use the format 0.05/1 (no idea why it accepts this...)
+					if (float.TryParse(splitS[0], NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out val))
+					{
+						return val;
+					}
+				}
+			}
+			if (s.Split('/').Length > 2)
+			{
+
+				s = s.Substring(0, s.IndexOf('/', s.IndexOf('/') + 1));
+				if (float.TryParse(s, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out val))
+				{
+					return val;
+				}
+			}
+
 			throw new InvalidDataException("Unable to parse " + s + " to a valid single in block " + Token);
 		}
 
@@ -957,6 +988,14 @@ namespace OpenBve.Formats.MsTs
 		public override float ReadSingle<TUnitType>(TUnitType desiredUnit, TUnitType? defaultUnits)
 		{
 			string s = ReadString();
+
+			string st = s.Trim();
+			if (st == "(")
+			{
+				// additional invalid opening bracket
+				s = ReadString();
+			}
+			
 			int hash = s.IndexOf('#');
 			if (hash != -1)
 			{
@@ -1093,7 +1132,7 @@ namespace OpenBve.Formats.MsTs
 				currentPosition++;
 			}
 
-			return getNextValue();
+			return GetNextValue();
 		}
 
 		public override bool ReadPath(string absolute, out string finalPath)
@@ -1262,7 +1301,7 @@ namespace OpenBve.Formats.MsTs
 			return currentPosition;
 		}
 
-		private string getNextValue()
+		private string GetNextValue()
 		{
 
 			if (char.IsWhiteSpace(myText[currentPosition]) && currentPosition < myText.Length - 1)
@@ -1289,7 +1328,7 @@ namespace OpenBve.Formats.MsTs
 				currentPosition++;
 				if (l > 0)
 				{
-					return myText.Substring(startPosition, l).Trim(new char[] { });
+					return myText.Substring(startPosition, l).Trim();
 				}
 			}
 			else
@@ -1302,7 +1341,7 @@ namespace OpenBve.Formats.MsTs
 				int l = currentPosition - startPosition;
 				if (l > 0)
 				{
-					return myText.Substring(startPosition, l).Trim(new char[] { });
+					return myText.Substring(startPosition, l).Trim();
 				}
 			}
 

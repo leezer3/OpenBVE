@@ -1,6 +1,6 @@
 ﻿//Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2024, Christopher Lees, The OpenBVE Project
+//Copyright (c) 2026, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -22,37 +22,23 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// ReSharper disable CoVariantArrayConversion
+using OpenBveApi.Colors;
 
-using OpenBveApi.Math;
-
-namespace OpenBveApi.Objects
+namespace Plugin
 {
-    /// <summary>An animation setting an absolute rotation</summary>
-    public class TcbKey : AbstractAnimation
-    {
-	    private readonly QuaternionFrame[] animationFrames;
+	/// <summary>Describes a texture to be applied to a MSTS shape</summary>
+	internal class Texture
+	{
+		/// <summary>The relative texture path</summary>
+		/// <remarks>Note that this may be relative to the Shape, the ENG / WAG or the COMMON folder</remarks>
+		internal readonly string fileName;
+		internal int filterMode;
+		internal int mipmapLODBias;
+		internal Color32 borderColor;
 
-	    /// <summary>Creates a new tcb_key animation</summary>
-	    public TcbKey(string name, QuaternionFrame[] frames) : base(name)
-	    {
-		    animationFrames = frames;
-	    }
-
-	    /// <summary>Updates the animation</summary>
-	    public override void Update(double animationKey, double timeElapsed, ref Matrix4D matrix)
-	    {
-		    int currentFrame = animationFrames.FindCurrentFrame(animationKey, out int interpolateFrame, out double frac);
-			Quaternion q = Quaternion.Slerp(animationFrames[currentFrame].Quaternion, animationFrames[interpolateFrame].Quaternion, (float)frac);
-		    Vector3 location = matrix.ExtractTranslation();
-		    matrix = Matrix4D.CreateFromQuaternion(q);
-		    matrix.Row3.Xyz = location;
-	    }
-
-	    /// <inheritdoc />
-	    public override AbstractAnimation Clone()
-	    {
-		    return new TcbKey(Name, animationFrames);
-	    }
+		internal Texture(string file)
+		{
+			fileName = file;
+		}
 	}
 }

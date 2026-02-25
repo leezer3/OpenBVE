@@ -257,6 +257,12 @@ namespace CsvRwRouteParser
 							currentPatch.ViewingDistance = int.MaxValue;
 						}
 						break;
+					case "MaxViewingDistance":
+						if (!int.TryParse(childNode.InnerText.Trim(), out currentPatch.MaxViewingDistance))
+						{
+							currentPatch.MaxViewingDistance = int.MaxValue;
+						}
+						break;
 					case "AggressiveRwBrackets":
 						t = childNode.InnerText.Trim().ToLowerInvariant();
 						if (t == "1" || t == "true")
@@ -288,6 +294,17 @@ namespace CsvRwRouteParser
 						else
 						{
 							currentPatch.DelayedAnimatedUpdates = false;
+						}
+						break;
+					case "AdhesionHack":
+						t = childNode.InnerText.Trim().ToLowerInvariant();
+						if (t == "1" || t == "true")
+						{
+							currentPatch.AdhesionHack = true;
+						}
+						else
+						{
+							currentPatch.AdhesionHack = false;
 						}
 						break;
 				}

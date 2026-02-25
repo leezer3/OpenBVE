@@ -295,22 +295,24 @@ namespace TrainManager.BrakeSystems
 			}
 		}
 
-		
-
-		public override double CurrentMotorDeceleration(double TimeElapsed, AbstractHandle BrakeHandle)
+		public override double CurrentMotorDeceleration(double timeElapsed, AbstractHandle brakeHandle)
 		{
-			double actualDeceleration = 0;
-			if (lastHandlePosition != BrakeHandle.Actual)
+			if (brakeHandle.Actual > MotorBrakeNotch)
 			{
-				motorDecelerationDelayTimer = BrakeHandle.Actual > lastHandlePosition ? motorDecelerationDelayUp : motorDecelerationDelayDown;
-				lastHandlePosition = BrakeHandle.Actual;
+				return 0;
 			}
-			if (BrakeHandle.Actual != 0)
+			double actualDeceleration = 0;
+			if (lastHandlePosition != brakeHandle.Actual)
 			{
-				motorDecelerationDelayTimer -= TimeElapsed;
+				motorDecelerationDelayTimer = brakeHandle.Actual > lastHandlePosition ? motorDecelerationDelayUp : motorDecelerationDelayDown;
+				lastHandlePosition = brakeHandle.Actual;
+			}
+			if (brakeHandle.Actual != 0)
+			{
+				motorDecelerationDelayTimer -= timeElapsed;
 				if (motorDecelerationDelayTimer < 0)
 				{
-					actualDeceleration = (BrakeHandle.Actual / (double)BrakeHandle.MaximumNotch) * motorDeceleration;
+					actualDeceleration = (brakeHandle.Actual / (double)brakeHandle.MaximumNotch) * motorDeceleration;
 					lastMotorDeceleration = actualDeceleration;
 				}
 				else if (lastHandlePosition != 0)

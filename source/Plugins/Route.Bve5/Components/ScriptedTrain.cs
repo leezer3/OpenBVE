@@ -287,16 +287,17 @@ namespace Route.Bve5
 
 				Train.AI = new TrackFollowingObjectAI(Train, Data.ToArray());
 
-				// For debug
-				Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"[{OtherTrain.Key}] 走行軌道: {OtherTrain.TrackKey}, 進行方向: {OtherTrain.Direction}, 有効開始位置: {Train.AppearanceStartPosition}m, 有効開始時刻: {Train.AppearanceTime}s");
+#if DEBUG
+				Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"BVE5: Adding Scripted Train [{OtherTrain.Key}] Rail Index: {OtherTrain.TrackKey}, Direction of Travel: {OtherTrain.Direction}, Starting Position: {Train.AppearanceStartPosition}m, Appearance Time: {Train.AppearanceTime}s");
 
 				for (int i = 0; i < Data.Count; i++)
 				{
 					if (Data[i] is TravelStopData d)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"[{OtherTrain.Key}] 停車位置: {d.Position}m, 減速度: {d.Decelerate * 3.6}km/h/s, 停車時間: {d.StopTime}s, 加速度: {d.Accelerate * 3.6}km/h/s, 加速後の走行速度: {d.TargetSpeed * 3.6}km/h");
+						Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"BVE5: Scripted Train [{OtherTrain.Key}] Travel Point: {d.Position}m, Deceleration: {d.Decelerate * 3.6}km/h/s, Stop Time: {d.StopTime}s, Acceleration: {d.Accelerate * 3.6}km/h/s, Target Speed: {d.TargetSpeed * 3.6}km/h");
 					}
 				}
+#endif
 
 				foreach (var Car in Train.Cars)
 				{
@@ -401,22 +402,32 @@ namespace Route.Bve5
 			foreach (var Sound3d in Sound3ds)
 			{
 				Sound3d.TryGetValue("key", out string Key);
+			
+				CarSound existingSound = scriptedTrain.CarSounds.Find(carsound => carsound.Key == Key);
+				if (existingSound != null && existingSound.Distance1 != null && existingSound.Distance2 != null) {
+					continue;
+				}
+
 				Sound3d.TryGetValue("distance1", out string TempDistance1);
 				Sound3d.TryGetValue("distance2", out string TempDistance2);
 				Sound3d.TryGetValue("function", out string Function);
 
 				Enum.TryParse(Function, true, out BVE5AISoundControl function);
 
-				if (string.IsNullOrEmpty(TempDistance1) || !NumberFormats.TryParseDoubleVb6(TempDistance1, out double Distance1))
-				{
-					Distance1 = 0.0;
+				double? Distance1 = null;
+				double? Distance2 = null;
+				double Distance1Parsed = 0;
+				double Distance2Parsed = 0;
+				
+				if (!string.IsNullOrEmpty(TempDistance1) && NumberFormats.TryParseDoubleVb6(TempDistance1, out Distance1Parsed)) {
+					Distance1 = Distance1Parsed;
 				}
-				if (string.IsNullOrEmpty(TempDistance2) || !NumberFormats.TryParseDoubleVb6(TempDistance2, out double Distance2))
-				{
-					Distance2 = 0.0;
+				if (!string.IsNullOrEmpty(TempDistance2) && NumberFormats.TryParseDoubleVb6(TempDistance2, out Distance2Parsed)) {
+					Distance2 = Distance2Parsed;
 				}
 
 				scriptedTrain.CarSounds.Add(new CarSound(Key, Distance1, Distance2, function));
+				scriptedTrain.CarSounds.Remove(existingSound);
 			}
 		}
 	}

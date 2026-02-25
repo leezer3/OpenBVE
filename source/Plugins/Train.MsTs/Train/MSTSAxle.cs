@@ -44,7 +44,15 @@ namespace Train.MsTs
 
 		public override double GetResistance(double Speed, double FrontalArea, double AirDensity, double AccelerationDueToGravity)
 		{
-			return FrictionProperties.GetResistanceValue(Speed) / Math.Max(1.0, baseCar.CurrentMass);
+			double friction = FrictionProperties.GetResistanceValue(Speed) / Math.Max(1.0, baseCar.CurrentMass);
+			if (friction != 0)
+			{
+				return friction;
+			}
+			// if zero friction, return BVE value
+			double f = FrontalArea * 1.1 * AirDensity / (2.0 * Math.Max(1.0, baseCar.CurrentMass));
+			double a = AccelerationDueToGravity * 0.0025 + f * Speed * Speed;
+			return a;
 		}
 
 		public override double CriticalWheelSlipAccelerationForElectricMotor(double AccelerationDueToGravity)

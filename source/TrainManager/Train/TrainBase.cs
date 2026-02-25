@@ -173,7 +173,7 @@ namespace TrainManager.Trains
 		{
 			for (int i = 0; i < Cars.Length; i++)
 			{
-				Cars[i].Syncronize();
+				Cars[i].Synchronize();
 			}
 		}
 

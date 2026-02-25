@@ -67,7 +67,7 @@ namespace OpenBveApi.Interface
 		/// <summary>
 		/// A function called when the plugin is loading
 		/// </summary>
-		/// <param name="fileSystem">The instance of FileSytem class</param>
+		/// <param name="fileSystem">The instance of the FileSystem class</param>
 		/// <returns>Check the plugin loading process is successfully</returns>
 		bool Load(FileSystem.FileSystem fileSystem);
 		
@@ -154,7 +154,7 @@ namespace OpenBveApi.Interface
 				/// Enabled
 				/// </summary>
 				Enable = 2
-			};
+			}
 
 			/// <summary>
 			/// Plugin's name
@@ -184,7 +184,7 @@ namespace OpenBveApi.Interface
 			/// <summary>
 			/// Constructor
 			/// </summary>
-			/// <param name="File">Asssembly information of the plugin</param>
+			/// <param name="File">Assembly information of the plugin</param>
 			internal PluginInfo(Assembly File)
 			{
 				Name = (AssemblyTitleAttribute)Attribute.GetCustomAttribute(File, typeof(AssemblyTitleAttribute));
@@ -281,7 +281,7 @@ namespace OpenBveApi.Interface
 		}
 
 		/// <summary>
-		/// The function that calls the plugin's unload funcion
+		/// The function that calls the plugin's unload function
 		/// </summary>
 		/// <param name="index">The index number which can use the plugins</param>
 		public static void CallPluginUnload(int index)
@@ -299,7 +299,7 @@ namespace OpenBveApi.Interface
 		}
 
 		/// <summary>
-		/// The function that calls the plugin's configration funcion
+		/// The function that calls the plugin's configuration function
 		/// </summary>
 		/// <param name="owner">The owner of the window</param>
 		/// <param name="index">The index number which can use the plugins</param>

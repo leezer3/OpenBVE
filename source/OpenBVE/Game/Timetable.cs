@@ -193,7 +193,10 @@ namespace OpenBve {
 						{
 							if (Program.CurrentRoute.Tracks[0].Elements[i].Events[j] is LimitChangeEvent lce)
 							{
-								if (lce.NextSpeedLimit != double.PositiveInfinity & lce.NextSpeedLimit > currentLimit) currentLimit = lce.NextSpeedLimit;
+								if (!double.IsPositiveInfinity(lce.NextSpeedLimit) && lce.NextSpeedLimit > currentLimit)
+								{
+									currentLimit = lce.NextSpeedLimit;
+								}
 							}
 						}
 					}

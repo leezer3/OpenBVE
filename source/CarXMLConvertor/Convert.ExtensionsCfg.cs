@@ -88,6 +88,7 @@ namespace CarXmlConvertor
 					case ExtensionCfgSection.Exterior:
 						while (block.RemainingDataValues > 0 && block.GetIndexedPath(Path.GetDirectoryName(FileName), out var carIndex, out carObject) && carIndex < ConvertTrainDat.NumberOfCars)
 						{
+							carObject = carObject.Replace(Path.GetDirectoryName(FileName), string.Empty);
 							CarInfos[carIndex].Object = carObject;
 						}
 						break;
@@ -104,6 +105,7 @@ namespace CarXmlConvertor
 						
 						if (block.GetPath(ExtensionCfgKey.Object, Path.GetDirectoryName(FileName), out carObject))
 						{
+							carObject = carObject.Replace(Path.GetDirectoryName(FileName), string.Empty);
 							CarInfos[block.Index].Object = carObject;
 						}
 
@@ -116,7 +118,7 @@ namespace CarXmlConvertor
 						block.GetValue(ExtensionCfgKey.LoadingSway, out CarInfos[block.Index].LoadingSway);
 						if (block.GetVector2(ExtensionCfgKey.Axles, ',', out Vector2 carAxles))
 						{
-							if (carAxles.X >= carAxles.Y)
+							if (carAxles.X <= carAxles.Y)
 							{
 								CarInfos[block.Index].RearAxle = carAxles.X;
 								CarInfos[block.Index].FrontAxle = carAxles.Y;
@@ -159,6 +161,7 @@ namespace CarXmlConvertor
 
 						if (block.GetPath(ExtensionCfgKey.Object, Path.GetDirectoryName(FileName), out string bogieObject))
 						{
+							bogieObject = bogieObject.Replace(Path.GetDirectoryName(FileName), string.Empty);
 							if (IsOdd)
 							{
 								CarInfos[CarIndex].RearBogie.Object = bogieObject;
@@ -179,7 +182,7 @@ namespace CarXmlConvertor
 						}
 						if (block.GetVector2(ExtensionCfgKey.Axles, ',', out Vector2 bogieAxles))
 						{
-							if (bogieAxles.X >= bogieAxles.Y)
+							if (bogieAxles.X <= bogieAxles.Y)
 							{
 								if (IsOdd)
 								{

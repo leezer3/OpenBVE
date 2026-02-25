@@ -80,6 +80,12 @@ namespace Train.OpenBve
 
 							Handle.MaxSpring = maxSpring;
 							break;
+						case HandleXMLKey.MotorBrakeNotch:
+							if (!NumberFormats.TryParseIntVb6(cc.InnerText, out Train.Cars[Car].CarBrake.MotorBrakeNotch))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid MotorBrakeNotch defined for Car " + Car + " in XML file " + fileName);
+							}
+							break;
 					}
 				}
 			}

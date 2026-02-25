@@ -58,5 +58,36 @@
 		<ReducedColorTransparency>true</ReducedColorTransparency>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
+	<!-- 57-es villamos-->
+	<Patch>
+		<Hash>A303A5CAB5F964D52DAFF211B418EAAED9FE2E9E80186E557032B8D9C33E9431</Hash>
+		<FileName>57beta1.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>6BBC2D93C48D28FE7D00F6BC9D46B245B2025D9EC5338E2D5DDFC9E69E91F314</Hash>
+		<FileName>58_1.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>D191B5B2D90236E0A1841B13A733778486D5082E961F3E8BF81EC362885A08B5</Hash>
+		<FileName>58_2.CSV</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>9FE3F56F6362199C20C077FB833D01309E0EA51F7F1C5ED58C64EE0481DD0874</Hash>
+		<FileName>58_3.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>48146224FC0D8CEEE144316D0F1291DF9FB2493B58A1B9AE181CB41C3CD84F7D</Hash>
+		<FileName>58_4.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
   </RoutePatches>
 </openBVE>

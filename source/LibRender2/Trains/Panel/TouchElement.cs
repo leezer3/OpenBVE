@@ -9,9 +9,9 @@ namespace LibRender2.Trains
 		public readonly AnimatedObject Element;
 		/// <summary>The index of the screen to jump to (if applicable)</summary>
 		public readonly int JumpScreenIndex;
-		/// <summary>The sound indicies associated with the object</summary>
+		/// <summary>The sound indices associated with the object</summary>
 		public readonly int[] SoundIndices;
-		/// <summary>The control indicies associated with the object</summary>
+		/// <summary>The control indices associated with the object</summary>
 		public readonly int[] ControlIndices;
 		/// <summary>The cursor texture</summary>
 		public MouseCursor MouseCursor;

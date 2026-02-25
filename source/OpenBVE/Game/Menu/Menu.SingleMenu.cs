@@ -199,7 +199,7 @@ namespace OpenBve
 							string ext = System.IO.Path.GetExtension(fileName);
 							if (!iconCache.ContainsKey(ext))
 							{
-								// As some people have used arbritary extensions for packages, let's show all files
+								// As some people have used arbitrary extensions for packages, let's show all files
 								// Try and pull out the default icon from the cache for something a little nicer looking
 								try
 								{

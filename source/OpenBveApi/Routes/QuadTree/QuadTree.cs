@@ -109,14 +109,13 @@ namespace OpenBveApi.Routes
 									{
 										index = 0;
 										right = centerX;
-										far = centerZ;
 									}
 									else
 									{
 										index = 1;
 										left = centerX;
-										far = centerZ;
 									}
+									far = centerZ;
 								}
 								else
 								{
@@ -124,14 +123,13 @@ namespace OpenBveApi.Routes
 									{
 										index = 2;
 										right = centerX;
-										near = centerZ;
 									}
 									else
 									{
 										index = 3;
 										left = centerX;
-										near = centerZ;
 									}
+									near = centerZ;
 								}
 
 								if (intern.Children[index] is QuadTreeUnpopulatedLeafNode)

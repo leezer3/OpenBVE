@@ -116,7 +116,7 @@ namespace OpenBve
 			List<Package> Dependancies = Database.CheckDependsReccomends(currentPackage.Dependancies.ToList());
 			if (Dependancies != null)
 			{
-				//We are missing a dependancy
+				//We are missing a dependency
 
 				labelDependancyErrorHeader.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_dependancies_unmet_header"});
 				labelMissingDependanciesText1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_dependancies_unmet"});
@@ -128,7 +128,7 @@ namespace OpenBve
 			List<Package> Reccomendations = Database.CheckDependsReccomends(currentPackage.Reccomendations.ToList());
 			if (Reccomendations != null)
 			{
-				//We are missing a reccomendation
+				//We are missing a recommendation
 
 				labelDependancyErrorHeader.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_reccomends_unmet_header"});
 				labelMissingDependanciesText1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_reccomends_unmet"});
@@ -381,9 +381,9 @@ namespace OpenBve
 		private void OnWorkerProgressChanged(object sender, ProgressReport e)
 		{
 			//We need to invoke the control so we don't get a cross thread exception
-			if (this.InvokeRequired)
+			if (InvokeRequired)
 			{
-				this.BeginInvoke((MethodInvoker) delegate
+				BeginInvoke((MethodInvoker) delegate
 				{
 					OnWorkerProgressChanged(sender, e);
 				});
@@ -398,9 +398,9 @@ namespace OpenBve
 		private void OnWorkerReportsProblem(object sender, ProblemReport e)
 		{
 			//We need to invoke the control so we don't get a cross thread exception
-			if (this.InvokeRequired)
+			if (InvokeRequired)
 			{
-				this.BeginInvoke((MethodInvoker) delegate
+				BeginInvoke((MethodInvoker) delegate
 				{
 					OnWorkerReportsProblem(sender, e);
 				});

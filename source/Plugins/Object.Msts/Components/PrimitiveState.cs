@@ -1,6 +1,6 @@
 ﻿//Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2024, Christopher Lees, The OpenBVE Project
+//Copyright (c) 2026, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -22,37 +22,32 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// ReSharper disable CoVariantArrayConversion
-
-using OpenBveApi.Math;
-
-namespace OpenBveApi.Objects
+namespace Plugin
 {
-    /// <summary>An animation setting an absolute rotation</summary>
-    public class TcbKey : AbstractAnimation
-    {
-	    private readonly QuaternionFrame[] animationFrames;
+	/// <summary>Describes a PrimitiveState</summary>
+	internal class PrimitiveState
+	{
+		/// <summary>The textual name of the PrimitiveState</summary>
+		internal readonly string Name;
+		/// <summary>The shader name to be applied when drawing this primitive</summary>
+		/// <remarks>Controls alpha blending etc.</remarks>
+		internal int Shader;
+		/// <summary>The texture indicies used by this primitive</summary>
+		internal int[] Textures;
+		/*
+		 * Unlikely to be able to support these at present
+		 * However, read and see if we can hack common ones
+		 */
+		internal uint Flags;
+		internal float ZBias;
+		internal int vertexStates;
+		internal int alphaTestMode;
+		internal int lightCfgIdx;
+		internal int zBufferMode;
 
-	    /// <summary>Creates a new tcb_key animation</summary>
-	    public TcbKey(string name, QuaternionFrame[] frames) : base(name)
-	    {
-		    animationFrames = frames;
-	    }
-
-	    /// <summary>Updates the animation</summary>
-	    public override void Update(double animationKey, double timeElapsed, ref Matrix4D matrix)
-	    {
-		    int currentFrame = animationFrames.FindCurrentFrame(animationKey, out int interpolateFrame, out double frac);
-			Quaternion q = Quaternion.Slerp(animationFrames[currentFrame].Quaternion, animationFrames[interpolateFrame].Quaternion, (float)frac);
-		    Vector3 location = matrix.ExtractTranslation();
-		    matrix = Matrix4D.CreateFromQuaternion(q);
-		    matrix.Row3.Xyz = location;
-	    }
-
-	    /// <inheritdoc />
-	    public override AbstractAnimation Clone()
-	    {
-		    return new TcbKey(Name, animationFrames);
-	    }
+		internal PrimitiveState(string name)
+		{
+			Name = name;
+		}
 	}
 }

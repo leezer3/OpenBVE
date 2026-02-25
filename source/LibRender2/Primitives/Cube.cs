@@ -33,7 +33,7 @@ using Vector2 = OpenBveApi.Math.Vector2;
 
 namespace LibRender2.Primitives
 {
-	/// <summary>A Cube of nomimal 1.0 size</summary>
+	/// <summary>A Cube of nominal 1.0 size</summary>
 	public class Cube
 	{
 		private readonly BaseRenderer renderer;

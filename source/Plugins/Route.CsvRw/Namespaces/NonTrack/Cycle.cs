@@ -28,7 +28,7 @@ namespace CsvRwRouteParser
 								ix = 0;
 							}
 
-							if (ix < 0 | !Data.Structure.Ground.ContainsKey(ix))
+							if (ix < 0 || !Data.Structure.Ground.ContainsKey(ix))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GroundStructure with an index of " + ix + " is out of range in Cycle." + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 								ix = 0;
@@ -58,7 +58,7 @@ namespace CsvRwRouteParser
 								ix = 0;
 							}
 
-							if (ix < 0 | !Data.Structure.RailObjects.ContainsKey(ix))
+							if (ix < 0 || !Data.Structure.RailObjects.ContainsKey(ix))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructure with an index of " + ix + " is out of range in Cycle." + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 								ix = 0;

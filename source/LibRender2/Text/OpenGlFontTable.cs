@@ -21,10 +21,10 @@ namespace LibRender2.Text
 		// ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
 		// Must remain, else will be disposed of by the GC as this is a separate assembly
 		private readonly byte[] myBytes;
-		/// <summary>The border around glpyhs on the font bitmap</summary>
-		const int drawBorder = 20;
+		/// <summary>The border around glyphs on the font bitmap</summary>
+		private const int drawBorder = 20;
 		/// <summary>The border used when calculating texture co-ordinates</summary>
-		const int coordinateBorder = 1;
+		private const int coordinateBorder = 1;
 
 		// --- constructors ---
 		/// <summary>Creates a new table of characters.</summary>

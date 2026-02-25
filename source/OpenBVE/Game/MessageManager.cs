@@ -21,7 +21,7 @@ namespace OpenBve
 		/// <param name="Mode"></param>
 		/// <param name="Color">The color of the message text</param>
 		/// <param name="Timeout">The time this message will display for</param>
-		/// <param name="key">The textual key identifiying this message</param>
+		/// <param name="key">The textual key identifying this message</param>
 		internal static void AddMessage(string Text, MessageDependency Depencency, GameMode Mode, MessageColor Color, double Timeout, string key)
 		{
 			if (TrainManagerBase.PlayerTrain == null)
@@ -63,12 +63,9 @@ namespace OpenBve
 			}
 			if (message is MarkerImage || message is TextureMessage)
 			{
-				for (int i = 0; i < ImageMessages.Count; i++)
+				if (ImageMessages.Contains(message))
 				{
-					if (ImageMessages[i] == message)
-					{
-						return;
-					}
+					return;
 				}
 				message.AddMessage(Program.CurrentRoute.SecondsSinceMidnight);
 				ImageMessages.Add(message);

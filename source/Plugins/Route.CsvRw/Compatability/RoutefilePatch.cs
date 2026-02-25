@@ -52,6 +52,7 @@ namespace CsvRwRouteParser
 				Plugin.CurrentOptions.Derailments = patch.Derailments;
 				Plugin.CurrentOptions.Toppling = patch.Toppling;
 				Plugin.CurrentOptions.DelayedAnimatedUpdates = patch.DelayedAnimatedUpdates;
+				Plugin.CurrentOptions.AdhesionHack = patch.AdhesionHack;
 				SplitLineHack = patch.SplitLineHack;
 				AllowTrackPositionArguments = patch.AllowTrackPositionArguments;
 				foreach (int i in patch.DummyRailTypes)
@@ -88,6 +89,10 @@ namespace CsvRwRouteParser
 				if (patch.ViewingDistance != int.MaxValue)
 				{
 					Plugin.CurrentOptions.ViewingDistance = patch.ViewingDistance;
+				}
+				else if (patch.MaxViewingDistance != int.MaxValue && Plugin.CurrentOptions.ViewingDistance > patch.MaxViewingDistance)
+				{
+					Plugin.CurrentOptions.ViewingDistance = patch.MaxViewingDistance;
 				}
 
 				if (patch.ColonFix)
@@ -148,11 +153,15 @@ namespace CsvRwRouteParser
 		internal bool ReducedColorTransparency;
 		/// <summary>The viewing distance to use</summary>
 		internal int ViewingDistance = int.MaxValue;
+		/// <summary>The maximum viewing distance to use</summary>
+		internal int MaxViewingDistance = int.MaxValue;
 		/// <summary>Whether the route is incompatible with OpenBVE</summary>
 		internal bool Incompatible = false;
 		/// <summary>Whether aggressive RW bracket fixing is applied</summary>
 		internal bool AggressiveRwBrackets = false;
 		/// <summary>Whether animated object updates are delayed based upon distance</summary>
 		internal bool DelayedAnimatedUpdates = false;
+		/// <summary>Whether adhesion is infinite (no wheelslip)</summary>
+		internal bool AdhesionHack = false;
 	}
 }

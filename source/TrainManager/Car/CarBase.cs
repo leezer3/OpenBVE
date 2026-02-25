@@ -256,7 +256,7 @@ namespace TrainManager.Car
 		}
 
 		/// <summary>Synchronizes the car after a period of infrequent updates</summary>
-		public void Syncronize()
+		public void Synchronize()
 		{
 			double s = 0.5 * (FrontAxle.Follower.TrackPosition + RearAxle.Follower.TrackPosition);
 			double d = 0.5 * (FrontAxle.Follower.TrackPosition - RearAxle.Follower.TrackPosition);
@@ -370,6 +370,10 @@ namespace TrainManager.Car
 				}	
 			}
 
+			for (int i = 0; i < ParticleSources.Count; i++)
+			{
+				ParticleSources[i].Offset.Z = -ParticleSources[i].Offset.Z;
+			}
 
 			(FrontBogie, RearBogie) = (RearBogie, FrontBogie);
 			FrontBogie.Reverse();
@@ -589,17 +593,17 @@ namespace TrainManager.Car
 			{
 				if (Left & Doors[i].Direction == -1 | Right & Doors[i].Direction == 1)
 				{
-					if (Doors[i].State == 0.0)
+					switch (Doors[i].State)
 					{
-						closed = true;
-					}
-					else if (Doors[i].State == 1.0)
-					{
-						opened = true;
-					}
-					else
-					{
-						mixed = true;
+						case 0.0:
+							closed = true;
+							break;
+						case 1.0:
+							opened = true;
+							break;
+						default:
+							mixed = true;
+							break;
 					}
 				}
 			}
@@ -1203,10 +1207,20 @@ namespace TrainManager.Car
 			double wheelSlipAccelerationBrakeRear = 0.0;
 			if (!Derailed)
 			{
-				wheelSlipAccelerationMotorFront = FrontAxle.CriticalWheelSlipAccelerationForElectricMotor(TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
-				wheelSlipAccelerationMotorRear = RearAxle.CriticalWheelSlipAccelerationForElectricMotor(TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
-				wheelSlipAccelerationBrakeFront = FrontAxle.CriticalWheelSlipAccelerationForFrictionBrake(TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
-				wheelSlipAccelerationBrakeRear = RearAxle.CriticalWheelSlipAccelerationForFrictionBrake(TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+				if (TrainManagerBase.CurrentOptions.AdhesionHack)
+				{
+					wheelSlipAccelerationMotorFront = double.MaxValue;
+					wheelSlipAccelerationMotorRear = double.MaxValue;
+					wheelSlipAccelerationBrakeFront = double.MaxValue;
+					wheelSlipAccelerationBrakeRear = double.MaxValue;
+				}
+				else
+				{
+					wheelSlipAccelerationMotorFront = FrontAxle.CriticalWheelSlipAccelerationForElectricMotor(TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+					wheelSlipAccelerationMotorRear = RearAxle.CriticalWheelSlipAccelerationForElectricMotor(TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+					wheelSlipAccelerationBrakeFront = FrontAxle.CriticalWheelSlipAccelerationForFrictionBrake(TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+					wheelSlipAccelerationBrakeRear = RearAxle.CriticalWheelSlipAccelerationForFrictionBrake(TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+				}
 			}
 
 			if (DecelerationDueToMotor == 0.0)
@@ -1292,11 +1306,11 @@ namespace TrainManager.Car
 					{
 						if (TractionModel.CurrentAcceleration < 0.0)
 						{
-							TractionModel.CurrentAcceleration += CarBrake.JerkDown * TimeElapsed;
+							TractionModel.CurrentAcceleration += Math.Max(CarBrake.JerkDown, 10) * TimeElapsed;
 						}
 						else
 						{
-							TractionModel.CurrentAcceleration += Specs.JerkPowerUp * TimeElapsed;
+							TractionModel.CurrentAcceleration += Math.Max(Specs.JerkPowerUp, 10) * TimeElapsed;
 						}
 
 						if (TractionModel.CurrentAcceleration > a)
@@ -1306,7 +1320,7 @@ namespace TrainManager.Car
 					}
 					else
 					{
-						TractionModel.CurrentAcceleration -= Specs.JerkPowerDown * TimeElapsed;
+						TractionModel.CurrentAcceleration -= Math.Max(Specs.JerkPowerDown, 10) * TimeElapsed;
 						if (TractionModel.CurrentAcceleration < a)
 						{
 							TractionModel.CurrentAcceleration = a;
@@ -1333,11 +1347,11 @@ namespace TrainManager.Car
 					{
 						if (TractionModel.CurrentAcceleration > 0.0)
 						{
-							TractionModel.CurrentAcceleration -= Specs.JerkPowerDown * TimeElapsed;
+							TractionModel.CurrentAcceleration -= Math.Max(Specs.JerkPowerDown, 10) * TimeElapsed;
 						}
 						else
 						{
-							TractionModel.CurrentAcceleration -= CarBrake.JerkUp * TimeElapsed;
+							TractionModel.CurrentAcceleration -= Math.Max(CarBrake.JerkUp, 10) * TimeElapsed;
 						}
 
 						if (TractionModel.CurrentAcceleration < a)
@@ -1347,7 +1361,7 @@ namespace TrainManager.Car
 					}
 					else
 					{
-						TractionModel.CurrentAcceleration += CarBrake.JerkDown * TimeElapsed;
+						TractionModel.CurrentAcceleration += Math.Max(CarBrake.JerkDown, 10) * TimeElapsed;
 						if (TractionModel.CurrentAcceleration > a)
 						{
 							TractionModel.CurrentAcceleration = a;

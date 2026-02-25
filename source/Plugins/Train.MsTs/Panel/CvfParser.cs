@@ -38,7 +38,6 @@ using System.IO;
 using System.Text;
 using OpenBveApi.World;
 using TrainManager.Car;
-using TrainManager.Trains;
 
 namespace Train.MsTs
 {
@@ -471,6 +470,10 @@ namespace Train.MsTs
 				case PanelSubject.Panto_Display:
 				case PanelSubject.Pantograph:
 					Code = "pantographstate";
+					break;
+				case PanelSubject.Line_Voltage:
+					// reversed relative to pantograph state
+					Code = "pantographstate 1 == 0 1 ?";
 					break;
 				case PanelSubject.Speedlim_Display:
 					switch (subjectUnits)

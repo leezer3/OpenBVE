@@ -15,7 +15,6 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using RouteManager2;
-using TrainManager.SafetySystems;
 using Path = OpenBveApi.Path;
 
 namespace OpenBve
@@ -661,8 +660,8 @@ namespace OpenBve
 		/// <param name="packages">Whether this is a packaged content folder</param>
 		private void PopulateTrainList(string selectedFolder, ListView listView, bool packages)
 		{
-			string error; //ignored in this case, background thread
-			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+			// error ignored in this case, background thread
+			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 			{
 				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 			}
@@ -715,7 +714,7 @@ namespace OpenBve
 						}
 						catch
 						{
-							//Another permisions issue?
+							//Another permissions issue?
 						}
 					}
 					
@@ -1548,11 +1547,20 @@ namespace OpenBve
 					return;
 				}
 
+				
 				if (!string.IsNullOrEmpty(trainImage))
 				{
-					Image image = Image.FromFile(trainImage);
-					pictureboxTrainImage.Image = image;
-					pictureboxTrainImage.Enabled = true;
+					try
+					{
+						Image image = Image.FromFile(trainImage);
+						pictureboxTrainImage.Image = image;
+						pictureboxTrainImage.Enabled = true;
+					}
+					catch
+					{
+						TryLoadImage(pictureboxTrainImage, "train_unknown.png");
+						pictureboxTrainImage.Enabled = false;
+					}
 				}
 				else
 				{

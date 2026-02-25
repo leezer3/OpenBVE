@@ -76,6 +76,27 @@
 		<FileName>SF&amp;C South.rw</FileName>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
-	
+	<!-- NYCT-M v1.5 -->
+	<!-- built for OpenBVE c. 2014, but various visbility glitches -->
+	<Patch>
+		<Hash>178C2EEEBFC02A4EF4297A7494A5C36C31F3A7C9384BC535BAD8357F5695B965</Hash>
+		<FileName>NYCT-M [Shuttle].csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>96F0ACBF6F892431623344FF4D1AF98981071BBE467C11A2069DD5E44F49E6F3</Hash>
+		<FileName>NYCT-M [To Broad St] Nassau St Exp.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>01F87B7562BF3594CA6B8D7153542F2C4AA996EC4C29AABACECF13870EE0EF23</Hash>
+		<FileName>NYCT-M [To Broad St] Nassau St LCL.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>566F47EAED0E71FA9632E5F5CCA7FA9F58601A25B172EDD3A2C68348DC1E6989</Hash>
+		<FileName>NYCT-M [To Essex St] Nassau St LCL.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
   </RoutePatches>
 </openBVE>

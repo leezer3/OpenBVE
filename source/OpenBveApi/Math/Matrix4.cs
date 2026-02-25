@@ -639,7 +639,7 @@ namespace OpenBveApi.Math
             result.Row3.W = d1 * (m11 * m22 * m33 + m12 * m23 * m31 + m13 * m21 * m32 - m11 * m23 * m32 - m12 * m21 * m33 - m13 * m22 * m31);
         }
 
-        void InvertAffine(ref Matrix4D result)
+        private void InvertAffine(ref Matrix4D result)
         {
             double m11 = Row0.X, m12 = Row0.Y, m13 = Row0.Z, m14 = Row0.W,
             m21 = Row1.X, m22 = Row1.Y, m23 = Row1.Z, m24 = Row1.W,

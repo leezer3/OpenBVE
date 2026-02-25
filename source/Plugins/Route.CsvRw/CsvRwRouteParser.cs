@@ -161,7 +161,8 @@ namespace CsvRwRouteParser {
 			CurrentStop = -1;
 			CurrentSection = 0;
 			
-			string Section = ""; bool SectionAlwaysPrefix = false;
+			string Section = string.Empty; 
+			bool SectionAlwaysPrefix = false;
 			int BlockIndex = 0;
 			CurrentRoute.Tracks[0].Direction = TrackDirection.Forwards;
 			CurrentRoute.Stations = new RouteStation[] { };
@@ -227,11 +228,26 @@ namespace CsvRwRouteParser {
 							Command = null;
 						} else {
 							if (Command.StartsWith(".")) {
-								Command = Section + Command;
+								if (Plugin.CurrentOptions.EnableBveTsHacks && (Command.StartsWith(".run", StringComparison.InvariantCultureIgnoreCase) || Command.StartsWith(".flange", StringComparison.InvariantCultureIgnoreCase)) && Section != "train")
+								{
+									/*
+									 * Handle run / flange sounds in the following format:
+									 *
+									 *  Train.Folder X911_3
+									 *  .Run(0) 0
+									 *
+									 */
+									Section = "train" + Command;
+								}
+								else
+								{
+									Command = Section + Command;
+								}
+									
 							} else if (SectionAlwaysPrefix) {
 								Command = Section + "." + Command;
 							}
-							Command = Command.Replace(".Void", "");
+							Command = Command.Replace(".Void", string.Empty);
 							
 							if (Command.StartsWith("structure", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".load", StringComparison.OrdinalIgnoreCase))
 							{
@@ -445,7 +461,7 @@ namespace CsvRwRouteParser {
 							} else if (SectionAlwaysPrefix) {
 								Command = Section + "." + Command;
 							}
-							Command = Command.Replace(".Void", "");
+							Command = Command.Replace(".Void", string.Empty);
 						}
 						
 						// process command
@@ -459,7 +475,7 @@ namespace CsvRwRouteParser {
 							}
 							if (nameSpace.StartsWith("signal", StringComparison.InvariantCultureIgnoreCase))
 							{
-								nameSpace = "";
+								nameSpace = string.Empty;
 							}
 							Command = Command.ToLowerInvariant();
 

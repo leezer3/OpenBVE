@@ -3,7 +3,6 @@ using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
-using OpenBveApi.World;
 
 namespace OpenBveApi.Objects
 {

@@ -1353,13 +1353,28 @@ namespace OpenBve.Formats.MsTs
 
 		// ORTS specific
 		ORTSUnknown, // Not actually a 'real' token, just used to allow us to handle unknown ORTS tokens gracefully
-		ORTSListName, // ORTS specific for multi-carspawnerlists
+		ORTSListName, // ORTS specific for multi-car spawner lists
 		ORTSSoundFileName, // ORTS specific for individual level crossing sounds
 		ORTSPantographToggle3,
 		ORTSPantographToggle4,
 		ORTSFreightAnims,
 		MSTSFreightAnimEnabled,
 		ORTSDriveWheelWeight,
+		ORTSTrainControlSystem,
+		ORTSTrainControlSystemSound,
+		ORTSTrainControlSystemParameters,
+		ORTSTrainBrakeController,
+		ORTSPowerOnDelay,
+		ORTSAuxPowerOnDelay,
+		ORTSCircuitBreaker,
+		ORTSCircuitBreakerClosingDelay,
+		ORTSPantograps, // typo (?)
+		ORTSAdhesion,
+		ORTSDavis_A,
+		ORTSDavis_B,
+		ORTSDavis_C,
+		ORTSBearingType,
+		ORTSFont,
 		SubType, // in some ORTS stuff
 
 		/*
@@ -1367,6 +1382,16 @@ namespace OpenBve.Formats.MsTs
 		 * It's not clear where some of these come from, possibly MSTSBin or simply 'working' but not in the actual MSTS header file
 		 *
 		 */
+		EngineBrakesControllerMaxPressureReduction, // TGV_507
+		TrainBrakesControllerMaxPressureReduction, // TGV_507
+		Overspeed, // TGV_507
+		ShutsDownEngine, // TGV_507
+		PantographsToggle_3, // Assumed
+		PantographsToggle_4, // TGV_507
+		CABToggle, // TGV_507
+		BrakeCyl_Inc_Past, // TGV_507
+		BrakeCyl_Dec_Past, // Assumed
+		BrakeCylControlled, // TGV_507
 		Exhaust3, // UK_Diesel_BR_Class50_D400
 		Exhaust4, // UK_Diesel_BR_Class50_D400
 		TrainBrakesControllerHasProportionalBrake, // SL_D6517
@@ -1388,15 +1413,19 @@ namespace OpenBve.Formats.MsTs
 		TrainBrakeControllerMinContinuousService, // BR_HW_5217
 		TrainBrakesPipeLeakRate, // FDB_L1_67708
 		InitialTrigger, // HWH-Manor-Int-80a-01
-
+		RegulatorPilotValveInitialOpening, // Adams B4, UKTS2910
+		RegulatorPilotValveFullOpening, // Adams B4, UKTS2910
+		
 		// NEED TO KEEP DUPLICATE FIXES ETC. AT THE END OF THE LIST
 
 		AirBrakeHasLowPressureTest = AirBrakesHasLowPressureTest, // MT Class 86
 		TrainBrakesControllerMaxPressureDropInNormalAppication = TrainBrakesControllerMaxPressureDropInNormalApplication, // MT Class 86
-		RegulatorPilotValveInitialOpening, // Adams B4, UKTS2910
+		
 		RegulatorPilotValveInitialOpenning = RegulatorPilotValveInitialOpening, // typo for above
-		RegulatorPilotValveFullOpening, // Adams B4, UKTS2910
+		
 		SSpring = Spring, // Typo
+		Vigilence = Vigilance,  // Typo
+		r_SMS = Tr_SMS, // Typo
 
 		//needed for our block parser, so let's deliberately use values ORTS will not touch
 		Comment = comment,

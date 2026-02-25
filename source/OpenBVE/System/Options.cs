@@ -26,7 +26,7 @@ namespace OpenBve
 			internal int TimeAccelerationFactor;
 			///// <summary>The current type of motion blur</summary>
 			internal MotionBlurMode MotionBlur;
-			/// <summary>Whether duplicate verticies are culled during loading</summary>
+			/// <summary>Whether duplicate vertices are culled during loading</summary>
 			internal bool ObjectOptimizationVertexCulling;
 			/// <summary>Whether collisions between trains are enabled</summary>
 			internal bool Collisions;
@@ -38,7 +38,7 @@ namespace OpenBve
 			internal double JoystickAxisThreshold;
 			/// <summary>The delay after which a held-down key will start to repeat</summary>
 			internal double KeyRepeatDelay;
-			/// <summary>The interval at which a held down key will repeat after the intial delay</summary>
+			/// <summary>The interval at which a held down key will repeat after the initial delay</summary>
 			internal double KeyRepeatInterval;
 			/// <summary>The current sound model</summary>
 			internal SoundModels SoundModel;

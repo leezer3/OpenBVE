@@ -13,10 +13,10 @@ namespace CsvRwRouteParser
 {
 	internal class MarkerScriptParser
 	{
-		public static bool ReadMarkerXML(string fileName, double StartingPosition, out Marker Marker)
+		public static bool ReadMarkerXML(string fileName, double StartingPosition, out Marker marker)
 		{
-			Marker = null;
-			double EndingPosition = Double.PositiveInfinity;
+			marker = null;
+			double EndingPosition = double.PositiveInfinity;
 			AbstractMessage Message = null;
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
@@ -346,7 +346,7 @@ namespace CsvRwRouteParser
 				}
 				
 			}
-			Marker = new Marker(StartingPosition, EndingPosition, Message);
+			marker = new Marker(StartingPosition, EndingPosition, Message);
 			return true;
 		}
 

@@ -96,7 +96,7 @@ namespace OpenBve
 			}
 		}
 
-		/// <summary>Sets the state, intializing any required resource.</summary>
+		/// <summary>Sets the state, initializing any required resource.</summary>
 		/// <param name="newState">The new state to set to.</param>
 		private void SetState(OverlayState newState)
 		{

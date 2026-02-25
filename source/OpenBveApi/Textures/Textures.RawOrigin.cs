@@ -12,7 +12,7 @@
 		/// <param name="texture">The texture raw data.</param>
 		public RawOrigin(Texture texture)
 		{
-			this.Texture = texture;
+			Texture = texture;
 		}
 
 		// --- functions ---
@@ -21,7 +21,7 @@
 		/// <returns>Whether the texture could be obtained successfully.</returns>
 		public override bool GetTexture(out Texture texture)
 		{
-			texture = this.Texture;
+			texture = Texture;
 			return true;
 		}
 	}

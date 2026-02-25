@@ -31,14 +31,14 @@ namespace CsvRwRouteParser
 			{
 				for (int l = 0; l < Blocks[g].Transponders.Length; l++)
 				{
-					if (Blocks[g].Transponders[l].Type != -1 & Blocks[g].Transponders[l].SectionIndex == m)
+					if (Blocks[g].Transponders[l].Type != -1 && Blocks[g].Transponders[l].SectionIndex == m)
 					{
 						int blockIdx = CurrentTrackElement - CurrentBlock + g;
 						if (blockIdx < 0)
 						{
 							/*
 							 * Section created at track position zero attempts to create
-							 * the associated transponders in the preceeding block
+							 * the associated transponders in the preceding block
 							 */
 							blockIdx = 0;
 						}
@@ -54,7 +54,7 @@ namespace CsvRwRouteParser
 			for (int l = 0; l < Aspects.Length; l++)
 			{
 				newAspects[l].Number = Aspects[l];
-				if (Aspects[l] >= 0 & Aspects[l] < SignalSpeeds.Length)
+				if (Aspects[l] >= 0 && Aspects[l] < SignalSpeeds.Length)
 				{
 					newAspects[l].Speed = SignalSpeeds[Aspects[l]];
 				}

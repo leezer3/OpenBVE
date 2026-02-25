@@ -478,6 +478,12 @@ namespace Train.MsTs
 						lastResult = tA.TankWaterLevel;
 					}
 					break;
+				case PanelSubject.Line_Voltage:
+					if (tractionModel.Components.TryGetTypedValue(EngineComponent.Pantograph, out Pantograph p))
+					{
+						lastResult = p.State == PantographState.Raised ? Maximum : Minimum;
+					}
+					break;
 			}
 			return lastResult;
 		}

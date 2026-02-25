@@ -155,6 +155,10 @@ namespace TrainManager.BrakeSystems
 		
 		public override double CurrentMotorDeceleration(double timeElapsed, AbstractHandle brakeHandle)
 		{
+			if (brakeHandle.Actual > MotorBrakeNotch)
+			{
+				return 0;
+			}
 			double actualDeceleration = 0;
 			if (lastHandlePosition != brakeHandle.Actual)
 			{

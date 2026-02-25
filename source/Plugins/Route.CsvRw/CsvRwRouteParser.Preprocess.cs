@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -48,7 +48,7 @@ namespace CsvRwRouteParser
 				//Remove empty null characters
 				//Found these in a couple of older routes, harmless but generate errors
 				//Possibly caused by BVE-RR (DOS version)
-				Lines[i] = Lines[i].Replace("\0", "");
+				Lines[i] = Lines[i].Replace("\0", string.Empty);
 				if (IsRW & AllowRwRouteDescription) {
 					// ignore rw route description
 					if (
@@ -77,10 +77,10 @@ namespace CsvRwRouteParser
 								Level--;
 								break;
 							case ',':
-								if (!IsRW & Level == 0) n++;
+								if (!IsRW && Level == 0) n++;
 								break;
 							case '@':
-								if (IsRW & Level == 0) n++;
+								if (IsRW && Level == 0) n++;
 								break;
 						}
 					}
@@ -134,7 +134,7 @@ namespace CsvRwRouteParser
 								}
 								break;
 							case ',':
-								if (Level == 0 & !IsRW) {
+								if (Level == 0 && !IsRW) {
 									string t = Lines[i].Substring(a, j - a).Trim();
 									if (t.Length > 0 && !t.StartsWith(";"))
 									{
@@ -171,7 +171,7 @@ namespace CsvRwRouteParser
 										}
 									}
 								}
-								if (Level == 0 & IsRW) {
+								if (Level == 0 && IsRW) {
 									string t = Lines[i].Substring(a, j - a).Trim();
 									if (t.Length > 0 && !t.StartsWith(";"))
 									{
@@ -247,8 +247,9 @@ namespace CsvRwRouteParser
 							string s = Expressions[i].Text.Substring(k + 1, h - k - 1).Trim();
 							switch (t.ToLowerInvariant()) {
 								case "$if":
+								case "$elseif":
 									if (j != 0) {
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The $If directive must not appear within another statement" + Epilog);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The $If and $ElseIf directives must not appear within another statement" + Epilog);
 									} else
 									{
 										if (double.TryParse(s, NumberStyles.Float, Culture, out double num)) {
@@ -256,7 +257,7 @@ namespace CsvRwRouteParser
 											Expressions[i].Text = string.Empty;
 											if (num == 0.0) {
 												/*
-												 * Blank every expression until the matching $Else or $EndIf
+												 * Blank every expression until the matching $Else, $ElseIf or $EndIf
 												 * */
 												i++;
 												int level = 1;
@@ -264,7 +265,15 @@ namespace CsvRwRouteParser
 													if (Expressions[i].Text.StartsWith("$if", StringComparison.OrdinalIgnoreCase)) {
 														Expressions[i].Text = string.Empty;
 														level++;
-													} else if (Expressions[i].Text.StartsWith("$else", StringComparison.OrdinalIgnoreCase)) {
+													} else if (Expressions[i].Text.StartsWith("$else", StringComparison.OrdinalIgnoreCase))
+													{
+														if (Expressions[i].Text.StartsWith("$elseif", StringComparison.OrdinalIgnoreCase))
+														{
+															i--;
+															level--;
+															break;
+														}
+
 														Expressions[i].Text = string.Empty;
 														if (level == 1) {
 															level--;
@@ -584,12 +593,12 @@ namespace CsvRwRouteParser
 												} else {
 													continueWithNextExpression = true;
 													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is out of range in " + t + Epilog);
-													Expressions[i].Text = Expressions[i].Text.Substring(0, j) + "" + Expressions[i].Text.Substring(h + 1);
+													Expressions[i].Text = Expressions[i].Text.Substring(0, j) + Expressions[i].Text.Substring(h + 1);
 												}
 											} else {
 												continueWithNextExpression = true;
 												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is invalid in " + t + Epilog);
-												Expressions[i].Text = Expressions[i].Text.Substring(0, j) + "" + Expressions[i].Text.Substring(h + 1);
+												Expressions[i].Text = Expressions[i].Text.Substring(0, j) + Expressions[i].Text.Substring(h + 1);
 											}
 										}
 										

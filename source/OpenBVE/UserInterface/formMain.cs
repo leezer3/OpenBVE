@@ -45,7 +45,7 @@ namespace OpenBve {
 				Dialog.ShowDialog();
 				LaunchParameters result = Dialog.Result;
 				//Dispose of the worker thread when closing the form
-				//If it's still running, it attempts to update a non-existant form and crashes nastily
+				//If it's still running, it attempts to update a non-existent form and crashes nastily
 				Dialog.DisposePreviewRouteThread();
 				if (!OpenTK.Configuration.RunningOnMacOS)
 				{

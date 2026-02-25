@@ -39,6 +39,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using OpenBveApi.Runtime;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
@@ -312,11 +313,15 @@ namespace Train.MsTs
 				{
 					Tender tender = new Tender(currentCar, MaxFuelLevel, MaxWaterLevel);
 					currentCar.TractionModel = tender;
-					CarBase previousCar = currentCar.baseTrain.Cars[currentCar.Index - 1];
-					if (previousCar.TractionModel is TenderEngine tenderEngine)
+					if (currentCar.Index > 0)
 					{
-						tenderEngine.Tender = tender;
+						CarBase previousCar = currentCar.baseTrain.Cars[currentCar.Index - 1];
+						if (previousCar.TractionModel is TenderEngine tenderEngine)
+						{
+							tenderEngine.Tender = tender;
+						}
 					}
+					
 				}
 
 				if (currentCar.TrailingWheels.Count == 0)
@@ -1315,6 +1320,19 @@ namespace Train.MsTs
 					if (injectorDiameter2 > 15)
 					{
 						injectorDiameter2 = 15;
+					}
+					break;
+				case KujuTokenID.PassengerCapacity:
+					double numPassengers = block.ReadSingle();
+					// NOTE: ENG files may declare a passenger capacity, so assume they have doors too
+					if (numPassengers > 0 || currentWagonType == WagonType.Passenger)
+					{
+						car.Doors = new[]
+						{
+							new Door(-1, 1000, 0),
+							new Door(1, 1000, 0)
+						};
+						car.DetermineDoorClosingSpeed();
 					}
 					break;
 			}

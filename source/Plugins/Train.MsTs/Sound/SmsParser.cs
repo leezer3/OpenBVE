@@ -201,8 +201,6 @@ namespace Train.MsTs
 			}
 		}
 		
-		
-
 		private static void ParseBlock(Block block, ref SoundSet currentSoundSet, ref SoundStream currentSoundStream, ref CarBase car)
 		{
 			Block newBlock;
@@ -351,16 +349,21 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.Triggers:
 					int numTriggers = block.ReadInt32();
-					for (int i = 0; i < numTriggers; i++)
+					int parsedTriggers = 0;
+					while(block.Length() - block.Position() <= 3)
 					{
-						// two triggers per sound set (start + stop)
-						newBlock = block.ReadSubBlock(new [] {KujuTokenID.Variable_Trigger, KujuTokenID.Initial_Trigger, KujuTokenID.Discrete_Trigger, KujuTokenID.Random_Trigger, KujuTokenID.Dist_Travelled_Trigger});
+						// note: usually two triggers per sound set (start + stop), however one start only appears perfectly valid
+						newBlock = block.ReadSubBlock(new [] {KujuTokenID.Variable_Trigger, KujuTokenID.Initial_Trigger, KujuTokenID.Discrete_Trigger, KujuTokenID.Random_Trigger, KujuTokenID.Dist_Travelled_Trigger, KujuTokenID.Skip});
 						ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
-						if (block.Length() - block.Position() <= 3)
+						if (newBlock.Token != KujuTokenID.Skip)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Expected " + numTriggers + ", but only found " + i + " in Triggers block in SMS " + currentFile);
-							break;
+							parsedTriggers++;
 						}
+					}
+
+					if (parsedTriggers != numTriggers - 1)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Expected " + numTriggers + ", but only found " + parsedTriggers + " in Triggers block in SMS " + currentFile);
 					}
 					break;
 				case KujuTokenID.Initial_Trigger:
@@ -594,6 +597,14 @@ namespace Train.MsTs
 									}
 								}
 								break;
+							case SoundTrigger.DoorOpen:
+								car.Doors[0].OpenSound = new CarSound(Plugin.CurrentHost, soundFile, 5.0, new Vector3(-1.3, 0.0, 0.0));
+								car.Doors[1].OpenSound = new CarSound(Plugin.CurrentHost, soundFile, 5.0, new Vector3(1.3, 0.0, 0.0));
+								break;
+							case SoundTrigger.DoorClose:
+								car.Doors[0].CloseSound = new CarSound(Plugin.CurrentHost, soundFile, 5.0, new Vector3(-1.3, 0.0, 0.0));
+								car.Doors[1].CloseSound = new CarSound(Plugin.CurrentHost, soundFile, 5.0, new Vector3(1.3, 0.0, 0.0));
+								break;
 						}
 					}
 					else
@@ -660,6 +671,9 @@ namespace Train.MsTs
 						case KujuTokenID.Variable3_Dec_Past:
 						case KujuTokenID.Variable3Controlled:
 							break;
+						case KujuTokenID.BrakeCyl_Inc_Past:
+						case KujuTokenID.BrakeCyl_Dec_Past:
+							break;
 						default:
 							throw new Exception("Unexpected enum value " + currentSoundSet.VariableTriggerType + " encountered in SMS " + currentFile);
 					}
@@ -692,6 +706,7 @@ namespace Train.MsTs
 						case KujuTokenID.Variable1Controlled:
 						case KujuTokenID.Variable2Controlled:
 						case KujuTokenID.Variable3Controlled:
+						case KujuTokenID.BrakeCylControlled:
 							newBlock = block.ReadSubBlock(KujuTokenID.CurvePoints);
 							ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 							break;
@@ -710,6 +725,7 @@ namespace Train.MsTs
 						case KujuTokenID.Variable1Controlled:
 						case KujuTokenID.Variable2Controlled:
 						case KujuTokenID.Variable3Controlled:
+						case KujuTokenID.BrakeCylControlled:
 							newBlock = block.ReadSubBlock(KujuTokenID.CurvePoints);
 							ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 							break;

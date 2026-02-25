@@ -332,11 +332,11 @@ namespace LibRender2
 		}
 
 		/// <summary>Call this once to initialise the renderer</summary>
-		/// <remarks>A call to DeInitialize should be made when closing the progam to release resources</remarks>
+		/// <remarks>A call to DeInitialize should be made when closing the program to release resources</remarks>
 		[HandleProcessCorruptedStateExceptions] //As some graphics cards crash really nastily if we request unsupported features
 		public virtual void Initialize()
 		{
-			if (!ForceLegacyOpenGL && (currentOptions.IsUseNewRenderer || currentHost.Application != HostApplication.OpenBve)) // GL3 has already failed. Don't trigger unneccessary exceptions
+			if (!ForceLegacyOpenGL && (currentOptions.IsUseNewRenderer || currentHost.Application != HostApplication.OpenBve)) // GL3 has already failed. Don't trigger unnecessary exceptions
 			{
 				try
 				{
@@ -442,7 +442,7 @@ namespace LibRender2
 		/// <summary>Deinitializes the renderer</summary>
 		public void DeInitialize()
 		{
-			this.GameWindow?.Dispose();
+			GameWindow?.Dispose();
 			// terminate spinning thread
 			VisibilityThreadShouldRun = false;
 		}
@@ -995,7 +995,7 @@ namespace LibRender2
 
 			foreach (string extension in Extensions)
 			{
-				if (String.Compare(extension, "GL_EXT_texture_filter_anisotropic", StringComparison.OrdinalIgnoreCase) == 0)
+				if (string.Compare(extension, "GL_EXT_texture_filter_anisotropic", StringComparison.OrdinalIgnoreCase) == 0)
 				{
 					float n = GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt);
 					int MaxAF = (int)Math.Round(n);

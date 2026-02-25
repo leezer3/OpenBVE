@@ -39,8 +39,11 @@ namespace OpenBve
 			private readonly TrainBase Train;
 			/// <summary>The index to the first motor car, if the driver car is not a motor car</summary>
 			private readonly int MotorCar;
-			// functions
-			internal SimpleHumanDriverAI(TrainBase train, double Limit)
+			
+			/// <summary>Creates the AI</summary>
+			/// <param name="train">The train which the AI is controlling</param>
+			/// <param name="limit">The maximum route speed limit for this train</param>
+			internal SimpleHumanDriverAI(TrainBase train, double limit)
 			{
 				Train = train;
 				TimeLastProcessed = 0.0;
@@ -57,7 +60,7 @@ namespace OpenBve
 				{
 					LastStation = -1;
 				}
-				SpeedLimit = Limit;
+				SpeedLimit = limit;
 				MotorCar = train.DriverCar;
 				if (!train.Cars[train.DriverCar].TractionModel.ProvidesPower)
 				{
@@ -1027,11 +1030,7 @@ namespace OpenBve
 				{
 					if (Program.TrainManager.Trains[i] != Train && Program.TrainManager.Trains[i].State == TrainState.Available)
 					{
-						double pos =
-							Program.TrainManager.Trains[i].Cars[Program.TrainManager.Trains[i].Cars.Length - 1].RearAxle.Follower.TrackPosition -
-							Program.TrainManager.Trains[i].Cars[Program.TrainManager.Trains[i].Cars.Length - 1].RearAxle.Position -
-							0.5 * Program.TrainManager.Trains[i].Cars[Program.TrainManager.Trains[i].Cars.Length - 1].Length;
-						double dist = pos - Train.FrontCarTrackPosition;
+						double dist = Train.RearCarTrackPosition - Train.FrontCarTrackPosition;
 						if (dist > -10.0 & dist < lookahead)
 						{
 							const double minDistance = 10.0;
@@ -1343,11 +1342,7 @@ namespace OpenBve
 				{
 					if (Program.TrainManager.Trains[i] != Train && Program.TrainManager.Trains[i].State == TrainState.Available)
 					{
-						double pos =
-							Program.TrainManager.Trains[i].Cars[Program.TrainManager.Trains[i].Cars.Length - 1].RearAxle.Follower.TrackPosition -
-							Program.TrainManager.Trains[i].Cars[Program.TrainManager.Trains[i].Cars.Length - 1].RearAxle.Position -
-							0.5 * Program.TrainManager.Trains[i].Cars[Program.TrainManager.Trains[i].Cars.Length - 1].Length;
-						double dist = Train.FrontCarTrackPosition - pos;
+						double dist = Train.FrontCarTrackPosition - Train.RearCarTrackPosition;
 						if (dist > -10.0 & dist < lookahead)
 						{
 							const double minDistance = 10.0;

@@ -254,7 +254,7 @@ namespace CsvRwRouteParser
 			return false;
 		}
 
-		/// <summary>The total number of compatability objects used by the current route</summary>
+		/// <summary>The total number of compatibility objects used by the current route</summary>
 		internal static int CompatibilityObjectsUsed;
 	}
 

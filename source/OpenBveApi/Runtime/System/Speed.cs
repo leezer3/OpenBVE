@@ -12,13 +12,13 @@ namespace OpenBveApi.Runtime
 		private readonly double MyValue;
 
 		/// <summary>Gets the speed in meters per second.</summary>
-		public double MetersPerSecond => this.MyValue;
+		public double MetersPerSecond => MyValue;
 
-		/// <summary>Gets the speed in kilometes per hour.</summary>
-		public double KilometersPerHour => 3.6 * this.MyValue;
+		/// <summary>Gets the speed in kilometers per hour.</summary>
+		public double KilometersPerHour => 3.6 * MyValue;
 
 		/// <summary>Gets the speed in miles per hour.</summary>
-		public double MilesPerHour => 2.236936 * this.MyValue;
+		public double MilesPerHour => 2.236936 * MyValue;
 
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="value">The speed in meters per second.</param>

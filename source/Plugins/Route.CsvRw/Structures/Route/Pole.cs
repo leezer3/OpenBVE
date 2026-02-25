@@ -26,7 +26,7 @@ namespace CsvRwRouteParser
 			}
 			double dz = StartingDistance / Interval;
 			dz -= Math.Floor(dz + 0.5);
-			if (dz >= -0.01 & dz <= 0.01)
+			if (dz >= -0.01 && dz <= 0.01)
 			{
 				if (Mode == 0)
 				{
@@ -48,9 +48,8 @@ namespace CsvRwRouteParser
 					Vector3 w = new Vector3(Math.Cos(wa), Math.Tan(updown), Math.Sin(wa));
 					w.Normalize();
 					double sx = Direction.Y;
-					double sy = 0.0;
 					double sz = -Direction.X;
-					Vector3 wpos = WorldPosition + new Vector3(sx * dx + w.X * dz, sy * dx + w.Y * dz, sz * dx + w.Z * dz);
+					Vector3 wpos = WorldPosition + new Vector3(sx * dx + w.X * dz, w.Y * dz, sz * dx + w.Z * dz);
 					int type = Type;
 					Poles[m][type].CreateObject(wpos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 				}

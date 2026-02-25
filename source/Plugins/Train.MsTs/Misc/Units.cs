@@ -23,6 +23,8 @@ namespace Train.MsTs
 		Kilo_Lbs,
 		Kilopascals,
 		Bar,
-		Kgs_Per_Square_Cm
+		Kgs_Per_Square_Cm,
+		Newtons,
+		Kilo_Newtons
     }
 }

@@ -64,38 +64,22 @@ namespace RouteViewer {
 						Function.Stack[s - 1] = Function.Stack[s - 1] == 0.0 ? 0.0 : 1.0 / Function.Stack[s - 1];
 						break;
 					case Instructions.MathPower:
+						double num = Function.Stack[s - 2];
+						double pow = Function.Stack[s - 1];
+						if (pow == 0.0)
 						{
-							double a = Function.Stack[s - 2];
-							double b = Function.Stack[s - 1];
-							if (b == 2.0) {
-								Function.Stack[s - 2] = a * a;
-							} else if (b == 3.0) {
-								Function.Stack[s - 2] = a * a * a;
-							} else if (b == 4.0) {
-								double t = a * a;
-								Function.Stack[s - 2] = t * t;
-							} else if (b == 5.0) {
-								double t = a * a;
-								Function.Stack[s - 2] = t * t * a;
-							} else if (b == 6.0) {
-								double t = a * a * a;
-								Function.Stack[s - 2] = t * t;
-							} else if (b == 7.0) {
-								double t = a * a * a;
-								Function.Stack[s - 2] = t * t * a;
-							} else if (b == 8.0) {
-								double t = a * a; t *= t;
-								Function.Stack[s - 2] = t * t;
-							} else if (b == 0.0) {
-								Function.Stack[s - 2] = 1.0;
-							} else if (b < 0.0) {
-								Function.Stack[s - 2] = 0.0;
-							} else {
-								Function.Stack[s - 2] = Math.Pow(a, b);
-							}
-							s--; break;
+							Function.Stack[s - 2] = 1.0;
 						}
-                    case Instructions.MathRandom:
+						else if (pow < 0.0)
+						{
+							Function.Stack[s - 2] = 0.0;
+						}
+						else
+						{
+							Function.Stack[s - 2] = Math.Pow(num, pow);
+						}
+						s--; break;
+					case Instructions.MathRandom:
                         {
                             //Generates a random number between two given doubles
                             double min = Function.Stack[s - 2];

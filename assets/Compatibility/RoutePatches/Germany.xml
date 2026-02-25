@@ -72,5 +72,28 @@
 		<FileName>S8.csv</FileName>
 		<SignalSet>DB_New.xml</SignalSet>
 	</Patch>
+	<!-- Linie 10 tram routes -->
+	<!-- NOTE: These use the 25m animation trick in multiple places-->
+	<!--       Some buildings disappering is an unfortunate side effect...-->
+	<Patch>
+		<Hash>1BA02A6F4075E99BC5541BC60A38D8608F75F542BDB4369A13CD831C0445EA14</Hash>
+		<FileName>Linie 11_TW811.rw</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>343A2C73EFF619DE7DAC9C93805BF16106C4E6170FCDBFA9FE1EEECFAFE40904</Hash>
+		<FileName>Linie 10_Frehzug_GT6Z.rw</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>6770C897AB0F70817659936E87793816AE77DD81F543E2AE88281C99F5B045B7</Hash>
+		<FileName>Linie 10_GT6Z.rw</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>C066BADB3E14FF66F7CA89052CE6032E9995A16D2E4418D7F184644D22D0DB04</Hash>
+		<FileName>Linie 10_TW6000.rw</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
   </RoutePatches>
 </openBVE>

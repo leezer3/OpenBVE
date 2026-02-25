@@ -47,7 +47,7 @@ namespace ObjectViewer
 
 		private void CloseButton_Click(object sender, EventArgs e)
 		{
-			int previousAntialasingLevel = Interface.CurrentOptions.AntiAliasingLevel;
+			int previousAntialiasingLevel = Interface.CurrentOptions.AntiAliasingLevel;
 
 			//Interpolation mode
 			InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
@@ -83,7 +83,7 @@ namespace ObjectViewer
 			Interface.CurrentOptions.AnisotropicFilteringLevel = (int) AnsiotropicLevel.Value;
 			//Antialiasing level
 			Interface.CurrentOptions.AntiAliasingLevel = (int) AntialiasingLevel.Value;
-			if (Interface.CurrentOptions.AntiAliasingLevel != previousAntialasingLevel)
+			if (Interface.CurrentOptions.AntiAliasingLevel != previousAntialiasingLevel)
 			{
 				Program.Renderer.GraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
 			}

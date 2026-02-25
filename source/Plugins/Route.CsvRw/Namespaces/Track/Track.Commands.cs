@@ -106,7 +106,7 @@
 		Doppler,
 		/// <summary>Adds a doppler sound played in all cars</summary>
 		DopplerAll,
-		/// <summary>Adds a reigon where an announcement can be played in-game using the microphone</summary>
+		/// <summary>Adds a region where an announcement can be played in-game using the microphone</summary>
 		MicSound,
 		/// <summary>Controls the calling time of the PreTrain</summary>
 		PreTrain,
