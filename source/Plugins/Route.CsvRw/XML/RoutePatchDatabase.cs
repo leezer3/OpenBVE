@@ -15,9 +15,7 @@ namespace CsvRwRouteParser
 		{
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
-
 			
-
 			if (databaseFile == string.Empty)
 			{
 				databaseFile = Path.CombineFile(Plugin.FileSystem.GetDataFolder("Compatibility\\RoutePatches"), "database.xml");
