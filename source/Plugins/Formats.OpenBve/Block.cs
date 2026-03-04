@@ -646,6 +646,20 @@ namespace Formats.OpenBve
 		}
 
 		/// <summary>Reads the specified Enum value from the block</summary>
+		public virtual bool TryGetEnumValue<T3>(T2 key, ref T3 enumValue) where T3 : struct, Enum
+		{
+			if (keyValuePairs.TryRemove(key, out var value))
+			{
+				if (Enum.TryParse(value.Value, true, out enumValue))
+				{
+					return true;
+				}
+				currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + key + " in " + Key + " at line " + value.Key);
+			}
+			return false;
+		}
+
+		/// <summary>Reads the specified Enum value from the block</summary>
 		public virtual bool GetEnumValue<T3>(T2 key, out T3 enumValue, out int index, out string suffix) where T3 : struct, Enum
 		{
 			index = -1;

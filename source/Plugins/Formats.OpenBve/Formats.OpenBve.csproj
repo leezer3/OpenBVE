@@ -54,6 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CFG\ConfigFile.cs" />
+    <Compile Include="Enums\DynamicBackground\DynamicBackgroundKey.cs" />
+    <Compile Include="Enums\DynamicBackground\DynamicBackgroundSection.cs" />
     <Compile Include="Enums\DynamicLight\DynamicLightKey.cs" />
     <Compile Include="Enums\DynamicLight\DynamicLightSection.cs" />
     <Compile Include="Enums\ExtensionsCfg\ExtensionsCfgKey.cs" />
