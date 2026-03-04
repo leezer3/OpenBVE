@@ -13,6 +13,9 @@ namespace CsvRwRouteParser
 		//Parses an XML dynamic lighting definition
 		public static bool ReadLightingXML(string fileName, out LightDefinition[] LightDefinitions)
 		{
+			//Prep
+			LightDefinitions = new LightDefinition[0];
+		
 			XMLFile<DynamicLightSection, DynamicLightKey> xmlFile = new XMLFile<DynamicLightSection, DynamicLightKey>(fileName, "/openBVE", Plugin.CurrentHost);
 			bool defined = false;
 			while(xmlFile.RemainingSubBlocks > 0)

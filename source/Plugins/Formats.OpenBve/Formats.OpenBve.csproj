@@ -62,6 +62,8 @@
     <Compile Include="Enums\ExtensionsCfg\ExtensionsCfgSection.cs" />
     <Compile Include="Enums\HUD\HUDKey.cs" />
     <Compile Include="Enums\HUD\HUDSection.cs" />
+    <Compile Include="Enums\MarkerScript\MarkerScriptKey.cs" />
+    <Compile Include="Enums\MarkerScript\MarkerScriptSection.cs" />
     <Compile Include="Enums\PatchDatabase\PatchDatabaseKey.cs" />
     <Compile Include="Enums\PatchDatabase\PatchDatabaseSection.cs" />
     <Compile Include="Enums\SoundCfg\SoundCfgKey.cs" />
