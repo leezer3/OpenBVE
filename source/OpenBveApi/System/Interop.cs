@@ -79,7 +79,7 @@ namespace OpenBveApi.Interop
 		[OperationContract] void KeepAlive();
 	}
 
-	/// <summary>Provides the WCF interface for recieving data from the 32-bit plugin proxy</summary>
+	/// <summary>Provides the WCF interface for receiving data from the 32-bit plugin proxy</summary>
 	[ServiceContract]
 	public interface IAtsPluginCallback
 	{

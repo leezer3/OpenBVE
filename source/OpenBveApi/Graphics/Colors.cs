@@ -128,7 +128,7 @@ namespace OpenBveApi.Colors {
 		/// <param name="Expression">The color in hexadecimal format</param>
 		/// <param name="Color">The Color24, updated via 'out'</param>
 		/// <remarks>Sets Color to blue if the parse fails</remarks>
-		/// <returns>True if the parse succeds, false if it does not</returns>
+		/// <returns>True if the parse succeeds, false if it does not</returns>
 		public static bool TryParseHexColor(string Expression, out Color24 Color)
 		{
 			Color = Blue;
@@ -154,7 +154,7 @@ namespace OpenBveApi.Colors {
 		/// <param name="stringToParse">The string to parse</param>
 		/// <param name="separator">The separator character</param>
 		/// <param name="Color">The out Color32</param>
-		/// <returns>True if parsing succeded with no errors, false otherwise</returns>
+		/// <returns>True if parsing succeeded with no errors, false otherwise</returns>
 		/// <remarks>This will always return a Color32.
 		/// If any part fails parsing, it will be set to 255</remarks>
 		public static bool TryParseColor(string stringToParse, char separator, out Color24 Color)
@@ -411,7 +411,7 @@ namespace OpenBveApi.Colors {
 		/// <summary>Parses a hexadecimal string into a Color32</summary>
 		/// <param name="Expression">The color in hexadecimal format</param>
 		/// <param name="Color">The Color32, updated via 'out'</param>
-		/// <returns>True if the parse succeds, false if it does not</returns>
+		/// <returns>True if the parse succeeds, false if it does not</returns>
 		public static bool TryParseHexColor(string Expression, out Color32 Color)
 		{
 			if (Expression.StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
@@ -503,7 +503,7 @@ namespace OpenBveApi.Colors {
 		/// <summary>Parses a Color32 stored in a string array</summary>
 		/// <param name="arguments">The string array to parse</param>
 		/// <param name="Color">The out Color32</param>
-		/// <returns>True if parsing succeded with no errors, false otherwise</returns>
+		/// <returns>True if parsing succeeded with no errors, false otherwise</returns>
 		/// <remarks>This will always return a Color32.
 		/// If any part fails parsing, it will be set to 255</remarks>
 		public static bool TryParseColor(string[] arguments, out Color32 Color)

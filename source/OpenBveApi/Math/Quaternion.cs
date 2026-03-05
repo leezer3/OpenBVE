@@ -369,9 +369,7 @@ namespace OpenBveApi.Math
             return left.Equals(right);
         }
 
-        /// <summary>
-        /// Compares two instances for inequality.
-        /// </summary>
+        /// <summary>Compares two instances for inequality.</summary>
         /// <param name="left">The first instance.</param>
         /// <param name="right">The second instance.</param>
         /// <returns>True, if left does not equal right; false otherwise.</returns>
@@ -380,15 +378,13 @@ namespace OpenBveApi.Math
             return !left.Equals(right);
         }
 
-		/// <summary>A quaterion representing an identity matrix.</summary>
+		/// <summary>A quaternion representing an identity matrix.</summary>
 		public static readonly Quaternion Identity = new Quaternion(0, 0, 0, 1);
 
-		/// <summary>A quaterion representing an identity matrix in DirectX format.</summary>
+		/// <summary>A quaternion representing an identity matrix in DirectX format.</summary>
 		public static readonly Quaternion DirectXIdentity = new Quaternion(0, 0, 0, -1);
 
-		/// <summary>
-		/// Do Spherical linear interpolation between two quaternions 
-		/// </summary>
+		/// <summary>Performs a spherical linear interpolation between two quaternions</summary>
 		/// <param name="q1">The first quaternion</param>
 		/// <param name="q2">The second quaternion</param>
 		/// <param name="blend">The blend factor</param>

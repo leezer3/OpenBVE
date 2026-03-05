@@ -4,18 +4,18 @@ using OpenBveApi.Math;
 
 namespace OpenBveApi.Textures
 {
-	/// <summary>Provides functions for dyamically overlaying text onto a texture</summary>
+	/// <summary>Provides functions for dynamically overlaying text onto a texture</summary>
 	public static class TextOverlay
 	{
 		/// <summary>Adds a textual string to a bitmap image</summary>
 		/// <param name="bitmap">The bitmap image to add the text to, or a null reference if a new image is to be created</param>
 		/// <param name="txt">The text to overlay</param>
-		/// <param name="fontname">The name of the font to use</param>
-		/// <param name="fontsize">The size in points of the font</param>
-		/// <param name="bgcolor">The background color to use (Only relevant if creating a new image)</param>
-		/// <param name="fcolor">The font color to use</param>
+		/// <param name="fontName">The name of the font to use</param>
+		/// <param name="fontSize">The size in points of the font</param>
+		/// <param name="bgColor">The background color to use (Only relevant if creating a new image)</param>
+		/// <param name="fColor">The font color to use</param>
 		/// <param name="Padding">The padding to use, or alternatively the X,Y inset if overlaying text</param>
-		public static Bitmap AddTextToBitmap(Bitmap bitmap, string txt, string fontname, int fontsize, Color bgcolor, Color fcolor, Vector2 Padding)
+		public static Bitmap AddTextToBitmap(Bitmap bitmap, string txt, string fontName, int fontSize, Color bgColor, Color fColor, Vector2 Padding)
 		{
 			bool overlay = true;
 			SizeF size;
@@ -27,14 +27,14 @@ namespace OpenBveApi.Textures
 
 			using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(bitmap))
 			{
-				Font font = new Font(fontname, fontsize);
+				Font font = new Font(fontName, fontSize);
 				size = graphics.MeasureString(txt, font);
 				if (!overlay)
 				{
-					graphics.FillRectangle(new SolidBrush(bgcolor), 0, 0, size.Width + (int) Padding.X * 2, size.Height + (int) Padding.Y * 2);
+					graphics.FillRectangle(new SolidBrush(bgColor), 0, 0, size.Width + (int) Padding.X * 2, size.Height + (int) Padding.Y * 2);
 				}
 
-				graphics.DrawString(txt, font, new SolidBrush(fcolor), (int) Padding.X, (int) Padding.Y);
+				graphics.DrawString(txt, font, new SolidBrush(fColor), (int) Padding.X, (int) Padding.Y);
 				graphics.Flush();
 				font.Dispose();
 			}

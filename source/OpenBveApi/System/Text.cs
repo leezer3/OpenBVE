@@ -228,7 +228,7 @@ namespace OpenBveApi
 			return String;
 		}
 
-		/// <summary>Performs a string split to an array with a consistant length</summary>
+		/// <summary>Performs a string split to an array with a consistent length</summary>
 		/// <param name="text">The string to split</param>
 		/// <param name="separator">The separator character</param>
 		/// <param name="desiredLength">The desired length</param>

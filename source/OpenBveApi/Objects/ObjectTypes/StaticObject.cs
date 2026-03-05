@@ -562,7 +562,7 @@ namespace OpenBveApi.Objects
 			}
 		}
 
-		/// <summary>Applys a color to all materials in the mesh</summary>
+		/// <summary>Applies a color to all materials in the mesh</summary>
 		/// <param name="newColor">The color</param>
 		/// <param name="emissive">Whether this is an emissive color</param>
 		public void ApplyColor(Color32 newColor, bool emissive)

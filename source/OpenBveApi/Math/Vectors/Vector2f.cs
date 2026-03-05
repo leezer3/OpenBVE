@@ -270,7 +270,7 @@ namespace OpenBveApi.Math {
 		/// <summary>Checks whether the vector is a null vector.</summary>
 		/// <returns>A boolean indicating whether the vector is a null vector.</returns>
 		public bool IsNullVector() {
-			return this.X == 0.0 & this.Y == 0.0;
+			return this.X == 0.0 && this.Y == 0.0;
 		}
 		
 		/// <summary>Checks whether the vector is considered a null vector.</summary>

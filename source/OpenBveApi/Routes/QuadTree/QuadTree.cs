@@ -47,7 +47,7 @@ namespace OpenBveApi.Routes
 			{
 				// the root node does not exist yet
 				// as our object must be in world-space, it's world position is a good starting point for the tree, as
-				// routes may start at any arbritary track position
+				// routes may start at any arbitrary track position
 				Vector3 quadPosition = new Vector3(0.0, objectState.WorldPosition.Y, 0.0);
 				QuadTreePopulatedLeafNode leaf = new QuadTreePopulatedLeafNode(
 					null,

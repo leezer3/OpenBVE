@@ -67,7 +67,7 @@ namespace OpenBveApi.Runtime
 		{
 			get
 			{
-				//If all trains must pass the expcted stop should be zero, regardless of what's set in the route
+				//If all trains must pass the expected stop should be zero, regardless of what's set in the route
 				if (StopMode == StationStopMode.AllPass)
 				{
 					return 0;

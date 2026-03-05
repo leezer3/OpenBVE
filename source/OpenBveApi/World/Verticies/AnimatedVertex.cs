@@ -26,7 +26,7 @@ using OpenBveApi.Math;
 
 namespace OpenBveApi.Objects
 {
-	/// <summary>Represents a vertex animated via a chain of matricies</summary>
+	/// <summary>Represents a vertex animated via a chain of matrices</summary>
 	public class AnimatedVertex : VertexTemplate
 	{
 		/// <summary>The matrix chain within the object to transform this vertex by</summary>

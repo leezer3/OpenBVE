@@ -10,8 +10,6 @@ namespace OpenBveApi {
 	/// <summary>Provides path-related functions for accessing files and directories in a cross-platform manner.</summary>
 	public static partial class Path {
 		
-		// --- read-only fields ---
-		
 		/// <summary>The list of characters that are invalid in platform-independent relative paths.</summary>
 		private static readonly char[] InvalidPathChars = { ':', '*', '?', '"', '<', '>', '|' };
 		
@@ -278,7 +276,7 @@ namespace OpenBveApi {
 			{
 				if (Expression.IndexOfAny(InvalidPathChars) != -1)
 				{
-					// Check our platform independant list first
+					// Check our platform independent list first
 					return true;
 				}
 			}
@@ -375,14 +373,14 @@ namespace OpenBveApi {
 			return System.IO.Path.GetDirectoryName(path);
 		}
 
-		/// <summary>Returns the file name and extension for the specificed path string</summary>
+		/// <summary>Returns the file name and extension for the specified path string</summary>
 		/// <param name="path">The path string</param>
 		public static string GetFileName(string path)
 		{
 			return System.IO.Path.GetFileName(path);
 		}
 
-		/// <summary>Returns the file name for the specificed path string</summary>
+		/// <summary>Returns the file name for the specified path string</summary>
 		/// <param name="path">The path string</param>
 		public static string GetFileNameWithoutExtension(string path)
 		{

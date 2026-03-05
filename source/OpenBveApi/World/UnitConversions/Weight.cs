@@ -56,9 +56,9 @@ namespace OpenBveApi.World
 				{"g", UnitOfWeight.Grams}, {"gram", UnitOfWeight.Grams}, {"grams", UnitOfWeight.Grams},
 				{"kg", UnitOfWeight.Kilograms}, {"kilogram", UnitOfWeight.Kilograms}, {"kilograms", UnitOfWeight.Kilograms},
 				/*
-				 * NOTE: Unfortunately, metric and imperial tons are often confused / interchangable
+				 * NOTE: Unfortunately, metric and imperial tons are often confused / interchangeable
 				 *       They're close enough it's unlikely to matter for our purposes, but we're going to assume that
-				 *       the T abbreviation refers to a metric ton for convienence.
+				 *       the T abbreviation refers to a metric ton for convenience.
 				 */
 				{"t", UnitOfWeight.MetricTonnes}, {"tonne", UnitOfWeight.MetricTonnes}, {"tonnes", UnitOfWeight.MetricTonnes},
 				{"ton", UnitOfWeight.ImperialTons}, {"tons", UnitOfWeight.ImperialTons}, {"t-uk", UnitOfWeight.ImperialTons},

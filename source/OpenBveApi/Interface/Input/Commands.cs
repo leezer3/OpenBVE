@@ -32,7 +32,7 @@ namespace OpenBveApi.Interface {
 			SinglePower,
 			/// <summary>Moves the handle towards neutral on a train with a combined power and brake handle (Will not apply brakes)</summary>
 			SingleNeutral,
-			/// <summary>Returns the handle towards the maxium brake notch on a train with a combined power and brake handle</summary>
+			/// <summary>Returns the handle towards the maximum brake notch on a train with a combined power and brake handle</summary>
 			SingleBrake,
 			/// <summary>Applies full emergency brake on a train with a combined power and brake handle</summary>
 			SingleEmergency,

@@ -477,11 +477,11 @@ namespace OpenBveApi.Hosts {
 
 		///  <summary>Adds a message to the in-game display</summary>
 		/// <param name="Message">The text of the message</param>
-		///  <param name="MessageDependancy">The dependancy of the message</param>
+		///  <param name="MessageDependancy">The dependency of the message</param>
 		///  <param name="Mode">The required game mode for the message to display</param>
 		///  <param name="MessageColor">The color of the message font</param>
 		///  <param name="MessageTimeOut">The timeout of the message</param>
-		///  <param name="Key">The mesage key</param>
+		///  <param name="Key">The message key</param>
 		public virtual void AddMessage(string Message, object MessageDependancy, GameMode Mode, MessageColor MessageColor, double MessageTimeOut, string Key)
 		{
 

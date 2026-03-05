@@ -137,7 +137,7 @@ namespace OpenBveApi.Math
 		/// <summary>Checks whether the two specified matrices are equal.</summary>
 		/// <param name="a">The first matrix.</param>
 		/// <param name="b">The second matrix.</param>
-		/// <returns>Whether the two matricies are equal.</returns>
+		/// <returns>Whether the two matrices are equal.</returns>
 		public static bool operator ==(Matrix4D a, Matrix4D b)
 		{
 			if (a.Row0 != b.Row0) return false;
@@ -500,7 +500,7 @@ namespace OpenBveApi.Math
 		public static void CreateFromQuaternion(ref Quaternion q, out Matrix4D result)
 		{
 			// Adapted from https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation#Quaternion-derived_rotation_matrix
-			// with the caviat that opentk uses row-major matrices so the matrix we create is transposed
+			// with the caveat that opentk uses row-major matrices so the matrix we create is transposed
 			double sqx = q.X * q.X;
 			double sqy = q.Y * q.Y;
 			double sqz = q.Z * q.Z;

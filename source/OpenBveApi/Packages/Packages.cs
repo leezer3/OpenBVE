@@ -66,7 +66,7 @@ namespace OpenBveApi.Packages
 		public Image PackageImage;
 		/// <summary>The list of dependancies for this package</summary>
 		public List<Package> Dependancies;
-		/// <summary>The list of packages that this package reccomends you also install</summary>
+		/// <summary>The list of packages that this package recommends you also install</summary>
 		public List<Package> Reccomendations;
 		/// <summary>The list of packages which depend on this package</summary>
 		public List<string> DependantPackages;
@@ -191,7 +191,7 @@ namespace OpenBveApi.Packages
 	{
 		/// <summary>LZMA Zip compression</summary>
 		Zip = 0,
-		/// <summary>G comp0ession</summary>
+		/// <summary>GZip compression</summary>
 		TarGZ = 1,
 		GZip = 1,
 		/// <summary>BZip2 compression</summary>
