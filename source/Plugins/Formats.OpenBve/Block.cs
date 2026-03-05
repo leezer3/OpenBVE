@@ -302,7 +302,7 @@ namespace Formats.OpenBve
 					return true;
 				}
 
-				currentHost.AddMessage(MessageType.Warning, false, "File " + value.Value + " was not found for Index " + value.Key + " in Section " + Key);
+				currentHost.AddMessage(MessageType.Warning, false, "File " + value.Value + " was not found for Index " + value.Key + " in Section " + Key + " in file " + FileName);
 				return true;
 			}
 			index = -1;
@@ -530,7 +530,7 @@ namespace Formats.OpenBve
 				values = value.Value.Split(separators);
 				return true;
 			}
-			currentHost.AddMessage(MessageType.Warning, false, "Key " + key + " was not found in Section " + Key + " at line " + value.Key);
+			currentHost.AddMessage(MessageType.Warning, false, "Key " + key + " was not found in Section " + Key + " at line " + value.Key + " in file " + FileName);
 			return false;
 		}
 
@@ -554,13 +554,13 @@ namespace Formats.OpenBve
 							if (!string.IsNullOrEmpty(splitValues[i]) && !splitValues[i].Equals("null", StringComparison.InvariantCultureIgnoreCase))
 							{
 								// allow empty states etc.
-								currentHost.AddMessage(MessageType.Warning, false, "The path for state " + i + " was invalid in " + key + " in Section " + Key + " at line " + value.Key);
+								currentHost.AddMessage(MessageType.Warning, false, "The path for state " + i + " was invalid in " + key + " in Section " + Key + " at line " + value.Key + " in file " + FileName);
 							}
 						}
 					}
 					return true;
 				}
-				currentHost.AddMessage(MessageType.Warning, false, "An empty path list was provided for " + key + " in Section " + Key + " at line " + value.Key);
+				currentHost.AddMessage(MessageType.Warning, false, "An empty path list was provided for " + key + " in Section " + Key + " at line " + value.Key + " in file " + FileName);
 			}
 			return false;
 		}
@@ -587,7 +587,7 @@ namespace Formats.OpenBve
 				{
 					if (!NumberFormats.TryParseDoubleVb6(strings[i], out values[i]))
 					{
-						currentHost.AddMessage(MessageType.Warning, false, "Value " + i + " in array " + key + " was not a valid double in Section " + Key + " at line " + value.Key);
+						currentHost.AddMessage(MessageType.Warning, false, "Value " + i + " in array " + key + " was not a valid double in Section " + Key + " at line " + value.Key + " in file " + FileName);
 					}
 				}
 				return true;
@@ -606,7 +606,7 @@ namespace Formats.OpenBve
 				{
 					if (!NumberFormats.TryParseIntVb6(strings[i], out values[i]))
 					{
-						currentHost.AddMessage(MessageType.Warning, false, "Value " + i + " in array " + key + " was not a valid double in Section " + Key + " at line " + value.Key);
+						currentHost.AddMessage(MessageType.Warning, false, "Value " + i + " in array " + key + " was not a valid double in Section " + Key + " at line " + value.Key + " in file " + FileName);
 					}
 				}
 				return true;
@@ -638,7 +638,7 @@ namespace Formats.OpenBve
 					return true;
 				}
 
-				currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + key + " in " + Key + " at line " + value.Key);
+				currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + key + " in " + Key + " at line " + value.Key + " in file " + FileName);
 			}
 
 			enumValue = default;
@@ -654,7 +654,7 @@ namespace Formats.OpenBve
 				{
 					return true;
 				}
-				currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + key + " in " + Key + " at line " + value.Key);
+				currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + key + " in " + Key + " at line " + value.Key + " in file " + FileName);
 			}
 			return false;
 		}
@@ -719,7 +719,7 @@ namespace Formats.OpenBve
 					return true;
 				}
 
-				currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + key + " in " + Key + " at line " + value.Key);
+				currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + key + " in " + Key + " at line " + value.Key + " in file " + FileName);
 			}
 
 			enumValue = default;
@@ -744,12 +744,12 @@ namespace Formats.OpenBve
 					}
 					else
 					{
-						currentHost.AddMessage(MessageType.Error, false, "Color is invalid in " + key + " in " + Key + " at line " + value.Key);
+						currentHost.AddMessage(MessageType.Error, false, "Color is invalid in " + key + " in " + Key + " at line " + value.Key + " in file " + FileName);
 					}
 					return true;
 				}
 
-				currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + key + " in " + Key + " at line " + value.Key);
+				currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + key + " in " + Key + " at line " + value.Key + " in file " + FileName);
 			}
 
 			enumValue = default;
@@ -789,12 +789,12 @@ namespace Formats.OpenBve
 						return true;
 					}
 
-					currentHost.AddMessage(MessageType.Warning, false, "File " + fileName + " was not found at line " + fileName.Key + " in Section " + Key);
+					currentHost.AddMessage(MessageType.Warning, false, "File " + fileName + " was not found at line " + fileName.Key + " in Section " + Key + " in file " + FileName);
 					finalPath = string.Empty;
 					return false;
 				}
 
-				currentHost.AddMessage(MessageType.Warning, false, "Path contains invalid characters for " + fileName + " at line " + fileName.Key + " in Section " + Key);
+				currentHost.AddMessage(MessageType.Warning, false, "Path contains invalid characters for " + fileName + " at line " + fileName.Key + " in Section " + Key + " in file " + FileName);
 			}
 			finalPath = string.Empty;
 			return false;
@@ -810,29 +810,29 @@ namespace Formats.OpenBve
 				{
 					if (!double.TryParse(s[0], NumberStyles.Float, CultureInfo.InvariantCulture, out double nf))
 					{
-						currentHost.AddMessage(MessageType.Error, false, "NaturalFrequency is invalid in " + key + " at line " + value.Key + " in the Section " + Key);
+						currentHost.AddMessage(MessageType.Error, false, "NaturalFrequency is invalid in " + key + " at line " + value.Key + " in the Section " + Key + " in file " + FileName);
 						return false;
 					}
 					if (!double.TryParse(s[1], NumberStyles.Float, CultureInfo.InvariantCulture, out double dr))
 					{
-						currentHost.AddMessage(MessageType.Error, false, "DampingRatio is invalid in " + key + " at line " + value.Key + " in the Section " + Key);
+						currentHost.AddMessage(MessageType.Error, false, "DampingRatio is invalid in " + key + " at line " + value.Key + " in the Section " + Key + " in file " + FileName);
 						return false;
 					}
 					if (nf <= 0.0)
 					{
-						currentHost.AddMessage(MessageType.Error, false, "NaturalFrequency is expected to be positive in " + key + " at line " + value.Key + " in the Section " + Key);
+						currentHost.AddMessage(MessageType.Error, false, "NaturalFrequency is expected to be positive in " + key + " at line " + value.Key + " in the Section " + Key + " in file " + FileName);
 						return false;
 					}
 					if (dr <= 0.0)
 					{
-						currentHost.AddMessage(MessageType.Error, false, "DampingRatio is expected to be positive in " + key + " at line " + value.Key + " in the Section " + Key);
+						currentHost.AddMessage(MessageType.Error, false, "DampingRatio is expected to be positive in " + key + " at line " + value.Key + " in the Section " + Key + " in file " + FileName);
 						return false;
 					}
 
 					damping = new Damping(nf, dr);
 					return true;
 				}
-				currentHost.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in " + key + " at line " + value.Key + " in the Section " + Key);
+				currentHost.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in " + key + " at line " + value.Key + " in the Section " + Key + " in file " + FileName);
 			}
 			return false;
 		}
@@ -938,13 +938,13 @@ namespace Formats.OpenBve
 			for (int i = 0; i < keyValuePairs.Count; i++)
 			{
 				T2 key = keyValuePairs.ElementAt(i).Key;
-				currentHost.AddMessage(MessageType.Error, false, key + " is not valid in an " + Key + " section at line " + keyValuePairs[key].Key);
+				currentHost.AddMessage(MessageType.Error, false, key + " is not valid in an " + Key + " section at line " + keyValuePairs[key].Key + " in file " + FileName);
 			}
 
 			for (int i = 0; i < rawValues.Count; i++)
 			{
 				KeyValuePair<int, string> errorValue = rawValues.Dequeue();
-				currentHost.AddMessage(MessageType.Error, false, "Unexpected non key-value-pair encountered in " + Key + " section at line " + errorValue.Key);
+				currentHost.AddMessage(MessageType.Error, false, "Unexpected non key-value-pair encountered in " + Key + " section at line " + errorValue.Key + " in file " + FileName);
 			}
 		}
     }

@@ -32,21 +32,21 @@ namespace CsvRwRouteParser
 				//The number of times the texture is repeated around the viewing frustum (if appropriate)
 				double repetitions = 6;
 
-				xmlFile.TryGetEnumValue(DynamicBackgroundKey.Mode, ref mode);
-				if (xmlFile.GetPath(DynamicBackgroundKey.Object, Path.GetDirectoryName(fileName), out string objectPath))
+				backgroundBlock.TryGetEnumValue(DynamicBackgroundKey.Mode, ref mode);
+				if (backgroundBlock.GetPath(DynamicBackgroundKey.Object, Path.GetDirectoryName(fileName), out string objectPath))
 				{
 					Plugin.CurrentHost.LoadObject(objectPath, System.Text.Encoding.Default, out UnifiedObject obj);
 					o = (StaticObject)obj;
 				}
-				else if (xmlFile.GetPath(DynamicBackgroundKey.Texture, Path.GetDirectoryName(fileName), out string texturePath))
+				else if (backgroundBlock.GetPath(DynamicBackgroundKey.Texture, Path.GetDirectoryName(fileName), out string texturePath))
 				{
 					Plugin.CurrentHost.RegisterTexture(texturePath, TextureParameters.NoChange, out t);
-					xmlFile.TryGetValue(DynamicBackgroundKey.Repetitions, ref repetitions);
+					backgroundBlock.TryGetValue(DynamicBackgroundKey.Repetitions, ref repetitions);
 				}
 
-				xmlFile.TryGetTime(DynamicBackgroundKey.Time, ref DisplayTime);
-				xmlFile.TryGetValue(DynamicBackgroundKey.TransitionTime, ref TransitionTime);
-				xmlFile.TryGetValue(DynamicBackgroundKey.FogDistance, ref FogDistance);
+				backgroundBlock.TryGetTime(DynamicBackgroundKey.Time, ref DisplayTime);
+				backgroundBlock.TryGetValue(DynamicBackgroundKey.TransitionTime, ref TransitionTime);
+				backgroundBlock.TryGetValue(DynamicBackgroundKey.FogDistance, ref FogDistance);
 				
 				if (t != null)
 				{

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Formats.OpenBve
+﻿namespace Formats.OpenBve
 {
 	public enum PatchDatabaseKey
 	{
@@ -14,6 +8,7 @@ namespace Formats.OpenBve
 		ColonFix,
 		IgnorePitchRoll,
 		LogMessage,
+		Message = LogMessage,
 		CylinderHack,
 		Expression,
 		XParser,

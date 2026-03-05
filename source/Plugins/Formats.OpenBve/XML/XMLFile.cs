@@ -31,7 +31,6 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using OpenBveApi.Math;
 using Path = OpenBveApi.Path;
 
 namespace Formats.OpenBve.XML
@@ -72,8 +71,7 @@ namespace Formats.OpenBve.XML
 								continue;
 							}
 
-							if (File.Exists(childFile) &&
-							    !childFile.EndsWith(".dll", StringComparison.InvariantCultureIgnoreCase))
+							if (File.Exists(childFile) && !childFile.EndsWith(".dll", StringComparison.InvariantCultureIgnoreCase))
 							{
 								XMLFile<T1, T2> childXML;
 								try
@@ -89,14 +87,11 @@ namespace Formats.OpenBve.XML
 								if (childXML.ReadBlock(key, out Block<T1, T2> childFileBlock))
 								{
 									subBlocks.Add(childFileBlock);
-								}
-								else
-								{
-									currentHost.AddMessage(MessageType.Warning, false,
-										"Child XML File " + element.Value + " does not contain the expected node " +
-										element.Name.LocalName);
 									continue;
 								}
+
+								currentHost.AddMessage(MessageType.Warning, false, "Child XML File " + element.Value + " does not contain the expected node " + element.Name.LocalName);
+								continue;
 							}
 							// HACK: If file does not exist, add it as a value instead (allows for using the same thing as both a value and section key)
 						}
@@ -109,15 +104,13 @@ namespace Formats.OpenBve.XML
 						{
 							if (element.HasElements)
 							{
-								currentHost.AddMessage(MessageType.Warning, false,
-									"Unexpected node " + element.Name.LocalName + " encountered in XML file " + FileName);
+								currentHost.AddMessage(MessageType.Warning, false, "Unexpected node " + element.Name.LocalName + " encountered at Line " + ((IXmlLineInfo)element).LineNumber + " in XML file " + FileName);
 							}
 							else
 							{
 								if (element.NodeType != XmlNodeType.Comment)
 								{
-									currentHost.AddMessage(MessageType.Warning, false,
-										"Unexpected value " + element.Name.LocalName + " encountered in XML file " + FileName);
+									currentHost.AddMessage(MessageType.Warning, false, "Unexpected value " + element.Name.LocalName + " encountered at Line " + ((IXmlLineInfo)element).LineNumber + " in XML file " + FileName);
 								}
 							}
 						}
@@ -148,7 +141,7 @@ namespace Formats.OpenBve.XML
 					{
 						if (childElement.HasElements)
 						{
-							subBlocks.Add(new XMLSection<T1, T2>(path, childElement, key, currentHost));
+							subBlocks.Add(new XMLSection<T1, T2>(fileName, childElement, key, currentHost));
 							continue;
 						}
 						string childFile;

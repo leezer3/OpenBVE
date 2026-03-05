@@ -121,7 +121,7 @@ namespace LibRender2.Lightings
 				k = j + 1;
 			}
 
-			int t1 = LightDefinitions[j].Time, t2 = LightDefinitions[k].Time;
+			double t1 = LightDefinitions[j].Time, t2 = LightDefinitions[k].Time;
 
 			double cb1 = LightDefinitions[j].CabBrightness, cb2 = LightDefinitions[k].Time;
 			//Calculate, inverting if necessary
