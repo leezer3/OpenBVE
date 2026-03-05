@@ -1,0 +1,39 @@
+﻿namespace Formats.OpenBve
+{
+	public enum StationXMLKey
+	{
+		Unknown = 0,
+		Name,
+		Filename,
+		Radius,
+		ArrivalTime,
+		DepartureTime,
+		Type,
+		JumpIndex,
+		PassAlarm,
+		Doors,
+		ForcedRedSignal,
+		System,
+		ArrivalSound,
+		StopDuration,
+		PassengerRatio,
+		DepartureSound,
+		TimetableIndex,
+		ReOpenDoor,
+		ReOpenStationLimit,
+		InterferenceInDoor,
+		MaxInterferingObjectRate,
+		RequestStop,
+		AIBehaviour,
+		PlayerOnly,
+		Distance,
+		EarlyTime,
+		LateTime,
+		StopMessage,
+		Early,
+		Late,
+		OnTime,
+		Text,
+		MaxCars
+	}
+}

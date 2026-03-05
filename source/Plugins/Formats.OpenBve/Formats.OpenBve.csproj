@@ -70,6 +70,8 @@
     <Compile Include="Enums\SoundCfg\SoundCfgSection.cs" />
     <Compile Include="Enums\SoundXML\SoundXMLKey.cs" />
     <Compile Include="Enums\SoundXML\SoundXMLSection.cs" />
+    <Compile Include="Enums\StationXML\StationXMLKey.cs" />
+    <Compile Include="Enums\StationXML\StationXMLSection.cs" />
     <Compile Include="Enums\TrackFollowingObjectXML\TrackFollowingObjectKey.cs" />
     <Compile Include="Enums\TrackFollowingObjectXML\TrackFollowingObjectSection.cs" />
     <Compile Include="Enums\TrainXML\CargoType.cs" />

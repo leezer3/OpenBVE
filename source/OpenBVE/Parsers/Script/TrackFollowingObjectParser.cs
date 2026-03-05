@@ -65,18 +65,18 @@ namespace OpenBve
 				{
 					case TrackFollowingObjectSection.Definition:
 						Train = new ScriptedTrain(TrainState.Pending);
-						ParseDefinitionNode(subBlock, Train as ScriptedTrain);
+						ParseDefinitionBlock(subBlock, Train as ScriptedTrain);
 						break;
 					case TrackFollowingObjectSection.Points:
 					case TrackFollowingObjectSection.Stops:
-						ParseTravelDataNodes(subBlock, travelData);
+						ParseTravelDataBlock(subBlock, travelData);
 						break;
 				}
 			}
 
 			if (trainBlock != null)
 			{
-				ParseTrainNode(objectPath, fileName, trainBlock, ref trainDirectory, ref consistReversed);
+				ParseTrainBlock(objectPath, fileName, trainBlock, ref trainDirectory, ref consistReversed);
 			}
 			else
 			{
@@ -175,12 +175,10 @@ namespace OpenBve
 			return Train;
 		}
 
-		/// <summary>
-		/// Function to parse TFO definition
-		/// </summary>
+		/// <summary>Function to parse TFO definition</summary>
 		/// <param name="definitionBlock">The definition to parse</param>
-		/// <param name="scriptedTrain">The track following object to parse this node into</param>
-		private static void ParseDefinitionNode(Block<TrackFollowingObjectSection, TrackFollowingObjectKey> definitionBlock, ScriptedTrain scriptedTrain)
+		/// <param name="scriptedTrain">The track following object to parse this block into</param>
+		private static void ParseDefinitionBlock(Block<TrackFollowingObjectSection, TrackFollowingObjectKey> definitionBlock, ScriptedTrain scriptedTrain)
 		{
 			definitionBlock.TryGetTime(TrackFollowingObjectKey.AppearanceTime, ref scriptedTrain.AppearanceTime);
 			definitionBlock.TryGetValue(TrackFollowingObjectKey.AppearanceStartPosition, ref scriptedTrain.AppearanceStartPosition);
@@ -189,15 +187,13 @@ namespace OpenBve
 			definitionBlock.ReportErrors();
 		}
 
-		/// <summary>
-		/// Function to parse train definition
-		/// </summary>
+		/// <summary>Function to parse train definition</summary>
 		/// <param name="objectPath">Absolute path to the object folder of route data</param>
 		/// <param name="fileName">The filename of the containing XML file</param>
 		/// <param name="definitionBlock">The definition to parse</param>
 		/// <param name="trainDirectory">Absolute path to the train directory</param>
 		/// <param name="consistReversed">Whether to reverse the train composition.</param>
-		private static void ParseTrainNode(string objectPath, string fileName, Block<TrackFollowingObjectSection, TrackFollowingObjectKey> definitionBlock, ref string trainDirectory, ref bool consistReversed)
+		private static void ParseTrainBlock(string objectPath, string fileName, Block<TrackFollowingObjectSection, TrackFollowingObjectKey> definitionBlock, ref string trainDirectory, ref bool consistReversed)
 		{
 			if (definitionBlock.GetValue(TrackFollowingObjectKey.Directory, out string value))
 			{
@@ -261,10 +257,10 @@ namespace OpenBve
 			definitionBlock.TryGetValue(TrackFollowingObjectKey.Reversed, ref consistReversed);
 		}
 
-		/// <summary>Parses a train travel data node</summary>
+		/// <summary>Parses a train travel data block</summary>
 		/// <param name="travelDataBlock">The travel data to parse</param>
 		/// <param name="travelData">The list of travel data to add this to</param>
-		private static void ParseTravelDataNodes(Block<TrackFollowingObjectSection, TrackFollowingObjectKey> travelDataBlock, ICollection<TravelData> travelData)
+		private static void ParseTravelDataBlock(Block<TrackFollowingObjectSection, TrackFollowingObjectKey> travelDataBlock, ICollection<TravelData> travelData)
 		{
 			while (travelDataBlock.RemainingSubBlocks > 0)
 			{
@@ -272,23 +268,20 @@ namespace OpenBve
 				switch (subBlock.Key)
 				{
 					case TrackFollowingObjectSection.Stop:
-						travelData.Add(ParseTravelStopNode(subBlock));
+						travelData.Add(ParseTravelStopBlock(subBlock));
 						break;
 					case TrackFollowingObjectSection.Point:
-						travelData.Add(ParseTravelPointNode(subBlock));
+						travelData.Add(ParseTravelPointBlock(subBlock));
 						break;
 				}
 			}
 			travelDataBlock.ReportErrors();
 		}
 
-		/// <summary>
-		/// Function to parse the contents of TravelData class
-		/// </summary>
-		/// <param name="fileName">The filename of the containing XML file</param>
+		/// <summary>Function to parse the contents of TravelData class</summary>
 		/// <param name="travelDataBlock">The travel data to parse</param>
 		/// <param name="travelData">Travel data to which the parse results apply</param>
-		private static void ParseTravelDataNode(Block<TrackFollowingObjectSection, TrackFollowingObjectKey> travelDataBlock, TravelData travelData)
+		private static void ParseTravelDataBlock(Block<TrackFollowingObjectSection, TrackFollowingObjectKey> travelDataBlock, TravelData travelData)
 		{
 			double decelerate = 0.0;
 			double accelerate = 0.0;
@@ -315,17 +308,14 @@ namespace OpenBve
 			travelData.TargetSpeed = targetSpeed / 3.6;
 		}
 
-		/// <summary>
-		/// Function to parse the contents of TravelStopData class
-		/// </summary>
-		/// <param name="fileName">The filename of the containing XML file</param>
+		/// <summary>Function to parse the contents of TravelStopData class</summary>
 		/// <param name="sectionElement">The XElement to parse</param>
 		/// <returns>An instance of the new TravelStopData class with the parse result applied</returns>
-		private static TravelStopData ParseTravelStopNode(Block<TrackFollowingObjectSection, TrackFollowingObjectKey> sectionElement)
+		private static TravelStopData ParseTravelStopBlock(Block<TrackFollowingObjectSection, TrackFollowingObjectKey> sectionElement)
 		{
 			TravelStopData travelStopData = new TravelStopData();
 
-			ParseTravelDataNode(sectionElement, travelStopData);
+			ParseTravelDataBlock(sectionElement, travelStopData);
 			sectionElement.TryGetTime(TrackFollowingObjectKey.StopTime, ref travelStopData.StopTime);
 			if (sectionElement.GetValue(TrackFollowingObjectKey.Doors, out string doorDirection))
 			{
@@ -388,17 +378,14 @@ namespace OpenBve
 			return travelStopData;
 		}
 
-		/// <summary>
-		/// Function to parse the contents of TravelPointData class
-		/// </summary>
-		/// <param name="fileName">The filename of the containing XML file</param>
+		/// <summary>Function to parse the contents of TravelPointData class</summary>
 		/// <param name="sectionElement">The XElement to parse</param>
 		/// <returns>An instance of the new TravelPointData class with the parse result applied</returns>
-		private static TravelPointData ParseTravelPointNode(Block<TrackFollowingObjectSection, TrackFollowingObjectKey> sectionElement)
+		private static TravelPointData ParseTravelPointBlock(Block<TrackFollowingObjectSection, TrackFollowingObjectKey> sectionElement)
 		{
 			TravelPointData travelPointData = new TravelPointData();
 
-			ParseTravelDataNode(sectionElement, travelPointData);
+			ParseTravelDataBlock(sectionElement, travelPointData);
 
 			double passingSpeed = 0.0;
 
