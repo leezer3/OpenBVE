@@ -711,9 +711,9 @@ namespace OpenBveApi.Math {
 				 * Some implementations appear to expect a constant W value to be added to the vector,
 				 * whereas others ignore it
 				 */
-				x += (1 * transformMatrix.Row3.X);
-				y += (1 * transformMatrix.Row3.Y);
-				z += (1 * transformMatrix.Row3.Z);
+				x += transformMatrix.Row3.X;
+				y += transformMatrix.Row3.Y;
+				z += transformMatrix.Row3.Z;
 			}
 			X = x;
 			Y = y;

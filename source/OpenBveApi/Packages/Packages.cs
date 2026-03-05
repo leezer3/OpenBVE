@@ -43,7 +43,7 @@ namespace OpenBveApi.Packages
 			}
 			set
 			{
-				if (!String.IsNullOrEmpty(value))
+				if (!string.IsNullOrEmpty(value))
 					this.PackageVersion = new Version(value);
 			}
 		}
@@ -90,7 +90,7 @@ namespace OpenBveApi.Packages
 			}
 			set
 			{
-				if (!String.IsNullOrEmpty(value))
+				if (!string.IsNullOrEmpty(value))
 					this.MinimumVersion = new Version(value);
 			}
 		}
@@ -111,13 +111,13 @@ namespace OpenBveApi.Packages
 			}
 			set
 			{
-				if (!String.IsNullOrEmpty(value))
+				if (!string.IsNullOrEmpty(value))
 					this.MaximumVersion = new Version(value);
 			}
 		}
 		/// <summary>Creates a clone of the specified package</summary>
 		/// <param name="packageToClone">The package to clone</param>
-		/// <param name="dependancy">Whether this package is part of a dependancy list</param>
+		/// <param name="dependancy">Whether this package is part of a dependency list</param>
 		public Package(Package packageToClone, bool dependancy)
 		{
 			Name = packageToClone.Name;
@@ -305,7 +305,7 @@ namespace OpenBveApi.Packages
 		{
 			int cf = 0;
 			
-			string fp = String.Empty;
+			string fp = string.Empty;
 			try
 			{
 				using (var zip = File.OpenWrite(packageFile))

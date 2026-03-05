@@ -27,11 +27,6 @@ namespace OpenBveApi.Objects
 		public AnimationScript VolumeFunction;
 		/// <summary>The function script controlling the sound's pitch, or a null reference</summary>
 		public AnimationScript PitchFunction;
-
-		/// <inheritdoc/>
-		/// <remarks>In this case, the position of the track follower is returned.</remarks>
-		public override double RelativeTrackPosition => Follower.TrackPosition;
-
 		/// <summary>Creates a new WorldSound</summary>
 		public WorldSound(Hosts.HostInterface Host, SoundHandle buffer) : base(Host)
 		{

@@ -106,7 +106,7 @@ namespace OpenBveApi.Objects
 			else
 			{
 				int n = Vertices.Length;
-				for (int i = 0; i < (n >> 1); i++)
+				for (int i = 0; i < n >> 1; i++)
 				{
 					(Vertices[i], Vertices[n - i - 1]) = (Vertices[n - i - 1], Vertices[i]);
 				}

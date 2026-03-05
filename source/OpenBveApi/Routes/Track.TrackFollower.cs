@@ -323,7 +323,7 @@ namespace OpenBveApi.Routes
 			RainIntensity = currentHost.Tracks[TrackIndex].Elements[i].RainIntensity;
 			SnowIntensity = currentHost.Tracks[TrackIndex].Elements[i].SnowIntensity;
 			//Pitch added for Plugin Data usage
-			//Mutliply this by 1000 to get the original value
+			//Multiply this by 1000 to get the original value
 			Pitch = currentHost.Tracks[TrackIndex].Elements[i].Pitch * 1000;
 			// inaccuracy
 			if (addTrackInaccuracy)
