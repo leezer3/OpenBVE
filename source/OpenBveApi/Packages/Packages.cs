@@ -35,10 +35,11 @@ namespace OpenBveApi.Packages
 		{
 			get
 			{
-				if (this.PackageVersion == null)
+				if (PackageVersion == null)
+				{
 					return string.Empty;
-				else
-					return this.PackageVersion.ToString();
+				}
+				return PackageVersion.ToString();
 			}
 			set
 			{

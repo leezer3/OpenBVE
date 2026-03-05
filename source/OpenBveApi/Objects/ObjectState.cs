@@ -18,9 +18,9 @@ namespace OpenBveApi.Objects
 		public Vector3 WorldPosition;
 		/// <summary>A value between 0 (daytime) and 255 (nighttime).</summary>
 		public byte DaytimeNighttimeBlend = 0;
-		/// <summary>The matricies within the object</summary>
+		/// <summary>The matrices within the object</summary>
 		public Matrix4D[] Matricies;
-		/// <summary>The index of the storage buffer for the matricies</summary>
+		/// <summary>The index of the storage buffer for the matrices</summary>
 		public int MatrixBufferIndex;
 		/// <summary>The translation matrix to be applied</summary>
 		public Matrix4D Translation

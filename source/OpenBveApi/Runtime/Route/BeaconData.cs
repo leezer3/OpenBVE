@@ -2,7 +2,7 @@
 
 namespace OpenBveApi.Runtime
 {
-	/// <summary>Represents data trasmitted by a beacon.</summary>
+	/// <summary>Represents data transmitted by a beacon.</summary>
 	[DataContract]
 	public class BeaconData
 	{

@@ -895,7 +895,7 @@ namespace OpenBveApi.Colors {
 		
 		/*
 		 * Colors used by overlays etc.
-		 * Where possible, use the standard web pallette names
+		 * Where possible, use the standard web palette names
 		 */
 		/// <summary>Represents a semi transparent grey color</summary>
 		public static readonly Color128 SemiTransparentGrey = new Color128(0.5f, 0.5f, 0.5f, 0.5f);

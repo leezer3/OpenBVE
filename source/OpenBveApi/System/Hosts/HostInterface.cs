@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using OpenBveApi.Colors;
@@ -686,7 +685,7 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Adds a new train</summary>
 		/// <param name="ReferenceTrain">The reference train, or a null reference to add the train at the end of the queue</param>
 		/// <param name="NewTrain">The new train</param>
-		/// <param name="Preceedes">Whether this train preceeds or follows the reference train</param>
+		/// <param name="Preceedes">Whether this train precedes or follows the reference train</param>
 		public virtual void AddTrain(AbstractTrain ReferenceTrain, AbstractTrain NewTrain, bool Preceedes)
 		{
 

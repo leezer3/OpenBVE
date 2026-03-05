@@ -7,33 +7,33 @@ using System.Windows.Forms;
 namespace OpenBveApi.Interface {
 	public static partial class Translations {
 
-		/// <summary>Loads all available language files from the specificed folder</summary>
-        public static void LoadLanguageFiles(string LanguageFolder) {
+		/// <summary>Loads all available language files from the specified folder</summary>
+        public static void LoadLanguageFiles(string languageFolder) {
 			if (AvailableNewLanguages.Count > 2)
 			{
 				// Don't re-load languages if already present, e.g. restart
 				return;
 			}
-			if (!Directory.Exists(LanguageFolder))
+			if (!Directory.Exists(languageFolder))
 			{
 				MessageBox.Show(@"The default language files have been moved or deleted.", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 				LoadEmbeddedLanguage();
 				return;
 			}
             try {
-				string[] LanguageFiles = Directory.GetFiles(LanguageFolder, "*.xlf");
-	            if (LanguageFiles.Length == 0)
+				string[] languageFiles = Directory.GetFiles(languageFolder, "*.xlf");
+	            if (languageFiles.Length == 0)
 	            {
 		            MessageBox.Show(@"No valid language files were found.", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					LoadEmbeddedLanguage();
 		            return;
 	            }
-                foreach (var File in LanguageFiles) {
+                foreach (string language in languageFiles) {
 	                try
 	                {
-		                using (FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read))
+		                using (FileStream stream = new FileStream(language, FileMode.Open, FileAccess.Read))
 		                {
-			                AvailableNewLanguages.Add(System.IO.Path.GetFileNameWithoutExtension(File), new NewLanguage(stream, File));
+			                AvailableNewLanguages.Add(System.IO.Path.GetFileNameWithoutExtension(language), new NewLanguage(stream, language));
 		                }
 	                }
 	                catch
@@ -88,14 +88,14 @@ namespace OpenBveApi.Interface {
 		private static bool blockComboBox = false;
 
 		/// <summary>Attempts to set the flag image for the selected language code</summary>
-		/// <param name="FlagFolder">The folder containing flag images</param>
-		/// <param name="CurrentLanguageCodeArgument">The language code we wish to get the flag for</param>
+		/// <param name="flagFolder">The folder containing flag images</param>
+		/// <param name="currentLanguageCodeArgument">The language code we wish to get the flag for</param>
 		/// <param name="comboboxLanguages">A reference to the combobox used to select the UI language</param>
-		/// <param name="LanguageImage">The path to the returned language image</param>
+		/// <param name="languageImage">The path to the returned language image</param>
 		/// <returns>True if we have found and successfully loaded the flag image</returns>
-		public static bool SelectedLanguage(string FlagFolder, ref string CurrentLanguageCodeArgument, ComboBox comboboxLanguages, out string LanguageImage)
+		public static bool SelectedLanguage(string flagFolder, ref string currentLanguageCodeArgument, ComboBox comboboxLanguages, out string languageImage)
 		{
-			LanguageImage = Path.CombineFile(FlagFolder, "unknown.png");
+			languageImage = Path.CombineFile(flagFolder, "unknown.png");
 			if (comboboxLanguages.SelectedIndex == -1)
 			{
 				return false;
@@ -104,22 +104,22 @@ namespace OpenBveApi.Interface {
 			if (!blockComboBox)
 			{
 				CurrentLanguageCode = kvp.Value.Code;
-				CurrentLanguageCodeArgument = kvp.Value.Code;
+				currentLanguageCodeArgument = kvp.Value.Code;
 			}
 			
-			LanguageImage = Path.CombineFile(FlagFolder, kvp.Value.Flag);
-			if (!File.Exists(LanguageImage)) 
+			languageImage = Path.CombineFile(flagFolder, kvp.Value.Flag);
+			if (!File.Exists(languageImage)) 
 			{
-				LanguageImage = Path.CombineFile(FlagFolder, "unknown.png");
+				languageImage = Path.CombineFile(flagFolder, "unknown.png");
 			}
 			return true;
         }
 
 		/// <summary>Selects a language</summary>
-		/// <param name="CurrentLanguageCodeArgument">The language code to select</param>
+		/// <param name="currentLanguageCodeArgument">The language code to select</param>
 		/// <param name="comboboxLanguages">A reference to the combobox used to select the UI language</param>
 		/// <returns>True if the language was found and selected successfully</returns>
-        public static bool SelectedLanguage(ref string CurrentLanguageCodeArgument, ComboBox comboboxLanguages) {
+        public static bool SelectedLanguage(ref string currentLanguageCodeArgument, ComboBox comboboxLanguages) {
 			if (comboboxLanguages.SelectedIndex == -1)
 			{
 				return false;
@@ -128,7 +128,7 @@ namespace OpenBveApi.Interface {
 			if (!blockComboBox)
 			{
 				CurrentLanguageCode = kvp.Value.Code;
-				CurrentLanguageCodeArgument = kvp.Value.Code;
+				currentLanguageCodeArgument = kvp.Value.Code;
 			}
 			
 			return true;

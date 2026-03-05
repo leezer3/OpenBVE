@@ -156,7 +156,7 @@ namespace OpenBveApi.Textures {
 				switch (texture.Palette.Length)
 				{
 					case 0:
-						//ignore if no reduced pallette
+						//ignore if no reduced palette
 						break;
 					default:
 						Color24 c = (Color24)color;

@@ -25,7 +25,7 @@
 		    return System.Math.Sqrt(X);
 	    }
 
-	    /// <summary>Returns the tamgent of the specified angle</summary>
+	    /// <summary>Returns the tangent of the specified angle</summary>
 	    /// <remarks>This function will return 0 if the result would be ComplexInfinity</remarks>
 	    public static double TanC(double X)
 	    {

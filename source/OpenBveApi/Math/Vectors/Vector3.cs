@@ -44,7 +44,7 @@ namespace OpenBveApi.Math {
 		/// <param name="stringToParse">The string to parse</param>
 		/// <param name="separator">The separator character</param>
 		/// <param name="v">The out Vector</param>
-		/// <returns>True if parsing succeded with no errors, false otherwise</returns>
+		/// <returns>True if parsing succeeded with no errors, false otherwise</returns>
 		/// <remarks>This will always return a Vector3.
 		/// If any part fails parsing, it will be set to zero</remarks>
 		public static bool TryParse(string stringToParse, char separator, out Vector3 v)
@@ -88,7 +88,7 @@ namespace OpenBveApi.Math {
 		/// <summary>Parses a Vector3 from a list of strings</summary>
 		/// <param name="arguments">The list of strings</param>
 		/// <param name="v">The out Vector</param>
-		/// <returns>True if parsing succeded with no errors, false otherwise</returns>
+		/// <returns>True if parsing succeeded with no errors, false otherwise</returns>
 		/// <remarks>This will always return a Vector3.
 		/// If any part fails parsing, it will be set to zero</remarks>
 		public static bool TryParse(string[] arguments, out Vector3 v)

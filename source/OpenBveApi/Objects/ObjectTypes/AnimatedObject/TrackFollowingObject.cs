@@ -23,8 +23,8 @@ namespace OpenBveApi.Objects
 #pragma warning restore 0649, 1591
 
 		/// <summary>Creates a new Track Following Object</summary>
-		/// <param name="Host">The host application</param>
-		public TrackFollowingObject(Hosts.HostInterface Host) : base(Host)
+		/// <param name="host">The host application</param>
+		public TrackFollowingObject(Hosts.HostInterface host) : base(host)
 		{
 			FrontAxleFollower = new TrackFollower(currentHost);
 			RearAxleFollower = new TrackFollower(currentHost);
@@ -37,23 +37,23 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <inheritdoc/>
-		public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate, bool CurrentlyVisible)
+		public override void Update(AbstractTrain nearestTrain, double timeElapsed, bool forceUpdate, bool currentlyVisible)
 		{
 
-			if (CurrentlyVisible | ForceUpdate)
+			if (currentlyVisible | forceUpdate)
 			{
-				if (Object.SecondsSinceLastUpdate >= Object.RefreshRate | ForceUpdate)
+				if (Object.SecondsSinceLastUpdate >= Object.RefreshRate | forceUpdate)
 				{
-					double timeDelta = Object.SecondsSinceLastUpdate + TimeElapsed;
+					double timeDelta = Object.SecondsSinceLastUpdate + timeElapsed;
 					Object.SecondsSinceLastUpdate = 0.0;
 
 					if (Visible)
 					{
 						//Calculate the distance travelled
-						double delta = UpdateTrackFollowerScript(false, NearestTrain, NearestTrain?.DriverCar ?? 0, Object.SectionIndex, TrackPosition, Position, true, timeDelta);
+						double delta = UpdateTrackFollowerScript(false, nearestTrain, nearestTrain?.DriverCar ?? 0, Object.SectionIndex, TrackPosition, Position, true, timeDelta);
 						//Update the front and rear axle track followers
-						FrontAxleFollower.UpdateAbsolute((TrackPosition + FrontAxlePosition) + delta, true, true);
-						RearAxleFollower.UpdateAbsolute((TrackPosition + RearAxlePosition) + delta, true, true);
+						FrontAxleFollower.UpdateAbsolute(TrackPosition + FrontAxlePosition + delta, true, true);
+						RearAxleFollower.UpdateAbsolute(TrackPosition + RearAxlePosition + delta, true, true);
 						//Update the base object position
 						FrontAxleFollower.UpdateWorldCoordinates(false);
 						RearAxleFollower.UpdateWorldCoordinates(false);
@@ -61,11 +61,11 @@ namespace OpenBveApi.Objects
 					}
 
 					//Update the actual animated object- This must be done last in case the user has used Translation or Rotation
-					Object.Update(NearestTrain, NearestTrain?.DriverCar ?? 0, FrontAxleFollower.TrackPosition, FrontAxleFollower.WorldPosition, Direction, Up, Side, true, true, timeDelta, true);
+					Object.Update(nearestTrain, nearestTrain?.DriverCar ?? 0, FrontAxleFollower.TrackPosition, FrontAxleFollower.WorldPosition, Direction, Up, Side, true, true, timeDelta, true);
 				}
 				else
 				{
-					Object.SecondsSinceLastUpdate += TimeElapsed;
+					Object.SecondsSinceLastUpdate += timeElapsed;
 				}
 
 				if (!Visible)
@@ -76,7 +76,7 @@ namespace OpenBveApi.Objects
 			}
 			else
 			{
-				Object.SecondsSinceLastUpdate += TimeElapsed;
+				Object.SecondsSinceLastUpdate += timeElapsed;
 				if (Visible)
 				{
 					currentHost.HideObject(Object.internalObject);
@@ -86,7 +86,7 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <inheritdoc/>
-		public override bool IsVisible(Vector3 CameraPosition, double ExtraViewingDistance, double BackgroundImageDistance)
+		public override bool IsVisible(Vector3 cameraPosition, double extraViewingDistance, double backgroundImageDistance)
 		{
 			double z = 0;
 			if (Object != null && Object.TranslateZFunction != null)
@@ -95,12 +95,12 @@ namespace OpenBveApi.Objects
 			}
 			double pa = TrackPosition + z - Radius - 10.0;
 			double pb = TrackPosition + z + Radius + 10.0;
-			double ta = CameraPosition.Z - BackgroundImageDistance - ExtraViewingDistance;
-			double tb = CameraPosition.Z + BackgroundImageDistance + ExtraViewingDistance;
+			double ta = cameraPosition.Z - backgroundImageDistance - extraViewingDistance;
+			double tb = cameraPosition.Z + backgroundImageDistance + extraViewingDistance;
 			bool isVisible = pb >= ta & pa <= tb;
 			if (isVisible == false)
 			{
-				//Not found at the inital track position, so let's check to see if it's moved
+				//Not found at the initial track position, so let's check to see if it's moved
 				pa = FrontAxleFollower.TrackPosition + z - Radius - 10.0;
 				pb = FrontAxleFollower.TrackPosition + z + Radius + 10.0;
 				return pb >= ta & pa <= tb;
@@ -130,29 +130,25 @@ namespace OpenBveApi.Objects
 			}
 
 			// apply position due to cant/toppling
-			{
-				double a = CurrentRollDueToTopplingAngle + CurrentRollDueToCantAngle;
-				double x = System.Math.Sign(a) * 0.5 * FrontAxleFollower.RailGauge * (1.0 - System.Math.Cos(a));
-				double y = System.Math.Abs(0.5 * FrontAxleFollower.RailGauge * System.Math.Sin(a));
-				Vector3 c = Side * x + Up * y;
+			double a = CurrentRollDueToTopplingAngle + CurrentRollDueToCantAngle;
+			double x = System.Math.Sign(a) * 0.5 * FrontAxleFollower.RailGauge * (1.0 - System.Math.Cos(a));
+			double y = System.Math.Abs(0.5 * FrontAxleFollower.RailGauge * System.Math.Sin(a));
+			Vector3 c = Side * x + Up * y;
 
-				FrontAxleFollower.WorldPosition += c;
-				RearAxleFollower.WorldPosition += c;
-			}
+			FrontAxleFollower.WorldPosition += c;
+			RearAxleFollower.WorldPosition += c;
 			// apply rolling
-			{
-				double a = CurrentRollDueToTopplingAngle - CurrentRollDueToCantAngle;
-				Side.Rotate(Direction, a);
-				Up.Rotate(Direction, a);
-			}
+			a = CurrentRollDueToTopplingAngle - CurrentRollDueToCantAngle;
+			Side.Rotate(Direction, a);
+			Up.Rotate(Direction, a);
 		}
 
-		private double UpdateTrackFollowerScript(bool IsPartOfTrain, AbstractTrain Train, int CarIndex, int currentSectionIndex, double currentTrackPosition, Vector3 WorldPosition, bool UpdateFunctions, double TimeElapsed)
+		private double UpdateTrackFollowerScript(bool isPartOfTrain, AbstractTrain train, int carIndex, int currentSectionIndex, double currentTrackPosition, Vector3 worldPosition, bool updateFunctions, double timeElapsed)
 		{
 			double x = 0.0;
 			if (Object.TrackFollowerFunction != null)
 			{
-				x = UpdateFunctions ? Object.TrackFollowerFunction.ExecuteScript(Train, CarIndex, WorldPosition, currentTrackPosition, currentSectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState) : Object.TrackFollowerFunction.LastResult;
+				x = updateFunctions ? Object.TrackFollowerFunction.ExecuteScript(train, carIndex, worldPosition, currentTrackPosition, currentSectionIndex, isPartOfTrain, timeElapsed, Object.CurrentState) : Object.TrackFollowerFunction.LastResult;
 			}
 
 			return x;

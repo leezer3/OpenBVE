@@ -982,7 +982,7 @@ namespace OpenBveApi.FunctionScripting
 							InstructionSet[n] = Instructions.OverheadVolts;
 							n++; s++; if (s >= m) m = s; break;
 						case "overheadvoltsindex":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.OverheadVoltsTarget;
 							n++; break;
@@ -991,7 +991,7 @@ namespace OpenBveApi.FunctionScripting
 							InstructionSet[n] = Instructions.ThirdRailVolts;
 							n++; s++; if (s >= m) m = s; break;
 						case "thirdrailvoltsindex":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.ThirdRailVoltsTarget;
 							n++; break;

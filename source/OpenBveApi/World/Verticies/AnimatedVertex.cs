@@ -75,7 +75,7 @@ namespace OpenBveApi.Objects
 
 		/// <summary>Tests if this vertex is equal to the supplied object</summary>
 		/// <param name="obj">The supplied object</param>
-		/// <returns>Trye if they are equal, false otherwise</returns>
+		/// <returns>True if they are equal, false otherwise</returns>
 		public override bool Equals(object obj)
 		{
 			if (obj == null)

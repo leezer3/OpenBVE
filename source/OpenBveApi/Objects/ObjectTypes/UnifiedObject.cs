@@ -52,7 +52,7 @@ namespace OpenBveApi.Objects
 		public abstract void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, int SectionIndex, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness, bool DuplicateMaterials = false);
 
 		/// <summary>Call this method to optimize the object</summary>
-		/// <param name="PreserveVerticies">Whether duplicate verticies are to be preserved (Takes less time)</param>
+		/// <param name="PreserveVerticies">Whether duplicate vertices are to be preserved (Takes less time)</param>
 		/// <param name="Threshold">The face size threshold for optimization</param>
 		/// <param name="VertexCulling">Whether vertex culling is performed</param>
 		public abstract void OptimizeObject(bool PreserveVerticies, int Threshold, bool VertexCulling);

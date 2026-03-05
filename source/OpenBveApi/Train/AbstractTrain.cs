@@ -28,7 +28,7 @@ namespace OpenBveApi.Trains
 		/// <summary>The speed limit of the signalling section the train is currently in</summary>
 		/// <remarks>Default units are km/h</remarks>
 		public double CurrentSectionLimit;
-		/// <summary>The route speed limts</summary>
+		/// <summary>The route speed limits</summary>
 		public double[] RouteLimits;
 		/// <summary>The current route limit in effect</summary>
 		/// <remarks>Units are m/s</remarks>

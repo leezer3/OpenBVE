@@ -90,7 +90,7 @@ namespace OpenBveApi.Interface
 								// possibly ought to redesign things slightly- need to lookup the correct way to do this for XLF
 								// properties which are language specific as I suspect this is not the intended way to do this.....
 								//
-								// To try and maintain full compatability with anything manually edited, use the target in preference to the source
+								// To try and maintain full compatibility with anything manually edited, use the target in preference to the source
 								switch((string)strings[j].Attribute("id"))
 								{
 									case "name":

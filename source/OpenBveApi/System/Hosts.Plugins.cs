@@ -49,7 +49,7 @@ namespace OpenBveApi.Hosts
 						}
 						catch (Exception ex)
 						{
-							if ((ex is ReflectionTypeLoadException))
+							if (ex is ReflectionTypeLoadException)
 							{
 								/*
 								 * This is actually a .Net assembly, it just failed to load a reference

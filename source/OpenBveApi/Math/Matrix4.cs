@@ -248,11 +248,11 @@ namespace OpenBveApi.Math
 			return Frustum(xMin, xMax, yMin, yMax, zNear, zFar);
 		}
 
-		/// <summary>Creates a matrix which transforms camera space to the viewing frustrum</summary>
-		/// <param name="left">The left side of the frustrum</param>
-		/// <param name="right">The right side of the frustrum</param>
-		/// <param name="bottom">The bottom of the frustrum</param>
-		/// <param name="top">The top of the frustrum</param>
+		/// <summary>Creates a matrix which transforms camera space to the viewing frustum</summary>
+		/// <param name="left">The left side of the frustum</param>
+		/// <param name="right">The right side of the frustum</param>
+		/// <param name="bottom">The bottom of the frustum</param>
+		/// <param name="top">The top of the frustum</param>
 		/// <param name="zNear">Distance to the near clip plane</param>
 		/// <param name="zFar">Distance to the far clip plane</param>
 		/// <returns></returns>
@@ -305,10 +305,10 @@ namespace OpenBveApi.Math
 		}
 
 		/// <summary>Creates a perspective projection matrix, assuming that the eye is located at 0,0,0</summary>
-		/// <param name="left">The left side of the frustrum</param>
-		/// <param name="right">The right side of the frustrum</param>
-		/// <param name="bottom">The bottom of the frustrum</param>
-		/// <param name="top">The top of the frustrum</param>
+		/// <param name="left">The left side of the frustum</param>
+		/// <param name="right">The right side of the frustum</param>
+		/// <param name="bottom">The bottom of the frustum</param>
+		/// <param name="top">The top of the frustum</param>
 		/// <param name="zNear">Distance to the near clip plane</param>
 		/// <param name="zFar">Distance to the far clip plane</param>
 		/// <returns>The perspective projection matrix</returns>
@@ -366,7 +366,7 @@ namespace OpenBveApi.Math
 			return result;
 		}
 
-		/// <summary>Adds two matricies</summary>
+		/// <summary>Adds two matrices</summary>
 		/// <param name="left">The left matrix</param>
 		/// <param name="right">The right matrix</param>
 		/// <returns>The final matrix</returns>

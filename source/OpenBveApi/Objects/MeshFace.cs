@@ -5,7 +5,7 @@ namespace OpenBveApi.Objects
 	/// <summary>Represents a face consisting of vertices and material attributes.</summary>
 	public struct MeshFace
 	{
-		/// <summary>The array of verticies making up this face</summary>
+		/// <summary>The array of vertices making up this face</summary>
 		public MeshFaceVertex[] Vertices;
 		/// <summary>A reference to an element in the Material array of the containing Mesh structure.</summary>
 		[CLSCompliant(false)]
@@ -28,8 +28,8 @@ namespace OpenBveApi.Objects
 			return s;
 		}
 
-		/// <summary>Creates a new MeshFace using the specified vertex indicies and the default material</summary>
-		/// <param name="Vertices">The vertex indicies</param>
+		/// <summary>Creates a new MeshFace using the specified vertex indices and the default material</summary>
+		/// <param name="Vertices">The vertex indices</param>
 		/// <param name="material">The material</param>
 		/// <param name="Type">The type of OpenGL face drawing to use</param>
 		public MeshFace(int[] Vertices, ushort material, FaceFlags Type = FaceFlags.NotSet)
@@ -50,20 +50,20 @@ namespace OpenBveApi.Objects
 			}
 		}
 
-		/// <summary>Creates a new MeshFace using the specified vertex indicies and the default material</summary>
-		/// <param name="Vertices">The vertex indicies</param>
+		/// <summary>Creates a new MeshFace using the specified vertex indices and the default material</summary>
+		/// <param name="Vertices">The vertex indices</param>
 		/// <param name="Type">The type of OpenGL face drawing to use</param>
 		public MeshFace(int[] Vertices, FaceFlags Type = FaceFlags.NotSet) : this(Vertices, 0, Type)
 		{
 		}
 
 		/// <summary>Creates a new MeshFace using the specified vertex indices and material</summary>
-		/// <param name="verticies">The vertex indicies</param>
+		/// <param name="vertices">The vertex indices</param>
 		/// <param name="material">The material</param>
 		[CLSCompliant(false)]
-		public MeshFace(MeshFaceVertex[] verticies, ushort material)
+		public MeshFace(MeshFaceVertex[] vertices, ushort material)
 		{
-			Vertices = verticies;
+			Vertices = vertices;
 			Material = material;
 			Flags = 0;
 			IboStartIndex = 0;
@@ -80,16 +80,16 @@ namespace OpenBveApi.Objects
 			NormalsIboStartIndex = 0;
 		}
 
-		/// <summary>Appends an array of verticies to the MeshFace</summary>
-		/// <param name="additionalVerticies">The verticies to append</param>
+		/// <summary>Appends an array of vertices to the MeshFace</summary>
+		/// <param name="additionalVertices">The vertices to append</param>
 		/// <remarks>This does not check the MeshFace for duplicates</remarks>
-		public void AppendVerticies(int[] additionalVerticies)
+		public void AppendVertices(int[] additionalVertices)
 		{
 			int oldLength = Vertices.Length;
-			Array.Resize(ref Vertices, oldLength + additionalVerticies.Length);
-			for (int i = 0; i < additionalVerticies.Length; i++)
+			Array.Resize(ref Vertices, oldLength + additionalVertices.Length);
+			for (int i = 0; i < additionalVertices.Length; i++)
 			{
-				Vertices[oldLength + i] = new MeshFaceVertex(additionalVerticies[i]);
+				Vertices[oldLength + i] = new MeshFaceVertex(additionalVertices[i]);
 			}
 		}
 

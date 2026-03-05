@@ -18,7 +18,7 @@ namespace OpenBveApi
 			    case "train.dat":       //BVE Train data
 			    case "tekstury.dat":    //Mechanik texture list
 			    case "dzweiki.dat":     //Mechanik sound list
-			    case "moduly.dat":      //Mechnik route generator dat list
+			    case "moduly.dat":      //Mechanik route generator dat list
 			    case "dzw_osob.dat":    //Mechanik route generator sound list
 			    case "dzw_posp.dat":    //Mechanik route generator sound list
 			    case "log.dat":         //Mechanik route generator logfile

@@ -16,14 +16,14 @@ namespace OpenBveApi.Interface
 			/// <summary>The translated key description</summary>
 			public string Description;
 			/// <summary>Creates a new translated key</summary>
-			internal KeyInfo(Key Key, string Name)
+			internal KeyInfo(Key key, string name)
 			{
-				this.Key = Key;
-				this.Name = Name;
-				this.Description = Name;
+				Key = key;
+				Name = name;
+				Description = name;
 			}
 
-			/// <returns>ToString for a key binding returns the binding description in textual format, NOT the phyisical key</returns>
+			/// <returns>ToString for a key binding returns the binding description in textual format, NOT the physical key</returns>
 			public override string ToString()
 			{
 				return Description;

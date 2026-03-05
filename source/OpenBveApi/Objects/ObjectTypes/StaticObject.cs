@@ -408,13 +408,13 @@ namespace OpenBveApi.Objects
 			}
 		}
 
-		/// <summary>Applys scale</summary>
+		/// <summary>Applies scale</summary>
 		public void ApplyScale(Vector3 scale)
 		{
 			ApplyScale(scale.X, scale.Y, scale.Z);
 		}
 
-		/// <summary>Applys scale</summary>
+		/// <summary>Applies scale</summary>
 		public void ApplyScale(double x, double y, double z)
 		{
 			float rx = (float) (1.0 / x);
@@ -458,7 +458,7 @@ namespace OpenBveApi.Objects
 			}
 		}
 
-		/// <summary>Applys rotation</summary>
+		/// <summary>Applies rotation</summary>
 		/// <param name="Rotation">The rotation vector</param>
 		/// <param name="Angle">The angle to rotate in degrees</param>
 		public void ApplyRotation(Vector3 Rotation, double Angle)
@@ -478,7 +478,7 @@ namespace OpenBveApi.Objects
 			}
 		}
 		
-		/// <summary>Applys translation</summary>
+		/// <summary>Applies translation</summary>
 		public override void ApplyTranslation(double x, double y, double z, bool absoluteTranslation = false)
 		{
 			for (int i = 0; i < Mesh.Vertices.Length; i++)
@@ -490,9 +490,9 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Applies mirroring</summary>
-		/// <param name="vX">Whether to mirror verticies in the X-axis</param>
-		/// <param name="vY">Whether to mirror verticies in the Y-axis</param>
-		/// <param name="vZ">Whether to mirror verticies in the Z-axis</param>
+		/// <param name="vX">Whether to mirror vertices in the X-axis</param>
+		/// <param name="vY">Whether to mirror vertices in the Y-axis</param>
+		/// <param name="vZ">Whether to mirror vertices in the Z-axis</param>
 		/// <param name="nX">Whether to mirror normals in the X-axis</param>
 		/// <param name="nY">Whether to mirror normals in the Y-axis</param>
 		/// <param name="nZ">Whether to mirror normals in the Z-axis</param>
@@ -813,7 +813,7 @@ namespace OpenBveApi.Objects
 				{
 					int staring_vertex_count = Mesh.Faces[i].Vertices.Length;
 
-					// One triange for the first three points, then one for each vertex
+					// One triangle for the first three points, then one for each vertex
 					// Wind order is maintained.
 					// Ex: 0, 1, 2; 0, 2, 3; 0, 3, 4; 0, 4, 5; 
 					int tri_count = (staring_vertex_count - 2);
@@ -850,7 +850,7 @@ namespace OpenBveApi.Objects
 				}
 			}
 
-			// decomposit TRIANGLES and QUADS
+			// decomposite TRIANGLES and QUADS
 			for (int i = 0; i < f; i++)
 			{
 				FaceFlags type = Mesh.Faces[i].Flags & FaceFlags.FaceTypeMask;

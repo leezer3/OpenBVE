@@ -367,7 +367,7 @@ namespace Plugin
 					{
 						int squashID = usedFaces - 1;
 						int oldLength = Object.Mesh.Faces[squashID].Vertices.Length;
-						Object.Mesh.Faces[squashID].AppendVerticies(faces[i].Vertices);
+						Object.Mesh.Faces[squashID].AppendVertices(faces[i].Vertices);
 						for (int k = 0; k < faces[i].Vertices.Length; k++)
 						{
 							Object.Mesh.Faces[squashID].Vertices[k + oldLength].Normal = verticies[faces[i].Vertices[k]].Normal;
