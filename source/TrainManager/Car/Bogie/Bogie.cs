@@ -49,8 +49,10 @@ namespace TrainManager.Car
 			CurrentCarSection = -1;
 			FrontAxle = new BVEAxle(TrainManagerBase.currentHost, car.baseTrain, car);
 			FrontAxle.Follower.TriggerType = EventTriggerType.FrontBogieAxle;
+			FrontAxle.Position = 1;
 			RearAxle = new BVEAxle(TrainManagerBase.currentHost, car.baseTrain, car);
 			RearAxle.Follower.TriggerType = EventTriggerType.RearBogieAxle;
+			RearAxle.Position = -1;
 		}
 
 		public void UpdateObjects(double TimeElapsed, bool ForceUpdate)

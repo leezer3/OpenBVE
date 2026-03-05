@@ -62,7 +62,7 @@ namespace Train.OpenBve
 					{
 						//Parsing very low numbers (Probable typos) for the panel resolution causes some very funky graphical bugs
 						//Cap the minimum panel resolution at 100px wide (BVE1 panels are 480px wide, so this is probably a safe minimum)
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A panel resolution of less than 100px was given in " + fileName);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A panel resolution of less than 100px was given in " + Block.FileName);
 					}
 
 					Block.TryGetValue(Panel2Key.Left, ref PanelLeft);
@@ -103,7 +103,7 @@ namespace Train.OpenBve
 				}
 				else
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A [This] section was present, but the main panel image was missing or invalid in " + fileName);
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A [This] section was present, but the main panel image was missing or invalid in " + Block.FileName);
 					return;
 				}
 				Block.ReportErrors();
@@ -111,7 +111,7 @@ namespace Train.OpenBve
 			else
 			{
 				// no main panel image, so invalid
-				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Panel2.cfg file " + fileName + " does not contain a [This] section.");
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Panel2.cfg file " + Block.FileName + " does not contain a [This] section.");
 				return;
 			}
 
@@ -157,7 +157,7 @@ namespace Train.OpenBve
 							}
 							catch
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + fileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + Block.FileName);
 							}
 						}
 						break;
@@ -181,12 +181,12 @@ namespace Train.OpenBve
 							if (Block.TryGetValue(Panel2Key.NaturalFreq, ref NaturalFrequency) && NaturalFrequency < 0)
 							{
 								NaturalFrequency = -NaturalFrequency;
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "NaturalFrequency is expected to be non-negative in [Needle] in " + panelFile);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "NaturalFrequency is expected to be non-negative in [Needle] in " + Block.FileName);
 							}
 							if(Block.TryGetValue(Panel2Key.DampingRatio, ref DampingRatio) && DampingRatio < 0)
 							{
 								DampingRatio = -DampingRatio;
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DampingRatio is expected to be non-negative in [Needle] in " + panelFile);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DampingRatio is expected to be non-negative in [Needle] in " + Block.FileName);
 							}
 							Block.TryGetColor24(Panel2Key.Color, ref Color);
 							Block.GetValue(Panel2Key.Backstop, out bool Backstop);
@@ -242,7 +242,7 @@ namespace Train.OpenBve
 							}
 							catch
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + fileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + Block.FileName);
 								break;
 							}
 							if (Backstop)
@@ -274,7 +274,7 @@ namespace Train.OpenBve
 							int j = CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[GroupIndex], Location.X, Location.Y, tday.Width, tday.Height, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight, Color32.White);
 							if (Maximum < Minimum)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Block.Key + " in " + fileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Block.Key + " in " + Block.FileName);
 								break;
 							}
 							string tf = GetInfixFunction(Car.baseTrain, Subject, subjectIndex, subjectSuffix, Minimum, Maximum, Width, tday.Width);
@@ -294,7 +294,7 @@ namespace Train.OpenBve
 								}
 								catch
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + fileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + Block.FileName);
 								}
 							}
 						}
@@ -406,7 +406,7 @@ namespace Train.OpenBve
 								}
 								catch
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + fileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + Block.FileName);
 								}
 
 								if (Plugin.CurrentOptions.Panel2ExtendedMode)
@@ -467,16 +467,16 @@ namespace Train.OpenBve
 
 							if (Radius == 0.0)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Radius is required to be non-zero in " + Block.Key + " in " + fileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Radius is required to be non-zero in " + Block.Key + " in " + Block.FileName);
 							}
 							if (Minimum == Maximum)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Minimum and Maximum must not be equal in " + Block.Key + " in " + fileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Minimum and Maximum must not be equal in " + Block.Key + " in " + Block.FileName);
 								Radius = 0.0;
 							}
 							if (Math.Abs(InitialAngle - LastAngle) > 6.28318531)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The absolute difference between InitialAngle and LastAngle exceeds 360 degrees in " + Block.Key + " in " + fileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The absolute difference between InitialAngle and LastAngle exceeds 360 degrees in " + Block.Key + " in " + Block.FileName);
 							}
 							// create element
 							int j = CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[GroupIndex], Location.X - Radius, Location.Y - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, null, null, Color);
@@ -549,7 +549,7 @@ namespace Train.OpenBve
 							}
 							catch
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + fileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + Block.FileName);
 							}
 						}
 						break;
@@ -560,7 +560,7 @@ namespace Train.OpenBve
 							Block.GetValue(Panel2Key.Height, out double Height);
 							if (Width <= 0 || Height <= 0)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Width and Height are required to be positive in " + Block.Key + " in " + fileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Width and Height are required to be positive in " + Block.Key + " in " + Block.FileName);
 								break;
 							}
 
@@ -568,7 +568,7 @@ namespace Train.OpenBve
 							{
 								// The original code read this, but never used it
 								// Deliberately deprecate.
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TransparentColor is not supported in " + Block.Key + " in " + fileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TransparentColor is not supported in " + Block.Key + " in " + Block.FileName);
 							}
 
 							int j = CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[GroupIndex], Location.X, Location.Y, Width, Height, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, null, null, Color32.White);
@@ -578,7 +578,7 @@ namespace Train.OpenBve
 							}
 							catch
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + fileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + Block.FileName);
 							}
 
 							Plugin.CurrentHost.AddObjectForCustomTimeTable(Car.CarSections[CarSectionType.Interior].Groups[GroupIndex].Elements[j]);
@@ -627,7 +627,7 @@ namespace Train.OpenBve
 									restPosition = WiperPosition.Right;
 									break;
 								default:
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Block.Key + " in " + fileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Block.Key + " in " + Block.FileName);
 									break;
 							}
 						}
@@ -644,7 +644,7 @@ namespace Train.OpenBve
 									restPosition = WiperPosition.Right;
 									break;
 								default:
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Block.Key + " in " + fileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Block.Key + " in " + Block.FileName);
 									break;
 							}
 						}
@@ -704,7 +704,7 @@ namespace Train.OpenBve
 							}
 							catch
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + fileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + Block.FileName);
 							}
 
 							currentDropX += dropInterval;

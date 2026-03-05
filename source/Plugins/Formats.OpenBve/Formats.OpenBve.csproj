@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -54,23 +54,38 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CFG\ConfigFile.cs" />
+    <Compile Include="Enums\DynamicBackground\DynamicBackgroundKey.cs" />
+    <Compile Include="Enums\DynamicBackground\DynamicBackgroundSection.cs" />
+    <Compile Include="Enums\DynamicLight\DynamicLightKey.cs" />
+    <Compile Include="Enums\DynamicLight\DynamicLightSection.cs" />
     <Compile Include="Enums\ExtensionsCfg\ExtensionsCfgKey.cs" />
     <Compile Include="Enums\ExtensionsCfg\ExtensionsCfgSection.cs" />
     <Compile Include="Enums\HUD\HUDKey.cs" />
     <Compile Include="Enums\HUD\HUDSection.cs" />
+    <Compile Include="Enums\MarkerScript\MarkerScriptKey.cs" />
+    <Compile Include="Enums\MarkerScript\MarkerScriptSection.cs" />
+    <Compile Include="Enums\PatchDatabase\PatchDatabaseKey.cs" />
+    <Compile Include="Enums\PatchDatabase\PatchDatabaseSection.cs" />
     <Compile Include="Enums\SoundCfg\SoundCfgKey.cs" />
     <Compile Include="Enums\SoundCfg\SoundCfgSection.cs" />
-    <Compile Include="Enums\TrackFollowingObjectXML\TrackFollowingObject.cs" />
-    <Compile Include="Enums\TrainXML\Brake.cs" />
+    <Compile Include="Enums\SoundXML\SoundXMLKey.cs" />
+    <Compile Include="Enums\SoundXML\SoundXMLSection.cs" />
+    <Compile Include="Enums\StationXML\StationXMLKey.cs" />
+    <Compile Include="Enums\StationXML\StationXMLSection.cs" />
+    <Compile Include="Enums\TrackFollowingObjectXML\TrackFollowingObjectKey.cs" />
+    <Compile Include="Enums\TrackFollowingObjectXML\TrackFollowingObjectSection.cs" />
+    <Compile Include="Enums\TrainXML\CargoType.cs" />
     <Compile Include="Enums\TrainXML\Handle.cs" />
-    <Compile Include="Enums\TrainXML\Train.cs" />
+    <Compile Include="Enums\TrainXML\TrainXMLKey.cs" />
+    <Compile Include="Enums\TrainXML\TrainXMLSection.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Block.cs" />
     <Compile Include="NumberRange.cs" />
-    <Compile Include="Panel\Panel2\Panel2Key.cs" />
-    <Compile Include="Panel\Panel2\Panel2Sections.cs" />
-    <Compile Include="Panel\Panel2\Panel2Subject.cs" />
+    <Compile Include="Enums\Panel2\Panel2Key.cs" />
+    <Compile Include="Enums\Panel2\Panel2Sections.cs" />
+    <Compile Include="Enums\Panel2\Panel2Subject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XML\XMLFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\OpenBveApi\OpenBveApi.csproj">

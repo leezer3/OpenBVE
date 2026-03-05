@@ -14,7 +14,7 @@
 		<IgnorePitchRoll>true</IgnorePitchRoll>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 		<MaxViewingDistance>1500</MaxViewingDistance>
-		<Message>Sanbie routefile detected- Applying fix to yaw / roll.</Message>
+		<LogMessage>Sanbie routefile detected- Applying fix to yaw / roll.</LogMessage>
 	</Patch>
 	<Patch>
 		<Hash>D8B88EE63CF98D271EC8A75577539752E84A8B74A46EF1B49D57FCA6A53BDBB4</Hash>
@@ -22,7 +22,7 @@
 		<IgnorePitchRoll>true</IgnorePitchRoll>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 		<MaxViewingDistance>1500</MaxViewingDistance>
-		<Message>Sanbie routefile detected- Applying fix to yaw / roll.</Message>
+		<LogMessage>Sanbie routefile detected- Applying fix to yaw / roll.</LogMessage>
 	</Patch>
 	<Patch>
 		<Hash>FD63747CDD10E501D68E7A3FAB193B191F818CE950FB714B2FF79439A11AD427</Hash>
@@ -30,7 +30,7 @@
 		<IgnorePitchRoll>true</IgnorePitchRoll>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 		<MaxViewingDistance>1500</MaxViewingDistance>
-		<Message>Sanbie routefile detected- Applying fix to yaw / roll.</Message>
+		<LogMessage>Sanbie routefile detected- Applying fix to yaw / roll.</LogMessage>
 	</Patch>
 	<Patch>
 		<Hash>661C2E3EEE663192529A761631F02C0F0288340DCF69AB80622CA7E1B37BB126</Hash>
@@ -38,7 +38,7 @@
 		<IgnorePitchRoll>true</IgnorePitchRoll>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 		<MaxViewingDistance>1500</MaxViewingDistance>
-		<Message>Sanbie routefile detected- Applying fix to yaw / roll.</Message>
+		<LogMessage>Sanbie routefile detected- Applying fix to yaw / roll.</LogMessage>
 	</Patch>
 	<Patch>
 		<Hash>18A7BD8BB969E79D140112C4246B62EED8111A82509720C466174248674B20B6</Hash>
@@ -46,7 +46,7 @@
 		<IgnorePitchRoll>true</IgnorePitchRoll>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 		<MaxViewingDistance>1500</MaxViewingDistance>
-		<Message>Sanbie routefile detected- Applying fix to yaw / roll.</Message>
+		<LogMessage>Sanbie routefile detected- Applying fix to yaw / roll.</LogMessage>
 	</Patch>
 	<Patch>
 		<Hash>A29A91698F03A3C0F258A4E6C6DC72C4A15F3828849C929F25AF67FD0747A3FF</Hash>
@@ -54,7 +54,7 @@
 		<IgnorePitchRoll>true</IgnorePitchRoll>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 		<MaxViewingDistance>1500</MaxViewingDistance>
-		<Message>Sanbie routefile detected- Applying fix to yaw / roll.</Message>
+		<LogMessage>Sanbie routefile detected- Applying fix to yaw / roll.</LogMessage>
 	</Patch>
 	<!-- San Aro-->
 	<!-- NOTE: Also has a bunch of fixes in CSV object parser-->
@@ -63,28 +63,28 @@
 		<FileName>Sanaro-aln663.csv</FileName>
 		<IgnorePitchRoll>true</IgnorePitchRoll>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
-		<Message>San Aro routefile detected- Applying fix to yaw / roll.</Message>
+		<LogMessage>San Aro routefile detected- Applying fix to yaw / roll.</LogMessage>
 	</Patch>
 	<Patch>
 		<Hash>C821E3A08643DA1F6A747502167E76B594B6366823902A55242665158AD73A11</Hash>
 		<FileName>Sanaro-aln663-dev.csv</FileName>
 		<IgnorePitchRoll>true</IgnorePitchRoll>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
-		<Message>San Aro routefile detected- Applying fix to yaw / roll.</Message>
+		<LogMessage>San Aro routefile detected- Applying fix to yaw / roll.</LogMessage>
 	</Patch>
 	<Patch>
 		<Hash>3AAD7A1AC95D261BBD0F41E3BA47DEE6E47A2DE5CFFABFB903E7FBE25132978B</Hash>
 		<FileName>Sanaro-aln773.csv</FileName>
 		<IgnorePitchRoll>true</IgnorePitchRoll>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
-		<Message>San Aro routefile detected- Applying fix to yaw / roll.</Message>
+		<LogMessage>San Aro routefile detected- Applying fix to yaw / roll.</LogMessage>
 	</Patch>
 	<Patch>
 		<Hash>B03C2243210A493C61D821D92A8EE2D2C7D3A9436450162339D063D03BF2E580</Hash>
 		<FileName>Sanaro-aln773-dev.csv</FileName>
 		<IgnorePitchRoll>true</IgnorePitchRoll>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
-		<Message>San Aro routefile detected- Applying fix to yaw / roll.</Message>
+		<LogMessage>San Aro routefile detected- Applying fix to yaw / roll.</LogMessage>
 	</Patch>
 	<Patch>
 		<Hash>C4061E0E53862BA4951A76746B2AB1AFA3A7D4126F375D5EF96E4DEBDFC969EF</Hash>
