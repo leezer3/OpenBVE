@@ -5,51 +5,51 @@
 		<Hash>AA6528402BE457A20DF77A8B7CAFBC2580F3F8326BB56B9A691A4558174AE152</Hash>
 		<FileName>V.2.1.1 Aldwych BVE4- no fog.csv</FileName>
 		<CylinderHack>true</CylinderHack>
-		<Message>Aldwych v2.1.1 routefile detected- Applying cylinder hack.</Message>
+		<LogMessage>Aldwych v2.1.1 routefile detected- Applying cylinder hack.</LogMessage>
 	</Patch>
 	<Patch>
 		<Hash>2EB087770AEC2C6A0F2AADC0A8D531117502B1AB33E94CBBC11940DA4FFF4A30</Hash>
 		<FileName>V.2.1.1 Aldwych BVE4.csv</FileName>
 		<CylinderHack>true</CylinderHack>
-		<Message>Aldwych v2.1.1 routefile detected- Applying cylinder hack.</Message>
+		<LogMessage>Aldwych v2.1.1 routefile detected- Applying cylinder hack.</LogMessage>
 	</Patch>
 	<!-- Bakerloo V3 BVE2 -->
 	<Patch>
 		<Hash>2654DAF8B0FEEAAB928C8CC9E1D68279E361C7C2150D82860CCBB31DFD48A7C8</Hash>
 		<FileName>Elephant to Harrow 1972Mk2TS.csv</FileName>
 		<CylinderHack>true</CylinderHack>
-		<Message>Bakerloo v3 routefile detected- Applying cylinder hack.</Message>
+		<LogMessage>Bakerloo v3 routefile detected- Applying cylinder hack.</LogMessage>
 	</Patch>
 	<Patch>
 		<Hash>D2382ED7D67DF6B9D6F32E8A89B1C21A7689EA18AEADED6BFE8EFE53BD78D2BD</Hash>
 		<FileName>Elephant to Queen's Park 1972Mk2TS.csv</FileName>
 		<CylinderHack>true</CylinderHack>
-		<Message>Bakerloo v3 routefile detected- Applying cylinder hack.</Message>
+		<LogMessage>Bakerloo v3 routefile detected- Applying cylinder hack.</LogMessage>
 	</Patch>
 	<Patch>
 		<Hash>9062F55797622F66E2FED2C7E2A6EB6F661F6C8C6EE89A249AEAC0E6CB6B1FF9</Hash>
 		<FileName>Queen's Park to Harrow SILVERLINK Cl313.csv</FileName>
 		<CylinderHack>true</CylinderHack>
-		<Message>Bakerloo v3 routefile detected- Applying cylinder hack.</Message>
+		<LogMessage>Bakerloo v3 routefile detected- Applying cylinder hack.</LogMessage>
 	</Patch>
 	<!-- Bakerloo V3 BVE4 -->
 	<Patch>
 		<Hash>C2AC8A277D08AED9505A339759EDD5BBB0E4C541E0226EFFD8615DCBDCE8A446</Hash>
 		<FileName>Elephant to Harrow 1972Mk2TS.csv</FileName>
 		<CylinderHack>true</CylinderHack>
-		<Message>Bakerloo v3 routefile detected- Applying cylinder hack.</Message>
+		<LogMessage>Bakerloo v3 routefile detected- Applying cylinder hack.</LogMessage>
 	</Patch>
 	<Patch>
 		<Hash>1175ABDC20934050DBF3DF6E186874D9A7315358235D2CE4CC3096512BF17514</Hash>
 		<FileName>Elephant to Queen's Park 1972Mk2TS.csv</FileName>
 		<CylinderHack>true</CylinderHack>
-		<Message>Bakerloo v3 routefile detected- Applying cylinder hack.</Message>
+		<LogMessage>Bakerloo v3 routefile detected- Applying cylinder hack.</LogMessage>
 	</Patch>
 	<Patch>
 		<Hash>84F32BB8CFAB5D63E611C261822A55F22AE444401A04B826E2529449E3431728</Hash>
 		<FileName>Queen's Park to Harrow SILVERLINK Cl313.csv</FileName>
 		<CylinderHack>true</CylinderHack>
-		<Message>Bakerloo v3 routefile detected- Applying cylinder hack.</Message>
+		<LogMessage>Bakerloo v3 routefile detected- Applying cylinder hack.</LogMessage>
 	</Patch>
 	<!-- Northern Line v4 -->
 	<!-- 1938TS -->
@@ -57,38 +57,38 @@
 		<Hash>842B3E0848DFFA9BA387B3E0A31604459549EC99761A7594C2EF16DF468E76B4</Hash>
 		<FileName>Edgware-Kennington via ChX 1974.csv</FileName>
 		<CylinderHack>true</CylinderHack>
-		<Message>Northern Line v4 routefile detected- Applying cylinder hack.</Message>
+		<LogMessage>Northern Line v4 routefile detected- Applying cylinder hack.</LogMessage>
 	</Patch>
 	<Patch>
 		<Hash>FBA1A71D4CC35A17C56D6E8F9FDE5815347C21C50113B29944680307ED767ADB</Hash>
 		<FileName>Edgware-Morden via Bank 1974.csv</FileName>
 		<CylinderHack>true</CylinderHack>
-		<Message>Northern Line v4 routefile detected- Applying cylinder hack.</Message>
+		<LogMessage>Northern Line v4 routefile detected- Applying cylinder hack.</LogMessage>
 	</Patch>
 	<Patch>
 		<Hash>F4C3184B6AA622A2044AFB15266A9006423191875F0A63E15C2467AAA5583AA9</Hash>
 		<FileName>Kennington-High Barnet 1974.csv</FileName>
 		<CylinderHack>true</CylinderHack>
-		<Message>Northern Line v4 routefile detected- Applying cylinder hack.</Message>
+		<LogMessage>Northern Line v4 routefile detected- Applying cylinder hack.</LogMessage>
 	</Patch>
 	<!-- 1995TS -->
 	<Patch>
 		<Hash>681894EC8AC08D5F8DF8EFE4A4CA5B412A15A389421AF1E1E2857FB5FBA52586</Hash>
 		<FileName>Edgware-Kennington via ChX 1998.csv</FileName>
 		<CylinderHack>true</CylinderHack>
-		<Message>Northern Line v4 routefile detected- Applying cylinder hack.</Message>
+		<LogMessage>Northern Line v4 routefile detected- Applying cylinder hack.</LogMessage>
 	</Patch>
 	<Patch>
 		<Hash>302088CB983164ECBEAA04C3B747D6776A30A04A376681B505CC121BFA94E61C</Hash>
 		<FileName>Edgware-Morden via Bank 1995.csv</FileName>
 		<CylinderHack>true</CylinderHack>
-		<Message>Northern Line v4 routefile detected- Applying cylinder hack.</Message>
+		<LogMessage>Northern Line v4 routefile detected- Applying cylinder hack.</LogMessage>
 	</Patch>
 	<Patch>
 		<Hash>AE7A000D2CD28407E1F26C3688F46DB21048AF5B18C11D5BD56C70CDC2CC2949</Hash>
 		<FileName>Kennington-High Barnet 1998.csv</FileName>
 		<CylinderHack>true</CylinderHack>
-		<Message>Northern Line v4 routefile detected- Applying cylinder hack.</Message>
+		<LogMessage>Northern Line v4 routefile detected- Applying cylinder hack.</LogMessage>
 	</Patch>
 	<!-- Picadilly Line -->
 	<!-- Tweak dummy signalling stations so they don't show on timetable -->
@@ -96,7 +96,7 @@
 		<Hash>9D87539BAC426DE5B1ECB638A935EF8AC37B31AD6B16D645B1D3F2A7E2D1B23F</Hash>
 		<FileName>Barons Ct to Arnos 38ts.csv</FileName>
 		<CylinderHack>true</CylinderHack>
-		<Message>Picadilly v5.2 routefile detected- Applying cylinder hack.</Message>
+		<LogMessage>Picadilly v5.2 routefile detected- Applying cylinder hack.</LogMessage>
 		<Expression Number="517">.sta ;;;;N;1</Expression>
 		<Expression Number="2756">.sta ;;;;N;1</Expression>
 	</Patch>
@@ -104,7 +104,7 @@
 		<Hash>078324311EC9048F313513849B5EBDCF3C3CAF193520F947258324FEDDD6A2BD</Hash>
 		<FileName>Barons Ct to Arnos Peak.csv</FileName>
 		<CylinderHack>true</CylinderHack>
-		<Message>Picadilly v5.2 routefile detected- Applying cylinder hack.</Message>
+		<LogMessage>Picadilly v5.2 routefile detected- Applying cylinder hack.</LogMessage>
 		<Expression Number="532">.sta ;;;;N;1</Expression>
 		<Expression Number="3016">.sta ;;;;N;1</Expression>
 	</Patch>
@@ -112,14 +112,14 @@
 		<Hash>939E18B5AB5645FF25CF5C4CE72D0F0567C9A0C9ABDF6D21AB5DC3278D180032</Hash>
 		<FileName>Barons Ct to Arnos Weedkill.csv</FileName>
 		<CylinderHack>true</CylinderHack>
-		<Message>Picadilly v5.2 routefile detected- Applying cylinder hack.</Message>
+		<LogMessage>Picadilly v5.2 routefile detected- Applying cylinder hack.</LogMessage>
 		<Expression Number="2933">.sta ;;;;N;1</Expression>
 	</Patch>
 	<Patch>
 		<Hash>3E673AAD446439A42FA81AA37D6C51FE69DC32C93D2FDC1EE3B8DA73EDC61B81</Hash>
 		<FileName>Barons Ct to Arnos.csv</FileName>
 		<CylinderHack>true</CylinderHack>
-		<Message>Picadilly v5.2 routefile detected- Applying cylinder hack.</Message>
+		<LogMessage>Picadilly v5.2 routefile detected- Applying cylinder hack.</LogMessage>
 		<Expression Number="532">.sta ;;;;N;1</Expression>
 		<Expression Number="2981">.sta ;;;;N;1</Expression>
 	</Patch>
@@ -127,14 +127,14 @@
 		<Hash>60F9CF7F40E21808072DAEF3F316ECB0BEA2AA224F5AD414BCA084F6AE0BD1E8</Hash>
 		<FileName>Barons Ct to Wood Green.csv</FileName>
 		<CylinderHack>true</CylinderHack>
-		<Message>Picadilly v5.2 routefile detected- Applying cylinder hack.</Message>
+		<LogMessage>Picadilly v5.2 routefile detected- Applying cylinder hack.</LogMessage>
 		<Expression Number="538">.sta ;;;;N;1</Expression>
 	</Patch>
 	<Patch>
 		<Hash>179EB3C4F653DBC8FF98CF1F6F44693DE5AE6EB8A196CE89D2B5681BA6D972EB</Hash>
 		<FileName>Hyde Pk Cnr to Wood Green.csv</FileName>
 		<CylinderHack>true</CylinderHack>
-		<Message>Picadilly v5.2 routefile detected- Applying cylinder hack.</Message>
+		<LogMessage>Picadilly v5.2 routefile detected- Applying cylinder hack.</LogMessage>
 	</Patch>
 	<!-- Sandymill- Invernay -->
 	<Patch>

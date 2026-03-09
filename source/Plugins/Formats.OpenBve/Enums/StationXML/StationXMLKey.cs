@@ -1,8 +1,11 @@
-﻿namespace CsvRwRouteParser
+﻿namespace Formats.OpenBve
 {
-	internal enum StationXmlCommand
+	public enum StationXMLKey
 	{
+		Unknown = 0,
 		Name,
+		Filename,
+		Radius,
 		ArrivalTime,
 		DepartureTime,
 		Type,
@@ -21,5 +24,16 @@
 		InterferenceInDoor,
 		MaxInterferingObjectRate,
 		RequestStop,
+		AIBehaviour,
+		PlayerOnly,
+		Distance,
+		EarlyTime,
+		LateTime,
+		StopMessage,
+		Early,
+		Late,
+		OnTime,
+		Text,
+		MaxCars
 	}
 }

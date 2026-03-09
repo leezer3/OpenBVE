@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Xml;
+using Formats.OpenBve;
+using Formats.OpenBve.XML;
 using OpenBveApi.Interface;
-using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using System.Collections.Generic;
+using System.IO;
+using System.Xml;
 using Path = OpenBveApi.Path;
-using XmlElement = System.Xml.XmlElement;
 
 namespace CsvRwRouteParser
 {
@@ -16,7 +15,7 @@ namespace CsvRwRouteParser
 		{
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
-
+			
 			if (databaseFile == string.Empty)
 			{
 				databaseFile = Path.CombineFile(Plugin.FileSystem.GetDataFolder("Compatibility\\RoutePatches"), "database.xml");
@@ -25,289 +24,63 @@ namespace CsvRwRouteParser
 					return;
 				}
 			}
-			currentXML.Load(databaseFile);
-			//Check for null
-			if (currentXML.DocumentElement != null)
+			XMLFile<PatchDatabaseSection, PatchDatabaseKey> xmlFile = new XMLFile<PatchDatabaseSection, PatchDatabaseKey>(databaseFile, "/openBVE/RoutePatches", Plugin.CurrentHost);
+
+			while (xmlFile.RemainingSubBlocks > 0)
 			{
-				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/RoutePatches");
-				//Check this file actually contains OpenBVE route patch definition nodes
-				if (DocumentNodes != null)
+				Block<PatchDatabaseSection, PatchDatabaseKey> subBlock = xmlFile.ReadNextBlock();
+				while (subBlock.RemainingSubBlocks > 0)
 				{
-					for (int i = 0; i < DocumentNodes.Count; i++)
-					{
-						if (DocumentNodes[i].HasChildNodes)
-						{
-							foreach (XmlElement childNode in DocumentNodes[i].ChildNodes.OfType<XmlElement>())
-							{
-								switch (childNode.Name)
-								{
-									case "Patch":
-										if (childNode.HasChildNodes)
-										{
-											ParsePatchNode(childNode, ref routePatches);
-										}
-										break;
-									case "PatchList":
-										string folder = Path.GetDirectoryName(databaseFile);
-										string newFile = Path.CombineFile(folder, childNode.InnerText);
-										if (File.Exists(newFile))
-										{
-											LoadRoutePatchDatabase(ref routePatches, newFile);
-										}
-										break;
-								}
-								
-							}
-						}
-					}
+					Block<PatchDatabaseSection, PatchDatabaseKey> patchBlock = subBlock.ReadNextBlock();
+					ParsePatchNode(patchBlock, ref routePatches);
 				}
+				
 			}
+			currentXML.Load(databaseFile);
 		}
 
-		internal static void ParsePatchNode(XmlNode node, ref Dictionary<string, RoutefilePatch> routeFixes)
+		internal static void ParsePatchNode(Block<PatchDatabaseSection, PatchDatabaseKey> patchBlock, ref Dictionary<string, RoutefilePatch> routeFixes)
 		{
 			RoutefilePatch currentPatch = new RoutefilePatch();
-			string currentHash = string.Empty;
-			foreach (XmlElement childNode in node.ChildNodes.OfType<XmlElement>())
+			patchBlock.GetValue(PatchDatabaseKey.Hash, out string currentHash);
+			patchBlock.GetValue(PatchDatabaseKey.FileName, out currentPatch.FileName);
+			patchBlock.GetValue(PatchDatabaseKey.LineEndingFix, out currentPatch.LineEndingFix);
+			patchBlock.GetValue(PatchDatabaseKey.ColonFix, out currentPatch.ColonFix);
+			patchBlock.GetValue(PatchDatabaseKey.IgnorePitchRoll, out currentPatch.IgnorePitchRoll);
+			patchBlock.GetValue(PatchDatabaseKey.LogMessage, out currentPatch.LogMessage);
+			patchBlock.GetValue(PatchDatabaseKey.CylinderHack, out currentPatch.CylinderHack);
+			patchBlock.GetValue(PatchDatabaseKey.Derailments, out currentPatch.Derailments);
+			patchBlock.GetValue(PatchDatabaseKey.Toppling, out currentPatch.Toppling);
+			patchBlock.GetValue(PatchDatabaseKey.AccurateObjectDisposal, out currentPatch.AccurateObjectDisposal);
+			patchBlock.GetValue(PatchDatabaseKey.SplitLineHack, out currentPatch.SplitLineHack);
+			patchBlock.GetValue(PatchDatabaseKey.AllowTrackPositionArguments, out currentPatch.AllowTrackPositionArguments);
+			patchBlock.GetValue(PatchDatabaseKey.DisableSemiTransparentFaces, out currentPatch.DisableSemiTransparentFaces);
+			patchBlock.GetValue(PatchDatabaseKey.ReducedColorTransparency, out currentPatch.ReducedColorTransparency);
+			patchBlock.TryGetValue(PatchDatabaseKey.ViewingDistance, ref currentPatch.ViewingDistance, NumberRange.Positive);
+			patchBlock.TryGetValue(PatchDatabaseKey.MaxViewingDistance, ref currentPatch.MaxViewingDistance, NumberRange.Positive);
+			patchBlock.GetValue(PatchDatabaseKey.AggressiveRWBrackets, out currentPatch.AggressiveRwBrackets);
+			patchBlock.GetValue(PatchDatabaseKey.Incompatible, out currentPatch.Incompatible);
+			patchBlock.GetValue(PatchDatabaseKey.DelayedAnimatedUpdates, out currentPatch.DelayedAnimatedUpdates);
+			patchBlock.GetValue(PatchDatabaseKey.AdhesionHack, out currentPatch.AdhesionHack);
+			if (patchBlock.GetEnumValue(PatchDatabaseKey.XParser, out XParsers parser))
 			{
-				string t;
-				switch (childNode.Name)
+				currentPatch.XParser = parser;
+			}
+			patchBlock.TryGetIntArray(PatchDatabaseKey.DummyRailTypes, ',', ref currentPatch.DummyRailTypes);
+			patchBlock.TryGetIntArray(PatchDatabaseKey.DummyGroundTypes, ',', ref currentPatch.DummyGroundTypes);
+			if (patchBlock.GetValue(PatchDatabaseKey.SignalSet, out string signalSet))
+			{
+				string signalFile = Path.CombineFile(Plugin.FileSystem.GetDataFolder("Compatibility\\Signals"), signalSet);
+				if (File.Exists(signalFile))
 				{
-					case "Hash":
-						currentHash = childNode.InnerText;
-						break;
-					case "FileName":
-						currentPatch.FileName = childNode.InnerText;
-						break;
-					case "LineEndingFix":
-						t = childNode.InnerText.Trim().ToLowerInvariant();
-						if (t == "1" || t == "true")
-						{
-							currentPatch.LineEndingFix = true;
-						}
-						else
-						{
-							currentPatch.LineEndingFix = false;
-						}
-						break;
-					case "ColonFix":
-						t = childNode.InnerText.Trim().ToLowerInvariant();
-						if (t == "1" || t == "true")
-						{
-							currentPatch.ColonFix = true;
-						}
-						else
-						{
-							currentPatch.ColonFix = false;
-						}
-						break;
-					case "IgnorePitchRoll":
-						t = childNode.InnerText.Trim().ToLowerInvariant();
-						if (t == "1" || t == "true")
-						{
-							currentPatch.IgnorePitchRoll = true;
-						}
-						else
-						{
-							currentPatch.IgnorePitchRoll = false;
-						}
-						break;
-					case "LogMessage":
-						currentPatch.LogMessage = childNode.InnerText;
-						break;
-					case "CylinderHack":
-						t = childNode.InnerText.Trim().ToLowerInvariant();
-						if (t == "1" || t == "true")
-						{
-							currentPatch.CylinderHack = true;
-						}
-						else
-						{
-							currentPatch.CylinderHack = false;
-						}
-						break;
-					case "Expression":
-						t = childNode.Attributes["Number"].InnerText;
-						if (NumberFormats.TryParseIntVb6(t, out int expressionNumber))
-						{
-							currentPatch.ExpressionFixes.Add(expressionNumber, childNode.InnerText);
-						}
-						break;
-					case "XParser":
-						switch (childNode.InnerText.ToLowerInvariant())
-						{
-							case "original":
-								currentPatch.XParser = XParsers.Original;
-								break;
-							case "new":
-								currentPatch.XParser = XParsers.NewXParser;
-								break;
-							case "assimp":
-								currentPatch.XParser = XParsers.Assimp;
-								break;
-						}
-						break;
-					case "DummyRailTypes":
-						string[] splitString = childNode.InnerText.Split(',');
-						for (int i = 0; i < splitString.Length; i++)
-						{
-							if (NumberFormats.TryParseIntVb6(splitString[i], out int rt))
-							{
-								currentPatch.DummyRailTypes.Add(rt);
-							}
-						}
-						break;
-					case "DummyGroundTypes":
-						splitString = childNode.InnerText.Split(',');
-						for (int i = 0; i < splitString.Length; i++)
-						{
-							if (NumberFormats.TryParseIntVb6(splitString[i], out int gt))
-							{
-								currentPatch.DummyGroundTypes.Add(gt);
-							}
-						}
-						break;
-					case "Derailments":
-						t = childNode.InnerText.Trim().ToLowerInvariant();
-						if (t == "0" || t == "false")
-						{
-							currentPatch.Derailments = false;
-						}
-						else
-						{
-							currentPatch.Derailments = true;
-						}
-						break;
-					case "Toppling":
-						t = childNode.InnerText.Trim().ToLowerInvariant();
-						if (t == "0" || t == "false")
-						{
-							currentPatch.Toppling = false;
-						}
-						else
-						{
-							currentPatch.Toppling = true;
-						}
-						break;
-					case "SignalSet":
-						string signalFile = Path.CombineFile(Plugin.FileSystem.GetDataFolder("Compatibility\\Signals"), childNode.InnerText.Trim());
-						if (File.Exists(signalFile))
-						{
-							currentPatch.CompatibilitySignalSet = signalFile;
-						}
-						break;
-					case "AccurateObjectDisposal":
-						t = childNode.InnerText.Trim().ToLowerInvariant();
-						if (t == "1" || t == "true")
-						{
-							currentPatch.AccurateObjectDisposal = true;
-						}
-						else
-						{
-							currentPatch.AccurateObjectDisposal = false;
-						}
-						break;
-					case "SplitLineHack":
-						t = childNode.InnerText.Trim().ToLowerInvariant();
-						if (t == "1" || t == "true")
-						{
-							currentPatch.SplitLineHack = true;
-						}
-						else
-						{
-							currentPatch.SplitLineHack = false;
-						}
-						break;
-					case "AllowTrackPositionArguments":
-						t = childNode.InnerText.Trim().ToLowerInvariant();
-						if (t == "1" || t == "true")
-						{
-							currentPatch.AllowTrackPositionArguments = true;
-						}
-						else
-						{
-							currentPatch.AllowTrackPositionArguments = false;
-						}
-						break;
-					case "DisableSemiTransparentFaces":
-						t = childNode.InnerText.Trim().ToLowerInvariant();
-						if (t == "1" || t == "true")
-						{
-							currentPatch.DisableSemiTransparentFaces = true;
-						}
-						else
-						{
-							currentPatch.DisableSemiTransparentFaces = false;
-						}
-						break;
-					case "ReducedColorTransparency":
-						t = childNode.InnerText.Trim().ToLowerInvariant();
-						if (t == "1" || t == "true")
-						{
-							currentPatch.ReducedColorTransparency = true;
-						}
-						else
-						{
-							currentPatch.ReducedColorTransparency = false;
-						}
-						break;
-					case "ViewingDistance":
-						if (!int.TryParse(childNode.InnerText.Trim(), out currentPatch.ViewingDistance))
-						{
-							currentPatch.ViewingDistance = int.MaxValue;
-						}
-						break;
-					case "MaxViewingDistance":
-						if (!int.TryParse(childNode.InnerText.Trim(), out currentPatch.MaxViewingDistance))
-						{
-							currentPatch.MaxViewingDistance = int.MaxValue;
-						}
-						break;
-					case "AggressiveRwBrackets":
-						t = childNode.InnerText.Trim().ToLowerInvariant();
-						if (t == "1" || t == "true")
-						{
-							currentPatch.AggressiveRwBrackets = true;
-						}
-						else
-						{
-							currentPatch.AggressiveRwBrackets = false;
-						}
-						break;
-					case "Incompatible":
-						t = childNode.InnerText.Trim().ToLowerInvariant();
-						if (t == "1" || t == "true")
-						{
-							currentPatch.Incompatible = true;
-						}
-						else
-						{
-							currentPatch.Incompatible = false;
-						}
-						break;
-					case "DelayedAnimatedUpdates":
-						t = childNode.InnerText.Trim().ToLowerInvariant();
-						if (t == "1" || t == "true")
-						{
-							currentPatch.DelayedAnimatedUpdates = true;
-						}
-						else
-						{
-							currentPatch.DelayedAnimatedUpdates = false;
-						}
-						break;
-					case "AdhesionHack":
-						t = childNode.InnerText.Trim().ToLowerInvariant();
-						if (t == "1" || t == "true")
-						{
-							currentPatch.AdhesionHack = true;
-						}
-						else
-						{
-							currentPatch.AdhesionHack = false;
-						}
-						break;
+					currentPatch.CompatibilitySignalSet = signalFile;
 				}
+			}
+
+			while (patchBlock.RemainingDataValues > 0)
+			{
+				patchBlock.GetIndexedValue(out int expressionNumber, out string text);
+				currentPatch.ExpressionFixes.Add(expressionNumber, text);
 			}
 
 			if (!routeFixes.ContainsKey(currentHash))

@@ -50,7 +50,7 @@ namespace Train.OpenBve
 					ParseExtensionsConfig(TrainPath, Encoding.GetEncoding(1252), ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior, Train);
 					return;
 				}
-				ConfigFile<ExtensionCfgSection, ExtensionCfgKey> cfg = new ConfigFile<ExtensionCfgSection, ExtensionCfgKey>(Lines, Plugin.CurrentHost);
+				ConfigFile<ExtensionCfgSection, ExtensionCfgKey> cfg = new ConfigFile<ExtensionCfgSection, ExtensionCfgKey>(Lines, FileName, Plugin.CurrentHost);
 
 				double perBlockProgress = cfg.RemainingSubBlocks == 0 ? 0.25 : 0.25 / cfg.RemainingSubBlocks;
 				int readBlocks = 0;
@@ -69,19 +69,19 @@ namespace Train.OpenBve
 						case ExtensionCfgSection.Car:
 							if (block.Index == -1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid or missing CarIndex in file " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid or missing CarIndex in file " + block.FileName);
 								break;
 							}
 
 							if (block.Index >= Train.Cars.Length)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CarIndex " + block.Index + " does not reference an existing car in in file " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CarIndex " + block.Index + " does not reference an existing car in in file " + block.FileName);
 								break;
 							}
 
 							if (CarsDefined[block.Index])
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "CarIndex " + block.Index + " has already been declared in in file " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "CarIndex " + block.Index + " has already been declared in in file " + block.FileName);
 							}
 
 							CarsDefined[block.Index] = true;
@@ -104,7 +104,7 @@ namespace Train.OpenBve
 							{
 								if (carAxles.X >= carAxles.Y)
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front for Car " + block.Index + " in file " + FileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front for Car " + block.Index + " in file " + block.FileName);
 								}
 								else
 								{
@@ -125,7 +125,7 @@ namespace Train.OpenBve
 						case ExtensionCfgSection.Coupler:
 							if (block.Index == -1 || block.Index >= Train.Cars.Length)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid or missing CouplerIndex in file " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid or missing CouplerIndex in file " + block.FileName);
 								break;
 							}
 							if (block.GetVector2(ExtensionCfgKey.Distances, ',', out Vector2 distances))
@@ -133,7 +133,7 @@ namespace Train.OpenBve
 								if (distances.X > distances.Y)
 								{
 									// NOTE: Current error is misleading...
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Minimum is expected to be less than Maximum in for Coupler " + block.Index + " in file " + FileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Minimum is expected to be less than Maximum in for Coupler " + block.Index + " in file " + block.FileName);
 								}
 								else
 								{
@@ -149,19 +149,19 @@ namespace Train.OpenBve
 						case ExtensionCfgSection.Bogie:
 							if (block.Index == -1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid or missing BogieIndex in file " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid or missing BogieIndex in file " + block.FileName);
 								break;
 							}
 
 							if (block.Index > Train.Cars.Length * 2)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BogieIndex " + block.Index + " does not reference an existing bogie in in file " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BogieIndex " + block.Index + " does not reference an existing bogie in in file " + block.FileName);
 								break;
 							}
 
 							if (BogiesDefined[block.Index])
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BogieIndex " + block.Index + " has already been declared in in file " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BogieIndex " + block.Index + " has already been declared in in file " + block.FileName);
 							}
 							BogiesDefined[block.Index] = true;
 							//Assuming that there are two bogies per car
@@ -177,7 +177,7 @@ namespace Train.OpenBve
 							{
 								if (bogieAxles.X >= bogieAxles.Y)
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front for Bogie " + block.Index + " in file " + FileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front for Bogie " + block.Index + " in file " + block.FileName);
 								}
 								else
 								{

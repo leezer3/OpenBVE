@@ -112,7 +112,6 @@
     <Compile Include="XML\DynamicBackground.cs" />
     <Compile Include="XML\DynamicLight.cs" />
     <Compile Include="XML\MarkerScript.cs" />
-    <Compile Include="XML\StationXml.Commands.cs" />
     <Compile Include="XML\StationXml.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +126,10 @@
     <ProjectReference Include="..\..\TrainManager\TrainManager.csproj">
       <Project>{d0fca2c5-ff75-42d8-ae80-310280a61fb1}</Project>
       <Name>TrainManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Formats.OpenBve\Formats.OpenBve.csproj">
+      <Project>{7ed7b285-fae6-4b34-acc5-87399f27c8bc}</Project>
+      <Name>Formats.OpenBve</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
