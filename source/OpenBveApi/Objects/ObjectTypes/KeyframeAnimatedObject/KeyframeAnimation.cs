@@ -206,7 +206,7 @@ namespace OpenBveApi.Objects
 						}
 						AnimationKey %= FrameCount;
 					}
-					else if (Name.StartsWith("PANTOGRAPHBOTTOM1") || Name.StartsWith("PANTOGRAPHTOP1"))
+					else if (Name.StartsWith("PANTOGRAPHBOTTOM1", StringComparison.InvariantCultureIgnoreCase) || Name.StartsWith("PANTOGRAPHTOP1", StringComparison.InvariantCultureIgnoreCase))
 					{
 						dynamic d = baseCar;
 						// n.b. use pantograph state from the train, as some stuff has pantographs on trailer cars
@@ -229,7 +229,7 @@ namespace OpenBveApi.Objects
 								break;
 						}
 					}
-					else if (Name.StartsWith("PANTOGRAPHBOTTOM2") || Name.StartsWith("PANTOGRAPHTOP2"))
+					else if (Name.StartsWith("PANTOGRAPHBOTTOM2", StringComparison.InvariantCultureIgnoreCase) || Name.StartsWith("PANTOGRAPHTOP2", StringComparison.InvariantCultureIgnoreCase))
 					{
 						AnimationKey = 0;
 					}

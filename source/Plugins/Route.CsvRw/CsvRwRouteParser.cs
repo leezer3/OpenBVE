@@ -21,16 +21,22 @@ namespace CsvRwRouteParser {
 		internal static CompatabilityHacks EnabledHacks;
 		internal bool SplitLineHack = true;
 		internal bool AllowTrackPositionArguments = false;
-		internal bool IsRW;
+		internal readonly bool IsRW;
+		internal readonly Plugin Plugin;
 		internal bool IsHmmsim;
 
-		internal Plugin Plugin;
+		internal Parser(Plugin plugin, bool isRW)
+		{
+			Plugin = plugin;
+			IsRW = isRW;
+		}
+
+		
 
 		internal CurrentRoute CurrentRoute;
 		// parse route
-		internal void ParseRoute(string FileName, bool isRW, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, Plugin hostPlugin)
+		internal void ParseRoute(string fileName, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly)
 		{
-			Plugin = hostPlugin;
 			CurrentRoute = Plugin.CurrentRoute;
 			/*
 			 * Store paths for later use
@@ -38,7 +44,6 @@ namespace CsvRwRouteParser {
 			ObjectPath = objectPath;
 			SoundPath = soundPath;
 			TrainPath = trainPath;
-			IsRW = isRW;
 			if (!PreviewOnly)
 			{
 				for (int i = 0; i < Plugin.CurrentHost.Plugins.Length; i++)
@@ -71,7 +76,7 @@ namespace CsvRwRouteParser {
 				Data.Blocks[0].RailWall = new Dictionary<int, WallDike>();
 				Data.Blocks[0].RailDike = new Dictionary<int, WallDike>();
 				Data.Blocks[0].RailPole = new Pole[] {};
-				string PoleFolder = Path.CombineDirectory(CompatibilityFolder, "Poles");
+				string poleFolder = Path.CombineDirectory(CompatibilityFolder, "Poles");
 				Data.Structure.Poles = new PoleDictionary
 				{
 					{0, new ObjectDictionary()}, 
@@ -79,10 +84,10 @@ namespace CsvRwRouteParser {
 					{2, new ObjectDictionary()}, 
 					{3, new ObjectDictionary()}
 				};
-				Data.Structure.Poles[0].Add(0, LoadStaticObject(Path.CombineFile(PoleFolder, "pole_1.csv"), System.Text.Encoding.UTF8, false));
-				Data.Structure.Poles[1].Add(0, LoadStaticObject(Path.CombineFile(PoleFolder, "pole_2.csv"), System.Text.Encoding.UTF8, false));
-				Data.Structure.Poles[2].Add(0, LoadStaticObject(Path.CombineFile(PoleFolder, "pole_3.csv"), System.Text.Encoding.UTF8, false));
-				Data.Structure.Poles[3].Add(0, LoadStaticObject(Path.CombineFile(PoleFolder, "pole_4.csv"), System.Text.Encoding.UTF8, false));
+				Data.Structure.Poles[0].Add(0, LoadStaticObject(Path.CombineFile(poleFolder, "pole_1.csv"), System.Text.Encoding.UTF8, false));
+				Data.Structure.Poles[1].Add(0, LoadStaticObject(Path.CombineFile(poleFolder, "pole_2.csv"), System.Text.Encoding.UTF8, false));
+				Data.Structure.Poles[2].Add(0, LoadStaticObject(Path.CombineFile(poleFolder, "pole_3.csv"), System.Text.Encoding.UTF8, false));
+				Data.Structure.Poles[3].Add(0, LoadStaticObject(Path.CombineFile(poleFolder, "pole_4.csv"), System.Text.Encoding.UTF8, false));
 				
 				Data.Structure.RailObjects = new ObjectDictionary();
 				Data.Structure.RailObjects = new ObjectDictionary();
@@ -126,13 +131,13 @@ namespace CsvRwRouteParser {
 				CurrentRoute.Sections[0].CurrentAspect = 0;
 				CurrentRoute.Sections[0].StationIndex = -1;
 			}
-			ParseRouteForData(FileName, Encoding, ref Data, PreviewOnly);
+			ParseRouteForData(fileName, Encoding, ref Data, PreviewOnly);
 			if (Plugin.Cancel)
 			{
 				Plugin.IsLoading = false;
 				return;
 			}
-			ApplyRouteData(FileName, ref Data, PreviewOnly);
+			ApplyRouteData(fileName, ref Data, PreviewOnly);
 		}
 
 		private void ParseRouteForData(string FileName, System.Text.Encoding Encoding, ref RouteData Data, bool PreviewOnly) {
