@@ -484,6 +484,12 @@ namespace Train.MsTs
 						lastResult = p.State == PantographState.Raised ? Maximum : Minimum;
 					}
 					break;
+				case PanelSubject.Fuel_Gauge:
+					if (tractionModel is DieselEngine dE)
+					{
+						lastResult = dE.FuelTank.CurrentLevel;
+					}
+					break;
 			}
 			return lastResult;
 		}

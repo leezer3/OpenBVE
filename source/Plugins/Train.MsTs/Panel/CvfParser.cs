@@ -510,6 +510,18 @@ namespace Train.MsTs
 					// https://openrails.org/files/OR_Steam%20Model_03_02_2014.pdf
 					Code = "1";
 					break;
+				case PanelSubject.Fuel_Gauge:
+					Code = car.Index + " fuellevelindex";
+					switch (subjectUnits)
+					{
+						case Units.Gallons:
+							Code = car.Index + " fuellevelindex 3.785 /";
+							break;
+						case Units.Liters:
+							Code = car.Index + " fuellevelindex";
+							break;
+					}
+					break;
 				default:
 					Code = "0";
 					break;
