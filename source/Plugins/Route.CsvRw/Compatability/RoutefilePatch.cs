@@ -138,7 +138,7 @@ namespace CsvRwRouteParser
 		internal int[] DummyRailTypes = Array.Empty<int>();
 		/// <summary>Dummy ground types to be added to fix broken cycles</summary>
 		internal int[] DummyGroundTypes = Array.Empty<int>();
-		/// <summary>The compatability signal file to use</summary>
+		/// <summary>The compatibility signal file to use</summary>
 		internal string CompatibilitySignalSet;
 		/// <summary>Forces accurate object disposal on or off</summary>
 		internal bool AccurateObjectDisposal;

@@ -202,7 +202,7 @@ namespace CsvRwRouteParser
 			{
 				return false;
 			}
-			//Some Chashinai downloads are badly formatted and don't specifiy that the objects and sounds should be placed within a Chashinai folder
+			//Some Chashinai downloads are badly formatted and don't specify that the objects and sounds should be placed within a Chashinai folder
 			if (fileName.StartsWith(@"Chashinai", StringComparison.InvariantCultureIgnoreCase))
 			{
 				string fn = fileName.Substring(10);

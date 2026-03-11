@@ -4,7 +4,6 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using System;
-using System.Xml;
 
 namespace CsvRwRouteParser
 {

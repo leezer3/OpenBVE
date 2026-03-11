@@ -467,6 +467,13 @@ namespace Train.MsTs
 					}
 					MapResult(injector2State);
 					break;
+				case PanelSubject.Boiler_Water:
+					if (tractionModel.Components.TryGetTypedValue(EngineComponent.Boiler, out Boiler b))
+					{
+						lastResult = b.WaterLevel;
+					}
+					lastResult *= UnitConversionFactor;
+					break;
 				case PanelSubject.Tender_Water:
 					if (tractionModel is TenderEngine tE)
 					{
@@ -477,6 +484,7 @@ namespace Train.MsTs
 						// CHECK: Assume that tender water will also map to tank water
 						lastResult = tA.TankWaterLevel;
 					}
+					lastResult *= UnitConversionFactor;
 					break;
 				case PanelSubject.Line_Voltage:
 					if (tractionModel.Components.TryGetTypedValue(EngineComponent.Pantograph, out Pantograph p))

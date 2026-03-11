@@ -39,7 +39,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using OpenBveApi.Runtime;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
@@ -237,9 +236,10 @@ namespace Train.MsTs
 
 						currentCar.TractionModel.Components.Add(EngineComponent.CylinderCocks, new CylinderCocks(currentCar.TractionModel));
 						currentCar.TractionModel.Components.Add(EngineComponent.Blowers, new Blowers(currentCar.TractionModel));
-						currentCar.TractionModel.Components.Add(EngineComponent.Boiler, new Boiler(currentCar.TractionModel, BoilerLength));
+						currentCar.TractionModel.Components.Add(EngineComponent.Boiler, new Boiler(currentCar.TractionModel, BoilerLength, MaxBoilerOutput, StartingBoilerWater, StartingBoilerPressure));
 						currentCar.TractionModel.Components.Add(EngineComponent.SteamInjector1, injectorType1 == 0 ? (AbstractComponent)new LiveSteamInjector(currentCar.TractionModel, injectorDiameter1) : new ExhaustSteamInjector(currentCar.TractionModel, injectorDiameter1));
 						currentCar.TractionModel.Components.Add(EngineComponent.SteamInjector2, injectorType2 == 0 ? (AbstractComponent)new LiveSteamInjector(currentCar.TractionModel, injectorDiameter1) : new ExhaustSteamInjector(currentCar.TractionModel, injectorDiameter1));
+						currentCar.TractionModel.Components.Add(EngineComponent.Firebox, new Firebox(currentCar.TractionModel, MaxFireMass, Math.Min(MaxFireMass, StartingFireMass), IdealFireMass, Math.Max(StartingFireTemp, 500)));
 						break;
 					case EngineType.NoEngine:
 						currentCar.TractionModel = new BVETrailerCar(currentCar);
@@ -574,17 +574,25 @@ namespace Train.MsTs
 		private UnitOfPressure brakeSystemDefaultUnits = UnitOfPressure.PoundsPerSquareInch;
 		private double MaxWaterLevel = -1;
 		private double MaxFuelLevel = -1;
-		private double BoilerLength = 0;
+		private double BoilerLength = 5;
+		private double MaxBoilerOutput = 32000;
 		private int injectorType1;
 		private double injectorDiameter1;
 		private int injectorType2;
 		private double injectorDiameter2;
+		private double MaxFireMass;
+		private double IdealFireMass;
+		private double StartingFireTemp;
+		private double StartingFireMass;
+		private double StartingBoilerWater;
+		private double StartingBoilerPressure;
 		/// <summary>The maximum expanded size of a particle</summary>
 		internal double ExhaustMaxMagnitude;
 		/// <summary>The rate of particle emissions at idle</summary>
 		internal double ExhaustInitialRate;
 		/// <summary>The rate of particle emissions at maximum power</summary>SmokeMaxMagnitude`
 		internal double ExhaustMaxRate;
+
 
 		private double GetMaxDieselCapacity(int carIndex)
 		{
@@ -1267,6 +1275,11 @@ namespace Train.MsTs
 							// Fire condition
 							// Coal quality
 							// NOTE: Max fuel / water levels are set by MaxTenderCoalMass and MaxTenderWaterMass
+							StartingFireTemp = block.ReadSingle();
+							StartingFireMass = block.ReadSingle();
+							StartingBoilerWater = block.ReadSingle();
+							StartingBoilerWater /= 2.205; // convert to L
+							StartingBoilerPressure = block.ReadSingle();
 							break;
 						case EngineType.Electric:
 							// Not present
@@ -1282,6 +1295,13 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.BoilerLength:
 					BoilerLength = block.ReadSingle(UnitOfLength.Meter);
+					break;
+				case KujuTokenID.MaxBoilerOutput:
+					// pounds of steam / hr
+					// assume for the minute that 1lb of steam == 1lb of water
+					MaxBoilerOutput = block.ReadSingle(VolumetricUnit.LbPerHour);
+					// convert this to KG first, then divide by 3600 to give output per second
+					MaxBoilerOutput = MaxBoilerOutput / 2.205 / 3600;
 					break;
 				case KujuTokenID.InjectorTypes:
 					try
@@ -1321,6 +1341,12 @@ namespace Train.MsTs
 					{
 						injectorDiameter2 = 15;
 					}
+					break;
+				case KujuTokenID.MaxFireMass:
+					MaxFireMass = block.ReadSingle(UnitOfWeight.Kilograms);
+					break;
+				case KujuTokenID.IdealFireMass:
+					IdealFireMass = block.ReadSingle(UnitOfWeight.Kilograms);
 					break;
 				case KujuTokenID.PassengerCapacity:
 					double numPassengers = block.ReadSingle();

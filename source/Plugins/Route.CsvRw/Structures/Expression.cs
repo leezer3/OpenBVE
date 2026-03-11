@@ -95,7 +95,7 @@ namespace CsvRwRouteParser
 
 				if (IsRw && CurrentSection.ToLowerInvariant() == "track")
 				{
-					//Removes misplaced track position indicies from the end of a command in the Track section
+					//Removes misplaced track position indices from the end of a command in the Track section
 					int idx = Text.LastIndexOf(')');
 					if (idx != -1 && idx != Text.Length)
 					{

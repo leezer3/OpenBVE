@@ -1,6 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
-//
-//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
+﻿//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -22,30 +20,35 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-namespace OpenBveApi.Motor
+
+namespace TrainManager.Motor
 {
-	/// <summary>The types of engine component</summary>
-	public enum EngineComponent
+	public class Firebox : AbstractComponent
 	{
-		/// <summary>A traction motor</summary>
-		TractionMotor,
-		/// <summary>A regenerative traction motor</summary>
-		RegenerativeTractionMotor,
-		/// <summary>A pantograph</summary>
-		Pantograph,
-		/// <summary>A gearbox</summary>
-		Gearbox,
-		/// <summary>Steam engine cylinder cocks</summary>
-		CylinderCocks,
-		/// <summary>Steam engine blowers</summary>
-		Blowers,
-		/// <summary>Steam engine boiler</summary>
-		Boiler,
-		/// <summary>Steam engine first injector</summary>
-		SteamInjector1,
-		/// <summary>Steam engine second injector</summary>
-		SteamInjector2,
-		/// <summary>Steam engine firebox</summary>
-		Firebox
+		/// <summary>The maximum fuel level in the firebox</summary>
+		private readonly double MaxFuelLevel;
+		/// <summary>The ideal fuel level in the firebox</summary>
+		private readonly double IdealFuelLevel;
+		/// <summary>The current firebox temperature in °C</summary>
+		public double Temperature;
+		/// <summary>The current fuel level in the firebox</summary>
+		public double FuelLevel;
+
+		/// <summary>The current heat output ratio</summary>
+		/// <remarks>Assumed coal combustion temperature</remarks>
+		public double HeatOutput => (FuelLevel / IdealFuelLevel) * (Temperature / 1000);
+
+		public Firebox(TractionModel engine, double maxFuelLevel, double currentFuelLevel, double idealFuelLevel, double currentTemperature) : base(engine)
+		{
+			MaxFuelLevel = maxFuelLevel;
+			FuelLevel = currentFuelLevel;
+			IdealFuelLevel = idealFuelLevel;
+			Temperature = currentTemperature;
+		}
+
+		public override void Update(double timeElapsed)
+		{
+
+		}
 	}
 }

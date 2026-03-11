@@ -14,6 +14,6 @@ namespace Train.MsTs
 		TwelveHour,
 		While_Pressed,
 		Pressed,
-		Liquid,
+		Liquid
 	}
 }

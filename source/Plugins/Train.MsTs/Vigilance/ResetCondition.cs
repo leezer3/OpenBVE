@@ -14,6 +14,6 @@ namespace Train.MsTs
 		BrakeFullyOn = 32,
 		DynamicBrakeOff = 64,
 		DynamicBrakeOn = 128,
-		ResetButton = 256,
+		ResetButton = 256
 	}
 }

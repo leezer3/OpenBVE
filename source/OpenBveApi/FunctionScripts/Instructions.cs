@@ -56,7 +56,7 @@ namespace OpenBveApi.FunctionScripting
 		LeftDoorsTargetIndex, RightDoorsTargetIndex,
 		BrakeMainReservoirOfCar, BrakeEqualizingReservoirOfCar, BrakeBrakePipeOfCar, BrakeBrakeCylinderOfCar, BrakeStraightAirPipeOfCar,
 		PantographStateOfCar,
-		CylinderCocksStateOfCar, BlowersStateOfCar, TenderWaterOfCar,
+		CylinderCocksStateOfCar, BlowersStateOfCar, TenderWaterOfCar, BoilerPressureOfCar,
 		WheelRadiusOfCar,
 		WheelSlipCar,
 		EngineRunningCar,

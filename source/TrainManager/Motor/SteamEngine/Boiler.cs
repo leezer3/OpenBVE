@@ -20,19 +20,43 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using OpenBveApi;
+using OpenBveApi.Motor;
+
 namespace TrainManager.Motor
 {
 	public class Boiler : AbstractComponent
 	{
 		public readonly double Length;
-		
+		/// <summary>The maximum steam generation rate of the boiler in kg / sec</summary>
+		public readonly double MaxOutput;
+		/// <summary>The current boiler water level in Liters</summary>
 		public double WaterLevel;
-
+		/// <summary>The current boiler pressure in PSI</summary>
 		public double CurrentPressure;
 
-		public Boiler(TractionModel engine, double length) : base(engine)
+		public Boiler(TractionModel engine, double length, double maxOutput, double startingWaterLevel, double startingPressure) : base(engine)
 		{
 			Length = length;
+			MaxOutput = maxOutput;
+			WaterLevel = startingWaterLevel;
+			CurrentPressure = startingPressure;
+		}
+
+		public override void Update(double timeElapsed)
+		{
+			if (!baseEngine.Components.TryGetTypedValue(EngineComponent.Firebox, out Firebox firebox))
+			{
+				return;
+			}
+
+			double steamGenerated = MaxOutput * firebox.HeatOutput;
+			// NOTE: MSTS steam simulation bug- boiler volume fixed at 150 cubic feet (See 'Manual 2.0e.doc')
+			// for the minute, we'll run with that as this is the most likely to produce 'expected' results
+			// 1lb / sqft = 0.00694 psi
+			CurrentPressure += steamGenerated / 150.0 * 0.00694 * 2.205;
+			// drop water level (convert from pounds)
+			WaterLevel -= steamGenerated;
 		}
 	}
 }

@@ -306,7 +306,6 @@ namespace Train.MsTs
 
 					Texture[] frameTextures = new Texture[11];
 					TexturePath = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility"), "numbers.png"); // arial 9.5pt
-					Plugin.CurrentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
 
 					for (int i = 0; i < 10; i++)
 					{

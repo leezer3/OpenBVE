@@ -22,30 +22,39 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-namespace OpenBveApi.Motor
+using System.Collections.Generic;
+
+namespace OpenBveApi.World
 {
-	/// <summary>The types of engine component</summary>
-	public enum EngineComponent
+	/// <summary>Available units of volumetric</summary>
+	public enum VolumetricUnit
 	{
-		/// <summary>A traction motor</summary>
-		TractionMotor,
-		/// <summary>A regenerative traction motor</summary>
-		RegenerativeTractionMotor,
-		/// <summary>A pantograph</summary>
-		Pantograph,
-		/// <summary>A gearbox</summary>
-		Gearbox,
-		/// <summary>Steam engine cylinder cocks</summary>
-		CylinderCocks,
-		/// <summary>Steam engine blowers</summary>
-		Blowers,
-		/// <summary>Steam engine boiler</summary>
-		Boiler,
-		/// <summary>Steam engine first injector</summary>
-		SteamInjector1,
-		/// <summary>Steam engine second injector</summary>
-		SteamInjector2,
-		/// <summary>Steam engine firebox</summary>
-		Firebox
+		/// <summary>Pounds per hour</summary>
+		LbPerHour,
+		/// <summary>Pounds per hour</summary>
+		LbPerMinute,
+		/// <summary>Kilograms per hour</summary>
+		KgPerHour,
+		/// <summary>Kilograms per minute</summary>
+		KgPerMinute,
+	}
+
+	/// <summary>Implements the volume convertor</summary>
+	public class VolumetricConvertor : UnitConverter<VolumetricUnit, double>
+	{
+		static VolumetricConvertor()
+		{
+			BaseUnit = VolumetricUnit.LbPerHour;
+			RegisterConversion(VolumetricUnit.LbPerMinute, v => v / 60, v => v * 60);
+			RegisterConversion(VolumetricUnit.KgPerHour, v => v / 60 / 2.205, v => v * 60 * 2.205);
+			RegisterConversion(VolumetricUnit.KgPerMinute, v => v / 2.205, v => v * 2.205);
+			KnownUnits = new Dictionary<string, VolumetricUnit>
+			{
+				{ "lb/h", VolumetricUnit.LbPerHour }, {"lb/m", VolumetricUnit.LbPerMinute}, { "lbh", VolumetricUnit.LbPerHour }, {"lbm", VolumetricUnit.LbPerMinute}
+			};
+		}
+
+		/// <summary>Contains the known units</summary>
+		public static Dictionary<string, VolumetricUnit> KnownUnits;
 	}
 }

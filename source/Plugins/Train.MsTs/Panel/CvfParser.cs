@@ -493,14 +493,14 @@ namespace Train.MsTs
 					break;
 				case PanelSubject.Tender_Water:
 					// Tender_Water (or tanks) returns a value in gallons / liters
-					Code = car.Index + " tenderwaterstateindex";
+					Code = car.Index + " tenderwaterindex";
 					switch (subjectUnits)
 					{
 						case Units.Gallons:
-							Code = car.Index + " tenderwaterstateindex 3.785 /";
+							Code = car.Index + " tenderwaterindex 3.785 /";
 							break;
 						case Units.Liters:
-							Code = car.Index + " tenderwaterstateindex";
+							Code = car.Index + " tenderwaterindex";
 							break;
 					}
 					break;
@@ -509,6 +509,9 @@ namespace Train.MsTs
 					// Presumably this has to do with the steam circuit calculations
 					// https://openrails.org/files/OR_Steam%20Model_03_02_2014.pdf
 					Code = "1";
+					break;
+				case PanelSubject.Steam_Pr:
+					Code = car.Index + " boilerpressureindex";
 					break;
 				case PanelSubject.Fuel_Gauge:
 					Code = car.Index + " fuellevelindex";

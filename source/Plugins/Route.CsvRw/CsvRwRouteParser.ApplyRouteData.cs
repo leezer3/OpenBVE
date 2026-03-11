@@ -400,7 +400,7 @@ namespace CsvRwRouteParser
 													/*
 													 * Switches are obviously(?) going to be on intersecting tracks
 													 * This means that we don't want to add the default point sound when Rail0 intersects with
-													 * another, but should do it in the switch instead for consistancy
+													 * another, but should do it in the switch instead for consistency
 													 * 
 													 * Longer term, the original point sound method should really be got rid of entirely
 													 * (Parser option??)
