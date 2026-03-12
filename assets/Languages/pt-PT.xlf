@@ -18,7 +18,7 @@
 				</trans-unit>
 				<trans-unit id="last_updated">
 					<source>2019-06-29</source>
-					<target state="translated">2025-04-16</target>
+					<target state="translated">2026-03-12</target>
 				</trans-unit>
 			</group>
 			<group id="openbve">
@@ -179,6 +179,11 @@
 				<group id="errors">
 					<trans-unit id="critical_loading">
 						<source>A critical error occured: \n\n [error] \n\n Please inspect the error log file for further information.</source>
+						<target state="translated">Ocorreu um erro crítico: 
+
+ [error] 
+
+ Por favor analise o relatório para mais informações.</target>
 					</trans-unit>
 					<trans-unit id="critical_file">
 						<source>A critical error occured whilst parsing the [file] file</source>
@@ -2918,9 +2923,11 @@
 					</trans-unit>
 					<trans-unit id="cylinder_cocks">
 						<source>Activates or deactivates the cylinder cocks</source>
+						<target state="translated">Activa ou desactiva as válvulas dos cilindros</target>
 					</trans-unit>
 					<trans-unit id="cylinder_cocks">
 						<source>Activates or deactivates the cylinder cocks</source>
+						<target state="translated">Activa ou desactiva as válvulas dos cilindros</target>
 					</trans-unit>
 					<trans-unit id="engine_start">
 						<source>Starts the engine</source>
