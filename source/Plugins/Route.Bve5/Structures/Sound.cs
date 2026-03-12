@@ -51,22 +51,26 @@ namespace Route.Bve5
 
 		internal void Create(RouteData Data, int currentElement, double startingDistance, Vector3 worldPosition, Vector2 worldDirection)
 		{
-			if (Type == SoundType.Ambient)
+			/*
+			 * https://github.com/leezer3/OpenBVE/issues/1241
+			 *
+			 * The Sound['sound'].Play(); command looks in the Sounds list first
+			 * If it is not found here, the Sounds3D list is then checked.
+			 *
+			 * If both are present, the Sounds list takes priority
+			 */
+			if (!Data.Sounds.ContainsKey(Key) && !Data.Sound3Ds.ContainsKey(Key))
 			{
-				/*
-				 * https://github.com/leezer3/OpenBVE/issues/1241
-				 *
-				 * The Sound['sound'].Play(); command looks in the Sounds list first
-				 * If it is not found here, the Sounds3D list is then checked.
-				 *
-				 * If both are present, the Sounds list takes priority
-				 */
-				if (!Data.Sounds.TryGetValue(Key, out SoundHandle buffer) && !Data.Sound3Ds.TryGetValue(Key, out buffer))
-				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: The Sound with key " + Key + " was not found in either the Sounds3D or Sounds list.");
-					return;
-				}
-				
+				Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: The Sound with key " + Key + " was not found in either the Sounds3D or Sounds list.");
+				return;
+			}
+			if (Data.Sounds.TryGetValue(Key, out SoundHandle buffer) && buffer != null)
+			{
+				double d = TrackPosition - startingDistance;
+				Plugin.CurrentRoute.Tracks[0].Elements[currentElement].Events.Add(new SoundEvent(Plugin.CurrentHost, d, buffer, true, false, false, false, Vector3.Zero, 0.0));
+			}
+			else if (Data.Sound3Ds.TryGetValue(Key, out buffer))
+			{
 				double d = TrackPosition - startingDistance;
 				double dx = Position.X;
 				double dy = Position.Y;
@@ -81,17 +85,7 @@ namespace Route.Bve5
 					Plugin.CurrentHost.PlaySound(buffer, 1.0, 1.0, wpos, null, true);
 				}
 			}
-
-			if (Type == SoundType.TrainStatic)
-			{
-				Data.Sounds.TryGetValue(Key, out SoundHandle buffer);
-
-				if (buffer != null)
-				{
-					double d = TrackPosition - startingDistance;
-					Plugin.CurrentRoute.Tracks[0].Elements[currentElement].Events.Add(new SoundEvent(Plugin.CurrentHost, d, buffer, true, true, false, false, Vector3.Zero, 0.0));
-				}
-			}
+			
 		}
 	}
 }
