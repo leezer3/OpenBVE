@@ -58,6 +58,8 @@ namespace Route.Bve5
 			 * If it is not found here, the Sounds3D list is then checked.
 			 *
 			 * If both are present, the Sounds list takes priority
+			 *
+			 * Note that files loaded from the Sounds3D list loop, whereas those from the Sounds list do not
 			 */
 			if (!Data.Sounds.ContainsKey(Key) && !Data.Sound3Ds.ContainsKey(Key))
 			{
@@ -67,7 +69,7 @@ namespace Route.Bve5
 			if (Data.Sounds.TryGetValue(Key, out SoundHandle buffer) && buffer != null)
 			{
 				double d = TrackPosition - startingDistance;
-				Plugin.CurrentRoute.Tracks[0].Elements[currentElement].Events.Add(new SoundEvent(Plugin.CurrentHost, d, buffer, true, false, false, false, Vector3.Zero, 0.0));
+				Plugin.CurrentRoute.Tracks[0].Elements[currentElement].Events.Add(new SoundEvent(Plugin.CurrentHost, d, buffer, true, false, true, false, Vector3.Zero, 0.0));
 			}
 			else if (Data.Sound3Ds.TryGetValue(Key, out buffer))
 			{
