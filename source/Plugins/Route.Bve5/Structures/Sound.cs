@@ -26,6 +26,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Sounds;
 using RouteManager2.Events;
 using System;
+using OpenBveApi.Interface;
 
 namespace Route.Bve5
 {
@@ -52,7 +53,20 @@ namespace Route.Bve5
 		{
 			if (Type == SoundType.Ambient)
 			{
-				Data.Sound3Ds.TryGetValue(Key, out SoundHandle buffer);
+				/*
+				 * https://github.com/leezer3/OpenBVE/issues/1241
+				 *
+				 * The Sound['sound'].Play(); command looks in the Sounds list first
+				 * If it is not found here, the Sounds3D list is then checked.
+				 *
+				 * If both are present, the Sounds list takes priority
+				 */
+				if (!Data.Sounds.TryGetValue(Key, out SoundHandle buffer) && !Data.Sound3Ds.TryGetValue(Key, out buffer))
+				{
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: The Sound with key " + Key + " was not found in either the Sounds3D or Sounds list.");
+					return;
+				}
+				
 				double d = TrackPosition - startingDistance;
 				double dx = Position.X;
 				double dy = Position.Y;
