@@ -873,7 +873,7 @@ namespace Route.Bve5
 				string stationKey = Statement.Key.ToLowerInvariant();
 				if (!RouteData.StationList.ContainsKey(stationKey))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unable to find a station with key " + Statement.Key + " in the BVE5 station list.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Unable to find a station with key " + Statement.Key + " in the station list.");
 					return;
 				}
 
@@ -1005,7 +1005,7 @@ namespace Route.Bve5
 								// Changes the density, but not the color
 								if (!NumberFormats.TryParseFloatVb6(Statement.GetArgumentValueAsString(ArgumentName.Density), out Density))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogDensity value at track position " + Statement.Distance);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Invalid FogDensity value at track position " + Statement.Distance);
 									break;
 								}
 								RouteData.sortedBlocks[Statement.Distance].FogDefined = true;
@@ -1017,20 +1017,20 @@ namespace Route.Bve5
 						{
 							if (!NumberFormats.TryParseFloatVb6(Statement.GetArgumentValueAsString(ArgumentName.Density), out Density))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogDensity value at track position " + Statement.Distance);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Invalid FogDensity value at track position " + Statement.Distance);
 								break;
 							}
 							if (!Statement.HasArgument(ArgumentName.Red) || !NumberFormats.TryParseFloatVb6(Statement.GetArgumentValueAsString(ArgumentName.Red), out r))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogColor R value at track position " + Statement.Distance);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Invalid FogColor R value at track position " + Statement.Distance);
 							}
 							if (!Statement.HasArgument(ArgumentName.Green) || !NumberFormats.TryParseFloatVb6(Statement.GetArgumentValueAsString(ArgumentName.Green), out g))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogColor G value at track position " + Statement.Distance);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Invalid FogColor G value at track position " + Statement.Distance);
 							}
 							if (!Statement.HasArgument(ArgumentName.Blue) || !NumberFormats.TryParseFloatVb6(Statement.GetArgumentValueAsString(ArgumentName.Blue), out b))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogColor B value at track position " + Statement.Distance);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Invalid FogColor B value at track position " + Statement.Distance);
 							}
 						}
 

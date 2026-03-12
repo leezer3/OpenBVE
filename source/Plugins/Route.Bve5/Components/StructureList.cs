@@ -52,7 +52,7 @@ namespace Route.Bve5
 
 				if (!File.Exists(structureList))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "The BVE5 Structure List file " + structureList + " was not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Structure List file " + structureList + " was not found.");
 					return;
 				}
 			}
@@ -84,7 +84,7 @@ namespace Route.Bve5
 				if (string.IsNullOrEmpty(FilePath) || a == -1)
 				{
 					// empty object name
-					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "No object file was specified for key " + Lines[i]);
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: No object file was specified for key " + Lines[i]);
 					continue;
 				}
 
@@ -100,7 +100,7 @@ namespace Route.Bve5
 
 				if (!File.Exists(FilePath))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The Object File " + FilePath + " with key " + Key + " was not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Object File " + FilePath + " with key " + Key + " was not found.");
 					continue;
 				}
 

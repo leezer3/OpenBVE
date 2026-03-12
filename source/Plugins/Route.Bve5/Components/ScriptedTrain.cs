@@ -102,7 +102,7 @@ namespace Route.Bve5
 
 						if (!RouteData.TrackKeyList.Contains(TrackKey, StringComparer.OrdinalIgnoreCase))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Attempted to place ScriptedTrain " + Statement.Key + " on the non-existent track " + TrackKey + " at track position " + Statement.Distance + "m");
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Attempted to place ScriptedTrain " + Statement.Key + " on the non-existent track " + TrackKey + " at track position " + Statement.Distance + "m");
 							TrackKey = "0";
 						}
 
@@ -113,7 +113,7 @@ namespace Route.Bve5
 						TrainFilePath = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Convert.ToString(TrainFilePath));
 						if (!File.Exists(Convert.ToString(TrainFilePath)))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Convert.ToString(TrainFilePath) + "is not found.");
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: ScriptedTrain " + Convert.ToString(TrainFilePath) + " was not found.");
 							continue;
 						}
 
@@ -148,7 +148,7 @@ namespace Route.Bve5
 
 				if (!RouteData.TrackKeyList.Contains(TrackKey, StringComparer.OrdinalIgnoreCase))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Attempted to place waypoint for ScriptedTrain " + Statement.Key + " on the non-existent track " + TrackKey + " at track position " + Statement.Distance + "m");
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Attempted to place waypoint for ScriptedTrain " + Statement.Key + " on the non-existent track " + TrackKey + " at track position " + Statement.Distance + "m");
 					TrackKey = "0";
 				}
 

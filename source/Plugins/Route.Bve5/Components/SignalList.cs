@@ -52,7 +52,7 @@ namespace Route.Bve5
 
 				if (!File.Exists(signalList))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "The BVE5 Signal List file " + signalList + " was not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Signal List file " + signalList + " was not found.");
 					return;
 				}
 			}

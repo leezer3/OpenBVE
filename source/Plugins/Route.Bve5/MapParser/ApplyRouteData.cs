@@ -635,7 +635,7 @@ namespace Route.Bve5
 			{
 				if (Plugin.CurrentRoute.Stations[i].Stops.Length == 0 & Plugin.CurrentRoute.Stations[i].StopMode != StationStopMode.AllPass)
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "StationIndex " + Plugin.CurrentRoute.Stations[i].Name + " expects trains to stop but does not define stop points at track position " + Plugin.CurrentRoute.Stations[i].DefaultTrackPosition.ToString(Culture) + " in file " + FileName);
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: StationIndex " + Plugin.CurrentRoute.Stations[i].Name + " expects trains to stop but does not define stop points at track position " + Plugin.CurrentRoute.Stations[i].DefaultTrackPosition.ToString(Culture) + " in file " + FileName);
 					Plugin.CurrentRoute.Stations[i].StopMode = StationStopMode.AllPass;
 				}
 			}

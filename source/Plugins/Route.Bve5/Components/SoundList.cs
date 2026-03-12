@@ -51,7 +51,7 @@ namespace Route.Bve5
 
 				if (!File.Exists(soundList))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "The BVE5 Sound List file " + soundList + " was not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Sound List file " + soundList + " was not found.");
 					return;
 				}
 			}
@@ -79,7 +79,7 @@ namespace Route.Bve5
 				if (string.IsNullOrEmpty(FilePath) || a == -1)
 				{
 					// empty object name
-					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "No sound file was specified for key " + Lines[i]);
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: No sound file was specified for key " + Lines[i]);
 					continue;
 				}
 
@@ -95,7 +95,7 @@ namespace Route.Bve5
 
 				if (!File.Exists(FilePath))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The Sound File " + FilePath + " with key " + Key + " was not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Sound File " + FilePath + " with key " + Key + " was not found.");
 					continue;
 				}
 
@@ -121,7 +121,7 @@ namespace Route.Bve5
 
 				if (!File.Exists(sound3DList))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "The BVE5 Sound3D List file " + sound3DList + " was not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Sound3D List file " + sound3DList + " was not found.");
 					return;
 				}
 			}
@@ -146,7 +146,7 @@ namespace Route.Bve5
 				int a = Lines[i].IndexOf(',');
 				if (a == -1)
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "No sound file was specified for key " + Lines[i]);
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: No sound file was specified for key " + Lines[i]);
 					continue;
 				}
 				string[] splitLine = Lines[i].Split(',');
@@ -161,14 +161,14 @@ namespace Route.Bve5
 					if (!NumberFormats.TryParseDoubleVb6(splitLine[2], out soundRadius))
 					{
 						soundRadius = 15;
-						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "An invalid sound radius was specified for key " + Lines[i]);
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: An invalid sound radius was specified for key " + Lines[i]);
 					}
 					
 				}
 				if (string.IsNullOrEmpty(splitLine[1]))
 				{
 					// empty object name
-					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "No sound file was specified for key " + Lines[i]);
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: No sound file was specified for key " + Lines[i]);
 					continue;
 				}
 
@@ -186,7 +186,7 @@ namespace Route.Bve5
 
 				if (!File.Exists(FilePath))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The Sound3D File " + FilePath + " with key " + Key + " was not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Sound3D File " + FilePath + " with key " + Key + " was not found.");
 					continue;
 				}
 
