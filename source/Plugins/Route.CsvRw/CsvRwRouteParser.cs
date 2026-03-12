@@ -242,7 +242,7 @@ namespace CsvRwRouteParser {
 									 *  .Run(0) 0
 									 *
 									 */
-									Section = "train" + Command;
+									Command = "train" + Command;
 								}
 								else
 								{
