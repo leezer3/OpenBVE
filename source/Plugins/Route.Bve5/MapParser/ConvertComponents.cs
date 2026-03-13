@@ -891,8 +891,14 @@ namespace Route.Bve5
 				
 				RouteStation NewStation = new RouteStation(stationKey);
 				RouteData.StationList[stationKey].Create(ref NewStation);
-				RouteData.Sounds.TryGetValue(RouteData.StationList[stationKey].ArrivalSoundKey, out NewStation.ArrivalSoundBuffer);
-				RouteData.Sounds.TryGetValue(RouteData.StationList[stationKey].DepartureSoundKey, out NewStation.DepartureSoundBuffer);
+				if (!string.IsNullOrEmpty(RouteData.StationList[stationKey].ArrivalSoundKey) && !RouteData.Sounds.TryGetValue(RouteData.StationList[stationKey].ArrivalSoundKey, out NewStation.ArrivalSoundBuffer))
+				{
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Unable to find the Station ArrivalSound with key " + RouteData.StationList[stationKey].ArrivalSoundKey + " for station " + stationKey);
+				}
+				if (!string.IsNullOrEmpty(RouteData.StationList[stationKey].ArrivalSoundKey) && !RouteData.Sounds.TryGetValue(RouteData.StationList[stationKey].DepartureSoundKey, out NewStation.DepartureSoundBuffer))
+				{
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Unable to find the Station DepartureSound with key " + RouteData.StationList[stationKey].DepartureSoundKey + " for station " + stationKey);
+				}
 				NewStation.OpenLeftDoors = Convert.ToDouble(Doors) < 0.0;
 				NewStation.OpenRightDoors = Convert.ToDouble(Doors) > 0.0;
 				NewStation.Stops = new StationStop[1];
