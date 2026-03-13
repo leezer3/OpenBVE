@@ -355,16 +355,14 @@ namespace Route.Bve5
 					if (StartBlock != i)
 					{
 						double StartDistance = Blocks[StartBlock].StartingDistance;
-						double StartRadius = 0.0;
 						double StartCant = Blocks[StartBlock - 1].Rails[railKey].CurveCant;
 						double EndDistance = Blocks[i].StartingDistance;
-						double EndRadius = 0.0;
 						double EndCant = Blocks[i].Rails[railKey].CurveCant;
 
 						for (int k = StartBlock; k < i; k++)
 						{
 							double CurrentDistance = Blocks[k].StartingDistance;
-							CalcCurveTransition(StartDistance, StartRadius, StartCant, EndDistance, EndRadius, EndCant, CurrentDistance, out _, out Blocks[k].Rails[railKey].CurveCant);
+							CalcCurveTransition(StartDistance, 0.0, StartCant, EndDistance, 0.0, EndCant, CurrentDistance, out _, out Blocks[k].Rails[railKey].CurveCant);
 						}
 					}
 				}
@@ -400,16 +398,14 @@ namespace Route.Bve5
 					if (StartBlock != i)
 					{
 						double StartDistance = Blocks[StartBlock].StartingDistance;
-						double StartRadius = 0.0;
 						double StartCant = Blocks[StartBlock].Rails[railKey].CurveCant;
 						double EndDistance = Blocks[i].StartingDistance;
-						double EndRadius = 0.0;
 						double EndCant = Blocks[i].Rails[railKey].CurveCant;
 
 						for (int k = StartBlock + 1; k < i; k++)
 						{
 							double CurrentDistance = Blocks[k].StartingDistance;
-							CalcCurveTransition(StartDistance, StartRadius, StartCant, EndDistance, EndRadius, EndCant, CurrentDistance, out _, out Blocks[k].Rails[railKey].CurveCant);
+							CalcCurveTransition(StartDistance, 0.0, StartCant, EndDistance, 0.0, EndCant, CurrentDistance, out _, out Blocks[k].Rails[railKey].CurveCant);
 						}
 					}
 				}
@@ -425,7 +421,7 @@ namespace Route.Bve5
 
 			IList<Block> Blocks = RouteData.Blocks;
 
-			foreach (var Statement in ParseData.Statements)
+			foreach (Statement Statement in ParseData.Statements)
 			{
 				if (Statement.ElementName != MapElementName.Structure)
 				{
@@ -517,7 +513,7 @@ namespace Route.Bve5
 
 			List<Repeater> RepeaterList = new List<Repeater>();
 
-			foreach (var Statement in ParseData.Statements)
+			foreach (Statement Statement in ParseData.Statements)
 			{
 				if (Statement.ElementName != MapElementName.Repeater)
 				{
@@ -530,11 +526,11 @@ namespace Route.Bve5
 				}
 			}
 
-			foreach (var Repeater in RepeaterList)
+			foreach (Repeater Repeater in RepeaterList)
 			{
 				double lastDistance = -1;
 				bool possibleEnd = false;
-				foreach (var Statement in ParseData.Statements)
+				foreach (Statement Statement in ParseData.Statements)
 				{
 					if (Statement.ElementName != MapElementName.Repeater || !Statement.Key.Equals(Repeater.Key, StringComparison.InvariantCultureIgnoreCase))
 					{
@@ -684,7 +680,7 @@ namespace Route.Bve5
 			}
 
 
-			foreach (var Statement in ParseData.Statements)
+			foreach (Statement Statement in ParseData.Statements)
 			{
 				if (Statement.ElementName != MapElementName.Section && !(Statement.ElementName == MapElementName.Signal && Statement.FunctionName == MapFunctionName.SpeedLimit))
 				{
@@ -736,7 +732,7 @@ namespace Route.Bve5
 				return;
 			}
 
-			foreach (var Statement in ParseData.Statements)
+			foreach (Statement Statement in ParseData.Statements)
 			{
 				if (Statement.ElementName != MapElementName.Signal || Statement.FunctionName != MapFunctionName.Put)
 				{
@@ -806,7 +802,7 @@ namespace Route.Bve5
 				return;
 			}
 
-			foreach (var Statement in ParseData.Statements)
+			foreach (Statement Statement in ParseData.Statements)
 			{
 				if (Statement.ElementName != MapElementName.Beacon)
 				{
@@ -1054,7 +1050,7 @@ namespace Route.Bve5
 				return;
 			}
 
-			foreach (var Statement in ParseData.Statements)
+			foreach (Statement Statement in ParseData.Statements)
 			{
 				if (Statement.ElementName != MapElementName.FlangeNoise)
 				{

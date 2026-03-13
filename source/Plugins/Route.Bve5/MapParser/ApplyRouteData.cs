@@ -205,7 +205,7 @@ namespace Route.Bve5
 						}
 						Data.Blocks[i].Fog.TrackPosition = StartingDistance;
 						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new FogChangeEvent(Plugin.CurrentRoute, 0.0, PreviousFog, Data.Blocks[i].Fog, Data.Blocks[i].Fog));
-						if (PreviousFogElement >= 0 & PreviousFogEvent >= 0)
+						if (PreviousFogElement >= 0 && PreviousFogEvent >= 0)
 						{
 							FogChangeEvent e = (FogChangeEvent)Plugin.CurrentRoute.Tracks[0].Elements[PreviousFogElement].Events[PreviousFogEvent];
 							e.NextFog = Data.Blocks[i].Fog;
@@ -246,7 +246,7 @@ namespace Route.Bve5
 				{
 					int s = Data.Blocks[i].StationIndex;
 					Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new StationStartEvent(Plugin.CurrentRoute, 0.0, s));
-					double dx, dy = 3.0;
+					double dx;
 					if (Plugin.CurrentRoute.Stations[s].OpenLeftDoors & !Plugin.CurrentRoute.Stations[s].OpenRightDoors)
 					{
 						dx = -5.0;
@@ -259,14 +259,14 @@ namespace Route.Bve5
 					{
 						dx = 0.0;
 					}
-					Plugin.CurrentRoute.Stations[s].SoundOrigin = Position + dx * Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide + dy * Plugin.CurrentRoute.Tracks[0].Elements[n].WorldUp;
+					Plugin.CurrentRoute.Stations[s].SoundOrigin = Position + dx * Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide + 3.0 * Plugin.CurrentRoute.Tracks[0].Elements[n].WorldUp;
 				}
 
 				// stop
 				if (Data.Blocks[i].Stop >= 0)
 				{
 					int s = Data.Blocks[i].Stop;
-					double dx, dy = 3.0;
+					double dx;
 					if (Plugin.CurrentRoute.Stations[s].OpenLeftDoors & !Plugin.CurrentRoute.Stations[s].OpenRightDoors)
 					{
 						dx = -5.0;
@@ -279,7 +279,7 @@ namespace Route.Bve5
 					{
 						dx = 0.0;
 					}
-					Plugin.CurrentRoute.Stations[s].SoundOrigin = Position + dx * Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide + dy * Plugin.CurrentRoute.Tracks[0].Elements[n].WorldUp;
+					Plugin.CurrentRoute.Stations[s].SoundOrigin = Position + dx * Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide + 3.0 * Plugin.CurrentRoute.Tracks[0].Elements[n].WorldUp;
 				}
 
 				// limit
@@ -633,7 +633,7 @@ namespace Route.Bve5
 			}
 			for (int i = 0; i < Plugin.CurrentRoute.Stations.Length; i++)
 			{
-				if (Plugin.CurrentRoute.Stations[i].Stops.Length == 0 & Plugin.CurrentRoute.Stations[i].StopMode != StationStopMode.AllPass)
+				if (Plugin.CurrentRoute.Stations[i].Stops.Length == 0 && Plugin.CurrentRoute.Stations[i].StopMode != StationStopMode.AllPass)
 				{
 					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: StationIndex " + Plugin.CurrentRoute.Stations[i].Name + " expects trains to stop but does not define stop points at track position " + Plugin.CurrentRoute.Stations[i].DefaultTrackPosition.ToString(Culture) + " in file " + FileName);
 					Plugin.CurrentRoute.Stations[i].StopMode = StationStopMode.AllPass;

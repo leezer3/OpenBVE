@@ -34,7 +34,7 @@ namespace Route.Bve5
 	{
 		/// <summary>The track position of the sound</summary>
 		internal readonly double TrackPosition;
-		/// <summary>The key of the soundfile in the sounds list</summary>
+		/// <summary>The key of the sound file in the sounds list</summary>
 		internal readonly string Key;
 		/// <summary>The type of sound</summary>
 		internal readonly SoundType Type;

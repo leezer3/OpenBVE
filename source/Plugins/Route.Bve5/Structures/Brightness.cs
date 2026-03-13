@@ -48,7 +48,7 @@ namespace Route.Bve5
 				int k = Plugin.CurrentRoute.Tracks.ElementAt(i).Key;
 				double d = TrackPosition - startingDistance;
 				Plugin.CurrentRoute.Tracks[k].Elements[currentElement].Events.Add(new BrightnessChangeEvent(d, Value, CurrentBrightnessValue, TrackPosition - CurrentBrightnessTrackPosition));
-				if (CurrentBrightnessElement >= 0 & CurrentBrightnessEvent >= 0)
+				if (CurrentBrightnessElement >= 0 && CurrentBrightnessEvent >= 0)
 				{
 					BrightnessChangeEvent bce = (BrightnessChangeEvent)Plugin.CurrentRoute.Tracks[0].Elements[CurrentBrightnessElement].Events[CurrentBrightnessEvent];
 					bce.NextBrightness = Value;

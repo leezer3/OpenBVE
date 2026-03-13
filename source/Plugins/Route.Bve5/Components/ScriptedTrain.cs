@@ -56,13 +56,14 @@ namespace Route.Bve5
 
 			List<ScriptedTrain> OtherTrains = new List<ScriptedTrain>();
 
-			foreach (var Statement in ParseData.Statements)
+			foreach (Statement Statement in ParseData.Statements)
 			{
 				if (Statement.ElementName != MapElementName.Train)
 				{
 					continue;
 				}
 
+				// ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 				switch (Statement.FunctionName)
 				{
 					case MapFunctionName.Add:
@@ -130,7 +131,7 @@ namespace Route.Bve5
 				}
 			}
 
-			foreach (var Statement in ParseData.Statements)
+			foreach (Statement Statement in ParseData.Statements)
 			{
 				dynamic d = Statement;
 				if (Statement.ElementName != MapElementName.Train || Statement.FunctionName != MapFunctionName.SetTrack)
@@ -167,7 +168,7 @@ namespace Route.Bve5
 				OtherTrains[TrainIndex].Direction = Direction;
 			}
 
-			foreach (var OtherTrain in OtherTrains)
+			foreach (ScriptedTrain OtherTrain in OtherTrains)
 			{
 				if (!RouteData.TrackKeyList.Contains(OtherTrain.TrackKey, StringComparer.OrdinalIgnoreCase))
 				{
@@ -237,7 +238,7 @@ namespace Route.Bve5
 
 				List<TravelData> Data = new List<TravelData>();
 
-				foreach (var Statement in ParseData.Statements)
+				foreach (Statement Statement in ParseData.Statements)
 				{
 					if (Statement.ElementName != MapElementName.Train || Statement.Key != OtherTrain.Key)
 					{
@@ -299,7 +300,7 @@ namespace Route.Bve5
 				}
 #endif
 
-				foreach (var Car in Train.Cars)
+				foreach (CarBase Car in Train.Cars)
 				{
 					Car.FrontAxle.Follower.TrackIndex = Data[0].RailIndex;
 					Car.RearAxle.Follower.TrackIndex = Data[0].RailIndex;
@@ -376,7 +377,7 @@ namespace Route.Bve5
 				}
 			}
 
-			foreach (var Structure in Structures)
+			foreach (Dictionary<string, string> Structure in Structures)
 			{
 				Structure.TryGetValue("key", out string Key);
 				Structure.TryGetValue("distance", out string TempDistance);
@@ -399,11 +400,11 @@ namespace Route.Bve5
 				scriptedTrain.CarObjects.Add(new CarObject(Key, Distance, Span, Z));
 			}
 
-			foreach (var Sound3d in Sound3ds)
+			foreach (Dictionary<string, string> Sound3d in Sound3ds)
 			{
 				Sound3d.TryGetValue("key", out string Key);
 			
-				CarSound existingSound = scriptedTrain.CarSounds.Find(carsound => carsound.Key == Key);
+				CarSound existingSound = scriptedTrain.CarSounds.Find(carSound => carSound.Key == Key);
 				if (existingSound != null && existingSound.Distance1 != null && existingSound.Distance2 != null) {
 					continue;
 				}
@@ -416,13 +417,11 @@ namespace Route.Bve5
 
 				double? Distance1 = null;
 				double? Distance2 = null;
-				double Distance1Parsed = 0;
-				double Distance2Parsed = 0;
 				
-				if (!string.IsNullOrEmpty(TempDistance1) && NumberFormats.TryParseDoubleVb6(TempDistance1, out Distance1Parsed)) {
+				if (!string.IsNullOrEmpty(TempDistance1) && NumberFormats.TryParseDoubleVb6(TempDistance1, out double Distance1Parsed)) {
 					Distance1 = Distance1Parsed;
 				}
-				if (!string.IsNullOrEmpty(TempDistance2) && NumberFormats.TryParseDoubleVb6(TempDistance2, out Distance2Parsed)) {
+				if (!string.IsNullOrEmpty(TempDistance2) && NumberFormats.TryParseDoubleVb6(TempDistance2, out double Distance2Parsed)) {
 					Distance2 = Distance2Parsed;
 				}
 

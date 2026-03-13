@@ -99,7 +99,7 @@ namespace Route.Bve5
 				}
 
 				List<StaticObject> Objects = new List<StaticObject>();
-				foreach (var ObjectKey in ObjectKeys)
+				foreach (string ObjectKey in ObjectKeys)
 				{
 					RouteData.Objects.TryGetValue(ObjectKey, out UnifiedObject Object);
 					if (Object != null)
