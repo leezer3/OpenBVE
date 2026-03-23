@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Compatibility>
+  <ObjectList>
   <!-- Uchibo Route Objects -->
 	<Object>
 		<Name>Ballast.csv</Name>
@@ -313,5 +313,5 @@
 		<Path>Sound\crossing.wav</Path>
 		<Message></Message>
 	</Sound>
-  </Compatibility>
+  </ObjectList>
 </openBVE>

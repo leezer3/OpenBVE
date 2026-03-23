@@ -79,9 +79,9 @@ namespace RouteViewer
 			Sounds = new Sounds(CurrentHost);
 			Options.LoadOptions();
 			// n.b. Init the toolkit before the renderer
-			var options = new ToolkitOptions
+			ToolkitOptions options = new ToolkitOptions
 			{
-				Backend = PlatformBackend.PreferX11,
+				Backend = PlatformBackend.PreferX11
 			};
 
 			if (CurrentHost.Platform == HostPlatform.MicrosoftWindows)
@@ -227,25 +227,25 @@ namespace RouteViewer
 			Renderer.InitializeVisibility();
 			for (int i = 0; i < CurrentRoute.Tracks.Count; i++)
 			{
-				int key = Program.CurrentRoute.Tracks.ElementAt(i).Key;
+				int key = CurrentRoute.Tracks.ElementAt(i).Key;
 					
 				if (!Renderer.trackColors.ContainsKey(key))
 				{
 					if (key == 0)
 					{
-						Renderer.trackColors.Add(key, new RailPath(CurrentHost, Renderer, key, Program.CurrentRoute.BlockLength, Color24.Red));
+						Renderer.trackColors.Add(key, new RailPath(CurrentHost, Renderer, key, CurrentRoute.BlockLength, Color24.Red));
 						Renderer.usedTrackColors.Add(5);
 					}
 					else
 					{
-						var randomGenerator = new Random();
+						Random randomGenerator = new Random();
 						int colorIdx = 5; // known value already in list to make our while loop easy
 						while (Renderer.usedTrackColors.Contains(colorIdx))
 						{
 							colorIdx = randomGenerator.Next(0, 255);
 						}
 						Renderer.usedTrackColors.Add(colorIdx);
-						Renderer.trackColors.Add(key, new RailPath(Program.CurrentHost, Renderer, key, Program.CurrentRoute.BlockLength, ColorPalettes.Windows256ColorPalette[colorIdx])); //use the 256 color Windows pallette for a decent set of contrasting colors	
+						Renderer.trackColors.Add(key, new RailPath(CurrentHost, Renderer, key, CurrentRoute.BlockLength, ColorPalettes.Windows256ColorPalette[colorIdx])); //use the 256 color Windows palette for a decent set of contrasting colors	
 					}
 				}
 				Renderer.trackColors[key].Render();
@@ -257,7 +257,7 @@ namespace RouteViewer
 
 		// jump to station
 		private static void JumpToStation(int Direction) {
-			if (Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse)
+			if (CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse)
 			{
 				Direction = -Direction;
 			}
@@ -265,10 +265,10 @@ namespace RouteViewer
 				for (int i = CurrentRoute.Stations.Length - 1; i >= 0; i--) {
 					if (CurrentRoute.Stations[i].Stops.Length != 0) {
 						double p = CurrentRoute.Stations[i].Stops[CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
-						if (p < Program.Renderer.CameraTrackFollower.TrackPosition - 0.1) {
-							Program.Renderer.CameraTrackFollower.UpdateAbsolute(p, true, false);
+						if (p < Renderer.CameraTrackFollower.TrackPosition - 0.1) {
+							Renderer.CameraTrackFollower.UpdateAbsolute(p, true, false);
 							Renderer.Camera.Alignment.TrackPosition = p;
-							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
+							Renderer.Camera.Reset(CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 							break;
 						}
 					}
@@ -277,10 +277,10 @@ namespace RouteViewer
 				for (int i = 0; i < CurrentRoute.Stations.Length; i++) {
 					if (CurrentRoute.Stations[i].Stops.Length != 0) {
 						double p = CurrentRoute.Stations[i].Stops[CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
-						if (p > Program.Renderer.CameraTrackFollower.TrackPosition + 0.1) {
-							Program.Renderer.CameraTrackFollower.UpdateAbsolute(p, true, false);
+						if (p > Renderer.CameraTrackFollower.TrackPosition + 0.1) {
+							Renderer.CameraTrackFollower.UpdateAbsolute(p, true, false);
 							Renderer.Camera.Alignment.TrackPosition = p;
-							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
+							Renderer.Camera.Reset(CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 							break;
 						}
 					}
@@ -291,24 +291,24 @@ namespace RouteViewer
 		internal static void UpdateGraphicsSettings()
 		{
 			Renderer.Camera.ForwardViewingDistance = Interface.CurrentOptions.ViewingDistance;
-			Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = Interface.CurrentOptions.ViewingDistance;
+			CurrentRoute.CurrentBackground.BackgroundImageDistance = Interface.CurrentOptions.ViewingDistance;
 			if (CurrentRouteFile != null)
 			{
-				Program.CurrentlyLoading = true;
+				CurrentlyLoading = true;
 				Renderer.RenderScene(0.0);
-				Program.Renderer.GameWindow.SwapBuffers();
+				Renderer.GameWindow.SwapBuffers();
 				CameraAlignment a = Renderer.Camera.Alignment;
-				if (Program.LoadRoute())
+				if (LoadRoute())
 				{
 					Renderer.Camera.Alignment = a;
-					Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
-					Program.Renderer.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
+					Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
+					Renderer.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
 					Renderer.Camera.AlignmentDirection = new CameraAlignment();
 					Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 					ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 				}
 				Renderer.UpdateViewingDistances(Interface.CurrentOptions.ViewingDistance);
-				Program.CurrentlyLoading = false;
+				CurrentlyLoading = false;
 			}
 		}
 
@@ -325,7 +325,7 @@ namespace RouteViewer
 
 		internal static void MouseMoveEvent(object sender, MouseMoveEventArgs e)
 		{
-			switch (Program.Renderer.CurrentInterface)
+			switch (Renderer.CurrentInterface)
 			{
 				case InterfaceType.Menu:
 				case InterfaceType.GLMainMenu:
@@ -414,7 +414,7 @@ namespace RouteViewer
 			}
 
 			CurrentlyLoading = false;
-			Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
+			Renderer.Camera.Reset(CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 			UpdateCaption();
 
 		}
@@ -481,16 +481,16 @@ namespace RouteViewer
 							if (LoadRoute(textureBytes))
 							{
 								Renderer.Camera.Alignment = a;
-								Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
-								Program.Renderer.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
+								Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
+								Renderer.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
 								ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 							}
 							else
 							{
-								Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
+								Renderer.Camera.Reset(CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 								Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 								World.UpdateAbsoluteCamera(0.0);
-								Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
+								Renderer.UpdateViewingDistances(CurrentRoute.CurrentBackground.BackgroundImageDistance);
 							}
 						}
 
@@ -503,7 +503,7 @@ namespace RouteViewer
 					}
 					break;
 				case Key.F7:
-					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+					if (CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 					{
 						return;
 					}
@@ -530,9 +530,9 @@ namespace RouteViewer
 						CurrentRouteFile = Dialog.FileName;
 						UpdateCaption();
 						bool canLoad = false;
-						for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+						for (int i = 0; i < CurrentHost.Plugins.Length; i++)
 						{
-							if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(CurrentRouteFile))
+							if (CurrentHost.Plugins[i].Route != null && CurrentHost.Plugins[i].Route.CanLoadRoute(CurrentRouteFile))
 							{
 								canLoad = true;
 								break;
@@ -544,17 +544,17 @@ namespace RouteViewer
 							if (canLoad && LoadRoute())
 							{
 								ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
-								Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
+								Renderer.Camera.Reset(CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 								Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 								World.UpdateAbsoluteCamera(0.0);
-								Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
+								Renderer.UpdateViewingDistances(CurrentRoute.CurrentBackground.BackgroundImageDistance);
 							}
 							else
 							{
 								bool isObject = false;
-								for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+								for (int i = 0; i < CurrentHost.Plugins.Length; i++)
 								{
-									if (Program.CurrentHost.Plugins[i].Object != null && Program.CurrentHost.Plugins[i].Object.CanLoadObject(CurrentRouteFile))
+									if (CurrentHost.Plugins[i].Object != null && CurrentHost.Plugins[i].Object.CanLoadObject(CurrentRouteFile))
 									{
 										isObject = true;
 										break;
@@ -578,17 +578,17 @@ namespace RouteViewer
 								CurrentRouteFile = previousRoute;
 							}
 
-							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
+							Renderer.Camera.Reset(CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 							Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 							World.UpdateAbsoluteCamera(0.0);
-							Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
+							Renderer.UpdateViewingDistances(CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						}
 						CurrentlyLoading = false;
 						UpdateCaption();
 					}
 					else
 					{
-						if (Program.CurrentHost.MonoRuntime)
+						if (CurrentHost.MonoRuntime)
 						{
 							//HACK: Dialog doesn't close properly when pressing the ESC key under Mono
 							//Avoid calling Application.DoEvents() unless absolutely necessary though!
@@ -598,7 +598,7 @@ namespace RouteViewer
 					Dialog.Dispose();
 					break;
 				case Key.F8:
-					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+					if (CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 					{
 						return;
 					}
@@ -618,9 +618,9 @@ namespace RouteViewer
 					Renderer.Camera.AlignmentDirection.Position.Y = 0;
 					break;
 				case Key.F9:
-					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+					if (CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 					{
-						Program.Renderer.CurrentInterface = InterfaceType.Menu;
+						Renderer.CurrentInterface = InterfaceType.Menu;
 						Game.Menu.PushMenu(MenuType.ErrorList);
 						return;
 					}
@@ -653,11 +653,11 @@ namespace RouteViewer
 					break;
 				case Key.W:
 				case Key.Keypad9:
-					Renderer.Camera.AlignmentDirection.TrackPosition = CameraProperties.ExteriorTopSpeed * (Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse ? -speedModified : speedModified);
+					Renderer.Camera.AlignmentDirection.TrackPosition = CameraProperties.ExteriorTopSpeed * (CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse ? -speedModified : speedModified);
 					break;
 				case Key.S:
 				case Key.Keypad3:
-					Renderer.Camera.AlignmentDirection.TrackPosition = -CameraProperties.ExteriorTopSpeed * (Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse ? -speedModified : speedModified);
+					Renderer.Camera.AlignmentDirection.TrackPosition = -CameraProperties.ExteriorTopSpeed * (CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse ? -speedModified : speedModified);
 					break;
 				case Key.Left:
 					Renderer.Camera.AlignmentDirection.Yaw = -CameraProperties.ExteriorTopAngularSpeed * speedModified;
@@ -698,10 +698,10 @@ namespace RouteViewer
 					Renderer.Camera.AlignmentDirection.Zoom = -CameraProperties.ZoomTopSpeed * speedModified;
 					break;
 				case Key.Keypad1:
-					Program.CurrentRoute.ApplyPointOfInterest(TrackDirection.Reverse);
+					CurrentRoute.ApplyPointOfInterest(TrackDirection.Reverse);
 					break;
 				case Key.Keypad7:
-					Program.CurrentRoute.ApplyPointOfInterest(TrackDirection.Forwards);
+					CurrentRoute.ApplyPointOfInterest(TrackDirection.Forwards);
 					break;
 				case Key.PageUp:
 					JumpToStation(1);
@@ -710,10 +710,10 @@ namespace RouteViewer
 					JumpToStation(-1);
 					break;
 				case Key.Keypad5:
-					Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
+					Renderer.Camera.Reset(CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 					Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
-					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
+					Renderer.UpdateViewingDistances(CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					break;
 				case Key.F:
 					Renderer.OptionWireFrame = !Renderer.OptionWireFrame;
@@ -811,14 +811,14 @@ namespace RouteViewer
 								{
 									if (direction != 0)
 									{
-										value = Program.Renderer.CameraTrackFollower.TrackPosition + direction * value;
+										value = Renderer.CameraTrackFollower.TrackPosition + direction * value;
 									}
 
-									Program.Renderer.CameraTrackFollower.UpdateAbsolute(value, true, false);
+									Renderer.CameraTrackFollower.UpdateAbsolute(value, true, false);
 									Renderer.Camera.Alignment.TrackPosition = value;
-									Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
+									Renderer.Camera.Reset(CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 									World.UpdateAbsoluteCamera(0.0);
-									Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
+									Renderer.UpdateViewingDistances(CurrentRoute.CurrentBackground.BackgroundImageDistance);
 								}
 							}
 						}
@@ -832,10 +832,10 @@ namespace RouteViewer
 					}
 					else
 					{
-						if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+						if (CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 						{
-							Program.Renderer.GameWindow.TargetRenderFrequency = 0;
-							Program.Renderer.CurrentInterface = InterfaceType.Menu;
+							Renderer.GameWindow.TargetRenderFrequency = 0;
+							Renderer.CurrentInterface = InterfaceType.Menu;
 							Game.Menu.PushMenu(MenuType.GameStart);
 						}
 					}

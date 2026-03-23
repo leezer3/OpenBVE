@@ -117,7 +117,7 @@ namespace CsvRwRouteParser
 						 */
 						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "No backgrounds were defined- Using default background.");
 						string f = OpenBveApi.Path.CombineFile(Plugin.FileSystem.GetDataFolder("Compatibility"), "Uchibo\\Back_Mt.png");
-						Plugin.CurrentHost.RegisterTexture(f, TextureParameters.NoChange, out var t);
+						Plugin.CurrentHost.RegisterTexture(f, TextureParameters.NoChange, out Texture t);
 						CurrentRoute.CurrentBackground = new StaticBackground(t, 6, false, Plugin.CurrentOptions.ViewingDistance);
 					}
 					else if (Data.Backgrounds.Count > 0 && !Data.Backgrounds.ContainsKey(0) && Data.Blocks[0].Background == 0)
@@ -173,7 +173,7 @@ namespace CsvRwRouteParser
 			{
 				for (int d = 0; d < Data.Blocks[i].Rails.Count; d++)
 				{
-					var item = Data.Blocks[i].Rails.ElementAt(d);
+					KeyValuePair<int, Rail> item = Data.Blocks[i].Rails.ElementAt(d);
 					if (!CurrentRoute.Tracks.ContainsKey(item.Key))
 					{
 						CurrentRoute.Tracks.Add(item.Key, new Track());
@@ -217,7 +217,7 @@ namespace CsvRwRouteParser
 				int n = CurrentTrackLength;
 				for (int j = 0; j < CurrentRoute.Tracks.Count; j++)
 				{
-					var key = CurrentRoute.Tracks.ElementAt(j).Key;
+					int key = CurrentRoute.Tracks.ElementAt(j).Key;
 					if (n >= CurrentRoute.Tracks[key].Elements.Length)
 					{
 						Array.Resize(ref CurrentRoute.Tracks[key].Elements, CurrentRoute.Tracks[key].Elements.Length << 1);
@@ -247,7 +247,7 @@ namespace CsvRwRouteParser
 					{
 						break;
 					}
-					var key = CurrentRoute.Tracks.ElementAt(j).Key;
+					int key = CurrentRoute.Tracks.ElementAt(j).Key;
 					CurrentRoute.Tracks[key].Elements[n].Events = new List<GeneralEvent>();
 				}
 				// background
@@ -281,7 +281,7 @@ namespace CsvRwRouteParser
 							 */
 							typ = Data.Blocks[0].Background;
 						}
-						if (Data.Backgrounds.TryGetValue(typ, out var background))
+						if (Data.Backgrounds.TryGetValue(typ, out BackgroundHandle background))
 						{
 							CurrentRoute.Tracks[0].Elements[n].Events.Add(new BackgroundChangeEvent(CurrentRoute, 0.0, background, Data.Backgrounds[Data.Blocks[i].Background]));
 						}
@@ -400,7 +400,7 @@ namespace CsvRwRouteParser
 													/*
 													 * Switches are obviously(?) going to be on intersecting tracks
 													 * This means that we don't want to add the default point sound when Rail0 intersects with
-													 * another, but should do it in the switch instead for consistancy
+													 * another, but should do it in the switch instead for consistency
 													 * 
 													 * Longer term, the original point sound method should really be got rid of entirely
 													 * (Parser option??)

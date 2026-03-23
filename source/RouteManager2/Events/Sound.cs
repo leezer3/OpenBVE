@@ -104,20 +104,20 @@ namespace RouteManager2.Events
 							case EventTriggerType.OtherCarRearAxle:
 								return;
 							case EventTriggerType.RearCarRearAxle:
-								this.DontTriggerAnymore = this.Once;
+								DontTriggerAnymore = Once;
 								return;
 						}
 					}
 					double pitch = 1.0;
 					double gain = 1.0;
 					//In order to play for all cars, we need to create a clone of the buffer, as 1 buffer can only be playing in a single location
-					SoundBuffer buffer = this.AllCars ? SoundBuffer.Clone() : SoundBuffer;
+					SoundBuffer buffer = AllCars ? SoundBuffer.Clone() : SoundBuffer;
 					if (buffer != null)
 					{
-						if (this.Dynamic)
+						if (Dynamic)
 						{
 							double spd = Math.Abs(trackFollower.Train.CurrentSpeed);
-							pitch = spd / this.Speed;
+							pitch = spd / Speed;
 							gain = pitch < 0.5 ? 2.0 * pitch : 1.0;
 							if (pitch < 0.2 | gain < 0.2)
 							{
@@ -132,7 +132,7 @@ namespace RouteManager2.Events
 					if (!AllCars)
 					{
 						// All cars case is handled above
-						this.DontTriggerAnymore = this.Once;
+						DontTriggerAnymore = Once;
 					}
 				}
 			}

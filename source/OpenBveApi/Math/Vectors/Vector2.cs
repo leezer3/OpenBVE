@@ -47,7 +47,7 @@ namespace OpenBveApi.Math {
 		/// <summary>Parses a Vector2 from a list of strings</summary>
 		/// <param name="arguments">The list of strings</param>
 		/// <param name="v">The out Vector</param>
-		/// <returns>True if parsing succeded with no errors, false otherwise</returns>
+		/// <returns>True if parsing succeeded with no errors, false otherwise</returns>
 		/// <remarks>This will always return a Vector3.
 		/// If any part fails parsing, it will be set to zero</remarks>
 		public static bool TryParse(string[] arguments, out Vector2 v)
@@ -168,12 +168,13 @@ namespace OpenBveApi.Math {
 		/// <param name="b">The second vector.</param>
 		/// <returns>The quotient of the two vectors.</returns>
 		/// <exception cref="System.DivideByZeroException">Raised when any member of the second vector is zero.</exception>
-		public static Vector2 operator /(Vector2 a, Vector2 b) {
+		public static Vector2 operator /(Vector2 a, Vector2 b)
+		{
 			if (b.X == 0.0 | b.Y == 0.0) {
 				throw new DivideByZeroException();
-			} else {
-				return new Vector2(a.X / b.X, a.Y / b.Y);
 			}
+
+			return new Vector2(a.X / b.X, a.Y / b.Y);
 		}
 		
 		/// <summary>Divides a vector by a scalar.</summary>
@@ -181,13 +182,14 @@ namespace OpenBveApi.Math {
 		/// <param name="b">The scalar.</param>
 		/// <returns>The quotient of the vector and the scalar.</returns>
 		/// <exception cref="System.DivideByZeroException">Raised when the scalar is zero.</exception>
-		public static Vector2 operator /(Vector2 a, double b) {
+		public static Vector2 operator /(Vector2 a, double b)
+		{
 			if (b == 0.0) {
 				throw new DivideByZeroException();
-			} else {
-				double factor = 1.0 / b;
-				return new Vector2(a.X * factor, a.Y * factor);
 			}
+
+			double factor = 1.0 / b;
+			return new Vector2(a.X * factor, a.Y * factor);
 		}
 		
 		/// <summary>Divides a scalar by a vector.</summary>
@@ -195,12 +197,13 @@ namespace OpenBveApi.Math {
 		/// <param name="b">The vector.</param>
 		/// <returns>The quotient of the scalar and the vector.</returns>
 		/// <exception cref="DivideByZeroException">Raised when any member of the vector is zero.</exception>
-		public static Vector2 operator /(double a, Vector2 b) {
+		public static Vector2 operator /(double a, Vector2 b)
+		{
 			if (b.X == 0.0 | b.Y == 0.0) {
 				throw new DivideByZeroException();
-			} else {
-				return new Vector2(a / b.X, a / b.Y);
 			}
+
+			return new Vector2(a / b.X, a / b.Y);
 		}
 		
 		
@@ -268,11 +271,11 @@ namespace OpenBveApi.Math {
 			double norm = this.X * this.X + this.Y * this.Y;
 			if (norm == 0.0) {
 				throw new DivideByZeroException();
-			} else {
-				double factor = 1.0 / System.Math.Sqrt(norm);
-				this.X *= factor;
-				this.Y *= factor;
 			}
+
+			double factor = 1.0 / System.Math.Sqrt(norm);
+			this.X *= factor;
+			this.Y *= factor;
 		}
 		
 		/// <summary>Translates the vector by a specified offset.</summary>
@@ -375,10 +378,10 @@ namespace OpenBveApi.Math {
 			double norm = vector.X * vector.X + vector.Y * vector.Y;
 			if (norm == 0.0) {
 				throw new DivideByZeroException();
-			} else {
-				double factor = 1.0 / System.Math.Sqrt(norm);
-				return new Vector2(vector.X * factor, vector.Y * factor);
 			}
+
+			double factor = 1.0 / System.Math.Sqrt(norm);
+			return new Vector2(vector.X * factor, vector.Y * factor);
 		}
 		
 		/// <summary>Translates a vector by a specified offset.</summary>

@@ -49,11 +49,6 @@ namespace RouteManager2.Events
 					{
 						train.Destination = NextDestination;
 					}
-
-					if (TriggerOnce)
-					{
-						DontTriggerAnymore = true;
-					}
 				}
 				else
 				{
@@ -61,12 +56,9 @@ namespace RouteManager2.Events
 					{
 						train.Destination = PreviousDestination;
 					}
-
-					if (TriggerOnce)
-					{
-						DontTriggerAnymore = true;
-					}
 				}
+
+				DontTriggerAnymore = TriggerOnce;
 			}
 		}
 	}

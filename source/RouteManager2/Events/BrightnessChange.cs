@@ -39,7 +39,7 @@ namespace RouteManager2.Events
 		{
 			EventTriggerType triggerType = trackFollower.TriggerType;
 
-			if (triggerType == EventTriggerType.FrontCarFrontAxle | triggerType == EventTriggerType.OtherCarFrontAxle)
+			if (triggerType == EventTriggerType.FrontCarFrontAxle || triggerType == EventTriggerType.OtherCarFrontAxle)
 			{
 				AbstractCar car = trackFollower.Car;
 

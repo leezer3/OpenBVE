@@ -377,6 +377,7 @@ namespace OpenBve.Formats.MsTs
 		private readonly PressureConverter pressureConverter = new PressureConverter();
 		private readonly VelocityConverter velocityConvertor = new VelocityConverter();
 		private readonly TorqueConverter torqueConvertor = new TorqueConverter();
+		private readonly VolumetricConvertor volumetricConvertor = new VolumetricConvertor();
 
 		private KujuTokenID ParseToken(string s)
 		{
@@ -1115,6 +1116,15 @@ namespace OpenBve.Formats.MsTs
 				}
 
 				parsedNumber = (float)torqueConvertor.Convert(parsedNumber, TorqueConverter.KnownUnits[Unit], (UnitOfTorque)(object)desiredUnit);
+			}
+			else if (desiredUnit is VolumetricUnit)
+			{
+				if (!VolumetricConvertor.KnownUnits.ContainsKey(Unit))
+				{
+					throw new InvalidDataException("Unknown or unexpected volumetric unit " + Unit + " encountered in block " + Token);
+				}
+
+				parsedNumber = (float)volumetricConvertor.Convert(parsedNumber, VolumetricConvertor.KnownUnits[Unit], (VolumetricUnit)(object)desiredUnit);
 			}
 			return parsedNumber;
 		}

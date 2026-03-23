@@ -1,3 +1,5 @@
+using System;
+
 namespace OpenBveApi.Objects
 {
 	/// <summary>Represents the interface for loading objects. Plugins must implement this interface if they wish to expose objects.</summary>
@@ -6,12 +8,12 @@ namespace OpenBveApi.Objects
 		/// <summary>
 		/// Array of supported animated object extensions.
 		/// </summary>
-		public virtual string[] SupportedAnimatedObjectExtensions => new string[0];
+		public virtual string[] SupportedAnimatedObjectExtensions => Array.Empty<string>();
 
 		/// <summary>
 		/// Array of supported static object extensions.
 		/// </summary>
-		public virtual string[] SupportedStaticObjectExtensions => new string[0];
+		public virtual string[] SupportedStaticObjectExtensions => Array.Empty<string>();
 
 		/// <summary>Called when the plugin is loaded.</summary>
 		/// <param name="host">The host that loaded the plugin.</param>

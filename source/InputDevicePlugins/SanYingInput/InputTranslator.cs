@@ -142,7 +142,7 @@ namespace SanYingInput
 		}
 
 		/// <summary>
-		/// Funtction that convert into the position of reverser from state of axial of the joy-stick.
+		/// Function that convert into the position of reverser from state of axial of the joy-stick.
 		/// </summary>
 		/// <param name="axises">State of axial of the joy-stick</param>
 		/// <param name="reverserPosition">Position of reverser</param>

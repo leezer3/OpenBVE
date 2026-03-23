@@ -52,7 +52,7 @@ namespace Route.Bve5
 
 				if (!File.Exists(signalList))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "The BVE5 Signal List file " + signalList + " was not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Signal List file " + signalList + " was not found.");
 					return;
 				}
 			}
@@ -99,7 +99,7 @@ namespace Route.Bve5
 				}
 
 				List<StaticObject> Objects = new List<StaticObject>();
-				foreach (var ObjectKey in ObjectKeys)
+				foreach (string ObjectKey in ObjectKeys)
 				{
 					RouteData.Objects.TryGetValue(ObjectKey, out UnifiedObject Object);
 					if (Object != null)

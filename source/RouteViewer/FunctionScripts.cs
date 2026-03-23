@@ -84,7 +84,7 @@ namespace RouteViewer {
                             //Generates a random number between two given doubles
                             double min = Function.Stack[s - 2];
                             double max = Function.Stack[s - 1];
-                            var randomGenerator = new Random();
+                            Random randomGenerator = new Random();
                             Function.Stack[s - 2] = min + randomGenerator.NextDouble() * (max - min);
                             s--;
                         }
@@ -94,7 +94,7 @@ namespace RouteViewer {
                             //Generates a random number between two given doubles
                             int min = (int)Function.Stack[s - 2];
                             int max = (int)Function.Stack[s - 1];
-                            var randomGenerator = new Random();
+                            Random randomGenerator = new Random();
                             Function.Stack[s - 2] = randomGenerator.Next(min, max);
                             s--;
                         }

@@ -216,7 +216,7 @@ namespace Route.Bve5
 			a = 0.0;
 			c = BlockInterval;
 			h = 0.0;
-			if (CurveRadius != 0.0 & Pitch != 0.0)
+			if (CurveRadius != 0.0 && Pitch != 0.0)
 			{
 				double s = BlockInterval / Math.Sqrt(1.0 + Pitch * Pitch);
 				h = s * Pitch;

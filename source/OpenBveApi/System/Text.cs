@@ -114,11 +114,9 @@ namespace OpenBveApi
 				int a = char.ConvertToUtf32(Text, i);
 				if (a == 0xD & i < Text.Length - 1) {
 					int b = char.ConvertToUtf32(Text, i + 1);
+					Builder.Append("\r\n");
 					if (b == 0xA) {
-						Builder.Append("\r\n");
 						i++;
-					} else {
-						Builder.Append("\r\n");
 					}
 				} else if (a == 0xA | a == 0xC | a == 0xD | a == 0x85 | a == 0x2028 | a == 0x2029) {
 					Builder.Append("\r\n");
@@ -228,7 +226,7 @@ namespace OpenBveApi
 			return String;
 		}
 
-		/// <summary>Performs a string split to an array with a consistant length</summary>
+		/// <summary>Performs a string split to an array with a consistent length</summary>
 		/// <param name="text">The string to split</param>
 		/// <param name="separator">The separator character</param>
 		/// <param name="desiredLength">The desired length</param>

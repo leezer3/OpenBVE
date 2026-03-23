@@ -6,7 +6,7 @@ namespace OpenBveApi.Objects
 	/// <summary>Represents a mesh consisting of a series of vertices, faces and material properties.</summary>
 	public class Mesh
 	{
-		/// <summary>The shared verticies for the mesh</summary>
+		/// <summary>The shared vertices for the mesh</summary>
 		public VertexTemplate[] Vertices;
 		/// <summary>The shared materials for the mesh</summary>
 		public MeshMaterial[] Materials;

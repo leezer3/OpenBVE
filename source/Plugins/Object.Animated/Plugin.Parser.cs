@@ -28,7 +28,7 @@ namespace Plugin
 			int SoundCount = 0;
 			// load file
 
-			ConfigFile<AnimatedSection, AnimatedKey> cfg = new ConfigFile<AnimatedSection, AnimatedKey>(File.ReadAllLines(FileName, Encoding), Plugin.currentHost);
+			ConfigFile<AnimatedSection, AnimatedKey> cfg = new ConfigFile<AnimatedSection, AnimatedKey>(File.ReadAllLines(FileName, Encoding), FileName, Plugin.currentHost);
 
 			while (cfg.RemainingSubBlocks > 0)
 			{

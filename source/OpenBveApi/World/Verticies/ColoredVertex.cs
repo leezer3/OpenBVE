@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
@@ -68,16 +68,14 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Clones a colored vertex</summary>
-		public ColoredVertex(ColoredVertex v)
+		public override VertexTemplate Clone()
 		{
-			Coordinates = v.Coordinates;
-			TextureCoordinates = v.TextureCoordinates;
-			Color = v.Color;
+			return new ColoredVertex(Coordinates, TextureCoordinates, Color);
 		}
 
 		/// <summary>Tests if this vertex is equal to the supplied object</summary>
 		/// <param name="obj">The supplied object</param>
-		/// <returns>Trye if they are equal, false otherwise</returns>
+		/// <returns>True if they are equal, false otherwise</returns>
 		public override bool Equals(object obj)
 		{
 			if (obj == null)

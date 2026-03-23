@@ -41,7 +41,7 @@ namespace OpenBveApi.Textures {
 		public double FrameInterval = -1;
 		/// <summary>The total number of frames</summary>
 		public int TotalFrames;
-		/// <summary>Whether this texture uses the compatible transparency mode (Matches to the nearest color in a restricted pallete)</summary>
+		/// <summary>Whether this texture uses the compatible transparency mode (Matches to the nearest color in a restricted palette)</summary>
 		public bool CompatibleTransparencyMode;
 
 		/// <summary>Gets the color of the given pixel</summary>
@@ -70,7 +70,7 @@ namespace OpenBveApi.Textures {
 		/// <param name="height">The height of the texture in pixels.</param>
 		/// <param name="pixelFormat">The pixel format.</param>
 		/// <param name="bytes">The texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</param>
-		/// <param name="palette">The original color pallete of the image (Before upsampling to 32-bit RGBA)</param>
+		/// <param name="palette">The original color palette of the image (Before upsampling to 32-bit RGBA)</param>
 		/// <exception cref="System.ArgumentException">Raised when the number of bits per pixel is not 32.</exception>
 		/// <exception cref="System.ArgumentNullException">Raised when the byte array is a null reference.</exception>
 		/// <exception cref="System.ArgumentException">Raised when the byte array is of unexpected length.</exception>

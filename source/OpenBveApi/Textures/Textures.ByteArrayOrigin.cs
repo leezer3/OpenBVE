@@ -1,4 +1,5 @@
 #pragma warning disable 0659, 0661
+using System;
 using OpenBveApi.Colors;
 // ReSharper disable MergeCastWithTypeCheck
 
@@ -53,7 +54,7 @@ namespace OpenBveApi.Textures
 		{
 			if (TextureBytes.Length == 1)
 			{
-				texture = new Texture(Width, Height, PixelFormat.RGBAlpha, TextureBytes[0], new Color24[0]);
+				texture = new Texture(Width, Height, PixelFormat.RGBAlpha, TextureBytes[0], Array.Empty<Color24>());
 				return true;
 			}
 			texture = new Texture(Width, Height, PixelFormat.RGBAlpha, TextureBytes, FrameInterval);

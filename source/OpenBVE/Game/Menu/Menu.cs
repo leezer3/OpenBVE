@@ -1058,7 +1058,7 @@ namespace OpenBve
 										}
 										else if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("mascon", StringComparison.InvariantCultureIgnoreCase) != -1)
 										{
-											controlPictureBox.Texture = Program.Renderer.MasconTeture;
+											controlPictureBox.Texture = Program.Renderer.MasconTexture;
 										}
 										else
 										{

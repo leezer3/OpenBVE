@@ -1056,7 +1056,7 @@ namespace CsvRwRouteParser
 					{
 						int n = Data.Blocks[BlockIndex].Transponders.Length;
 						Array.Resize(ref Data.Blocks[BlockIndex].Transponders, n + 1);
-						Data.Blocks[BlockIndex].Transponders[n] = new Transponder(Data.TrackPosition, 0, 0, new Vector2(), CurrentSection + 1, -2);
+						Data.Blocks[BlockIndex].Transponders[n] = new Transponder(Data.TrackPosition, 0, 0, Vector2.Null, CurrentSection + 1, -2);
 					}
 				}
 					break;
@@ -1066,7 +1066,7 @@ namespace CsvRwRouteParser
 					{
 						int n = Data.Blocks[BlockIndex].Transponders.Length;
 						Array.Resize(ref Data.Blocks[BlockIndex].Transponders, n + 1);
-						Data.Blocks[BlockIndex].Transponders[n] = new Transponder(Data.TrackPosition, 3, 0, new Vector2(), CurrentSection + 1, -2);
+						Data.Blocks[BlockIndex].Transponders[n] = new Transponder(Data.TrackPosition, 3, 0, Vector2.Null, CurrentSection + 1, -2);
 					}
 				}
 					break;
@@ -1727,7 +1727,6 @@ namespace CsvRwRouteParser
 						}
 					}
 
-					OpenBveApi.Sounds.SoundHandle depsnd = null;
 					if (!PreviewOnly)
 					{
 						if (Arguments.Length >= 6 && Arguments[5].Length != 0)
@@ -1746,16 +1745,14 @@ namespace CsvRwRouteParser
 								else
 								{
 									const double radius = 30.0;
-									Plugin.CurrentHost.RegisterSound(f, radius, out depsnd);
+									Plugin.CurrentHost.RegisterSound(f, radius, out CurrentRoute.Stations[CurrentStation].DepartureSoundBuffer);
 								}
 							}
 						}
 					}
 
 					CurrentRoute.Stations[CurrentStation].ArrivalTime = arr;
-					CurrentRoute.Stations[CurrentStation].ArrivalSoundBuffer = null;
 					CurrentRoute.Stations[CurrentStation].DepartureTime = dep;
-					CurrentRoute.Stations[CurrentStation].DepartureSoundBuffer = depsnd;
 					CurrentRoute.Stations[CurrentStation].StopTime = 15.0;
 					CurrentRoute.Stations[CurrentStation].ForceStopSignal = stop == 1;
 					CurrentRoute.Stations[CurrentStation].OpenLeftDoors = true;
@@ -1763,8 +1760,6 @@ namespace CsvRwRouteParser
 					CurrentRoute.Stations[CurrentStation].SafetySystem = device == 1 ? SafetySystem.Atc : SafetySystem.Ats;
 					CurrentRoute.Stations[CurrentStation].Stops = new StationStop[] { };
 					CurrentRoute.Stations[CurrentStation].PassengerRatio = 1.0;
-					CurrentRoute.Stations[CurrentStation].TimetableDaytimeTexture = null;
-					CurrentRoute.Stations[CurrentStation].TimetableNighttimeTexture = null;
 					CurrentRoute.Stations[CurrentStation].DefaultTrackPosition = Data.TrackPosition;
 					CurrentRoute.Stations[CurrentStation].ReopenDoor = 0.0;
 					CurrentRoute.Stations[CurrentStation].ReopenStationLimit = 0;
@@ -2655,7 +2650,7 @@ namespace CsvRwRouteParser
 							if (bg.Texture == null)
 							{
 								//There's a possibility that this was loaded via a default BVE command rather than XML
-								//Thus check for the existance of the file and chuck out error if appropriate
+								//Thus check for the existence of the file and chuck out error if appropriate
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundIndex " + typ + " has not been loaded via Texture.Background in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
 							else
@@ -2683,7 +2678,7 @@ namespace CsvRwRouteParser
 						}
 						else if (Data.Backgrounds[typ] is DynamicBackground)
 						{
-							//File existance checks should already have been made when loading the XML
+							//File existence checks should already have been made when loading the XML
 							Data.Blocks[BlockIndex].Background = typ;
 						}
 						else
@@ -2728,7 +2723,7 @@ namespace CsvRwRouteParser
 									Array.Resize(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
 									if (Command == TrackCommand.AnnounceAll)
 									{
-										Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, f, speed * Data.UnitOfSpeed, new Vector2(), 0, 0, true);
+										Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, f, speed * Data.UnitOfSpeed, Vector2.Null, 0, 0, true);
 									}
 									else
 									{
@@ -2780,11 +2775,11 @@ namespace CsvRwRouteParser
 									Array.Resize(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
 									if (Command == TrackCommand.RailAnnounceAll)
 									{
-										Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, f, speed * Data.UnitOfSpeed, new Vector2(), 0, 0, true, railIndex);
+										Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, f, speed * Data.UnitOfSpeed, Vector2.Null, 0, 0, true, railIndex);
 									}
 									else
 									{
-										Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, f, speed * Data.UnitOfSpeed, new Vector2(), 0, 0, false, railIndex);
+										Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, f, speed * Data.UnitOfSpeed, Vector2.Null, 0, 0, false, railIndex);
 									}
 								}
 							}

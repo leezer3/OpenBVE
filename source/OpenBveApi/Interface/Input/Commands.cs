@@ -4,7 +4,7 @@ using OpenBveApi.Runtime;
 namespace OpenBveApi.Interface {
 	public static partial class Translations
 	{
-		/// <summary>Defines the available commands which may be callled by a player during a simulation session</summary>
+		/// <summary>Defines the available commands which may be called by a player during a simulation session</summary>
 		public enum Command
 		{
 			//Basic controls
@@ -32,7 +32,7 @@ namespace OpenBveApi.Interface {
 			SinglePower,
 			/// <summary>Moves the handle towards neutral on a train with a combined power and brake handle (Will not apply brakes)</summary>
 			SingleNeutral,
-			/// <summary>Returns the handle towards the maxium brake notch on a train with a combined power and brake handle</summary>
+			/// <summary>Returns the handle towards the maximum brake notch on a train with a combined power and brake handle</summary>
 			SingleBrake,
 			/// <summary>Applies full emergency brake on a train with a combined power and brake handle</summary>
 			SingleEmergency,
@@ -172,7 +172,7 @@ namespace OpenBveApi.Interface {
 			DebugNormals,
 			/// <summary>Shows or hides debug information on the brake-system performance</summary>
 			DebugBrakeSystems,
-			/// <summary>Shows or hides the ATS (plugin) debugn screen</summary>
+			/// <summary>Shows or hides the ATS (plugin) debug screen</summary>
 			DebugATS,
 			/// <summary>Shows or hides the touch range</summary>
 			DebugTouchMode,

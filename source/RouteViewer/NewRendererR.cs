@@ -254,8 +254,6 @@ namespace RouteViewer
 							UnsetAlphaFunc();
 							additive = true;
 						}
-
-						face.Draw();
 					}
 					else
 					{
@@ -264,9 +262,8 @@ namespace RouteViewer
 							SetAlphaFunc();
 							additive = false;
 						}
-
-						face.Draw();
 					}
+					face.Draw();
 				}
 			}
 
@@ -470,15 +467,11 @@ namespace RouteViewer
 							cubePos.Y += dx * f.WorldSide.Y + dy * f.WorldUp.Y + dz * f.WorldDirection.Y;
 							cubePos.Z += dx * f.WorldSide.Z + dy * f.WorldUp.Z + dz * f.WorldDirection.Z;
 
-							if (CubesToDraw.ContainsKey(t))
-							{
-								CubesToDraw[t].Add(cubePos);
-							}
-							else
+							if (!CubesToDraw.ContainsKey(t))
 							{
 								CubesToDraw.Add(t, new HashSet<Vector3>());
-								CubesToDraw[t].Add(cubePos);
 							}
+							CubesToDraw[t].Add(cubePos);
 						}
 					}
 				}

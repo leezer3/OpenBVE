@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using OpenBveApi.Motor;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Power;
@@ -41,6 +42,8 @@ namespace TrainManager.Motor
 		public override void Update(double timeElapsed)
 		{
 			IsRunning = true;
+			Boiler boiler = Components[EngineComponent.Boiler] as Boiler;
+			boiler.Update(timeElapsed);
 		}
 
 		// TODO: PLACEHOLDER VALUES

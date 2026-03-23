@@ -920,11 +920,11 @@ namespace OpenBveApi.FunctionScripting
 						} j++;
 					}
 					throw new System.IO.InvalidDataException("No closing parenthesis found in " + Expression);
-				} else {
-					i = Expression.IndexOf(')');
-					if (i >= 0) {
-						throw new System.IO.InvalidDataException("Unexpected closing parenthesis encountered in " + Expression);
-					}
+				}
+
+				i = Expression.IndexOf(')');
+				if (i >= 0) {
+					throw new System.IO.InvalidDataException("Unexpected closing parenthesis encountered in " + Expression);
 				}
 			}
 			// operators

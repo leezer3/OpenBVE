@@ -25,7 +25,7 @@ namespace RouteManager2.Events
 				return;
 			}
 
-			if (trackFollower.TriggerType == EventTriggerType.RearCarRearAxle & !train.IsPlayerTrain)
+			if (trackFollower.TriggerType == EventTriggerType.RearCarRearAxle && !train.IsPlayerTrain)
 			{
 				train.Dispose();
 			}

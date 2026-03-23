@@ -35,9 +35,13 @@ namespace OpenBveApi.Objects
 		/// <summary>The texture co-ordinates for the vertex</summary>
 		public Vector2 TextureCoordinates;
 
+		/// <summary>Clones the vertex</summary>
+		/// <returns>The cloned vertex</returns>
+		public abstract VertexTemplate Clone();
+
 		/// <summary>Tests if this vertex template is equal to the supplied object</summary>
 		/// <param name="obj">The supplied object</param>
-		/// <returns>Trye if they are equal, false otherwise</returns>
+		/// <returns>True if they are equal, false otherwise</returns>
 		public override bool Equals(object obj)
 		{
 			if (obj == null)
@@ -54,7 +58,7 @@ namespace OpenBveApi.Objects
 		}
 
 
-		/// <summary>Tests if two verticies are equal</summary>
+		/// <summary>Tests if two vertices are equal</summary>
 		/// <param name="A">The first vertex</param>
 		/// <param name="B">The second vertex</param>
 		/// <returns>True if they are equal, false otherwise</returns>
@@ -73,7 +77,7 @@ namespace OpenBveApi.Objects
 			return true;
 		}
 
-		/// <summary>Tests if two verticies are not equal</summary>
+		/// <summary>Tests if two vertices are not equal</summary>
 		/// <param name="A">The first vertex</param>
 		/// <param name="B">The second vertex</param>
 		/// <returns>True if they are equal, false otherwise</returns>

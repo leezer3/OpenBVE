@@ -8,11 +8,15 @@
 		NotFitted = -1,
 		/// <summary>Cuts off power instantly and rebuilds it up fast in steps.</summary>
 		TypeA = 0,
+		A = TypeA,
 		/// <summary>Updates not so often and adapts slowly. Wheel slip can persist longer and power is regained slower. The behavior is smoother.</summary>
 		TypeB = 1,
+		B = TypeB,
 		/// <summary>The behavior is somewhere in-between type B and type D.</summary>
 		TypeC = 2,
+		C = TypeC,
 		/// <summary>Updates fast and adapts fast. Wheel slip only occurs briefly and power is regained fast. The behavior is more abrupt.</summary>
 		TypeD = 3,
+		D = TypeD
 	}
 }

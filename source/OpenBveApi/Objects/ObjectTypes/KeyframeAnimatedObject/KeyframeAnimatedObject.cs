@@ -45,7 +45,7 @@ namespace OpenBveApi.Objects
 		public Dictionary<int, KeyframeAnimation> Animations;
 		/// <summary>The objects within this object</summary>
 		public ObjectState[] Objects;
-		/// <summary>The keyframe matricies to be sent to the shader</summary>
+		/// <summary>The keyframe matrices to be sent to the shader</summary>
 		public KeyframeMatrix[] Matricies;
 		/// <summary>The pivots</summary>
 		public Dictionary<string, PivotPoint> Pivots = new Dictionary<string, PivotPoint>();
@@ -69,7 +69,7 @@ namespace OpenBveApi.Objects
 			this.currentHost = currentHost;
 			RefreshRate = 0;
 			SecondsSinceLastUpdate = 0;
-			Matricies = new KeyframeMatrix[0];
+			Matricies = Array.Empty<KeyframeMatrix>();
 			Animations = new Dictionary<int, KeyframeAnimation>();
 			trackFollower = new TrackFollower(currentHost);
 		}

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Reflection;
 using OpenBveApi.Interface;
@@ -22,16 +23,16 @@ namespace LibRender2
 			FileName = fileName;
 			Image = image;
 
-			var thisAssembly = Assembly.GetExecutingAssembly();
-			using (var stream = thisAssembly.GetManifestResourceStream("OpenBve.plus.png"))
+			Assembly thisAssembly = Assembly.GetExecutingAssembly();
+			using (Stream stream = thisAssembly.GetManifestResourceStream("OpenBve.plus.png"))
 			{
 				if (stream != null)
 				{
 					Bitmap Plus = new Bitmap(stream);
-					using (var g = Graphics.FromImage(Plus))
+					using (Graphics g = Graphics.FromImage(Plus))
 					{
 						g.DrawImage(image, 0.0f, 0.0f, image.Width, image.Height);
-						var data = Plus.LockBits(new Rectangle(0, 0, Plus.Width, Plus.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+						BitmapData data = Plus.LockBits(new Rectangle(0, 0, Plus.Width, Plus.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppPArgb);
 						MyCursorPlus = new OpenTK.MouseCursor(5, 0, data.Width, data.Height, data.Scan0);
 						Plus.UnlockBits(data);
 					}
@@ -39,24 +40,24 @@ namespace LibRender2
 				else
 				{
 					Bitmap Plus = new Bitmap(OpenBveApi.Path.CombineFile(Renderer.fileSystem.GetDataFolder(), "Cursors\\Symbols\\plus.png"));
-					using (var g = Graphics.FromImage(Plus))
+					using (Graphics g = Graphics.FromImage(Plus))
 					{
 						g.DrawImage(image, 0.0f, 0.0f, image.Width, image.Height);
-						var data = Plus.LockBits(new Rectangle(0, 0, Plus.Width, Plus.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+						BitmapData data = Plus.LockBits(new Rectangle(0, 0, Plus.Width, Plus.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppPArgb);
 						MyCursorPlus = new OpenTK.MouseCursor(5, 0, data.Width, data.Height, data.Scan0);
 						Plus.UnlockBits(data);
 					}
 				}
 			}
-			using (var stream = thisAssembly.GetManifestResourceStream("OpenBve.minus.png"))
+			using (Stream stream = thisAssembly.GetManifestResourceStream("OpenBve.minus.png"))
 			{
 				if (stream != null)
 				{
 					Bitmap Minus = new Bitmap(stream);
-					using (var g = Graphics.FromImage(Minus))
+					using (Graphics g = Graphics.FromImage(Minus))
 					{
 						g.DrawImage(image, 0.0f, 0.0f, image.Width, image.Height);
-						var data = Minus.LockBits(new Rectangle(0, 0, Minus.Width, Minus.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+						BitmapData data = Minus.LockBits(new Rectangle(0, 0, Minus.Width, Minus.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppPArgb);
 						MyCursorMinus = new OpenTK.MouseCursor(5, 0, data.Width, data.Height, data.Scan0);
 						Minus.UnlockBits(data);
 					}
@@ -64,10 +65,10 @@ namespace LibRender2
 				else
 				{
 					Bitmap Minus = new Bitmap(OpenBveApi.Path.CombineFile(Renderer.fileSystem.GetDataFolder(), "Cursors\\Symbols\\minus.png"));
-					using (var g = Graphics.FromImage(Minus))
+					using (Graphics g = Graphics.FromImage(Minus))
 					{
 						g.DrawImage(image, 0.0f, 0.0f, image.Width, image.Height);
-						var data = Minus.LockBits(new Rectangle(0, 0, Minus.Width, Minus.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+						BitmapData data = Minus.LockBits(new Rectangle(0, 0, Minus.Width, Minus.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppPArgb);
 						MyCursorMinus = new OpenTK.MouseCursor(5, 0, data.Width, data.Height, data.Scan0);
 						Minus.UnlockBits(data);
 					}
@@ -75,7 +76,7 @@ namespace LibRender2
 			}
 
 			{
-				var data = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+				BitmapData data = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppPArgb);
 				MyCursor = new OpenTK.MouseCursor(5, 0, data.Width, data.Height, data.Scan0);
 				image.UnlockBits(data);
 			}
@@ -114,11 +115,11 @@ namespace LibRender2
 
 			string[] CursorImageFiles = Directory.GetFiles(CursorFolder);
 
-			foreach (var File in CursorImageFiles)
+			foreach (string File in CursorImageFiles)
 			{
 				try
 				{
-					using (var Fs= new FileStream(File, FileMode.Open, FileAccess.Read))
+					using (FileStream Fs= new FileStream(File, FileMode.Open, FileAccess.Read))
 					{
 						if (File.EndsWith("scroll.png", StringComparison.InvariantCultureIgnoreCase))
 						{
@@ -144,8 +145,8 @@ namespace LibRender2
 
 		private static void LoadEmbeddedCursorImages()
 		{
-			var thisAssembly = Assembly.GetExecutingAssembly();
-			using (var stream = thisAssembly.GetManifestResourceStream("OpenBve.nk.png"))
+			Assembly thisAssembly = Assembly.GetExecutingAssembly();
+			using (Stream stream = thisAssembly.GetManifestResourceStream("OpenBve.nk.png"))
 			{
 				if (stream != null)
 				{

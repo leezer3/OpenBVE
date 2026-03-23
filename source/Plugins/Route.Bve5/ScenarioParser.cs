@@ -44,7 +44,7 @@ namespace Route.Bve5
 			{
 				using (StreamReader reader = new StreamReader(fileName))
 				{
-					var firstLine = reader.ReadLine() ?? "";
+					string firstLine = reader.ReadLine() ?? "";
 					string b = string.Empty;
 					if (!firstLine.ToLowerInvariant().StartsWith("bvets scenario"))
 					{
@@ -91,7 +91,7 @@ namespace Route.Bve5
 			ScenarioData Data = Parser.Parse(File.ReadAllText(fileName, Encoding));
 
 			Plugin.CurrentRoute.Comment = Data.Comment;
-			Plugin.CurrentRoute.Stations = new RouteStation[0];
+			Plugin.CurrentRoute.Stations = Array.Empty<RouteStation>();
 			CurrentStation = 0;
 			if (!string.IsNullOrEmpty(Data.Image))
 			{

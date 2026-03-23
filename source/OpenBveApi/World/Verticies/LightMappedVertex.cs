@@ -66,6 +66,17 @@ namespace OpenBveApi.Objects
 			TextureCoordinates = textureCoordinates;
 		}
 
+		/// <summary>Creates a new vertex</summary>
+		/// <param name="coordinates">A Vector3 containing the coordinates</param>
+		/// <param name="textureCoordinates">A Vector2 containing the texture coordinates</param>
+		/// <param name="lightMapCoordinates">A Vector2 containing the light map coordinates</param>
+		public LightMappedVertex(Vector3 coordinates, Vector2 textureCoordinates, Vector2 lightMapCoordinates)
+		{
+			Coordinates = coordinates;
+			TextureCoordinates = textureCoordinates;
+			LightMapCoordinates = lightMapCoordinates;
+		}
+
 		/// <summary>Clones a vertex</summary>
 		public LightMappedVertex(Vertex v)
 		{
@@ -74,14 +85,12 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Clones a vertex</summary>
-		public LightMappedVertex(LightMappedVertex v)
+		public override VertexTemplate Clone()
 		{
-			Coordinates = v.Coordinates;
-			TextureCoordinates = v.TextureCoordinates;
-			LightMapCoordinates = v.LightMapCoordinates;
+			return new LightMappedVertex(Coordinates, TextureCoordinates, LightMapCoordinates);
 		}
 
-		/// <summary>Tests if two verticies are equal</summary>
+		/// <summary>Tests if two vertices are equal</summary>
 		/// <param name="a">The first vertex</param>
 		/// <param name="b">The second vertex</param>
 		/// <returns>True if they are equal, false otherwise</returns>
@@ -92,7 +101,7 @@ namespace OpenBveApi.Objects
 
 		/// <summary>Tests if this vertex is equal to the supplied object</summary>
 		/// <param name="obj">The supplied object</param>
-		/// <returns>Trye if they are equal, false otherwise</returns>
+		/// <returns>True if they are equal, false otherwise</returns>
 		public override bool Equals(object obj)
 		{
 			if (obj == null)

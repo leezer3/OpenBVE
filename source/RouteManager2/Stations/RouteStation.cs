@@ -37,7 +37,7 @@ namespace RouteManager2.Stations
 		public bool AccessibilityAnnounced;
 
 		/// <summary>Whether this station is a dummy station for signalling purposes</summary>
-		/// <remarks>Used by some BVE2 / BVE4 routes in conjunction with forced redsignal</remarks>
+		/// <remarks>Used by some BVE2 / BVE4 routes in conjunction with forced red signal</remarks>
 		public bool Dummy;
 
 		/// <summary>The key for this station</summary>

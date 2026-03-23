@@ -35,7 +35,7 @@ namespace OpenBveApi.Routes
 		}
 
 		/// <summary>Creates the visibility list for the specified leaf node.</summary>
-		/// <param name="node">The node to potentially include in the visiblity list if visible.</param>
+		/// <param name="node">The node to potentially include in the visibility list if visible.</param>
 		/// <param name="nodes">The list of visible leaf nodes.</param>
 		/// <param name="viewingDistance">The viewing distance.</param>
 		private void CreateVisibilityList(QuadNode node, List<QuadTreePopulatedLeafNode> nodes, double viewingDistance)
@@ -52,7 +52,7 @@ namespace OpenBveApi.Routes
 				{
 					/*
 					 * If the bounding rectangles intersect directly, the node is
-					 * definately visible from at least some point inside the leaf.
+					 * definitely visible from at least some point inside the leaf.
 					 * */
 					visible = true;
 				}

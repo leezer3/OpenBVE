@@ -13,15 +13,15 @@ using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace RouteViewer
 {
-    class RouteViewer : GameWindow
+    internal class RouteViewer : GameWindow
     {
         //Deliberately specify the default constructor with various overrides
-        public RouteViewer(int width, int height, GraphicsMode currentGraphicsMode, string openbve, GameWindowFlags @default): base (width,height,currentGraphicsMode,openbve,@default)
+        public RouteViewer(int width, int height, GraphicsMode currentGraphicsMode, string windowTitle, GameWindowFlags @default): base (width, height, currentGraphicsMode, windowTitle, @default)
         {
             try
             {
                 System.Drawing.Icon ico = new System.Drawing.Icon("data\\icon.ico");
-                this.Icon = ico;
+                Icon = ico;
             }
             catch
             {
@@ -153,7 +153,7 @@ namespace RouteViewer
 			{
 				// Mono often fails to close the main window properly
 				// give it a brief pause (to the visibility thread terminate cleanly)
-				// then issue forceful closeure
+				// then issue forceful closure
 				Thread.Sleep(100);
 				Environment.Exit(0);
 			}

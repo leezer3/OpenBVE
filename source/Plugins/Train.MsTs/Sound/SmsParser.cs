@@ -350,7 +350,7 @@ namespace Train.MsTs
 				case KujuTokenID.Triggers:
 					int numTriggers = block.ReadInt32();
 					int parsedTriggers = 0;
-					while(block.Length() - block.Position() <= 3)
+					while(block.Length() - block.Position() >= 3)
 					{
 						// note: usually two triggers per sound set (start + stop), however one start only appears perfectly valid
 						newBlock = block.ReadSubBlock(new [] {KujuTokenID.Variable_Trigger, KujuTokenID.Initial_Trigger, KujuTokenID.Discrete_Trigger, KujuTokenID.Random_Trigger, KujuTokenID.Dist_Travelled_Trigger, KujuTokenID.Skip});

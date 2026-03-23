@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
@@ -64,13 +64,12 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Clones a vertex</summary>
-		public Vertex(Vertex v)
+		public override VertexTemplate Clone()
 		{
-			Coordinates = v.Coordinates;
-			TextureCoordinates = v.TextureCoordinates;
+			return new Vertex(Coordinates, TextureCoordinates);
 		}
 
-		/// <summary>Tests if two verticies are equal</summary>
+		/// <summary>Tests if two vertices are equal</summary>
 		/// <param name="a">The first vertex</param>
 		/// <param name="b">The second vertex</param>
 		/// <returns>True if they are equal, false otherwise</returns>
@@ -81,7 +80,7 @@ namespace OpenBveApi.Objects
 
 		/// <summary>Tests if this vertex is equal to the supplied object</summary>
 		/// <param name="obj">The supplied object</param>
-		/// <returns>Trye if they are equal, false otherwise</returns>
+		/// <returns>True if they are equal, false otherwise</returns>
 		public override bool Equals(object obj)
 		{
 			if (obj == null)

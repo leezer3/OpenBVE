@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Compatibility>
+  <ObjectList>
   <!-- Uchibo V1 Route Objects -->
 	<Object>
 		<Name>Ballast.b3d</Name>
@@ -277,5 +277,5 @@
 		<Path>UchiboV1\WallGR.csv</Path>
 		<Message></Message>
 	</Object>
-  </Compatibility>
+  </ObjectList>
 </openBVE>

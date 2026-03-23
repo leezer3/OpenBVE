@@ -64,7 +64,7 @@ namespace RouteManager2.Tracks
 
 		private int setTrack;
 
-		/// <summary>The list of available track indicies</summary>
+		/// <summary>The list of available track indices</summary>
 		private readonly int[] availableTracks;
 
 		/// <summary>The track position</summary>

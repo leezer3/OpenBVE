@@ -23,11 +23,11 @@ namespace RouteManager2.SignalManager
 		public readonly StaticObject[] Objects;
 
 		private readonly HostInterface currentHost;
-		public CompatibilitySignalObject(int[] aspectNumbers, StaticObject[] Objects, HostInterface Host)
+		public CompatibilitySignalObject(int[] aspectNumbers, StaticObject[] aspectObjects, HostInterface Host)
 		{
-			this.AspectNumbers = aspectNumbers;
-			this.Objects = Objects;
-			this.currentHost = Host;
+			AspectNumbers = aspectNumbers;
+			Objects = aspectObjects;
+			currentHost = Host;
 		}
 
 		public override void Create(Vector3 wpos, Transformation railTransformation, Transformation localTransformation, int sectionIndex, double startingDistance, double endingDistance, double trackPosition, double brightness)

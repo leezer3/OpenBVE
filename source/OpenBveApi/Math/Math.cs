@@ -78,7 +78,8 @@ namespace OpenBveApi.Math {
 						Value = (int)System.Math.Round(a);
 						return true;
 					}
-					else break;
+
+					break;
 				}
 			}
 			Value = 0;
@@ -136,32 +137,28 @@ namespace OpenBveApi.Math {
 				Value = a * UnitFactors[UnitFactors.Length - 1];
 				return true;
 			}
-			else
+
+			string[] parameters = Expression.Split(':');
+			if (parameters.Length <= UnitFactors.Length)
 			{
-				string[] parameters = Expression.Split(':');
-				if (parameters.Length <= UnitFactors.Length)
+				Value = 0.0;
+				for (int i = 0; i < parameters.Length; i++)
 				{
-					Value = 0.0;
-					for (int i = 0; i < parameters.Length; i++)
+					if (double.TryParse(parameters[i].Trim(new char[] { }), NumberStyles.Float, CultureInfo.InvariantCulture, out a))
 					{
-						if (double.TryParse(parameters[i].Trim(new char[] { }), NumberStyles.Float, CultureInfo.InvariantCulture, out a))
-						{
-							int j = i + UnitFactors.Length - parameters.Length;
-							Value += a * UnitFactors[j];
-						}
-						else
-						{
-							return false;
-						}
+						int j = i + UnitFactors.Length - parameters.Length;
+						Value += a * UnitFactors[j];
 					}
-					return true;
+					else
+					{
+						return false;
+					}
 				}
-				else
-				{
-					Value = 0.0;
-					return false;
-				}
+				return true;
 			}
+
+			Value = 0.0;
+			return false;
 		}
 
 		/// <summary>Parses an integer formatted as a Visual Basic 6 string, using the supplied unit conversion factor(s)</summary>
@@ -176,31 +173,27 @@ namespace OpenBveApi.Math {
 				Value = a * UnitFactors[UnitFactors.Length - 1];
 				return true;
 			}
-			else
+
+			string[] parameters = Expression.Split(':');
+			Value = 0.0;
+			if (parameters.Length <= UnitFactors.Length)
 			{
-				string[] parameters = Expression.Split(':');
-				Value = 0.0;
-				if (parameters.Length <= UnitFactors.Length)
+				for (int i = 0; i < parameters.Length; i++)
 				{
-					for (int i = 0; i < parameters.Length; i++)
+					if (TryParseDoubleVb6(parameters[i].Trim(), out a))
 					{
-						if (TryParseDoubleVb6(parameters[i].Trim(), out a))
-						{
-							int j = i + UnitFactors.Length - parameters.Length;
-							Value += a * UnitFactors[j];
-						}
-						else
-						{
-							return false;
-						}
+						int j = i + UnitFactors.Length - parameters.Length;
+						Value += a * UnitFactors[j];
 					}
-					return true;
+					else
+					{
+						return false;
+					}
 				}
-				else
-				{
-					return false;
-				}
+				return true;
 			}
+
+			return false;
 		}
 
 		/// <summary>Converts a value given in degrees to Radians</summary>

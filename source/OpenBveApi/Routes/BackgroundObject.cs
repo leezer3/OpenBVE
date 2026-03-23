@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace OpenBveApi.Routes
 {
 	/// <summary>Represents a background object</summary>
-	public class BackgroundObject : BackgroundHandle
+	public sealed class BackgroundObject : BackgroundHandle
 	{
 		/// <summary>The object used for this background (NOTE: Static objects only)</summary>
 		public readonly StaticObject Object;

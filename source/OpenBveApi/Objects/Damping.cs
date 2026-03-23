@@ -15,7 +15,7 @@ namespace OpenBveApi.Objects
 		public readonly double NaturalDampingFrequency;
 		/// <summary>The starting angle</summary>
 		public double OriginalAngle;
-		/// <summary>The derivitive at the starting angle</summary>
+		/// <summary>The derivative at the starting angle</summary>
 		public double OriginalDerivative;
 		/// <summary>The target angle</summary>
 		public double TargetAngle;
@@ -27,43 +27,41 @@ namespace OpenBveApi.Objects
 		public double CurrentTimeDelta;
 
 		/// <summary>Constructs a new damping instance</summary>
-		/// <param name="NaturalFrequency">The natural frequency</param>
-		/// <param name="DampingRatio">The damping ratio to be applied</param>
-		public Damping(double NaturalFrequency, double DampingRatio)
+		/// <param name="naturalFrequency">The natural frequency</param>
+		/// <param name="dampingRatio">The damping ratio to be applied</param>
+		public Damping(double naturalFrequency, double dampingRatio)
 		{
-			if (NaturalFrequency < 0.0)
+			if (naturalFrequency < 0.0)
 			{
 				throw new ArgumentException("NaturalFrequency must be non-negative in the constructor of the Damping class.");
 			}
-			else if (DampingRatio < 0.0)
+			if (dampingRatio < 0.0)
 			{
 				throw new ArgumentException("DampingRatio must be non-negative in the constructor of the Damping class.");
 			}
+
+			NaturalFrequency = naturalFrequency;
+			NaturalTime = naturalFrequency != 0.0 ? 1.0 / naturalFrequency : 0.0;
+			DampingRatio = dampingRatio;
+			if (dampingRatio < 1.0)
+			{
+				NaturalDampingFrequency = naturalFrequency * System.Math.Sqrt(1.0 - dampingRatio * dampingRatio);
+			}
+			else if (dampingRatio == 1.0)
+			{
+				NaturalDampingFrequency = naturalFrequency;
+			}
 			else
 			{
-				this.NaturalFrequency = NaturalFrequency;
-				this.NaturalTime = NaturalFrequency != 0.0 ? 1.0 / NaturalFrequency : 0.0;
-				this.DampingRatio = DampingRatio;
-				if (DampingRatio < 1.0)
-				{
-					this.NaturalDampingFrequency = NaturalFrequency * System.Math.Sqrt(1.0 - DampingRatio * DampingRatio);
-				}
-				else if (DampingRatio == 1.0)
-				{
-					this.NaturalDampingFrequency = NaturalFrequency;
-				}
-				else
-				{
-					this.NaturalDampingFrequency = NaturalFrequency * System.Math.Sqrt(DampingRatio * DampingRatio - 1.0);
-				}
-
-				this.OriginalAngle = 0.0;
-				this.OriginalDerivative = 0.0;
-				this.TargetAngle = 0.0;
-				this.CurrentAngle = 0.0;
-				this.CurrentValue = 1.0;
-				this.CurrentTimeDelta = 0.0;
+				NaturalDampingFrequency = naturalFrequency * System.Math.Sqrt(dampingRatio * dampingRatio - 1.0);
 			}
+
+			OriginalAngle = 0.0;
+			OriginalDerivative = 0.0;
+			TargetAngle = 0.0;
+			CurrentAngle = 0.0;
+			CurrentValue = 1.0;
+			CurrentTimeDelta = 0.0;
 		}
 
 		/// <summary>Clones a damping instance</summary>

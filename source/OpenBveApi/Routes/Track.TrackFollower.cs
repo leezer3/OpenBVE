@@ -29,7 +29,7 @@ namespace OpenBveApi.Routes
 		public double CurveCant;
 		/// <summary>The distance the follower has travelled</summary>
 		public double Odometer;
-		/// <summary>The adjusted cant value due to the Route.Innacuracy value</summary>
+		/// <summary>The adjusted cant value due to the Route.Inaccuracy value</summary>
 		public double CantDueToInaccuracy;
 		/// <summary>The adhesion multiplier at the current location</summary>
 		public double AdhesionMultiplier;
@@ -109,7 +109,7 @@ namespace OpenBveApi.Routes
 		/// <summary>Call this method to update a single track follower on a relative basis</summary>
 		/// <param name="relativeTrackPosition">The new absolute track position of the follower</param>
 		/// <param name="updateWorldCoordinates">Whether to update the world co-ordinates</param>
-		/// <param name="addTrackInaccuracy">Whether to add track innacuracy</param>
+		/// <param name="addTrackInaccuracy">Whether to add track inaccuracy</param>
 		public void UpdateRelative(double relativeTrackPosition, bool updateWorldCoordinates, bool addTrackInaccuracy)
 		{
 			if (relativeTrackPosition == 0)
@@ -323,7 +323,7 @@ namespace OpenBveApi.Routes
 			RainIntensity = currentHost.Tracks[TrackIndex].Elements[i].RainIntensity;
 			SnowIntensity = currentHost.Tracks[TrackIndex].Elements[i].SnowIntensity;
 			//Pitch added for Plugin Data usage
-			//Mutliply this by 1000 to get the original value
+			//Multiply this by 1000 to get the original value
 			Pitch = currentHost.Tracks[TrackIndex].Elements[i].Pitch * 1000;
 			// inaccuracy
 			if (addTrackInaccuracy)
@@ -400,7 +400,7 @@ namespace OpenBveApi.Routes
 						return;
 					}
 
-					if (oldDelta > e.TrackPositionDelta & newDelta <= e.TrackPositionDelta)
+					if (oldDelta > e.TrackPositionDelta && newDelta <= e.TrackPositionDelta)
 					{
 						e.TryTrigger(-1, this);
 					}
@@ -411,7 +411,7 @@ namespace OpenBveApi.Routes
 				for (int j = 0; j < currentHost.Tracks[Index].Elements[elementIndex].Events.Count; j++)
 				{
 					GeneralEvent e = currentHost.Tracks[Index].Elements[elementIndex].Events[j];
-					if (oldDelta < e.TrackPositionDelta & newDelta >= e.TrackPositionDelta)
+					if (oldDelta < e.TrackPositionDelta && newDelta >= e.TrackPositionDelta)
 					{
 						e.TryTrigger(1, this);
 					}

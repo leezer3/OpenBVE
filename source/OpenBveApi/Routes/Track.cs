@@ -28,9 +28,9 @@ namespace OpenBveApi.Routes
 			Name = trackName;
 		}
 
-		/// <summary>Gets the innacuracy (Gauge spread and track bounce) for a given track position and routefile innacuracy value</summary>
+		/// <summary>Gets the inaccuracy (Gauge spread and track bounce) for a given track position and routefile inaccuracy value</summary>
 		/// <param name="position">The track position</param>
-		/// <param name="inaccuracy">The openBVE innacuaracy value</param>
+		/// <param name="inaccuracy">The openBVE inaccuracy value</param>
 		/// <param name="x">The X (horizontal) co-ordinate to update</param>
 		/// <param name="y">The Y (vertical) co-ordinate to update</param>
 		/// <param name="c">???</param>
@@ -195,13 +195,11 @@ namespace OpenBveApi.Routes
 				if (isTurn[i])
 				{
 					// estimate radius
-					Vector3 AP = Elements[i - 1].WorldPosition;
-					Vector3 BP = Elements[i + 1].WorldPosition;
-					Vector3 S = Elements[i - 1].WorldSide - Elements[i + 1].WorldSide;
+					Vector3 side = Elements[i - 1].WorldSide - Elements[i + 1].WorldSide;
 					double rx;
-					if (S.X * S.X > 0.000001)
+					if (side.X * side.X > 0.000001)
 					{
-						rx = (BP.X - AP.X) / S.X;
+						rx = (Elements[i + 1].WorldPosition.X - Elements[i - 1].WorldPosition.X) / side.X;
 					}
 					else
 					{
@@ -209,9 +207,9 @@ namespace OpenBveApi.Routes
 					}
 
 					double rz;
-					if (S.Z * S.Z > 0.000001)
+					if (side.Z * side.Z > 0.000001)
 					{
-						rz = (BP.Z - AP.Z) / S.Z;
+						rz = (Elements[i + 1].WorldPosition.Z - Elements[i - 1].WorldPosition.Z) / side.Z;
 					}
 					else
 					{

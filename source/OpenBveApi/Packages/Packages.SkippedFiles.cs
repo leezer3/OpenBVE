@@ -4,8 +4,7 @@
 	public static partial class Manipulation
 	{
 		/// <summary>The list of files which are to be skipped during package extraction</summary>
-		private static readonly string[] filesToSkip = new[]
-		{
+		private static readonly string[] filesToSkip = {
 			"package.xml",
 			"package.png",
 			"package.rtf",

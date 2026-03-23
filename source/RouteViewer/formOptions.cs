@@ -40,9 +40,9 @@ namespace RouteViewer
             button1.Focus();
         }
 
-	    readonly int previousAntialasingLevel = Interface.CurrentOptions.AntiAliasingLevel;
-	    readonly int previousAnsiotropicLevel = Interface.CurrentOptions.AnisotropicFilteringLevel;
-	    readonly int previousViewingDistance = Interface.CurrentOptions.ViewingDistance;
+	    private readonly int previousAntialiasingLevel = Interface.CurrentOptions.AntiAliasingLevel;
+	    private readonly int previousAnisotropicLevel = Interface.CurrentOptions.AnisotropicFilteringLevel;
+	    private readonly int previousViewingDistance = Interface.CurrentOptions.ViewingDistance;
 	    private bool GraphicsModeChanged = false;
 
         private void button1_Click(object sender, EventArgs e)
@@ -81,7 +81,7 @@ namespace RouteViewer
 			Interface.CurrentOptions.AnisotropicFilteringLevel = (int) AnsiotropicLevel.Value;
             //Antialiasing level
             Interface.CurrentOptions.AntiAliasingLevel = (int)AntialiasingLevel.Value;
-            if (Interface.CurrentOptions.AntiAliasingLevel != previousAntialasingLevel)
+            if (Interface.CurrentOptions.AntiAliasingLevel != previousAntialiasingLevel)
             {
                 Program.Renderer.GraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
 	            GraphicsModeChanged = true;
@@ -136,8 +136,8 @@ namespace RouteViewer
 					Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
 				}
 			}
-			//Check if interpolation mode or ansiotropic filtering level has changed, and trigger a reload
-			if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnsiotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel || GraphicsModeChanged || Interface.CurrentOptions.ViewingDistance != previousViewingDistance)
+			//Check if interpolation mode or anisotropic filtering level has changed, and trigger a reload
+			if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnisotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel || GraphicsModeChanged || Interface.CurrentOptions.ViewingDistance != previousViewingDistance)
 			{
 				this.DialogResult = DialogResult.OK;
 			}

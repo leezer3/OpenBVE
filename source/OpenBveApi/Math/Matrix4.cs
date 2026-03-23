@@ -137,7 +137,7 @@ namespace OpenBveApi.Math
 		/// <summary>Checks whether the two specified matrices are equal.</summary>
 		/// <param name="a">The first matrix.</param>
 		/// <param name="b">The second matrix.</param>
-		/// <returns>Whether the two matricies are equal.</returns>
+		/// <returns>Whether the two matrices are equal.</returns>
 		public static bool operator ==(Matrix4D a, Matrix4D b)
 		{
 			if (a.Row0 != b.Row0) return false;
@@ -248,11 +248,11 @@ namespace OpenBveApi.Math
 			return Frustum(xMin, xMax, yMin, yMax, zNear, zFar);
 		}
 
-		/// <summary>Creates a matrix which transforms camera space to the viewing frustrum</summary>
-		/// <param name="left">The left side of the frustrum</param>
-		/// <param name="right">The right side of the frustrum</param>
-		/// <param name="bottom">The bottom of the frustrum</param>
-		/// <param name="top">The top of the frustrum</param>
+		/// <summary>Creates a matrix which transforms camera space to the viewing frustum</summary>
+		/// <param name="left">The left side of the frustum</param>
+		/// <param name="right">The right side of the frustum</param>
+		/// <param name="bottom">The bottom of the frustum</param>
+		/// <param name="top">The top of the frustum</param>
 		/// <param name="zNear">Distance to the near clip plane</param>
 		/// <param name="zFar">Distance to the far clip plane</param>
 		/// <returns></returns>
@@ -305,10 +305,10 @@ namespace OpenBveApi.Math
 		}
 
 		/// <summary>Creates a perspective projection matrix, assuming that the eye is located at 0,0,0</summary>
-		/// <param name="left">The left side of the frustrum</param>
-		/// <param name="right">The right side of the frustrum</param>
-		/// <param name="bottom">The bottom of the frustrum</param>
-		/// <param name="top">The top of the frustrum</param>
+		/// <param name="left">The left side of the frustum</param>
+		/// <param name="right">The right side of the frustum</param>
+		/// <param name="bottom">The bottom of the frustum</param>
+		/// <param name="top">The top of the frustum</param>
 		/// <param name="zNear">Distance to the near clip plane</param>
 		/// <param name="zFar">Distance to the far clip plane</param>
 		/// <returns>The perspective projection matrix</returns>
@@ -366,7 +366,7 @@ namespace OpenBveApi.Math
 			return result;
 		}
 
-		/// <summary>Adds two matricies</summary>
+		/// <summary>Adds two matrices</summary>
 		/// <param name="left">The left matrix</param>
 		/// <param name="right">The right matrix</param>
 		/// <returns>The final matrix</returns>
@@ -500,7 +500,7 @@ namespace OpenBveApi.Math
 		public static void CreateFromQuaternion(ref Quaternion q, out Matrix4D result)
 		{
 			// Adapted from https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation#Quaternion-derived_rotation_matrix
-			// with the caviat that opentk uses row-major matrices so the matrix we create is transposed
+			// with the caveat that opentk uses row-major matrices so the matrix we create is transposed
 			double sqx = q.X * q.X;
 			double sqy = q.Y * q.Y;
 			double sqz = q.Z * q.Z;

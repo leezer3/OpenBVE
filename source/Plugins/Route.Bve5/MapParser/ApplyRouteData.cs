@@ -205,7 +205,7 @@ namespace Route.Bve5
 						}
 						Data.Blocks[i].Fog.TrackPosition = StartingDistance;
 						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new FogChangeEvent(Plugin.CurrentRoute, 0.0, PreviousFog, Data.Blocks[i].Fog, Data.Blocks[i].Fog));
-						if (PreviousFogElement >= 0 & PreviousFogEvent >= 0)
+						if (PreviousFogElement >= 0 && PreviousFogEvent >= 0)
 						{
 							FogChangeEvent e = (FogChangeEvent)Plugin.CurrentRoute.Tracks[0].Elements[PreviousFogElement].Events[PreviousFogEvent];
 							e.NextFog = Data.Blocks[i].Fog;
@@ -246,7 +246,7 @@ namespace Route.Bve5
 				{
 					int s = Data.Blocks[i].StationIndex;
 					Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new StationStartEvent(Plugin.CurrentRoute, 0.0, s));
-					double dx, dy = 3.0;
+					double dx;
 					if (Plugin.CurrentRoute.Stations[s].OpenLeftDoors & !Plugin.CurrentRoute.Stations[s].OpenRightDoors)
 					{
 						dx = -5.0;
@@ -259,14 +259,14 @@ namespace Route.Bve5
 					{
 						dx = 0.0;
 					}
-					Plugin.CurrentRoute.Stations[s].SoundOrigin = Position + dx * Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide + dy * Plugin.CurrentRoute.Tracks[0].Elements[n].WorldUp;
+					Plugin.CurrentRoute.Stations[s].SoundOrigin = Position + dx * Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide + 3.0 * Plugin.CurrentRoute.Tracks[0].Elements[n].WorldUp;
 				}
 
 				// stop
 				if (Data.Blocks[i].Stop >= 0)
 				{
 					int s = Data.Blocks[i].Stop;
-					double dx, dy = 3.0;
+					double dx;
 					if (Plugin.CurrentRoute.Stations[s].OpenLeftDoors & !Plugin.CurrentRoute.Stations[s].OpenRightDoors)
 					{
 						dx = -5.0;
@@ -279,7 +279,7 @@ namespace Route.Bve5
 					{
 						dx = 0.0;
 					}
-					Plugin.CurrentRoute.Stations[s].SoundOrigin = Position + dx * Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide + dy * Plugin.CurrentRoute.Tracks[0].Elements[n].WorldUp;
+					Plugin.CurrentRoute.Stations[s].SoundOrigin = Position + dx * Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide + 3.0 * Plugin.CurrentRoute.Tracks[0].Elements[n].WorldUp;
 				}
 
 				// limit
@@ -314,10 +314,6 @@ namespace Route.Bve5
 							for (int k = 0; k < Data.Blocks[i].FreeObjects[railKey].Count; k++)
 							{
 								string key = Data.Blocks[i].FreeObjects[railKey][k].Key;
-								double dx = Data.Blocks[i].FreeObjects[railKey][k].Position.X;
-								double dy = Data.Blocks[i].FreeObjects[railKey][k].Position.Y;
-								double dz = Data.Blocks[i].FreeObjects[railKey][k].Position.Z;
-								double tpos = Data.Blocks[i].FreeObjects[railKey][k].TrackPosition;
 								Vector3 wpos;
 								Transformation Transformation;
 								if (j == 0)
@@ -328,9 +324,10 @@ namespace Route.Bve5
 								{
 									GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, Data.Blocks[i].FreeObjects[railKey][k], out wpos, out Transformation);
 								}
-								wpos += dx * Transformation.X + dy * Transformation.Y + dz * Transformation.Z;
+
+								wpos += Data.Blocks[i].FreeObjects[railKey][k].Position * Transformation;
 								Data.Objects.TryGetValue(key, out UnifiedObject obj);
-								obj?.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].FreeObjects[railKey][k].Yaw, Data.Blocks[i].FreeObjects[railKey][k].Pitch, Data.Blocks[i].FreeObjects[railKey][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0);
+								obj?.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].FreeObjects[railKey][k].Yaw, Data.Blocks[i].FreeObjects[railKey][k].Pitch, Data.Blocks[i].FreeObjects[railKey][k].Roll), -1, StartingDistance, EndingDistance, Data.Blocks[i].FreeObjects[railKey][k].TrackPosition, 1.0);
 							}
 						}
 
@@ -382,11 +379,6 @@ namespace Route.Bve5
 						{
 							for (int k = 0; k < Data.Blocks[i].Signals[j].Count; k++)
 							{
-								string key = Data.Blocks[i].Signals[j][k].Key;
-								double dx = Data.Blocks[i].Signals[j][k].Position.X;
-								double dy = Data.Blocks[i].Signals[j][k].Position.Y;
-								double dz = Data.Blocks[i].Signals[j][k].Position.Z;
-								double tpos = Data.Blocks[i].Signals[j][k].TrackPosition;
 								Vector3 wpos;
 								Transformation Transformation;
 								if (j == 0)
@@ -397,9 +389,9 @@ namespace Route.Bve5
 								{
 									GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, Data.Blocks[i].Signals[j][k], out wpos, out Transformation);
 								}
-								wpos += dx * Transformation.X + dy * Transformation.Y + dz * Transformation.Z;
+								wpos += Data.Blocks[i].Signals[j][k].Position * Transformation;
 
-								SignalData sd = Data.SignalObjects.Find(data => data.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase));
+								SignalData sd = Data.SignalObjects.Find(data => data.Key.Equals(Data.Blocks[i].Signals[j][k].Key, StringComparison.InvariantCultureIgnoreCase));
 								if (sd != null)
 								{
 									if (sd.Numbers.Any())
@@ -441,7 +433,7 @@ namespace Route.Bve5
 											aoc.Objects[m].RefreshRate = refreshRate;
 										}
 
-										aoc.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].Signals[j][k].Yaw, Data.Blocks[i].Signals[j][k].Pitch, Data.Blocks[i].Signals[j][k].Roll), Data.Blocks[i].Signals[j][k].SectionIndex, StartingDistance, EndingDistance, tpos, 1.0);
+										aoc.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].Signals[j][k].Yaw, Data.Blocks[i].Signals[j][k].Pitch, Data.Blocks[i].Signals[j][k].Roll), Data.Blocks[i].Signals[j][k].SectionIndex, StartingDistance, EndingDistance, Data.Blocks[i].Signals[j][k].TrackPosition, 1.0);
 									}
 								}
 							}
@@ -633,9 +625,9 @@ namespace Route.Bve5
 			}
 			for (int i = 0; i < Plugin.CurrentRoute.Stations.Length; i++)
 			{
-				if (Plugin.CurrentRoute.Stations[i].Stops.Length == 0 & Plugin.CurrentRoute.Stations[i].StopMode != StationStopMode.AllPass)
+				if (Plugin.CurrentRoute.Stations[i].Stops.Length == 0 && Plugin.CurrentRoute.Stations[i].StopMode != StationStopMode.AllPass)
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "StationIndex " + Plugin.CurrentRoute.Stations[i].Name + " expects trains to stop but does not define stop points at track position " + Plugin.CurrentRoute.Stations[i].DefaultTrackPosition.ToString(Culture) + " in file " + FileName);
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: StationIndex " + Plugin.CurrentRoute.Stations[i].Name + " expects trains to stop but does not define stop points at track position " + Plugin.CurrentRoute.Stations[i].DefaultTrackPosition.ToString(Culture) + " in file " + FileName);
 					Plugin.CurrentRoute.Stations[i].StopMode = StationStopMode.AllPass;
 				}
 			}

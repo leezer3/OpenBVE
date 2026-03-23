@@ -61,13 +61,26 @@ namespace OpenBveApi.Objects
 		public override bool IsVisible(Vector3 cameraPosition, double backgroundImageDistance, double extraViewingDistance)
 		{
 			double z = 0;
-			if (Object != null && Object.TranslateZFunction != null)
+			if (Object != null)
 			{
-				/*
-				 * FIXME:
-				 * Low priority, the translate Z-direction may have changed
-				 */
-				z += Object.TranslateZFunction.LastResult;
+				if (Object.TranslateXFunction != null && Object.TranslateXDirection == Vector3.Forward)
+				{
+					z += Object.TranslateXFunction.LastResult;
+				}
+				else if (Object.TranslateYFunction != null && Object.TranslateYDirection == Vector3.Forward)
+				{
+					z += Object.TranslateYFunction.LastResult;
+				}
+				else if (Object.TranslateZFunction != null && Object.TranslateYDirection == Vector3.Forward)
+				{
+					z += Object.TranslateZFunction.LastResult;
+				}
+
+				if (z > 500)
+				{
+					// HACK: We can't assume the TranslateFunction has actually been updated (as the object may not be visible)
+					z = 0;
+				}
 			}
 			double pa = TrackPosition + z - Radius - 10.0;
 			double pb = TrackPosition + z + Radius + 10.0;

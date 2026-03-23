@@ -314,6 +314,7 @@
     <Compile Include="World\UnitConversions\UnitConvertor.cs" />
     <Compile Include="World\UnitConversions\Velocity.cs" />
     <Compile Include="World\UnitConversions\Volume.cs" />
+    <Compile Include="World\UnitConversions\Volumetric.cs" />
     <Compile Include="World\UnitConversions\Weight.cs" />
     <Compile Include="World\Verticies\AnimatedVertex.cs" />
     <Compile Include="World\Verticies\ColoredVertex.cs" />

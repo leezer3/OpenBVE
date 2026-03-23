@@ -12,7 +12,7 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 	{
 		internal static void Parse(string fileName, Train train)
 		{
-			ConfigFile<ExtensionCfgSection, ExtensionCfgKey> cfg = new ConfigFile<ExtensionCfgSection, ExtensionCfgKey>(File.ReadAllLines(fileName, TextEncoding.GetSystemEncodingFromFile(fileName)), Program.CurrentHost);
+			ConfigFile<ExtensionCfgSection, ExtensionCfgKey> cfg = new ConfigFile<ExtensionCfgSection, ExtensionCfgKey>(File.ReadAllLines(fileName, TextEncoding.GetSystemEncodingFromFile(fileName)), fileName, Program.CurrentHost);
 			string trainPath = Path.GetDirectoryName(fileName);
 			while (cfg.RemainingSubBlocks > 0)
 			{

@@ -16,8 +16,8 @@ namespace OpenBveApi
 		private static extern bool QueryPerformanceCounter(ref long PerformanceCount);  //gets the number of elapsed ticks for future calculations
 		//UNSAFE ZONE//
 
-		static readonly long _ticksPerSecond = 0;  //initialize variables
-		static long _previousElapsedTime = 0;
+		private static readonly long _ticksPerSecond = 0;  //initialize variables
+		private static long _previousElapsedTime = 0;
 
 		private static readonly Stopwatch stopWatch;
 

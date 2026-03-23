@@ -85,14 +85,14 @@ namespace RouteViewer
 				if (!File.Exists(configFile))
 				{
 					//If no route viewer specific configuration file exists, then try the main OpenBVE configuration file
-					//Write out to a new routeviewer specific file though
+					//Write out to a new Route Viewer specific file though
 					configFile = Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
 				}
 			}
 
 			if (File.Exists(configFile))
 			{
-				ConfigFile<OptionsSection, OptionsKey> cfg = new ConfigFile<OptionsSection, OptionsKey>(File.ReadAllLines(configFile, new System.Text.UTF8Encoding()), Program.CurrentHost);
+				ConfigFile<OptionsSection, OptionsKey> cfg = new ConfigFile<OptionsSection, OptionsKey>(File.ReadAllLines(configFile, new System.Text.UTF8Encoding()), configFile, Program.CurrentHost);
 
 				while (cfg.RemainingSubBlocks > 0)
 				{

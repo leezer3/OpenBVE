@@ -242,7 +242,7 @@ namespace OpenBveApi.FileSystem {
 			}
 		}
 
-		/// <summary> Replaces all instances of absolute paths within a string with their relative equivilants</summary>
+		/// <summary> Replaces all instances of absolute paths within a string with their relative equivalents</summary>
 		internal static string ReplacePath(string line)
 		{
 			try

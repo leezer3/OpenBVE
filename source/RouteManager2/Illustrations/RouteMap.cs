@@ -59,12 +59,12 @@ namespace RouteManager2
 			public Pen		elevBrdr;			// border for elevation contour
 			public Brush	limitFill;			// fill for elevation contour
 			public Pen		limitBrdr;			// border for elevation contour
-		};
+		}
 
 		// the colours used for the images
 		private static readonly MapColors[]	mapColors =
 		{					// colours for windowed mode display
-			new MapColors() {background=Color.White,		atcMap=Pens.DarkRed,	normalMap=Pens.Black,
+			new MapColors {background=Color.White,		atcMap=Pens.DarkRed,	normalMap=Pens.Black,
 							actStatnFill=Brushes.SkyBlue,	inactStatnFill=Brushes.LightGray,
 							actStatnBrdr=Pens.Black,		inactStatnBrdr=Pens.Gray,
 							actNameFill=Brushes.White,		inactNameFill=Brushes.LightGray,
@@ -74,7 +74,7 @@ namespace RouteManager2
 							elevFill=Brushes.Tan,			elevBrdr=Pens.Black,
 							limitFill=Brushes.White,			limitBrdr= new Pen(Color.Red, 5f)},
 							// colours for in-game display
-			new MapColors() {background=Color.FromArgb(0x64000000),	atcMap=Pens.Red,	normalMap=Pens.White,
+			new MapColors {background=Color.FromArgb(0x64000000),	atcMap=Pens.Red,	normalMap=Pens.White,
 							actStatnFill=Brushes.SkyBlue,	inactStatnFill=Brushes.Gray,
 							actStatnBrdr=Pens.White,		inactStatnBrdr=Pens.LightGray,
 							actNameFill=Brushes.Black,		inactNameFill=Brushes.Gray,
@@ -83,7 +83,7 @@ namespace RouteManager2
 							belowSeaFill= new SolidBrush(Color.FromArgb(0x7feee8aa)),	belowSeaBrdr=Pens.Gray,
 							elevFill= new SolidBrush(Color.FromArgb(0x7fd2b48c)),		elevBrdr=Pens.Gray,
 							limitFill=Brushes.White,			limitBrdr= new Pen(Color.Red, 5f)},
-			new MapColors() {background=Color.FromArgb(0x64000000),	atcMap=Pens.Red,	normalMap=Pens.White,
+			new MapColors {background=Color.FromArgb(0x64000000),	atcMap=Pens.Red,	normalMap=Pens.White,
 			actStatnFill=Brushes.SkyBlue,	inactStatnFill=Brushes.Gray,
 			actStatnBrdr=Pens.White,		inactStatnBrdr=Pens.LightGray,
 			actNameFill=Brushes.Black,		inactNameFill=Brushes.Gray,
@@ -98,12 +98,12 @@ namespace RouteManager2
 		private static int	lastGradientMinTrack, lastGradientMaxTrack;
 		private static int	lastRouteMinX, lastRouteMinZ, lastRouteMaxX, lastRouteMaxZ;
 		// access these properties as read-only
-		public  static int	LastGradientMinTrack => lastGradientMinTrack;
-		public  static int	LastGradientMaxTrack => lastGradientMaxTrack;
-		public  static int	LastRouteMinX => lastRouteMinX;
-		public  static int	LastRouteMaxX => lastRouteMaxX;
-		public  static int	LastRouteMinZ => lastRouteMinZ;
-		public  static int	LastRouteMaxZ => lastRouteMaxZ;
+		public static int LastGradientMinTrack => lastGradientMinTrack;
+		public static int LastGradientMaxTrack => lastGradientMaxTrack;
+		public static int LastRouteMinX => lastRouteMinX;
+		public static int LastRouteMaxX => lastRouteMaxX;
+		public static int LastRouteMinZ => lastRouteMinZ;
+		public static int LastRouteMaxZ => lastRouteMaxZ;
 
 		/// <summary>Creates and returns the route map as Bitmap.</summary>
 		/// <returns>The route map.</returns>

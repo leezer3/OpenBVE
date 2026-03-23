@@ -44,7 +44,7 @@ namespace CsvRwRouteParser
 		internal ObjectDictionary FreeObjects;
 		/// <summary>All currently defined Structure.Beacon objects</summary>
 		internal ObjectDictionary Beacon;
-		/// <summary>All currenly defined Structure.Weather objects</summary>
+		/// <summary>All currently defined Structure.Weather objects</summary>
 		internal ObjectDictionary WeatherObjects;
 		/// <summary>All currently defined cycles</summary>
 		internal int[][] Cycles;

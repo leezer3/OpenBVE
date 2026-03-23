@@ -41,16 +41,17 @@ namespace Route.Bve5
 
 		internal void Create(int currentElement, double startingDistance, ref int currentRunIndex, int currentFlangeIndex)
 		{
-			if (SoundIndex != currentRunIndex)
+			if (SoundIndex == currentRunIndex)
 			{
-				double d = TrackPosition - startingDistance;
-				if (d > 0.0)
-				{
-					d = 0.0;
-				}
-				Plugin.CurrentRoute.Tracks[0].Elements[currentElement].Events.Add(new RailSoundsChangeEvent(d, currentRunIndex, currentFlangeIndex, SoundIndex, currentFlangeIndex));
-				currentRunIndex = SoundIndex;
+				return;
 			}
+			double d = TrackPosition - startingDistance;
+			if (d > 0.0)
+			{
+				d = 0.0;
+			}
+			Plugin.CurrentRoute.Tracks[0].Elements[currentElement].Events.Add(new RailSoundsChangeEvent(d, currentRunIndex, currentFlangeIndex, SoundIndex, currentFlangeIndex));
+			currentRunIndex = SoundIndex;
 		}
 	}
 
@@ -69,16 +70,17 @@ namespace Route.Bve5
 
 		internal void Create(int currentElement, double startingDistance, int currentRunIndex, ref int currentFlangeIndex)
 		{
-			if (SoundIndex != currentFlangeIndex)
+			if (SoundIndex == currentFlangeIndex)
 			{
-				double d = TrackPosition - startingDistance;
-				if (d > 0.0)
-				{
-					d = 0.0;
-				}
-				Plugin.CurrentRoute.Tracks[0].Elements[currentElement].Events.Add(new RailSoundsChangeEvent(d, currentRunIndex, currentFlangeIndex, currentRunIndex, SoundIndex));
-				currentFlangeIndex = SoundIndex;
+				return;
 			}
+			double d = TrackPosition - startingDistance;
+			if (d > 0.0)
+			{
+				d = 0.0;
+			}
+			Plugin.CurrentRoute.Tracks[0].Elements[currentElement].Events.Add(new RailSoundsChangeEvent(d, currentRunIndex, currentFlangeIndex, currentRunIndex, SoundIndex));
+			currentFlangeIndex = SoundIndex;
 		}
 	}
 }

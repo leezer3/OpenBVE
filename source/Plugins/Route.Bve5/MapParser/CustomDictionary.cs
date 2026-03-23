@@ -47,7 +47,7 @@ namespace Route.Bve5
 				if (ContainsKey(key))
 				{
 					base[key] = unifiedObject;
-					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The structure " + key + " has been declared twice: The most recent declaration will be used.");
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: The structure " + key + " has been declared twice: The most recent declaration will be used.");
 				}
 				else
 				{
@@ -68,7 +68,7 @@ namespace Route.Bve5
 				if (ContainsKey(key))
 				{
 					base[key] = soundBuffer;
-					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The sound " + key + " has been declared twice: The most recent declaration will be used.");
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: The sound " + key + " has been declared twice: The most recent declaration will be used.");
 				}
 				else
 				{

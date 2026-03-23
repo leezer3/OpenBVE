@@ -44,6 +44,8 @@ namespace OpenBveApi.Motor
 		/// <summary>Steam engine first injector</summary>
 		SteamInjector1,
 		/// <summary>Steam engine second injector</summary>
-		SteamInjector2
+		SteamInjector2,
+		/// <summary>Steam engine firebox</summary>
+		Firebox
 	}
 }

@@ -13,9 +13,6 @@ namespace OpenBveApi.Objects
 		public Vector3 Position;
 		/// <summary>The track position for this object</summary>
 		public double TrackPosition;
-		/// <summary>The relative track position for this object</summary>
-		public virtual double RelativeTrackPosition => TrackPosition;
-
 		/// <summary>Whether the object is currently visible at the player's camera position</summary>
 		public bool Visible;
 		/// <summary>The world direction vector</summary>
@@ -54,7 +51,7 @@ namespace OpenBveApi.Objects
 		/// <param name="NearestTrain">The nearest train to this object</param>
 		/// <param name="TimeElapsed">The time elapsed in milliseconds</param>
 		/// <param name="ForceUpdate">Whether this is a forced update (e.g. Change of viewpoint) or periodic</param>
-		/// <param name="CurrentlyVisible">Whether the object is currently visble to the player</param>
+		/// <param name="CurrentlyVisible">Whether the object is currently visible to the player</param>
 		public abstract void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate, bool CurrentlyVisible);
 
 		/// <summary>Whether the object is currently visible</summary>

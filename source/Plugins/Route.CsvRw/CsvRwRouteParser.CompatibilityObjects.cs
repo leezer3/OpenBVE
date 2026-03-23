@@ -1,9 +1,12 @@
-﻿using System;
-using System.Xml;
-using System.Linq;
+﻿using Formats.OpenBve;
+using Formats.OpenBve.XML;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
+using System;
+using System.ComponentModel.Design;
+using System.Linq;
+using System.Xml;
 
 namespace CsvRwRouteParser
 {
@@ -202,7 +205,7 @@ namespace CsvRwRouteParser
 			{
 				return false;
 			}
-			//Some Chashinai downloads are badly formatted and don't specifiy that the objects and sounds should be placed within a Chashinai folder
+			//Some Chashinai downloads are badly formatted and don't specify that the objects and sounds should be placed within a Chashinai folder
 			if (fileName.StartsWith(@"Chashinai", StringComparison.InvariantCultureIgnoreCase))
 			{
 				string fn = fileName.Substring(10);
@@ -331,169 +334,40 @@ namespace CsvRwRouteParser
 			{
 				return;
 			}
-			string d = Path.GetDirectoryName(fileName);
-			XmlDocument currentXML = new XmlDocument();
-			try
+
+			XMLFile<CompatibilityObjectSection, CompatibilityObjectKey> xmlFile = new XMLFile<CompatibilityObjectSection, CompatibilityObjectKey>(fileName, "/openBVE/Compatibility", Plugin.CurrentHost);
+			while (xmlFile.RemainingSubBlocks > 0)
 			{
-				currentXML.Load(fileName);
-			}
-			catch
-			{
-				return;
-			}
-			
-			//Check for null
-			if (currentXML.DocumentElement != null)
-			{
-				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Compatibility/Object");
-				//Check this file actually contains OpenBVE compatibility nodes
-				if (DocumentNodes != null)
+				Block<CompatibilityObjectSection, CompatibilityObjectKey> objectListBlock = xmlFile.ReadNextBlock();
+				while (objectListBlock.RemainingSubBlocks > 0)
 				{
-					foreach (XmlNode n in DocumentNodes)
+					Block<CompatibilityObjectSection, CompatibilityObjectKey> fileBlock = objectListBlock.ReadNextBlock();
+					ReplacementObject o = new ReplacementObject();
+					if (!fileBlock.GetValue(CompatibilityObjectKey.Path, out o.ReplacementPath) || !fileBlock.TryGetStringArray(CompatibilityObjectKey.Name, ';', ref o.ObjectNames))
 					{
-						if (n.ChildNodes.OfType<XmlElement>().Any())
+						continue;
+					}
+					fileBlock.GetValue(CompatibilityObjectKey.Message, out o.Message);
+					if (fileBlock.Key == CompatibilityObjectSection.Object)
+					{
+						if (o.ReplacementPath != string.Empty)
 						{
-							ReplacementObject o = new ReplacementObject();
-							string[] names = null;
-							foreach (XmlNode c in n.ChildNodes)
-							{
-								switch (c.Name.ToLowerInvariant())
-								{
-									case "name":
-										if (c.InnerText.IndexOf(';') == -1)
-										{
-											names = new[]
-											{
-												c.InnerText
-											};
-										}
-										else
-										{
-											names = c.InnerText.Split(';');
-										}
-										break;
-									case "path":
-											string f = Path.CombineFile(d, c.InnerText.Trim());
-											if (System.IO.File.Exists(f))
-											{
-												o.ReplacementPath = f;
-											}
-											break;
-									case "message":
-										o.Message = c.InnerText.Trim();
-										break;
-									default:
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unexpected entry " + c.Name + " found in compatability object XML " + fileName);
-										break;
-								}
-							}
-							if (names != null)
-							{
-								o.ObjectNames = names;
-								if (o.ReplacementPath != string.Empty)
-								{
-									int i = AvailableReplacements.Length;
-									Array.Resize(ref AvailableReplacements, i + 1);
-									AvailableReplacements[i] = o;
-								}
-							}
+							int i = AvailableReplacements.Length;
+							Array.Resize(ref AvailableReplacements, i + 1);
+							AvailableReplacements[i] = o;
 						}
 					}
-					DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Compatibility/Sound");
-					//Check this file actually contains OpenBVE compatibility nodes
-					if (DocumentNodes != null)
+					else
 					{
-						foreach (XmlNode n in DocumentNodes)
+						if (o.ReplacementPath != string.Empty)
 						{
-							if (n.ChildNodes.OfType<XmlElement>().Any())
-							{
-								ReplacementObject o = new ReplacementObject();
-								string[] names = null;
-								foreach (XmlNode c in n.ChildNodes)
-								{
-									switch (c.Name.ToLowerInvariant())
-									{
-										case "name":
-											if (c.InnerText.IndexOf(';') == -1)
-											{
-												names = new[]
-												{
-													c.InnerText
-												};
-											}
-											else
-											{
-												names = c.InnerText.Split(';');
-											}
-											break;
-										case "path":
-											string f = Path.CombineFile(d, c.InnerText.Trim());
-											if (System.IO.File.Exists(f))
-											{
-												o.ReplacementPath = f;
-											}
-											break;
-										case "message":
-											o.Message = c.InnerText.Trim();
-											break;
-										default:
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false,
-												"Unexpected entry " + c.Name + " found in compatability object XML " + fileName);
-											break;
-									}
-								}
-								if (names != null)
-								{
-									o.ObjectNames = names;
-									if (o.ReplacementPath != string.Empty)
-									{
-										int i = AvailableSounds.Length;
-										Array.Resize(ref AvailableSounds, i + 1);
-										AvailableSounds[i] = o;
-									}
-								}
-							}
-						}
-					}
-					//Now try and load any object list XML files this references
-						DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Compatibility/ObjectList");
-					
-					if (DocumentNodes != null)
-					{
-						foreach (XmlNode n in DocumentNodes)
-						{
-							if (n.ChildNodes.OfType<XmlElement>().Any())
-							{
-								foreach (XmlNode c in n.ChildNodes)
-								{
-									switch (c.Name.ToLowerInvariant())
-									{
-										case "filename":
-											var f = c.InnerText.Trim();
-											if (!System.IO.File.Exists(f))
-											{
-												try
-												{
-													f = Path.CombineFile(d, f);
-												}
-												catch
-												{
-													//Deliberately suppress all errors
-												}
-											}
-											LoadCompatibilityObjects(f);
-											break;
-										default:
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unexpected entry " + c.Name + " found in compatability XML list " + fileName);
-											break;
-									}
-								}
-							}
+							int i = AvailableSounds.Length;
+							Array.Resize(ref AvailableSounds, i + 1);
+							AvailableSounds[i] = o;
 						}
 					}
 				}
 			}
-
 			if (AvailableReplacements.Length != 0)
 			{
 				CompatabilityObjectsLoaded = true;

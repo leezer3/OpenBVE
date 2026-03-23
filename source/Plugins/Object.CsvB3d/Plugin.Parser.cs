@@ -509,6 +509,16 @@ namespace Object.CsvB3d
 											}
 										}
 
+										if (FileName.FileNameEndsWith(new[] { "USF\\bridge.b3d" }))
+										{
+											switch (Object.Mesh.Faces.Length)
+											{
+												case 0:
+													a = new[] { 0, 2, 3, 1 };
+													break;
+											}
+										}
+
 										int[] vertexIndices = (int[])a.Clone();
 										Array.Sort(vertexIndices);
 										for (int k = 0; k < Builder.Faces.Count; k++)

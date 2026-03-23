@@ -2,12 +2,12 @@
 
 namespace OpenBveApi.Routes
 {
-	/// <summary>Represents a static background, using the default viewing frustrum</summary>
-	public class StaticBackground : BackgroundHandle
+	/// <summary>Represents a static background, using the default viewing frustum</summary>
+	public sealed class StaticBackground : BackgroundHandle
 	{
 		/// <summary>The background texture</summary>
 		public Texture Texture;
-		/// <summary>The number of times the texture is repeated around the viewing frustrum</summary>
+		/// <summary>The number of times the texture is repeated around the viewing frustum</summary>
 		public double Repetition;
 		/// <summary>Whether the texture's aspect ratio should be maintained</summary>
 		public bool KeepAspectRatio;
@@ -22,8 +22,8 @@ namespace OpenBveApi.Routes
 
 		/// <summary>Creates a new static background, using the default 0.8s fade-in time</summary>
 		/// <param name="Texture">The texture to apply</param>
-		/// <param name="Repetition">The number of times the texture should be repeated around the viewing frustrum</param>
-		/// <param name="KeepAspectRatio">Whether the aspect ratio of the texture should be preseved</param>
+		/// <param name="Repetition">The number of times the texture should be repeated around the viewing frustum</param>
+		/// <param name="KeepAspectRatio">Whether the aspect ratio of the texture should be preserved</param>
 		/// <param name="Distance">The viewing distance</param>
 		public StaticBackground(Texture Texture, double Repetition, bool KeepAspectRatio, double Distance = 0) : this(Texture, Repetition, KeepAspectRatio, 0.8, BackgroundTransitionMode.FadeIn)
 		{
@@ -35,8 +35,8 @@ namespace OpenBveApi.Routes
 
 		/// <summary>Creates a new static background</summary>
 		/// <param name="Texture">The texture to apply</param>
-		/// <param name="Repetition">The number of times the texture should be repeated around the viewing frustrum</param>
-		/// <param name="KeepAspectRatio">Whether the aspect ratio of the texture should be preseved</param>
+		/// <param name="Repetition">The number of times the texture should be repeated around the viewing frustum</param>
+		/// <param name="KeepAspectRatio">Whether the aspect ratio of the texture should be preserved</param>
 		/// <param name="transitionTime">The time taken in seconds for the fade-in transition to occur</param>
 		/// <param name="Mode">The transition mode</param>
 		public StaticBackground(Texture Texture, double Repetition, bool KeepAspectRatio, double transitionTime, BackgroundTransitionMode Mode) : this(Texture, Repetition, KeepAspectRatio, transitionTime, Mode, -1.0)
@@ -45,8 +45,8 @@ namespace OpenBveApi.Routes
 
 		/// <summary>Creates a new static background</summary>
 		/// <param name="Texture">The texture to apply</param>
-		/// <param name="Repetition">The number of times the texture should be repeated around the viewing frustrum</param>
-		/// <param name="KeepAspectRatio">Whether the aspect ratio of the texture should be preseved</param>
+		/// <param name="Repetition">The number of times the texture should be repeated around the viewing frustum</param>
+		/// <param name="KeepAspectRatio">Whether the aspect ratio of the texture should be preserved</param>
 		/// <param name="transitionTime">The time taken in seconds for the fade-in transition to occur</param>
 		/// <param name="Mode">The transition mode</param>
 		/// <param name="Time">The time at which this background is to be displayed, expressed as the number of seconds since midnight</param>
@@ -61,12 +61,12 @@ namespace OpenBveApi.Routes
 		}
 		
 		/// <summary>Updates the static background</summary>
-		/// <param name="SecondsSinceMidnight">The current in-game time</param>
-		/// <param name="ElapsedTime">The elapsed time since the last call to this function</param>
-		/// <param name="Target">Whether this is the target background or the current background when applying fading</param>
-		public override void UpdateBackground(double SecondsSinceMidnight, double ElapsedTime, bool Target)
+		/// <param name="secondsSinceMidnight">The current in-game time</param>
+		/// <param name="elapsedTime">The elapsed time since the last call to this function</param>
+		/// <param name="target">Whether this is the target background or the current background when applying fading</param>
+		public override void UpdateBackground(double secondsSinceMidnight, double elapsedTime, bool target)
 		{
-			if (Target)
+			if (target)
 			{
 				switch (Mode)
 				{

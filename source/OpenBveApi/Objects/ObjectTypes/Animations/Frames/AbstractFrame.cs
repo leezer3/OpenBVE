@@ -64,7 +64,7 @@ namespace OpenBveApi.Objects
 		    }
 
 		    interpolateFrame = currentFrame + 1 < frames.Length ? currentFrame + 1 : currentFrame;
-			// n.b. for correct interpolation must use internal frame number, not frame index for cases where the number of frames doesn't match the indicies, e.g. Scotsman valve gear
+			// n.b. for correct interpolation must use internal frame number, not frame index for cases where the number of frames doesn't match the indices, e.g. Scotsman valve gear
 			diff = currentFrame < interpolateFrame ? Clamp((animationKey - frames[currentFrame].FrameNumber) / (frames[interpolateFrame].FrameNumber - frames[currentFrame].FrameNumber), 0, 1) : 0;
 		    return currentFrame;
 	    }

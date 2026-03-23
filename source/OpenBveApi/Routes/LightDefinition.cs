@@ -13,12 +13,12 @@ namespace OpenBveApi.Routes
 		/// <summary>The position of the sun in the sky (Directional light)</summary>
 		public Vector3 LightPosition;
 		/// <summary>The time in seconds since midnight</summary>
-		public int Time;
+		public double Time;
 		/// <summary>The cab brightness value to be applied</summary>
 		public double CabBrightness;
 
 		/// <summary>Creates a new LightDefinition</summary>
-		public LightDefinition(Color24 ambientColor, Color24 diffuseColor, Vector3 lightPosition, int time, double cab)
+		public LightDefinition(Color24 ambientColor, Color24 diffuseColor, Vector3 lightPosition, double time, double cab)
 		{
 			AmbientColor = ambientColor;
 			DiffuseColor = diffuseColor;

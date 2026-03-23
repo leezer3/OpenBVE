@@ -32,15 +32,16 @@ namespace OpenBveApi.FunctionScripting {
 		/// <param name="path">The path to the CS file. Suffix similar to URL query string will be parsed as arguments.</param>
 		public CSAnimationScript(HostInterface host, string path) : this(host, GetFileNameFromPath(path), GetArgsFromPath(path)) { }
 
-		private static string GetFileNameFromPath(string path) {
+		private static string GetFileNameFromPath(string path)
+		{
 			if (path.Contains('?')) {
 				return path.Split('?').First();
-			} else {
-				return path;
 			}
+			return path;
 		}
 
-		private static Dictionary<string, string> GetArgsFromPath(string path) {
+		private static Dictionary<string, string> GetArgsFromPath(string path)
+		{
 			if (path.Contains('?')) {
 				var queryStr = path.Split('?').Last();
 				var result = new Dictionary<string, string>();
@@ -52,9 +53,8 @@ namespace OpenBveApi.FunctionScripting {
 					}
 				}
 				return result;
-			} else {
-				return null;
 			}
+			return null;
 		}
 
 		/// <summary>Load a script with or without arguments.</summary>

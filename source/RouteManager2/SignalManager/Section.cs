@@ -115,14 +115,14 @@ namespace RouteManager2.SignalManager
 		/// <returns>Whether the section is free, disregarding the specified train.</returns>
 		public bool IsFree(AbstractTrain train)
 		{
-			return Trains.All(t => !(t != train & (t.State == TrainState.Available | t.State == TrainState.Bogus)));
+			return Trains.All(t => !(t != train & (t.State == TrainState.Available || t.State == TrainState.Bogus)));
 		}
 
 		/// <summary>Checks whether the section is free</summary>
 		/// <returns>Whether the section is free</returns>
 		public bool IsFree()
 		{
-			return Trains.All(t => !(t.State == TrainState.Available | t.State == TrainState.Bogus));
+			return Trains.All(t => !(t.State == TrainState.Available || t.State == TrainState.Bogus));
 		}
 
 		/// <summary>Gets the first train within the section</summary>

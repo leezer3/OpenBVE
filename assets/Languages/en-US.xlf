@@ -2829,6 +2829,44 @@
 						<source>OK</source>
 					</trans-unit>
 				</group>
+				<group id="kato">
+					<trans-unit id="config_title">
+						<source>KATO controller configuration</source>
+					</trans-unit>
+					<trans-unit id="input_section">
+						<source>Device input</source>
+					</trans-unit>
+					<trans-unit id="label_brake">
+						<source>Brake: [notch]</source>
+					</trans-unit>
+					<trans-unit id="label_power">
+						<source>Power: [notch]</source>
+					</trans-unit>
+					<trans-unit id="label_reverser">
+						<source>Reverser: [notch]</source>
+					</trans-unit>
+					<trans-unit id="device">
+						<source>Device:</source>
+					</trans-unit>
+					<trans-unit id="handle_section">
+						<source>Handle mapping</source>
+					</trans-unit>
+					<trans-unit id="option_convert">
+						<source>Convert notches</source>
+					</trans-unit>
+					<trans-unit id="option_keep_minmax">
+						<source>Keep minimum and maximum</source>
+					</trans-unit>
+					<trans-unit id="option_holdbrake">
+						<source>Map hold brake to B1</source>
+					</trans-unit>
+					<trans-unit id="save_button">
+						<source>Save</source>
+					</trans-unit>
+					<trans-unit id="cancel_button">
+						<source>Cancel</source>
+					</trans-unit>
+				</group>
 			</group>
 			<group id="train_editor">
 				<group id="general">

@@ -43,7 +43,7 @@ namespace Route.Bve5
 			// Everything breaks if no station list
 			if (string.IsNullOrEmpty(ParseData.StationListPath))
 			{
-				Plugin.CurrentHost.AddMessage(MessageType.Error, true, "No BVE5 Station List file was specified.");
+				Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: No Station List file was specified.");
 				return;
 			}
 
@@ -55,7 +55,7 @@ namespace Route.Bve5
 
 				if (!File.Exists(stationList))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "The BVE5 Station List file " + stationList + " was not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Station List file " + stationList + " was not found.");
 					return;
 				}
 			}
@@ -201,7 +201,7 @@ namespace Route.Bve5
 					// Key and name *must* be set, everything else can be ignored
 					if (RouteData.StationList.ContainsKey(stationKey))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The station with key " + stationKey + " has been declared twice in BVE5 station list file " + ParseData.StationListPath);
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: The station with key " + stationKey + " has been declared twice in BVE5 station list file " + ParseData.StationListPath);
 						RouteData.StationList[stationKey] = newStation;
 					}
 					else

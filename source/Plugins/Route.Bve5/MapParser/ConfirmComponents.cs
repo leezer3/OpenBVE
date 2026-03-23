@@ -355,16 +355,14 @@ namespace Route.Bve5
 					if (StartBlock != i)
 					{
 						double StartDistance = Blocks[StartBlock].StartingDistance;
-						double StartRadius = 0.0;
 						double StartCant = Blocks[StartBlock - 1].Rails[railKey].CurveCant;
 						double EndDistance = Blocks[i].StartingDistance;
-						double EndRadius = 0.0;
 						double EndCant = Blocks[i].Rails[railKey].CurveCant;
 
 						for (int k = StartBlock; k < i; k++)
 						{
 							double CurrentDistance = Blocks[k].StartingDistance;
-							CalcCurveTransition(StartDistance, StartRadius, StartCant, EndDistance, EndRadius, EndCant, CurrentDistance, out _, out Blocks[k].Rails[railKey].CurveCant);
+							CalcCurveTransition(StartDistance, 0.0, StartCant, EndDistance, 0.0, EndCant, CurrentDistance, out _, out Blocks[k].Rails[railKey].CurveCant);
 						}
 					}
 				}
@@ -400,16 +398,14 @@ namespace Route.Bve5
 					if (StartBlock != i)
 					{
 						double StartDistance = Blocks[StartBlock].StartingDistance;
-						double StartRadius = 0.0;
 						double StartCant = Blocks[StartBlock].Rails[railKey].CurveCant;
 						double EndDistance = Blocks[i].StartingDistance;
-						double EndRadius = 0.0;
 						double EndCant = Blocks[i].Rails[railKey].CurveCant;
 
 						for (int k = StartBlock + 1; k < i; k++)
 						{
 							double CurrentDistance = Blocks[k].StartingDistance;
-							CalcCurveTransition(StartDistance, StartRadius, StartCant, EndDistance, EndRadius, EndCant, CurrentDistance, out _, out Blocks[k].Rails[railKey].CurveCant);
+							CalcCurveTransition(StartDistance, 0.0, StartCant, EndDistance, 0.0, EndCant, CurrentDistance, out _, out Blocks[k].Rails[railKey].CurveCant);
 						}
 					}
 				}
@@ -425,7 +421,7 @@ namespace Route.Bve5
 
 			IList<Block> Blocks = RouteData.Blocks;
 
-			foreach (var Statement in ParseData.Statements)
+			foreach (Statement Statement in ParseData.Statements)
 			{
 				if (Statement.ElementName != MapElementName.Structure)
 				{
@@ -444,9 +440,15 @@ namespace Route.Bve5
 							TrackKey = "0";
 						}
 
+						if (!RouteData.Objects.ContainsKey(Statement.Key))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Structure " + Statement.Key + " was not found on Track " + TrackKey + " at track position " + Statement.Distance + "m");
+							continue;
+						}
+
 						if (!RouteData.TrackKeyList.Contains(TrackKey, StringComparer.OrdinalIgnoreCase))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Attempted to place Structure " + Statement.Key + " on the non-existent track " + d.TrackKey + " at track position " + Statement.Distance + "m");
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Attempted to place Structure " + Statement.Key + " on the non-existent track " + d.TrackKey + " at track position " + Statement.Distance + "m");
 							TrackKey = "0";
 						}
 						
@@ -458,7 +460,7 @@ namespace Route.Bve5
 
 						if (Tilt > 3)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid ObjectTransformType for Structure " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Invalid ObjectTransformType for Structure " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
 							Tilt = 0;
 						}
 
@@ -471,8 +473,8 @@ namespace Route.Bve5
 
 						Vector3 position = new Vector3(Statement.GetArgumentValueAsDouble(ArgumentName.X), Statement.GetArgumentValueAsDouble(ArgumentName.Y), Statement.GetArgumentValueAsDouble(ArgumentName.Z));
 						Blocks[BlockIndex].FreeObjects[TrackKey].Add(new FreeObj(Statement.Distance, Statement.Key, position, RY.ToRadians(), -RX.ToRadians(), RZtoRoll(RY, RZ).ToRadians(), (ObjectTransformType)Tilt, Span));
-						}
-						break;
+					}
+					break;
 					case MapFunctionName.PutBetween:
 					{
 						string[] TrackKeys = new string[2];
@@ -485,7 +487,12 @@ namespace Route.Bve5
 							TrackKeys[1] = "0";
 						}
 
-						
+						if (!RouteData.Objects.ContainsKey(Statement.Key))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Structure " + Statement.Key + " was not found for PutBetween Track " + TrackKeys[0] + " and Track " + TrackKeys[1] + " at track position " + Statement.Distance + "m");
+							continue;
+						}
+
 						if (RouteData.TrackKeyList.Contains(TrackKeys[0], StringComparer.OrdinalIgnoreCase) && RouteData.TrackKeyList.Contains(TrackKeys[1]))
 						{
 							int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
@@ -506,7 +513,7 @@ namespace Route.Bve5
 
 			List<Repeater> RepeaterList = new List<Repeater>();
 
-			foreach (var Statement in ParseData.Statements)
+			foreach (Statement Statement in ParseData.Statements)
 			{
 				if (Statement.ElementName != MapElementName.Repeater)
 				{
@@ -519,11 +526,11 @@ namespace Route.Bve5
 				}
 			}
 
-			foreach (var Repeater in RepeaterList)
+			foreach (Repeater Repeater in RepeaterList)
 			{
 				double lastDistance = -1;
 				bool possibleEnd = false;
-				foreach (var Statement in ParseData.Statements)
+				foreach (Statement Statement in ParseData.Statements)
 				{
 					if (Statement.ElementName != MapElementName.Repeater || !Statement.Key.Equals(Repeater.Key, StringComparison.InvariantCultureIgnoreCase))
 					{
@@ -551,7 +558,7 @@ namespace Route.Bve5
 
 								if (!RouteData.TrackKeyList.Contains(TrackKey, StringComparer.OrdinalIgnoreCase))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Attempted to place Repeater " + Statement.Key + " on the non-existent track " + d.TrackKey + " at track position " + Statement.Distance + "m");
+									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Attempted to place Repeater " + Statement.Key + " on the non-existent track " + d.TrackKey + " at track position " + Statement.Distance + "m");
 									TrackKey = "0";
 								}
 								double RX = Statement.GetArgumentValueAsDouble(ArgumentName.RX);
@@ -563,7 +570,7 @@ namespace Route.Bve5
 
 								if (Tilt > 3)
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid ObjectTransformType for Repeater " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
+									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Invalid ObjectTransformType for Repeater " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
 									Tilt = 0;
 								}
 
@@ -581,6 +588,13 @@ namespace Route.Bve5
 								
 								Repeater.ObjectKeys = new string[d.StructureKeys.Count];
 								d.StructureKeys.CopyTo(Repeater.ObjectKeys, 0);
+								for (int i = 0; i < Repeater.ObjectKeys.Length; i++)
+								{
+									if (!RouteData.Objects.ContainsKey(Repeater.ObjectKeys[i]))
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Structure " + Repeater.ObjectKeys[i] + " was not found in Repeater " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
+									}
+								}
 								possibleEnd = false;
 							}
 							break;
@@ -666,7 +680,7 @@ namespace Route.Bve5
 			}
 
 
-			foreach (var Statement in ParseData.Statements)
+			foreach (Statement Statement in ParseData.Statements)
 			{
 				if (Statement.ElementName != MapElementName.Section && !(Statement.ElementName == MapElementName.Signal && Statement.FunctionName == MapFunctionName.SpeedLimit))
 				{
@@ -718,7 +732,7 @@ namespace Route.Bve5
 				return;
 			}
 
-			foreach (var Statement in ParseData.Statements)
+			foreach (Statement Statement in ParseData.Statements)
 			{
 				if (Statement.ElementName != MapElementName.Signal || Statement.FunctionName != MapFunctionName.Put)
 				{
@@ -736,7 +750,7 @@ namespace Route.Bve5
 
 				if (!RouteData.TrackKeyList.Contains(TrackKey, StringComparer.OrdinalIgnoreCase))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Attempted to place Signal " + Statement.Key + " on the non-existent track " + TrackKey + " at track position " + Statement.Distance + "m");
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Attempted to place Signal " + Statement.Key + " on the non-existent track " + TrackKey + " at track position " + Statement.Distance + "m");
 					TrackKey = "0";
 				}
 
@@ -748,7 +762,7 @@ namespace Route.Bve5
 
 				if ((int)Tilt > 3)
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid ObjectTransformType for Signal " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Invalid ObjectTransformType for Signal " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
 					Tilt = 0;
 				}
 
@@ -788,7 +802,7 @@ namespace Route.Bve5
 				return;
 			}
 
-			foreach (var Statement in ParseData.Statements)
+			foreach (Statement Statement in ParseData.Statements)
 			{
 				if (Statement.ElementName != MapElementName.Beacon)
 				{
@@ -1036,7 +1050,7 @@ namespace Route.Bve5
 				return;
 			}
 
-			foreach (var Statement in ParseData.Statements)
+			foreach (Statement Statement in ParseData.Statements)
 			{
 				if (Statement.ElementName != MapElementName.FlangeNoise)
 				{

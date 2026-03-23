@@ -10,7 +10,7 @@ namespace RouteViewer
 	 *
 	 */
 
-	class MessageManager
+	internal class MessageManager
 	{
 		/// <summary>Contains the current textual messages</summary>
 		internal static readonly List<AbstractMessage> TextualMessages = new List<AbstractMessage>();

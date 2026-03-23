@@ -7,7 +7,7 @@
 		Pending = 0,
 		/// <summary>The train has been introduced into the simulation</summary>
 		Available = 1,
-		/// <summary>The train is a bogus (non-visble) train created via a .PreTrain command</summary>
+		/// <summary>The train is a bogus (non-visible) train created via a .PreTrain command</summary>
 		Bogus = 2,
 		/// <summary>The train is pending disposal</summary>
 		DisposePending = 3,

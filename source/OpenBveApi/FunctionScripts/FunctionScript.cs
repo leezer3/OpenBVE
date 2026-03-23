@@ -3,6 +3,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 using System;
+// ReSharper disable StringLiteralTypo
 
 namespace OpenBveApi.FunctionScripting
 {
@@ -19,9 +20,9 @@ namespace OpenBveApi.FunctionScripting
 		/// <summary>The last result returned</summary>
 		public double LastResult { get; set; }
 		/// <summary>The minimum pinned result or NaN to set no minimum</summary>
-		public double Maximum { get; set; } = Double.NaN;
+		public double Maximum { get; set; } = double.NaN;
 		/// <summary>The maximum pinned result or NaN to set no maximum</summary>
-		public double Minimum { get; set; } = Double.NaN;
+		public double Minimum { get; set; } = double.NaN;
 		/// <summary>We caught an exception on the last execution of the script, so further execution has been stopped</summary> 
 		private bool exceptionCaught;
 
@@ -982,7 +983,7 @@ namespace OpenBveApi.FunctionScripting
 							InstructionSet[n] = Instructions.OverheadVolts;
 							n++; s++; if (s >= m) m = s; break;
 						case "overheadvoltsindex":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.OverheadVoltsTarget;
 							n++; break;
@@ -991,7 +992,7 @@ namespace OpenBveApi.FunctionScripting
 							InstructionSet[n] = Instructions.ThirdRailVolts;
 							n++; s++; if (s >= m) m = s; break;
 						case "thirdrailvoltsindex":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.ThirdRailVoltsTarget;
 							n++; break;
@@ -1080,10 +1081,15 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.BlowersStateOfCar;
 							n++; break;
-						case "tenderwaterstateindex":
+						case "tenderwaterindex":
 							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.TenderWaterOfCar;
+							n++; break;
+						case "boilerpressureindex":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.BoilerPressureOfCar;
 							n++; break;
 						// default
 						default:

@@ -42,7 +42,7 @@ namespace TrainEditor
 
 			if (File.Exists(configFile))
 			{
-				ConfigFile<OptionsSection, OptionsKey> cfg = new ConfigFile<OptionsSection, OptionsKey>(File.ReadAllLines(configFile, new UTF8Encoding()), Program.CurrentHost);
+				ConfigFile<OptionsSection, OptionsKey> cfg = new ConfigFile<OptionsSection, OptionsKey>(File.ReadAllLines(configFile, new UTF8Encoding()), configFile, Program.CurrentHost);
 
 				while (cfg.RemainingSubBlocks > 0)
 				{

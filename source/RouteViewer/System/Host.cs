@@ -286,10 +286,8 @@ namespace RouteViewer
 				handle = Program.Sounds.RegisterBuffer(path, 0.0);
 				return true;
 			}
-			else
-			{
-				ReportProblem(ProblemType.PathNotFound, path);
-			}
+
+			ReportProblem(ProblemType.PathNotFound, path);
 			handle = null;
 			return false;
 		}
@@ -342,7 +340,7 @@ namespace RouteViewer
 							{
 								try
 								{
-									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out var unifiedObject))
+									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out UnifiedObject unifiedObject))
 									{
 										if (unifiedObject is StaticObject staticObject)
 										{

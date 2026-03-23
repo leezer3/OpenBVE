@@ -35,14 +35,15 @@ namespace OpenBveApi.Packages
 		{
 			get
 			{
-				if (this.PackageVersion == null)
+				if (PackageVersion == null)
+				{
 					return string.Empty;
-				else
-					return this.PackageVersion.ToString();
+				}
+				return PackageVersion.ToString();
 			}
 			set
 			{
-				if (!String.IsNullOrEmpty(value))
+				if (!string.IsNullOrEmpty(value))
 					this.PackageVersion = new Version(value);
 			}
 		}
@@ -65,7 +66,7 @@ namespace OpenBveApi.Packages
 		public Image PackageImage;
 		/// <summary>The list of dependancies for this package</summary>
 		public List<Package> Dependancies;
-		/// <summary>The list of packages that this package reccomends you also install</summary>
+		/// <summary>The list of packages that this package recommends you also install</summary>
 		public List<Package> Reccomendations;
 		/// <summary>The list of packages which depend on this package</summary>
 		public List<string> DependantPackages;
@@ -89,7 +90,7 @@ namespace OpenBveApi.Packages
 			}
 			set
 			{
-				if (!String.IsNullOrEmpty(value))
+				if (!string.IsNullOrEmpty(value))
 					this.MinimumVersion = new Version(value);
 			}
 		}
@@ -110,13 +111,13 @@ namespace OpenBveApi.Packages
 			}
 			set
 			{
-				if (!String.IsNullOrEmpty(value))
+				if (!string.IsNullOrEmpty(value))
 					this.MaximumVersion = new Version(value);
 			}
 		}
 		/// <summary>Creates a clone of the specified package</summary>
 		/// <param name="packageToClone">The package to clone</param>
-		/// <param name="dependancy">Whether this package is part of a dependancy list</param>
+		/// <param name="dependancy">Whether this package is part of a dependency list</param>
 		public Package(Package packageToClone, bool dependancy)
 		{
 			Name = packageToClone.Name;
@@ -190,7 +191,7 @@ namespace OpenBveApi.Packages
 	{
 		/// <summary>LZMA Zip compression</summary>
 		Zip = 0,
-		/// <summary>G comp0ession</summary>
+		/// <summary>GZip compression</summary>
 		TarGZ = 1,
 		GZip = 1,
 		/// <summary>BZip2 compression</summary>
@@ -304,7 +305,7 @@ namespace OpenBveApi.Packages
 		{
 			int cf = 0;
 			
-			string fp = String.Empty;
+			string fp = string.Empty;
 			try
 			{
 				using (var zip = File.OpenWrite(packageFile))
@@ -670,7 +671,7 @@ namespace OpenBveApi.Packages
 
 		
 
-		/// <summary>Checks to see if upgrading or downgrading this package will break any dependancies</summary>
+		/// <summary>Checks to see if upgrading or downgrading this package will break any dependencies</summary>
 		public static List<Package> UpgradeDowngradeDependancies(Package currentPackage, List<Package> installedRoutes, List<Package> installedTrains)
 		{
 			List<Package> Dependancies = new List<Package>();
@@ -714,7 +715,7 @@ namespace OpenBveApi.Packages
 			}
 			if (Dependancies.Count == 0)
 			{
-				//Return null if there are no unmet dependancies
+				//Return null if there are no unmet dependencies
 				return null;
 			}
 			return Dependancies;

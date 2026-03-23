@@ -11,7 +11,7 @@
 		PreTrain,
 		/// <summary>The train is controlled by a TFO script</summary>
 		ScriptedTrain,
-		/// <summary>The train consists of static cars and does not move independantly</summary>
+		/// <summary>The train consists of static cars and does not move independently</summary>
 		StaticCars
     }
 }

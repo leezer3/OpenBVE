@@ -55,7 +55,7 @@ namespace Route.Bve5
 
 			internal MapData Parse()
 			{
-				var Data = new MapData();
+				MapData Data = new MapData();
 				Parser = new MapGrammarParser();
 
 				if (Parser != null)
@@ -73,8 +73,9 @@ namespace Route.Bve5
 
 			private void DisplayErrors()
 			{
-				foreach (var error in Parser.ParserErrors.OrderBy(e => e.Line).ThenBy(e => e.Column))
+				foreach (ParseError error in Parser.ParserErrors.OrderBy(e => e.Line).ThenBy(e => e.Column))
 				{
+					// ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 					switch (error.ErrorLevel)
 					{
 						case ParseErrorLevel.Error:
