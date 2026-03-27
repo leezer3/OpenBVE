@@ -18,6 +18,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
@@ -208,8 +209,20 @@ namespace OpenBve {
 			return false;
 		}
 
-		public override bool LoadTexture(ref Texture Texture, OpenGlTextureWrapMode wrapMode)
+		public override bool LoadTexture(ref Texture Texture, OpenGlTextureWrapMode wrapMode, bool renderThread = false)
 		{
+			if (renderThread)
+			{
+				Texture t = Texture;
+				Program.Renderer.RunInRenderThread(() =>
+				{
+					Program.Renderer.TextureManager.LoadTexture(ref t, wrapMode, CPreciseTimer.GetClockTicks(),
+						Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
+				}, 1000);
+				Texture = t;
+				return true;
+			}
+			
 			return Program.Renderer.TextureManager.LoadTexture(ref Texture, wrapMode, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
 		}
 		

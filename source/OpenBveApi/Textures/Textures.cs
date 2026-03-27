@@ -45,23 +45,33 @@ namespace OpenBveApi.Textures {
 		public bool CompatibleTransparencyMode;
 
 		/// <summary>Gets the color of the given pixel</summary>
-		/// <param name="X">The X-coordinate of the pixel</param>
-		/// <param name="Y">The Y-coordinate of the pixel</param>
+		/// <param name="pix">The pixel index</param>
 		/// <param name="frame">The frame</param>
-		/// <returns></returns>
-		public Color24 GetPixel(int X, int Y, int frame = 0)
+		public Color24 GetPixel(int pix, int frame = 0)
 		{
-			if (X > MySize.X)
+			if (pix > MySize.X * MySize.Y)
 			{
-				throw new ArgumentException("X is outside the bounds of the image");
+				throw new ArgumentException("Pixel is outside the bounds of the image");
 			}
 
-			if (Y > MySize.Y)
+			int firstByte;
+			switch (PixelFormat)
 			{
-				throw new ArgumentException("Y is outside the bounds of the image");
+				case PixelFormat.Grayscale:
+					firstByte = pix;
+					break;
+				case PixelFormat.GrayscaleAlpha:
+					firstByte = 2 * pix;
+					break;
+				case PixelFormat.RGB:
+					firstByte = 3 * pix;
+					break;
+				case PixelFormat.RGBAlpha:
+					firstByte = 4 * pix;
+					break;
+				default:
+					throw new Exception("Unable to get a pixel value with invalid data.");
 			}
-
-			int firstByte = 4 * X * Y;
 			return new Color24(MyBytes[frame][firstByte], MyBytes[frame][firstByte + 1], MyBytes[frame][firstByte + 2]);
 		}
 

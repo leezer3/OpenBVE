@@ -27,6 +27,7 @@ using System.Text;
 using OpenBveApi;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
+using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using RouteManager2;
 using TrainManager;
@@ -90,7 +91,19 @@ namespace Route.Bve5
 			    return false;
 		    }
 
-		    return true;
+			// YUCK: Some trains need BVETSHacks or black transparency, but we don't want them turned on until the route is loaded
+		    for (int i = 0; i < CurrentHost.Plugins.Length; i++)
+		    {
+			    if (CurrentHost.Plugins[i].Object != null)
+			    {
+				    CompatabilityHacks EnabledHacks = new CompatabilityHacks();
+				    EnabledHacks.BlackTransparency = true;
+				    EnabledHacks.BveTsHacks = CurrentOptions.EnableBveTsHacks;
+					CurrentHost.Plugins[i].Object.SetCompatibilityHacks(EnabledHacks);
+			    }
+		    }
+
+			return true;
 
 	    }
     }

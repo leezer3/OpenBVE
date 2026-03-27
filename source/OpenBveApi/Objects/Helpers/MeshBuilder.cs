@@ -85,6 +85,22 @@ namespace OpenBveApi.Objects
 					Object.Mesh.Materials[mm + i].Flags = Materials[i].Flags;
 					Object.Mesh.Materials[mm + i].Color = Materials[i].Color;
 					Object.Mesh.Materials[mm + i].TransparentColor = Materials[i].TransparentColor;
+					Texture transparency = null;
+					if (Materials[i].TransparencyTexture != null)
+					{
+						currentHost.LoadTexture(Materials[i].TransparencyTexture, new TextureParameters(null, null), out transparency);
+						currentHost.LoadTexture(ref transparency, OpenGlTextureWrapMode.ClampClamp, true);
+					}
+
+					TextureParameters parameters;
+					if ((Materials[i].Flags & MaterialFlags.TransparentColor) != 0)
+					{
+						parameters = new TextureParameters(null, Materials[i].TransparentColor, transparency);
+					}
+					else
+					{
+						parameters = new TextureParameters(null, null, transparency);
+					}
 					if (Materials[i].DaytimeTexture != null || Materials[i].Text != null)
 					{
 						Texture tday;
@@ -97,20 +113,11 @@ namespace OpenBveApi.Objects
 							}
 
 							Bitmap texture = TextOverlay.AddTextToBitmap(bitmap, Materials[i].Text, Materials[i].Font, 12, Materials[i].BackgroundColor, Materials[i].TextColor, Materials[i].TextPadding);
-							currentHost.RegisterTexture(texture, new TextureParameters(null, new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G, Materials[i].TransparentColor.B)), out tday);
+							currentHost.RegisterTexture(texture, parameters, out tday);
 						}
 						else
 						{
-							if ((Materials[i].Flags & MaterialFlags.TransparentColor) != 0)
-							{
-								currentHost.RegisterTexture(Materials[i].DaytimeTexture, new TextureParameters(null,
-										new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G,
-											Materials[i].TransparentColor.B)), out tday);
-							}
-							else
-							{
-								currentHost.RegisterTexture(Materials[i].DaytimeTexture, TextureParameters.NoChange, out tday);
-							}
+							currentHost.RegisterTexture(Materials[i].DaytimeTexture, parameters, out tday);
 						}
 
 						Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
@@ -123,16 +130,7 @@ namespace OpenBveApi.Objects
 					Object.Mesh.Materials[mm + i].EmissiveColor = Materials[i].EmissiveColor;
 					if (Materials[i].NighttimeTexture != null)
 					{
-						Texture tnight;
-						if ((Materials[i].Flags & MaterialFlags.TransparentColor) != 0)
-						{
-							currentHost.RegisterTexture(Materials[i].NighttimeTexture, new TextureParameters(null, new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G, Materials[i].TransparentColor.B)), out tnight);
-						}
-						else
-						{
-							currentHost.RegisterTexture(Materials[i].NighttimeTexture, TextureParameters.NoChange, out tnight);
-						}
-
+						currentHost.RegisterTexture(Materials[i].DaytimeTexture, parameters, out Texture tnight);
 						Object.Mesh.Materials[mm + i].NighttimeTexture = tnight;
 					}
 					else

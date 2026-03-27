@@ -2023,7 +2023,7 @@ namespace Train.OpenBve
 							string a = Subject.Substring(3);
 							if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var n))
 							{
-								if (n >= 0 & n <= 255)
+								if (n >= 0 && n <= 255)
 								{
 									Code = n.ToString(Culture) + " pluginstate";
 									unsupported = false;
@@ -2035,15 +2035,14 @@ namespace Train.OpenBve
 							string a = Subject.Substring(5);
 							if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var n))
 							{
-								if (n >= 0 & n < Train.NumberOfCars)
+								unsupported = false;
+								if (n >= 0 && n < Train.NumberOfCars)
 								{
 									Code = n.ToString(Culture) + " leftdoorsindex ceiling";
-									unsupported = false;
 								}
 								else
 								{
 									Code = "2";
-									unsupported = false;
 								}
 							}
 						}
@@ -2052,15 +2051,14 @@ namespace Train.OpenBve
 							string a = Subject.Substring(5);
 							if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var n))
 							{
-								if (n >= 0 & n < Train.NumberOfCars)
+								unsupported = false;
+								if (n >= 0 && n < Train.NumberOfCars)
 								{
 									Code = n.ToString(Culture) + " rightdoorsindex ceiling";
-									unsupported = false;
 								}
 								else
 								{
 									Code = "2";
-									unsupported = false;
 								}
 							}
 						}

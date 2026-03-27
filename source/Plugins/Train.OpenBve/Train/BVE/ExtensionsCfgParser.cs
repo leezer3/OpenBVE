@@ -290,11 +290,11 @@ namespace Train.OpenBve
 					}
 				}
 				
-				if (carObjects > 0 & carObjects < Train.Cars.Length) {
+				if (carObjects > 0 && carObjects < Train.Cars.Length) {
 					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "An incomplete set of exterior objects was provided in file " + FileName);
 				}
 				
-				if (bogieObjects > 0 & bogieObjects < Train.Cars.Length * 2)
+				if (bogieObjects > 0 && bogieObjects < Train.Cars.Length * 2)
 				{
 					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "An incomplete set of bogie objects was provided in file " + FileName);
 				}

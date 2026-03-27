@@ -26,6 +26,7 @@ using System;
 using System.IO;
 using System.Text;
 using OpenBveApi.FileSystem;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -67,7 +68,21 @@ namespace Plugin
 			{
 				if (path.ToLowerInvariant().EndsWith(".l3dobj", StringComparison.InvariantCultureIgnoreCase))
 				{
-					unifiedObject = Ls3DObjectParser.ReadObject(path, Vector3.Zero);
+					bool autoRotate = false;
+					unifiedObject = Ls3DObjectParser.ReadObject(path, Vector3.Zero, ref autoRotate);
+					if (autoRotate)
+					{
+						AnimatedObjectCollection aoc = new AnimatedObjectCollection(Plugin.currentHost)
+						{
+							Objects = new[]
+							{
+								new AnimatedObject(Plugin.currentHost, (StaticObject)unifiedObject)
+							},
+						};
+						aoc.Objects[0].RotateXFunction = new FunctionScript(currentHost, "billboardx", true);
+						aoc.Objects[0].RotateXDirection = Vector3.Down;
+						unifiedObject = aoc;
+					}
 				}
 				else
 				{

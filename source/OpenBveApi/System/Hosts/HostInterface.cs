@@ -193,8 +193,9 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Loads a texture and returns the texture data.</summary>
 		/// <param name="texture">Receives the texture.</param>
 		/// <param name="wrapMode">The openGL wrap mode</param>
+		/// <param name="renderThread">Whether this must be run in the render thread</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public virtual bool LoadTexture(ref Texture texture, OpenGlTextureWrapMode wrapMode)
+		public virtual bool LoadTexture(ref Texture texture, OpenGlTextureWrapMode wrapMode, bool renderThread = false)
 		{
 			return false;
 		}

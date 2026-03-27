@@ -131,6 +131,8 @@ namespace CarXmlConvertor
 						{
 							break;
 						}
+
+						Couplers[block.Index] = new Coupler();
 						if (block.GetVector2(ExtensionCfgKey.Distances, ',', out Vector2 distances))
 						{
 							if (distances.X > distances.Y)
@@ -141,7 +143,7 @@ namespace CarXmlConvertor
 						}
 						if (block.GetPath(ExtensionCfgKey.Object, Path.GetDirectoryName(FileName), out string couplerObject))
 						{
-							Couplers[block.Index].Object = couplerObject;
+							Couplers[block.Index].Object = couplerObject.Replace(Path.GetDirectoryName(FileName), string.Empty);
 						}
 						break;
 					case ExtensionCfgSection.Bogie:

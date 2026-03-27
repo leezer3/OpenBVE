@@ -139,14 +139,13 @@ namespace Train.OpenBve
 							}
 							return TrainDatFormats.openBVE;
 						}
-						else if (t.ToLowerInvariant().StartsWith("bve"))
+
+						if (t.ToLowerInvariant().StartsWith("bve"))
 						{
 							return TrainDatFormats.UnknownBVE;
 						}
-						else
-						{
-							return TrainDatFormats.Unsupported;
-						}
+
+						return TrainDatFormats.Unsupported;
 				}
 			}
 			return TrainDatFormats.Unsupported;

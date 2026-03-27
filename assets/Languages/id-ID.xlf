@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
 	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="id-ID">
 		<body>
 			<group id="language">
@@ -13,32 +13,32 @@
 				</trans-unit>
 				<trans-unit id="contributors">
 					<source>Unknown</source>
-					<target>SDW</target>
+					<target>SDW, Adfriz</target>
 				</trans-unit>
 				<trans-unit id="last_updated">
 					<source>2019-06-29</source>
-					<target>2019-06-29</target>
+					<target>2026-03-24</target>
 				</trans-unit>
 			</group>
 			<group id="openbve">
 				<group id="program">
 					<trans-unit id="title">
 						<source>OpenBVE</source>
-					</trans-unit>
+					<target>OpenBVE</target></trans-unit>
 				</group>
 				<group id="about">
 					<trans-unit id="title">
 						<source>About</source>
-					</trans-unit>
+					<target>Tentang</target></trans-unit>
 					<trans-unit id="description">
 						<source>OpenBVE is a free and open-source multi-platform train simulator, featuring support for 2D and 3D cabs and scenery.\r\n\r\nThis program was initially developed by Michelle, and is released into the public domain where legally possible.</source>
-					</trans-unit>
+					<target>OpenBVE adalah simulator kereta api multi-platform gratis dan sumber terbuka, yang menampilkan dukungan untuk kabin dan pemandangan 2D dan 3D.\r\n\r\nProgram ini awalnya dikembangkan oleh Michelle, dan dirilis ke domain publik jika memungkinkan secara hukum.</target></trans-unit>
 					<trans-unit id="open_source_licenses">
 						<source>Open Source Licenses</source>
-					</trans-unit>
+					<target>Lisensi Sumber Terbuka</target></trans-unit>
 					<trans-unit id="open_source_licenses_header">
 						<source>OpenBVE makes use of several open-source libraries, whose licenses are reproduced below:</source>
-					</trans-unit>
+					<target>OpenBVE menggunakan beberapa perpustakaan sumber terbuka, yang lisensinya direproduksi di bawah ini:</target></trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
 						<target>Keluar</target>
@@ -47,38 +47,38 @@
 				<group id="bug_report">
 					<trans-unit id="title">
 						<source>Report Problem</source>
-					</trans-unit>
+					<target>Laporkan Masalah</target></trans-unit>
 					<trans-unit id="description">
 						<source>This function will create a zip archive on your Desktop, containing the previous Simulation log and Crash log (If any), along with a text file containing the brief description of the problem entered below.\r\n\r\nPlease post this on the discussion board, or create a new issue on Github.</source>
-					</trans-unit>
+					<target>Fungsi ini akan membuat arsip zip di Desktop Anda, berisi log Simulasi dan log Crash sebelumnya (jika ada), bersama dengan file teks yang berisi deskripsi singkat tentang masalah yang dimasukkan di bawah ini.\r\n\r\nSilakan kirimkan ini di papan diskusi, atau buat masalah baru di Github.</target></trans-unit>
 					<trans-unit id="view_log_button">
 						<source>View...</source>
-					</trans-unit>
+					<target>Lihat...</target></trans-unit>
 					<trans-unit id="view_log">
 						<source>View the previous log:</source>
-					</trans-unit>
+					<target>Lihat log sebelumnya:</target></trans-unit>
 					<trans-unit id="view_crash_log">
 						<source>View the previous crash log:</source>
-					</trans-unit>
+					<target>Lihat log crash sebelumnya:</target></trans-unit>
 					<trans-unit id="enter_description">
 						<source>Please enter a brief description of the problem:</source>
-					</trans-unit>
+					<target>Harap masukkan deskripsi singkat tentang masalah tersebut:</target></trans-unit>
 					<trans-unit id="no_log">
 						<source>No simulation logs were found.</source>
-					</trans-unit>
+					<target>Tidak ada log simulasi yang ditemukan.</target></trans-unit>
 					<trans-unit id="no_crash_log">
 						<source>No crash logs were found.</source>
-					</trans-unit>
+					<target>Tidak ada log crash yang ditemukan.</target></trans-unit>
 					<trans-unit id="save">
 						<source>Save Bug Report</source>
-					</trans-unit>
+					<target>Simpan Laporan Bug</target></trans-unit>
 					<trans-unit id="saved">
-						<source>The report has been saved as &quot;[filename]&quot; on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</source>
-						<target>The report has been saved as &quot;[filename]&quot; on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</target>
+						<source>The report has been saved as "[filename]" on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</source>
+						<target>Laporan telah disimpan sebagai "[filename]" di desktop Anda. \r\n\r\nAnda sekarang dapat mengirimkan laporan bug ke papan diskusi, atau membuka masalah di GitHub dengan lampiran file zip ini.</target>
 					</trans-unit>
 					<trans-unit id="save_failed">
-						<source>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the &quot;View...&quot; button, then submit these logs to the discussion board or open an issue on GitHub.</source>
-						<target>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the &quot;View...&quot; button, then submit these logs to the discussion board or open an issue on GitHub.</target>
+						<source>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the "View..." button, then submit these logs to the discussion board or open an issue on GitHub.</source>
+						<target>Tidak dapat membuat laporan bug! \r\n\r\nAnda dapat mengakses Log dan Log Crash secara langsung dengan mengklik tombol "Lihat...", lalu kirimkan log ini ke papan diskusi atau buka masalah di GitHub.</target>
 					</trans-unit>
 				</group>
 				<group id="panel">
@@ -120,7 +120,7 @@
 					</trans-unit>
 					<trans-unit id="updates_daily">
 						<source>The most recent nightly build from [date] is available for download.</source>
-					</trans-unit>
+					<target>Build nightly terbaru dari [date] tersedia untuk diunduh.</target></trans-unit>
 					<trans-unit id="updates_new">
 						<source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
 						<target>Versi baru telah tersedia. Silakan download di web resmi: [version] ([date])</target>
@@ -163,7 +163,7 @@
 				<group id="errors">
 					<trans-unit id="critical_loading">
 						<source>A critical error occured: \n\n [error] \n\n Please inspect the error log file for further information.</source>
-					</trans-unit>
+					<target>Kesalahan fatal terjadi: \n\n [error] \n\n Silakan periksa file log kesalahan untuk informasi lebih lanjut.</target></trans-unit>
 					<trans-unit id="critical_file">
 						<source>A critical error occured whilst parsing the [file] file</source>
 						<target>Fatal error saat membaca isi file [file]</target>
@@ -274,12 +274,12 @@
 					</trans-unit>
 					<trans-unit id="route_switch_turn">
 						<source>The .Turn command and the .Switch command may not be used in the same route.</source>
-					</trans-unit>
+					<target>Perintah .Turn dan perintah .Switch tidak boleh digunakan dalam rute yang sama.</target></trans-unit>
 				</group>
 				<group id="start">
 					<trans-unit id="title">
 						<source>Start new game</source>
-					</trans-unit>
+					<target>Mulai game baru</target></trans-unit>
 					<trans-unit id="route">
 						<source>Route</source>
 						<target>Rute</target>
@@ -358,7 +358,7 @@
 					</trans-unit>
 					<trans-unit id="train_default">
 						<source>Route default</source>
-					</trans-unit>
+					<target>Kereta standar rute</target></trans-unit>
 					<trans-unit id="train_usedefault">
 						<source>Use the train suggested by the route</source>
 						<target>Gunakan kereta yang disarankan</target>
@@ -397,7 +397,7 @@
 					</trans-unit>
 					<trans-unit id="start">
 						<source>Start</source>
-					</trans-unit>
+					<target>Mulai</target></trans-unit>
 					<trans-unit id="start_mode">
 						<source>Mode of driving:</source>
 						<target>Mode simulasi:</target>
@@ -408,12 +408,12 @@
 					</trans-unit>
 					<trans-unit id="train_notfound_download">
 						<source>The default train is not currently installed:\r\n\r\n [train]\r\n\r\n It may be downloaded at:\r\n\r\n</source>
-					</trans-unit>
+					<target>Kereta standar rute tidak terpasang:\r\n\r\n [train]\r\n\r\n Ini dapat diunduh di:\r\n\r\n</target></trans-unit>
 				</group>
 				<group id="review">
 					<trans-unit id="title">
 						<source>Review last game</source>
-					</trans-unit>
+					<target>Penilaian game terakhir</target></trans-unit>
 					<trans-unit id="conditions">
 						<source>Conditions</source>
 						<target>Kondisi</target>
@@ -526,7 +526,7 @@
 				<group id="packages">
 					<trans-unit id="title">
 						<source>Package Management</source>
-					</trans-unit>
+					<target>Manager Add-Ons</target></trans-unit>
 					<trans-unit id="proceed">
 						<source>Proceed...</source>
 						<target>OK</target>
@@ -716,8 +716,8 @@
 						<target>Hapus</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_skip_if_none">
-						<source>If your package does not rely on other dependencies, you may continue by clicking the &quot;Create&quot; button.</source>
-						<target>If your package does not rely on other dependencies, you may continue by clicking the &quot;Create&quot; button.</target>
+						<source>If your package does not rely on other dependencies, you may continue by clicking the "Create" button.</source>
+						<target>Jika paket anda tidak bergantung pada dependensi lain, anda dapat melanjutkannya dengan mengklik tombol "Buat".</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_nextstep">
 						<source>Package details and dependancies may be assigned in the following steps.</source>
@@ -745,7 +745,7 @@
 					</trans-unit>
 					<trans-unit id="enter_details_header">
 						<source>Enter Package Details</source>
-					</trans-unit>
+					<target>Masukkan Detail Add-on</target></trans-unit>
 					<trans-unit id="creation_name">
 						<source>Please enter a package name.</source>
 						<target>Masukkan nama add-on!</target>
@@ -796,7 +796,7 @@
 					</trans-unit>
 					<trans-unit id="creation_invalid_nofiles">
 						<source>No files were selected to package- Please retry.</source>
-						<target>No files were selected to package- Please retry.</target>
+						<target>Tidak ada file yang dipilih untuk dipaketkan- Silakan coba lagi.</target>
 					</trans-unit>
 					<trans-unit id="creation_invalid_filename">
 						<source>The selected filename is invalid- Please retry.</source>
@@ -824,7 +824,7 @@
 					</trans-unit>
 					<trans-unit id="creation_no">
 						<source>No</source>
-						<target>Nggak</target>
+						<target>Tidak</target>
 					</trans-unit>
 					<trans-unit id="replace_select">
 						<source>Replace this Package</source>
@@ -988,19 +988,19 @@
 					</trans-unit>
 					<trans-unit id="error_busy_thread">
 						<source>The package worker thread is currently busy. Please wait a moment and try again.</source>
-					</trans-unit>
+					<target>Utas pengerja paket sedang sibuk. Harap tunggu sebentar dan coba lagi.</target></trans-unit>
 				</group>
 				<group id="controls">
 					<trans-unit id="title">
 						<source>Customize controls</source>
-					</trans-unit>
+					<target>Pengaturan Kontrol</target></trans-unit>
 					<trans-unit id="list_command">
 						<source>Command</source>
 						<target>Perintah</target>
 					</trans-unit>
 					<trans-unit id="list_type">
 						<source>Type</source>
-					</trans-unit>
+					<target>Tipe</target></trans-unit>
 					<trans-unit id="list_type_digital">
 						<source>Digital</source>
 						<target>Digital</target>
@@ -1043,7 +1043,7 @@
 					</trans-unit>
 					<trans-unit id="reset_question">
 						<source>Reset the current control configuration to the defaults?</source>
-					</trans-unit>
+					<target>Atur ulang konfigurasi kontrol saat ini ke standar?</target></trans-unit>
 					<trans-unit id="reset">
 						<source>Reset to defaults</source>
 						<target>Reset</target>
@@ -1117,7 +1117,7 @@
 						<target>Pilih tombol atau arahkan joystick...</target>
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment_grab_fullaxis">
-						<source>Move an axis into the direction of &quot;increase&quot; or &quot;power&quot;...</source>
+						<source>Move an axis into the direction of "increase" or "power"...</source>
 						<target>Geser tuas joystick untuk menambah power.</target>
 					</trans-unit>
 					<trans-unit id="attached">
@@ -1236,71 +1236,71 @@
 					</trans-unit>
 					<trans-unit id="notdetected">
 						<source>No RailDriver controllers detected.</source>
-						<target>Perangkat RailDriver tidak ditemukan.</target>
+						<target>Pengontrol RailDriver tidak terdeteksi.</target>
 					</trans-unit>
 					<trans-unit id="config_error">
 						<source>Error loading RailDriver calibration file.</source>
-						<target>Error saat membuka file kalibrasi RailDriver.</target>
+						<target>Terjadi kesalahan saat memuat file kalibrasi RailDriver.</target>
 					</trans-unit>
 					<trans-unit id="calibration_start">
-						<source>Please press &apos;Next&apos; to start calibration.</source>
-						<target>Tekan &apos;Lanjut&apos; untuk mulai kalibrasi.</target>
+						<source>Please press 'Next' to start calibration.</source>
+						<target>Tekan 'Lanjut' untuk mulai kalibrasi.</target>
 					</trans-unit>
 					<trans-unit id="calibration_a">
-						<source>Move the reverser lever to the full reverse position and press &apos;Next&apos;.</source>
-						<target>Ubah reverser ke arah mundur dan pilih &apos;lanjut&apos;.</target>
+						<source>Move the reverser lever to the full reverse position and press 'Next'.</source>
+						<target>Ubah reverser ke arah mundur dan pilih 'lanjut'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_b">
-						<source>Move the reverser lever to the full forward position and press &apos;Next&apos;.</source>
-						<target>Ubah reverser ke arah maju dan pilih &apos;lanjut&apos;.</target>
+						<source>Move the reverser lever to the full forward position and press 'Next'.</source>
+						<target>Ubah reverser ke arah maju dan pilih 'lanjut'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_c">
-						<source>Move the combined brake / throttle lever to the full power position and press &apos;Next&apos;.</source>
-						<target>Ubah tuas single ke arah full power lalu pilih &apos;Lanjut&apos;.</target>
+						<source>Move the combined brake / throttle lever to the full power position and press 'Next'.</source>
+						<target>Ubah tuas single ke arah full power lalu pilih 'Lanjut'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_d">
-						<source>Move the combined brake / throttle lever to the full brake position and press &apos;Next&apos;.</source>
-						<target>Ubah tuas single ke arah rem penuh lalu pilih &apos;Lanjut&apos;.</target>
+						<source>Move the combined brake / throttle lever to the full brake position and press 'Next'.</source>
+						<target>Ubah tuas single ke arah rem penuh lalu pilih 'Lanjut'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_e">
-						<source>Move the dynamic brake lever to the release position and press &apos;Next&apos;.</source>
-						<target>Geser tuas rem dinamis ke arah RELEASE lalu pilih &apos;Lanjut&apos;.</target>
+						<source>Move the dynamic brake lever to the release position and press 'Next'.</source>
+						<target>Geser tuas rem dinamis ke arah RELEASE lalu pilih 'Lanjut'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_f">
-						<source>Move the dynamic brake lever to the emergency position and press &apos;Next&apos;.</source>
-						<target>Geser tuas rem dinamis ke arah EMEREGENCY lalu pilih &apos;Lanjut&apos;.</target>
+						<source>Move the dynamic brake lever to the emergency position and press 'Next'.</source>
+						<target>Geser tuas rem dinamis ke arah EMEREGENCY lalu pilih 'Lanjut'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_g">
-						<source>Move the independant brake lever to the release position and press &apos;Next&apos;.</source>
-						<target>Geser tuas rem independen ke arah RELEASE lalu pilih &apos;Lanjut&apos;.</target>
+						<source>Move the independant brake lever to the release position and press 'Next'.</source>
+						<target>Geser tuas rem independen ke arah RELEASE lalu pilih 'Lanjut'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_h">
-						<source>Move the independant brake lever to the full position and press &apos;Next&apos;.</source>
-						<target>Geser tuas rem independen ke arah FULL lalu pilih &apos;Lanjut&apos;.</target>
+						<source>Move the independant brake lever to the full position and press 'Next'.</source>
+						<target>Geser tuas rem independen ke arah FULL lalu pilih 'Lanjut'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_i">
-						<source>Move the bail-off lever to the release position and press &apos;Next&apos;.</source>
-						<target>Geser tuas bail-off ke arah RELEASE lalu pilih &apos;Lanjut&apos;.</target>
+						<source>Move the bail-off lever to the release position and press 'Next'.</source>
+						<target>Geser tuas bail-off ke arah RELEASE lalu pilih 'Lanjut'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_j">
-						<source>Move and hold the bail-off lever into the full position and press &apos;Next&apos;.</source>
-						<target>Geser dan tahan tuas bail-off ke arah FULL lalu pilih &apos;Lanjut&apos;.</target>
+						<source>Move and hold the bail-off lever into the full position and press 'Next'.</source>
+						<target>Geser dan tahan tuas bail-off ke arah FULL lalu pilih 'Lanjut'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_k">
-						<source>Move the wiper switch to OFF and press &apos;Next&apos;.</source>
-						<target>Ubah posisi wiper ker arah MATI lalu pilih &apos;Lanjut&apos;.</target>
+						<source>Move the wiper switch to OFF and press 'Next'.</source>
+						<target>Ubah posisi wiper ker arah MATI lalu pilih 'Lanjut'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_l">
-						<source>Move the wiper switch to FULL and press &apos;Next&apos;.</source>
-						<target>Ubah posisi wiper ke posisi FULL lalu pilih &apos;Lanjut&apos;.</target>
+						<source>Move the wiper switch to FULL and press 'Next'.</source>
+						<target>Ubah posisi wiper ke posisi FULL lalu pilih 'Lanjut'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_m">
-						<source>Move the lights switch to OFF and press &apos;Next&apos;.</source>
-						<target>Ubah posisi lampu ke posisi OFF lalu pilih &apos;Lanjut&apos;.</target>
+						<source>Move the lights switch to OFF and press 'Next'.</source>
+						<target>Ubah posisi lampu ke posisi OFF lalu pilih 'Lanjut'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_n">
-						<source>Move the lights switch to FULL and press &apos;Next&apos;.</source>
-						<target>Ubah posisi lampu ke posisi FULL lalu pilih &apos;Lanjut&apos;.</target>
+						<source>Move the lights switch to FULL and press 'Next'.</source>
+						<target>Ubah posisi lampu ke posisi FULL lalu pilih 'Lanjut'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_o">
 						<source>Calibration complete.</source>
@@ -1314,7 +1314,7 @@
 					</trans-unit>
 					<trans-unit id="title">
 						<source>Options</source>
-					</trans-unit>
+					<target>Pengaturan game</target></trans-unit>
 					<trans-unit id="language">
 						<source>Language</source>
 						<target>Bahasa</target>
@@ -1337,7 +1337,7 @@
 					</trans-unit>
 					<trans-unit id="display_vsync">
 						<source>Vertical synchronization:</source>
-						<target>Vertical synchronization:</target>
+						<target>Sinkronisasi vertikal:</target>
 					</trans-unit>
 					<trans-unit id="display_vsync_off">
 						<source>Disabled</source>
@@ -1373,7 +1373,7 @@
 					</trans-unit>
 					<trans-unit id="display_fullscreen_bits">
 						<source>Bits per pixel:</source>
-						<target>Bits per pixel:</target>
+						<target>Bit per piksel:</target>
 					</trans-unit>
 					<trans-unit id="quality">
 						<source>Quality</source>
@@ -1429,11 +1429,11 @@
 					</trans-unit>
 					<trans-unit id="quality_interpolation_transparency_smooth">
 						<source>Smooth</source>
-						<target>Lembut</target>
+						<target>Halus</target>
 					</trans-unit>
 					<trans-unit id="quality_distance">
 						<source>Distance effects</source>
-						<target>Penglihatan</target>
+						<target>Efek Jarak Pandang</target>
 					</trans-unit>
 					<trans-unit id="quality_distance_viewingdistance">
 						<source>Viewing distance:</source>
@@ -1545,7 +1545,7 @@
 					</trans-unit>
 					<trans-unit id="verbosity_accessibilityaids">
 						<source>Accessibility Aids</source>
-					</trans-unit>
+					<target>Alat Bantu Aksesibilitas</target></trans-unit>
 					<trans-unit id="advanced">
 						<source>Advanced Options</source>
 						<target>Lainnya</target>
@@ -1568,7 +1568,7 @@
 					</trans-unit>
 					<trans-unit id="advanced_cursor">
 						<source>Cursor</source>
-					</trans-unit>
+					<target>Kursor</target></trans-unit>
 					<trans-unit id="other">
 						<source>Other</source>
 						<target>Lainnya</target>
@@ -1655,7 +1655,7 @@
 					</trans-unit>
 					<trans-unit id="font">
 						<source>Font:</source>
-					</trans-unit>
+					<target>Font:</target></trans-unit>
 					<trans-unit id="transparencyfix">
 						<source>Attempt to fix transparency issues in older content.</source>
 						<target>Coba perbaiki transparansi di konten lawas.</target>
@@ -1718,7 +1718,7 @@
 					</trans-unit>
 					<trans-unit id="object_parser">
 						<source>Object Parser</source>
-					</trans-unit>
+					<target>Pengurai Objek</target></trans-unit>
 					<trans-unit id="xobject_parser">
 						<source>X Object Parser</source>
 						<target>Pengurai file X</target>
@@ -1785,7 +1785,7 @@
 					</trans-unit>
 					<trans-unit id="power">
 						<source>Power</source>
-						<target>Power</target>
+						<target>Tenaga</target>
 					</trans-unit>
 					<trans-unit id="brake">
 						<source>Brake</source>
@@ -1797,10 +1797,10 @@
 					</trans-unit>
 					<trans-unit id="route">
 						<source>Route:</source>
-					</trans-unit>
+					<target>Rute:</target></trans-unit>
 					<trans-unit id="train">
 						<source>Train:</source>
-					</trans-unit>
+					<target>Kereta:</target></trans-unit>
 					<trans-unit id="date">
 						<source>Date:</source>
 						<target>Tanggal:</target>
@@ -1811,7 +1811,7 @@
 					</trans-unit>
 					<trans-unit id="score">
 						<source>Score:</source>
-					</trans-unit>
+					<target>Skor:</target></trans-unit>
 					<trans-unit id="rating">
 						<source>Rating:</source>
 						<target>Rating:</target>
@@ -1839,12 +1839,12 @@
 						<target>File hilang:</target>
 					</trans-unit>
 					<trans-unit id="almost_help_filesnotfound">
-						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting &quot;Ignore&quot; from below.</source>
-						<target>Error saat mencoba loading rute dan kereta. \r\n\r\nBeberapa file hilang sehingga mungkin rute atau kereta tidak muncul seperti yang seharusnya. Cobalah download rute dan kereta lagi untuk memastikan tidak ada file yang tertinggal. \r\n\r\nTekan &apos;Abaikan&apos; untuk tetap memainkan rute dan kereta ini.</target>
+						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting "Ignore" from below.</source>
+						<target>Error saat mencoba loading rute dan kereta. \r\n\r\nBeberapa file hilang sehingga mungkin rute atau kereta tidak muncul seperti yang seharusnya. Cobalah download rute dan kereta lagi untuk memastikan tidak ada file yang tertinggal. \r\n\r\nTekan 'Abaikan' untuk tetap memainkan rute dan kereta ini.</target>
 					</trans-unit>
 					<trans-unit id="almost_help_general">
-						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select &quot;Ignore&quot; at this point to start the game.</source>
-						<target>Error saat mencoba loading rute dan kereta. \r\n\r\nBeberapa file tidak ditemukan. Jika anda kreator add-on ini, cek pesan error yang tersedia. \r\n\r\nTekan &apos;Abaikan&apos; untuk tetap memainkan rute dan kereta ini.</target>
+						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select "Ignore" at this point to start the game.</source>
+						<target>Error saat mencoba loading rute dan kereta. \r\n\r\nBeberapa file tidak ditemukan. Jika anda kreator add-on ini, cek pesan error yang tersedia. \r\n\r\nTekan 'Abaikan' untuk tetap memainkan rute dan kereta ini.</target>
 					</trans-unit>
 					<trans-unit id="almost_show">
 						<source>Show issues</source>
@@ -1956,7 +1956,7 @@
 					</trans-unit>
 					<trans-unit id="station_terminal">
 						<source>This is the terminal station.</source>
-						<target>Ini adalah stasiun terakhir. Simulasi selesai.</target>
+						<target>Ini adalah stasiun pemberhentian terakhir.</target>
 					</trans-unit>
 					<trans-unit id="station_deadline">
 						<source>Departure is expected in [time].</source>
@@ -1972,11 +1972,11 @@
 					</trans-unit>
 					<trans-unit id="station_depart_closedoors">
 						<source>Boarding complete. You may close the doors now.</source>
-						<target>Silakan tutup pintu dan berangkat.</target>
+						<target>Pemuatan penumpang selesai. Silakan tutup pintu.</target>
 					</trans-unit>
 					<trans-unit id="station_depart">
 						<source>Boarding complete.</source>
-						<target>Silakan berangkat.</target>
+						<target>Pemuatan penumpang selesai.</target>
 					</trans-unit>
 					<trans-unit id="station_passed">
 						<source>You have passed [name] where you should have stopped.</source>
@@ -1987,12 +1987,12 @@
 						<target>Berangkat dari [name] saat masih naik-turun penumpang. Hentikan kereta sekarang!</target>
 					</trans-unit>
 					<trans-unit id="train_currentspeed">
-						<source>The train&apos;s current speed is [speed]</source>
+						<source>The train's current speed is [speed]</source>
 						<target>Kecepatan kereta [speed]</target>
 					</trans-unit>
 					<trans-unit id="loading">
 						<source>Loading. Please wait...</source>
-					</trans-unit>
+					<target>Memuat. Harap tunggu...</target></trans-unit>
 				</group>
 				<group id="notification">
 					<trans-unit id="interior">
@@ -2061,19 +2061,19 @@
 					</trans-unit>
 					<trans-unit id="switchexterior_uncouple">
 						<source>Please switch to exterior view to uncouple.</source>
-					</trans-unit>
+					<target>Harap pindah ke tampilan eksterior untuk melepas rangkaian.</target></trans-unit>
 					<trans-unit id="unable_uncouple">
 						<source>Unable to uncouple this car.</source>
-					</trans-unit>
+					<target>Tidak dapat melepas kereta ini.</target></trans-unit>
 					<trans-unit id="exterior_uncouplerear">
 						<source>Uncoupling the rear of car number</source>
-					</trans-unit>
+					<target>Melepas bagian belakang kereta nomor</target></trans-unit>
 					<trans-unit id="exterior_uncouplefront">
 						<source>Uncoupling the front of car number</source>
-					</trans-unit>
+					<target>Melepas bagian depan kereta nomor</target></trans-unit>
 					<trans-unit id="fixed_uncouple">
 						<source>This coupler is fixed, and cannot uncouple.</source>
-					</trans-unit>
+					<target>Alat perangkai ini bersifat tetap, dan tidak dapat dilepas.</target></trans-unit>
 				</group>
 				<group id="score">
 					<trans-unit id="overspeed">
@@ -2130,7 +2130,7 @@
 					</trans-unit>
 					<trans-unit id="rating">
 						<source>Your rating:</source>
-					</trans-unit>
+					<target>Rating Anda:</target></trans-unit>
 				</group>
 				<group id="rating">
 					<trans-unit id="0">
@@ -2175,12 +2175,12 @@
 					</trans-unit>
 					<trans-unit id="unknown">
 						<source>Unknown</source>
-					</trans-unit>
+					<target>Tidak diketahui</target></trans-unit>
 				</group>
 				<group id="menu">
 					<trans-unit id="title">
 						<source>In-Game Menu</source>
-					</trans-unit>
+					<target>Menu Dalam Game</target></trans-unit>
 					<trans-unit id="pause_title">
 						<source>PAUSE</source>
 						<target>PAUSE</target>
@@ -2203,7 +2203,7 @@
 					</trans-unit>
 					<trans-unit id="exit_no">
 						<source>No</source>
-						<target>Ngga</target>
+						<target>Tidak</target>
 					</trans-unit>
 					<trans-unit id="exit_yes">
 						<source>Yes</source>
@@ -2219,7 +2219,7 @@
 					</trans-unit>
 					<trans-unit id="quit_no">
 						<source>No</source>
-						<target>Ngga</target>
+						<target>Tidak</target>
 					</trans-unit>
 					<trans-unit id="quit_yes">
 						<source>Yes</source>
@@ -2325,7 +2325,7 @@
 					</trans-unit>
 					<trans-unit id="eb">
 						<source>EB</source>
-						<target>DEADMAN</target>
+						<target>EB</target>
 					</trans-unit>
 					<trans-unit id="constspeed">
 						<source>CONST SPEED</source>
@@ -2347,14 +2347,14 @@
 					</trans-unit>
 					<trans-unit id="power">
 						<source>P</source>
-					</trans-unit>
+					<target>Tenaga</target></trans-unit>
 					<trans-unit id="powernull">
 						<source>N</source>
 						<target>N</target>
 					</trans-unit>
 					<trans-unit id="brake">
 						<source>B</source>
-					</trans-unit>
+					<target>Rem</target></trans-unit>
 					<trans-unit id="locobrake">
 						<source>L</source>
 						<target>L</target>
@@ -2387,17 +2387,17 @@
 				<group id="doors">
 					<trans-unit id="left">
 						<source>L</source>
-						<target>L</target>
+						<target>Kiri</target>
 					</trans-unit>
 					<trans-unit id="right">
 						<source>R</source>
-						<target>R</target>
+						<target>Kanan</target>
 					</trans-unit>
 				</group>
 				<group id="misc">
 					<trans-unit id="score">
 						<source>Score:\x20</source>
-					</trans-unit>
+					<target>Skor:\x20</target></trans-unit>
 				</group>
 				<group id="commands">
 					<trans-unit id="power_increase">
@@ -2426,10 +2426,10 @@
 					</trans-unit>
 					<trans-unit id="locobrake_decrease">
 						<source>Decreases the locomotive brake by one notch</source>
-					</trans-unit>
+					<target>Kurangi rem lokomotif satu tingkat</target></trans-unit>
 					<trans-unit id="locobrake_increase">
 						<source>Increases the locomotive brake by one notch</source>
-					</trans-unit>
+					<target>Tambah rem lokomotif satu tingkat</target></trans-unit>
 					<trans-unit id="brake_halfaxis">
 						<source>Controls brake for trains with two handles on half of a joystick axis</source>
 						<target>Mengatur tuas rem pada kereta 2 tuas dengan joystick half axis</target>
@@ -2516,10 +2516,10 @@
 					</trans-unit>
 					<trans-unit id="play_mic_sounds">
 						<source>Activates or deactivates the system microphone soundsource</source>
-					</trans-unit>
+					<target>Aktifkan atau nonaktifkan sumber suara mikrofon sistem</target></trans-unit>
 					<trans-unit id="sanders">
 						<source>Activates or deactivates the sanders</source>
-					</trans-unit>
+					<target>Aktifkan atau nonaktifkan sander</target></trans-unit>
 					<trans-unit id="security_power">
 						<source>Activates or deactivates the security system on some trains</source>
 						<target>Sistem keamanan kereta</target>
@@ -2605,15 +2605,15 @@
 						<target>Fungsi P</target>
 					</trans-unit>
 					<trans-unit id="camera_interior">
-						<source>Switches to the train&apos;s interior view</source>
+						<source>Switches to the train's interior view</source>
 						<target>Mode interior</target>
 					</trans-unit>
 					<trans-unit id="camera_interior_nopanel">
-						<source>Switches to the train&apos;s interior view. However, the panel is not displayed.</source>
+						<source>Switches to the train's interior view. However, the panel is not displayed.</source>
 						<target>Mode interior (tanpa panel)</target>
 					</trans-unit>
 					<trans-unit id="camera_exterior">
-						<source>Switches to the train&apos;s exterior view</source>
+						<source>Switches to the train's exterior view</source>
 						<target>Mode eksterior</target>
 					</trans-unit>
 					<trans-unit id="camera_track">
@@ -2818,7 +2818,7 @@
 					</trans-unit>
 					<trans-unit id="wiper_speed_up">
 						<source>Increases the speed of the windscreen wipers</source>
-						<target>Menambah level wiper</target>
+						<target>Menambah kecepatan wiper</target>
 					</trans-unit>
 					<trans-unit id="wiper_speed_down">
 						<source>Decreases the speed of the windscreen wipers</source>
@@ -2854,7 +2854,7 @@
 					</trans-unit>
 					<trans-unit id="cylinder_cocks">
 						<source>Activates or deactivates the cylinder cocks</source>
-					</trans-unit>
+					<target>Aktifkan atau nonaktifkan cylinder cock</target></trans-unit>
 					<trans-unit id="engine_start">
 						<source>Starts the engine</source>
 						<target>Nyalakan mesin</target>
@@ -2889,54 +2889,54 @@
 					</trans-unit>
 					<trans-unit id="accessibility_current_speed">
 						<source>Accessibility: Audibly announces the current speed.</source>
-					</trans-unit>
+					<target>Aksesibilitas: Mengumumkan kecepatan saat ini secara akustik.</target></trans-unit>
 					<trans-unit id="accessibility_next_signal">
 						<source>Accessibility: Audibly announces the next signal distance and aspect.</source>
-					</trans-unit>
+					<target>Aksesibilitas: Mengumumkan jarak sinyal berikutnya dan aspeknya secara akustik.</target></trans-unit>
 					<trans-unit id="accessibility_next_station">
 						<source>Accessibility: Audibly announces the the next station name and distance.</source>
-					</trans-unit>
+					<target>Aksesibilitas: Mengumumkan nama stasiun berikutnya dan jaraknya secara akustik.</target></trans-unit>
 					<trans-unit id="uncouple_front">
 						<source>Uncouples the front coupler for the selected car.</source>
-					</trans-unit>
+					<target>Lepaskan rangkaian depan untuk kereta yang dipilih.</target></trans-unit>
 					<trans-unit id="uncouple_rear">
 						<source>Uncouples the rear coupler for the selected car.</source>
-					</trans-unit>
+					<target>Lepaskan rangkaian belakang untuk kereta yang dipilih.</target></trans-unit>
 					<trans-unit id="switch_menu">
 						<source>Shows the change switch menu</source>
-					</trans-unit>
+					<target>Tampilkan menu ganti wesel</target></trans-unit>
 				</group>
 				<group id="keys">
 					<trans-unit id="0">
 						<source>0</source>
-					</trans-unit>
+					<target>0</target></trans-unit>
 					<trans-unit id="1">
 						<source>1</source>
-					</trans-unit>
+					<target>1</target></trans-unit>
 					<trans-unit id="2">
 						<source>2</source>
-					</trans-unit>
+					<target>2</target></trans-unit>
 					<trans-unit id="3">
 						<source>3</source>
-					</trans-unit>
+					<target>3</target></trans-unit>
 					<trans-unit id="4">
 						<source>4</source>
-					</trans-unit>
+					<target>4</target></trans-unit>
 					<trans-unit id="5">
 						<source>5</source>
-					</trans-unit>
+					<target>5</target></trans-unit>
 					<trans-unit id="6">
 						<source>6</source>
-					</trans-unit>
+					<target>6</target></trans-unit>
 					<trans-unit id="7">
 						<source>7</source>
-					</trans-unit>
+					<target>7</target></trans-unit>
 					<trans-unit id="8">
 						<source>8</source>
-					</trans-unit>
+					<target>8</target></trans-unit>
 					<trans-unit id="9">
 						<source>9</source>
-					</trans-unit>
+					<target>9</target></trans-unit>
 					<trans-unit id="ampersand">
 						<source>Ampersand</source>
 						<target>Ampersand</target>
@@ -2987,7 +2987,7 @@
 					</trans-unit>
 					<trans-unit id="delete">
 						<source>Delete</source>
-						<target>Delete</target>
+						<target>Hapus</target>
 					</trans-unit>
 					<trans-unit id="dollar">
 						<source>Dollar</source>
@@ -2995,7 +2995,7 @@
 					</trans-unit>
 					<trans-unit id="down">
 						<source>Down</source>
-					</trans-unit>
+					<target>Bawah</target></trans-unit>
 					<trans-unit id="end">
 						<source>End</source>
 						<target>End</target>
@@ -3162,7 +3162,7 @@
 					</trans-unit>
 					<trans-unit id="kp_period">
 						<source>Keypad Period</source>
-						<target>Numpad koma</target>
+						<target>Numpad .</target>
 					</trans-unit>
 					<trans-unit id="kp_plus">
 						<source>Keypad Plus</source>
@@ -3174,18 +3174,18 @@
 					</trans-unit>
 					<trans-unit id="lctrl">
 						<source>Left Ctrl</source>
-						<target>Alt ctrl</target>
+						<target>Ctrl kiri</target>
 					</trans-unit>
 					<trans-unit id="left">
 						<source>Left</source>
-					</trans-unit>
+					<target>Kiri</target></trans-unit>
 					<trans-unit id="leftbracket">
 						<source>Left bracket</source>
-						<target>Left bracket</target>
+						<target>Kurung kotak kiri</target>
 					</trans-unit>
 					<trans-unit id="leftparen">
 						<source>Left parenthesis</source>
-						<target>Left parenthesis</target>
+						<target>Kurung kiri</target>
 					</trans-unit>
 					<trans-unit id="less">
 						<source>Less</source>
@@ -3213,7 +3213,7 @@
 					</trans-unit>
 					<trans-unit id="mode">
 						<source>Alt Gr</source>
-					</trans-unit>
+					<target>Alt Gr</target></trans-unit>
 					<trans-unit id="numlock">
 						<source>Numlock</source>
 						<target>Numlock</target>
@@ -3240,7 +3240,7 @@
 					</trans-unit>
 					<trans-unit id="power">
 						<source>Power</source>
-					</trans-unit>
+					<target>Tenaga</target></trans-unit>
 					<trans-unit id="print">
 						<source>Print</source>
 						<target>Print</target>
@@ -3271,14 +3271,14 @@
 					</trans-unit>
 					<trans-unit id="right">
 						<source>Right</source>
-					</trans-unit>
+					<target>Kanan</target></trans-unit>
 					<trans-unit id="rightbracket">
 						<source>Right bracket</source>
-						<target>Right bracket</target>
+						<target>Kurung kotak kanan</target>
 					</trans-unit>
 					<trans-unit id="rightparen">
 						<source>Right parenthesis</source>
-						<target>Right parenthesis</target>
+						<target>Kurung kanan</target>
 					</trans-unit>
 					<trans-unit id="rmeta">
 						<source>Right Meta</source>
@@ -3322,7 +3322,7 @@
 					</trans-unit>
 					<trans-unit id="up">
 						<source>Up</source>
-					</trans-unit>
+					<target>Atas</target></trans-unit>
 					<trans-unit id="a">
 						<source>A</source>
 						<target>A</target>
@@ -3341,7 +3341,7 @@
 					</trans-unit>
 					<trans-unit id="e">
 						<source>E</source>
-						<target>E</target>
+						<target>e (2.0)</target>
 					</trans-unit>
 					<trans-unit id="f">
 						<source>F</source>
@@ -3551,28 +3551,19 @@
 					</trans-unit>
 					<trans-unit id="help_controller1_textbox">
 						<source>If your non-USB controller is not providing correct input:\r\n\r\n1. Ensure the USB adapter is working. Ideally, the adapter should map the direction buttons from a standard controller to separate buttons to avoid compatibility issues.\r\n2. Calibrate the controller from the configuration window, if necessary.</source>
-						<target>Jika controller selain input USB tidak bekerja dengan baik:
-
-1. Pastikan adapter USB berfungsi. Adapter seharusnya dapat menyesuaikan tombol dengan kontroller standar
-untuk mengatur tombol dan menghindari masalah perangkat..
-2. Kalibrasi ulang perangkat dari pengaturan kontrol jika diperlukan.</target>
+						<target>Jika pengontrol berjenis non-USB Anda tidak memberikan input yang benar:\r\n\r\n1. Pastikan adaptor USB berfungsi dengan baik. Idealnya, adaptor harus memetakan tombol arah dari pengontrol standar ke tombol terpisah untuk menghindari masalah kompatibilitas.\r\n2. Kalibrasi pengontrol melalui jendela konfigurasi jika diperlukan.</target>
 					</trans-unit>
 					<trans-unit id="help_controller2_textbox">
 						<source>If your PS2 controller does not appear in the list, follow these steps:</source>
-						<target>Jika joypad PS2 tidak muncul, ikuti langkah berikut:</target>
+						<target>Jika pengontrol PS2 Anda tidak muncul dalam daftar, ikuti langkah-langkah berikut:</target>
 					</trans-unit>
 					<trans-unit id="help_windows_textbox">
-						<source>1. Extract the Windows drivers.\r\n2. Download and run Zadig.\r\n3. Load the appropriate CFG file for your device (&quot;Device &gt; Load Preset Device&quot;).\r\n4. Press &quot;Install Driver&quot; and wait for installation to complete.</source>
-						<target>1. Extract driver untuk Windows.
-2. Download dan install Zadig.
-3. Pilih file CFG yang tersedia untuk perangkat anda (&quot;Device &gt; Load Preset Device&quot;).
-4. Tekan &quot;Install Driver&quot; dan tunggu sampai selesai.</target>
+						<source>1. Extract the Windows drivers.\r\n2. Download and run Zadig.\r\n3. Load the appropriate CFG file for your device ("Device &gt; Load Preset Device").\r\n4. Press "Install Driver" and wait for installation to complete.</source>
+						<target>1. Ekstrak driver Windows.\r\n2. Unduh dan jalankan Zadig.\r\n3. Muat file CFG yang sesuai untuk perangkat Anda ("Device &gt; Load Preset Device").\r\n4. Tekan "Install Driver" dan tunggu hingga instalasi selesai.</target>
 					</trans-unit>
 					<trans-unit id="help_linux_textbox">
-						<source>1. Extract the Linux udev file.\r\n2. Copy the file to &quot;/etc/udev/rules.d/&quot; (root permissions required).\r\n3. Reboot or reload udev rules manually.</source>
-						<target>1. Extract file Linux udev.
-2. Salin ke &quot;/etc/udev/rules.d/&quot; (wajib root).
-3. Nyalakan ulang udev rules.</target>
+						<source>1. Extract the Linux udev file.\r\n2. Copy the file to "/etc/udev/rules.d/" (root permissions required).\r\n3. Reboot or reload udev rules manually.</source>
+						<target>1. Ekstrak file udev Linux.\r\n2. Salin file tersebut ke "/etc/udev/rules.d/" (membutuhkan izin root).\r\n3. Nyalakan ulang atau muat ulang aturan udev secara manual.</target>
 					</trans-unit>
 					<trans-unit id="help_zadig_button">
 						<source>Get Zadig</source>
@@ -3591,45 +3582,38 @@ untuk mengatur tombol dan menghindari masalah perangkat..
 						<target>OK</target>
 					</trans-unit>
 					<trans-unit id="help_libusb_symlink">
-						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.\r\nPlease follow the following instructions:\r\n\r\n1. Check that the &quot;libusb-1.0&quot; package is installed.\r\n2. Find the location of &quot;libusb-1.0.so.0&quot; - On recent Ubuntu and Debian versions, this is likely to be &quot;/lib/x86_64-linux-gnu/&quot;\r\n3. Open the directory in the terminal.\r\n4. Check this location to see if &quot;libusb-1.0.so&quot; exists.\r\n5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</source>
-						<target>LibUsb mungkin hilang, atau tidak dapat digunakan dengan baik.
-Ikuti langkah berikut untuk mengatasinya:
-
-1. Pastikan &quot;libusb-1.0&quot; telah terinstall.
-2. Cari lokasi &quot;libusb-1.0.so.0&quot; - Di versi terkini Ubuntu dan Debian, mungkin tertulis seperti &quot;/lib/x86_64-linux-gnu/&quot;
-3. Buka direktori pada terminal.
-4. Cek pada folder tersebut apakah ada file &quot;libusb-1.0.so&quot;.
-5. Jika tidak ada, buat symlink dengan meng-input perintah berikut dari terminal : &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</target>
+						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.\r\nPlease follow the following instructions:\r\n\r\n1. Check that the "libusb-1.0" package is installed.\r\n2. Find the location of "libusb-1.0.so.0" - On recent Ubuntu and Debian versions, this is likely to be "/lib/x86_64-linux-gnu/"\r\n3. Open the directory in the terminal.\r\n4. Check this location to see if "libusb-1.0.so" exists.\r\n5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: "sudo ln -s libusb-1.0.so.0 libusb-1.0.so"</source>
+						<target>LibUsb tampaknya hilang, atau belum dibuatkan symlink dengan benar untuk pemuatan saat aplikasi berjalan.\r\nIkuti instruksi berikut:\r\n\r\n1. Pastikan paket "libusb-1.0" telah terinstal.\r\n2. Cari lokasi "libusb-1.0.so.0" - Pada versi Ubuntu dan Debian terbaru, kemungkinan besar berada di "/lib/x86_64-linux-gnu/"\r\n3. Buka direktori tersebut di terminal.\r\n4. Periksa lokasi ini untuk melihat apakah "libusb-1.0.so" ada.\r\n5. Jika file tersebut tidak ada, kita harus membuat symlink yang sesuai dengan menjalankan perintah berikut dari terminal ini: "sudo ln -s libusb-1.0.so.0 libusb-1.0.so"</target>
 					</trans-unit>
 					<trans-unit id="label_reverser">
 						<source>Reverser: [notch]</source>
-					</trans-unit>
+					<target /></trans-unit>
 					<trans-unit id="label_a2">
 						<source>A2</source>
-					</trans-unit>
+					<target /></trans-unit>
 					<trans-unit id="label_ats">
 						<source>ATS</source>
-					</trans-unit>
+					<target /></trans-unit>
 				</group>
 				<group id="switchmenu">
 					<trans-unit id="title">
 						<source>Select a Switch To Change: </source>
-					</trans-unit>
+					<target>Pilih Wesel untuk Diganti: </target></trans-unit>
 					<trans-unit id="selected">
 						<source>Selected Switch: </source>
-					</trans-unit>
+					<target>Wesel Terpilih: </target></trans-unit>
 					<trans-unit id="current">
 						<source>Current Setting: </source>
-					</trans-unit>
+					<target>Pengaturan Saat Ini: </target></trans-unit>
 					<trans-unit id="distance">
 						<source>Distance from Player: </source>
-					</trans-unit>
+					<target>Jarak dari Pemain: </target></trans-unit>
 					<trans-unit id="zoom_in">
 						<source>Zoom In</source>
-					</trans-unit>
+					<target>Perbesar</target></trans-unit>
 					<trans-unit id="zoom_out">
 						<source>Zoom Out</source>
-					</trans-unit>
+					<target>Perkecil</target></trans-unit>
 				</group>
 			</group>
 			<group id="train_editor">
@@ -3644,14 +3628,14 @@ Ikuti langkah berikut untuk mengatasinya:
 					</trans-unit>
 					<trans-unit id="save">
 						<source>Save</source>
-					</trans-unit>
+					<target>Simpan</target></trans-unit>
 					<trans-unit id="save_as">
 						<source>Save as...</source>
 						<target>Simpan sebagai...</target>
 					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
-					</trans-unit>
+					<target>Tutup</target></trans-unit>
 					<trans-unit id="new_message">
 						<source>Do you want to save data before creating a new train?</source>
 						<target>Simpan date sebelum membuat kereta baru?</target>
@@ -3684,15 +3668,15 @@ Ikuti langkah berikut untuk mengatasinya:
 					</trans-unit>
 					<trans-unit id="static_friction">
 						<source>CoefficientOfStaticFriction:</source>
-						<target>CoefficientOfStaticFriction:</target>
+						<target>Koefisien Gesekan Statis</target>
 					</trans-unit>
 					<trans-unit id="rolling_resistance">
 						<source>CoefficientOfRollingResistance:</source>
-						<target>CoefficientOfRollingResistance:</target>
+						<target>Koefisien Hambatan Gulung</target>
 					</trans-unit>
 					<trans-unit id="aerodynamic_drag">
 						<source>AerodynamicDragCoefficient:</source>
-						<target>AerodynamicDragCoefficient:</target>
+						<target>Koefisien Hambatan Aerodinamis</target>
 					</trans-unit>
 				</group>
 				<group id="delay">
@@ -3722,49 +3706,49 @@ Ikuti langkah berikut untuk mengatasinya:
 					</trans-unit>
 					<trans-unit id="notch">
 						<source>Notch</source>
-						<target>Notch</target>
+						<target>Tingkat</target>
 					</trans-unit>
 					<trans-unit id="save">
 						<source>Save</source>
-					</trans-unit>
+					<target>Simpan</target></trans-unit>
 					<trans-unit id="cancel">
 						<source>Cancel</source>
-					</trans-unit>
+					<target>Batal</target></trans-unit>
 				</group>
 				<group id="move">
 					<trans-unit id="move">
 						<source>Move</source>
-						<target>Move</target>
+						<target>Pindahkan</target>
 					</trans-unit>
 					<trans-unit id="jerk_power_up">
 						<source>JerkPowerUp:</source>
-						<target>JerkPowerUp:</target>
+						<target>Jerk Power-Up</target>
 					</trans-unit>
 					<trans-unit id="jerk_power_down">
 						<source>JerkPowerDown:</source>
-						<target>JerkPowerDown:</target>
+						<target>Jerk Power-Down</target>
 					</trans-unit>
 					<trans-unit id="jerk_brake_up">
 						<source>JerkBrakeUp:</source>
-						<target>JerkBrakeUp:</target>
+						<target>Jerk Brake-Up</target>
 					</trans-unit>
 					<trans-unit id="jerk_brake_down">
 						<source>JerkBrakeDown:</source>
-						<target>JerkBrakeDown:</target>
+						<target>Jerk Brake-Down</target>
 					</trans-unit>
 					<trans-unit id="brake_cylinder_up">
 						<source>BrakeCylinderUp:</source>
-						<target>BrakeCylinderUp:</target>
+						<target>Brake Cylinder-Up</target>
 					</trans-unit>
 					<trans-unit id="brake_cylinder_down">
 						<source>BrakeCylinderDown:</source>
-						<target>BrakeCylinderDown:</target>
+						<target>Brake Cylinder-Down</target>
 					</trans-unit>
 				</group>
 				<group id="brake">
 					<trans-unit id="brake">
 						<source>Brake</source>
-					</trans-unit>
+					<target>Rem</target></trans-unit>
 					<trans-unit id="type">
 						<source>BrakeType:</source>
 						<target>BrakeType:</target>
@@ -3779,15 +3763,15 @@ Ikuti langkah berikut untuk mengatasinya:
 					</trans-unit>
 					<trans-unit id="smee">
 						<source>Electromagnetic straight air brake</source>
-						<target>Electromagnetic straight air brake</target>
+						<target>Rem udara lurus elektromagnetik</target>
 					</trans-unit>
 					<trans-unit id="ecb">
 						<source>Electro-pneumatic air brake without brake pipe</source>
-						<target>Electro-pneumatic air brake without brake pipe</target>
+						<target>Rem udara elektro-pneumatik tanpa pipa rem</target>
 					</trans-unit>
 					<trans-unit id="cl">
 						<source>Air brake with partial release feature</source>
-						<target>Air brake with partial release feature</target>
+						<target>Rem udara dengan fitur pelepasan parsial</target>
 					</trans-unit>
 					<trans-unit id="control_system_none">
 						<source>None</source>
@@ -3795,11 +3779,11 @@ Ikuti langkah berikut untuk mengatasinya:
 					</trans-unit>
 					<trans-unit id="lock_out_valve">
 						<source>Closing electromagnetic valve</source>
-						<target>Closing electromagnetic valve</target>
+						<target>Katup elektromagnetik penutup</target>
 					</trans-unit>
 					<trans-unit id="delay_including_control">
 						<source>Delay-including control</source>
-						<target>Delay-including control</target>
+						<target>Kontrol termasuk penundaan</target>
 					</trans-unit>
 				</group>
 				<group id="pressure">
@@ -3809,23 +3793,23 @@ Ikuti langkah berikut untuk mengatasinya:
 					</trans-unit>
 					<trans-unit id="brake_cylinder_service_max">
 						<source>BrakeCylinderServiceMaximumPressure:</source>
-						<target>BrakeCylinderServiceMaximumPressure:</target>
+						<target>Tekanan Maksimum Servis Silinder Rem</target>
 					</trans-unit>
 					<trans-unit id="brake_cylinder_emergency_max">
 						<source>BrakeCylinderEmergencyMaximumPressure:</source>
-						<target>BrakeCylinderEmergencyMaximumPressure:</target>
+						<target>Tekanan Maksimum Darurat Silinder Rem</target>
 					</trans-unit>
 					<trans-unit id="main_reservoir_min">
 						<source>MainReservoirMinimumPressure:</source>
-						<target>MainReservoirMinimumPressure:</target>
+						<target>Tekanan Minimum Reservoir Utama</target>
 					</trans-unit>
 					<trans-unit id="main_reservoir_max">
 						<source>MainReservoirMaximumPressure:</source>
-						<target>MainReservoirMaximumPressure:</target>
+						<target>Tekanan Maksimum Reservoir Utama</target>
 					</trans-unit>
 					<trans-unit id="brake_pipe_normal">
 						<source>BrakePipeNormalPressure:</source>
-						<target>BrakePipeNormalPressure:</target>
+						<target>Tekanan Normal Pipa Rem</target>
 					</trans-unit>
 				</group>
 				<group id="handle">
@@ -3835,7 +3819,7 @@ Ikuti langkah berikut untuk mengatasinya:
 					</trans-unit>
 					<trans-unit id="type">
 						<source>HandleType:</source>
-					</trans-unit>
+					<target>TipeTuas:</target></trans-unit>
 					<trans-unit id="power_notches">
 						<source>PowerNotches:</source>
 						<target>TuasThrottle:</target>
@@ -3942,11 +3926,11 @@ Ikuti langkah berikut untuk mengatasinya:
 					</trans-unit>
 					<trans-unit id="exposed_frontal_area">
 						<source>ExposedFrontalArea:</source>
-						<target>ExposedFrontalArea:</target>
+						<target>Area Depan yang Terpapar</target>
 					</trans-unit>
 					<trans-unit id="unexposed_frontal_area">
 						<source>UnexposedFrontalArea:</source>
-						<target>UnexposedFrontalArea:</target>
+						<target>Area Depan yang Tidak Terpapar</target>
 					</trans-unit>
 					<trans-unit id="number_of_trailer_cars_error_message">
 						<source>NumberOfTrailerCars must be at least 1 if FrontCarIsAMotorCar is not set.</source>
@@ -3956,14 +3940,14 @@ Ikuti langkah berikut untuk mengatasinya:
 				<group id="device">
 					<trans-unit id="device">
 						<source>Device</source>
-					</trans-unit>
+					<target>Perangkat</target></trans-unit>
 					<trans-unit id="const_speed">
 						<source>ConstSpeed:</source>
 						<target>Kecepatan Konstan:</target>
 					</trans-unit>
 					<trans-unit id="hold_brake">
 						<source>HoldBrake:</source>
-					</trans-unit>
+					<target>RemTahan:</target></trans-unit>
 					<trans-unit id="readhesion_device">
 						<source>ReAdhesionDevice:</source>
 						<target>ReAdhesionDevice:</target>
@@ -4040,10 +4024,10 @@ Ikuti langkah berikut untuk mengatasinya:
 				<group id="acceleration">
 					<trans-unit id="acceleration">
 						<source>Acceleration</source>
-					</trans-unit>
+					<target>Akselerasi</target></trans-unit>
 					<trans-unit id="notch">
 						<source>Notch:</source>
-					</trans-unit>
+					<target>Tingkat:</target></trans-unit>
 					<trans-unit id="data">
 						<source>Data</source>
 						<target>Data</target>
@@ -4092,7 +4076,7 @@ Ikuti langkah berikut untuk mengatasinya:
 					</trans-unit>
 					<trans-unit id="preview">
 						<source>Preview</source>
-					</trans-unit>
+					<target>Tampilan</target></trans-unit>
 					<trans-unit id="y_pitch">
 						<source>Ypitch</source>
 						<target>Ypitch</target>
@@ -4107,13 +4091,13 @@ Ikuti langkah berikut untuk mengatasinya:
 					</trans-unit>
 					<trans-unit id="max_x">
 						<source>Xmax:</source>
-					</trans-unit>
+					<target /></trans-unit>
 					<trans-unit id="left">
 						<source>Left</source>
-					</trans-unit>
+					<target>Kiri</target></trans-unit>
 					<trans-unit id="right">
 						<source>Right</source>
-					</trans-unit>
+					<target>Kanan</target></trans-unit>
 					<trans-unit id="in">
 						<source>In</source>
 						<target>Masuk</target>
@@ -4202,7 +4186,7 @@ Ikuti langkah berikut untuk mengatasinya:
 					</trans-unit>
 					<trans-unit id="misc">
 						<source>Miscellaneous Features</source>
-					</trans-unit>
+					<target>Fitur Lain-lain</target></trans-unit>
 					<trans-unit id="misc_eb">
 						<source>Handle behaviour on EB:</source>
 						<target>Tuas saat rem darurat:</target>
@@ -4225,7 +4209,7 @@ Ikuti langkah berikut untuk mengatasinya:
 					</trans-unit>
 					<trans-unit id="language">
 						<source>Language</source>
-					</trans-unit>
+					<target>Bahasa</target></trans-unit>
 				</group>
 			</group>
 			<group id="train_editor2">
@@ -4233,79 +4217,79 @@ Ikuti langkah berikut untuk mengatasinya:
 					<group id="file">
 						<trans-unit id="name">
 							<source>File</source>
-						</trans-unit>
+						<target /></trans-unit>
 						<trans-unit id="new">
 							<source>New</source>
-						</trans-unit>
+						<target>Baru</target></trans-unit>
 						<trans-unit id="open">
 							<source>Open...</source>
-						</trans-unit>
+						<target>Buka...</target></trans-unit>
 						<trans-unit id="save">
 							<source>Save</source>
-						</trans-unit>
+						<target>Simpan</target></trans-unit>
 						<trans-unit id="save_as">
 							<source>Save as...</source>
-						</trans-unit>
+						<target>Simpan sebagai...</target></trans-unit>
 						<trans-unit id="import">
 							<source>Import...</source>
-						</trans-unit>
+						<target>Impor...</target></trans-unit>
 						<trans-unit id="export">
 							<source>Export...</source>
-						</trans-unit>
+						<target>Ekspor...</target></trans-unit>
 						<trans-unit id="exit">
 							<source>Exit</source>
-						</trans-unit>
+						<target>Keluar</target></trans-unit>
 						<trans-unit id="wrongtype">
 							<source>You have attempted to open a train.\r\nThese cannot be opened directly-\r\nPlease use the import function to import this train into TrainEditor2.</source>
-							<target>Anda mencoba membuka sebuah kereta. \n\n Tidak dapat membuka file ini. \n\n Gunakan perintah &apos;impor&apos; untuk membuka file ini ke TrainEditor2.</target>
+							<target>Anda mencoba membuka sebuah kereta. \n\n Tidak dapat membuka file ini. \n\n Gunakan perintah 'impor' untuk membuka file ini ke TrainEditor2.</target>
 						</trans-unit>
 					</group>
 					<group id="message">
 						<trans-unit id="new">
 							<source>Do you want to save the current file before creating a new one?</source>
-						</trans-unit>
+						<target>Apakah Anda ingin menyimpan file saat ini sebelum membuat yang baru?</target></trans-unit>
 						<trans-unit id="open">
 							<source>Do you want to save the current file before opening another file?</source>
-						</trans-unit>
+						<target>Apakah Anda ingin menyimpan file saat ini sebelum membuka file lain?</target></trans-unit>
 						<trans-unit id="exit">
 							<source>Do you want to save the current file before closing?</source>
-						</trans-unit>
+						<target>Apakah Anda ingin menyimpan file saat ini sebelum menutup?</target></trans-unit>
 					</group>
 					<trans-unit id="language">
 						<source>Language</source>
-					</trans-unit>
+					<target>Bahasa</target></trans-unit>
 				</group>
 				<group id="navigation">
 					<trans-unit id="up">
 						<source>Up</source>
-					</trans-unit>
+					<target>Atas</target></trans-unit>
 					<trans-unit id="down">
 						<source>Down</source>
-					</trans-unit>
+					<target>Bawah</target></trans-unit>
 					<trans-unit id="add">
 						<source>Add</source>
-					</trans-unit>
+					<target>Tambah</target></trans-unit>
 					<trans-unit id="remove">
 						<source>Remove</source>
-					</trans-unit>
+					<target>Hapus</target></trans-unit>
 					<trans-unit id="copy">
 						<source>Copy</source>
 						<target>Salin</target>
 					</trans-unit>
 					<trans-unit id="set">
 						<source>Set...</source>
-					</trans-unit>
+					<target>Atur...</target></trans-unit>
 					<trans-unit id="open">
 						<source>Open...</source>
-					</trans-unit>
+					<target>Buka...</target></trans-unit>
 				</group>
 				<group id="tree_cars">
 					<trans-unit id="train">
 						<source>Train</source>
-					</trans-unit>
+					<target>Kereta</target></trans-unit>
 					<trans-unit id="general">
 						<source>General</source>
-						<target>General</target>
+						<target>Umum</target>
 					</trans-unit>
 					<trans-unit id="cars">
 						<source>Cars</source>
@@ -4321,34 +4305,34 @@ Ikuti langkah berikut untuk mengatasinya:
 						<group id="handle_type">
 							<trans-unit id="name">
 								<source>HandleType</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="separated">
 								<source>Separated</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="combined">
 								<source>Combined</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="separated_interlocked">
 								<source>Separated (Interlocked)</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="separated_interlocked_reverser">
 								<source>Separated (Reverser Interlocked)</source>
-							</trans-unit>
+							<target /></trans-unit>
 						</group>
 						<group id="eb_handle_behaviour">
 							<trans-unit id="name">
 								<source>EbHandleBehaviour</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="no">
 								<source>No action</source>
 								<target>Tidak ada</target>
 							</trans-unit>
 							<trans-unit id="power">
 								<source>Return power to neutral</source>
-							</trans-unit>
+							<target>Tenaga</target></trans-unit>
 							<trans-unit id="reverser">
 								<source>Return reverser to neutral</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="power_reverser">
 								<source>Return power and reverser to neutral</source>
 								<target>Netralkan throttle dan reverser</target>
@@ -4357,10 +4341,10 @@ Ikuti langkah berikut untuk mengatasinya:
 						<group id="loco_brake_handle_type">
 							<trans-unit id="name">
 								<source>LocoBrakeHandleType</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="combined">
 								<source>Combined</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="independent">
 								<source>Independent</source>
 								<target>Independen</target>
@@ -4372,60 +4356,60 @@ Ikuti langkah berikut untuk mengatasinya:
 						</group>
 						<trans-unit id="name">
 							<source>Handle</source>
-						</trans-unit>
+						<target /></trans-unit>
 						<trans-unit id="power_notches">
 							<source>PowerNotches</source>
-						</trans-unit>
+						<target /></trans-unit>
 						<trans-unit id="brake_notches">
 							<source>BrakeNotches</source>
-						</trans-unit>
+						<target /></trans-unit>
 						<trans-unit id="power_notch_reduce_steps">
 							<source>PowerNotchReduceSteps</source>
-						</trans-unit>
+						<target /></trans-unit>
 						<trans-unit id="driver_power_notches">
 							<source>DriverPowerNotches</source>
-						</trans-unit>
+						<target /></trans-unit>
 						<trans-unit id="driver_brake_notches">
 							<source>DriverBrakeNotches</source>
-						</trans-unit>
+						<target /></trans-unit>
 						<trans-unit id="loco_brake_notches">
 							<source>LocoBrakeNotches</source>
-						</trans-unit>
+						<target /></trans-unit>
 						<trans-unit id="brake_notches_error_message">
 							<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
-						</trans-unit>
+						<target /></trans-unit>
 						<trans-unit id="driver_power_notches_error_message">
 							<source>DriverPowerNotches must be less than or equal to PowerNotches.</source>
-						</trans-unit>
+						<target /></trans-unit>
 						<trans-unit id="driver_brake_notches_error_message">
 							<source>DriverBrakeNotches must be less than or equal to BrakeNotches.</source>
-						</trans-unit>
+						<target /></trans-unit>
 					</group>
 					<group id="cab">
 						<trans-unit id="name">
 							<source>Cab</source>
-						</trans-unit>
+						<target /></trans-unit>
 						<trans-unit id="x">
 							<source>X</source>
-						</trans-unit>
+						<target>X</target></trans-unit>
 						<trans-unit id="y">
 							<source>Y</source>
-						</trans-unit>
+						<target>Y</target></trans-unit>
 						<trans-unit id="z">
 							<source>Z</source>
-						</trans-unit>
+						<target>Z</target></trans-unit>
 						<trans-unit id="driver_car">
 							<source>DriverCar</source>
-						</trans-unit>
+						<target /></trans-unit>
 					</group>
 					<group id="device">
 						<group id="ats">
 							<trans-unit id="name">
 								<source>Ats</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="none">
 								<source>None</source>
-							</trans-unit>
+							<target>Tidak dipasang</target></trans-unit>
 							<trans-unit id="ats_sn">
 								<source>ATS-SN</source>
 								<target>ATS-SN</target>
@@ -4438,97 +4422,97 @@ Ikuti langkah berikut untuk mengatasinya:
 						<group id="atc">
 							<trans-unit id="name">
 								<source>Atc</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="none">
 								<source>None</source>
-							</trans-unit>
+							<target>Tidak dipasang</target></trans-unit>
 							<trans-unit id="manual">
 								<source>Manual switching</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="automatic">
 								<source>Automatic switching</source>
-							</trans-unit>
+							<target /></trans-unit>
 						</group>
 						<group id="re_adhesion_device">
 							<trans-unit id="name">
 								<source>ReAdhesionDevice</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="none">
 								<source>None</source>
-							</trans-unit>
+							<target>Tidak dipasang</target></trans-unit>
 							<trans-unit id="type_a">
 								<source>Type A (instant)</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="type_b">
 								<source>Type B (slow)</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="type_c">
 								<source>Type C (medium)</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="type_d">
 								<source>Type D (fast)</source>
-							</trans-unit>
+							<target /></trans-unit>
 						</group>
 						<group id="pass_alarm">
 							<trans-unit id="name">
 								<source>PassAlarm</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="none">
 								<source>None</source>
-							</trans-unit>
+							<target>Tidak dipasang</target></trans-unit>
 							<trans-unit id="single">
 								<source>Single</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="looping">
 								<source>Looping</source>
-							</trans-unit>
+							<target /></trans-unit>
 						</group>
 						<group id="door_mode">
 							<trans-unit id="open">
 								<source>DoorOpenMode</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="close">
 								<source>DoorCloseMode</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="semi_automatic">
 								<source>Semi-automatic</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="automatic">
 								<source>Automatic</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="manual">
 								<source>Manual</source>
-							</trans-unit>
+							<target /></trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>Device</source>
-						</trans-unit>
+						<target /></trans-unit>
 						<trans-unit id="eb">
 							<source>Eb</source>
-						</trans-unit>
+						<target /></trans-unit>
 						<trans-unit id="const_speed">
 							<source>ConstSpeed</source>
-						</trans-unit>
+						<target /></trans-unit>
 						<trans-unit id="hold_brake">
 							<source>HoldBrake</source>
-						</trans-unit>
+						<target /></trans-unit>
 						<trans-unit id="door_width">
 							<source>DoorWidth</source>
-						</trans-unit>
+						<target /></trans-unit>
 						<trans-unit id="door_max_tolerance">
 							<source>DoorMaxTolerance</source>
-						</trans-unit>
+						<target /></trans-unit>
 					</group>
 					<trans-unit id="name">
 						<source>General settings</source>
-					</trans-unit>
+					<target /></trans-unit>
 				</group>
 				<group id="car_settings">
 					<group id="general">
 						<group id="axles">
 							<trans-unit id="name">
 								<source>Axles</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="front">
 								<source>FrontAxle</source>
 								<target>Ujung roda depan</target>
@@ -4539,11 +4523,11 @@ Ikuti langkah berikut untuk mengatasinya:
 							</trans-unit>
 							<trans-unit id="mustbe_less">
 								<source>RearAxle must be less than FrontAxle.</source>
-							</trans-unit>
+							<target /></trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>General</source>
-						</trans-unit>
+						<target>Umum</target></trans-unit>
 						<trans-unit id="is_motor_car">
 							<source>IsMotorCar</source>
 							<target>Kereta Penggerak</target>
@@ -4566,13 +4550,13 @@ Ikuti langkah berikut untuk mengatasinya:
 						</trans-unit>
 						<trans-unit id="center_of_gravity_height">
 							<source>CenterOfGravityHeight</source>
-						</trans-unit>
+						<target>Tinggi Pusat Gravitasi</target></trans-unit>
 						<trans-unit id="exposed_frontal_area">
 							<source>ExposedFrontalArea</source>
-						</trans-unit>
+						<target>Area Depan yang Terpapar</target></trans-unit>
 						<trans-unit id="unexposed_frontal_area">
 							<source>UnexposedFrontalArea</source>
-						</trans-unit>
+						<target>Area Depan yang Tidak Terpapar</target></trans-unit>
 						<trans-unit id="defined_axles">
 							<source>DefinedAxles</source>
 							<target>Atur ujung roda</target>
@@ -4601,90 +4585,90 @@ Ikuti langkah berikut untuk mengatasinya:
 					<group id="performance">
 						<trans-unit id="name">
 							<source>Performance</source>
-						</trans-unit>
+						<target>Performa</target></trans-unit>
 						<trans-unit id="deceleration">
 							<source>Deceleration</source>
-						</trans-unit>
+						<target>Deselerasi</target></trans-unit>
 						<trans-unit id="static_friction">
 							<source>CoefficientOfStaticFriction</source>
-						</trans-unit>
+						<target>Koefisien Gesekan Statis</target></trans-unit>
 						<trans-unit id="rolling_resistance">
 							<source>CoefficientOfRollingResistance</source>
-						</trans-unit>
+						<target>Koefisien Hambatan Gulung</target></trans-unit>
 						<trans-unit id="aerodynamic_drag">
 							<source>AerodynamicDragCoefficient</source>
-						</trans-unit>
+						<target>Koefisien Hambatan Aerodinamis</target></trans-unit>
 					</group>
 					<group id="move">
 						<trans-unit id="name">
 							<source>Move</source>
-						</trans-unit>
+						<target>Gerakan</target></trans-unit>
 						<trans-unit id="jerk_power_up">
 							<source>JerkPowerUp</source>
-						</trans-unit>
+						<target>Jerk Power-Up</target></trans-unit>
 						<trans-unit id="jerk_power_down">
 							<source>JerkPowerDown</source>
-						</trans-unit>
+						<target>Jerk Power-Down</target></trans-unit>
 						<trans-unit id="jerk_brake_up">
 							<source>JerkBrakeUp</source>
-						</trans-unit>
+						<target>Jerk Brake-Up</target></trans-unit>
 						<trans-unit id="jerk_brake_down">
 							<source>JerkBrakeDown</source>
-						</trans-unit>
+						<target>Jerk Brake-Down</target></trans-unit>
 						<trans-unit id="brake_cylinder_up">
 							<source>BrakeCylinderUp</source>
-						</trans-unit>
+						<target>Brake Cylinder-Up</target></trans-unit>
 						<trans-unit id="brake_cylinder_down">
 							<source>BrakeCylinderDown</source>
-						</trans-unit>
+						<target>Brake Cylinder-Down</target></trans-unit>
 					</group>
 					<group id="brake">
 						<group id="brake_type">
 							<trans-unit id="name">
 								<source>BrakeType</source>
-							</trans-unit>
+							<target>Tipe Rem</target></trans-unit>
 							<trans-unit id="smee">
 								<source>Electromagnetic straight air brake</source>
-							</trans-unit>
+							<target>Rem udara lurus elektromagnetik</target></trans-unit>
 							<trans-unit id="ecb">
 								<source>Electro-pneumatic air brake without brake pipe</source>
-							</trans-unit>
+							<target>Rem udara elektro-pneumatik tanpa pipa rem</target></trans-unit>
 							<trans-unit id="cl">
 								<source>Air brake with partial release feature</source>
-							</trans-unit>
+							<target>Rem udara dengan fitur pelepasan parsial</target></trans-unit>
 						</group>
 						<group id="loco_brake_type">
 							<trans-unit id="name">
 								<source>LocoBrakeType</source>
-							</trans-unit>
+							<target>Tipe Rem Lokomotif</target></trans-unit>
 							<trans-unit id="none">
 								<source>Not fitted</source>
-							</trans-unit>
+							<target>Tidak dipasang</target></trans-unit>
 							<trans-unit id="notched_air_brake">
 								<source>Notched air brake</source>
 								<target>Rem angin tidak teratur</target>
 							</trans-unit>
 							<trans-unit id="cl">
 								<source>Air brake with partial release</source>
-							</trans-unit>
+							<target>Rem udara dengan fitur pelepasan parsial</target></trans-unit>
 						</group>
 						<group id="brake_control_system">
 							<trans-unit id="name">
 								<source>BrakeControlSystem</source>
-							</trans-unit>
+							<target>Sistem Kontrol Rem</target></trans-unit>
 							<trans-unit id="none">
 								<source>None</source>
-							</trans-unit>
+							<target>Tidak dipasang</target></trans-unit>
 							<trans-unit id="lock_out_valve">
 								<source>Closing electromagnetic valve</source>
-							</trans-unit>
+							<target>Katup elektromagnetik penutup</target></trans-unit>
 							<trans-unit id="delay_including_control">
 								<source>Delay-including control</source>
-							</trans-unit>
+							<target>Kontrol termasuk penundaan</target></trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>Brake</source>
-						</trans-unit>
+						<target>Rem</target></trans-unit>
 						<trans-unit id="brake_control_speed">
 							<source>BrakeControlSpeed</source>
 							<target>Kecepatan kontrol rem</target>
@@ -4693,66 +4677,66 @@ Ikuti langkah berikut untuk mengatasinya:
 					<group id="pressure">
 						<trans-unit id="name">
 							<source>Pressure</source>
-						</trans-unit>
+						<target>Tekanan</target></trans-unit>
 						<trans-unit id="brake_cylinder_service_max">
 							<source>BrakeCylinderServiceMaximumPressure</source>
-						</trans-unit>
+						<target>Tekanan Maksimum Servis Silinder Rem</target></trans-unit>
 						<trans-unit id="brake_cylinder_emergency_max">
 							<source>BrakeCylinderEmergencyMaximumPressure</source>
-						</trans-unit>
+						<target>Tekanan Maksimum Darurat Silinder Rem</target></trans-unit>
 						<trans-unit id="main_reservoir_min">
 							<source>MainReservoirMinimumPressure</source>
-						</trans-unit>
+						<target>Tekanan Minimum Reservoir Utama</target></trans-unit>
 						<trans-unit id="main_reservoir_max">
 							<source>MainReservoirMaximumPressure</source>
-						</trans-unit>
+						<target>Tekanan Maksimum Reservoir Utama</target></trans-unit>
 						<trans-unit id="brake_pipe_normal">
 							<source>BrakePipeNormalPressure</source>
-						</trans-unit>
+						<target>Tekanan Normal Pipa Rem</target></trans-unit>
 					</group>
 					<group id="delay">
 						<group id="edit_entry">
 							<trans-unit id="name">
 								<source>Edit entry</source>
-							</trans-unit>
+							<target>Ubah entri</target></trans-unit>
 							<trans-unit id="up">
 								<source>Up</source>
-							</trans-unit>
+							<target>Atas</target></trans-unit>
 							<trans-unit id="down">
 								<source>Down</source>
-							</trans-unit>
+							<target>Bawah</target></trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>Delay</source>
-						</trans-unit>
+						<target>Penundaan</target></trans-unit>
 						<trans-unit id="power">
 							<source>Power</source>
-						</trans-unit>
+						<target>Tenaga</target></trans-unit>
 						<trans-unit id="brake">
 							<source>Brake</source>
-						</trans-unit>
+						<target>Rem</target></trans-unit>
 						<trans-unit id="loco_brake">
 							<source>LocoBrake</source>
-						</trans-unit>
+						<target>Rem Lokomotif</target></trans-unit>
 						<trans-unit id="notch">
 							<source>Notch</source>
-						</trans-unit>
+						<target>Tingkat</target></trans-unit>
 						<trans-unit id="value">
 							<source>Value</source>
-						</trans-unit>
+						<target>Nilai</target></trans-unit>
 						<trans-unit id="electric_brake">
 							<source>ElectricBrake</source>
-						</trans-unit>
+						<target>Rem Elektrik</target></trans-unit>
 					</group>
 					<trans-unit id="name">
 						<source>Car settings</source>
-					</trans-unit>
+					<target>Pengaturan Kereta</target></trans-unit>
 				</group>
 				<group id="acceleration_settings">
 					<group id="parameter">
 						<trans-unit id="name">
 							<source>Parameter</source>
-						</trans-unit>
+						<target>Parameter</target></trans-unit>
 						<trans-unit id="a0">
 							<source>a0</source>
 							<target>a0</target>
@@ -4771,21 +4755,21 @@ Ikuti langkah berikut untuk mengatasinya:
 						</trans-unit>
 						<trans-unit id="e">
 							<source>e (2.0)</source>
-						</trans-unit>
+						<target>e (2.0)</target></trans-unit>
 					</group>
 					<group id="preview">
 						<trans-unit id="name">
 							<source>Preview</source>
-						</trans-unit>
+						<target>Tampilan</target></trans-unit>
 						<trans-unit id="subtract_deceleration">
 							<source>Subtract deceleration due to air and rolling resistance</source>
-						</trans-unit>
+						<target>Kurangi deselerasi akibat hambatan udara dan gulung</target></trans-unit>
 						<trans-unit id="x">
 							<source>X</source>
-						</trans-unit>
+						<target>X</target></trans-unit>
 						<trans-unit id="y">
 							<source>Y</source>
-						</trans-unit>
+						<target>Y</target></trans-unit>
 						<trans-unit id="x_min">
 							<source>x-min</source>
 							<target>x-min</target>
@@ -4812,21 +4796,21 @@ Ikuti langkah berikut untuk mengatasinya:
 						</trans-unit>
 						<trans-unit id="reset">
 							<source>Reset</source>
-						</trans-unit>
+						<target>Atur Ulang</target></trans-unit>
 					</group>
 					<trans-unit id="name">
 						<source>Acceleration settings</source>
-					</trans-unit>
+					<target>Pengaturan Akselerasi</target></trans-unit>
 					<trans-unit id="notch">
 						<source>Notch</source>
-					</trans-unit>
+					<target>Tingkat</target></trans-unit>
 				</group>
 				<group id="motor_sound_settings">
 					<group id="menu">
 						<group id="edit">
 							<trans-unit id="name">
 								<source>Edit</source>
-							</trans-unit>
+							<target>Ubah</target></trans-unit>
 							<trans-unit id="undo">
 								<source>Undo</source>
 								<target>Undo</target>
@@ -4841,7 +4825,7 @@ Ikuti langkah berikut untuk mengatasinya:
 							</trans-unit>
 							<trans-unit id="copy">
 								<source>Copy</source>
-							</trans-unit>
+							<target>Salin</target></trans-unit>
 							<trans-unit id="paste">
 								<source>Paste</source>
 								<target>Paste</target>
@@ -4852,35 +4836,35 @@ Ikuti langkah berikut untuk mengatasinya:
 							</trans-unit>
 							<trans-unit id="delete">
 								<source>Delete</source>
-							</trans-unit>
+							<target>Hapus</target></trans-unit>
 						</group>
 						<group id="view">
 							<trans-unit id="name">
 								<source>View</source>
-							</trans-unit>
+							<target>Lihat</target></trans-unit>
 							<trans-unit id="power">
 								<source>Power</source>
-							</trans-unit>
+							<target>Tenaga</target></trans-unit>
 							<trans-unit id="brake">
 								<source>Brake</source>
-							</trans-unit>
+							<target>Rem</target></trans-unit>
 							<trans-unit id="track">
 								<source>Track</source>
-							</trans-unit>
+							<target>Jalur</target></trans-unit>
 						</group>
 						<group id="input">
 							<trans-unit id="name">
 								<source>Input</source>
-							</trans-unit>
+							<target>Input</target></trans-unit>
 							<trans-unit id="pitch">
 								<source>Pitch</source>
-							</trans-unit>
+							<target>Pitch</target></trans-unit>
 							<trans-unit id="volume">
 								<source>Volume</source>
-							</trans-unit>
+							<target>Volume</target></trans-unit>
 							<trans-unit id="sound_index">
 								<source>Sound source index</source>
-							</trans-unit>
+							<target>Indeks sumber suara</target></trans-unit>
 							<trans-unit id="sound_index_none">
 								<source>None</source>
 								<target>Tidak ada</target>
@@ -4889,14 +4873,14 @@ Ikuti langkah berikut untuk mengatasinya:
 						<group id="tool">
 							<trans-unit id="name">
 								<source>Tool</source>
-							</trans-unit>
+							<target>Peralatan</target></trans-unit>
 							<trans-unit id="select">
 								<source>Select</source>
 								<target>Pilih</target>
 							</trans-unit>
 							<trans-unit id="move">
 								<source>Move</source>
-							</trans-unit>
+							<target>Pindahkan</target></trans-unit>
 							<trans-unit id="dot">
 								<source>Dot</source>
 								<target>Titik</target>
@@ -4910,7 +4894,7 @@ Ikuti langkah berikut untuk mengatasinya:
 					<group id="view_setting">
 						<trans-unit id="name">
 							<source>View setting</source>
-						</trans-unit>
+						<target>Pengaturan tampilan</target></trans-unit>
 						<trans-unit id="min_velocity">
 							<source>x-min(Velocity)</source>
 							<target>x-min(Velocity)</target>
@@ -4937,48 +4921,48 @@ Ikuti langkah berikut untuk mengatasinya:
 						</trans-unit>
 						<trans-unit id="zoom_in">
 							<source>Zoom In</source>
-						</trans-unit>
+						<target>Zoom In</target></trans-unit>
 						<trans-unit id="zoom_out">
 							<source>Zoom Out</source>
-						</trans-unit>
+						<target>Zoom Out</target></trans-unit>
 						<trans-unit id="reset">
 							<source>Reset</source>
-						</trans-unit>
+						<target>Atur Ulang</target></trans-unit>
 					</group>
 					<group id="direct_input">
 						<trans-unit id="name">
 							<source>Direct input</source>
-						</trans-unit>
+						<target>Input langsung</target></trans-unit>
 						<trans-unit id="x">
 							<source>x coordinate</source>
-						</trans-unit>
+						<target>Koordinat x</target></trans-unit>
 						<trans-unit id="y">
 							<source>y coordinate</source>
-						</trans-unit>
+						<target>Koordinat y</target></trans-unit>
 						<trans-unit id="dot">
 							<source>Dot</source>
-						</trans-unit>
+						<target>Titik</target></trans-unit>
 						<trans-unit id="move">
 							<source>Move</source>
-						</trans-unit>
+						<target>Pindahkan</target></trans-unit>
 					</group>
 					<group id="play_setting">
 						<group id="source">
 							<trans-unit id="name">
 								<source>Sound source setting</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="run">
 								<source>Running sound</source>
 								<target>Suara trek</target>
 							</trans-unit>
 							<trans-unit id="track">
 								<source>Track</source>
-							</trans-unit>
+							<target>Jalur</target></trans-unit>
 						</group>
 						<group id="area">
 							<trans-unit id="name">
 								<source>Area setting</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="loop">
 								<source>Loop playback</source>
 								<target>Loop playback</target>
@@ -4989,7 +4973,7 @@ Ikuti langkah berikut untuk mengatasinya:
 							</trans-unit>
 							<trans-unit id="acceleration">
 								<source>Acceleration</source>
-							</trans-unit>
+							<target>Akselerasi</target></trans-unit>
 							<trans-unit id="swap">
 								<source>Swap</source>
 								<target>Tukar</target>
@@ -4997,14 +4981,14 @@ Ikuti langkah berikut untuk mengatasinya:
 						</group>
 						<trans-unit id="name">
 							<source>Playback setting</source>
-						</trans-unit>
+						<target>Pengaturan playback</target></trans-unit>
 						<trans-unit id="play">
 							<source>Playback</source>
 							<target>Playback</target>
 						</trans-unit>
 						<trans-unit id="pause">
 							<source>Pause</source>
-						</trans-unit>
+						<target>Jeda</target></trans-unit>
 						<trans-unit id="stop">
 							<source>Stop</source>
 							<target>Berhenti</target>
@@ -5013,79 +4997,79 @@ Ikuti langkah berikut untuk mengatasinya:
 					<group id="vertex_info">
 						<trans-unit id="name">
 							<source>Vertex information</source>
-						</trans-unit>
+						<target>Informasi titik</target></trans-unit>
 						<trans-unit id="velocity">
 							<source>Velocity</source>
 							<target>Laju</target>
 						</trans-unit>
 						<trans-unit id="pitch">
 							<source>Pitch</source>
-						</trans-unit>
+						<target>Pitch</target></trans-unit>
 						<trans-unit id="volume">
 							<source>Volume</source>
-						</trans-unit>
+						<target>Volume</target></trans-unit>
 						<trans-unit id="sound_index">
 							<source>Sound source index</source>
-						</trans-unit>
+						<target>Indeks sumber suara</target></trans-unit>
 					</group>
 					<group id="status">
 						<group id="type">
 							<trans-unit id="name">
 								<source>Type</source>
-							</trans-unit>
+							<target>Tipe</target></trans-unit>
 							<trans-unit id="power">
 								<source>Power</source>
-							</trans-unit>
+							<target>Tenaga</target></trans-unit>
 							<trans-unit id="brake">
 								<source>Brake</source>
-							</trans-unit>
+							<target>Rem</target></trans-unit>
 						</group>
 						<group id="track">
 							<trans-unit id="name">
 								<source>Track</source>
-							</trans-unit>
+							<target>Jalur</target></trans-unit>
 						</group>
 						<group id="mode">
 							<trans-unit id="name">
 								<source>Mode</source>
-							</trans-unit>
+							<target>Mode</target></trans-unit>
 							<trans-unit id="pitch">
 								<source>Pitch</source>
-							</trans-unit>
+							<target>Pitch</target></trans-unit>
 							<trans-unit id="volume">
 								<source>Volume</source>
-							</trans-unit>
+							<target>Volume</target></trans-unit>
 							<trans-unit id="sound_index">
 								<source>Sound source index</source>
-							</trans-unit>
+							<target>Indeks sumber suara</target></trans-unit>
 						</group>
 						<group id="tool">
 							<trans-unit id="name">
 								<source>Tool</source>
-							</trans-unit>
+							<target>Peralatan</target></trans-unit>
 							<trans-unit id="select">
 								<source>Select</source>
-							</trans-unit>
+							<target>Pilih</target></trans-unit>
 							<trans-unit id="move">
 								<source>Move</source>
-							</trans-unit>
+							<target>Pindahkan</target></trans-unit>
 							<trans-unit id="dot">
 								<source>Dot</source>
-							</trans-unit>
+							<target>Titik</target></trans-unit>
 							<trans-unit id="line">
 								<source>Line</source>
-							</trans-unit>
+							<target>Garis</target></trans-unit>
 						</group>
 						<group id="xy">
 							<trans-unit id="velocity">
 								<source>Velocity</source>
-							</trans-unit>
+							<target>Laju</target></trans-unit>
 							<trans-unit id="pitch">
 								<source>Pitch</source>
-							</trans-unit>
+							<target>Pitch</target></trans-unit>
 							<trans-unit id="volume">
 								<source>Volume</source>
-							</trans-unit>
+							<target>Volume</target></trans-unit>
 						</group>
 					</group>
 					<group id="message">
@@ -5096,13 +5080,13 @@ Ikuti langkah berikut untuk mengatasinya:
 					</group>
 					<trans-unit id="name">
 						<source>Motor sound settings</source>
-					</trans-unit>
+					<target>Pengaturan Suara Motor</target></trans-unit>
 				</group>
 				<group id="coupler_settings">
 					<group id="general">
 						<trans-unit id="name">
 							<source>General</source>
-						</trans-unit>
+						<target>Umum</target></trans-unit>
 						<trans-unit id="min">
 							<source>Min</source>
 							<target>Min</target>
@@ -5114,44 +5098,44 @@ Ikuti langkah berikut untuk mengatasinya:
 					</group>
 					<trans-unit id="name">
 						<source>Coupler settings</source>
-					</trans-unit>
+					<target>Pengaturan perangkai</target></trans-unit>
 				</group>
 				<group id="panel_settings">
 					<group id="this">
 						<group id="center">
 							<trans-unit id="name">
 								<source>Center origin</source>
-							</trans-unit>
+							<target>Asal tengah</target></trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
-							</trans-unit>
+							<target>X</target></trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
-							</trans-unit>
+							<target>Y</target></trans-unit>
 						</group>
 						<group id="origin">
 							<trans-unit id="name">
 								<source>Track origin</source>
-							</trans-unit>
+							<target>Asal jalur</target></trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
-							</trans-unit>
+							<target>X</target></trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
-							</trans-unit>
+							<target>Y</target></trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>This</source>
-						</trans-unit>
+						<target>Ini</target></trans-unit>
 						<trans-unit id="resolution">
 							<source>Resolution</source>
-						</trans-unit>
+						<target>Resolusi</target></trans-unit>
 						<trans-unit id="left">
 							<source>Left</source>
-						</trans-unit>
+						<target>Kiri</target></trans-unit>
 						<trans-unit id="right">
 							<source>Right</source>
-						</trans-unit>
+						<target>Kanan</target></trans-unit>
 						<trans-unit id="top">
 							<source>Top</source>
 							<target>Atas</target>
@@ -5176,7 +5160,7 @@ Ikuti langkah berikut untuk mengatasinya:
 					<group id="screen">
 						<trans-unit id="name">
 							<source>Screen</source>
-						</trans-unit>
+						<target>Layar</target></trans-unit>
 						<trans-unit id="number">
 							<source>Number</source>
 							<target>Angka</target>
@@ -5190,63 +5174,63 @@ Ikuti langkah berikut untuk mengatasinya:
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
-							</trans-unit>
+							<target>Lokasi</target></trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
-							</trans-unit>
+							<target>X</target></trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
-							</trans-unit>
+							<target>Y</target></trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>PilotLamp</source>
-						</trans-unit>
+						<target>Lampu Indikator</target></trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
 							<target>Subjek</target>
 						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
-						</trans-unit>
+						<target>Skin siang</target></trans-unit>
 						<trans-unit id="nighttime_image">
 							<source>NighttimeImage</source>
-						</trans-unit>
+						<target>Skin malam</target></trans-unit>
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
-						</trans-unit>
+						<target>Warna transparan</target></trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
-						</trans-unit>
+						<target>Layer</target></trans-unit>
 					</group>
 					<group id="needle">
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
-							</trans-unit>
+							<target>Lokasi</target></trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
-							</trans-unit>
+							<target>X</target></trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
-							</trans-unit>
+							<target>Y</target></trans-unit>
 						</group>
 						<group id="origin">
 							<trans-unit id="name">
 								<source>Origin</source>
-							</trans-unit>
+							<target>Asal</target></trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
-							</trans-unit>
+							<target>X</target></trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
-							</trans-unit>
+							<target>Y</target></trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>Needle</source>
-						</trans-unit>
+						<target>Jarum</target></trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
-						</trans-unit>
+						<target>Subjek</target></trans-unit>
 						<trans-unit id="defined_radius">
 							<source>DefinedRadius</source>
 							<target>DefinedRadius</target>
@@ -5257,17 +5241,17 @@ Ikuti langkah berikut untuk mengatasinya:
 						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
-						</trans-unit>
+						<target>Skin siang</target></trans-unit>
 						<trans-unit id="nighttime_image">
 							<source>NighttimeImage</source>
-						</trans-unit>
+						<target>Skin malam</target></trans-unit>
 						<trans-unit id="color">
 							<source>Color</source>
 							<target>Warna</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
-						</trans-unit>
+						<target>Warna transparan</target></trans-unit>
 						<trans-unit id="defined_origin">
 							<source>DefinedOrigin</source>
 							<target>DefinedOrigin</target>
@@ -5314,38 +5298,38 @@ Ikuti langkah berikut untuk mengatasinya:
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
-						</trans-unit>
+						<target>Layer</target></trans-unit>
 					</group>
 					<group id="digital_number">
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
-							</trans-unit>
+							<target>Lokasi</target></trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
-							</trans-unit>
+							<target>X</target></trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
-							</trans-unit>
+							<target>Y</target></trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>DigitalNumber</source>
-						</trans-unit>
+						<target>Angka Digital</target></trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
-						</trans-unit>
+						<target>Subjek</target></trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
-						</trans-unit>
+						<target>Skin siang</target></trans-unit>
 						<trans-unit id="nighttime_image">
 							<source>NighttimeImage</source>
-						</trans-unit>
+						<target>Skin malam</target></trans-unit>
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
-						</trans-unit>
+						<target>Warna transparan</target></trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
-						</trans-unit>
+						<target>Layer</target></trans-unit>
 						<trans-unit id="interval">
 							<source>Interval</source>
 							<target>Interval</target>
@@ -5355,158 +5339,158 @@ Ikuti langkah berikut untuk mengatasinya:
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
-							</trans-unit>
+							<target>Lokasi</target></trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
-							</trans-unit>
+							<target>X</target></trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
-							</trans-unit>
+							<target>Y</target></trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>DigitalGauge</source>
-						</trans-unit>
+						<target>Gauger Digital</target></trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
-						</trans-unit>
+						<target>Subjek</target></trans-unit>
 						<trans-unit id="radius">
 							<source>Radius</source>
-						</trans-unit>
+						<target>Radius</target></trans-unit>
 						<trans-unit id="color">
 							<source>Color</source>
-						</trans-unit>
+						<target>Warna</target></trans-unit>
 						<trans-unit id="initial_angle">
 							<source>InitialAngle</source>
-						</trans-unit>
+						<target>Rotasi Awal</target></trans-unit>
 						<trans-unit id="last_angle">
 							<source>LastAngle</source>
-						</trans-unit>
+						<target>Rotasi Ujung</target></trans-unit>
 						<trans-unit id="minimum">
 							<source>Minimum</source>
-						</trans-unit>
+						<target>Minimum</target></trans-unit>
 						<trans-unit id="maximum">
 							<source>Maximum</source>
-						</trans-unit>
+						<target>Maksimum</target></trans-unit>
 						<trans-unit id="step">
 							<source>Step</source>
 							<target>Step</target>
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
-						</trans-unit>
+						<target>Layer</target></trans-unit>
 					</group>
 					<group id="linear_gauge">
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
-							</trans-unit>
+							<target>Lokasi</target></trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
-							</trans-unit>
+							<target>X</target></trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
-							</trans-unit>
+							<target>Y</target></trans-unit>
 						</group>
 						<group id="direction">
 							<trans-unit id="name">
 								<source>Direction</source>
-							</trans-unit>
+							<target /></trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
-							</trans-unit>
+							<target>X</target></trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
-							</trans-unit>
+							<target>Y</target></trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>LinearGauge</source>
-						</trans-unit>
+						<target>Gauger Linear</target></trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
-						</trans-unit>
+						<target>Subjek</target></trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
-						</trans-unit>
+						<target>Skin siang</target></trans-unit>
 						<trans-unit id="nighttime_image">
 							<source>NighttimeImage</source>
-						</trans-unit>
+						<target>Skin malam</target></trans-unit>
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
-						</trans-unit>
+						<target>Warna transparan</target></trans-unit>
 						<trans-unit id="minimum">
 							<source>Minimum</source>
-						</trans-unit>
+						<target>Minimum</target></trans-unit>
 						<trans-unit id="maximum">
 							<source>Maximum</source>
-						</trans-unit>
+						<target>Maksimum</target></trans-unit>
 						<trans-unit id="width">
 							<source>Width</source>
-						</trans-unit>
+						<target>Lebar</target></trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
-						</trans-unit>
+						<target>Layer</target></trans-unit>
 					</group>
 					<group id="timetable">
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
-							</trans-unit>
+							<target>Lokasi</target></trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
-							</trans-unit>
+							<target>X</target></trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
-							</trans-unit>
+							<target>Y</target></trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>Timetable</source>
-						</trans-unit>
+						<target>Jadwal</target></trans-unit>
 						<trans-unit id="height">
 							<source>Height</source>
-						</trans-unit>
+						<target>Tinggi</target></trans-unit>
 						<trans-unit id="width">
 							<source>Width</source>
-						</trans-unit>
+						<target>Lebar</target></trans-unit>
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
-						</trans-unit>
+						<target>Warna transparan</target></trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
-						</trans-unit>
+						<target>Layer</target></trans-unit>
 					</group>
 					<group id="touch">
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
-							</trans-unit>
+							<target>Lokasi</target></trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
-							</trans-unit>
+							<target>X</target></trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
-							</trans-unit>
+							<target>Y</target></trans-unit>
 						</group>
 						<group id="size">
 							<trans-unit id="name">
 								<source>Size</source>
-							</trans-unit>
+							<target>Ukuran</target></trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
-							</trans-unit>
+							<target>X</target></trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
-							</trans-unit>
+							<target>Y</target></trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>Touch</source>
-						</trans-unit>
+						<target>Sentuh</target></trans-unit>
 						<trans-unit id="jump_screen">
 							<source>JumpScreen</source>
 							<target>JumpScreen</target>
 						</trans-unit>
 						<trans-unit id="sound_index">
 							<source>SoundIndex</source>
-						</trans-unit>
+						<target>Indeks sumber suara</target></trans-unit>
 						<trans-unit id="command">
 							<source>Command</source>
 							<target>Perintah</target>
@@ -5517,115 +5501,115 @@ Ikuti langkah berikut untuk mengatasinya:
 						</trans-unit>
 						<trans-unit id="sound_command">
 							<source>Sound and command</source>
-						</trans-unit>
+						<target>Suara dan perintah</target></trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
-						</trans-unit>
+						<target>Layer</target></trans-unit>
 					</group>
 					<group id="subject">
 						<trans-unit id="name">
 							<source>Subject</source>
-						</trans-unit>
+						<target>Subjek</target></trans-unit>
 						<trans-unit id="base">
 							<source>Base</source>
-						</trans-unit>
+						<target>Dasar</target></trans-unit>
 						<trans-unit id="baseoption">
 							<source>Base option</source>
-						</trans-unit>
+						<target>Opsi dasar</target></trans-unit>
 						<trans-unit id="suffix">
 							<source>Suffix</source>
-						</trans-unit>
+						<target>Akhiran</target></trans-unit>
 						<trans-unit id="suffixoption">
 							<source>Suffix option</source>
-						</trans-unit>
+						<target>Opsi akhiran</target></trans-unit>
 					</group>
 					<group id="sound_command">
 						<group id="tree">
 							<trans-unit id="touch_element">
 								<source>Touch element</source>
-							</trans-unit>
+							<target>Elemen sentuh</target></trans-unit>
 							<trans-unit id="sounds">
 								<source>Sounds</source>
-							</trans-unit>
+							<target>Suara</target></trans-unit>
 							<trans-unit id="commands">
 								<source>Commands</source>
-							</trans-unit>
+							<target>Perintah</target></trans-unit>
 						</group>
 						<group id="edit_entry">
 							<group id="sound">
 								<trans-unit id="index">
 									<source>Index</source>
-								</trans-unit>
+								<target /></trans-unit>
 							</group>
 							<group id="command">
 								<trans-unit id="name">
 									<source>Key</source>
-								</trans-unit>
+								<target /></trans-unit>
 								<trans-unit id="option">
 									<source>Option</source>
-								</trans-unit>
+								<target>Opsi</target></trans-unit>
 							</group>
 							<trans-unit id="name">
 								<source>Edit entry</source>
-							</trans-unit>
+							<target>Ubah entri</target></trans-unit>
 							<trans-unit id="sound">
 								<source>Sound</source>
-							</trans-unit>
+							<target>Suara</target></trans-unit>
 							<trans-unit id="command">
 								<source>Command</source>
-							</trans-unit>
+							<target>Perintah</target></trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>Sound and command</source>
-						</trans-unit>
+						<target>Suara dan perintah</target></trans-unit>
 					</group>
 					<trans-unit id="name">
 						<source>Panel settings</source>
-					</trans-unit>
+					<target>Pengaturan panel</target></trans-unit>
 				</group>
 				<group id="sound_settings">
 					<group id="edit_entry">
 						<group id="section">
 							<trans-unit id="name">
 								<source>Section select</source>
-							</trans-unit>
+							<target>Pilih bagian</target></trans-unit>
 						</group>
 						<group id="key">
 							<trans-unit id="name">
 								<source>Key type select</source>
-							</trans-unit>
+							<target>Pilih tipe kunci</target></trans-unit>
 						</group>
 						<group id="value">
 							<group id="position">
 								<trans-unit id="name">
 									<source>Position</source>
-								</trans-unit>
+								<target /></trans-unit>
 								<trans-unit id="x">
 									<source>X</source>
-								</trans-unit>
+								<target>X</target></trans-unit>
 								<trans-unit id="y">
 									<source>Y</source>
-								</trans-unit>
+								<target>Y</target></trans-unit>
 								<trans-unit id="z">
 									<source>Z</source>
-								</trans-unit>
+								<target>Z</target></trans-unit>
 							</group>
 							<trans-unit id="name">
 								<source>Input value</source>
-							</trans-unit>
+							<target>Nilai input</target></trans-unit>
 							<trans-unit id="filename">
 								<source>Filename</source>
-							</trans-unit>
+							<target>Nama file</target></trans-unit>
 							<trans-unit id="radius">
 								<source>Radius</source>
-							</trans-unit>
+							<target>Radius</target></trans-unit>
 							<trans-unit id="position">
 								<source>Position setting</source>
-							</trans-unit>
+							<target>Pengaturan posisi</target></trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>Edit entry</source>
-						</trans-unit>
+						<target>Ubah entri</target></trans-unit>
 					</group>
 					<group id="message">
 						<trans-unit id="empty_filename">
@@ -5639,7 +5623,7 @@ Ikuti langkah berikut untuk mengatasinya:
 					</group>
 					<trans-unit id="name">
 						<source>Sound settings</source>
-					</trans-unit>
+					<target>Pengaturan suara</target></trans-unit>
 					<trans-unit id="key">
 						<source>Key</source>
 						<target>Tombol</target>
@@ -5650,10 +5634,10 @@ Ikuti langkah berikut untuk mengatasinya:
 					</trans-unit>
 					<trans-unit id="position">
 						<source>Position</source>
-					</trans-unit>
+					<target>Posisi</target></trans-unit>
 					<trans-unit id="radius">
 						<source>Radius</source>
-					</trans-unit>
+					<target>Radius</target></trans-unit>
 				</group>
 				<group id="status">
 					<group id="menu">
@@ -5663,18 +5647,18 @@ Ikuti langkah berikut untuk mengatasinya:
 						</trans-unit>
 						<trans-unit id="warning">
 							<source>Warning</source>
-						</trans-unit>
+						<target>Peringatan</target></trans-unit>
 						<trans-unit id="info">
 							<source>Information</source>
 							<target>Info</target>
 						</trans-unit>
 						<trans-unit id="clear">
 							<source>Clear</source>
-						</trans-unit>
+						<target /></trans-unit>
 					</group>
 					<trans-unit id="name">
 						<source>Status</source>
-					</trans-unit>
+					<target>Status</target></trans-unit>
 					<trans-unit id="level">
 						<source>Level</source>
 						<target>Level</target>
@@ -5687,13 +5671,13 @@ Ikuti langkah berikut untuk mengatasinya:
 				<group id="message">
 					<trans-unit id="error">
 						<source>Error</source>
-					</trans-unit>
+					<target>Error</target></trans-unit>
 					<trans-unit id="warning">
 						<source>Warning</source>
-					</trans-unit>
+					<target>Peringatan</target></trans-unit>
 					<trans-unit id="info">
 						<source>Information</source>
-					</trans-unit>
+					<target>Informasi</target></trans-unit>
 					<trans-unit id="positive">
 						<source>positive</source>
 						<target>Plus</target>
@@ -5708,7 +5692,7 @@ Ikuti langkah berikut untuk mengatasinya:
 					</trans-unit>
 					<trans-unit id="invalid_float">
 						<source>This value must be a {0}floating-point number.</source>
-						<target>This value must be a {0}floating-point number.</target>
+						<target>Nilai ini harus berupa bilangan {0}floating-point.</target>
 					</trans-unit>
 					<trans-unit id="invalid_color">
 						<source>Invalid HEX color</source>
@@ -5716,80 +5700,80 @@ Ikuti langkah berikut untuk mengatasinya:
 					</trans-unit>
 					<trans-unit id="number_exist">
 						<source>The specified number is already set.</source>
-					</trans-unit>
+					<target>Nomor yang ditentukan sudah diatur.</target></trans-unit>
 					<trans-unit id="mustbe_greater_than">
 						<source>Max must be greater than or equal to Min.</source>
-					</trans-unit>
+					<target>Maks harus lebih besar dari atau sama dengan Min.</target></trans-unit>
 					<trans-unit id="mustbe_less_than">
 						<source>Min must be less than the Max.</source>
-					</trans-unit>
+					<target>Min harus lebih kecil dari Maks.</target></trans-unit>
 				</group>
 				<group id="items">
 					<trans-unit id="filename">
 						<source>Filename</source>
-					</trans-unit>
+					<target>Nama file</target></trans-unit>
 					<trans-unit id="folder">
 						<source>Folder</source>
-					</trans-unit>
+					<target>Folder</target></trans-unit>
 					<trans-unit id="type">
 						<source>Type</source>
-					</trans-unit>
+					<target>Tipe</target></trans-unit>
 					<trans-unit id="button_ok">
 						<source>OK</source>
-					</trans-unit>
+					<target>OK</target></trans-unit>
 				</group>
 				<group id="import_export">
 					<group id="train">
 						<trans-unit id="name">
 							<source>Train setting file</source>
-						</trans-unit>
+						<target>File pengaturan kereta</target></trans-unit>
 						<trans-unit id="old_format">
 							<source>Old format</source>
-						</trans-unit>
+						<target>Format lama</target></trans-unit>
 						<trans-unit id="traindat">
 							<source>Train.dat</source>
-						</trans-unit>
+						<target>Train.dat</target></trans-unit>
 						<trans-unit id="extensionscfg">
 							<source>Extensions.cfg</source>
-						</trans-unit>
+						<target>Extensions.cfg</target></trans-unit>
 					</group>
 					<group id="panel">
 						<trans-unit id="name">
 							<source>Panel Setting File</source>
-						</trans-unit>
+						<target>File pengaturan panel</target></trans-unit>
 						<trans-unit id="panel2cfg">
 							<source>Panel2.cfg</source>
-						</trans-unit>
+						<target>Panel2.cfg</target></trans-unit>
 						<trans-unit id="panelxml">
 							<source>Panel.xml</source>
-						</trans-unit>
+						<target>Panel.xml</target></trans-unit>
 					</group>
 					<group id="sound">
 						<trans-unit id="name">
 							<source>Sound setting file</source>
-						</trans-unit>
+						<target>File pengaturan suara</target></trans-unit>
 						<trans-unit id="no_setting_file">
 							<source>No setting file</source>
-						</trans-unit>
+						<target>Tidak ada file pengaturan</target></trans-unit>
 						<trans-unit id="soundcfg">
 							<source>Sound.cfg</source>
-						</trans-unit>
+						<target>Sound.cfg</target></trans-unit>
 						<trans-unit id="soundxml">
 							<source>Sound.xml</source>
-						</trans-unit>
+						<target>Sound.xml</target></trans-unit>
 					</group>
 					<trans-unit id="import_name">
 						<source>Import</source>
-					</trans-unit>
+					<target>Impor</target></trans-unit>
 					<trans-unit id="export_name">
 						<source>Export</source>
-					</trans-unit>
+					<target>Ekspor</target></trans-unit>
 					<trans-unit id="folder">
 						<source>Folder</source>
-					</trans-unit>
+					<target>Folder</target></trans-unit>
 					<trans-unit id="type">
 						<source>Type</source>
-					</trans-unit>
+					<target>Tipe</target></trans-unit>
 				</group>
 			</group>
 		</body>

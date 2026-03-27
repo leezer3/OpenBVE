@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using OpenBveApi;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -16,21 +17,28 @@ namespace Plugin
 			string sanitized = SanitizeXml(s);
 			currentXML.LoadXml(sanitized);
 			XmlDeclaration declaration = currentXML.ChildNodes.OfType<XmlDeclaration>().FirstOrDefault();
-			if (declaration != null)
+			if (declaration == null)
+			{
+				// No XML declaration (yes, this is invalid, but still...)
+				Encoding e = TextEncoding.GetSystemEncodingFromFile(fileName);
+				s = File.ReadAllText(fileName, e);
+			}
+			else
 			{
 				/*
 				 * Yuck: Handle stuff not encoded in UTF-8 by re-reading with correct encoding
 				 *		 Unfortunately, some stuff uses umlauts in filenames....
-				 *       Non-standard XML means that 
+				 *       Non-standard XML means that we can't use the system XML reader directly
 				 */
 				Encoding e = Encoding.GetEncoding(declaration.Encoding);
 				if (!e.Equals(Encoding.UTF8))
 				{
 					s = File.ReadAllText(fileName, e);
-					sanitized = SanitizeXml(s);
-					currentXML.LoadXml(sanitized);
 				}
 			}
+			
+			sanitized = SanitizeXml(s);
+			currentXML.LoadXml(sanitized);
 		}
 
 		/// <summary>Sanitizes a LokSim3D XML file so that the C# XML parser will read it correctly</summary>

@@ -89,6 +89,26 @@ namespace OpenBveApi.Colors {
 			return Equals(this, (Color24)obj);
 		}
 
+		/// <summary>Gets the hue-saturation-brightness (HSB) brightness value for this color.</summary>
+		/// <returns>The brightness of this color.</returns>
+		public float GetBrightness()
+		{
+			float num1 = R / (float)byte.MaxValue;
+			float num2 = G / (float)byte.MaxValue;
+			float num3 = B / (float)byte.MaxValue;
+			float num4 = num1;
+			float num5 = num1;
+			if (num2 > num4)
+				num4 = num2;
+			if (num3 > num4)
+				num4 = num3;
+			if (num2 < num5)
+				num5 = num2;
+			if (num3 < num5)
+				num5 = num3;
+			return (num4 + num5) / 2.0f;
+		}
+
 		/// <summary>Returns the hashcode for this instance.</summary>
 		/// <returns>An integer representing the unique hashcode for this instance.</returns>
 		public override int GetHashCode()

@@ -155,7 +155,7 @@ namespace ObjectViewer {
 			return false;
 		}
 		
-		public override bool LoadTexture(ref Texture Texture, OpenGlTextureWrapMode wrapMode)
+		public override bool LoadTexture(ref Texture Texture, OpenGlTextureWrapMode wrapMode, bool renderThread = false)
 		{
 			return Program.Renderer.TextureManager.LoadTexture(ref Texture, wrapMode, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
 		}

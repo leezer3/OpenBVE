@@ -245,6 +245,7 @@ namespace Plugin
 						}
 						StaticObject Object = null;
 						AnimatedObjectCollection AnimatedObject = null;
+						bool autoRotate = false;
 						try {
 							if (CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dgrp"))
 							{
@@ -252,7 +253,20 @@ namespace Plugin
 							}
 							else if (CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dobj"))
 							{
-								Object = Ls3DObjectParser.ReadObject(CurrentObjects[i].Name, CurrentObjects[i].Rotation);
+								Object = Ls3DObjectParser.ReadObject(CurrentObjects[i].Name, CurrentObjects[i].Rotation, ref autoRotate);
+								// if object auto-rotates, we need to add it to it's own state
+								if (autoRotate)
+								{
+									Array.Resize(ref Result.Objects, Result.Objects.Length + 1);
+									AnimatedObject a = new AnimatedObject(Plugin.currentHost, FileName);
+									ObjectState aos = new ObjectState(Object);
+									a.States = new[] { aos };
+									Result.Objects[Result.Objects.Length - 1] = a;
+									Result.Objects[Result.Objects.Length - 1].RotateXFunction = new FunctionScript(Plugin.currentHost, "billboardx", false);
+									Result.Objects[Result.Objects.Length - 1].RotateXDirection = Vector3.Down;
+									Object = null;
+									AnimatedObject = null;
+								}
 							}
 							else
 							{
@@ -322,6 +336,8 @@ namespace Plugin
 						a.States = new [] { aos };
 						Result.Objects[Result.Objects.Length - 1] = a;
 					}
+
+					
 				}
 				return Result;
 			}

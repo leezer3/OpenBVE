@@ -22,7 +22,12 @@ namespace OpenBveApi.Textures {
 					result = ExtractClipRegion(result, parameters.ClipRegion);
 					result.CompatibleTransparencyMode = texture.CompatibleTransparencyMode;
 				}
-				if (parameters.TransparentColor != null) {
+
+				if (parameters.TransparencyTexture != null && parameters.TransparencyTexture.Size == texture.Size)
+				{
+					result = new Texture(texture.Width, texture.Height, PixelFormat.RGBAlpha, ApplyTransparentTexture(texture.Bytes, texture.PixelFormat, texture.Width, texture.Height, parameters.TransparencyTexture), texture.Palette);
+				}
+				else if (parameters.TransparentColor != null) {
 					result = ApplyTransparentColor(result, parameters.TransparentColor);
 				}
 			}
@@ -176,6 +181,68 @@ namespace OpenBveApi.Textures {
 				return new Texture(texture.Width, texture.Height, PixelFormat.RGBAlpha, newFrames, texture.FrameInterval);
 			}
 			return new Texture(texture.Width, texture.Height, PixelFormat.RGBAlpha, ApplyTransparentColor(texture.Bytes, texture.PixelFormat, texture.Width, texture.Height, color.Value), texture.Palette);
+		}
+
+		private static byte[] ApplyTransparentTexture(byte[] source, PixelFormat pixelFormat, int width, int height, Texture transparencyTexture)
+		{
+			byte[] target = new byte[4 * width * height];
+
+
+			int targetIndex = 0;
+			switch (pixelFormat)
+			{
+				case PixelFormat.Grayscale:
+					for (int i = 0; i < source.Length; i++, targetIndex += 4)
+					{
+						Color24 c = transparencyTexture.GetPixel(i);
+						target[targetIndex] = source[i];
+						target[targetIndex + 1] = source[i];
+						target[targetIndex + 2] = source[i];
+						target[targetIndex + 3] = (byte)(255 * c.GetBrightness());
+					}
+					break;
+				case PixelFormat.GrayscaleAlpha:
+					for (int i = 0; i < source.Length; i += 2, targetIndex += 4)
+					{
+						int pix = i / 2;
+						Color24 c = transparencyTexture.GetPixel(pix);
+						target[targetIndex] = source[i];
+						target[targetIndex + 1] = source[i];
+						target[targetIndex + 2] = source[i];
+						target[targetIndex + 3] = (byte)(255 * c.GetBrightness());
+					}
+					break;
+				case PixelFormat.RGB:
+					for (int i = 0; i < source.Length; i += 3, targetIndex += 4)
+					{
+						int pix = i / 3;
+						Color24 c = transparencyTexture.GetPixel(pix);
+						target[targetIndex] = source[i];
+						target[targetIndex + 1] = source[i + 1];
+						target[targetIndex + 2] = source[i + 2];
+						target[targetIndex + 3] = (byte)(255 * c.GetBrightness());
+					}
+					break;
+				case PixelFormat.RGBAlpha:
+					Color24 fc = transparencyTexture.GetPixel(0);
+					target[0] = source[0];
+					target[1] = source[1];
+					target[2] = source[2];
+					target[3] = (byte)(((double)fc.R + (double)fc.G + (double)fc.B) / 3.0);
+
+					for (int i = 4; i < source.Length; i += 4)
+					{
+						int pix = i / 4;
+						Color24 c = transparencyTexture.GetPixel(pix);
+						target[i + 0] = source[i + 0];
+						target[i + 1] = source[i + 1];
+						target[i + 2] = source[i + 2];
+						target[i + 3] = (byte)(255 * c.GetBrightness());
+					}
+					break;
+			}
+
+			return target;
 		}
 
 		private static byte[] ApplyTransparentColor(byte[] source, PixelFormat pixelFormat, int width, int height, Color24 color)

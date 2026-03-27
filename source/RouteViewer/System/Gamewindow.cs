@@ -56,11 +56,6 @@ namespace RouteViewer
 			Program.MouseMovement();
 			Program.Renderer.FrameRate = RenderFrequency;
 
-            //Do not do anything whilst loading
-            if (currentlyLoading)
-            {
-                return;
-            }
             if (Program.Renderer.RenderThreadJobWaiting)
             {
 	            while (!Program.Renderer.RenderThreadJobs.IsEmpty)

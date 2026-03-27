@@ -263,7 +263,7 @@ namespace Train.OpenBve
 				    IsLoading = false;
 				    return false;
 			    }
-			    FileSystem.AppendToLogFile("Train panel loaded sucessfully.");
+			    FileSystem.AppendToLogFile("Train panel loaded successfully.");
 		    }
 
 		    CurrentProgress = 0.5;
@@ -367,7 +367,7 @@ namespace Train.OpenBve
 				/*
 				 * Determine door opening / closing speed & copy in any missing bits (e.g. motor sound tables)
 				 * This *must* be done after the sound configuration has loaded
-				 * (As the original BVE / OpenBVE implimentation calculates this from
+				 * (As the original BVE / OpenBVE implementation calculates this from
 				 * the length of the sound buffer)
 				 *
 				 * However, as motor performance / sound tables may also be loaded via car XML files,

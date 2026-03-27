@@ -8,14 +8,10 @@ using OpenBveApi.Sounds;
 using SoundManager;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Xml;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
 using TrainManager.Motor;
-using TrainManager.Power;
 using TrainManager.SafetySystems;
 using TrainManager.Trains;
 
