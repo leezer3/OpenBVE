@@ -234,7 +234,7 @@ namespace Texture.Ace {
 					 * 18 = dtx1 */
 					if (type != 14 & type != 16 & type != 17 & type != 18)
 					{
-						throw new InvalidDataException();
+						throw new InvalidDataException("Unsupported ACE compression type.");
 					}
 
 					int channels = reader.ReadInt32();
@@ -243,7 +243,7 @@ namespace Texture.Ace {
 					 * 5 = 24 bit 8 bit alpha */
 					if (channels != 3 & channels != 4 & channels != 5)
 					{
-						throw new InvalidDataException();
+						throw new InvalidDataException("Invalid number of ACE channels.");
 					}
 
 					//We don't know what this is, so reading it into a variable just generates a compiler warning....
@@ -269,9 +269,10 @@ namespace Texture.Ace {
 					}
 
 					// --- actual pixel data ---
-					byte[] bytes = new byte[4 * width * height];
 					if (type == 14 & channels == 3)
 					{
+						byte[] bytes = new byte[3 * width * height];
+
 						// --- rgb ---
 						int[] streamOffsets = new int[height];
 						for (int y = 0; y < height; y++)
@@ -280,42 +281,38 @@ namespace Texture.Ace {
 						}
 
 						int offset = 0;
-						int offsetIncrement = -4 * width + 1;
+						int offsetIncrement = -3 * width + 1;
 						for (int y = 0; y < height; y++)
 						{
 							stream.Position = streamOffsets[y];
 							for (int x = 0; x < width; x++)
 							{
 								bytes[offset] = reader.ReadByte();
-								offset += 4;
+								offset += 3;
 							}
 
 							offset += offsetIncrement;
 							for (int x = 0; x < width; x++)
 							{
 								bytes[offset] = reader.ReadByte();
-								offset += 4;
+								offset += 3;
 							}
 
 							offset += offsetIncrement;
 							for (int x = 0; x < width; x++)
 							{
 								bytes[offset] = reader.ReadByte();
-								offset += 4;
+								offset += 3;
 							}
 
-							offset += offsetIncrement;
-							for (int x = 0; x < width; x++)
-							{
-								bytes[offset] = 255;
-								offset += 4;
-							}
-
-							offset -= 3;
+							offset -= 2;
 						}
+						return new OpenBveApi.Textures.Texture(width, height, PixelFormat.RGB, bytes, null);
 					}
-					else if (type == 16 & channels == 4)
+
+					if (type == 16 & channels == 4)
 					{
+						byte[] bytes = new byte[4 * width * height];
 						// --- rgb (1-bit transparency) ---
 						int[] streamOffsets = new int[height];
 						for (int y = 0; y < height; y++)
@@ -370,9 +367,12 @@ namespace Texture.Ace {
 
 							offset -= 3;
 						}
+						return new OpenBveApi.Textures.Texture(width, height, PixelFormat.RGBAlpha, bytes, null);
 					}
-					else if (type == 17 & channels == 5)
+
+					if (type == 17 & channels == 5)
 					{
+						byte[] bytes = new byte[4 * width * height];
 						// --- rgb (8-bit alpha) ---
 						int[] streamOffsets = new int[height];
 						for (int y = 0; y < height; y++)
@@ -415,16 +415,19 @@ namespace Texture.Ace {
 
 							offset -= 3;
 						}
+						return new OpenBveApi.Textures.Texture(width, height, PixelFormat.RGBAlpha, bytes, null);
 					}
-					else if (type == 18 & (channels == 3 | channels == 4))
+
+					if (type == 18 & (channels == 3 | channels == 4))
 					{
+						byte[] bytes = channels == 3 ? new byte[3 * width * height] : new byte[4 * width * height];
 						// --- dxt1 ---
 						int mipmapOffset0 = reader.ReadInt32() + 20;
 						stream.Position = mipmapOffset0;
 						int offset = 0;
-						int offsetIncrementY = 12 * width;
-						int offsetIncrementX = -16 * width + 16;
-						int offsetIncrementDy = 4 * width - 16;
+						int offsetIncrementY = channels == 3 ? 9 * width : 12 * width;
+						int offsetIncrementX = channels == 3 ? -12 * width + 12 : -16 * width + 16; 
+						int offsetIncrementDy = channels == 3 ? 3 * width - 12 : 4 * width - 16;
 						Color32[] colors = new Color32[4];
 						Color32 black = channels == 4 ? Color32.Transparent : Color32.Black;
 						for (int y = 0; y < height; y += 4)
@@ -453,11 +456,13 @@ namespace Texture.Ace {
 									{
 										uint index = lookup & 3;
 										lookup >>= 2;
-										bytes[offset + 0] = colors[index].R;
-										bytes[offset + 1] = colors[index].G;
-										bytes[offset + 2] = colors[index].B;
-										bytes[offset + 3] = colors[index].A;
-										offset += 4;
+										bytes[offset++] = colors[index].R;
+										bytes[offset++] = colors[index].G;
+										bytes[offset++] = colors[index].B;
+										if (channels == 4)
+										{
+											bytes[offset++] = colors[index].A;
+										}
 									}
 
 									offset += offsetIncrementDy;
@@ -467,16 +472,17 @@ namespace Texture.Ace {
 							}
 
 							offset += offsetIncrementY;
+
 						}
-					}
-					else
-					{
-						// --- not supported ---
-						throw new NotSupportedException();
+
+						return new OpenBveApi.Textures.Texture(width, height, channels == 3 ? PixelFormat.RGB :  PixelFormat.RGBAlpha, bytes, null);
 					}
 
+					// --- not supported ---
+					throw new NotSupportedException();
+
 					// --- return texture ---
-					return new OpenBveApi.Textures.Texture(width, height, PixelFormat.RGBAlpha, bytes, null);
+					
 				}
 			}
 		}
