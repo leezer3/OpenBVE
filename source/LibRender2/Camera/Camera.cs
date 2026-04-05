@@ -313,8 +313,11 @@ namespace LibRender2.Cameras
 		public void ApplyZoom()
 		{
 			VerticalViewingAngle = OriginalVerticalViewingAngle * Math.Exp(Alignment.Zoom);
-			if (VerticalViewingAngle < 0.001) VerticalViewingAngle = 0.001;
-			if (VerticalViewingAngle > 1.5) VerticalViewingAngle = 1.5;
+			if (VerticalViewingAngle < 0.001 || VerticalViewingAngle > 1.5)
+			{
+				VerticalViewingAngle = VerticalViewingAngle < 0.001 ? 0.001 : 1.5;
+				Alignment.Zoom = Math.Log(VerticalViewingAngle / OriginalVerticalViewingAngle);
+			}
 			Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 		}
 
