@@ -43,7 +43,7 @@ namespace CarXmlConvertor
 		internal static void Process(MainForm form)
 		{
 			mainForm = form;
-
+			AccelerationCurves.Clear();
 			if (!System.IO.File.Exists(FileName))
 			{
 				MessageBox.Show("The selected folder does not contain a valid train.dat \r\n Please retry.", @"CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Information);

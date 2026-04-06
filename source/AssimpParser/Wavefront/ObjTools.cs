@@ -43,7 +43,7 @@
 // their respective creators, which may impose additional requirements
 // on the use of their work. For any of these models, see
 // <model-name>.source.txt for more legal information. Contact us if you
-// are a copyright holder and believe that we credited you inproperly or
+// are a copyright holder and believe that we credited you improperly or
 // if you don't want your files to appear in the repository.
 //
 //
@@ -174,10 +174,8 @@ namespace AssimpNET.Obj
 			{
 				return true;
 			}
-			else
-			{
-				--end;
-			}
+
+			end--;
 			return tmp == end;
 		}
 
@@ -232,7 +230,7 @@ namespace AssimpNET.Obj
 		{
 			result = string.Empty;
 			DataIt = GetNextWord(DataIt, DataEnd);
-			if (Buffer[DataIt] == '\\')
+			if (DataIt < Buffer.Length && Buffer[DataIt] == '\\')
 			{
 				DataIt += 2;
 				DataIt = GetNextWord(DataIt, DataEnd);

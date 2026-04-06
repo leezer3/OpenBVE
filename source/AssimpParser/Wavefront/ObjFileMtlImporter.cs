@@ -43,7 +43,7 @@
 // their respective creators, which may impose additional requirements
 // on the use of their work. For any of these models, see
 // <model-name>.source.txt for more legal information. Contact us if you
-// are a copyright holder and believe that we credited you inproperly or
+// are a copyright holder and believe that we credited you improperly or
 // if you don't want your files to appear in the repository.
 //
 //
@@ -81,6 +81,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Runtime.Remoting.Channels;
 using OpenBveApi;
 using OpenBveApi.Colors;
 
@@ -150,41 +151,41 @@ namespace AssimpNET.Obj
 					continue;
 				}
 
-				switch (Buffer[DataIt])
+				switch (char.ToLower(Buffer[DataIt], CultureInfo.InvariantCulture))
 				{
 					case 'k':
-					case 'K':
 						{
-							++DataIt;
-							if (Buffer[DataIt] == 'a')  // Ambient color
+							DataIt++;
+							switch (Buffer[DataIt])
 							{
-								++DataIt;
-								GetColorRGB(ref Model.CurrentMaterial.Ambient);
-							}
-							else if (Buffer[DataIt] == 'd')    // Diffuse color
-							{
-								++DataIt;
-								GetColorRGBA(ref Model.CurrentMaterial.Diffuse);
-							}
-							else if (Buffer[DataIt] == 's')
-							{
-								++DataIt;
-								GetColorRGB(ref Model.CurrentMaterial.Specular);
-							}
-							else if (Buffer[DataIt] == 'e')
-							{
-								++DataIt;
-								GetColorRGB(ref Model.CurrentMaterial.Emissive);
+								// Ambient color
+								case 'a':
+									DataIt++;
+									GetColorRGB(ref Model.CurrentMaterial.Ambient);
+									break;
+								// Diffuse color
+								case 'd':
+									DataIt++;
+									GetColorRGBA(ref Model.CurrentMaterial.Diffuse);
+									break;
+								case 's':
+									DataIt++;
+									GetColorRGB(ref Model.CurrentMaterial.Specular);
+									break;
+								case 'e':
+									DataIt++;
+									GetColorRGB(ref Model.CurrentMaterial.Emissive);
+									break;
 							}
 							DataIt = SkipLine(DataIt, DataEnd, ref Line);
 						}
 						break;
-					case 'T':
+					case 't':
 						{
-							++DataIt;
+							DataIt++;
 							if (Buffer[DataIt] == 'f')  // Material transmission
 							{
-								++DataIt;
+								DataIt++;
 								GetColorRGB(ref Model.CurrentMaterial.Transparent);
 								Model.CurrentMaterial.TransparentUsed = true;
 							}
@@ -207,7 +208,6 @@ namespace AssimpNET.Obj
 							}
 						}
 						break;
-					case 'N':
 					case 'n':
 						{
 							++DataIt;

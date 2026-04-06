@@ -43,7 +43,7 @@
 // their respective creators, which may impose additional requirements
 // on the use of their work. For any of these models, see
 // <model-name>.source.txt for more legal information. Contact us if you
-// are a copyright holder and believe that we credited you inproperly or
+// are a copyright holder and believe that we credited you improperly or
 // if you don't want your files to appear in the repository.
 //
 //
@@ -894,17 +894,17 @@ namespace AssimpNET.X
 				{
 					break; // material finished
 				}
-				else if (objectName == "TextureFilename" || objectName == "TextureFileName")
+				else if (string.Equals(objectName,"TextureFileName", StringComparison.InvariantCultureIgnoreCase))
 				{
 					// some exporters write "TextureFileName" instead.
-					ParseDataObjectTextureFilename(out string texname);
-					material.Textures.Add(new TexEntry(texname));
+					ParseDataObjectTextureFilename(out string textureName);
+					material.Textures.Add(new TexEntry(textureName));
 				}
-				else if (objectName == "NormalmapFilename" || objectName == "NormalmapFileName")
+				else if (string.Equals(objectName, "NormalMapFileName", StringComparison.InvariantCultureIgnoreCase))
 				{
 					// one exporter writes out the normal map in a separate filename tag
-					ParseDataObjectTextureFilename(out string texname);
-					material.Textures.Add(new TexEntry(texname, true));
+					ParseDataObjectTextureFilename(out string textureName);
+					material.Textures.Add(new TexEntry(textureName, true));
 				}
 				else
 				{
@@ -1024,7 +1024,7 @@ namespace AssimpNET.X
 							quat.Y = ReadFloat();
 							quat.Z = ReadFloat();
 
-							QuatKey key = new QuatKey((double)time, quat);
+							QuatKey key = new QuatKey(time, quat);
 							animBone.RotKeys.Add(key);
 
 							CheckForSemicolon();
@@ -1038,7 +1038,7 @@ namespace AssimpNET.X
 							{
 								ThrowException("Invalid number of arguments for vector key in animation");
 							}
-							VectorKey key = new VectorKey((double)time, ReadVector3());
+							VectorKey key = new VectorKey(time, ReadVector3());
 
 							if (keyType == 2)
 							{
@@ -1078,7 +1078,7 @@ namespace AssimpNET.X
 							matrix.Row3.Z = ReadFloat();
 							matrix.Row3.W = ReadFloat();
 
-							MatrixKey key = new MatrixKey((double)time, matrix);
+							MatrixKey key = new MatrixKey(time, matrix);
 							animBone.TrafoKeys.Add(key);
 
 							CheckForSemicolon();
@@ -1518,47 +1518,43 @@ namespace AssimpNET.X
 				{
 					return ReadBinDWord();
 				}
-				else
-				{
-					currentPosition = End;
-					return 0;
-				}
+
+				currentPosition = End;
+				return 0;
 			}
-			else
+
+			FindNextNoneWhiteSpace();
+
+			// TODO: consider using strtol10 instead???
+
+			// check preceding minus sign
+			bool isNegative = false;
+			if (Buffer[currentPosition] == '-')
 			{
-				FindNextNoneWhiteSpace();
+				isNegative = true;
+				currentPosition++;
+			}
 
-				// TODO: consider using strtol10 instead???
+			// at least one digit expected
+			if (!char.IsDigit((char)Buffer[currentPosition]))
+			{
+				ThrowException("Number expected.");
+			}
 
-				// check preceding minus sign
-				bool isNegative = false;
-				if (Buffer[currentPosition] == '-')
-				{
-					isNegative = true;
-					currentPosition++;
-				}
-
-				// at least one digit expected
+			// read digits
+			uint number = 0;
+			while (currentPosition < End)
+			{
 				if (!char.IsDigit((char)Buffer[currentPosition]))
 				{
-					ThrowException("Number expected.");
+					break;
 				}
-
-				// read digits
-				uint number = 0;
-				while (currentPosition < End)
-				{
-					if (!char.IsDigit((char)Buffer[currentPosition]))
-					{
-						break;
-					}
-					number = number * 10 + (uint)(Buffer[currentPosition] - 48);
-					currentPosition++;
-				}
-
-				CheckForSeparator();
-				return isNegative ? (uint)(-(int)number) : number;
+				number = number * 10 + (uint)(Buffer[currentPosition] - 48);
+				currentPosition++;
 			}
+
+			CheckForSeparator();
+			return isNegative ? (uint)(-(int)number) : number;
 		}
 
 		protected float ReadFloat()
@@ -1619,7 +1615,8 @@ namespace AssimpNET.X
 				CheckForSeparator();
 				return 0.0f;
 			}
-			else if (Ascii.GetString(Buffer, currentPosition, 8) == "1.#QNAN0")
+
+			if (Ascii.GetString(Buffer, currentPosition, 8) == "1.#QNAN0")
 			{
 				currentPosition += 8;
 				CheckForSeparator();

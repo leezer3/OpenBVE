@@ -44,6 +44,13 @@ namespace ObjectViewer
 				Dialog.listviewMessages.SmallImageList.Images.Add("critical", Image.FromFile(OpenBveApi.Path.CombineFile(Folder, "icon_critical.png")));
 			}
 			catch { }
+
+			if (Interface.CurrentOptions.AutoReloadObjects)
+			{
+				ListViewItem a = Dialog.listviewMessages.Items.Add("Information", "information");
+				a.SubItems.Add("Objects last reloaded at time: " + Program.LastReloadTime);
+			}
+
 			// ReSharper restore EmptyGeneralCatchClause
 			for (int i = 0; i < Interface.LogMessages.Count; i++)
 			{

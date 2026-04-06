@@ -78,6 +78,7 @@ namespace ObjectViewer
 				Builder.AppendLine("windowWidth = " + Program.Renderer.Screen.Width.ToString(Culture));
 				Builder.AppendLine("windowHeight = " + Program.Renderer.Screen.Height.ToString(Culture));
 				Builder.AppendLine("isUseNewRenderer = " + (IsUseNewRenderer ? "true" : "false"));
+				Builder.AppendLine("autoReloadObjects = " + (AutoReloadObjects ? "true" : "false"));
 				Builder.AppendLine();
 				Builder.AppendLine("[quality]");
 				Builder.AppendLine("interpolation = " + Interpolation);
@@ -155,6 +156,7 @@ namespace ObjectViewer
 							block.TryGetValue(OptionsKey.WindowWidth, ref Interface.CurrentOptions.WindowWidth, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.WindowHeight, ref Interface.CurrentOptions.WindowHeight, NumberRange.Positive);
 							block.GetValue(OptionsKey.IsUseNewRenderer, out Interface.CurrentOptions.IsUseNewRenderer);
+							block.GetValue(OptionsKey.AutoReloadObjects, out Interface.CurrentOptions.AutoReloadObjects);
 							break;
 						case OptionsSection.Quality:
 							block.GetEnumValue(OptionsKey.Interpolation, out Interface.CurrentOptions.Interpolation);

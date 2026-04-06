@@ -130,7 +130,7 @@ namespace OpenBveApi.Objects
 					Object.Mesh.Materials[mm + i].EmissiveColor = Materials[i].EmissiveColor;
 					if (Materials[i].NighttimeTexture != null)
 					{
-						currentHost.RegisterTexture(Materials[i].DaytimeTexture, parameters, out Texture tnight);
+						currentHost.RegisterTexture(Materials[i].NighttimeTexture, parameters, out Texture tnight);
 						Object.Mesh.Materials[mm + i].NighttimeTexture = tnight;
 					}
 					else

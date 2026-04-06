@@ -34,6 +34,7 @@ namespace OpenBveApi
 		ViewingDistance,
 		QuadLeafSize,
 		UIScaleFactor,
+		AutoReloadObjects,
 		// Quality
 		Interpolation,
 		AnisotropicFilteringLevel,

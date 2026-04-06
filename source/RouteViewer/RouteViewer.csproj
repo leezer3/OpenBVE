@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <NoWarn>$(NoWarn),IDE1006</NoWarn>
@@ -187,8 +187,8 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <!-- Set LBA flag -->
-    <Exec Condition="'$(OS)' != 'Unix'" Command="$(TargetDir)DevTools\LBAHeader.exe $(TargetDir)OpenBve.exe" />
-    <Exec Condition="'$(OS)' == 'Unix'" Command="mono $(TargetDir)DevTools/LBAHeader.exe $(TargetDir)OpenBve.exe" />
+    <Exec Condition="'$(OS)' != 'Unix'" Command="&quot;$(TargetDir)DevTools\LBAHeader.exe&quot; &quot;$(TargetDir)OpenBve.exe&quot;" />
+    <Exec Condition="'$(OS)' == 'Unix'" Command="mono &quot;$(TargetDir)DevTools/LBAHeader.exe&quot; &quot;$(TargetDir)OpenBve.exe&quot;" />
     <!-- Copy in dependancies -->
     <!-- NOTE: Whilst AtsPluginProxy.dll is Windows specific, we still want to copy it in the auto-generated nightly builds -->
     <ItemGroup>

@@ -43,7 +43,7 @@
 // their respective creators, which may impose additional requirements
 // on the use of their work. For any of these models, see
 // <model-name>.source.txt for more legal information. Contact us if you
-// are a copyright holder and believe that we credited you inproperly or
+// are a copyright holder and believe that we credited you improperly or
 // if you don't want your files to appear in the repository.
 //
 //
@@ -96,7 +96,7 @@ namespace AssimpNET.Obj
 	public class Face
 	{
 		//! Primitive type
-		readonly PrimitiveType PrimitiveType;
+		public readonly PrimitiveType PrimitiveType;
 		//! Vertex indices
 		public IndexArray Vertices = new IndexArray();
 		//! Normal indices
@@ -123,10 +123,10 @@ namespace AssimpNET.Obj
 		public readonly string ObjName;
 		//! Transformation matrix, stored in OpenGL format
 #pragma warning disable 169, IDE0051
-		Matrix4D Transformation;
+		public Matrix4D Transformation;
 #pragma warning restore 169, IDE0051
 		//! All sub-objects referenced by this object
-		readonly List<WavefrontObject> SubObjects = new List<WavefrontObject>();
+		public readonly List<WavefrontObject> SubObjects = new List<WavefrontObject>();
 		/// Assigned meshes
 		public List<uint> Meshes = new List<uint>();
 		public WavefrontObject(string objName)
@@ -213,7 +213,7 @@ namespace AssimpNET.Obj
 	// ------------------------------------------------------------------------------------------------
 	public class Mesh
 	{
-		const uint AI_MAX_NUMBER_OF_TEXTURECOORDS = 0x8;
+		private const uint AI_MAX_NUMBER_OF_TEXTURECOORDS = 0x8;
 
 		public const uint NoMaterial = ~0u;
 		/// The name for the mesh
@@ -230,7 +230,7 @@ namespace AssimpNET.Obj
 		public uint MaterialIndex = NoMaterial;
 		/// True, if vertex colors are stored.
 #pragma warning disable 169
-		bool HasVertexColors;
+		public bool HasVertexColors;
 #pragma warning restore 169
 
 		/// Constructor

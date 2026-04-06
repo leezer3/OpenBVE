@@ -113,7 +113,9 @@ namespace OpenBveApi
 		public bool EnableBve5ScriptedTrain;
 		/// <summary>The scale factor for the user interface</summary>
 		public int UserInterfaceScaleFactor;
-
+		/// <summary>Whether loaded objects are automatically reloaded on change</summary>
+		public bool AutoReloadObjects;
+		
 		/// <summary>Saves the options to the specified filename</summary>
 		/// <param name="fileName">The filename to save the options to</param>
 		public abstract void Save(string fileName);

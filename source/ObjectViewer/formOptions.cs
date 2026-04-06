@@ -36,6 +36,7 @@ namespace ObjectViewer
 			comboBoxForwards.SelectedItem = Interface.CurrentOptions.CameraMoveForward;
 			comboBoxBackwards.DataSource = Enum.GetValues(typeof(Key));
 			comboBoxBackwards.SelectedItem = Interface.CurrentOptions.CameraMoveBackward;
+			checkBoxAutoReload.Checked = Interface.CurrentOptions.AutoReloadObjects;
 		}
 
 		internal static DialogResult ShowOptions()
@@ -135,6 +136,7 @@ namespace ObjectViewer
 			Interface.CurrentOptions.CameraMoveDown = (Key)comboBoxDown.SelectedItem;
 			Interface.CurrentOptions.CameraMoveForward = (Key)comboBoxForwards.SelectedItem;
 			Interface.CurrentOptions.CameraMoveBackward = (Key)comboBoxBackwards.SelectedItem;
+			Interface.CurrentOptions.AutoReloadObjects = checkBoxAutoReload.Checked;
 			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));
 			Program.RefreshObjects();
 			Close();

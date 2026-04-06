@@ -508,7 +508,7 @@ namespace Plugin
 						int nVertexNormals = block.ReadInt();
 						if (nVertexNormals != builder.Faces[i].Vertices.Length)
 						{
-							throw new Exception("nVertexNormals must match the number of verticies in the face");
+							throw new Exception("nVertexNormals must match the number of vertices in the face");
 						}
 						for (int j = 0; j < nVertexNormals; j++)
 						{

@@ -169,18 +169,32 @@ namespace OpenBveApi.Textures {
 						break;
 				}
 			}
+
+			bool usedTransparentColor = false;
 			if (texture.MultipleFrames)
 			{
+				
 				byte[][] newFrames = new byte[texture.TotalFrames][];
 				for (int i = 0; i < texture.TotalFrames; i++)
 				{
-					newFrames[i] = ApplyTransparentColor(texture.Bytes, texture.PixelFormat, texture.Width, texture.Height, color.Value);
+					newFrames[i] = ApplyTransparentColor(texture.Bytes, texture.PixelFormat, texture.Width, texture.Height, color.Value, ref usedTransparentColor);
 					texture.CurrentFrame++;
 				}
 
-				return new Texture(texture.Width, texture.Height, PixelFormat.RGBAlpha, newFrames, texture.FrameInterval);
+				if (usedTransparentColor)
+				{
+					return new Texture(texture.Width, texture.Height, PixelFormat.RGBAlpha, newFrames, texture.FrameInterval);
+				}
+				return texture;
+
 			}
-			return new Texture(texture.Width, texture.Height, PixelFormat.RGBAlpha, ApplyTransparentColor(texture.Bytes, texture.PixelFormat, texture.Width, texture.Height, color.Value), texture.Palette);
+
+			byte[] newBytes = ApplyTransparentColor(texture.Bytes, texture.PixelFormat, texture.Width, texture.Height, color.Value, ref usedTransparentColor);
+			if (usedTransparentColor)
+			{
+				return new Texture(texture.Width, texture.Height, PixelFormat.RGBAlpha, newBytes, texture.Palette);
+			}
+			return texture;
 		}
 
 		private static byte[] ApplyTransparentTexture(byte[] source, PixelFormat pixelFormat, int width, int height, Texture transparencyTexture)
@@ -245,14 +259,13 @@ namespace OpenBveApi.Textures {
 			return target;
 		}
 
-		private static byte[] ApplyTransparentColor(byte[] source, PixelFormat pixelFormat, int width, int height, Color24 color)
+		private static byte[] ApplyTransparentColor(byte[] source, PixelFormat pixelFormat, int width, int height, Color24 color, ref bool usedTransparentColor)
 		{
 			byte[] target = new byte[4 * width * height];
 			byte r = color.R;
 			byte g = color.G;
 			byte b = color.B;
 
-			
 			int targetIndex = 0;
 			switch (pixelFormat)
 			{
@@ -264,6 +277,7 @@ namespace OpenBveApi.Textures {
 							target[targetIndex + 1] = 0;
 							target[targetIndex + 2] = 0;
 							target[targetIndex + 3] = 0;
+							usedTransparentColor = true;
 						} else {
 							target[targetIndex] = source[i];
 							target[targetIndex + 1] = source[i];
@@ -280,6 +294,7 @@ namespace OpenBveApi.Textures {
 							target[targetIndex + 1] = 0;
 							target[targetIndex + 2] = 0;
 							target[targetIndex + 3] = 0;
+							usedTransparentColor = true;
 						} else {
 							target[targetIndex] = source[i];
 							target[targetIndex + 1] = source[i];
@@ -296,6 +311,7 @@ namespace OpenBveApi.Textures {
 							target[targetIndex + 1] = 0;
 							target[targetIndex + 2] = 0;
 							target[targetIndex + 3] = 0;
+							usedTransparentColor = true;
 						} else {
 							target[targetIndex] = source[i];
 							target[targetIndex + 1] = source[i + 1];
@@ -310,6 +326,7 @@ namespace OpenBveApi.Textures {
 						target[1] = 128;
 						target[2] = 128;
 						target[3] = 0;
+						usedTransparentColor = true;
 					} else {
 						target[0] = source[0];
 						target[1] = source[1];
@@ -322,6 +339,7 @@ namespace OpenBveApi.Textures {
 							target[i + 1] = target[i - 3];
 							target[i + 2] = target[i - 2];
 							target[i + 3] = 0;
+							usedTransparentColor = true;
 						} else {
 							target[i + 0] = source[i + 0];
 							target[i + 1] = source[i + 1];

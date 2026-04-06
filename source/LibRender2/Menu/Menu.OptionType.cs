@@ -42,6 +42,8 @@ namespace LibRender2.Menu
 		/// <summary>Sets the UI scale factor</summary>
 		UIScaleFactor,
 		/// <summary>Sets the total number of valid sounds</summary>
-		NumberOfSounds
+		NumberOfSounds,
+		/// <summary>Sets whether to automatically reload the current objects</summary>
+		AutoReloadObjects
 	}
 }

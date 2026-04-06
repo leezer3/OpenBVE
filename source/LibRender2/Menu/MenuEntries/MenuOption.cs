@@ -69,6 +69,9 @@ namespace LibRender2.Menu
 					}
 
 					break;
+				case OptionType.AutoReloadObjects:
+					CurrentlySelectedOption = BaseMenu.CurrentOptions.AutoReloadObjects ? 0 : 1;
+					return;
 				case OptionType.FullScreen:
 					CurrentlySelectedOption = BaseMenu.CurrentOptions.FullscreenMode ? 0 : 1;
 					return;
@@ -240,6 +243,9 @@ namespace LibRender2.Menu
 					break;
 				case OptionType.Interpolation:
 					BaseMenu.CurrentOptions.Interpolation = (InterpolationMode)CurrentlySelectedOption;
+					break;
+				case OptionType.AutoReloadObjects:
+					BaseMenu.CurrentOptions.AutoReloadObjects = !BaseMenu.CurrentOptions.AutoReloadObjects;
 					break;
 				//HACK: We can't store plain ints due to to boxing, so store strings and parse instead
 				case OptionType.AnisotropicLevel:

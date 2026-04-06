@@ -1,4 +1,4 @@
-﻿using LibRender2.Menu;
+using LibRender2.Menu;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -64,6 +64,8 @@ namespace ObjectViewer
 								try
 								{
 									potentialFiles = Directory.GetFiles(SearchDirectory);
+									// n.b. sort order of returned files is not guaranteed, so case invariant sort
+									Array.Sort(potentialFiles,(x, y) => String.Compare(x, y, StringComparison.InvariantCultureIgnoreCase));
 									directoryList = Directory.GetDirectories(SearchDirectory);
 								}
 								catch
@@ -79,6 +81,8 @@ namespace ObjectViewer
 								try
 								{
 									potentialFiles = Directory.GetFiles(SearchDirectory);
+									// n.b. sort order of returned files is not guaranteed, so case invariant sort
+									Array.Sort(potentialFiles, (x, y) => String.Compare(x, y, StringComparison.InvariantCultureIgnoreCase));
 									directoryList = Directory.GetDirectories(SearchDirectory);
 								}
 								catch
@@ -144,7 +148,7 @@ namespace ObjectViewer
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.Options:
-						Items = new MenuEntry[8];
+						Items = new MenuEntry[9];
 						Items[0] = new MenuCaption(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "panel", "options" }));
 						Items[1] = new MenuOption(menu, OptionType.ScreenResolution, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "resolution" }), Program.Renderer.Screen.AvailableResolutions.ToArray());
 						Items[2] = new MenuOption(menu, OptionType.FullScreen, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "display_mode_fullscreen" }), new[] { "true", "false" });
@@ -160,7 +164,9 @@ namespace ObjectViewer
 						Items[4] = new MenuOption(menu, OptionType.AnisotropicLevel, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "quality_interpolation_anisotropic_level" }), new[] { "0", "2", "4", "8", "16" });
 						Items[5] = new MenuOption(menu, OptionType.AntialiasingLevel, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "quality_interpolation_antialiasing_level" }), new[] { "0", "2", "4", "8", "16" });
 						Items[6] = new MenuOption(menu, OptionType.ViewingDistance, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "quality_distance_viewingdistance" }), new[] { "400", "600", "800", "1000", "1500", "2000" });
-						Items[7] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "back" }), MenuTag.MenuBack, 0);
+						Items[7] = new MenuOption(menu, OptionType.AutoReloadObjects, "Automatically Reload Objects", new[] { "true", "false"});
+						Items[8] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "back" }), MenuTag.MenuBack, 0);
+						
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.ErrorList:

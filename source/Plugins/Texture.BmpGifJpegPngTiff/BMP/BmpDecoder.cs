@@ -285,7 +285,7 @@ namespace Plugin.BMP
 					/*
 					 * NOTE:
 					 * Documentation states that if the number of colors used is set to zero,
-					 * the color table is set to the one of the standard Windows color pallettes
+					 * the color table is set to the one of the standard Windows color palettes
 					 *
 					 * However, in practice there seem to be some bitmaps in the wild
 					 * which contain a color table regardless. 
@@ -296,6 +296,7 @@ namespace Plugin.BMP
 						case BitsPerPixel.Monochrome:
 							ColorsUsed = 2;
 							ColorTable = ColorPalettes.MonochromePalette;
+							AttemptToFindColorTable(fileReader, colorSize);
 							break;
 						case BitsPerPixel.FourBitPalletized:
 							ColorsUsed = 16;
@@ -338,36 +339,27 @@ namespace Plugin.BMP
 									{
 										destIdx = (Height - currentRow - 1) * Width * 4;
 									}
-									for (int currentPixel = 0; currentPixel < Width; currentPixel++)
+									
+									int currentPixel = 0;
+									while (currentPixel < Width)
 									{
-										for (int currentBit = 0; currentBit < 8; currentBit++)
+										int bitIdx = currentPixel % 8;
+										byte bit = ((buffer[sourceIdx] & 1 << (7 - bitIdx % 8)) != 0) ? (byte)1 : (byte)0;
+										ImageData[destIdx] = ColorTable[bit].R;
+										ImageData[destIdx + 1] = ColorTable[bit].G;
+										ImageData[destIdx + 2] = ColorTable[bit].B;
+										ImageData[destIdx + 3] = byte.MaxValue;
+										currentPixel++;
+										destIdx += 4;
+										if (bitIdx == 7)
 										{
-											if ((buffer[sourceIdx] & 1 << (7 - currentBit % 8)) != 0)
-											{
-												ImageData[destIdx] = ColorTable[1].R;
-												ImageData[destIdx + 1] = ColorTable[1].G;
-												ImageData[destIdx + 2] = ColorTable[1].B;
-												ImageData[destIdx + 3] = byte.MaxValue;
-											}
-											else
-											{
-												ImageData[destIdx] = ColorTable[0].R;
-												ImageData[destIdx + 1] = ColorTable[0].G;
-												ImageData[destIdx + 2] = ColorTable[0].B;
-												ImageData[destIdx + 3] = byte.MaxValue;
-											}
-											destIdx += 4;
-											currentPixel++;
-											if (currentPixel >= Width)
-											{
-												// A single byte contains 8px, but the image may not be of a multiple of this
-												break;
-											}
+											sourceIdx++;
 										}
-										sourceIdx++;
 									}
+
 									// BMP scan lines are zero-padded to the nearest 4-byte boundary
 									sourceIdx = sourceIdx % 4 == 0 ? sourceIdx : sourceIdx + 4 - sourceIdx % 4;
+
 								}
 								break;
 							case BitsPerPixel.TwoBitPalletized:
@@ -793,7 +785,7 @@ namespace Plugin.BMP
 		{
 			int possibleColorTableSize = dataOffset - (int)fileReader.Position;
 			int possibleColors = possibleColorTableSize / colorSize;
-			if (possibleColors > 3) // color table appears to be present, even though length was declared as zero
+			if (possibleColors >= 2) // color table appears to be present, even though length was declared as zero
 			{
 				buffer = new byte[possibleColorTableSize];
 				// ReSharper disable once MustUseReturnValue

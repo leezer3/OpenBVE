@@ -140,6 +140,10 @@ namespace CarXmlConvertor
 								Couplers[block.Index].Min = distances.X;
 								Couplers[block.Index].Max = distances.Y;
 							}
+							else
+							{
+								mainForm.updateLogBoxText += "Minimum is expected to be less than Maximum for Coupler " + block.Index + Environment.NewLine;
+							}
 						}
 						if (block.GetPath(ExtensionCfgKey.Object, Path.GetDirectoryName(FileName), out string couplerObject))
 						{

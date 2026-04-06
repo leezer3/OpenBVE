@@ -57,7 +57,7 @@ namespace Train.OpenBve
 			Vector3 interiorDirection = Vector3.Zero;
 			if (block.TryGetValue(TrainXMLKey.Length, ref Train.Cars[Car].Length))
 			{
-				Train.Cars[block.Index].BeaconReceiverPosition = 0.5 * Train.Cars[Car].Length;
+				Train.Cars[Car].BeaconReceiverPosition = 0.5 * Train.Cars[Car].Length;
 			}
 
 			block.TryGetValue(TrainXMLKey.Width, ref Train.Cars[Car].Width);
