@@ -169,7 +169,6 @@ namespace Train.OpenBve
 						{
 							Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
 						}
-						return;
 					}
 					DocumentElements = CurrentXML.Root.Elements("Panel").ToList();
 					if (DocumentElements != null && DocumentElements.Count != 0)
@@ -179,7 +178,6 @@ namespace Train.OpenBve
 						Plugin.PanelXmlParser.ParsePanelXml(interiorFile, Train, Car);
 						Train.TrainFolder = t;
 						Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.On;
-						return;
 					}
 				}
 				else if (interiorFile.ToLowerInvariant().EndsWith(".cfg"))
@@ -208,7 +206,7 @@ namespace Train.OpenBve
 						}
 						catch
 						{
-							Plugin.Cancel = true;
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "An error occured whilst loading the interior view file for Car " + Car + " in XML file " + block.FileName);
 						}
 					}
 

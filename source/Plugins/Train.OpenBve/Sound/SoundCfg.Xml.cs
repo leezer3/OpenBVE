@@ -219,16 +219,13 @@ namespace Train.OpenBve
 							switch (hornSubBlock.Key)
 							{
 								case SoundXMLSection.Primary:
-									ParseHornBlock(hornSubBlock, car, out car.Horns[0], front,
-										SoundCfgParser.largeRadius);
+									ParseHornBlock(hornSubBlock, car, out car.Horns[0], front, SoundCfgParser.largeRadius);
 									break;
 								case SoundXMLSection.Secondary:
-									ParseHornBlock(hornSubBlock, car, out car.Horns[1], front,
-										SoundCfgParser.largeRadius);
+									ParseHornBlock(hornSubBlock, car, out car.Horns[1], front, SoundCfgParser.largeRadius);
 									break;
 								case SoundXMLSection.Music:
-									ParseHornBlock(hornSubBlock, car, out car.Horns[2], front,
-										SoundCfgParser.largeRadius);
+									ParseHornBlock(hornSubBlock, car, out car.Horns[2], front, SoundCfgParser.largeRadius);
 									break;
 							}
 						}
@@ -517,6 +514,9 @@ namespace Train.OpenBve
 					case SoundXMLSection.End:
 						ParseBlock(subBlock, out Horn.EndSound, ref Position, Radius);
 						Horn.StartEndSounds = true;
+						break;
+					case SoundXMLSection.Loop:
+						ParseBlock(subBlock, out Horn.LoopSound, ref Position, Radius);
 						break;
 				}
 
