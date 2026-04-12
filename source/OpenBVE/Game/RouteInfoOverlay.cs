@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Colors;
+﻿using LibRender2;
+using OpenBveApi.Colors;
 using OpenTK.Graphics.OpenGL;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
@@ -60,7 +61,10 @@ namespace OpenBve
 				return;
 			Vector2 Pos = Vector2.Null;
 			Vector2	origin = Vector2.Null;
-			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
+			if (!Interface.CurrentOptions.ForceForwardsCompatibleContext)
+			{
+				GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
+			}
 			// draw the relevant image
 			switch (currentState)
 			{

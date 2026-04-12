@@ -339,15 +339,19 @@ namespace LibRender2.Textures
 						switch (texture.PixelFormat)
 						{
 							case PixelFormat.Grayscale:
-								// send as is to the luminance channel [NOTE: deprecated in GL4]
+								// send as is to the luminance channel [NOTE: deprecated in GL4, so use Red channel instead]
 								// n.b. Make sure to set the unpack alignment as otherwise we corrupt textures where stride > width
 								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
 								GL.TexImage2D(TextureTarget.Texture2D, 0,
-									PixelInternalFormat.Luminance,
+									renderer.currentOptions.ForceForwardsCompatibleContext ? PixelInternalFormat.R8 : PixelInternalFormat.Luminance,
 									texture.Width, texture.Height, 0,
-									OpenTK.Graphics.OpenGL.PixelFormat.Luminance,
+									renderer.currentOptions.ForceForwardsCompatibleContext ? OpenTK.Graphics.OpenGL.PixelFormat.Red : OpenTK.Graphics.OpenGL.PixelFormat.Luminance,
 									PixelType.UnsignedByte, texture.Bytes);
-
+								if (renderer.currentOptions.ForceForwardsCompatibleContext)
+								{
+									// small cheat: Use GL_RED (6403) to swizzle our R channel when called by the shader
+									GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleRgba, new[] { 6403, 6403, 6403, 1});
+								}
 								break;
 							case PixelFormat.RGB:
 								// send as is
@@ -360,16 +364,8 @@ namespace LibRender2.Textures
 									PixelType.UnsignedByte, texture.Bytes);
 								break;
 							case PixelFormat.RGBAlpha:
-								/*
-								* If the texture is fully opaque, the alpha channel is not used.
-								* If the graphics driver and card support 24-bits per channel,
-								* it is best to convert the bitmap data to that format in order
-								* to save memory on the card. If the card does not support the
-								* format, it will likely be upconverted to 32-bits per channel
-								* again, and this is wasted effort.
-								* */
+								// down convert to RGB
 								int stride = (3 * (texture.Width + 1) >> 2) << 2;
-								byte[] oldBytes = texture.Bytes;
 								byte[] newBytes = new byte[stride * texture.Height];
 								int i = 0, j = 0;
 
@@ -377,9 +373,9 @@ namespace LibRender2.Textures
 								{
 									for (int x = 0; x < texture.Width; x++)
 									{
-										newBytes[j + 0] = oldBytes[i + 0];
-										newBytes[j + 1] = oldBytes[i + 1];
-										newBytes[j + 2] = oldBytes[i + 2];
+										newBytes[j + 0] = texture.Bytes[i + 0];
+										newBytes[j + 1] = texture.Bytes[i + 1];
+										newBytes[j + 2] = texture.Bytes[i + 2];
 										i += 4;
 										j += 3;
 									}
@@ -396,26 +392,55 @@ namespace LibRender2.Textures
 									PixelType.UnsignedByte, newBytes);
 								break;
 						}
-						
 					}
 					else
 					{
 						switch (texture.PixelFormat)
 						{
 							case PixelFormat.GrayscaleAlpha:
-								// NOTE: luminance is deprecated in GL4
-								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
-								GL.TexImage2D(TextureTarget.Texture2D, 0,
-									PixelInternalFormat.LuminanceAlpha,
-									texture.Width, texture.Height, 0,
-									OpenTK.Graphics.OpenGL.PixelFormat.LuminanceAlpha,
-									PixelType.UnsignedByte, texture.Bytes);
+								// NOTE: LuminanceAlpha is deprecated in GL4, so just upconvert to RGBA
+								if (renderer.currentOptions.ForceForwardsCompatibleContext)
+								{
+									int stride = (2 * (texture.Width + 1) >> 2) << 2;
+									byte[] newBytes = new byte[stride * texture.Height];
+									int i = 0, j = 0;
+
+									for (int y = 0; y < texture.Height; y++)
+									{
+										for (int x = 0; x < texture.Width; x++)
+										{
+											newBytes[j + 0] = texture.Bytes[i + 0];
+											newBytes[j + 1] = texture.Bytes[i + 0];
+											newBytes[j + 2] = texture.Bytes[i + 0];
+											newBytes[j + 3] = texture.Bytes[i + 1];
+											i += 4;
+											j += 4;
+										}
+
+										j += stride - 3 * texture.Width;
+										GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
+										GL.TexImage2D(TextureTarget.Texture2D, 0,
+											PixelInternalFormat.Rgba8,
+											texture.Width, texture.Height, 0,
+											OpenTK.Graphics.OpenGL.PixelFormat.Rgba,
+											PixelType.UnsignedByte, newBytes);
+									}
+								}
+								else
+								{
+									GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
+									GL.TexImage2D(TextureTarget.Texture2D, 0,
+										PixelInternalFormat.LuminanceAlpha,
+										texture.Width, texture.Height, 0,
+										OpenTK.Graphics.OpenGL.PixelFormat.LuminanceAlpha,
+										PixelType.UnsignedByte, texture.Bytes);
+								}
 								break;
 							case PixelFormat.RGBAlpha:
 								/*
-						 * The texture uses its alpha channel, so send the bitmap data
-						 * in 32-bits per channel as-is.
-						 * */
+								* The texture uses its alpha channel, so send the bitmap data
+								* in 32-bits per channel as-is.
+								* */
 								// n.b. Must reset the unpack alignment in case of changes
 								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
 								GL.TexImage2D(TextureTarget.Texture2D, 0,

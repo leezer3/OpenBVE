@@ -424,23 +424,30 @@ namespace LibRender2
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthFunc(DepthFunction.Lequal);
 			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-			GL.Hint(HintTarget.FogHint, HintMode.Fastest);
+			if (currentOptions.ForceForwardsCompatibleContext == false)
+			{
+				// not valid with a forwards compatible context, so don't generate spurious error
+				GL.Hint(HintTarget.FogHint, HintMode.Fastest);
+				GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
+				GL.Hint(HintTarget.GenerateMipmapHint, HintMode.Nicest);
+				GL.Disable(EnableCap.Lighting);
+				GL.Disable(EnableCap.Fog);
+			}
+
 			GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
-			GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
 			GL.Hint(HintTarget.PointSmoothHint, HintMode.Fastest);
 			GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Fastest);
-			GL.Hint(HintTarget.GenerateMipmapHint, HintMode.Nicest);
+			
 			GL.Enable(EnableCap.CullFace);
 			GL.CullFace(CullFaceMode.Front);
 			GL.Disable(EnableCap.Dither);
-			GL.Disable(EnableCap.Lighting);
-			GL.Disable(EnableCap.Fog);
+			
 			if (!AvailableNewRenderer)
 			{
 				GL.Disable(EnableCap.Texture2D);
 				GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
 			}
-
+			
 			// ReSharper disable once PossibleNullReferenceException
 			string openGLdll = Path.CombineFile(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "opengl32.dll");
 

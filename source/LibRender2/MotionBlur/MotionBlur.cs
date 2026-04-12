@@ -46,11 +46,11 @@ namespace LibRender2.MotionBlurs
 		/// <summary>This function renderers full-screen motion blur if selected</summary>
 		public void RenderFullscreen(MotionBlurMode mode, double frameRate, double speed)
 		{
-			if (renderer.Screen.Minimized)
+			if (renderer.Screen.Minimized || renderer.currentOptions.ForceForwardsCompatibleContext)
 			{
 				/*
 		         * HACK:
-		         * This breaks if minimized, even if we don't reset the W / H values
+		         * This breaks if minimized or using a forwards compatible context, even if we don't reset the W / H values
 		         */
 				return;
 			}
