@@ -68,7 +68,7 @@ namespace LibRender2.Shaders
 			// Try to load from the same directory as the existing shaders
 			// OpenBVE typically loads shaders as embedded resources in LibRender2
 			var assembly = Assembly.GetExecutingAssembly();
-			string resourceName = $"LibRender2.Shaders.{filename}";
+			string resourceName = $"LibRender2.{filename}";
 
 			using (Stream stream = assembly.GetManifestResourceStream(resourceName))
 			{
@@ -83,7 +83,7 @@ namespace LibRender2.Shaders
 
 			// Fallback: try file-based loading next to the assembly
 			string dir = Path.GetDirectoryName(assembly.Location) ?? ".";
-			string path = Path.Combine(dir, "Shaders", filename);
+			string path = Path.Combine(dir, "Data\\Shaders", filename);
 			if (File.Exists(path))
 			{
 				return File.ReadAllText(path);

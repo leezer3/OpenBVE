@@ -140,8 +140,8 @@
     <EmbeddedResource Include="..\..\assets\Shaders\rectangle.frag" />
     <EmbeddedResource Include="..\..\assets\Shaders\rectangle.vert" />
     <EmbeddedResource Include="..\..\assets\Shaders\text.vert" />
-    <EmbeddedResource Include="Shaders\shadow_depth.vert" />
-    <EmbeddedResource Include="Shaders\shadow_depth.frag" />
+	<EmbeddedResource Include="..\..\assets\Shaders\shadow_depth.vert" />
+    <EmbeddedResource Include="..\..\assets\Shaders\shadow_depth.frag" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
