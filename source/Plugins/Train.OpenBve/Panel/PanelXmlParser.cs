@@ -2115,6 +2115,7 @@ namespace Train.OpenBve
 			StaticObject Object = new StaticObject(Plugin.CurrentHost);
 			Object.Mesh.Vertices = new VertexTemplate[] { t0, t1, t2, t3 };
 			Object.Mesh.Faces = new[] { new MeshFace(new[] { 0, 1, 2, 3 }) };
+			Object.Mesh.Faces[0].Flags |= FaceFlags.Triangles;
 			Object.Mesh.Materials = new MeshMaterial[1];
 			Object.Mesh.Materials[0].Flags = 0;
 			Object.Mesh.Materials[0].Color = Color32.White;
