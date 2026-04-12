@@ -53,18 +53,18 @@
 		<Message></Message>
 	</Object>
 	<Object>
-		<Name>Cr_Crossing_DR.csv</Name>
+		<Name>Cr_CrossingDR.csv</Name>
 		<Path>Uchibo\Cr_CrossingDR.csv</Path>
 		<Message></Message>
 	</Object>
 	<Object>
-		<Name>Cr_Crossing_SL.csv</Name>
-		<Path>Uchibo\Cr_Crossing_SL.csv</Path>
+		<Name>Cr_CrossingSL.csv</Name>
+		<Path>Uchibo\Cr_CrossingSL.csv</Path>
 		<Message></Message>
 	</Object>
 	<Object>
-		<Name>Cr_Crossing_SR.csv</Name>
-		<Path>Uchibo\Cr_Crossing_SR.csv</Path>
+		<Name>Cr_CrossingSR.csv</Name>
+		<Path>Uchibo\Cr_CrossingSR.csv</Path>
 		<Message></Message>
 	</Object>
 	<Object>
@@ -144,6 +144,21 @@
 	</Object>
 	<Object>
 		<Name>FormL.csv</Name>
+		<Path>Uchibo\FormL.csv</Path>
+		<Message></Message>
+	</Object>
+	<Object>
+		<Name>FormLS.csv</Name>
+		<Path>Uchibo\FormLS.csv</Path>
+		<Message></Message>
+	</Object>
+	<Object>
+		<Name>FormLS2.csv</Name>
+		<Path>Uchibo\FormLS2.csv</Path>
+		<Message></Message>
+	</Object>
+	<Object>
+		<Name>FormL2.csv</Name>
 		<Path>Uchibo\FormL2.csv</Path>
 		<Message></Message>
 	</Object>
@@ -300,7 +315,7 @@
 	</Object>
 	<Object>
 		<Name>Signal3.csv</Name>
-		<Path>Signals\Signal_3_0.csv</Path>
+		<Path>Signals\Japanese\Signal_3_0.csv</Path>
 		<Message></Message>
 	</Object>
 	<Sound>

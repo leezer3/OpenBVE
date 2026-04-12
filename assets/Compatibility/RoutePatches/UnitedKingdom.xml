@@ -519,5 +519,11 @@
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 		<Expression Number="266"></Expression>
 	</Patch>
+	<Patch>
+		<Hash>36AAA0A88B3305D0C203B987F9430AACD7FE29C42C949B980D90A9BDAFA82BCF</Hash>
+		<FileName>Edgware Road to Putney Bridge 2002.csv</FileName>
+		<SignalSet>LU.xml</SignalSet>
+	</Patch>
+	
   </RoutePatches>
 </openBVE>
