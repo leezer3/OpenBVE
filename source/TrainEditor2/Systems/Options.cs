@@ -1,4 +1,4 @@
-﻿using Formats.OpenBve;
+using Formats.OpenBve;
 using OpenBveApi;
 using System;
 using System.Globalization;
@@ -71,7 +71,10 @@ namespace TrainEditor2.Systems
 					{
 						block.TryGetValue(OptionsKey.Code, ref CurrentOptions.LanguageCode);
 					}
-
+					else
+					{
+						cfg.ReadNextBlock();
+					}
 				}
 
 				return;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
@@ -589,64 +589,64 @@ namespace TrainEditor2.ViewModels
 				.AddTo(disposable);
 
 			UpCar = SelectedItem
-				.Select(x => Item.Value.Children[1].Children.IndexOf(x) > 0)
+				.Select(x => Item.Value != null && Item.Value.Children.Count > 1 && Item.Value.Children[1].Children.IndexOf(x) > 0)
 				.ToReactiveCommand()
 				.WithSubscribe(app.UpCar)
 				.AddTo(disposable);
 
 			DownCar = SelectedItem
-				.Select(x => Item.Value.Children[1].Children.IndexOf(x))
-				.Select(x => x >= 0 && x < Item.Value.Children[1].Children.Count - 1)
+				.Select(x => Item.Value != null && Item.Value.Children.Count > 1 ? Item.Value.Children[1].Children.IndexOf(x) : -1)
+				.Select(x => x >= 0 && Item.Value != null && Item.Value.Children.Count > 1 && x < Item.Value.Children[1].Children.Count - 1)
 				.ToReactiveCommand()
 				.WithSubscribe(app.DownCar)
 				.AddTo(disposable);
 
 			AddCar = SelectedItem
-				.Select(x => x == Item.Value.Children[1] || Item.Value.Children[1].Children.Contains(x))
+				.Select(x => Item.Value != null && Item.Value.Children.Count > 1 && (x == Item.Value.Children[1] || Item.Value.Children[1].Children.Contains(x)))
 				.ToReactiveCommand()
 				.WithSubscribe(app.AddCar)
 				.AddTo(disposable);
 
 			RemoveCar = SelectedItem
-				.Select(x => Item.Value.Children[1].Children.Contains(x) && Item.Value.Children[1].Children.Where(y => y != x).Any(y => y.Tag.Value is MotorCar))
+				.Select(x => Item.Value != null && Item.Value.Children.Count > 1 && Item.Value.Children[1].Children.Contains(x) && Item.Value.Children[1].Children.Where(y => y != x).Any(y => y.Tag.Value is MotorCar))
 				.ToReactiveCommand()
 				.WithSubscribe(app.RemoveCar)
 				.AddTo(disposable);
 
 			AddParticleSource = SelectedItem
-				.Select(x => x == Item.Value.Children[1].Children[1] || SelectedItem.Value.Children.Contains(x))
+				.Select(x => Item.Value != null && Item.Value.Children.Count > 1 && Item.Value.Children[1].Children.Count > 1 && (x == Item.Value.Children[1].Children[1] || (x != null && x.Children.Contains(x))))
 				.ToReactiveCommand()
 				.WithSubscribe(app.AddParticleSource)
 				.AddTo(disposable);
 
 			
 			RemoveParticleSource = SelectedItem
-				.Select(x => SelectedItem.Value.Children.Contains(x) && SelectedItem.Value.Children.Where(y => y != x).Any(y => y.Tag.Value is ParticleSource))
+				.Select(x => x != null && SelectedItem.Value != null && SelectedItem.Value.Children.Contains(x) && SelectedItem.Value.Children.Where(y => y != x).Any(y => y.Tag.Value is ParticleSource))
 				.ToReactiveCommand()
 				.WithSubscribe(app.RemoveParticleSource)
 				.AddTo(disposable);
 
 			CopyCar = SelectedItem
-				.Select(x => Item.Value.Children[1].Children.Contains(x))
+				.Select(x => Item.Value != null && Item.Value.Children.Count > 1 && Item.Value.Children[1].Children.Contains(x))
 				.ToReactiveCommand()
 				.WithSubscribe(app.CopyCar)
 				.AddTo(disposable);
 
 			UpCoupler = SelectedItem
-				.Select(x => Item.Value.Children[2].Children.IndexOf(x) > 0)
+				.Select(x => Item.Value != null && Item.Value.Children.Count > 2 && Item.Value.Children[2].Children.IndexOf(x) > 0)
 				.ToReactiveCommand()
 				.WithSubscribe(app.UpCoupler)
 				.AddTo(disposable);
 
 			DownCoupler = SelectedItem
-				.Select(x => Item.Value.Children[2].Children.IndexOf(x))
-				.Select(x => x >= 0 && x < Item.Value.Children[2].Children.Count - 1)
+				.Select(x => Item.Value != null && Item.Value.Children.Count > 2 ? Item.Value.Children[2].Children.IndexOf(x) : -1)
+				.Select(x => x >= 0 && Item.Value != null && Item.Value.Children.Count > 2 && x < Item.Value.Children[2].Children.Count - 1)
 				.ToReactiveCommand()
 				.WithSubscribe(app.DownCoupler)
 				.AddTo(disposable);
 
 			ChangeCarClass = SelectedItem
-				.Select(x => x?.Tag.Value is TrailerCar || Item.Value.Children[1].Children.Count(y => y?.Tag.Value is MotorCar) > 1)
+				.Select(x => (x?.Tag.Value is TrailerCar || (Item.Value != null && Item.Value.Children.Count > 1 && Item.Value.Children[1].Children.Count(y => y?.Tag.Value is MotorCar) > 1)))
 				.ToReactiveCommand()
 				.WithSubscribe(() => app.ChangeCarClass(app.Train.Cars.IndexOf((Car)SelectedItem.Value.Tag.Value)))
 				.AddTo(disposable);
