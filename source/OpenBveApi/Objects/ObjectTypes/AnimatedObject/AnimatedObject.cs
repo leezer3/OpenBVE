@@ -761,6 +761,27 @@ namespace OpenBveApi.Objects
 		/// <param name="TrackPosition">The absolute track position</param>
 		public void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, int sectionIndex, double TrackPosition)
 		{
+			CreateObject(Position, WorldTransformation, LocalTransformation, sectionIndex, 0.0f, 0.0f, TrackPosition);
+		}
+
+		/// <param name="StartingDistance">The starting distance</param>
+		/// <param name="EndingDistance">The ending distance</param>
+		/// <param name="TrackPosition">The absolute track position</param>
+		public void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, int sectionIndex, double StartingDistance, double EndingDistance, double TrackPosition)
+		{
+			CreateObject(Position, WorldTransformation, LocalTransformation, sectionIndex, (float)StartingDistance, (float)EndingDistance, TrackPosition);
+		}
+
+		/// <summary>Creates the animated object within the worldspace</summary>
+		/// <param name="Position">The absolute position</param>
+		/// <param name="WorldTransformation">The world transformation to apply (e.g. ground, rail)</param>
+		/// <param name="LocalTransformation">The local transformation to apply in order to rotate the model</param>
+		/// <param name="sectionIndex">The index of the section if placed using a SigF command</param>
+		/// <param name="StartingDistance">The starting distance</param>
+		/// <param name="EndingDistance">The ending distance</param>
+		/// <param name="TrackPosition">The absolute track position</param>
+		public void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, int sectionIndex, float StartingDistance, float EndingDistance, double TrackPosition)
+		{
 
 			int a = currentHost.AnimatedWorldObjectsUsed;
 			Transformation FinalTransformation = new Transformation(LocalTransformation, WorldTransformation);
@@ -770,6 +791,9 @@ namespace OpenBveApi.Objects
 			{
 				var o = this.Clone();
 				currentHost.CreateDynamicObject(ref o.internalObject);
+				o.internalObject.StartingDistance = StartingDistance;
+				o.internalObject.EndingDistance = EndingDistance;
+				o.internalObject.TrackPosition = (float)TrackPosition;
 				TrackFollowingObject currentObject = new TrackFollowingObject(currentHost)
 				{
 					Position = Position,
@@ -814,6 +838,9 @@ namespace OpenBveApi.Objects
 			{
 				var o = this.Clone();
 				currentHost.CreateDynamicObject(ref o.internalObject);
+				o.internalObject.StartingDistance = StartingDistance;
+				o.internalObject.EndingDistance = EndingDistance;
+				o.internalObject.TrackPosition = (float)TrackPosition;
 				o.SectionIndex = sectionIndex;
 				AnimatedWorldObject currentObject = new AnimatedWorldObject(currentHost)
 				{

@@ -633,7 +633,11 @@ namespace CsvRwRouteParser
 					int gi = Data.Blocks[i].Cycle[ci];
 					if (Data.Structure.Ground.ContainsKey(gi))
 					{
-						Data.Structure.Ground[Data.Blocks[i].Cycle[ci]].CreateObject(Position + new Vector3(0.0, -Data.Blocks[i].Height, 0.0), GroundTransformation, StartingDistance, EndingDistance, StartingDistance);
+						// only re-create objects if they are in the modified section
+						if (StartingDistance >= StartTrackPosition)
+						{
+							Data.Structure.Ground[Data.Blocks[i].Cycle[ci]].CreateObject(Position + new Vector3(0.0, -Data.Blocks[i].Height, 0.0), GroundTransformation, StartingDistance, EndingDistance, StartingDistance);
+						}
 					}
 				}
 				// ground-aligned free objects
@@ -641,13 +645,19 @@ namespace CsvRwRouteParser
 				{
 					for (int j = 0; j < Data.Blocks[i].GroundFreeObj.Count; j++)
 					{
-						Data.Blocks[i].GroundFreeObj[j].CreateGroundAligned(Data.Structure.FreeObjects, Position, GroundTransformation, Direction, Data.Blocks[i].Height, StartingDistance, EndingDistance);
+						if (StartingDistance >= StartTrackPosition)
+						{
+							Data.Blocks[i].GroundFreeObj[j].CreateGroundAligned(Data.Structure.FreeObjects, Position, GroundTransformation, Direction, Data.Blocks[i].Height, StartingDistance, EndingDistance);
+						}
 					}
 				}
 				if (!PreviewOnly && Data.Structure.WeatherObjects.ContainsKey(Data.Blocks[i].WeatherObject))
 				{
-					UnifiedObject obj = Data.Structure.WeatherObjects[Data.Blocks[i].WeatherObject];
-					obj.CreateObject(Position, GroundTransformation, Data.Blocks[i].Height, StartingDistance, EndingDistance);
+					if (StartingDistance >= StartTrackPosition)
+					{
+						UnifiedObject obj = Data.Structure.WeatherObjects[Data.Blocks[i].WeatherObject];
+						obj.CreateObject(Position, GroundTransformation, Data.Blocks[i].Height, StartingDistance, EndingDistance);
+					}
 				}
 				// rail-aligned objects
 				{
@@ -784,7 +794,10 @@ namespace CsvRwRouteParser
 
 							if (Data.Structure.RailObjects.ContainsKey(Data.Blocks[i].RailType[railKey]))
 							{
-								Data.Structure.RailObjects[Data.Blocks[i].RailType[railKey]]?.CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
+								if (StartingDistance >= StartTrackPosition)
+								{
+									Data.Structure.RailObjects[Data.Blocks[i].RailType[railKey]]?.CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
+								}
 							}
 
 							// points of interest
@@ -822,19 +835,28 @@ namespace CsvRwRouteParser
 							// poles
 							if (Data.Blocks[i].RailPole.Length > railKey)
 							{
-								Data.Blocks[i].RailPole[railKey].Create(Data.Structure.Poles, pos, RailTransformation, Direction, planar, updown, StartingDistance, EndingDistance);
+								if (StartingDistance >= StartTrackPosition)
+								{
+									Data.Blocks[i].RailPole[railKey].Create(Data.Structure.Poles, pos, RailTransformation, Direction, planar, updown, StartingDistance, EndingDistance);
+								}
 							}
 
 							// walls
 							if (Data.Blocks[i].RailWall.ContainsKey(railKey))
 							{
-								Data.Blocks[i].RailWall[railKey].Create(pos, RailTransformation, StartingDistance, EndingDistance);
+								if (StartingDistance >= StartTrackPosition)
+								{
+									Data.Blocks[i].RailWall[railKey].Create(pos, RailTransformation, StartingDistance, EndingDistance);
+								}
 							}
 
 							// dikes
 							if (Data.Blocks[i].RailDike.ContainsKey(railKey))
 							{
-								Data.Blocks[i].RailDike[railKey].Create(pos, RailTransformation, StartingDistance, EndingDistance);
+								if (StartingDistance >= StartTrackPosition)
+								{
+									Data.Blocks[i].RailDike[railKey].Create(pos, RailTransformation, StartingDistance, EndingDistance);
+								}
 							}
 
 							// sounds
@@ -873,7 +895,10 @@ namespace CsvRwRouteParser
 							{
 								for (int k = 0; k < Data.Blocks[i].RailFreeObj[railKey].Count; k++)
 								{
-									Data.Blocks[i].RailFreeObj[railKey][k].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance);
+									if (StartingDistance >= StartTrackPosition)
+									{
+										Data.Blocks[i].RailFreeObj[railKey][k].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance);
+									}
 								}
 							}
 
@@ -891,9 +916,17 @@ namespace CsvRwRouteParser
 									// patterns key off rail 0
 									while (Data.Blocks[i].PatternObjs[key].LastPlacement + Data.Blocks[i].PatternObjs[key].Interval < (i + 1) * Data.BlockInterval)
 									{
-										if (!Data.Blocks[i].PatternObjs[key].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance))
+										if (StartingDistance >= StartTrackPosition)
 										{
-											break;
+											if (!Data.Blocks[i].PatternObjs[key].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance))
+											{
+												break;
+											}
+										}
+										else
+										{
+											// we still need to "pretend" to place it to keep the state correct
+											Data.Blocks[i].PatternObjs[key].LastPlacement += Data.Blocks[i].PatternObjs[key].Interval;
 										}
 									}
 
@@ -910,18 +943,27 @@ namespace CsvRwRouteParser
 							{
 								for (int k = 0; k < Data.Blocks[i].Transponders.Length; k++)
 								{
-									double b = 0.25 + 0.75 * Data.GetBrightness(Data.Blocks[i].Transponders[k].TrackPosition);
-									Data.Blocks[i].Transponders[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b, Data.Structure.Beacon);
+									if (StartingDistance >= StartTrackPosition)
+									{
+										double b = 0.25 + 0.75 * Data.GetBrightness(Data.Blocks[i].Transponders[k].TrackPosition);
+										Data.Blocks[i].Transponders[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b, Data.Structure.Beacon);
+									}
 								}
 
 								for (int k = 0; k < Data.Blocks[i].DestinationChanges.Length; k++)
 								{
-									Data.Blocks[i].DestinationChanges[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, Data.Structure.Beacon);
+									if (StartingDistance >= StartTrackPosition)
+									{
+										Data.Blocks[i].DestinationChanges[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, Data.Structure.Beacon);
+									}
 								}
 
 								for (int k = 0; k < Data.Blocks[i].HornBlows.Length; k++)
 								{
-									Data.Blocks[i].HornBlows[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, Data.Structure.Beacon);
+									if (StartingDistance >= StartTrackPosition)
+									{
+										Data.Blocks[i].HornBlows[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, Data.Structure.Beacon);
+									}
 								}
 							}
 
@@ -931,7 +973,10 @@ namespace CsvRwRouteParser
 								// signals
 								for (int k = 0; k < Data.Blocks[i].Signals.Length; k++)
 								{
-									Data.Blocks[i].Signals[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, 0.27 + 0.75 * Data.GetBrightness(Data.Blocks[i].Signals[k].TrackPosition));
+									if (StartingDistance >= StartTrackPosition)
+									{
+										Data.Blocks[i].Signals[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, 0.27 + 0.75 * Data.GetBrightness(Data.Blocks[i].Signals[k].TrackPosition));
+									}
 								}
 
 								// sections
@@ -957,8 +1002,11 @@ namespace CsvRwRouteParser
 							{
 								if (railKey == Data.Blocks[i].Limits[k].RailIndex)
 								{
-									double b = 0.25 + 0.75 * Data.GetBrightness(Data.Blocks[i].Limits[k].TrackPosition);
-									Data.Blocks[i].Limits[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b, Data.UnitOfSpeed);
+									if (StartingDistance >= StartTrackPosition)
+									{
+										double b = 0.25 + 0.75 * Data.GetBrightness(Data.Blocks[i].Limits[k].TrackPosition);
+										Data.Blocks[i].Limits[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b, Data.UnitOfSpeed);
+									}
 								}
 							}
 
@@ -967,8 +1015,11 @@ namespace CsvRwRouteParser
 							{
 								for (int k = 0; k < Data.Blocks[i].StopPositions.Length; k++)
 								{
-									double b = 0.25 + 0.75 * Data.GetBrightness(Data.Blocks[i].StopPositions[k].TrackPosition);
-									Data.Blocks[i].StopPositions[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b);
+									if (StartingDistance >= StartTrackPosition)
+									{
+										double b = 0.25 + 0.75 * Data.GetBrightness(Data.Blocks[i].StopPositions[k].TrackPosition);
+										Data.Blocks[i].StopPositions[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b);
+									}
 								}
 							}
 						}

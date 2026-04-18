@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
@@ -75,7 +75,7 @@ namespace OpenBveApi.Objects
 						}
 						else
 						{
-							Objects[i].Clone().CreateObject(Position, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition);
+							Objects[i].Clone().CreateObject(Position, WorldTransformation, LocalTransformation, SectionIndex, StartingDistance, EndingDistance, TrackPosition);
 						}
 					}
 				}
@@ -86,7 +86,7 @@ namespace OpenBveApi.Objects
 				{
 					if (Objects[i].States.Length != 0)
 					{
-						Objects[i].Clone().CreateObject(Position, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition);
+						Objects[i].Clone().CreateObject(Position, WorldTransformation, LocalTransformation, SectionIndex, StartingDistance, EndingDistance, TrackPosition);
 					}
 				}
 			}

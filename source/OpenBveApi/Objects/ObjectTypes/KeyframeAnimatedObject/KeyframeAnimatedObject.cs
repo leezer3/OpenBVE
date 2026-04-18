@@ -99,6 +99,9 @@ namespace OpenBveApi.Objects
 				Objects[i].WorldPosition = position;
 				Objects[i].Rotate = Matrix4D.NoTransformation;
 				Objects[i].Translation = Matrix4D.NoTransformation;
+				Objects[i].StartingDistance = (float)startingDistance;
+				Objects[i].EndingDistance = (float)endingDistance;
+				Objects[i].TrackPosition = (float)trackPosition;
 				currentHost.ShowObject(Objects[i], ObjectType.Dynamic);
 				Objects[i].Matricies = matriciesToShader;
 			}

@@ -57,6 +57,8 @@ namespace RouteViewer
 			this.comboBoxNewXParser = new System.Windows.Forms.ComboBox();
 			this.label15 = new System.Windows.Forms.Label();
 			this.numericUpDownViewingDistance = new System.Windows.Forms.NumericUpDown();
+			this.labelAutoReload = new System.Windows.Forms.Label();
+			this.checkBoxAutoReload = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.width)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.height)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.AnsiotropicLevel)).BeginInit();
@@ -139,7 +141,7 @@ namespace RouteViewer
 			// 
 			// button1
 			// 
-			this.button1.Location = new System.Drawing.Point(211, 447);
+			this.button1.Location = new System.Drawing.Point(211, 470);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(75, 23);
 			this.button1.TabIndex = 9;
@@ -307,11 +309,29 @@ namespace RouteViewer
 			this.checkBoxProgressBar.TabIndex = 23;
 			this.checkBoxProgressBar.UseVisualStyleBackColor = true;
 			// 
+			// labelAutoReload
+			// 
+			this.labelAutoReload.AutoSize = true;
+			this.labelAutoReload.Location = new System.Drawing.Point(15, 326);
+			this.labelAutoReload.Name = "labelAutoReload";
+			this.labelAutoReload.Size = new System.Drawing.Size(100, 13);
+			this.labelAutoReload.TabIndex = 44;
+			this.labelAutoReload.Text = "Auto Reload Route:";
+			// 
+			// checkBoxAutoReload
+			// 
+			this.checkBoxAutoReload.AutoSize = true;
+			this.checkBoxAutoReload.Location = new System.Drawing.Point(248, 326);
+			this.checkBoxAutoReload.Name = "checkBoxAutoReload";
+			this.checkBoxAutoReload.Size = new System.Drawing.Size(15, 14);
+			this.checkBoxAutoReload.TabIndex = 45;
+			this.checkBoxAutoReload.UseVisualStyleBackColor = true;
+			// 
 			// label13
 			// 
 			this.label13.AutoSize = true;
 			this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label13.Location = new System.Drawing.Point(99, 333);
+			this.label13.Location = new System.Drawing.Point(99, 356);
 			this.label13.Name = "label13";
 			this.label13.Size = new System.Drawing.Size(42, 15);
 			this.label13.TabIndex = 26;
@@ -320,7 +340,7 @@ namespace RouteViewer
 			// label14
 			// 
 			this.label14.AutoSize = true;
-			this.label14.Location = new System.Drawing.Point(16, 377);
+			this.label14.Location = new System.Drawing.Point(16, 400);
 			this.label14.Name = "label14";
 			this.label14.Size = new System.Drawing.Size(106, 13);
 			this.label14.TabIndex = 28;
@@ -332,7 +352,7 @@ namespace RouteViewer
 			this.comboBoxNewObjParser.Items.AddRange(new object[] {
             "OriginalObjParser",
             "AssimpObjParser"});
-			this.comboBoxNewObjParser.Location = new System.Drawing.Point(166, 377);
+			this.comboBoxNewObjParser.Location = new System.Drawing.Point(166, 400);
 			this.comboBoxNewObjParser.Name = "comboBoxNewObjParser";
 			this.comboBoxNewObjParser.Size = new System.Drawing.Size(121, 21);
 			this.comboBoxNewObjParser.TabIndex = 27;
@@ -340,7 +360,7 @@ namespace RouteViewer
 			// label12
 			// 
 			this.label12.AutoSize = true;
-			this.label12.Location = new System.Drawing.Point(16, 348);
+			this.label12.Location = new System.Drawing.Point(16, 371);
 			this.label12.Name = "label12";
 			this.label12.Size = new System.Drawing.Size(97, 13);
 			this.label12.TabIndex = 32;
@@ -353,7 +373,7 @@ namespace RouteViewer
             "OriginalXParser",
             "NewXParser",
             "AssimpXParser"});
-			this.comboBoxNewXParser.Location = new System.Drawing.Point(166, 348);
+			this.comboBoxNewXParser.Location = new System.Drawing.Point(166, 371);
 			this.comboBoxNewXParser.Name = "comboBoxNewXParser";
 			this.comboBoxNewXParser.Size = new System.Drawing.Size(121, 21);
 			this.comboBoxNewXParser.TabIndex = 31;
@@ -361,7 +381,7 @@ namespace RouteViewer
 			// label15
 			// 
 			this.label15.AutoSize = true;
-			this.label15.Location = new System.Drawing.Point(12, 412);
+			this.label15.Location = new System.Drawing.Point(12, 435);
 			this.label15.Name = "label15";
 			this.label15.Size = new System.Drawing.Size(109, 13);
 			this.label15.TabIndex = 34;
@@ -369,7 +389,7 @@ namespace RouteViewer
 			// 
 			// numericUpDownViewingDistance
 			// 
-			this.numericUpDownViewingDistance.Location = new System.Drawing.Point(166, 410);
+			this.numericUpDownViewingDistance.Location = new System.Drawing.Point(166, 433);
 			this.numericUpDownViewingDistance.Maximum = new decimal(new int[] {
             4096,
             0,
@@ -393,7 +413,9 @@ namespace RouteViewer
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(311, 482);
+			this.ClientSize = new System.Drawing.Size(311, 505);
+			this.Controls.Add(this.labelAutoReload);
+			this.Controls.Add(this.checkBoxAutoReload);
 			this.Controls.Add(this.label15);
 			this.Controls.Add(this.numericUpDownViewingDistance);
 			this.Controls.Add(this.label12);
@@ -469,5 +491,7 @@ namespace RouteViewer
 		private System.Windows.Forms.ComboBox comboBoxNewXParser;
 		private System.Windows.Forms.Label label15;
 		private System.Windows.Forms.NumericUpDown numericUpDownViewingDistance;
+		private System.Windows.Forms.Label labelAutoReload;
+		private System.Windows.Forms.CheckBox checkBoxAutoReload;
 	}
 }

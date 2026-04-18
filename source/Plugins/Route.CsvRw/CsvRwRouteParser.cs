@@ -24,6 +24,7 @@ namespace CsvRwRouteParser {
 		internal readonly bool IsRW;
 		internal readonly Plugin Plugin;
 		internal bool IsHmmsim;
+		internal double StartTrackPosition = 0;
 
 		internal Parser(Plugin plugin, bool isRW)
 		{
@@ -486,7 +487,19 @@ namespace CsvRwRouteParser {
 								case "track":
 									if (Enum.TryParse(Command, true, out TrackCommand parsedCommand))
 									{
+										// speed up reloads by skipping objects before the edit point (we already have them in the renderer)
+										// however we still need to parse geometry/signaling stuff to keep the state correct
+										if (Data.TrackPosition < StartTrackPosition)
+										{
+											switch (parsedCommand)
+											{
+												case TrackCommand.FreeObj:
+												case TrackCommand.SigF:
+													goto skipCommand;
+											}
+										}
 										ParseTrackCommand(parsedCommand, Arguments, FileName, UnitOfLength, Expressions[j], ref Data, BlockIndex, PreviewOnly, IsRW);
+										skipCommand:;
 									}
 									else
 									{

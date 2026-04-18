@@ -26,6 +26,7 @@ namespace RouteViewer
 			comboBoxNewXParser.SelectedIndex = (int) Interface.CurrentOptions.CurrentXParser;
 			comboBoxNewObjParser.SelectedIndex = (int) Interface.CurrentOptions.CurrentObjParser;
 			numericUpDownViewingDistance.Value = Math.Min(Interface.CurrentOptions.ViewingDistance, numericUpDownViewingDistance.Minimum);
+			checkBoxAutoReload.Checked = Interface.CurrentOptions.AutoReloadObjects;
         }
 
         internal static DialogResult ShowOptions()
@@ -126,6 +127,7 @@ namespace RouteViewer
 				}
 			}
 			Interface.CurrentOptions.ViewingDistance = (int)numericUpDownViewingDistance.Value;
+			Interface.CurrentOptions.AutoReloadObjects = checkBoxAutoReload.Checked;
 			Interface.CurrentOptions.QuadTreeLeafSize = Math.Max(50, (int)Math.Ceiling(Interface.CurrentOptions.ViewingDistance / 10.0d) * 10); // quad tree size set to 10% of viewing distance to the nearest 10
 			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_rv.cfg"));
 			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)

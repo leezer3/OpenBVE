@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace OpenBveApi.Routes
 {
@@ -41,5 +41,8 @@ namespace OpenBveApi.Routes
 
 		/// <summary>Holds the current loading progress</summary>
 		public double CurrentProgress;
+
+		/// <summary>The track position to start parsing from (for selective reloading)</summary>
+		public double StartTrackPosition = 0;
 	}
 }

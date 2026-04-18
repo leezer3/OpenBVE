@@ -567,6 +567,17 @@ namespace LibRender2
 			VisibleObjects.Clear();
 		}
 
+		/// <summary>Resets the renderer state selectively from a given track position.</summary>
+		/// <param name="startPosition">The track position from which to clear objects.</param>
+		public void ResetSelective(double startPosition)
+		{
+			currentHost.AnimatedObjectCollectionCache.Clear();
+			// clear out world objects from the change point onwards so we can re-add them
+			StaticObjectStates.RemoveAll(s => s.TrackPosition >= startPosition || (s.TrackPosition == -1.0f && s.StartingDistance >= startPosition));
+			DynamicObjectStates.RemoveAll(s => s.TrackPosition >= startPosition || (s.TrackPosition == -1.0f && s.StartingDistance >= startPosition));
+			VisibleObjects.ClearSelective(startPosition);
+		}
+
 		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
 		{
 			Matrix4D Translate = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
@@ -650,6 +661,7 @@ namespace LibRender2
 				Rotate = Rotate,
 				StartingDistance = startingDistance,
 				EndingDistance = endingDistance,
+				TrackPosition = (float)TrackPosition,
 				WorldPosition = Position
 			});
 			

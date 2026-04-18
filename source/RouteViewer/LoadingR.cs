@@ -49,15 +49,23 @@ namespace RouteViewer {
 		internal static bool Complete;
 		private static string CurrentRouteFile;
 		private static Encoding CurrentRouteEncoding;
+		private static double currentStartPosition;
 
 		internal static bool JobAvailable;
 
 		// load
-		internal static void Load(string routeFile, Encoding routeEncoding, byte[] textureBytes)
+		internal static void Load(string routeFile, Encoding routeEncoding, byte[] textureBytes, double startPosition = 0)
 		{
 			Program.Renderer.GameWindow.TargetRenderFrequency = 0;
 			// reset
-			Game.Reset();
+			if (startPosition > 0)
+			{
+				Game.ResetSelective(startPosition);
+			}
+			else
+			{
+				Game.Reset();
+			}
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString(), Interface.CurrentOptions.LoadingLogo, Interface.CurrentOptions.LoadingProgressBar);
 			if (textureBytes != null && textureBytes.Length > 0)
 			{
@@ -70,7 +78,7 @@ namespace RouteViewer {
 			CurrentRouteFile = routeFile;
 			CurrentRouteEncoding = routeEncoding;
 			// thread
-			Loading.LoadAsynchronously(CurrentRouteFile, CurrentRouteEncoding);
+			Loading.LoadAsynchronously(CurrentRouteFile, CurrentRouteEncoding, startPosition);
 			RouteViewer.LoadingScreenLoop();
 		}
 
@@ -163,13 +171,14 @@ namespace RouteViewer {
 			}
 		}
 
-		internal static void LoadAsynchronously(string RouteFile, Encoding RouteEncoding)
+		internal static void LoadAsynchronously(string RouteFile, Encoding RouteEncoding, double startPosition = 0)
 		{
 			// members
 			Cancel = false;
 			Complete = false;
 			CurrentRouteFile = RouteFile;
 			CurrentRouteEncoding = RouteEncoding;
+			currentStartPosition = startPosition;
 
 			//Set the route and train folders in the info class
 			// ReSharper disable once UnusedVariable
@@ -191,6 +200,7 @@ namespace RouteViewer {
 				if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(CurrentRouteFile))
 				{
 					object Route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
+					Program.CurrentHost.Plugins[i].Route.StartTrackPosition = currentStartPosition;
 					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(CurrentRouteFile, CurrentRouteEncoding, null, ObjectFolder, SoundFolder, false, ref Route))
 					{
 						Program.CurrentRoute = (CurrentRoute) Route;

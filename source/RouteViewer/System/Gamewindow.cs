@@ -1,4 +1,4 @@
-﻿using LibRender2.Viewports;
+using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
@@ -79,6 +79,7 @@ namespace RouteViewer
 	            ObjectManager.UpdateAnimatedWorldObjects(TimeElapsed, false);
 	            World.UpdateAbsoluteCamera(TimeElapsed);
 	            Program.Sounds.Update(TimeElapsed, SoundModels.Linear);
+	            Program.CheckFileChanges(TimeElapsed);
             }
             Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight, Program.CurrentRoute.LightDefinitions);
             Program.Renderer.RenderScene(TimeElapsed);

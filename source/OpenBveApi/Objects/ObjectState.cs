@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Math;
 
 namespace OpenBveApi.Objects
@@ -79,6 +79,8 @@ namespace OpenBveApi.Objects
 		public float StartingDistance;
 		/// <summary>The ending track position, for static objects only.</summary>
 		public float EndingDistance;
+		/// <summary>The track position marker (used for selective reload cleanup)</summary>
+		public float TrackPosition;
 
 		/// <summary>Creates a new ObjectState</summary>
 		public ObjectState()
@@ -90,6 +92,7 @@ namespace OpenBveApi.Objects
 			TextureTranslation = Matrix4D.Identity;
 			StartingDistance = 0.0f;
 			EndingDistance = 0.0f;
+			TrackPosition = -1.0f;
 			updateModelMatrix = false;
 		}
 

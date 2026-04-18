@@ -85,6 +85,24 @@ namespace LibRender2.Objects
 				myOverlayAlphaFaces.Clear();
 				renderer.StaticObjectStates.Clear();
 				renderer.DynamicObjectStates.Clear();
+				quadTree.Clear();
+			}
+		}
+
+		/// <summary>Selective cleanup of objects and spatial partitioning tree.</summary>
+		/// <param name="startPosition">The track position from which to clear.</param>
+		public void ClearSelective(double startPosition)
+		{
+			lock (LockObject)
+			{
+				// remove objects effectively from the modification point onwards
+				List<ObjectState> toRemove = Objects.Keys.Where(s => s.StartingDistance >= startPosition).ToList();
+				foreach (var state in toRemove)
+				{
+					RemoveObject(state);
+				}
+				// clear the tree so it gets rebuilt properly with the new world objects
+				quadTree.Clear();
 			}
 		}
 

@@ -34,7 +34,67 @@ namespace RouteViewer {
 			{
 				Program.Renderer.Reset();
 			}
+			// object manager
+			Program.Renderer.InitializeVisibility();
+			ObjectManager.AnimatedWorldObjects = new WorldObject[4];
+			ObjectManager.AnimatedWorldObjectsUsed = 0;
+			ResetInternal();
+		}
+
+		/// <summary>Selective reset for auto-reloading.</summary>
+		/// <param name="startPosition">The track position from which to clear.</param>
+		internal static void ResetSelective(double startPosition)
+		{
+			Program.Renderer.ResetSelective(startPosition);
 			
+			// Selective cleanup of animated world objects:
+			// We need to explicitly hide each removed object from the renderer,
+			// otherwise its mesh faces stay in the draw lists and keep rendering as ghosts
+			int newCount = 0;
+			for (int i = 0; i < ObjectManager.AnimatedWorldObjectsUsed; i++)
+			{
+				if (ObjectManager.AnimatedWorldObjects[i].TrackPosition < startPosition)
+				{
+					// keep this one, it's before the edit point
+					ObjectManager.AnimatedWorldObjects[newCount++] = ObjectManager.AnimatedWorldObjects[i];
+				}
+				else
+				{
+					// this object is at or past the edit point, hide it from the renderer
+					// so its faces get removed from the draw lists
+					var wo = ObjectManager.AnimatedWorldObjects[i];
+
+					// KeyframeWorldObject shadows Object with KeyframeAnimatedObject which has an Objects[] array
+					if (wo is KeyframeWorldObject kwo && kwo.Object?.Objects != null)
+					{
+						for (int j = 0; j < kwo.Object.Objects.Length; j++)
+						{
+							if (kwo.Object.Objects[j] != null)
+							{
+								Program.Renderer.VisibleObjects.HideObject(kwo.Object.Objects[j]);
+								Program.Renderer.DynamicObjectStates.Remove(kwo.Object.Objects[j]);
+							}
+						}
+					}
+					// all other WorldObject subtypes use the base AnimatedObject.internalObject
+					else if (wo.Object?.internalObject != null)
+					{
+						Program.Renderer.VisibleObjects.HideObject(wo.Object.internalObject);
+						Program.Renderer.DynamicObjectStates.Remove(wo.Object.internalObject);
+					}
+				}
+			}
+			ObjectManager.AnimatedWorldObjectsUsed = newCount;
+			for (int i = newCount; i < ObjectManager.AnimatedWorldObjects.Length; i++)
+			{
+				ObjectManager.AnimatedWorldObjects[i] = null;
+			}
+
+			ResetInternal();
+		}
+
+		private static void ResetInternal()
+		{
 			// track manager
 			Program.CurrentRoute.Tracks = new Dictionary<int, Track>();
 			Program.CurrentRoute.Tracks.Add(0, new Track());
@@ -64,11 +124,6 @@ namespace RouteViewer {
 			Program.Renderer.InfoTotalQuads = 0;
 			Program.Renderer.InfoTotalQuadStrip = 0;
 			Program.Renderer.InfoTotalPolygon = 0;
-			Program.Renderer.VisibleObjects.quadTree.Clear();
-			// object manager
-			Program.Renderer.InitializeVisibility();
-			ObjectManager.AnimatedWorldObjects = new WorldObject[4];
-			ObjectManager.AnimatedWorldObjectsUsed = 0;
 			// renderer / sound
 			Program.Sounds.StopAllSounds();
 			GC.Collect();

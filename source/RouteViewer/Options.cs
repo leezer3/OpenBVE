@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -41,6 +41,7 @@ namespace RouteViewer
 				Builder.AppendLine("isUseNewRenderer = " + (IsUseNewRenderer ? "true" : "false"));
 				Builder.AppendLine("viewingdistance = " + ViewingDistance);
 				Builder.AppendLine("quadleafsize = " + QuadTreeLeafSize);
+				Builder.AppendLine("autoReloadObjects = " + (AutoReloadObjects ? "true" : "false"));
 				Builder.AppendLine();
 				Builder.AppendLine("[quality]");
 				Builder.AppendLine("interpolation = " + Interpolation);
@@ -106,6 +107,7 @@ namespace RouteViewer
 							block.GetValue(OptionsKey.IsUseNewRenderer, out Interface.CurrentOptions.IsUseNewRenderer);
 							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.QuadLeafSize, ref Interface.CurrentOptions.QuadTreeLeafSize, NumberRange.Positive);
+							block.GetValue(OptionsKey.AutoReloadObjects, out Interface.CurrentOptions.AutoReloadObjects);
 							break;
 						case OptionsSection.Quality:
 							block.GetEnumValue(OptionsKey.Interpolation, out Interface.CurrentOptions.Interpolation);

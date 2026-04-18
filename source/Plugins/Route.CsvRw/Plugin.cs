@@ -125,6 +125,7 @@ namespace CsvRwRouteParser
 		    try
 		    {
 				Parser parser = new Parser(this, isRw);
+				parser.StartTrackPosition = StartTrackPosition;
 				parser.ParseRoute(path, textEncoding, trainPath, objectPath, soundPath, PreviewOnly);
 				IsLoading = false;
 			    return true;
