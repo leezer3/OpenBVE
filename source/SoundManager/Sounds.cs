@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -30,6 +30,8 @@ namespace SoundManager
 
 		/// <summary>The number of sound buffers.</summary>
 		private int BufferCount;
+
+		private readonly object buffersLock = new object();
 
 		/// <summary>A list of all sound sources.</summary>
 		protected internal static SoundSource[] Sources = new SoundSource[16];
@@ -240,33 +242,36 @@ namespace SoundManager
 			{
 				return null;
 			}
-			for (int i = 0; i < BufferCount; i++)
+			lock (buffersLock)
 			{
-				if (!(Buffers[i].Origin is PathOrigin))
+				for (int i = 0; i < BufferCount; i++)
 				{
-					continue;
+					if (!(Buffers[i].Origin is PathOrigin))
+					{
+						continue;
+					}
+
+					if (((PathOrigin)Buffers[i].Origin).Path == path)
+					{
+						return Buffers[i];
+					}
+				}
+				if (Buffers.Length == BufferCount)
+				{
+					Array.Resize(ref Buffers, Buffers.Length << 1);
 				}
 
-				if (((PathOrigin)Buffers[i].Origin).Path == path)
+				try
 				{
-					return Buffers[i];
+					Buffers[BufferCount] = new SoundBuffer(CurrentHost, path, radius);
 				}
+				catch
+				{
+					return null;
+				}
+				BufferCount++;
+				return Buffers[BufferCount - 1];
 			}
-			if (Buffers.Length == BufferCount)
-			{
-				Array.Resize(ref Buffers, Buffers.Length << 1);
-			}
-
-			try
-			{
-				Buffers[BufferCount] = new SoundBuffer(CurrentHost, path, radius);
-			}
-			catch
-			{
-				return null;
-			}
-			BufferCount++;
-			return Buffers[BufferCount - 1];
 		}
 
 		/// <summary>Registers a sound buffer and returns a handle to the buffer.</summary>
@@ -275,21 +280,24 @@ namespace SoundManager
 		/// <returns>The handle to the sound buffer.</returns>
 		public SoundBuffer RegisterBuffer(Sound data, double radius)
 		{
-			if (Buffers.Length == BufferCount)
+			lock (buffersLock)
 			{
-				Array.Resize(ref Buffers, Buffers.Length << 1);
-			}
+				if (Buffers.Length == BufferCount)
+				{
+					Array.Resize(ref Buffers, Buffers.Length << 1);
+				}
 
-			try
-			{
-				Buffers[BufferCount] = new SoundBuffer(data, radius);
+				try
+				{
+					Buffers[BufferCount] = new SoundBuffer(data, radius);
+				}
+				catch
+				{
+					return null;
+				}
+				BufferCount++;
+				return Buffers[BufferCount - 1];
 			}
-			catch
-			{
-				return null;
-			}
-			BufferCount++;
-			return Buffers[BufferCount - 1];
 		}
 
 		// --- loading buffers ---

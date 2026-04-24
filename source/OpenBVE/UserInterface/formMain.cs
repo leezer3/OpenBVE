@@ -458,6 +458,7 @@ namespace OpenBve {
 			checkBoxLoadInAdvance.Checked = Interface.CurrentOptions.LoadInAdvance;
 			checkBoxUnloadTextures.Checked = Interface.CurrentOptions.UnloadUnusedTextures;
 			checkBoxIsUseNewRenderer.Checked = Interface.CurrentOptions.IsUseNewRenderer;
+			checkBoxParallelRouteLoading.Checked = Interface.CurrentOptions.ParallelRouteLoading;
 			// Shadow Resolution
 			switch (Interface.CurrentOptions.ShadowResolution)
 			{
@@ -1179,6 +1180,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.OldTransparencyMode = checkBoxTransparencyFix.Checked;
 			Interface.CurrentOptions.EnableBveTsHacks = checkBoxHacks.Checked;
 			Interface.CurrentOptions.IsUseNewRenderer = checkBoxIsUseNewRenderer.Checked;
+			Interface.CurrentOptions.ParallelRouteLoading = checkBoxParallelRouteLoading.Checked;
 			// Shadow Resolution
 			switch (comboboxShadowResolution.SelectedIndex)
 			{

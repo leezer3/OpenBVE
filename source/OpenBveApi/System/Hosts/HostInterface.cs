@@ -13,6 +13,7 @@ using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using System.Collections.Concurrent;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace OpenBveApi.Hosts {
@@ -123,11 +124,11 @@ namespace OpenBveApi.Hosts {
 		protected HostInterface(HostApplication host)
 		{
 			Application = host;
-			StaticObjectCache = new Dictionary<ValueTuple<string, bool, DateTime>, StaticObject>();
-			AnimatedObjectCollectionCache = new Dictionary<string, AnimatedObjectCollection>();
-			MissingFiles = new List<string>();
-			FailedObjects = new List<string>();
-			FailedTextures = new List<string>();
+			StaticObjectCache = new ConcurrentDictionary<ValueTuple<string, bool, DateTime>, StaticObject>();
+			AnimatedObjectCollectionCache = new ConcurrentDictionary<string, AnimatedObjectCollection>();
+			MissingFiles = new ConcurrentBag<string>();
+			FailedObjects = new ConcurrentBag<string>();
+			FailedTextures = new ConcurrentBag<string>();
 
 			if (Platform == HostPlatform.GNULinux)
             {
@@ -154,18 +155,17 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Clears the error log</summary>
 		public void ClearErrors()
 		{
-			MissingFiles.Clear();
-			FailedObjects.Clear();
-			FailedTextures.Clear();
-
+			while (MissingFiles.TryTake(out _)) ;
+			while (FailedObjects.TryTake(out _)) ;
+			while (FailedTextures.TryTake(out _)) ;
 		}
 
 		/// <summary>Contains a list of missing files encountered</summary>
-		public readonly List<string> MissingFiles;
+		public readonly ConcurrentBag<string> MissingFiles;
 		/// <summary>Contains a list of objects which failed to load</summary>
-		public readonly List<string> FailedObjects;
+		public readonly ConcurrentBag<string> FailedObjects;
 		/// <summary>Contains a list of textures which failed to load</summary>
-		public readonly List<string> FailedTextures;
+		public readonly ConcurrentBag<string> FailedTextures;
 
 		/// <summary>Queries the dimensions of a texture.</summary>
 		/// <param name="path">The path to the file or folder that contains the texture.</param>
@@ -604,13 +604,13 @@ namespace OpenBveApi.Hosts {
 		/// <summary>
 		/// Dictionary of StaticObject with Path and PreserveVertices as keys.
 		/// </summary>
-		public readonly Dictionary<ValueTuple<string, bool, DateTime>, StaticObject> StaticObjectCache;
+		public readonly ConcurrentDictionary<ValueTuple<string, bool, DateTime>, StaticObject> StaticObjectCache;
 
 		/// <summary>
 		/// Dictionary of AnimatedObjectCollection with Path as key.
 		/// </summary>
 
-		public readonly Dictionary<string, AnimatedObjectCollection> AnimatedObjectCollectionCache;
+		public readonly ConcurrentDictionary<string, AnimatedObjectCollection> AnimatedObjectCollectionCache;
 
 		/// <summary>Adds a marker texture to the host application's display</summary>
 		/// <param name="MarkerTexture">The texture to add</param>

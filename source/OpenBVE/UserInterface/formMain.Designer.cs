@@ -132,6 +132,7 @@ namespace OpenBve {
             this.labelTimeAcceleration = new System.Windows.Forms.Label();
             this.updownTimeAccelerationFactor = new System.Windows.Forms.NumericUpDown();
             this.checkBoxIsUseNewRenderer = new System.Windows.Forms.CheckBox();
+            this.checkBoxParallelRouteLoading = new System.Windows.Forms.CheckBox();
             this.checkBoxLoadInAdvance = new System.Windows.Forms.CheckBox();
             this.groupBoxPackageOptions = new System.Windows.Forms.GroupBox();
             this.buttonMSTSTrainsetDirectory = new System.Windows.Forms.Button();
@@ -1826,6 +1827,7 @@ namespace OpenBve {
             this.groupBoxAdvancedOptions.Controls.Add(this.labelTimeAcceleration);
             this.groupBoxAdvancedOptions.Controls.Add(this.updownTimeAccelerationFactor);
             this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxIsUseNewRenderer);
+            this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxParallelRouteLoading);
             this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxLoadInAdvance);
             this.groupBoxAdvancedOptions.ForeColor = System.Drawing.Color.Black;
             this.groupBoxAdvancedOptions.Location = new System.Drawing.Point(8, 190);
@@ -1935,6 +1937,17 @@ namespace OpenBve {
             this.checkBoxIsUseNewRenderer.TabIndex = 2;
             this.checkBoxIsUseNewRenderer.Text = "Disable OpenGL display lists";
             this.checkBoxIsUseNewRenderer.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxParallelRouteLoading
+            // 
+            this.checkBoxParallelRouteLoading.AutoSize = true;
+            this.checkBoxParallelRouteLoading.ForeColor = System.Drawing.Color.Black;
+            this.checkBoxParallelRouteLoading.Location = new System.Drawing.Point(8, 81);
+            this.checkBoxParallelRouteLoading.Name = "checkBoxParallelRouteLoading";
+            this.checkBoxParallelRouteLoading.Size = new System.Drawing.Size(133, 17);
+            this.checkBoxParallelRouteLoading.TabIndex = 11;
+            this.checkBoxParallelRouteLoading.Text = "Parallel route loading";
+            this.checkBoxParallelRouteLoading.UseVisualStyleBackColor = true;
             // 
             // checkBoxLoadInAdvance
             // 
@@ -6746,6 +6759,7 @@ namespace OpenBve {
         private System.Windows.Forms.ComboBox comboboxCursor;
 		private System.Windows.Forms.CheckBox checkBoxPanel2Extended;
 		private System.Windows.Forms.CheckBox checkBoxIsUseNewRenderer;
+        private System.Windows.Forms.CheckBox checkBoxParallelRouteLoading;
 		private System.Windows.Forms.CheckBox checkBoxLoadInAdvance;
 		private System.Windows.Forms.GroupBox groupBoxRailDriver;
 		private System.Windows.Forms.Label labelRailDriverCalibration;

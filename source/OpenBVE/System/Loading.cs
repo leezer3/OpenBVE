@@ -12,6 +12,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using OpenBveApi.Routes;
+using System.Diagnostics;
 using RouteManager2;
 using TrainManager;
 using TrainManager.Car;
@@ -324,7 +325,7 @@ namespace OpenBve {
 			Complete = true;
 		}
 		private static void LoadEverythingThreaded() {
-			
+			Stopwatch sw = Stopwatch.StartNew();
 			string railwayFolder = GetRailwayFolder(CurrentRouteFile);
 			string objectFolder = Path.CombineDirectory(railwayFolder, "Object");
 			string soundFolder = Path.CombineDirectory(railwayFolder, "Sound");
@@ -504,6 +505,13 @@ namespace OpenBve {
 			}
 
 			
+			sw.Stop();
+			LoadingStats.TotalLoadingTime = sw.Elapsed.TotalMilliseconds;
+			Interface.AddMessage(MessageType.Information, false, "--- Loading Performance Summary ---");
+			Interface.AddMessage(MessageType.Information, false, $"Route Parsing: {LoadingStats.RouteParseTime:0.0} ms");
+			Interface.AddMessage(MessageType.Information, false, $"Object Preload: {LoadingStats.ObjectPreloadTime:0.0} ms ({LoadingStats.ObjectsFound} unique objects)");
+			Interface.AddMessage(MessageType.Information, false, $"Total Loading: {LoadingStats.TotalLoadingTime:0.0} ms");
+			Interface.AddMessage(MessageType.Information, false, "-----------------------------------");
 		}
 
 	}

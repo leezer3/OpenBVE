@@ -790,7 +790,12 @@ namespace RouteViewer
 							OpenGlString.Draw(Fonts.SmallFont, $"Total opaque faces: {VisibleObjects.OpaqueFaces.Count}", new Vector2(4, Screen.Height - 76), TextAlignment.TopLeft, Color128.White, true);
 							OpenGlString.Draw(Fonts.SmallFont, $"Total alpha faces: {VisibleObjects.AlphaFaces.Count}", new Vector2(4, Screen.Height - 64), TextAlignment.TopLeft, Color128.White, true);
 						}
-						
+						double y = Screen.Height - 150;
+						OpenGlString.Draw(Fonts.SmallFont, $"Route Parsing: {LoadingStats.RouteParseTime:0.0} ms", new Vector2(4 * scaleFactor, y), TextAlignment.TopLeft, Color128.Yellow, true);
+						y -= 12;
+						OpenGlString.Draw(Fonts.SmallFont, $"Obj Preloading: {LoadingStats.ObjectPreloadTime:0.0} ms ({LoadingStats.ObjectsFound} unique)", new Vector2(4 * scaleFactor, y), TextAlignment.TopLeft, Color128.Yellow, true);
+						y -= 12;
+						OpenGlString.Draw(Fonts.SmallFont, $"Total Loading: {LoadingStats.TotalLoadingTime:0.0} ms", new Vector2(4 * scaleFactor, y), TextAlignment.TopLeft, Color128.Yellow, true);
 					}
 				}
 			}

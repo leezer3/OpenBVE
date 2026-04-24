@@ -22,6 +22,7 @@ namespace LibRender2.Textures
 
 		/// <summary>Holds all currently registered textures.</summary>
 		public static Texture[] RegisteredTextures;
+		private static readonly object texturesLock = new object();
 		/// <summary>Holds cached texture origins</summary>
 		internal static Dictionary<TextureOrigin, Texture> textureCache = new Dictionary<TextureOrigin, Texture>();
 
@@ -106,37 +107,40 @@ namespace LibRender2.Textures
 			 * Check if the texture is already registered.
 			 * If so, return the existing handle.
 			 * */
-			for (int i = 0; i < RegisteredTexturesCount; i++)
+			lock (texturesLock)
 			{
-				if (RegisteredTextures[i] != null)
+				for (int i = 0; i < RegisteredTexturesCount; i++)
 				{
-					try
+					if (RegisteredTextures[i] != null)
 					{
-						//The only exceptions thrown were these when it barfed
-						PathOrigin source = RegisteredTextures[i].Origin as PathOrigin;
-
-						if (source != null && source.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase) && source.Parameters == parameters)
+						try
 						{
-							handle = RegisteredTextures[i];
-							return true;
+							//The only exceptions thrown were these when it barfed
+							PathOrigin source = RegisteredTextures[i].Origin as PathOrigin;
+
+							if (source != null && source.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase) && source.Parameters == parameters)
+							{
+								handle = RegisteredTextures[i];
+								return true;
+							}
+						}
+						catch
+						{
+							// ignored
 						}
 					}
-					catch
-					{
-						// ignored
-					}
+
 				}
 
+				/*
+				 * Register the texture and return the newly created handle.
+				 * */
+				int idx = GetNextFreeTexture();
+				RegisteredTextures[idx] = new Texture(path, parameters, currentHost);
+				RegisteredTexturesCount++;
+				handle = RegisteredTextures[idx];
+				return true;
 			}
-
-			/*
-			 * Register the texture and return the newly created handle.
-			 * */
-			int idx = GetNextFreeTexture();
-			RegisteredTextures[idx] = new Texture(path, parameters, currentHost);
-			RegisteredTexturesCount++;
-			handle = RegisteredTextures[idx];
-			return true;
 		}
 
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>
@@ -147,10 +151,13 @@ namespace LibRender2.Textures
 			/*
 			 * Register the texture and return the newly created handle.
 			 * */
-			int idx = GetNextFreeTexture();
-			RegisteredTextures[idx] = new Texture(texture);
-			RegisteredTexturesCount++;
-			return RegisteredTextures[idx];
+			lock (texturesLock)
+			{
+				int idx = GetNextFreeTexture();
+				RegisteredTextures[idx] = new Texture(texture);
+				RegisteredTexturesCount++;
+				return RegisteredTextures[idx];
+			}
 		}
 
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>
@@ -178,10 +185,13 @@ namespace LibRender2.Textures
 			/*
 			 * Register the texture and return the newly created handle.
 			 * */
-			int idx = GetNextFreeTexture();
-			RegisteredTextures[idx] = new Texture(bitmap);
-			RegisteredTexturesCount++;
-			return RegisteredTextures[idx];
+			lock (texturesLock)
+			{
+				int idx = GetNextFreeTexture();
+				RegisteredTextures[idx] = new Texture(bitmap);
+				RegisteredTexturesCount++;
+				return RegisteredTextures[idx];
+			}
 		}
 
 

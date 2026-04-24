@@ -7,6 +7,7 @@ using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
@@ -286,13 +287,13 @@ namespace ObjectViewer {
 
 										if (Object is StaticObject staticObject)
 										{
-											StaticObjectCache.Add(ValueTuple.Create(path.ToLowerInvariant(), false, File.GetLastWriteTime(path)), staticObject);
+											StaticObjectCache.TryAdd(ValueTuple.Create(path.ToLowerInvariant(), false, File.GetLastWriteTime(path)), staticObject);
 											return true;
 										}
 
 										if (Object is AnimatedObjectCollection aoc)
 										{
-											AnimatedObjectCollectionCache.Add(path.ToLowerInvariant(), aoc);
+											AnimatedObjectCollectionCache.TryAdd(path.ToLowerInvariant(), aoc);
 										}
 
 										return true;

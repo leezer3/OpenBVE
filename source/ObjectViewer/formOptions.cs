@@ -85,6 +85,7 @@ namespace ObjectViewer
 			comboBoxBackwards.DataSource = Enum.GetValues(typeof(Key));
 			comboBoxBackwards.SelectedItem = Interface.CurrentOptions.CameraMoveBackward;
 			checkBoxAutoReload.Checked = Interface.CurrentOptions.AutoReloadObjects;
+			checkBoxParallel.Checked = Interface.CurrentOptions.ParallelRouteLoading;
 		}
 
 		private void InitializeSunSliders()
@@ -241,6 +242,7 @@ namespace ObjectViewer
 			Interface.CurrentOptions.CameraMoveForward = (Key)comboBoxForwards.SelectedItem;
 			Interface.CurrentOptions.CameraMoveBackward = (Key)comboBoxBackwards.SelectedItem;
 			Interface.CurrentOptions.AutoReloadObjects = checkBoxAutoReload.Checked;
+			Interface.CurrentOptions.ParallelRouteLoading = checkBoxParallel.Checked;
 
 			// Saving shadow settings
 			switch (comboBoxShadowResolution.SelectedIndex)

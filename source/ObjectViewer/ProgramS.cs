@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -321,6 +322,7 @@ namespace ObjectViewer {
 
 	    internal static void RefreshObjects(bool autoReload = false)
 	    {
+		    Stopwatch sw = Stopwatch.StartNew();
 		    LightingRelative = -1.0;
 			
 			// Prune cache to allow actual reloading of modified files
@@ -338,7 +340,7 @@ namespace ObjectViewer {
 			}
 			foreach (var key in staticKeysToRemove)
 			{
-				CurrentHost.StaticObjectCache.Remove(key);
+				CurrentHost.StaticObjectCache.TryRemove(key, out _);
 			}
 			CurrentHost.AnimatedObjectCollectionCache.Clear();
 			// Let TextureManager check for texture changes
@@ -456,6 +458,9 @@ namespace ObjectViewer {
 			    Renderer.GameWindow.Title = "Object Viewer";
 		    }
 		    LastReloadTime = DateTime.UtcNow;
+		    sw.Stop();
+		    LoadingStats.TotalLoadingTime = sw.Elapsed.TotalMilliseconds;
+		    Interface.AddMessage(MessageType.Information, false, $"Object(s) loaded in {LoadingStats.TotalLoadingTime:0.0} ms");
 			UpdateWatchers();
 	    }
 

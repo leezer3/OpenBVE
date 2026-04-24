@@ -1,4 +1,4 @@
-﻿using Formats.OpenBve;
+using Formats.OpenBve;
 using Formats.OpenBve.XML;
 using OpenBveApi;
 using OpenBveApi.Interface;
@@ -6,6 +6,7 @@ using OpenBveApi.Objects;
 using System;
 using System.ComponentModel.Design;
 using System.Linq;
+using System.Threading;
 using System.Xml;
 
 namespace CsvRwRouteParser
@@ -158,7 +159,7 @@ namespace CsvRwRouteParser
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, CompatibilityObjects.AvailableReplacements[i].Message);
 						}
-						CompatibilityObjectsUsed++;
+						Interlocked.Increment(ref CompatibilityObjectsUsed);
 						return true;
 					}
 				}
@@ -249,7 +250,7 @@ namespace CsvRwRouteParser
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, CompatibilityObjects.AvailableSounds[i].Message);
 						}
-						CompatibilityObjectsUsed++;
+						Interlocked.Increment(ref CompatibilityObjectsUsed);
 						return true;
 					}
 				}

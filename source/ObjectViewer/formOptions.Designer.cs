@@ -51,6 +51,8 @@ namespace ObjectViewer
             this.labelInterpolationMode = new System.Windows.Forms.Label();
             this.labelInterpolationSettings = new System.Windows.Forms.Label();
             this.InterpolationMode = new System.Windows.Forms.ComboBox();
+            this.labelParallel = new System.Windows.Forms.Label();
+            this.checkBoxParallel = new System.Windows.Forms.CheckBox();
             this.tabPageKeys = new System.Windows.Forms.TabPage();
             this.labelControls = new System.Windows.Forms.Label();
             this.comboBoxBackwards = new System.Windows.Forms.ComboBox();
@@ -117,6 +119,8 @@ namespace ObjectViewer
             // 
             // tabPageOptions
             // 
+            this.tabPageOptions.Controls.Add(this.checkBoxParallel);
+            this.tabPageOptions.Controls.Add(this.labelParallel);
             this.tabPageOptions.Controls.Add(this.checkBoxAutoReload);
             this.tabPageOptions.Controls.Add(this.labelAutoReloadChanged);
             this.tabPageOptions.Controls.Add(this.comboBoxOptimizeObjects);
@@ -785,6 +789,23 @@ namespace ObjectViewer
             this.checkBoxAutoReload.TabIndex = 49;
             this.checkBoxAutoReload.UseVisualStyleBackColor = true;
             // 
+            // labelParallel
+            // 
+            this.labelParallel.Location = new System.Drawing.Point(10, 352);
+            this.labelParallel.Name = "labelParallel";
+            this.labelParallel.Size = new System.Drawing.Size(131, 28);
+            this.labelParallel.TabIndex = 50;
+            this.labelParallel.Text = "Parallel Route Loading:";
+            // 
+            // checkBoxParallel
+            // 
+            this.checkBoxParallel.AutoSize = true;
+            this.checkBoxParallel.Location = new System.Drawing.Point(265, 356);
+            this.checkBoxParallel.Name = "checkBoxParallel";
+            this.checkBoxParallel.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxParallel.TabIndex = 51;
+            this.checkBoxParallel.UseVisualStyleBackColor = true;
+            // 
             // formOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -879,5 +900,7 @@ namespace ObjectViewer
 		private System.Windows.Forms.NumericUpDown numericUpDownShadowNormalBias;
 		private System.Windows.Forms.CheckBox checkBoxAutoReload;
 		private System.Windows.Forms.Label labelAutoReloadChanged;
+		private System.Windows.Forms.Label labelParallel;
+		private System.Windows.Forms.CheckBox checkBoxParallel;
 	}
 }

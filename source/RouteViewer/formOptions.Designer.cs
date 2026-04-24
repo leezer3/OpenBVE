@@ -60,6 +60,8 @@ namespace RouteViewer
             this.comboBoxNewXParser = new System.Windows.Forms.ComboBox();
             this.label15 = new System.Windows.Forms.Label();
             this.numericUpDownViewingDistance = new System.Windows.Forms.NumericUpDown();
+            this.labelParallel = new System.Windows.Forms.Label();
+            this.checkBoxParallel = new System.Windows.Forms.CheckBox();
             this.labelShadowResolution = new System.Windows.Forms.Label();
             this.comboBoxShadowResolution = new System.Windows.Forms.ComboBox();
             this.labelShadowDistance = new System.Windows.Forms.Label();
@@ -133,6 +135,8 @@ namespace RouteViewer
             this.tabPageOptions.Controls.Add(this.comboBoxNewXParser);
             this.tabPageOptions.Controls.Add(this.label14);
             this.tabPageOptions.Controls.Add(this.comboBoxNewObjParser);
+            this.tabPageOptions.Controls.Add(this.labelParallel);
+            this.tabPageOptions.Controls.Add(this.checkBoxParallel);
             this.tabPageOptions.Controls.Add(this.label15);
             this.tabPageOptions.Controls.Add(this.numericUpDownViewingDistance);
             this.tabPageOptions.AutoScroll = true;
@@ -489,6 +493,24 @@ namespace RouteViewer
             0,
             0});
             // 
+            // labelParallel
+            // 
+            this.labelParallel.AutoSize = true;
+            this.labelParallel.Location = new System.Drawing.Point(6, 417);
+            this.labelParallel.Name = "labelParallel";
+            this.labelParallel.Size = new System.Drawing.Size(120, 13);
+            this.labelParallel.TabIndex = 36;
+            this.labelParallel.Text = "Parallel Route Loading:";
+            // 
+            // checkBoxParallel
+            // 
+            this.checkBoxParallel.AutoSize = true;
+            this.checkBoxParallel.Location = new System.Drawing.Point(248, 417);
+            this.checkBoxParallel.Name = "checkBoxParallel";
+            this.checkBoxParallel.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxParallel.TabIndex = 35;
+            this.checkBoxParallel.UseVisualStyleBackColor = true;
+            // 
             // comboBoxShadowResolution
             // 
             this.comboBoxShadowResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -767,6 +789,8 @@ namespace RouteViewer
         private System.Windows.Forms.ComboBox comboBoxNewXParser;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.NumericUpDown numericUpDownViewingDistance;
+        private System.Windows.Forms.Label labelParallel;
+        private System.Windows.Forms.CheckBox checkBoxParallel;
         private System.Windows.Forms.Label labelShadowResolution;
         private System.Windows.Forms.ComboBox comboBoxShadowResolution;
         private System.Windows.Forms.Label labelShadowDistance;

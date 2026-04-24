@@ -134,6 +134,8 @@ namespace OpenBveApi
 		public int UserInterfaceScaleFactor;
 		/// <summary>Whether loaded objects are automatically reloaded on change</summary>
 		public bool AutoReloadObjects;
+		/// <summary>Whether to use multi-threaded object preloading when loading a route</summary>
+		public bool ParallelRouteLoading = true;
 		
 		/// <summary>Saves the options to the specified filename</summary>
 		/// <param name="fileName">The filename to save the options to</param>

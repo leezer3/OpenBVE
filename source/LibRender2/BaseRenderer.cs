@@ -882,7 +882,7 @@ namespace LibRender2
 			{
 				if (!File.Exists(keys[i].Item1) || File.GetLastWriteTime(keys[i].Item1) != keys[i].Item3)
 				{
-					currentHost.StaticObjectCache.Remove(keys[i]);
+					currentHost.StaticObjectCache.TryRemove(keys[i], out _);
 				}
 			}
 			TextureManager.UnloadAllTextures(true);

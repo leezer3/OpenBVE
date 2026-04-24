@@ -29,6 +29,7 @@ namespace RouteViewer
 			comboBoxNewXParser.SelectedIndex = (int) Interface.CurrentOptions.CurrentXParser;
 			comboBoxNewObjParser.SelectedIndex = (int) Interface.CurrentOptions.CurrentObjParser;
 			numericUpDownViewingDistance.Value = Interface.CurrentOptions.ViewingDistance;
+			checkBoxParallel.Checked = Interface.CurrentOptions.ParallelRouteLoading;
 
             // Shadows
             switch (Interface.CurrentOptions.ShadowResolution)
@@ -232,6 +233,7 @@ namespace RouteViewer
 			Interface.CurrentOptions.LoadingLogo = checkBoxLogo.Checked;
 			Interface.CurrentOptions.LoadingBackground = checkBoxBackgrounds.Checked;
 			Interface.CurrentOptions.LoadingProgressBar = checkBoxProgressBar.Checked;
+			Interface.CurrentOptions.ParallelRouteLoading = checkBoxParallel.Checked;
 			XParsers xParser = (XParsers)comboBoxNewXParser.SelectedIndex;
 			ObjParsers objParser = (ObjParsers)comboBoxNewObjParser.SelectedIndex;
 

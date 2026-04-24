@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Globalization;
 using OpenBveApi;
 using OpenBveApi.Interface;
@@ -9,9 +9,11 @@ namespace OpenBve {
 		internal static void AddMessage(MessageType messageType, bool fileNotFound, string messageText) {
 			if (messageType == MessageType.Warning && !CurrentOptions.ShowWarningMessages) return;
 			if (messageType == MessageType.Error && !CurrentOptions.ShowErrorMessages) return;
-			LogMessages.Add(new LogMessage(messageType, fileNotFound, messageText));
-			Program.FileSystem.AppendToLogFile(messageText);
-			
+			lock (LogMessages)
+			{
+				LogMessages.Add(new LogMessage(messageType, fileNotFound, messageText));
+				Program.FileSystem.AppendToLogFile(messageText);
+			}
 		}
 
 		/// <summary>Parses a string into OpenBVE's internal time representation (Seconds since midnight on the first day)</summary>

@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
+using OpenBveApi.Interface;
 using RouteManager2;
 
 namespace RouteViewer {
@@ -180,6 +182,7 @@ namespace RouteViewer {
 		}
 
 		private static void LoadEverythingThreaded() {
+			Stopwatch sw = Stopwatch.StartNew();
 			string RailwayFolder = GetRailwayFolder(CurrentRouteFile);
 			string ObjectFolder = Path.CombineDirectory(RailwayFolder, "Object");
 			string SoundFolder = Path.CombineDirectory(RailwayFolder, "Sound");
@@ -244,6 +247,13 @@ namespace RouteViewer {
 			Program.Renderer.CameraTrackFollower.UpdateAbsolute(FirstStationPosition, true, false);
 			Program.Renderer.Camera.Alignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
 			World.UpdateAbsoluteCamera(0.0);
+			sw.Stop();
+			OpenBveApi.Interface.LoadingStats.TotalLoadingTime = sw.Elapsed.TotalMilliseconds;
+			Interface.AddMessage(MessageType.Information, false, "--- Loading Performance Summary ---");
+			Interface.AddMessage(MessageType.Information, false, $"Route Parsing: {OpenBveApi.Interface.LoadingStats.RouteParseTime:0.0} ms");
+			Interface.AddMessage(MessageType.Information, false, $"Object Preload: {OpenBveApi.Interface.LoadingStats.ObjectPreloadTime:0.0} ms ({OpenBveApi.Interface.LoadingStats.ObjectsFound} unique objects)");
+			Interface.AddMessage(MessageType.Information, false, $"Total Loading: {OpenBveApi.Interface.LoadingStats.TotalLoadingTime:0.0} ms");
+			Interface.AddMessage(MessageType.Information, false, "-----------------------------------");
 			Complete = true;
 		}
 

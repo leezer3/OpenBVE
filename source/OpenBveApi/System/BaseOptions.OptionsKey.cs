@@ -35,6 +35,7 @@ namespace OpenBveApi
 		QuadLeafSize,
 		UIScaleFactor,
 		AutoReloadObjects,
+		ParallelRouteLoading,
 		// Quality
 		Interpolation,
 		AnisotropicFilteringLevel,

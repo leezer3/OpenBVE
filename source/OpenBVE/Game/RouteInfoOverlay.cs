@@ -1,9 +1,10 @@
-﻿using LibRender2;
+using LibRender2;
 using OpenBveApi.Colors;
 using OpenTK.Graphics.OpenGL;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Graphics;
 
 namespace OpenBve
 {
@@ -20,6 +21,7 @@ namespace OpenBve
 			None = 0,
 			Map,
 			Gradient,
+			LoadingStats,
 			NumOf
 		}
 
@@ -96,6 +98,23 @@ namespace OpenBve
 				// draw a vertical bar at the current train position
 				Program.Renderer.Rectangle.Draw(null, new Vector2(Pos.X, gradientSize.Y / 2),
 					new Vector2(gradientPosWidth, gradientSize.Y / 2), gradientPosBar);
+				break;
+			case OverlayState.LoadingStats:
+				double x = 4.0;
+				double y = 4.0;
+				double scale = Program.Renderer.ScaleFactor.X;
+				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.SmallFont, "Loading Performance Stats:", new Vector2(x * scale, y * scale), TextAlignment.TopLeft, Color128.Yellow, true);
+				y += 20.0;
+				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.SmallFont, $"Route Parsing Time: {OpenBveApi.Interface.LoadingStats.RouteParseTime:0.0} ms", new Vector2(x * scale, y * scale), TextAlignment.TopLeft, Color128.White, true);
+				y += 20.0;
+				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.SmallFont, $"Object Preload Time: {OpenBveApi.Interface.LoadingStats.ObjectPreloadTime:0.0} ms", new Vector2(x * scale, y * scale), TextAlignment.TopLeft, Color128.White, true);
+				y += 20.0;
+				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.SmallFont, $"Unique Objects Found: {OpenBveApi.Interface.LoadingStats.ObjectsFound}", new Vector2(x * scale, y * scale), TextAlignment.TopLeft, Color128.White, true);
+				y += 20.0;
+				if (OpenBveApi.Interface.LoadingStats.TotalLoadingTime > 0)
+				{
+					Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.SmallFont, $"Total Loading Time: {OpenBveApi.Interface.LoadingStats.TotalLoadingTime:0.0} ms", new Vector2(x * scale, y * scale), TextAlignment.TopLeft, Color128.White, true);
+				}
 				break;
 			}
 		}

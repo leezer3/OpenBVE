@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2024, Maurizo M. Gavioli, The OpenBVE Project
 //
@@ -46,6 +46,8 @@ namespace LibRender2.Menu
 		/// <summary>Sets whether to automatically reload the current objects</summary>
 		AutoReloadObjects,
 		/// <summary>Sets the shadow quality</summary>
-		ShadowQuality
+		ShadowQuality,
+		/// <summary>Sets whether to use parallel route loading</summary>
+		ParallelRouteLoading
 	}
 }

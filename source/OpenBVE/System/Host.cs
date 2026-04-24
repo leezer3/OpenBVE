@@ -356,7 +356,7 @@ namespace OpenBve {
 										{
 											staticObject.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, Interface.CurrentOptions.ObjectOptimizationVertexCulling);
 											Object = staticObject;
-											StaticObjectCache.Add(ValueTuple.Create(path.ToLowerInvariant(), PreserveVertices, File.GetLastWriteTime(path)), Object);
+											StaticObjectCache.TryAdd(ValueTuple.Create(path.ToLowerInvariant(), PreserveVertices, File.GetLastWriteTime(path)), Object);
 											return true;
 										}
 
@@ -424,13 +424,13 @@ namespace OpenBve {
 
 										if (Object is StaticObject staticObject)
 										{
-											StaticObjectCache.Add(ValueTuple.Create(path.ToLowerInvariant(), false, File.GetLastWriteTime(path)), staticObject);
+											StaticObjectCache.TryAdd(ValueTuple.Create(path.ToLowerInvariant(), false, File.GetLastWriteTime(path)), staticObject);
 											return true;
 										}
 
 										if (Object is AnimatedObjectCollection aoc)
 										{
-											AnimatedObjectCollectionCache.Add(path.ToLowerInvariant(), aoc);
+											AnimatedObjectCollectionCache.TryAdd(path.ToLowerInvariant(), aoc);
 										}
 
 										return true;

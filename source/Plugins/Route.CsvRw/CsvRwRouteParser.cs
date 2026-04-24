@@ -11,6 +11,10 @@ using RouteManager2;
 using RouteManager2.Climate;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Globalization;
 
 namespace CsvRwRouteParser {
 	internal partial class Parser {
@@ -138,6 +142,7 @@ namespace CsvRwRouteParser {
 		}
 
 		private void ParseRouteForData(string FileName, System.Text.Encoding Encoding, ref RouteData Data, bool PreviewOnly) {
+			Stopwatch sw = Stopwatch.StartNew();
 			//Read the entire routefile into memory
 			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
 			PreprocessSplitIntoExpressions(FileName, Lines, out Expression[] Expressions, true);
@@ -148,8 +153,12 @@ namespace CsvRwRouteParser {
 			Data.UnitOfSpeed = 0.277777777777778;
 			PreprocessOptions(Expressions, ref Data, ref UnitOfLength, PreviewOnly);
 			PreprocessSortByTrackPosition(UnitOfLength, ref Expressions);
+			if (Plugin.Cancel) return;
+			PreloadObjects(Expressions);
 			ParseRouteForData(FileName, Encoding, Expressions, UnitOfLength, ref Data, PreviewOnly);
 			CurrentRoute.UnitOfLength = UnitOfLength;
+			sw.Stop();
+			LoadingStats.RouteParseTime = sw.Elapsed.TotalMilliseconds;
 		}
 		
 		private int freeObjCount;
@@ -537,6 +546,104 @@ namespace CsvRwRouteParser {
 					}
 				}
 			}
+		}
+
+		private void PreloadObjects(Expression[] expressions)
+		{
+			if (Plugin.Cancel)
+			{
+				return;
+			}
+			Stopwatch sw = Stopwatch.StartNew();
+			ConcurrentDictionary<string, byte> objectsToLoad = new ConcurrentDictionary<string, byte>();
+			ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = Plugin.CurrentOptions.ParallelRouteLoading ? -1 : 1 };
+			
+			Parallel.ForEach(expressions, parallelOptions, (expression) =>
+			{
+				if (Plugin.Cancel || string.IsNullOrEmpty(expression.Text))
+				{
+					return;
+				}
+
+				string text = expression.Text;
+				// Quick check to skip clearly irrelevant lines
+				// Most object/sound commands contain a dot or start with a known namespace
+				if (text.IndexOf('.') == -1 && 
+				    text.IndexOf("Structure", StringComparison.OrdinalIgnoreCase) == -1 &&
+				    text.IndexOf("Signal", StringComparison.OrdinalIgnoreCase) == -1 &&
+				    text.IndexOf("Background", StringComparison.OrdinalIgnoreCase) == -1)
+				{
+					return;
+				}
+
+				string command, argumentSequence;
+				expression.SeparateCommandsAndArguments(out command, out argumentSequence, Culture, false, IsRW, "");
+				if (command == null)
+				{
+					return;
+				}
+
+				string cmdLower = command.ToLowerInvariant();
+				bool isFileCommand = false;
+				
+				// Structure namespace
+				if (cmdLower.StartsWith("structure.", StringComparison.Ordinal))
+				{
+					if (cmdLower.EndsWith(".load", StringComparison.Ordinal) || 
+					    cmdLower.Contains(".rail") || 
+					    cmdLower.Contains(".freeobj") ||
+					    cmdLower.Contains(".ground") ||
+					    cmdLower.Contains(".wall") ||
+					    cmdLower.Contains(".dike") ||
+					    cmdLower.Contains(".form") ||
+					    cmdLower.Contains(".roof") ||
+					    cmdLower.Contains(".crack"))
+					{
+						isFileCommand = true;
+					}
+				}
+				// Signal and Background namespaces
+				else if (cmdLower.Equals("signal", StringComparison.Ordinal) || 
+				         cmdLower.Equals("background", StringComparison.Ordinal) ||
+				         cmdLower.StartsWith("background.", StringComparison.Ordinal))
+				{
+					isFileCommand = true;
+				}
+
+				if (isFileCommand)
+				{
+					string[] args = SplitArguments(argumentSequence);
+					if (args.Length > 0 && !string.IsNullOrEmpty(args[0]))
+					{
+						string f = args[0];
+						if (LocateObject(ref f, ObjectPath))
+						{
+							objectsToLoad.TryAdd(f, (byte)0);
+						}
+					}
+				}
+			});
+
+			if (Plugin.Cancel)
+			{
+				return;
+			}
+
+			// Now load them in parallel
+			// This will populate the Host's cache thread-safely
+			Parallel.ForEach(objectsToLoad.Keys, parallelOptions, (file) =>
+			{
+				if (Plugin.Cancel)
+				{
+					return;
+				}
+				// UnifiedObject handles both static and animated objects
+				UnifiedObject obj;
+				Plugin.CurrentHost.LoadObject(file, System.Text.Encoding.UTF8, out obj);
+			});
+			sw.Stop();
+			LoadingStats.ObjectPreloadTime = sw.Elapsed.TotalMilliseconds;
+			LoadingStats.ObjectsFound = objectsToLoad.Count;
 		}
 	}
 }

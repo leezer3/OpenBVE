@@ -423,6 +423,7 @@ namespace ObjectViewer.Graphics
 						OpenGlString.Draw(Fonts.SmallFont, $"Current frame rate: {FrameRate.ToString("0.0", culture)}fps", new Vector2(4, Screen.Height - 88), TextAlignment.TopLeft, Color128.White, true);
 						OpenGlString.Draw(Fonts.SmallFont, $"Total opaque faces: {opaqueFaces}", new Vector2(4, Screen.Height - 76), TextAlignment.TopLeft, Color128.White, true);
 						OpenGlString.Draw(Fonts.SmallFont, $"Total alpha faces: {alphaFaces}", new Vector2(4, Screen.Height - 64), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Total Loading: {LoadingStats.TotalLoadingTime:0.0} ms", new Vector2(4 * scaleFactor, Screen.Height - 146), TextAlignment.TopLeft, Color128.Yellow, true);
 					}
 				}
 			}
