@@ -108,6 +108,9 @@ namespace Object.CsvB3d
 			}
 			// read lines
 			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
+			// Cache results of File.Exists locally during this load operation to avoid redundant disk IO.
+			// This is created fresh every time the object is loaded/reloaded, so it is safe against file additions/deletions between loads.
+			Dictionary<string, bool> fileExistsCache = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
 			if (enabledHacks.BveTsHacks && multiColumn)
 			{
 				/*
@@ -150,6 +153,9 @@ namespace Object.CsvB3d
 			List<Vector3> Normals = new List<Vector3>();
 			bool CommentStarted = false;
 			Color24? lastTransparentColor = null;
+			// HashSet to store face vertex indices to avoid O(N^2) search during Z-fighting check.
+			// Using a string key of sorted indices since MeshFace is a struct and we need a reliable key.
+			HashSet<string> faceCache = new HashSet<string>();
 			for (int i = 0; i < Lines.Count; i++) {
 				{
 					// Strip OpenBVE original standard comments
@@ -207,9 +213,10 @@ namespace Object.CsvB3d
 						}
 					}
 				}
-				// collect arguments
+				// collect arguments by splitting the line by commas
 				string[] Arguments = Lines[i].Split(new[] { ',' }, StringSplitOptions.None);
 				for (int j = 0; j < Arguments.Length; j++) {
+					// Trim each argument to remove leading/trailing whitespace
 					Arguments[j] = Arguments[j].Trim();
 				}
 				{
@@ -291,6 +298,7 @@ namespace Object.CsvB3d
 								Builder.Apply(ref Object, enabledHacks.BveTsHacks);
 								Builder = new MeshBuilder(currentHost);
 								Normals = new List<Vector3>();
+								faceCache.Clear(); // reset face cache for the new mesh builder
 							} break;
 						case B3DCsvCommands.AddVertex:
 						case B3DCsvCommands.Vertex:
@@ -519,45 +527,33 @@ namespace Object.CsvB3d
 											}
 										}
 
-										int[] vertexIndices = (int[])a.Clone();
-										Array.Sort(vertexIndices);
-										for (int k = 0; k < Builder.Faces.Count; k++)
+										/* 
+										 * Some BVE2 content declares a Face2 twice with the vertices in a differing order, e.g.
+										 * Face2 0, 1, 3, 2
+										 * Face2 1, 0, 2, 3
+										 * Doing this in OpenBVE causes some very funky glitches with Z-fighting,
+										 * as it attempts to render both faces in the same space
+										 *
+										 * With this hack, the lighting may be off but the Z-fighting is gone
+										 * (BVE2 / BVE4 operate in a strict draw-order, so the most recent face is always on top,
+										 * wheras OpenBVE has no fixed draw order)
+										 */
+
+										// Optimization: Use a HashSet to track existing faces by their vertex indices.
+										// This avoids the O(N^2) loop through all previous faces in the MeshBuilder.
+										if (isFace2)
 										{
-											/*
-											 * Some BVE2 content declares a Face2 twice with the vertices in a differing order, e.g.
-											 *
-											 * Face2 0, 1, 3, 2
-											 * Face2 1, 0, 2, 3
-											 *
-											 * Doing this in OpenBVE causes some very funky glitches with Z-fighting,
-											 * as it attempts to render both faces in the same space
-											 *
-											 * With this hack, the lighting may be off but the Z-fighting is gone
-											 * (BVE2 / BVE4 operate in a strict draw-order, so the most recent face is always on top,
-											 * wheras OpenBVE has no fixed draw order)
-											 */
-											MeshFace currentFace = Builder.Faces[k];
-											if (!isFace2 || (currentFace.Flags & FaceFlags.Face2Mask) == 0)
-											{
-												continue;
-											}
-
-											if (currentFace.Vertices.Length != a.Length)
-											{
-												continue;
-											}
-
-											int[] faceVertexIndices = new int[a.Length];
-											for (int v = 0; v < currentFace.Vertices.Length; v++)
-											{
-												faceVertexIndices[v] = currentFace.Vertices[v].Index;
-											}
-											Array.Sort(faceVertexIndices);
-											if (vertexIndices.SequenceEqual(faceVertexIndices))
+											int[] vertexIndices = (int[])a.Clone();
+											Array.Sort(vertexIndices);
+											string faceKey = string.Join("|", vertexIndices);
+											if (faceCache.Contains(faceKey))
 											{
 												q = false;
 											}
-											
+											else
+											{
+												faceCache.Add(faceKey);
+											}
 										}
 									}
 									if (q) {
@@ -1178,7 +1174,14 @@ namespace Object.CsvB3d
 											tday = null;
 										}
 										
-										if (!System.IO.File.Exists(tday))
+										// Cache results of File.Exists to avoid hitting the disk for the same file multiple times
+										bool tdayExists;
+										if (!fileExistsCache.TryGetValue(tday, out tdayExists))
+										{
+											tdayExists = System.IO.File.Exists(tday);
+											fileExistsCache[tday] = tdayExists;
+										}
+										if (!tdayExists)
 										{
 											bool hackFound = false;
 											if (enabledHacks.BveTsHacks)
@@ -1196,7 +1199,12 @@ namespace Object.CsvB3d
 												{
 													Arguments[0] = Arguments[0].Substring(7);
 													tday = Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[0]);
-													if (System.IO.File.Exists(tday))
+													if (!fileExistsCache.TryGetValue(tday, out tdayExists))
+													{
+														tdayExists = System.IO.File.Exists(tday);
+														fileExistsCache[tday] = tdayExists;
+													}
+													if (tdayExists)
 													{
 														hackFound = true;
 													}
@@ -1206,7 +1214,12 @@ namespace Object.CsvB3d
 												{
 													Arguments[0] = Arguments[0].Substring(4);
 													tday = Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[0]);
-													if (System.IO.File.Exists(tday))
+													if (!fileExistsCache.TryGetValue(tday, out tdayExists))
+												{
+													tdayExists = System.IO.File.Exists(tday);
+													fileExistsCache[tday] = tdayExists;
+												}
+												if (tdayExists)
 													{
 														hackFound = true;
 													}
@@ -1216,7 +1229,12 @@ namespace Object.CsvB3d
 												{
 													Arguments[0] = Arguments[0].Substring(3);
 													tday = Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[0]);
-													if (System.IO.File.Exists(tday))
+													if (!fileExistsCache.TryGetValue(tday, out tdayExists))
+												{
+													tdayExists = System.IO.File.Exists(tday);
+													fileExistsCache[tday] = tdayExists;
+												}
+												if (tdayExists)
 													{
 														hackFound = true;
 													}
@@ -1256,7 +1274,13 @@ namespace Object.CsvB3d
 												}
 											}
 											
-											if (!System.IO.File.Exists(tnight) && !ignoreAsInvalid) {
+											bool tnightExists;
+											if (!fileExistsCache.TryGetValue(tnight, out tnightExists))
+											{
+												tnightExists = System.IO.File.Exists(tnight);
+												fileExistsCache[tnight] = tnightExists;
+											}
+											if (!tnightExists && !ignoreAsInvalid) {
 												currentHost.AddMessage(MessageType.Error, true, "The NighttimeTexture " + tnight + " could not be found in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 												tnight = null;
 											}

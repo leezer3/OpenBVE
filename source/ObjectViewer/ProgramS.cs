@@ -41,6 +41,8 @@ namespace ObjectViewer {
 		/// <summary>The number of failed auto-reloads</summary>
         internal static int AutoReloadFailureCounter = 0;
         private static double reloadCheckTimer;
+		/// <summary>The list of loaded objects, cached to allow partial reloads</summary>
+		internal static UnifiedObject[] LoadedObjects = new UnifiedObject[0];
 
 		// mouse
 		internal static Vector3 MouseCameraPosition = Vector3.Zero;
@@ -170,6 +172,7 @@ namespace ObjectViewer {
 				if (filesToLoad.Count != 0)
 				{
 					Files = filesToLoad;
+					LoadedObjects = new UnifiedObject[Files.Count];
 				}
 	        }
 
@@ -319,8 +322,24 @@ namespace ObjectViewer {
 	        }
 	    }
 
-	    internal static void RefreshObjects(bool autoReload = false)
+	    internal static void RefreshObjects(int fileIndex = -1)
 	    {
+		    // If a specific file index is provided, only reload that file from disk.
+		    // Otherwise (or if the array is out of sync), do a full reload.
+		    if (fileIndex >= 0 && fileIndex < Files.Count && LoadedObjects.Length == Files.Count) {
+			    try {
+				    if (CurrentHost.LoadObject(Files[fileIndex], Encoding.UTF8, out UnifiedObject o)) {
+					    LoadedObjects[fileIndex] = o;
+				    }
+			    } catch {
+				    // If failed, we don't return here but continue to the reset/refresh logic
+				    // which will handle error reporting.
+			    }
+		    } else {
+			    LoadedObjects = new UnifiedObject[Files.Count];
+			    fileIndex = -1; // Force full load of all objects below
+		    }
+
 		    LightingRelative = -1.0;
 			
 			// Prune cache to allow actual reloading of modified files
@@ -353,6 +372,7 @@ namespace ObjectViewer {
 			    {
 				    if(Files[i].EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
 				    {
+					    // Trains are still reloaded fully as they are complex collections
 					    string currentTrain = Files[i];
 						if (currentTrain.EndsWith("extensions.cfg", StringComparison.InvariantCultureIgnoreCase))
 					    {
@@ -400,19 +420,24 @@ namespace ObjectViewer {
 				    }
 				    else
 				    {
-					    if (CurrentHost.LoadObject(Files[i], Encoding.UTF8, out UnifiedObject o))
-					    {
-						    o.CreateObject(Vector3.Zero, 0.0, 0.0, 0.0);
+					    if (fileIndex == -1 || fileIndex == i) {
+						    if (CurrentHost.LoadObject(Files[i], Encoding.UTF8, out UnifiedObject o)) {
+							    LoadedObjects[i] = o;
+						    }
 					    }
-					    
+					    if (LoadedObjects[i] != null) {
+						    LoadedObjects[i].CreateObject(Vector3.Zero, 0.0, 0.0, 0.0);
+					    }
 				    }
 
 			    }
 			    catch (Exception ex)
 			    {
-				    if (!autoReload || AutoReloadFailureCounter > 5)
+					// Check if we are in an auto-reload context (passed from CheckFileChanges) via a flag if needed, 
+					// but here we use fileIndex != -1 as a proxy for auto-reload.
+				    if (fileIndex == -1 || AutoReloadFailureCounter > 5)
 				    {
-					    if (autoReload)
+					    if (fileIndex != -1)
 					    {
 							// failure counter must be above 5
 							Interface.CurrentOptions.AutoReloadObjects = false;
@@ -481,7 +506,7 @@ namespace ObjectViewer {
 		            }
 		            if (System.IO.File.GetLastWriteTimeUtc(Files[i]) > LastReloadTime)
 		            {
-			            RefreshObjects();
+			            RefreshObjects(i);
 			            return;
 		            }
 				}

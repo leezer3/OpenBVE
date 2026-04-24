@@ -204,11 +204,20 @@ namespace OpenBveApi.Math {
 
 		private static string TrimInside(string Expression)
 		{
-			System.Text.StringBuilder Builder = new System.Text.StringBuilder(Expression.Length);
-			foreach (char c in Expression.Where(c => !char.IsWhiteSpace(c)))
+			if (string.IsNullOrEmpty(Expression)) return Expression;
+			
+			// Simple loop to remove whitespace without LINQ or StringBuilder overhead
+			int n = Expression.Length;
+			char[] result = new char[n];
+			int count = 0;
+			for (int i = 0; i < n; i++)
 			{
-				Builder.Append(c);
-			} return Builder.ToString();
+				if (!char.IsWhiteSpace(Expression[i]))
+				{
+					result[count++] = Expression[i];
+				}
+			}
+			return count == n ? Expression : new string(result, 0, count);
 		}
 
 		
