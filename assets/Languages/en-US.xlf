@@ -900,6 +900,30 @@
 					<trans-unit id="assignment_joystick_axis_positive">
 						<source>positive direction</source>
 					</trans-unit>
+					<trans-unit id="selection_mouse">
+						<source>Mouse:</source>
+					</trans-unit>
+					<trans-unit id="selection_mouse_button">
+						<source>Button:</source>
+					</trans-unit>
+					<trans-unit id="assignment_mouse">
+						<source>Mouse</source>
+					</trans-unit>
+					<trans-unit id="assignment_mouse_left">
+						<source>Left Click</source>
+					</trans-unit>
+					<trans-unit id="assignment_mouse_middle">
+						<source>Middle Click</source>
+					</trans-unit>
+					<trans-unit id="assignment_mouse_right">
+						<source>Right Click</source>
+					</trans-unit>
+					<trans-unit id="assignment_mouse_scrollup">
+						<source>Scroll Up</source>
+					</trans-unit>
+					<trans-unit id="assignment_mouse_scrolldown">
+						<source>Scroll Down</source>
+					</trans-unit>
 					<trans-unit id="assignment_joystick_axis_invalid">
 						<source>invalid direction</source>
 					</trans-unit>
@@ -2208,6 +2232,9 @@
 					</trans-unit>
 					<trans-unit id="camera_reset">
 						<source>Resets the camera view to default values</source>
+					</trans-unit>
+					<trans-unit id="camera_grab_toggle">
+						<source>Toggles camera grab (Mouse look)</source>
 					</trans-unit>
 					<trans-unit id="camera_restriction">
 						<source>Activates or deactivates interior view camera restriction</source>

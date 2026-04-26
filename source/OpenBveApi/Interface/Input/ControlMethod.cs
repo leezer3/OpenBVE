@@ -1,4 +1,4 @@
-﻿namespace OpenBveApi.Interface
+namespace OpenBveApi.Interface
 {
 	/// <summary>The method by which a control is activated</summary>
 	public enum ControlMethod
@@ -14,6 +14,8 @@
 		/// <summary>This control is activated using the Input Device Plugin</summary>
 		InputDevicePlugin = 4,
 		/// <summary>This control is activated using a touch element</summary>
-		Touch = 5
+		Touch = 5,
+		/// <summary>This control is activated using a mouse button or wheel</summary>
+		Mouse = 6
 	}
 }

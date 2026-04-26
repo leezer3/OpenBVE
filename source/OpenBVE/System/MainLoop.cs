@@ -126,7 +126,10 @@ namespace OpenBve
 		internal static MouseState currentMouseState, previousMouseState;
 
 		internal static bool MouseGrabEnabled = false;
+		private static bool scrollUpPressed = false;
+		private static bool scrollDownPressed = false;
 		internal static bool MouseGrabIgnoreOnce = false;
+		private static int lastMouseX, lastMouseY;
 		internal static OpenBveApi.Math.Vector2 MouseGrabTarget = new OpenBveApi.Math.Vector2(0.0, 0.0);
 
 		/// <summary>Called when a mouse button is pressed</summary>
@@ -140,11 +143,7 @@ namespace OpenBve
 				return;
 			}
 			timeSinceLastMouseEvent = 0;
-			if (e.Button == MouseButton.Right)
-			{
-				MouseGrabEnabled = !MouseGrabEnabled;
-				MouseGrabIgnoreOnce = true;
-			}
+			ProcessMouseControl((int)e.Button, true);
 			if (e.Button == MouseButton.Left)
 			{
 				switch (Program.Renderer.CurrentInterface)
@@ -172,6 +171,7 @@ namespace OpenBve
 				return;
 			}
 			timeSinceLastMouseEvent = 0;
+			ProcessMouseControl((int)e.Button, false);
 			if (e.Button == MouseButton.Left)
 			{
 				if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
@@ -210,6 +210,21 @@ namespace OpenBve
 			{
 				Game.Menu.ProcessMouseScroll(e.Delta);
 			}
+			if (e.Delta != 0)
+			{
+				int element = e.Delta > 0 ? 3 : 4;
+				// Accumulate scroll delta in AnalogState for smoother multi-scroll frames
+				for (int i = 0; i < Interface.CurrentControls.Length; i++)
+				{
+					if (Interface.CurrentControls[i].Method == ControlMethod.Mouse && Interface.CurrentControls[i].Element == element)
+					{
+						Interface.CurrentControls[i].AnalogState += 1.0;
+						Interface.CurrentControls[i].DigitalState = DigitalControlState.Pressed;
+					}
+				}
+				if (element == 3) scrollUpPressed = true;
+				if (element == 4) scrollDownPressed = true;
+			}
 		}
 
 		internal static void UpdateMouse(double TimeElapsed)
@@ -221,15 +236,33 @@ namespace OpenBve
 			else
 			{
 				timeSinceLastMouseEvent = 0; //Always show the mouse in the menu
+				Program.Renderer.GameWindow.CursorVisible = true;
+				MainLoop.MouseGrabEnabled = false;
 			}
 
 			if (Interface.CurrentOptions.CursorHideDelay > 0 && timeSinceLastMouseEvent > Interface.CurrentOptions.CursorHideDelay)
 			{
 				Program.Renderer.GameWindow.CursorVisible = false;
 			}
-			else
+
+			if (scrollUpPressed)
 			{
-				Program.Renderer.GameWindow.CursorVisible = true;
+				ProcessMouseControl(3, false);
+				scrollUpPressed = false;
+			}
+			if (scrollDownPressed)
+			{
+				ProcessMouseControl(4, false);
+				scrollDownPressed = false;
+			}
+			
+			if (MainLoop.MouseGrabEnabled)
+			{
+				Program.Renderer.GameWindow.CursorVisible = false;
+			}
+			else if (Interface.CurrentOptions.CursorHideDelay > 0 && timeSinceLastMouseEvent > Interface.CurrentOptions.CursorHideDelay)
+			{
+				Program.Renderer.GameWindow.CursorVisible = false;
 			}
 
 			if (MainLoop.MouseGrabEnabled)
@@ -244,8 +277,9 @@ namespace OpenBve
 					factor = 3.0;
 				}
 
-				Program.Renderer.Camera.AlignmentDirection.Yaw += factor * MouseGrabTarget.X;
-				Program.Renderer.Camera.AlignmentDirection.Pitch -= factor * MouseGrabTarget.Y;
+				double zoomFactor = Math.Exp(Program.Renderer.Camera.Alignment.Zoom);
+				Program.Renderer.Camera.Alignment.Yaw += factor * MouseGrabTarget.X * 0.001 * zoomFactor;
+				Program.Renderer.Camera.Alignment.Pitch -= factor * MouseGrabTarget.Y * 0.001 * zoomFactor;
 				MouseGrabTarget = OpenBveApi.Math.Vector2.Null;
 			}
 		}
@@ -312,17 +346,28 @@ namespace OpenBve
 			}
 			if (MouseGrabEnabled)
 			{
-				previousMouseState = currentMouseState;
-				currentMouseState = Mouse.GetState();
-				if (previousMouseState != currentMouseState)
+				int centerX = Program.Renderer.GameWindow.ClientRectangle.Width / 2;
+				int centerY = Program.Renderer.GameWindow.ClientRectangle.Height / 2;
+				System.Drawing.Point screenCenter = Program.Renderer.GameWindow.PointToScreen(new System.Drawing.Point(centerX, centerY));
+				
+				if (MouseGrabIgnoreOnce)
 				{
-					if (MouseGrabIgnoreOnce)
+					MouseGrabIgnoreOnce = false;
+					lastMouseX = System.Windows.Forms.Cursor.Position.X;
+					lastMouseY = System.Windows.Forms.Cursor.Position.Y;
+					MouseGrabTarget = OpenBveApi.Math.Vector2.Null;
+				}
+				else
+				{
+					int curX = System.Windows.Forms.Cursor.Position.X;
+					int curY = System.Windows.Forms.Cursor.Position.Y;
+					MouseGrabTarget = new OpenBveApi.Math.Vector2(curX - lastMouseX, curY - lastMouseY);
+					lastMouseX = curX;
+					lastMouseY = curY;
+					if (Math.Abs(curX - screenCenter.X) > 400 || Math.Abs(curY - screenCenter.Y) > 400)
 					{
-						MouseGrabIgnoreOnce = false;
-					}
-					else if (MouseGrabEnabled)
-					{
-						MouseGrabTarget = new OpenBveApi.Math.Vector2(currentMouseState.X - previousMouseState.X, currentMouseState.Y - previousMouseState.Y);
+						System.Windows.Forms.Cursor.Position = screenCenter;
+						MouseGrabIgnoreOnce = true;
 					}
 				}
 			}
@@ -603,5 +648,24 @@ namespace OpenBve
 			}
 		}
 #endif
+		private static void ProcessMouseControl(int element, bool pressed)
+		{
+			for (int i = 0; i < Interface.CurrentControls.Length; i++)
+			{
+				if (Interface.CurrentControls[i].Method == ControlMethod.Mouse && Interface.CurrentControls[i].Element == element)
+				{
+					if (pressed)
+					{
+						Interface.CurrentControls[i].AnalogState = 1.0;
+						Interface.CurrentControls[i].DigitalState = DigitalControlState.Pressed;
+					}
+					else
+					{
+						Interface.CurrentControls[i].AnalogState = 0.0;
+						Interface.CurrentControls[i].DigitalState = DigitalControlState.Released;
+					}
+				}
+			}
+		}
 	}
 }

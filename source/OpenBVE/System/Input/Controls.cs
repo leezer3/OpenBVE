@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -330,6 +330,20 @@ namespace OpenBve
 										}
 									}
 
+								}
+							}
+							else if (Method == ControlMethod.Mouse & Terms.Length >= 3)
+							{
+								if (int.TryParse(Terms[2], out int CurrentButton))
+								{
+									Controls[Length].Method = Method;
+									Controls[Length].Element = CurrentButton;
+									Controls[Length].Option = 0;
+									if (Terms.Length >= 4 && int.TryParse(Terms[3], NumberStyles.Integer, Culture, out int Option))
+									{
+										Controls[Length].Option = Option;
+									}
+									Valid = true;
 								}
 							}
 

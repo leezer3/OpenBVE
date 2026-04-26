@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
 	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="id-ID">
 		<body>
@@ -1155,6 +1155,38 @@
 					<trans-unit id="assignment_joystick_axis_positive">
 						<source>positive direction</source>
 						<target>arah positif</target>
+					</trans-unit>
+					<trans-unit id="selection_mouse">
+						<source>Mouse:</source>
+						<target>Mouse:</target>
+					</trans-unit>
+					<trans-unit id="selection_mouse_button">
+						<source>Button:</source>
+						<target>Tombol:</target>
+					</trans-unit>
+					<trans-unit id="assignment_mouse">
+						<source>Mouse</source>
+						<target>Mouse</target>
+					</trans-unit>
+					<trans-unit id="assignment_mouse_left">
+						<source>Left Click</source>
+						<target>Klik Kiri</target>
+					</trans-unit>
+					<trans-unit id="assignment_mouse_middle">
+						<source>Middle Click</source>
+						<target>Klik Tengah</target>
+					</trans-unit>
+					<trans-unit id="assignment_mouse_right">
+						<source>Right Click</source>
+						<target>Klik Kanan</target>
+					</trans-unit>
+					<trans-unit id="assignment_mouse_scrollup">
+						<source>Scroll Up</source>
+						<target>Scroll Atas</target>
+					</trans-unit>
+					<trans-unit id="assignment_mouse_scrolldown">
+						<source>Scroll Down</source>
+						<target>Scroll Bawah</target>
 					</trans-unit>
 					<trans-unit id="assignment_joystick_axis_invalid">
 						<source>invalid direction</source>
@@ -2771,6 +2803,10 @@
 					<trans-unit id="camera_reset">
 						<source>Resets the camera view to default values</source>
 						<target>Reset kamera</target>
+					</trans-unit>
+					<trans-unit id="camera_grab_toggle">
+						<source>Toggles camera grab (Mouse look)</source>
+						<target>Aktifkan/nonaktifkan kontrol kamera dengan mouse</target>
 					</trans-unit>
 					<trans-unit id="camera_restriction">
 						<source>Activates or deactivates interior view camera restriction</source>
