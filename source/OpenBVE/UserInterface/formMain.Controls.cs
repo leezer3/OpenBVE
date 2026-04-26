@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -54,13 +54,18 @@ namespace OpenBve {
 						case ControlMethod.RailDriver:
 							radiobuttonJoystick.Checked = true;
 							break;
+						case ControlMethod.Mouse:
+							radiobuttonMouse.Checked = true;
+							break;
 						default:
 							radiobuttonKeyboard.Checked = false;
 							radiobuttonJoystick.Checked = false;
+							radiobuttonMouse.Checked = false;
 							textboxJoystickGrab.Enabled = false;
 							break;
 					}
 					panelKeyboard.Enabled = radiobuttonKeyboard.Checked;
+					panelKeyboard.Visible = radiobuttonKeyboard.Checked;
 					if (radiobuttonKeyboard.Checked)
 					{
 						if (Translations.TranslatedKeys.ContainsKey(Interface.CurrentControls[i].Key))
@@ -72,13 +77,20 @@ namespace OpenBve {
 						checkboxKeyboardAlt.Checked = (Interface.CurrentControls[i].Modifier & KeyboardModifier.Alt) != 0;
 					} else if (radiobuttonJoystick.Checked) {
 						labelJoystickAssignmentValue.Text = GetControlDetails(i);
+					} else if (radiobuttonMouse.Checked) {
+						comboboxMouseButton.SelectedIndex = Interface.CurrentControls[i].Element;
 					} else {
 						comboboxKeyboardKey.SelectedIndex = -1;
 						checkboxKeyboardShift.Checked = false;
 						checkboxKeyboardCtrl.Checked = false;
 						checkboxKeyboardAlt.Checked = false;
+						comboboxMouseButton.SelectedIndex = -1;
 					}
 					panelJoystick.Enabled = radiobuttonJoystick.Checked;
+					panelJoystick.Visible = radiobuttonJoystick.Checked;
+					panelMouse.Enabled = radiobuttonMouse.Checked;
+					panelMouse.Visible = radiobuttonMouse.Checked;
+					textboxJoystickGrab.Visible = radiobuttonJoystick.Checked || radiobuttonKeyboard.Checked;
 					// finalize
 					Tag = null;
 				}
@@ -91,11 +103,13 @@ namespace OpenBve {
 				comboboxCommand.SelectedIndex = -1;
 				radiobuttonKeyboard.Checked = false;
 				radiobuttonJoystick.Checked = false;
+				radiobuttonMouse.Checked = false;
 				groupboxControl.Enabled = false;
 				comboboxKeyboardKey.SelectedIndex = -1;
 				checkboxKeyboardShift.Checked = false;
 				checkboxKeyboardCtrl.Checked = false;
 				checkboxKeyboardAlt.Checked = false;
+				comboboxMouseButton.SelectedIndex = -1;
 				labelJoystickAssignmentValue.Text = "";
 				Tag = null;
 				buttonControlRemove.Enabled = false;
@@ -121,6 +135,9 @@ namespace OpenBve {
 					break;
 				case ControlMethod.Joystick:
 					Item.ImageKey = Info.Type == Translations.CommandType.AnalogHalf || Info.Type == Translations.CommandType.AnalogFull ? @"joystick" : @"gamepad";
+					break;
+				case ControlMethod.Mouse:
+					Item.ImageKey = @"mouse";
 					break;
 				default:
 					Item.ImageKey = null;
@@ -266,6 +283,18 @@ namespace OpenBve {
 				}
 				return t;
 			} 
+			if (Interface.CurrentControls[Index].Method == ControlMethod.Mouse) {
+				string t = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse"}) + Separator;
+				switch (Interface.CurrentControls[Index].Element) {
+					case 0: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_left"}); break;
+					case 1: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_middle"}); break;
+					case 2: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_right"}); break;
+					case 3: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_scrollup"}); break;
+					case 4: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_scrolldown"}); break;
+					default: t += "{" + Interface.CurrentControls[Index].Element.ToString(Culture) + "}"; break;
+				}
+				return t;
+			}
 			return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_invalid"});
 			
 		}
@@ -359,12 +388,34 @@ namespace OpenBve {
 		// keyboard
 		private void radiobuttonKeyboard_CheckedChanged(object sender, EventArgs e) {
 			textboxJoystickGrab.Enabled = radiobuttonJoystick.Checked || radiobuttonKeyboard.Checked;
+			textboxJoystickGrab.Visible = radiobuttonJoystick.Checked || radiobuttonKeyboard.Checked;
 			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int i = listviewControls.SelectedIndices[0];
 				Interface.CurrentControls[i].Method = ControlMethod.Keyboard;
 				UpdateControlListElement(listviewControls.Items[i], i, true);
 			}
 			panelKeyboard.Enabled = radiobuttonKeyboard.Checked;
+			panelKeyboard.Visible = radiobuttonKeyboard.Checked;
+		}
+
+		// mouse
+		private void radiobuttonMouse_CheckedChanged(object sender, EventArgs e) {
+			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
+				int i = listviewControls.SelectedIndices[0];
+				Interface.CurrentControls[i].Method = ControlMethod.Mouse;
+				UpdateControlListElement(listviewControls.Items[i], i, true);
+			}
+			panelMouse.Enabled = radiobuttonMouse.Checked;
+			panelMouse.Visible = radiobuttonMouse.Checked;
+			textboxJoystickGrab.Visible = radiobuttonJoystick.Checked || radiobuttonKeyboard.Checked;
+		}
+
+		private void comboboxMouseButton_SelectedIndexChanged(object sender, EventArgs e) {
+			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
+				int i = listviewControls.SelectedIndices[0];
+				Interface.CurrentControls[i].Element = comboboxMouseButton.SelectedIndex;
+				UpdateControlListElement(listviewControls.Items[i], i, true);
+			}
 		}
 
 		// key
@@ -426,6 +477,7 @@ namespace OpenBve {
 				UpdateControlListElement(listviewControls.Items[i], i, true);
 			}
 			panelJoystick.Enabled = radiobuttonJoystick.Checked;
+			panelJoystick.Visible = radiobuttonJoystick.Checked;
 			if (radiobuttonJoystick.Checked || radiobuttonKeyboard.Checked)
 			{
 				textboxJoystickGrab.Enabled = true;
@@ -434,6 +486,7 @@ namespace OpenBve {
 			{
 				textboxJoystickGrab.Enabled = false;
 			}
+			textboxJoystickGrab.Visible = radiobuttonJoystick.Checked || radiobuttonKeyboard.Checked;
 
 			textboxJoystickGrab.Text = Translations.GetInterfaceString(HostApplication.OpenBve, radiobuttonJoystick.Checked ? new[] {"controls","selection_joystick_assignment_grab"} : new[] {"controls","selection_keyboard_assignment_grab"});
 		}

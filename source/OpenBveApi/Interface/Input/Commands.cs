@@ -120,6 +120,8 @@ namespace OpenBveApi.Interface {
 			CameraPOINext,
 			/// <summary>Reset the camera to pointing immediately forwards at track-level</summary>
 			CameraReset,
+			/// <summary>Toggles camera grab (Mouse looking)</summary>
+			CameraGrabToggle,
 			/// <summary>Toggle camera restriction mode</summary>
 			CameraRestriction,
 			/// <summary>Shows or hides the in-game timetable</summary>
