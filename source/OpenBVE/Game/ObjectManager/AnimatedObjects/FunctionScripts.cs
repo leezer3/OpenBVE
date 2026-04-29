@@ -267,6 +267,16 @@ namespace OpenBve {
 							Function.Stack[s] = 1;
 						}
 						s++; break;
+					case Instructions.CameraCar:
+						if (IsPartOfTrain && Train != null)
+						{
+							Function.Stack[s] = Train.CameraCar;
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
 						// train
 					case Instructions.PlayerTrain:
 						if (IsPartOfTrain && Train != null)
