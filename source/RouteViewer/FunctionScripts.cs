@@ -711,13 +711,7 @@ namespace RouteViewer {
 						}
 						break;
 					case Instructions.PilotLamp:
-						//Not currently supported in viewers
-						Function.Stack[s] = 0.0;
-						s++; break;
 					case Instructions.PassAlarm:
-						//Not currently supported in viewers
-						Function.Stack[s] = 0.0;
-						s++; break;
 					case Instructions.StationAdjustAlarm:
 						//Not currently supported in viewers
 						Function.Stack[s] = 0.0;

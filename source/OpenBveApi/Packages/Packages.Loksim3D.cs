@@ -67,7 +67,6 @@ namespace OpenBveApi.Packages
 								}
 								break;
 							case "DeleteFiles":
-								break;
 							case "DeinstallPackages":
 								break;
 						}

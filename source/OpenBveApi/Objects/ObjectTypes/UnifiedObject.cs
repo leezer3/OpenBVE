@@ -8,9 +8,7 @@ namespace OpenBveApi.Objects
 	{
 		/// <summary>Creates the object within the worldspace without using track based transforms</summary>
 		/// <param name="Position">The world position</param>
-		/// <param name="StartingDistance">The track distance at which this is displayed by the renderer</param>
-		/// <param name="EndingDistance">The track distance at which this hidden by the renderer</param>
-		/// <param name="TrackPosition">The absolute track position at which this object is placed</param>
+		/// <param name="Parameters">The parameters to use when creating the object</param>
 		public void CreateObject(Vector3 Position, ObjectCreationParameters Parameters)
 		{
 			CreateObject(Position, Transformation.NullTransformation, Transformation.NullTransformation, Parameters);
@@ -19,9 +17,7 @@ namespace OpenBveApi.Objects
 		/// <summary>Creates the object within the worldspace using a single track based transforms</summary>
 		/// <param name="Position">The world position</param>
 		/// <param name="WorldTransformation">The world transformation to apply (e.g. ground, rail)</param>
-		/// <param name="StartingDistance">The track distance at which this is displayed by the renderer</param>
-		/// <param name="EndingDistance">The track distance at which this hidden by the renderer</param>
-		/// <param name="TrackPosition">The absolute track position at which this object is placed</param>
+		/// <param name="Parameters">The parameters to use when creating the object</param>
 		public void CreateObject(Vector3 Position, Transformation WorldTransformation, ObjectCreationParameters Parameters)
 		{
 			CreateObject(Position, WorldTransformation, Transformation.NullTransformation, Parameters);
@@ -31,9 +27,7 @@ namespace OpenBveApi.Objects
 		/// <param name="Position">The world position</param>
 		/// <param name="WorldTransformation">The world transformation to apply (e.g. ground, rail)</param>
 		/// <param name="LocalTransformation">The local transformation to apply in order to rotate the model</param>
-		/// <param name="StartingDistance">The track distance at which this is displayed by the renderer</param>
-		/// <param name="EndingDistance">The track distance at which this hidden by the renderer</param>
-		/// <param name="TrackPosition">The absolute track position at which this object is placed</param>
+		/// <param name="Parameters">The parameters to use when creating the object</param>
 		public abstract void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectCreationParameters Parameters);
 
 		/// <summary>Call this method to optimize the object</summary>
