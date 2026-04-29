@@ -909,7 +909,7 @@ namespace LibRender2
 				foreach (VertexTemplate vertex in Prototype.Mesh.Vertices)
 				{
 					Vector3 Coordinates = new Vector3(vertex.Coordinates);
-					Coordinates.Rotate(LocalTransformation);
+					Coordinates.Rotate(LocalTransformation ?? Transformation.NullTransformation);
 
 					if (Coordinates.Z < startingDistance)
 					{
