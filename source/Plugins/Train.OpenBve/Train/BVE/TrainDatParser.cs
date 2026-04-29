@@ -1023,9 +1023,28 @@ namespace Train.OpenBve
 					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TrailerCarMass is expected to be positive in " + FileName);
 					TrailerCarMass = 1.0;	
 				}
-				
 			}
-			
+
+			// apply data (need to set driver car first to ensure handles are assigned to the correct place)
+			if (MotorCars < 1) MotorCars = 1;
+			if (TrailerCars < 0) TrailerCars = 0;
+			int Cars = MotorCars + TrailerCars;
+			Train.Cars = new CarBase[Cars];
+			for (int i = 0; i < Train.Cars.Length; i++)
+			{
+				Train.Cars[i] = new CarBase(Train, i, CoefficientOfStaticFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
+			}
+			double DistanceBetweenTheCars = 0.3;
+
+			if (DriverCar < 0 || DriverCar >= Cars)
+			{
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DriverCar must point to an existing car in " + FileName);
+			}
+			else
+			{
+				Train.DriverCar = DriverCar;
+			}
+
 			if (powerNotches == 0)
 			{
 				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "NumberOfPowerNotches was not set in " + FileName);
@@ -1078,24 +1097,7 @@ namespace Train.OpenBve
 				Train.Handles.LocoBrake = new LocoBrakeHandle(locoBrakeNotches, Train.Handles.EmergencyBrake, locoBrakeDelayUp, locoBrakeDelayDown, Train);
 			}
 			Train.Handles.LocoBrakeType = (LocoBrakeType)locoBrakeType;
-			Train.Handles.HoldBrake = new HoldBrakeHandle(Train);
-			// apply data
-			if (MotorCars < 1) MotorCars = 1;
-			if (TrailerCars < 0) TrailerCars = 0;
-			int Cars = MotorCars + TrailerCars;
-			Train.Cars = new CarBase[Cars];
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				Train.Cars[i] = new CarBase(Train, i, CoefficientOfStaticFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
-			}
-			double DistanceBetweenTheCars = 0.3;
 			
-			if (DriverCar < 0 | DriverCar >= Cars) {
-				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DriverCar must point to an existing car in " + FileName);
-				DriverCar = 0;
-
-			}
-			Train.DriverCar = DriverCar;
 			// brake system
 			double OperatingPressure;
 			if (BrakePipePressure <= 0.0) {
