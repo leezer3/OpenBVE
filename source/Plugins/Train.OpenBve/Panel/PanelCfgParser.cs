@@ -40,7 +40,7 @@ namespace Train.OpenBve
 		private double WorldLeft, WorldTop;
 		private double SemiHeight = 240;
 
-		private string PanelBackground;
+		private Texture panelTexture;
 		private bool isBackground = true;
 
 		/// <summary>Parses a BVE1 panel.cfg file</summary>
@@ -72,7 +72,7 @@ namespace Train.OpenBve
 			double WorldZ = Car.Driver.Z;
 			const double UpDownAngleConstant = -0.191986217719376;
 			// default background
-			PanelBackground = Path.CombineFile(TrainPath, "panel.bmp");
+			string PanelBackground = Path.CombineFile(TrainPath, "panel.bmp");
 
 			ConfigFile<PanelSections, PanelKey> cfg = new ConfigFile<PanelSections, PanelKey>(fileName, Plugin.CurrentHost);
 
@@ -84,7 +84,7 @@ namespace Train.OpenBve
 
 			if (File.Exists(PanelBackground))
 			{
-				Plugin.CurrentHost.RegisterTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out Texture panelTexture, true);
+				Plugin.CurrentHost.RegisterTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out panelTexture, true);
 				SemiHeight = PanelSize.Y - panelTexture.Height;
 				CreateElement(Car, 0, SemiHeight, panelTexture.Width, panelTexture.Height, WorldZ + EyeDistance, false, panelTexture, Color32.White);
 			}
@@ -783,10 +783,10 @@ namespace Train.OpenBve
 				 * Now, if this is *not* opaque, apply as a mask to the alpha channel
 				 *
 				 */
-				Plugin.CurrentHost.QueryTextureDimensions(PanelBackground, out int tW, out int tH);
-				double clipWidth = Math.Min(Width, tW - Left);
-				double clipHeight = Math.Min(Height, tH + SemiHeight - Top);
-				Plugin.CurrentHost.RegisterTexture(PanelBackground, new TextureParameters(new TextureClipRegion((int)Left, (int)(Top - SemiHeight), (int)clipWidth, (int)clipHeight), Color24.Blue), out Texture temp, true);
+				double clipWidth = Math.Min(Width, panelTexture.Width - Left);
+				double clipHeight = Math.Min(Height, panelTexture.Height + SemiHeight - Top);
+				Texture temp = panelTexture.ApplyParameters(new TextureParameters(new TextureClipRegion((int)Left, (int)(Top - SemiHeight), (int)clipWidth, (int)clipHeight), Color24.Blue));
+				
 				temp.Origin.GetTexture(out Texture t);
 				switch (t.GetTransparencyType())
 				{
