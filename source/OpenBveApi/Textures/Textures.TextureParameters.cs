@@ -13,7 +13,7 @@ namespace OpenBveApi.Textures
 		/// <summary>The color in the texture that should become transparent, or a null reference for no transparent color.</summary>
 		public readonly Color24? TransparentColor;
 		/// <summary>The alpha channel texture</summary>
-		public readonly Texture TransparencyTexture;
+		public Texture TransparencyTexture;
 
 		/// <summary>Texture parameters, which apply no changes.</summary>
 		public static TextureParameters NoChange = new TextureParameters(null, null);

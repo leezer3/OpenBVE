@@ -59,20 +59,39 @@ namespace OpenBveApi.Textures {
 			{
 				case PixelFormat.Grayscale:
 					firstByte = pix;
-					break;
+					return new Color24(MyBytes[frame][firstByte], MyBytes[frame][firstByte], MyBytes[frame][firstByte]);
 				case PixelFormat.GrayscaleAlpha:
 					firstByte = 2 * pix;
-					break;
+					return new Color24(MyBytes[frame][firstByte], MyBytes[frame][firstByte], MyBytes[frame][firstByte]);
 				case PixelFormat.RGB:
 					firstByte = 3 * pix;
-					break;
+					return new Color24(MyBytes[frame][firstByte], MyBytes[frame][firstByte + 1], MyBytes[frame][firstByte + 2]);
 				case PixelFormat.RGBAlpha:
 					firstByte = 4 * pix;
-					break;
+					return new Color24(MyBytes[frame][firstByte], MyBytes[frame][firstByte + 1], MyBytes[frame][firstByte + 2]);
 				default:
 					throw new Exception("Unable to get a pixel value with invalid data.");
 			}
-			return new Color24(MyBytes[frame][firstByte], MyBytes[frame][firstByte + 1], MyBytes[frame][firstByte + 2]);
+		}
+
+		/// <summary>Gets the alpha value of the given pixel</summary>
+		/// <param name="pix">The pixel index</param>
+		/// <param name="frame">The frame</param>
+		/// <returns></returns>
+		public byte GetAlpha(int pix, int frame = 0)
+		{
+			switch (PixelFormat)
+			{
+				case PixelFormat.Grayscale:
+				case PixelFormat.RGB:
+					return 255;
+				case PixelFormat.GrayscaleAlpha:
+					return MyBytes[frame][2 * pix + 1];
+				case PixelFormat.RGBAlpha:
+					return MyBytes[frame][4 * pix + 3];
+				default:
+					return 255;
+			}
 		}
 
 		/// <summary>Creates a new instance of this class.</summary>
@@ -213,6 +232,11 @@ namespace OpenBveApi.Textures {
 		{
 			get
 			{
+				if (MyBytes == null && Origin != null)
+				{
+					Origin.GetTexture(out Texture t);
+					return t.Bytes;
+				}
 				if (MultipleFrames == false)
 				{
 					return MyBytes[0];
@@ -333,24 +357,40 @@ namespace OpenBveApi.Textures {
 					transparencyType = TextureTransparencyType.Opaque;
 					break;
 				case PixelFormat.RGBAlpha:
+					transparencyType = TextureTransparencyType.Opaque;
 					for (int i = 3; i < this.MyBytes[CurrentFrame].Length; i += 4)
 					{
-						if (this.MyBytes[CurrentFrame][i] != 255)
-						{
-							for (int j = i; j < this.MyBytes[CurrentFrame].Length; j += 4)
-							{
-								if (this.MyBytes[CurrentFrame][j] != 0 & this.MyBytes[CurrentFrame][j] != 255)
-								{
-									transparencyType = TextureTransparencyType.Alpha;
-									return TextureTransparencyType.Alpha;
-								}
-							}
 
-							transparencyType = TextureTransparencyType.Partial;
-							return TextureTransparencyType.Partial;
+						switch (MyBytes[CurrentFrame][i])
+						{
+							case 0:
+								if (i == 3)
+								{
+									transparencyType = TextureTransparencyType.Transparent;
+								}
+								else
+								{
+									if (transparencyType == TextureTransparencyType.Opaque)
+									{
+										transparencyType = TextureTransparencyType.Partial;
+									}
+								}
+								break;
+							case 255:
+								if (transparencyType != TextureTransparencyType.Opaque)
+								{
+									transparencyType = TextureTransparencyType.Partial;
+								}
+								// nothing
+								break;
+							default:
+								transparencyType = TextureTransparencyType.Alpha;
+								return transparencyType;
 						}
 					}
-					break;
+
+					return transparencyType;
+				
 			}
 			return TextureTransparencyType.Opaque;
 		}

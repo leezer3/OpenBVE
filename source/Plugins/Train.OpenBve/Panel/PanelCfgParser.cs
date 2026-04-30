@@ -40,6 +40,9 @@ namespace Train.OpenBve
 		private double WorldLeft, WorldTop;
 		private double SemiHeight = 240;
 
+		private string PanelBackground;
+		private bool isBackground = true;
+
 		/// <summary>Parses a BVE1 panel.cfg file</summary>
 		/// <param name="TrainPath">The on-disk path to the train</param>
 		/// <param name="Encoding">The train's text encoding</param>
@@ -69,7 +72,7 @@ namespace Train.OpenBve
 			double WorldZ = Car.Driver.Z;
 			const double UpDownAngleConstant = -0.191986217719376;
 			// default background
-			string PanelBackground = Path.CombineFile(TrainPath, "panel.bmp");
+			PanelBackground = Path.CombineFile(TrainPath, "panel.bmp");
 
 			ConfigFile<PanelSections, PanelKey> cfg = new ConfigFile<PanelSections, PanelKey>(fileName, Plugin.CurrentHost);
 
@@ -81,10 +84,12 @@ namespace Train.OpenBve
 
 			if (File.Exists(PanelBackground))
 			{
-				Plugin.CurrentHost.RegisterTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out var panelTexture, true);
+				Plugin.CurrentHost.RegisterTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out Texture panelTexture, true);
 				SemiHeight = PanelSize.Y - panelTexture.Height;
 				CreateElement(Car, 0, SemiHeight, panelTexture.Width, panelTexture.Height, WorldZ + EyeDistance, panelTexture, Color32.White);
 			}
+
+			isBackground = false;
 
 			string compatibilityFolder = Plugin.FileSystem.GetDataFolder("Compatibility");
 			while (cfg.RemainingSubBlocks > 0)
@@ -759,6 +764,43 @@ namespace Train.OpenBve
 		// create element
 		private int CreateElement(CarBase Car, double Left, double Top, double Width, double Height, double WorldZ, Texture Texture, Color32 Color, bool AddStateToLastElement = false)
 		{
+			if (Plugin.CurrentOptions.EnableBveTsHacks && isBackground == false)
+			{
+				/*
+				 * In regions where the main panel texture is transparent,
+				 * BVE2 renders any other overlapping elements as transparent also
+				 *
+				 * e.g. Portuguese trains:
+				 * CP1400
+				 * CP2100
+				 * CP3500
+				 * CP4000
+				 *
+				 * All of these have junk extra elements in the main panel view
+				 * (Appears to have come from copy+pasting between trains)
+				 *
+				 * So, what we need to do is to extract the region of the main overlapping texture
+				 * Now, if this is *not* opaque, apply to the alpha channel
+				 */
+				Plugin.CurrentHost.QueryTextureDimensions(PanelBackground, out int tW, out int tH);
+				double clipWidth = Math.Min(Width, tW - Left);
+				double clipHeight = Math.Min(Height, tH - Top);
+				Plugin.CurrentHost.RegisterTexture(PanelBackground, new TextureParameters(new TextureClipRegion((int)Left, (int)Top, (int)clipWidth, (int)clipHeight), Color24.Blue), out Texture temp, true);
+				temp.Origin.GetTexture(out Texture t);
+				switch (t.GetTransparencyType())
+				{
+					case TextureTransparencyType.Transparent:
+						Texture = new Texture(1, 1, PixelFormat.RGBAlpha, new byte[] { 0, 0, 0, 0 }, new Color24[] { });
+						break;
+					case TextureTransparencyType.Partial:
+						Texture.Origin.GetTexture(out Texture tt);
+						Texture = tt.ApplyParameters(new TextureParameters(null, null, t));
+						break;
+				}
+
+			}
+
+
 			// create object
 			StaticObject Object = new StaticObject(Plugin.CurrentHost);
 			Vector3[] v = new Vector3[4];
