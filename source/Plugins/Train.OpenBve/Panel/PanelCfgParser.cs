@@ -780,12 +780,13 @@ namespace Train.OpenBve
 				 * (Appears to have come from copy+pasting between trains)
 				 *
 				 * So, what we need to do is to extract the region of the main overlapping texture
-				 * Now, if this is *not* opaque, apply to the alpha channel
+				 * Now, if this is *not* opaque, apply as a mask to the alpha channel
+				 *
 				 */
 				Plugin.CurrentHost.QueryTextureDimensions(PanelBackground, out int tW, out int tH);
 				double clipWidth = Math.Min(Width, tW - Left);
-				double clipHeight = Math.Min(Height, tH - Top);
-				Plugin.CurrentHost.RegisterTexture(PanelBackground, new TextureParameters(new TextureClipRegion((int)Left, (int)Top, (int)clipWidth, (int)clipHeight), Color24.Blue), out Texture temp, true);
+				double clipHeight = Math.Min(Height, tH + SemiHeight - Top);
+				Plugin.CurrentHost.RegisterTexture(PanelBackground, new TextureParameters(new TextureClipRegion((int)Left, (int)(Top - SemiHeight), (int)clipWidth, (int)clipHeight), Color24.Blue), out Texture temp, true);
 				temp.Origin.GetTexture(out Texture t);
 				switch (t.GetTransparencyType())
 				{
