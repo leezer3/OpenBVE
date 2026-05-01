@@ -291,7 +291,7 @@ namespace Formats.OpenBve
 
 				try
 				{
-					finalPath = Path.CombineFile(absolutePath, value.Value);
+					finalPath = value.Value != string.Empty ? Path.CombineFile(absolutePath, value.Value) : string.Empty;
 				}
 				catch
 				{

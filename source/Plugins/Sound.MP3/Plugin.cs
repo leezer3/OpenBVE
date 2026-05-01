@@ -50,6 +50,10 @@ namespace Plugin
 
 			using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
 			{
+				if (stream.Length == 0)
+				{
+					return false;
+				}
 				using (BinaryReader reader = new BinaryReader(stream))
 				{
 					byte[] magicNumber = reader.ReadBytes(3);

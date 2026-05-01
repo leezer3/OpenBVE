@@ -1,4 +1,4 @@
-﻿using NAudio.Wave;
+using NAudio.Wave;
 using OpenBveApi;
 using OpenBveApi.Math;
 using OpenBveApi.Sounds;
@@ -103,6 +103,11 @@ namespace Plugin
 							sample = 1.0f;
 						}
 
+						if (float.IsNaN(sample))
+						{
+							sample = 0;
+						}
+
 						writer.Write((short)(sample * short.MaxValue));
 					}
 				}
@@ -154,6 +159,7 @@ namespace Plugin
 			{
 				ChunkID ckID = (ChunkID)reader.ReadUInt32(endianness);
 				uint ckSize = reader.ReadUInt32(endianness);
+				long ckStart = reader.BaseStream.Position;
 
 				// "fmt "
 				switch (ckID)
@@ -176,7 +182,9 @@ namespace Plugin
 								format = new WaveFormatAdPcm(wFormatTag);
 								break;
 							case 0x0011:
+							case 0x0031:
 								// 0x0011 - Intel DVI ADPCM
+								// 0x0031 - GSM610
 								reader.BaseStream.Seek(0, 0);
 								return NAudioLoadFromStream(reader.BaseStream);
 							case 0x0050:
@@ -391,6 +399,15 @@ namespace Plugin
 								}
 							}
 						}
+
+						if (format is WaveFormatMp3)
+						{
+							using (MemoryStream dataStream = new MemoryStream(dataBytes))
+							{
+								return Mp3LoadFromStream(dataStream);
+							}
+						}
+
 						chunks.Add(new DataChunk(dataBytes, format));
 						break;
 					case ChunkID.CUE:
@@ -415,6 +432,9 @@ namespace Plugin
 						break;
 				}
 
+				// ensure we're actually at the end of the chunk
+				reader.BaseStream.Seek(ckStart + ckSize, SeekOrigin.Begin);
+
 				// pad byte
 				if ((ckSize & 1) == 1)
 				{
@@ -426,14 +446,6 @@ namespace Plugin
 			if (chunks.Count == 0)
 			{
 				throw new InvalidDataException("File contains no DATA or SLNT chunks.");
-			}
-
-			if (format is WaveFormatMp3)
-			{
-				using (MemoryStream dataStream = new MemoryStream(dataBytes))
-				{
-					return Mp3LoadFromStream(dataStream);
-				}
 			}
 
 			byte[][] buffers = new byte[format.Channels][];
