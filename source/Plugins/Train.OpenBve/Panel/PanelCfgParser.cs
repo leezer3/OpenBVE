@@ -785,7 +785,8 @@ namespace Train.OpenBve
 				 */
 				double clipWidth = Math.Min(Width, panelTexture.Width - Left);
 				double clipHeight = Math.Min(Height, panelTexture.Height + SemiHeight - Top);
-				Texture temp = panelTexture.ApplyParameters(new TextureParameters(new TextureClipRegion((int)Left, (int)(Top - SemiHeight), (int)clipWidth, (int)clipHeight), Color24.Blue));
+				Texture temp = panelTexture.ApplyParameters(new TextureParameters(new TextureClipRegion(Math.Max(0, (int)Left)
+					, Math.Max(0, (int)(Top - SemiHeight)), (int)clipWidth, (int)clipHeight), Color24.Blue));
 				
 				temp.Origin.GetTexture(out Texture t);
 				switch (t.GetTransparencyType())
