@@ -1,3 +1,4 @@
+using LibRender2.Cameras;
 using LibRender2.Screens;
 using LibRender2.Trains;
 using OpenBveApi;
@@ -1098,25 +1099,31 @@ namespace TrainManager.Trains
 				// If in the reverse direction, the last car is Car0 and the direction of increase is reversed
 				shouldIncrement = !shouldIncrement;
 			}
-
-			if (shouldIncrement)
+			
+			int currentTarget = TrainManagerBase.Renderer.Camera.TargetCameraCar != -1 ? TrainManagerBase.Renderer.Camera.TargetCameraCar : CameraCar;
+			int nextCar = shouldIncrement ? currentTarget + 1 : currentTarget - 1;
+			
+			if (nextCar >= 0 && nextCar < Cars.Length)
 			{
-				if (CameraCar < Cars.Length - 1)
+				TrainManagerBase.Renderer.Camera.TargetCameraCar = nextCar;
+				
+				if (!TrainManagerBase.Renderer.Camera.IsTransitioning)
 				{
-					CameraCar++;
-					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"notification","exterior"}) + " " + (CurrentDirection == TrackDirection.Reverse ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
-						MessageColor.White, 2.0, null);
+					TrainManagerBase.Renderer.Camera.PreviousCameraCar = CameraCar;
+					CameraCar = nextCar;
+					TrainManagerBase.Renderer.Camera.TargetCameraCar = -1;
+					TrainManagerBase.Renderer.Camera.IsTransitioning = true;
+					TrainManagerBase.Renderer.Camera.CameraCarTransitionTimer = 0.0;
 				}
+				
+				TrainManagerBase.currentHost.AddMessage(
+					Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "notification", "exterior" }) + " " + (CurrentDirection == TrackDirection.Reverse ? Cars.Length - nextCar : nextCar + 1),
+					MessageDependency.CameraView,
+					GameMode.Expert,
+					MessageColor.White,
+					2.0,
+					null);
 			}
-			else
-			{
-				if (CameraCar > 0)
-				{
-					CameraCar--;
-					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"notification","exterior"}) + " " + (CurrentDirection == TrackDirection.Reverse ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert, MessageColor.White, 2.0, null);
-				}
-			}
-
 		}
 
 		public override void Couple(AbstractTrain train, bool front)
