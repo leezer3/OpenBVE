@@ -1204,6 +1204,18 @@
 					<trans-unit id="misc">
 						<source>Miscellaneous</source>
 					</trans-unit>
+					<trans-unit id="camera">
+						<source>Camera options</source>
+					</trans-unit>
+					<trans-unit id="camera_interior_transition">
+						<source>Smooth interior transition</source>
+					</trans-unit>
+					<trans-unit id="camera_exterior_transition">
+						<source>Smooth exterior transition</source>
+					</trans-unit>
+					<trans-unit id="camera_transition_duration">
+						<source>Transition duration (sec):</source>
+					</trans-unit>
 					<trans-unit id="misc_simulation">
 						<source>Detail of simulation</source>
 					</trans-unit>

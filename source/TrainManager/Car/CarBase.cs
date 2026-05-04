@@ -1143,34 +1143,46 @@ namespace TrainManager.Car
 		}
 
 		/// <summary>Updates the position of the camera relative to this car</summary>
-		public void UpdateCamera()
+		public void UpdateCamera(CarBase previousCar = null, double mu = 1.0)
 		{
-			Vector3 direction = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
-			direction *= direction.Magnitude();
-			double sx = direction.Z * Up.Y - direction.Y * Up.Z;
-			double sy = direction.X * Up.Z - direction.Z * Up.X;
-			double sz = direction.Y * Up.X - direction.X * Up.Y;
-			double rx = 0.5 * (FrontAxle.Follower.WorldPosition.X + RearAxle.Follower.WorldPosition.X);
-			double ry = 0.5 * (FrontAxle.Follower.WorldPosition.Y + RearAxle.Follower.WorldPosition.Y);
-			double rz = 0.5 * (FrontAxle.Follower.WorldPosition.Z + RearAxle.Follower.WorldPosition.Z);
-			Vector3 cameraPosition;
-			Vector3 driverPosition = HasInteriorView ? Driver : baseTrain.Cars[baseTrain.DriverCar].Driver;
-			cameraPosition.X = rx + sx * driverPosition.X + Up.X * driverPosition.Y + direction.X * driverPosition.Z;
-			cameraPosition.Y = ry + sy * driverPosition.X + Up.Y * driverPosition.Y + direction.Y * driverPosition.Z;
-			cameraPosition.Z = rz + sz * driverPosition.X + Up.Z * driverPosition.Y + direction.Z * driverPosition.Z;
+			var a2 = GetAnchor();
+			var trackFollower = TrainManagerBase.Renderer.CameraTrackFollower;
+			if (previousCar != null && mu < 1.0)
+			{
+				var a1 = previousCar.GetAnchor();
+				trackFollower.WorldPosition = Vector3.CosineInterpolate(a1.worldPosition, a2.worldPosition, mu);
+				trackFollower.WorldDirection = Vector3.CosineInterpolate(a1.worldDirection, a2.worldDirection, mu);
+				trackFollower.WorldUp = Vector3.CosineInterpolate(a1.worldUp, a2.worldUp, mu);
+				trackFollower.WorldSide = Vector3.CosineInterpolate(a1.worldSide, a2.worldSide, mu);
+				double mu2 = (1.0 - Math.Cos(mu * Math.PI)) / 2.0;
+				trackFollower.UpdateAbsolute(a1.trackPosition + (a2.trackPosition - a1.trackPosition) * mu2, false, false);
+			}
+			else
+			{
+				trackFollower.WorldPosition = a2.worldPosition; 
+				trackFollower.WorldDirection = a2.worldDirection; 
+				trackFollower.WorldUp = a2.worldUp; 
+				trackFollower.WorldSide = a2.worldSide;
+				trackFollower.UpdateAbsolute(a2.trackPosition, false, false);
+			}
+		}
 
-			TrainManagerBase.Renderer.CameraTrackFollower.WorldPosition = cameraPosition;
-			TrainManagerBase.Renderer.CameraTrackFollower.WorldDirection = direction;
-			TrainManagerBase.Renderer.CameraTrackFollower.WorldUp = new Vector3(Up);
-			TrainManagerBase.Renderer.CameraTrackFollower.WorldSide = new Vector3(sx, sy, sz);
-			double f = (Driver.Z - RearAxle.Position) / (FrontAxle.Position - RearAxle.Position);
-			if (double.IsNaN(f))
+		public (Vector3 worldPosition, Vector3 worldDirection, Vector3 worldUp, Vector3 worldSide, double trackPosition) GetAnchor()
+		{
+			Vector3 worldDirection = FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition;
+			worldDirection.Normalize();
+			Vector3 worldSide = Vector3.Cross(Up, worldDirection);
+			Vector3 worldPosition = 0.5 * (FrontAxle.Follower.WorldPosition + RearAxle.Follower.WorldPosition);
+			Vector3 driverPosition = HasInteriorView ? Driver : baseTrain.Cars[baseTrain.DriverCar].Driver;
+			worldPosition += worldSide * driverPosition.X + Up * driverPosition.Y + worldDirection * driverPosition.Z;
+			double interpolationRatio = (Driver.Z - RearAxle.Position) / (FrontAxle.Position - RearAxle.Position);
+			if (double.IsNaN(interpolationRatio))
 			{
 				// car with both axles at zero and a driver position of zero creates NaN (guarded against in original BVE parser)
-				f = 0;
+				interpolationRatio = 0;
 			}
-			double tp = (1.0 - f) * RearAxle.Follower.TrackPosition + f * FrontAxle.Follower.TrackPosition;
-			TrainManagerBase.Renderer.CameraTrackFollower.UpdateAbsolute(tp, false, false);
+			double trackPosition = (1.0 - interpolationRatio) * RearAxle.Follower.TrackPosition + interpolationRatio * FrontAxle.Follower.TrackPosition;
+			return (worldPosition, worldDirection, new Vector3(Up), worldSide, trackPosition);
 		}
 
 		public void UpdateSpeed(double TimeElapsed, double DecelerationDueToMotor, double DecelerationDueToBrake, out double Speed)

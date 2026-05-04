@@ -522,6 +522,9 @@ namespace OpenBve {
 			checkBoxEnableKiosk.Checked = Interface.CurrentOptions.KioskMode;
 			numericUpDownKioskTimeout.Value = (decimal)Interface.CurrentOptions.KioskModeTimer;
 			checkBoxAccessibility.Checked = Interface.CurrentOptions.Accessibility;
+			checkboxCameraInteriorTransition.Checked = Interface.CurrentOptions.CameraInteriorTransition;
+			checkboxCameraExteriorTransition.Checked = Interface.CurrentOptions.CameraExteriorTransition;
+			updownCameraTransitionSpeed.Value = (decimal)Interface.CurrentOptions.CameraTransitionSpeed;
 			ListInputDevicePlugins();
 			if (Program.CurrentHost.MonoRuntime)
 			{
@@ -772,6 +775,10 @@ namespace OpenBve {
 			comboboxShadowCascades.Items[2] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "shadows_cascades_4" });
 			//Simulation
 			groupboxSimulation.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation"});
+			groupboxCamera.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","camera"});
+			checkboxCameraInteriorTransition.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","camera_interior_transition"});
+			checkboxCameraExteriorTransition.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","camera_exterior_transition"});
+			labelCameraTransitionSpeed.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","camera_transition_duration"});
 			checkboxToppling.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation_toppling"});
 			checkboxCollisions.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation_collisions"});
 			checkboxDerailments.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation_derailments"});
@@ -1245,6 +1252,9 @@ namespace OpenBve {
 			Interface.CurrentOptions.CurrentObjParser = (ObjParsers)comboBoxObjparser.SelectedIndex;
 			Interface.CurrentOptions.Panel2ExtendedMode = checkBoxPanel2Extended.Checked;
 			Interface.CurrentOptions.Accessibility = checkBoxAccessibility.Checked;
+			Interface.CurrentOptions.CameraInteriorTransition = checkboxCameraInteriorTransition.Checked;
+			Interface.CurrentOptions.CameraExteriorTransition = checkboxCameraExteriorTransition.Checked;
+			Interface.CurrentOptions.CameraTransitionSpeed = (double)updownCameraTransitionSpeed.Value;
 			switch (trackBarHUDSize.Value)
 			{
 				case 0:

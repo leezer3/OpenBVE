@@ -354,6 +354,16 @@ namespace OpenBve {
 				Program.Renderer.Camera.AbsoluteDirection = dF;
 				Program.Renderer.Camera.AbsoluteUp = uF;
 				Program.Renderer.Camera.AbsoluteSide = sF;
+
+				if (Program.Renderer.Camera.ModeTransitionTimer < 1.0)
+				{
+					double transitionProgress = Program.Renderer.Camera.ModeTransitionTimer;
+					var start = Program.Renderer.Camera.ModeTransitionStart;
+					Program.Renderer.Camera.AbsolutePosition = Vector3.CosineInterpolate(start.Position, Program.Renderer.Camera.AbsolutePosition, transitionProgress);
+					Program.Renderer.Camera.AbsoluteDirection = Vector3.CosineInterpolate(start.Direction, Program.Renderer.Camera.AbsoluteDirection, transitionProgress);
+					Program.Renderer.Camera.AbsoluteUp = Vector3.CosineInterpolate(start.Up, Program.Renderer.Camera.AbsoluteUp, transitionProgress);
+					Program.Renderer.Camera.AbsoluteSide = Vector3.CosineInterpolate(start.Side, Program.Renderer.Camera.AbsoluteSide, transitionProgress);
+				}
 			}
 		}
 	}

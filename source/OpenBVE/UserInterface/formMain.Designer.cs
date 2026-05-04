@@ -162,6 +162,11 @@ namespace OpenBve {
             this.groupboxSound = new System.Windows.Forms.GroupBox();
             this.updownSoundNumber = new System.Windows.Forms.NumericUpDown();
             this.labelSoundNumber = new System.Windows.Forms.Label();
+            this.groupboxCamera = new System.Windows.Forms.GroupBox();
+            this.checkboxCameraInteriorTransition = new System.Windows.Forms.CheckBox();
+            this.checkboxCameraExteriorTransition = new System.Windows.Forms.CheckBox();
+            this.labelCameraTransitionSpeed = new System.Windows.Forms.Label();
+            this.updownCameraTransitionSpeed = new System.Windows.Forms.NumericUpDown();
             this.panelOptionsPage2 = new System.Windows.Forms.Panel();
             this.groupboxDistance = new System.Windows.Forms.GroupBox();
             this.updownNearClipBase = new System.Windows.Forms.NumericUpDown();
@@ -536,6 +541,8 @@ namespace OpenBve {
             this.groupboxSimulation.SuspendLayout();
             this.groupboxSound.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.updownSoundNumber)).BeginInit();
+            this.groupboxCamera.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.updownCameraTransitionSpeed)).BeginInit();
             this.panelOptionsPage2.SuspendLayout();
             this.groupboxDistance.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.updownNearClipBase)).BeginInit();
@@ -2400,6 +2407,7 @@ namespace OpenBve {
             // panelOptionsPage2
             // 
             this.panelOptionsPage2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(255)))), ((int)(((byte)(243)))));
+            this.panelOptionsPage2.Controls.Add(this.groupboxCamera);
             this.panelOptionsPage2.Controls.Add(this.groupboxDistance);
             this.panelOptionsPage2.Controls.Add(this.groupboxShadows);
             this.panelOptionsPage2.Location = new System.Drawing.Point(0, 72);
@@ -2639,6 +2647,77 @@ namespace OpenBve {
             this.groupboxShadows.TabIndex = 30;
             this.groupboxShadows.TabStop = false;
             this.groupboxShadows.Text = "Shadows";
+            // 
+            // groupboxCamera
+            // 
+            this.groupboxCamera.Controls.Add(this.checkboxCameraInteriorTransition);
+            this.groupboxCamera.Controls.Add(this.checkboxCameraExteriorTransition);
+            this.groupboxCamera.Controls.Add(this.labelCameraTransitionSpeed);
+            this.groupboxCamera.Controls.Add(this.updownCameraTransitionSpeed);
+            this.groupboxCamera.ForeColor = System.Drawing.Color.Black;
+            this.groupboxCamera.Location = new System.Drawing.Point(330, 0);
+            this.groupboxCamera.Name = "groupboxCamera";
+            this.groupboxCamera.Size = new System.Drawing.Size(321, 120);
+            this.groupboxCamera.TabIndex = 22;
+            this.groupboxCamera.TabStop = false;
+            this.groupboxCamera.Text = "Camera options";
+            // 
+            // checkboxCameraInteriorTransition
+            // 
+            this.checkboxCameraInteriorTransition.AutoSize = true;
+            this.checkboxCameraInteriorTransition.Location = new System.Drawing.Point(8, 21);
+            this.checkboxCameraInteriorTransition.Name = "checkboxCameraInteriorTransition";
+            this.checkboxCameraInteriorTransition.Size = new System.Drawing.Size(150, 17);
+            this.checkboxCameraInteriorTransition.TabIndex = 0;
+            this.checkboxCameraInteriorTransition.Text = "Smooth interior transition";
+            this.checkboxCameraInteriorTransition.UseVisualStyleBackColor = true;
+            // 
+            // checkboxCameraExteriorTransition
+            // 
+            this.checkboxCameraExteriorTransition.AutoSize = true;
+            this.checkboxCameraExteriorTransition.Location = new System.Drawing.Point(8, 44);
+            this.checkboxCameraExteriorTransition.Name = "checkboxCameraExteriorTransition";
+            this.checkboxCameraExteriorTransition.Size = new System.Drawing.Size(150, 17);
+            this.checkboxCameraExteriorTransition.TabIndex = 1;
+            this.checkboxCameraExteriorTransition.Text = "Smooth exterior transition";
+            this.checkboxCameraExteriorTransition.UseVisualStyleBackColor = true;
+            // 
+            // labelCameraTransitionSpeed
+            // 
+            this.labelCameraTransitionSpeed.AutoSize = true;
+            this.labelCameraTransitionSpeed.Location = new System.Drawing.Point(8, 73);
+            this.labelCameraTransitionSpeed.Name = "labelCameraTransitionSpeed";
+            this.labelCameraTransitionSpeed.Size = new System.Drawing.Size(130, 13);
+            this.labelCameraTransitionSpeed.TabIndex = 2;
+            this.labelCameraTransitionSpeed.Text = "Transition duration (sec):";
+            // 
+            // updownCameraTransitionSpeed
+            // 
+            this.updownCameraTransitionSpeed.DecimalPlaces = 1;
+            this.updownCameraTransitionSpeed.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.updownCameraTransitionSpeed.Location = new System.Drawing.Point(200, 71);
+            this.updownCameraTransitionSpeed.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            65536});
+            this.updownCameraTransitionSpeed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.updownCameraTransitionSpeed.Name = "updownCameraTransitionSpeed";
+            this.updownCameraTransitionSpeed.Size = new System.Drawing.Size(52, 20);
+            this.updownCameraTransitionSpeed.TabIndex = 3;
+            this.updownCameraTransitionSpeed.Value = new decimal(new int[] {
+            4,
+            0,
+            0,
+            65536});
             // 
             // labelShadowResolution
             // 
@@ -6383,6 +6462,9 @@ namespace OpenBve {
             this.groupboxSimulation.PerformLayout();
             this.groupboxSound.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.updownSoundNumber)).EndInit();
+            this.groupboxCamera.ResumeLayout(false);
+            this.groupboxCamera.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.updownCameraTransitionSpeed)).EndInit();
             this.panelOptionsPage2.ResumeLayout(false);
             this.groupboxDistance.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.updownNearClipBase)).EndInit();
@@ -6935,6 +7017,11 @@ namespace OpenBve {
 		private System.Windows.Forms.Button buttonMSTSTrainsetDirectory;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.TextBox textBoxMSTSTrainsetDirectory;
+		private System.Windows.Forms.GroupBox groupboxCamera;
+		private System.Windows.Forms.CheckBox checkboxCameraInteriorTransition;
+		private System.Windows.Forms.CheckBox checkboxCameraExteriorTransition;
+		private System.Windows.Forms.Label labelCameraTransitionSpeed;
+		private System.Windows.Forms.NumericUpDown updownCameraTransitionSpeed;
 		private System.Windows.Forms.Panel panelOptionsPage2;
 	}
 }

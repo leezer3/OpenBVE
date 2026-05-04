@@ -31,6 +31,7 @@ using OpenBveApi.Routes;
 using OpenTK.Graphics.OpenGL;
 using RouteManager2.MessageManager;
 using SoundManager;
+using TrainManager.Car;
 using TrainManager.Trains;
 using Path = System.IO.Path;
 using Vector2 = OpenTK.Vector2;
@@ -167,8 +168,56 @@ namespace OpenBve
 			// update in one piece
 			if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead | Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior)
 			{
+				var cameraProperties = Program.Renderer.Camera;
+				var trackFollower = Program.Renderer.CameraTrackFollower;
+
+				if (cameraProperties.IsTransitioning) cameraProperties.CameraCarTransitionTimer += RealTimeElapsed;
+				if (cameraProperties.ModeTransitionTimer < 1.0) cameraProperties.ModeTransitionTimer += RealTimeElapsed / Interface.CurrentOptions.CameraTransitionSpeed;
+
+				double carTransitionProgress = Math.Min(1.0, cameraProperties.CameraCarTransitionTimer / Interface.CurrentOptions.CameraTransitionSpeed);
+				if (carTransitionProgress >= 1.0)
+				{
+					cameraProperties.IsTransitioning = false;
+					if (cameraProperties.TargetCameraCar != -1)
+					{
+						cameraProperties.PreviousCameraCar = TrainManager.PlayerTrain.CameraCar;
+						TrainManager.PlayerTrain.CameraCar = cameraProperties.TargetCameraCar;
+						cameraProperties.TargetCameraCar = -1;
+						cameraProperties.IsTransitioning = true;
+						cameraProperties.CameraCarTransitionTimer = 0.0;
+						carTransitionProgress = 0.0;
+					}
+				}
+
+				CarBase previousCar = (cameraProperties.IsTransitioning && cameraProperties.PreviousCameraCar != -1) ? TrainManager.PlayerTrain.Cars[cameraProperties.PreviousCameraCar] : null;
 				//Update the in-car camera based upon the current driver car (Cabview or passenger view)
-				TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].UpdateCamera();
+				TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].UpdateCamera(previousCar, carTransitionProgress);
+
+				if (cameraProperties.ModeTransitionTimer < 1.0)
+				{
+					double modeTransitionLinear = Math.Min(1.0, cameraProperties.ModeTransitionTimer);
+					double modeTransitionCosine = (1.0 - Math.Cos(modeTransitionLinear * Math.PI)) / 2.0;
+					var startAnchor = cameraProperties.ModeTransitionStart;
+
+					trackFollower.WorldPosition = OpenBveApi.Math.Vector3.CosineInterpolate(startAnchor.Position, trackFollower.WorldPosition, modeTransitionLinear);
+					trackFollower.WorldDirection = OpenBveApi.Math.Vector3.CosineInterpolate(startAnchor.Direction, trackFollower.WorldDirection, modeTransitionLinear);
+					trackFollower.WorldDirection.Normalize();
+					trackFollower.WorldUp = OpenBveApi.Math.Vector3.CosineInterpolate(startAnchor.Up, trackFollower.WorldUp, modeTransitionLinear);
+					trackFollower.WorldUp.Normalize();
+					trackFollower.WorldSide = OpenBveApi.Math.Vector3.CosineInterpolate(startAnchor.Side, trackFollower.WorldSide, modeTransitionLinear);
+					trackFollower.WorldSide.Normalize();
+					trackFollower.UpdateAbsolute(
+						startAnchor.TrackPosition + (trackFollower.TrackPosition - startAnchor.TrackPosition) * modeTransitionCosine,
+						false,
+						false);
+
+					// Smoothly decay alignment back to zero
+					cameraProperties.AlignmentDirection.Yaw = startAnchor.Alignment.Yaw * (1.0 - modeTransitionCosine);
+					cameraProperties.AlignmentDirection.Pitch = startAnchor.Alignment.Pitch * (1.0 - modeTransitionCosine);
+					cameraProperties.AlignmentDirection.Roll = startAnchor.Alignment.Roll * (1.0 - modeTransitionCosine);
+					cameraProperties.AlignmentDirection.Position = startAnchor.Alignment.Position * (1.0 - modeTransitionCosine);
+					cameraProperties.AlignmentDirection.Zoom = startAnchor.Alignment.Zoom + (0.0 - startAnchor.Alignment.Zoom) * modeTransitionCosine;
+				}
 			}
 			
 			if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable || Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D)

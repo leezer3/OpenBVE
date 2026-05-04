@@ -38,6 +38,9 @@ namespace OpenBveApi
 		NearClipCab,
 		NearClipBase,
 		AutoReloadObjects,
+		CameraInteriorTransition,
+		CameraExteriorTransition,
+		CameraTransitionSpeed,
 		// Quality
 		Interpolation,
 		AnisotropicFilteringLevel,
