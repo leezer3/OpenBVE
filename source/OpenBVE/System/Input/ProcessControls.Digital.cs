@@ -81,7 +81,7 @@ namespace OpenBve
 						bool isAtCabCar = TrainManager.PlayerTrain.CameraCar == 0 || TrainManager.PlayerTrain.CameraCar == TrainManager.PlayerTrain.DriverCar;
 						bool transition = false;
 						// Transition only if switching from Exterior mode and at the head of the train (Car 0 or Driver Car)
-						if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior && isAtCabCar && hasCab)
+						if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior && isAtCabCar && hasCab && Interface.CurrentOptions.CameraInteriorTransition)
 						{
 							Program.Renderer.Camera.ModeTransitionStart = (
 									Program.Renderer.Camera.AbsolutePosition,
@@ -291,7 +291,7 @@ namespace OpenBve
 						bool isAtCabCarLeaving = TrainManager.PlayerTrain.CameraCar == 0 || TrainManager.PlayerTrain.CameraCar == TrainManager.PlayerTrain.DriverCar;
 						bool transitionLeaving = false;
 						// Transition only if switching from Interior mode and at the head of the train
-						if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior || Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) && isAtCabCarLeaving && hasCabLeaving)
+						if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior || Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) && isAtCabCarLeaving && hasCabLeaving && Interface.CurrentOptions.CameraExteriorTransition)
 						{
 							Program.Renderer.Camera.ModeTransitionStart = (
 									Program.Renderer.Camera.AbsolutePosition,

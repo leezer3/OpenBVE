@@ -172,9 +172,9 @@ namespace OpenBve
 				var trackFollower = Program.Renderer.CameraTrackFollower;
 
 				if (cameraProperties.IsTransitioning) cameraProperties.CameraCarTransitionTimer += RealTimeElapsed;
-				if (cameraProperties.ModeTransitionTimer < 1.0) cameraProperties.ModeTransitionTimer += RealTimeElapsed / 0.4;
+				if (cameraProperties.ModeTransitionTimer < 1.0) cameraProperties.ModeTransitionTimer += RealTimeElapsed / Interface.CurrentOptions.CameraTransitionSpeed;
 
-				double carTransitionProgress = Math.Min(1.0, cameraProperties.CameraCarTransitionTimer / CameraProperties.CameraCarTransitionDuration);
+				double carTransitionProgress = Math.Min(1.0, cameraProperties.CameraCarTransitionTimer / Interface.CurrentOptions.CameraTransitionSpeed);
 				if (carTransitionProgress >= 1.0)
 				{
 					cameraProperties.IsTransitioning = false;

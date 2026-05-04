@@ -105,6 +105,13 @@ namespace OpenBve
 			internal int FPSLimit;
 
 			internal bool DailyBuildUpdates;
+
+			/// <summary>Whether smooth transitions are enabled for interior camera modes</summary>
+			internal bool CameraInteriorTransition;
+			/// <summary>Whether smooth transitions are enabled for exterior camera modes</summary>
+			internal bool CameraExteriorTransition;
+			/// <summary>The duration of camera transitions in seconds</summary>
+			internal double CameraTransitionSpeed;
 			
 			/// <summary>Creates a new instance of the options class with default values set</summary>
 			internal Options()
@@ -179,6 +186,9 @@ namespace OpenBve
 				UseGDIDecoders = false;
 				EnableBve5ScriptedTrain = true;
 				UserInterfaceScaleFactor = 1;
+				CameraInteriorTransition = true;
+				CameraExteriorTransition = true;
+				CameraTransitionSpeed = 0.4;
 				CultureInfo currentCultureInfo = CultureInfo.CurrentCulture;
 				switch (Program.CurrentHost.Platform)
 				{
@@ -292,6 +302,9 @@ namespace OpenBve
 				Builder.AppendLine("isUseNewRenderer = " + (IsUseNewRenderer ? "true" : "false"));
 				Builder.AppendLine("forwardsCompatibleContext = " + (ForceForwardsCompatibleContext ? "true" : "false"));
 				Builder.AppendLine("uiscalefactor = " + UserInterfaceScaleFactor);
+				Builder.AppendLine("cameraInteriorTransition = " + (CameraInteriorTransition ? "true" : "false"));
+				Builder.AppendLine("cameraExteriorTransition = " + (CameraExteriorTransition ? "true" : "false"));
+				Builder.AppendLine("cameraTransitionSpeed = " + CameraTransitionSpeed.ToString(Culture));
 				Builder.AppendLine();
 				Builder.AppendLine("[quality]");
 				Builder.AppendLine("interpolation = " + Interpolation);
@@ -485,6 +498,13 @@ namespace OpenBve
 							}
 
 							block.TryGetValue(OptionsKey.UIScaleFactor, ref CurrentOptions.UserInterfaceScaleFactor);
+							block.GetValue(OptionsKey.CameraInteriorTransition, out CurrentOptions.CameraInteriorTransition);
+							block.GetValue(OptionsKey.CameraExteriorTransition, out CurrentOptions.CameraExteriorTransition);
+							block.TryGetValue(OptionsKey.CameraTransitionSpeed, ref CurrentOptions.CameraTransitionSpeed, NumberRange.Positive);
+							if (CurrentOptions.CameraTransitionSpeed == 0)
+							{
+								CurrentOptions.CameraTransitionSpeed = 0.4;
+							}
 							break;
 						case OptionsSection.Quality:
 							block.GetEnumValue(OptionsKey.Interpolation, out Interface.CurrentOptions.Interpolation);
