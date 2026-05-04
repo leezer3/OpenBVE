@@ -49,38 +49,6 @@ namespace Plugin
 
 				StaticObject obj = new StaticObject(Plugin.CurrentHost);
 				MeshBuilder builder = new MeshBuilder(Plugin.CurrentHost);
-
-				List<Vertex> allVertices = new List<Vertex>();
-				foreach (Vector3 vertex in model.Vertices)
-				{
-					allVertices.Add(new Vertex(vertex * model.ScaleFactor));
-				}
-
-				List<Vector2> allTexCoords = new List<Vector2>();
-				foreach (Vector3 texCoord in model.TextureCoord)
-				{
-					Vector2 textureCoordinate = new Vector2(texCoord.X, texCoord.Y);
-					switch (model.Exporter)
-					{
-						case ModelExporter.SketchUp:
-							textureCoordinate.X *= -1.0;
-							textureCoordinate.Y *= -1.0;
-							break;
-						case ModelExporter.Blender:
-						case ModelExporter.BlockBench:
-							textureCoordinate.Y *= -1.0;
-							break;
-					}
-					allTexCoords.Add(textureCoordinate);
-					
-				}
-
-				List<Vector3> allNormals = new List<Vector3>();
-				foreach (var normal in model.Normals)
-				{
-					allNormals.Add(new Vector3(normal.X, normal.Y, normal.Z));
-				}
-
 				Material lastMaterial = null;
 
 				foreach (Mesh mesh in model.Meshes)
@@ -127,24 +95,40 @@ namespace Plugin
 						{
 							throw new Exception("nVertices must be greater than zero");
 						}
+						int startingVertex = builder.Vertices.Count;
 						for (int i = 0; i < face.Vertices.Count; i++)
 						{
-							VertexTemplate v = allVertices[(int)face.Vertices[i]].Clone();
-							if (allTexCoords.Count > 0 && i <= allTexCoords.Count && face.TexturCoords.Count > 0 && i <= face.TexturCoords.Count)
+							VertexTemplate v = new Vertex(model.Vertices[(int)face.Vertices[i]] * model.ScaleFactor);
+							
+							if (model.TextureCoord.Count > 0 && i <= model.TextureCoord.Count && face.TexturCoords.Count > 0 && i <= face.TexturCoords.Count)
 							{
-								v.TextureCoordinates = allTexCoords[(int)face.TexturCoords[i]];
+								Vector2 textureCoordinate = new Vector2(model.TextureCoord[i].X, model.TextureCoord[i].Y);
+								switch (model.Exporter)
+								{
+									case ModelExporter.SketchUp:
+										textureCoordinate.X *= -1.0;
+										textureCoordinate.Y *= -1.0;
+										break;
+									case ModelExporter.Blender:
+									case ModelExporter.BlockBench:
+										textureCoordinate.Y *= -1.0;
+										break;
+								}
+								v.TextureCoordinates = textureCoordinate;
 							}
+							
 							builder.Vertices.Add(v);
 							
 						}
 
 						MeshFace f = new MeshFace(face.Vertices.Count);
+						
 						for (int i = 0; i < face.Vertices.Count; i++)
 						{
-							f.Vertices[i].Index = builder.Vertices.Count + i;
+							f.Vertices[i].Index = startingVertex + i;
 							if (face.Normals.Count > i)
 							{
-								f.Vertices[i].Normal = allNormals[(int)face.Normals[i]];
+								f.Vertices[i].Normal = model.Normals[(int)face.Normals[i]];
 							}
 						}
 						
