@@ -1269,7 +1269,7 @@ namespace OpenBve
 
 			// ReSharper disable once RedundantCast
 			object route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
-			string railwayFolder = Loading.GetRailwayFolder(result.RouteFile);
+			string railwayFolder = Program.FileSystem.GetRailwayFolder(result.RouteFile, Application.StartupPath);
 			string objectFolder = Path.CombineDirectory(railwayFolder, "Object");
 			string soundFolder = Path.CombineDirectory(railwayFolder, "Sound");
 

@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 using System.Text;
+using System.Windows.Forms;
 using LibRender2.Menu;
 using LibRender2.Primitives;
 using LibRender2.Screens;
@@ -452,7 +453,7 @@ namespace RouteViewer
 				{
 					// ReSharper disable once RedundantCast
 					object Route = (object)Program.CurrentRoute; // must cast to allow us to use the ref keyword correctly.
-					string RailwayFolder = Loading.GetRailwayFolder(currentFile);
+					string RailwayFolder = Program.FileSystem.GetRailwayFolder(currentFile, Application.StartupPath);
 					string ObjectFolder = Path.CombineDirectory(RailwayFolder, "Object");
 					string SoundFolder = Path.CombineDirectory(RailwayFolder, "Sound");
 					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(currentFile, RouteEncoding, null, ObjectFolder, SoundFolder, true, ref Route))
