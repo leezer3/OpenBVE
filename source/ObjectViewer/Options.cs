@@ -169,12 +169,10 @@ namespace ObjectViewer
 							block.TryGetValue(OptionsKey.NearClipBase, ref Interface.CurrentOptions.NearClipBase, NumberRange.Positive);
 							// ensure viewing distance is greater than the near clipping plane to avoid rendering issues
 							if (Interface.CurrentOptions.ViewingDistance <= Interface.CurrentOptions.NearClipBase)
-
 							{
 								Interface.CurrentOptions.ViewingDistance = (int)Math.Ceiling(Interface.CurrentOptions.NearClipBase) + 1;
 							}
 
-							block.GetValue(OptionsKey.IsUseNewRenderer, out Interface.CurrentOptions.IsUseNewRenderer);
 							block.GetValue(OptionsKey.AutoReloadObjects, out Interface.CurrentOptions.AutoReloadObjects);
 							break;
 						case OptionsSection.Quality:
