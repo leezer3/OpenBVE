@@ -35,8 +35,6 @@ namespace Plugin
 {
 	internal static class WavefrontObjParser
 	{
-		
-
 		/// <summary>Loads a Wavefront object from a file.</summary>
 		/// <param name="fileName">The text file to load the object from. Must be an absolute file name.</param>
 		/// <param name="encoding">The encoding the file is saved in.</param>
@@ -44,9 +42,9 @@ namespace Plugin
 		internal static StaticObject ReadObject(string fileName, System.Text.Encoding encoding)
 		{
 			ModelExporter modelExporter = ModelExporter.Unknown;
-			StaticObject parsedObject = new StaticObject(Plugin.currentHost);
+			StaticObject parsedObject = new StaticObject(Plugin.CurrentHost);
 
-			MeshBuilder meshBuilder = new MeshBuilder(Plugin.currentHost);
+			MeshBuilder meshBuilder = new MeshBuilder(Plugin.CurrentHost);
 
 			/*
 			 * Temporary arrays
@@ -107,7 +105,7 @@ namespace Plugin
 									currentScale = 1.0;
 									break;
 								default:
-									Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unrecognised units value " + units + " at line "+ i);
+									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unrecognised units value " + units + " at line "+ i);
 									break;
 							}
 						}
@@ -139,15 +137,15 @@ namespace Plugin
 						Vector3 vertex = new Vector3();
 						if (!double.TryParse(arguments[1], out vertex.X))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid X co-ordinate in Vertex at Line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid X co-ordinate in Vertex at Line " + i);
 						}
 						if (!double.TryParse(arguments[2], out vertex.Y))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Y co-ordinate in Vertex at Line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid Y co-ordinate in Vertex at Line " + i);
 						}
 						if (!double.TryParse(arguments[3], out vertex.Z))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Z co-ordinate in Vertex at Line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid Z co-ordinate in Vertex at Line " + i);
 						}
 						vertex *= currentScale;
 						tempVertices.Add(vertex);
@@ -156,11 +154,11 @@ namespace Plugin
 						Vector2 coords = new Vector2();
 						if (!double.TryParse(arguments[1], out coords.X))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid X co-ordinate in Texture Co-ordinates at Line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid X co-ordinate in Texture Co-ordinates at Line " + i);
 						}
 						if (!double.TryParse(arguments[2], out coords.Y))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid X co-ordinate in Texture Co-Ordinates at Line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid X co-ordinate in Texture Co-Ordinates at Line " + i);
 						}
 						tempCoords.Add(coords);
 						break;
@@ -168,15 +166,15 @@ namespace Plugin
 						Vector3 normal = new Vector3();
 						if (!double.TryParse(arguments[1], out normal.X))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid X co-ordinate in Vertex Normal at Line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid X co-ordinate in Vertex Normal at Line " + i);
 						}
 						if (!double.TryParse(arguments[2], out normal.Y))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Y co-ordinate in Vertex Normal at Line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid Y co-ordinate in Vertex Normal at Line " + i);
 						}
 						if (!double.TryParse(arguments[3], out normal.Z))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Z co-ordinate in Vertex Normal at Line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid Z co-ordinate in Vertex Normal at Line " + i);
 						}
 						tempNormals.Add(normal);
 						break;
@@ -193,7 +191,7 @@ namespace Plugin
 							int idx;
 							if (!int.TryParse(faceArguments[0], out idx))
 							{
-								Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Vertex index in Face " + f + " at Line " + i);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid Vertex index in Face " + f + " at Line " + i);
 								continue;
 							}
 
@@ -210,7 +208,7 @@ namespace Plugin
 							}
 							if (currentVertex > tempVertices.Count)
 							{
-								Plugin.currentHost.AddMessage(MessageType.Warning, false, "Vertex index " + idx + " was greater than the available number of vertices in Face " + f + " at Line " + i);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Vertex index " + idx + " was greater than the available number of vertices in Face " + f + " at Line " + i);
 								continue;
 							}
 							newVertex.Coordinates = tempVertices[currentVertex - 1];
@@ -226,7 +224,7 @@ namespace Plugin
 								{
 									if (!string.IsNullOrEmpty(faceArguments[1]))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Texture Co-ordinate index in Face " + f + " at Line " + i);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid Texture Co-ordinate index in Face " + f + " at Line " + i);
 									}
 
 									newVertex.TextureCoordinates = new Vector2();
@@ -246,7 +244,7 @@ namespace Plugin
 									}
 									if (currentCoord > tempCoords.Count)
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Texture Co-ordinate index " + currentCoord + " was greater than the available number of texture co-ordinates in Face " + f + " at Line " + i);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Texture Co-ordinate index " + currentCoord + " was greater than the available number of texture co-ordinates in Face " + f + " at Line " + i);
 									}
 									else
 									{
@@ -273,7 +271,7 @@ namespace Plugin
 								{
 									if (!string.IsNullOrEmpty(faceArguments[2]))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Vertex Normal index in Face " + f + " at Line " + i);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid Vertex Normal index in Face " + f + " at Line " + i);
 									}
 								}
 								else
@@ -291,7 +289,7 @@ namespace Plugin
 									}
 									if (currentNormal > tempNormals.Count)
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Vertex Normal index " + currentNormal + " was greater than the available number of normals in Face " + f + " at Line " + i);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Vertex Normal index " + currentNormal + " was greater than the available number of normals in Face " + f + " at Line " + i);
 									}
 									else
 									{
@@ -342,7 +340,7 @@ namespace Plugin
 					case WavefrontObjCommands.O:
 					case WavefrontObjCommands.G:
 						meshBuilder.Apply(ref parsedObject);
-						meshBuilder = new MeshBuilder(Plugin.currentHost);
+						meshBuilder = new MeshBuilder(Plugin.CurrentHost);
 						break;
 					case WavefrontObjCommands.S:
 						/* 
@@ -371,17 +369,17 @@ namespace Plugin
 						if (!tempMaterials.ContainsKey(currentMaterial))
 						{
 							currentMaterial = string.Empty;
-							Plugin.currentHost.AddMessage(MessageType.Error, true, "Material " + arguments[1] + " was not found.");
+							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "Material " + arguments[1] + " was not found.");
 						}
 
 						if (lastMaterial != currentMaterial)
 						{
 							meshBuilder.Apply(ref parsedObject);
-							meshBuilder = new MeshBuilder(Plugin.currentHost);
+							meshBuilder = new MeshBuilder(Plugin.CurrentHost);
 						}
 						break;
 					default:
-						Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unrecognised command " + arguments[0]);
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unrecognised command " + arguments[0]);
 						break;
 				}
 			}
@@ -427,7 +425,7 @@ namespace Plugin
 						currentKey = arguments[1].ToLowerInvariant(); //store as KVP, but case insensitive
 						if (materials.ContainsKey(currentKey))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Material " + currentKey + " has been defined twice.");
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Material " + currentKey + " has been defined twice.");
 						}
 						else
 						{
@@ -441,15 +439,15 @@ namespace Plugin
 						double r = 1, g = 1, b = 1;
 						if (arguments.Count >= 2 && !double.TryParse(arguments[1], out r))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color R in Material Definition for " + currentKey);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color R in Material Definition for " + currentKey);
 						}
 						if (arguments.Count >= 3 && !double.TryParse(arguments[2], out g))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color G in Material Definition for " + currentKey);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color G in Material Definition for " + currentKey);
 						}
 						if (arguments.Count >= 4 && !double.TryParse(arguments[3], out b))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color B in Material Definition for " + currentKey);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color B in Material Definition for " + currentKey);
 						}
 						r = 255 * r;
 						g = 255 * g;
@@ -464,7 +462,7 @@ namespace Plugin
 						double a = 1;
 						if (arguments.Count >= 2 && !double.TryParse(arguments[1], out a))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Alpha in Material Definition for " + currentKey);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid Alpha in Material Definition for " + currentKey);
 						}
 						materials[currentKey].Color.A = (byte)(a * 255);
 						break;
@@ -473,7 +471,7 @@ namespace Plugin
 						if(Path.IsPathRooted(arguments[arguments.Count - 1]))
 						{
 							// Rooted path should not be used- Try looking beside the object instead
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Encountered rooted path for " + currentKey);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Encountered rooted path for " + currentKey);
 							arguments[arguments.Count - 1] = Path.GetFileName(arguments[arguments.Count - 1]);
 						}
 						string tday = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(fileName), arguments[arguments.Count - 1]);
@@ -503,12 +501,12 @@ namespace Plugin
 								}
 								else
 								{
-									Plugin.currentHost.AddMessage(MessageType.Error, true, "Material texture file " + arg + " was not found.");
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "Material texture file " + arg + " was not found.");
 								}
 							}
 							else
 							{
-								Plugin.currentHost.AddMessage(MessageType.Error, true, "Material texture file " + arguments[arguments.Count - 1] + " was not found.");
+								Plugin.CurrentHost.AddMessage(MessageType.Error, true, "Material texture file " + arguments[arguments.Count - 1] + " was not found.");
 							}
 								
 						}

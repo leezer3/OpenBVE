@@ -35,7 +35,7 @@ using Mesh = AssimpNET.Obj.Mesh;
 
 namespace Plugin
 {
-	class AssimpObjParser
+	internal class AssimpObjParser
 	{
 		private static string currentFolder;
 
@@ -47,17 +47,17 @@ namespace Plugin
 				ObjFileParser parser = new ObjFileParser(System.IO.File.ReadAllLines(fileName), null, System.IO.Path.GetFileNameWithoutExtension(fileName), fileName);
 				Model model = parser.GetModel();
 
-				StaticObject obj = new StaticObject(Plugin.currentHost);
-				MeshBuilder builder = new MeshBuilder(Plugin.currentHost);
+				StaticObject obj = new StaticObject(Plugin.CurrentHost);
+				MeshBuilder builder = new MeshBuilder(Plugin.CurrentHost);
 
 				List<Vertex> allVertices = new List<Vertex>();
-				foreach (var vertex in model.Vertices)
+				foreach (Vector3 vertex in model.Vertices)
 				{
 					allVertices.Add(new Vertex(vertex * model.ScaleFactor));
 				}
 
 				List<Vector2> allTexCoords = new List<Vector2>();
-				foreach (var texCoord in model.TextureCoord)
+				foreach (Vector3 texCoord in model.TextureCoord)
 				{
 					Vector2 textureCoordinate = new Vector2(texCoord.X, texCoord.Y);
 					switch (model.Exporter)
@@ -91,7 +91,7 @@ namespace Plugin
 						if (face.Material != lastMaterial)
 						{
 							builder.Apply(ref obj);
-							builder = new MeshBuilder(Plugin.currentHost);
+							builder = new MeshBuilder(Plugin.CurrentHost);
 							uint materialIndex = mesh.MaterialIndex;
 							if (materialIndex != Mesh.NoMaterial)
 							{
@@ -116,19 +116,18 @@ namespace Plugin
 									builder.Materials[0].DaytimeTexture = Path.CombineFile(currentFolder, material.Texture);
 									if (!System.IO.File.Exists(builder.Materials[0].DaytimeTexture))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Error, true, "Texture " + builder.Materials[0].DaytimeTexture + " was not found in file " + fileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, true, "Texture " + builder.Materials[0].DaytimeTexture + " was not found in file " + fileName);
 										builder.Materials[0].DaytimeTexture = null;
 									}
 								}
 							}
 						}
-						int nVerts = face.Vertices.Count;
-						int bVerts = builder.Vertices.Count;
-						if (nVerts == 0)
+						
+						if (face.Vertices.Count == 0)
 						{
 							throw new Exception("nVertices must be greater than zero");
 						}
-						for (int i = 0; i < nVerts; i++)
+						for (int i = 0; i < face.Vertices.Count; i++)
 						{
 							VertexTemplate v = allVertices[(int)face.Vertices[i]].Clone();
 							if (allTexCoords.Count > 0 && i <= allTexCoords.Count && face.TexturCoords.Count > 0 && i <= face.TexturCoords.Count)
@@ -139,10 +138,10 @@ namespace Plugin
 							
 						}
 
-						MeshFace f = new MeshFace(nVerts);
-						for (int i = 0; i < nVerts; i++)
+						MeshFace f = new MeshFace(face.Vertices.Count);
+						for (int i = 0; i < face.Vertices.Count; i++)
 						{
-							f.Vertices[i].Index = bVerts + i;
+							f.Vertices[i].Index = builder.Vertices.Count + i;
 							if (face.Normals.Count > i)
 							{
 								f.Vertices[i].Normal = allNormals[(int)face.Normals[i]];
@@ -165,7 +164,7 @@ namespace Plugin
 			}
 			catch (Exception e)
 			{
-				Plugin.currentHost.AddMessage(MessageType.Error, false, e.Message + " in " + fileName);
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, e.Message + " in " + fileName);
 				return null;
 			}
 		}
