@@ -131,7 +131,7 @@ namespace Train.OpenBve
 								}
 							}
 						}
-						if (subBlock.TryGetStringArray(TrainXMLKey.Brake, separatorChars, ref Train.Handles.LocoBrake.NotchDescriptions))
+						if (subBlock.TryGetStringArray(TrainXMLKey.LocoBrake, separatorChars, ref Train.Handles.LocoBrake.NotchDescriptions))
 						{
 							for (int j = 0; j < Train.Handles.LocoBrake.NotchDescriptions.Length; j++)
 							{
