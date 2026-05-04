@@ -392,7 +392,7 @@ namespace OpenBve
 				if (w == Interface.CurrentOptions.WindowWidth && h == Interface.CurrentOptions.WindowHeight)
 				{
 					// If we are not in full-screen, but height and width are equal to resolution, hide taskbar
-					// e.g. Borderless windowed fulllscreen
+					// e.g. Borderless windowed full-screen
 					int hwnd = FindWindow("Shell_TrayWnd","");
 					ShowWindow(hwnd,0);
 					int hstart = FindWindowEx(GetDesktopWindow(), 0, "button", 0);

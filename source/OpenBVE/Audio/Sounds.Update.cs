@@ -120,7 +120,7 @@ namespace OpenBve
 							 * */
 							if (Sources[i].State == SoundSourceState.Playing) {
 								AL.GetSource(Sources[i].OpenAlSourceName, ALGetSourcei.SourceState, out int state);
-								if (state != (int)ALSourceState.Initial & state != (int)ALSourceState.Playing) {
+								if (state != (int)ALSourceState.Initial && state != (int)ALSourceState.Playing) {
 									/*
 									 * The sound is not playing any longer.
 									 * Remove it from the list of sound sources.
@@ -142,11 +142,11 @@ namespace OpenBve
 							switch (Sources[i].Type)
 							{
 								case SoundType.TrainCar:
-									var Car = (AbstractCar)Sources[i].Parent;
+									AbstractCar Car = (AbstractCar)Sources[i].Parent;
 									Car.CreateWorldCoordinates(Sources[i].Position, out position, out _);
 									break;
 								case SoundType.AnimatedObject:
-									var WorldSound = (WorldSound)Sources[i].Parent;
+									WorldSound WorldSound = (WorldSound)Sources[i].Parent;
 									position = WorldSound.Follower.WorldPosition + WorldSound.Position;
 									break;
 								default:

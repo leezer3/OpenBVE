@@ -135,7 +135,7 @@ namespace RouteViewer
 							if (Sources[i].State == SoundSourceState.Playing)
 							{
 								AL.GetSource(Sources[i].OpenAlSourceName, ALGetSourcei.SourceState, out int state);
-								if (state != (int)ALSourceState.Initial & state != (int)ALSourceState.Playing)
+								if (state != (int)ALSourceState.Initial && state != (int)ALSourceState.Playing)
 								{
 									/*
 									 * The sound is not playing any longer.
@@ -174,7 +174,7 @@ namespace RouteViewer
 							Vector3 positionDifference = position - listenerPosition;
 							double distance = positionDifference.Norm();
 							double radius = Sources[i].Radius;
-							if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead)
+							if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior || Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead)
 							{
 								if (Sources[i].Parent != TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar])
 								{

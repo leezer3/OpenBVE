@@ -198,7 +198,7 @@ namespace OpenBve
 							}
 							Items[totalEntries] = new MenuCommand(menu, fileName, MenuTag.File, 0);
 							string ext = System.IO.Path.GetExtension(fileName);
-							if (!iconCache.ContainsKey(ext))
+							if (!iconCache.TryGetValue(ext, out Items[totalEntries].Icon))
 							{
 								// As some people have used arbitrary extensions for packages, let's show all files
 								// Try and pull out the default icon from the cache for something a little nicer looking
@@ -217,10 +217,6 @@ namespace OpenBve
 									// Ignored
 								}
 								
-							}
-							else
-							{
-								Items[totalEntries].Icon = iconCache[ext];
 							}
 							totalEntries++;
 						}

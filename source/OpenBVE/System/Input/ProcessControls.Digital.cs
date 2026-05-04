@@ -658,7 +658,7 @@ namespace OpenBve
 						break;
 					case Translations.Command.UncoupleFront:
 						/*
-						 * Need to remember that the coupler we're talking about here is actually that on the rear of the preceeding car, i.e. IDX - 1
+						 * Need to remember that the coupler we're talking about here is actually that on the rear of the preceding car, i.e. IDX - 1
 						 * This connects to the following car and is therefore it's front coupler
 						 *
 						 * However, car indexing is zero-based, so we need to *add* one to get the correct display number

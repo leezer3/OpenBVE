@@ -39,18 +39,18 @@ namespace OpenBve {
 		
 		internal static LaunchParameters ShowMainDialog(LaunchParameters initial)
 		{
-			using (formMain Dialog = new formMain())
+			using (formMain mainDialog = new formMain())
 			{
-				Dialog.Result = initial;
-				Dialog.ShowDialog();
-				LaunchParameters result = Dialog.Result;
+				mainDialog.Result = initial;
+				mainDialog.ShowDialog();
+				LaunchParameters result = mainDialog.Result;
 				//Dispose of the worker thread when closing the form
 				//If it's still running, it attempts to update a non-existent form and crashes nastily
-				Dialog.DisposePreviewRouteThread();
+				mainDialog.DisposePreviewRouteThread();
 				if (!OpenTK.Configuration.RunningOnMacOS)
 				{
-					Dialog.trainWatcher.Dispose();
-					Dialog.routeWatcher.Dispose();
+					mainDialog.trainWatcher.Dispose();
+					mainDialog.routeWatcher.Dispose();
 				}
 				return result;
 			}
@@ -491,7 +491,7 @@ namespace OpenBve {
 			}
 			// Shadow Strength
 			trackbarShadowStrength.Value = (int)(Interface.CurrentOptions.ShadowStrength * 100.0);
-			labelShadowStrengthValue.Text = trackbarShadowStrength.Value + "%";
+			labelShadowStrengthValue.Text = trackbarShadowStrength.Value + @"%";
 			updownShadowBias.Value = (decimal)Interface.CurrentOptions.ShadowBias;
 			updownShadowNormalBias.Value = (decimal)Interface.CurrentOptions.ShadowNormalBias;
 			// Enable/disable shadow sub-controls based on resolution setting

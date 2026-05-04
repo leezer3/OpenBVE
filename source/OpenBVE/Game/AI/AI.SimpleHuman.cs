@@ -1382,7 +1382,7 @@ namespace OpenBve
 				}
 			}
 
-			/// <summary>The timer unti the doors may be opened</summary>
+			/// <summary>The timer until the doors may be opened</summary>
 			private double doorWaitingTimer = 2.0;
 			/// <summary>Controls the AI operating the wipers</summary>
 			private double wiperTimer;

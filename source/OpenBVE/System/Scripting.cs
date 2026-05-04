@@ -36,7 +36,6 @@ namespace OpenBve
                         {
                             return Program.CurrentRoute.Sections[nextSectionIndex].Aspects[a].Number;
                         }
-                        return 0;
                     }
                 }
                 else if (SectionIndex >= 0 & SectionIndex < Program.CurrentRoute.Sections.Length)

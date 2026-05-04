@@ -663,21 +663,9 @@ namespace OpenBve
 
 		private void buttonUninstallPackage_Click(object sender, EventArgs e)
 		{
-			if (currentPackage != null)
+			if (currentPackage != null && currentPackage.PackageType != PackageType.NotFound)
 			{
-				switch (currentPackage.PackageType)
-				{
-					case PackageType.Route:
-						UninstallPackage(currentPackage);
-						break;
-					case PackageType.Train:
-						UninstallPackage(currentPackage);
-						break;
-					case PackageType.Other:
-					case PackageType.Loksim3D:
-						UninstallPackage(currentPackage);
-						break;
-				}
+				UninstallPackage(currentPackage);
 			}
 			else
 			{
@@ -1095,7 +1083,6 @@ namespace OpenBve
 				panelReplacePackage.Hide();
 				panelNewPackage.Show();
 				panelNewPackage.Enabled = true;
-				string GUID = Guid.NewGuid().ToString();
 				currentPackage = new Package
 				{
 					Name = textBoxPackageName.Text,
@@ -1103,7 +1090,7 @@ namespace OpenBve
 					Description = textBoxPackageDescription.Text.Replace("\r\n", "\\r\\n"),
 					//TODO:
 					//Website = linkLabelPackageWebsite.Links[0],
-					GUID = GUID,
+					GUID = Guid.NewGuid().ToString(),
 					PackageVersion = new Version(0, 0, 0, 0),
 					PackageType = newPackageType
 				};

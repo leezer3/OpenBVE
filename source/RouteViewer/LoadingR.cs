@@ -50,8 +50,6 @@ namespace RouteViewer {
 		private static string CurrentRouteFile;
 		private static Encoding CurrentRouteEncoding;
 
-		internal static bool JobAvailable;
-
 		// load
 		internal static void Load(string routeFile, Encoding routeEncoding, byte[] textureBytes)
 		{
@@ -70,7 +68,7 @@ namespace RouteViewer {
 			CurrentRouteFile = routeFile;
 			CurrentRouteEncoding = routeEncoding;
 			// thread
-			Loading.LoadAsynchronously(CurrentRouteFile, CurrentRouteEncoding);
+			LoadAsynchronously(CurrentRouteFile, CurrentRouteEncoding);
 			RouteViewer.LoadingScreenLoop();
 		}
 
