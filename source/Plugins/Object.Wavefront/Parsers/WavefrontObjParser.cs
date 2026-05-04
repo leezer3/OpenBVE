@@ -184,8 +184,8 @@ namespace Plugin
 						throw new NotSupportedException("Parameter space verticies are not supported by this parser");
 					case WavefrontObjCommands.F:
 						//Create the temp list to hook out the vertices 
-						List<VertexTemplate> vertices = new List<VertexTemplate>();
-						List<Vector3> normals = new List<Vector3>();
+						
+						MeshFaceVertex[] meshVerticies = new MeshFaceVertex[arguments.Count - 1];
 						for (int f = 1; f < arguments.Count; f++)
 						{
 							Vertex newVertex = new Vertex();
@@ -218,11 +218,9 @@ namespace Plugin
 							{
 								newVertex.Coordinates.X *= -1.0;
 							}
-							if (faceArguments.Length <= 1)
-							{
-								normals.Add(new Vector3());
-							}
-							else
+
+							
+							if (faceArguments.Length > 1)
 							{
 								if (!int.TryParse(faceArguments[1], out idx))
 								{
@@ -230,6 +228,7 @@ namespace Plugin
 									{
 										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Texture Co-ordinate index in Face " + f + " at Line " + i);
 									}
+
 									newVertex.TextureCoordinates = new Vector2();
 								}
 								else
@@ -267,11 +266,8 @@ namespace Plugin
 									}
 								}
 							}
-							if (faceArguments.Length <= 2)
-							{
-								normals.Add(new Vector3());
-							}
-							else
+							Vector3 vertexNormal = new Vector3();
+							if (faceArguments.Length > 2)
 							{
 								if (!int.TryParse(faceArguments[2], out idx))
 								{
@@ -279,7 +275,6 @@ namespace Plugin
 									{
 										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Vertex Normal index in Face " + f + " at Line " + i);
 									}
-									normals.Add(new Vector3());
 								}
 								else
 								{
@@ -297,23 +292,18 @@ namespace Plugin
 									if (currentNormal > tempNormals.Count)
 									{
 										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Vertex Normal index " + currentNormal + " was greater than the available number of normals in Face " + f + " at Line " + i);
-										normals.Add(new Vector3());
 									}
 									else
 									{
-										normals.Add(tempNormals[currentNormal - 1]);
+										vertexNormal = tempNormals[currentNormal - 1];
 									}
 								}
 							}
-							vertices.Add(newVertex);
+							meshBuilder.Vertices.Add(newVertex);
+							meshVerticies[f - 1].Index = meshBuilder.Vertices.Count - 1;
+							meshVerticies[f - 1].Normal = vertexNormal;
 						}
-						MeshFaceVertex[] meshVerticies = new MeshFaceVertex[vertices.Count];
-						for (int k = 0; k < vertices.Count; k++)
-						{
-							meshBuilder.Vertices.Add(vertices[k]);
-							meshVerticies[k].Index = (ushort)(meshBuilder.Vertices.Count -1);
-							meshVerticies[k].Normal = normals[k];
-						}
+						
 						int materialIndex = -1;
 						if (currentMaterial != string.Empty)
 						{
@@ -498,7 +488,15 @@ namespace Plugin
 								// HACK: re-join the split array (minus command) in case of spaces in folder names
 								arguments.RemoveAt(0);
 								string arg = string.Join(" ", arguments.ToArray());
-								tday = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(fileName), arg);
+								try
+								{
+									tday = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(fileName), arg);
+								}
+								catch
+								{
+									// ignored
+								}
+								
 								if (File.Exists(tday))
 								{
 									materials[currentKey].DaytimeTexture = tday;
