@@ -10,11 +10,6 @@ namespace Plugin
 {
 	public partial class Plugin
 	{
-		
-
-
-		// --- functions ---
-
 		/// <summary>Reads wave data from a WAVE file.</summary>
 		/// <param name="fileName">The file name of the WAVE file.</param>
 		/// <returns>The wave data.</returns>

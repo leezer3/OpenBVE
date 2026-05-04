@@ -13,7 +13,7 @@
 namespace Texture.Dds
 {
 	/// <summary>The known DDS FourCC values</summary>
-	enum FourCC : uint
+	internal enum FourCC : uint
 	{
 		DXT1 = 0x31545844,
 		DXT2 = 0x32545844,
