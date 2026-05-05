@@ -66,10 +66,6 @@ namespace RouteViewer
             if (numericUpDownShadowStrength.Value < 1) numericUpDownShadowStrength.Value = 1;
             numericUpDownShadowStrength.Refresh();
             numericUpDownShadowBias.Value = (decimal)Interface.CurrentOptions.ShadowBias;
-            if (numericUpDownShadowBias.Value == 0)
-            {
-                numericUpDownShadowBias.Value = 0.000050m;
-            }
             numericUpDownShadowBias.Refresh();
 
             numericUpDownShadowNormalBias.DecimalPlaces = 2;

@@ -64,10 +64,6 @@ namespace ObjectViewer
 			numericUpDownShadowStrength.Value = (decimal)(Interface.CurrentOptions.ShadowStrength * 100.0);
 			numericUpDownShadowBias.Value = (decimal)Interface.CurrentOptions.ShadowBias;
 			numericUpDownShadowNormalBias.Value = (decimal)Interface.CurrentOptions.ShadowNormalBias;
-			if (numericUpDownShadowBias.Value == 0)
-			{
-				numericUpDownShadowBias.Value = 0.000050m;
-			}
 
 
 			// Initialize sun direction sliders from current light position
