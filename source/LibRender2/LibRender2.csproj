@@ -120,6 +120,7 @@
     <Compile Include="Shadows\CascadedShadowCaster.cs" />
     <Compile Include="Shadows\CascadedShadowMap.cs" />
     <Compile Include="Shadows\FrustumUtils.cs" />
+    <Compile Include="Shadows\Shadows.cs" />
     <Compile Include="Textures\TextureManager.cs" />
     <Compile Include="Text\Fonts.BlockedFonts.cs" />
     <Compile Include="Text\Fonts.cs" />

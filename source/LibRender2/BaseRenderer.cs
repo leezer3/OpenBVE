@@ -18,7 +18,7 @@ using LibRender2.Overlays;
 using LibRender2.Primitives;
 using LibRender2.Screens;
 using LibRender2.Shaders;
-using LibRender2.Shadows;
+using LibRender2.ShadowMapping;
 using LibRender2.Text;
 using LibRender2.Textures;
 using LibRender2.Viewports;
@@ -157,20 +157,14 @@ namespace LibRender2
 
 		public Shader DefaultShader;
 		
-		/// <summary>Cascaded shadow map FBOs + depth textures.</summary>
-		public CascadedShadowMap CSMShadowMaps;
-		
-		/// <summary>Computes per-cascade light-space matrices.</summary>
-		public CascadedShadowCaster CSMCaster;
-		
-		/// <summary>The shadow depth shader for the depth-only pass.</summary>
-		public ShadowDepthShader ShadowDepthShaderProgram;
-		
+		/// <summary>Manages the Cascaded Shadow Mapping (CSM) system.</summary>
+		public Shadows Shadows;
+
 		/// <summary>Whether shadows are enabled.</summary>
-		public bool ShadowsEnabled = true;
+		public bool ShadowsEnabled => Shadows?.Enabled ?? false;
 
 		/// <summary>Shadow strength: 0=invisible, 1=full darkness.</summary>
-		public float ShadowStrength = 0.7f;
+		public float ShadowStrength => Shadows?.Strength ?? 0.7f;
 
 		/// <summary>Whether lighting is enabled in the debug options</summary>
 		public bool OptionLighting = true;
@@ -248,7 +242,7 @@ namespace LibRender2
 
 		protected internal Texture whitePixel;
 		/// <summary>A dummy 1x1 depth texture with comparison enabled, used when shadows are disabled to satisfy driver requirements.</summary>
-		private int nullDepthMap; 
+		internal int nullDepthMap; 
 
 		private bool logoError;
 
@@ -335,6 +329,7 @@ namespace LibRender2
 			Camera = new CameraProperties(this);
 			Lighting = new Lighting(this);
 			Marker = new Marker(this);
+			Shadows = new Shadows(this);
 
 			projectionMatrixList = new List<Matrix4D>();
 			viewMatrixList = new List<Matrix4D>();
@@ -474,90 +469,19 @@ namespace LibRender2
 			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "joystick.png"), TextureParameters.NoChange, out JoystickTexture);
 			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "raildriver.png"), TextureParameters.NoChange, out RailDriverTexture);
 
+			Lighting.Initialize();
+
 			if (AvailableNewRenderer)
 			{
-				InitializeShadows();
+				Shadows.Initialize();
 			}
 		}
 
-		/// <summary>
-		/// Initializes (or reinitializes) shadow mapping from current options.
-		/// Call after GL context creation and whenever shadow settings change.
-		/// </summary>
-		public void InitializeShadows()
-		{
-			// Read options
-			var opts = currentOptions;
-
-			// If shadows are off, dispose and disable
-			if (opts.ShadowResolution == ShadowMapResolution.Off)
-			{
-				DisposeShadows();
-				ShadowsEnabled = false;
-				fileSystem.AppendToLogFile("[CSM] Shadows disabled by user setting.");
-				return;
-			}
-
-			int resolution = Math.Max(1, (int)opts.ShadowResolution);
-			int cascadeCount = (int)opts.ShadowCascades;
-			double shadowDistance = opts.ShadowDrawDistance == ShadowDistance.ViewingDistance ? opts.ViewingDistance : (double)(int)opts.ShadowDrawDistance;
-			shadowDistance = Math.Max(1.0, shadowDistance);
-			float shadowStrength = (float)opts.ShadowStrength;
-
-			try
-			{
-				if (CSMShadowMaps == null)
-				{
-					// First-time creation
-					CSMShadowMaps = new CascadedShadowMap(cascadeCount, resolution);
-				}
-				else
-				{
-					// Hot-reload: resize existing maps
-					CSMShadowMaps.Resize(cascadeCount, resolution);
-				}
-
-				if (CSMCaster == null || cascadeCount != CSMCaster.CascadeCount)
-				{
-					// Create, or update if cascade count changed
-					CSMCaster = new CascadedShadowCaster(cascadeCount);
-				}
-
-				CSMCaster.ShadowDistance = shadowDistance;
-				CSMCaster.Resolution = resolution;
-				CSMCaster.SplitLambda = 0.75;
-				CSMCaster.DepthMargin = 150.0;
-
-				ShadowStrength = shadowStrength;
-
-				if (ShadowDepthShaderProgram == null)
-				{
-					ShadowDepthShaderProgram = new ShadowDepthShader(this, "shadow_depth", "shadow_depth", true);
-				}
-
-				ShadowsEnabled = true;
-
-				fileSystem.AppendToLogFile($"[CSM] Initialized: {cascadeCount} cascades, " + $"{resolution}×{resolution}, distance={shadowDistance}m, " + $"strength={shadowStrength:P0}");
-			}
-			catch (Exception ex)
-			{
-				fileSystem.AppendToLogFile($"[CSM] Init failed: {ex.Message}");
-				ShadowsEnabled = false;
-				// Purge lingering OpenGL error state if any, to avoid crashing later in ResetShader
-				GL.GetError();
-			}
-		}
+		/// <summary>Initializes (or reinitializes) shadow mapping from current options.</summary>
+		public void InitializeShadows() => Shadows.Initialize();
 
 		/// <summary>Disposes all shadow GPU resources.</summary>
-		public void DisposeShadows()
-		{
-			CSMShadowMaps?.Dispose();
-			CSMShadowMaps = null;
-			ShadowDepthShaderProgram?.Dispose();
-			ShadowDepthShaderProgram = null;
-			CSMCaster = null;
-			ShadowsEnabled = false;
-		}
+		public void DisposeShadows() => Shadows.Dispose();
 
 		/// <summary>
 		/// Call this when the user changes shadow settings at runtime
@@ -599,175 +523,13 @@ namespace LibRender2
 			while (GL.GetError() != ErrorCode.NoError) { }
 		}
 
-		/// <summary>
-		/// Performs the CSM shadow depth rendering pass for all opaque geometry.
-		/// </summary>
-		protected void PerformCSMShadowPass()
-		{
-			if (!ShadowsEnabled || CSMShadowMaps == null || CSMCaster == null || ShadowDepthShaderProgram == null)
-				return;
+		/// <summary>Performs the CSM shadow depth rendering pass for all geometry.</summary>
+		protected void PerformCSMShadowPass() => Shadows.RenderPass();
 
-			// 1. Get light direction pointing FROM the sun TOWARD the scene
-			// OptionLightPosition points to the sun, so we negate it for the shadow pass.
-			// OpenBVE world space is Z-forward, so we also negate the final Z for OpenGL space.
-			Vector3 lightDir = new Vector3(
-				-Lighting.OptionLightPosition.X,
-				-Lighting.OptionLightPosition.Y,
-				Lighting.OptionLightPosition.Z // -(-Z) from previous code
-			);
+		/// <summary>Binds cascading shadow data to the default shader.</summary>
+		protected void BindCSMToDefaultShader() => Shadows.Bind(DefaultShader);
 
-			// 2. Update cascade matrices
-			// Use CurrentViewMatrix (Z-negated) so the frustum corners match the world space
-			// that the shadow depth shader and shadow lookup shader both operate in.
-			if (lightDir.IsNullVector())
-			{
-				return;
-			}
-			CSMCaster.Resolution = CSMShadowMaps.Resolution;
-			if (currentOptions.ShadowDrawDistance == ShadowDistance.ViewingDistance)
-			{
-				CSMCaster.ShadowDistance = currentOptions.ViewingDistance;
-			}
-			CSMCaster.Update(lightDir, CurrentViewMatrix, CurrentProjectionMatrix, 0.1, Camera.VerticalViewingAngle, Screen.AspectRatio);
-
-			// 3. Setup rendering state
-			CurrentShader?.Deactivate();
-			ShadowDepthShaderProgram.Activate();
-			GL.Enable(EnableCap.DepthTest);
-			GL.DepthFunc(DepthFunction.Less);
-			GL.Disable(EnableCap.CullFace);
-			GL.DepthMask(true); // Ensure depth writes are enabled before clearing
-			ShadowDepthShaderProgram.SetTexture(0); // always use texture unit 0
-
-			for (int cascade = 0; cascade < CSMCaster.CascadeCount; cascade++)
-			{
-				CSMShadowMaps.BindCascadeForWriting(cascade);
-				GL.Clear(ClearBufferMask.DepthBufferBit);
-				ShadowDepthShaderProgram.SetLightSpaceMatrix(CSMCaster.LightSpaceMatrices[cascade]);
-
-				lock (VisibleObjects.LockObject)
-				{
-					int lastVAOHandle = -1;
-
-					// Add a helper to render a collection of faces into the shadow pass also avoiding duplicate loops for opaque and alpha collections.
-					Action<ICollection<FaceState>> renderFaces = faces =>
-					{
-						foreach (var face in faces)
-						{
-							if (face.Object.Prototype.Mesh.VAO == null) continue;
-							if (face.Object.DisableShadowCasting) continue;
-
-							Matrix4D modelMatrix = face.Object.ModelMatrix * Camera.TranslationMatrix;
-							ShadowDepthShaderProgram.SetModelMatrix(modelMatrix);
-
-							// Bind texture for alpha scissoring if the face has one
-							var material = face.Object.Prototype.Mesh.Materials[face.Face.Material];
-							if (material.DaytimeTexture != null && currentHost.LoadTexture(ref material.DaytimeTexture, (OpenGlTextureWrapMode)(material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp)))
-							{
-								GL.ActiveTexture(TextureUnit.Texture0);
-								GL.BindTexture(TextureTarget.Texture2D,
-									material.DaytimeTexture.OpenGlTextures[(int)(material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp)].Name);
-								ShadowDepthShaderProgram.SetHasTexture(true);
-							}
-							else
-							{
-								ShadowDepthShaderProgram.SetHasTexture(false);
-							}
-
-							// Set alpha cutoff + material alpha for all faces, so untextured semi-transparent
-							// geometry (e.g. glass with Color,80,80,160,90) is also correctly discarded
-							ShadowDepthShaderProgram.SetAlphaCutoff(0.5f);
-							ShadowDepthShaderProgram.SetMaterialAlpha(material.Color.A / 255.0f);
-							ShadowDepthShaderProgram.SetMaterialFlags(material.Flags);
-
-#pragma warning disable CS0618
-							ObjectState state = face.Object;
-							if (state.Matricies != null && state.Matricies.Length > 0)
-							{
-								ShadowDepthShaderProgram.SetCurrentAnimationMatricies(state);
-								GL.BindBufferBase(BufferTarget.UniformBuffer, 0, state.MatrixBufferIndex);
-							}
-#pragma warning restore CS0618
-
-							VertexArrayObject vao = (VertexArrayObject)face.Object.Prototype.Mesh.VAO;
-							if (vao.handle != lastVAOHandle)
-							{
-								vao.Bind();
-								lastVAOHandle = vao.handle;
-							}
-							PrimitiveType drawMode = GetPrimitiveType(face.Face.Flags);
-							vao.Draw(drawMode, face.Face.IboStartIndex, face.Face.Vertices.Length);
-						}
-					};
-
-					// Render both opaque and alpha-tested geometry into the shadow map.
-					// This ensures semi-transparent cutout objects (fences, trees, etc. using `transparent`) 
-					// cast proper silhouettes instead of being skipped.
-					renderFaces(VisibleObjects.OpaqueFaces);
-					renderFaces(VisibleObjects.AlphaFaces);
-				}
-				CSMShadowMaps.Unbind();
-			}
-
-			// 4. Restore state
-			GL.DepthFunc(DepthFunction.Lequal);
-			GL.CullFace(CullFaceMode.Front);
-			GL.Viewport(0, 0, Screen.Width, Screen.Height);
-
-			// Shadow pass corrupts the GL texture state without updating LastBoundTexture
-			// Clear it here so the main pass is forced to rebind the correct texture or whitePixel.
-			LastBoundTexture = null;
-		}
-
-		/// <summary>
-		/// Binds cascading shadow data to the default shader.
-		/// </summary>
-		protected void BindCSMToDefaultShader()
-		{
-			if (!ShadowsEnabled || CSMShadowMaps == null || CSMCaster == null)
-			{
-				DefaultShader.SetShadowEnabled(false);
-				// To satisfy strict OpenGL drivers (e.g. Apple/Intel), we must still bind a depth-compatible
-				// texture even if shadows are disabled, as the shader contains sampler2DShadow uniforms.
-				for (int i = 0; i < 4; i++)
-				{
-					GL.ActiveTexture(TextureUnit.Texture4 + i);
-					GL.BindTexture(TextureTarget.Texture2D, nullDepthMap);
-				}
-				GL.ActiveTexture(TextureUnit.Texture0);
-				return;
-			}
-
-			DefaultShader.Activate();
-			DefaultShader.SetShadowEnabled(true);
-			
-			// Read strength from current options (supports runtime changes)
-			DefaultShader.SetShadowStrength((float)currentOptions.ShadowStrength);
-			DefaultShader.SetCurrentViewMatrix(CurrentViewMatrix);
-
-			CSMShadowMaps.BindAllCascadesForReading(TextureUnit.Texture4);
-
-			int cascadeCount = CSMCaster.CascadeCount;
-			for (int i = 0; i < cascadeCount; i++)
-			{
-				DefaultShader.SetCascadeLightSpaceMatrix(i, CSMCaster.LightSpaceMatrices[i]);
-				DefaultShader.SetCascadeShadowMapUnit(i, 4 + i);
-				DefaultShader.SetCascadeFarDistance(i, (float)CSMCaster.CascadeFarDistances[i]);
-				DefaultShader.SetCascadeBias(i, CSMCaster.CascadeBiases[i] + (float)currentOptions.ShadowBias);
-				DefaultShader.SetNormalBias(i, (float)currentOptions.ShadowNormalBias);
-			}
-
-
-			// If fewer than max cascades, disable unused slots
-			for (int i = cascadeCount; i < 4; i++)
-			{
-				DefaultShader.SetCascadeFarDistance(i, 0.0f);
-			}
-
-			DefaultShader.SetCascadeCount(cascadeCount);
-		}
-
-		private PrimitiveType GetPrimitiveType(FaceFlags flags)
+		internal PrimitiveType GetPrimitiveType(FaceFlags flags)
 		{
 			switch (flags & FaceFlags.FaceTypeMask)
 			{
