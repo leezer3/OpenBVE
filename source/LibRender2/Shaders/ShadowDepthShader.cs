@@ -37,6 +37,7 @@ namespace LibRender2.Shaders
 		private readonly int uAlphaCutoff;
 		private readonly int uMaterialAlpha; // Uniform location for material color alpha
 		private readonly int uMaterialFlags;
+		private readonly int uTextureMatrix;
 
 		public ShadowDepthShader(BaseRenderer Renderer,  string vertexShaderName, string fragmentShaderName, bool isFromStream = false) : base(Renderer, vertexShaderName, fragmentShaderName, isFromStream, false)
 		{
@@ -56,6 +57,7 @@ namespace LibRender2.Shaders
 			uAlphaCutoff = GL.GetUniformLocation(Handle, "uAlphaCutoff");
 			uMaterialAlpha = GL.GetUniformLocation(Handle, "uMaterialAlpha"); // Cache the material alpha location
 			uMaterialFlags = GL.GetUniformLocation(Handle, "uMaterialFlags");
+			uTextureMatrix = GL.GetUniformLocation(Handle, "uTextureMatrix");
 		}
 
 		public void SetLightSpaceMatrix(OpenBveApi.Math.Matrix4D m)
@@ -95,6 +97,12 @@ namespace LibRender2.Shaders
 		{
 			OpenTK.Matrix4 matrix = ConvertToMatrix4(m);
 			GL.UniformMatrix4(uModelMatrix, false, ref matrix);
+		}
+
+		public void SetTextureMatrix(OpenBveApi.Math.Matrix4D m)
+		{
+			OpenTK.Matrix4 matrix = ConvertToMatrix4(m);
+			GL.UniformMatrix4(uTextureMatrix, false, ref matrix);
 		}
 
 		public void SetCurrentAnimationMatricies(OpenBveApi.Objects.ObjectState objectState)

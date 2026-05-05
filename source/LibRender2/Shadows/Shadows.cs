@@ -176,10 +176,15 @@ namespace LibRender2.ShadowMapping
 					continue;
 				}
 
-				Matrix4D modelMatrix = face.Object.ModelMatrix * renderer.Camera.TranslationMatrix;
-				DepthShader.SetModelMatrix(modelMatrix);
+				ObjectState state = face.Object;
+				DepthShader.SetModelMatrix(state.ModelMatrix * renderer.Camera.TranslationMatrix);
+				DepthShader.SetTextureMatrix(state.TextureTranslation);
 
 				var material = face.Object.Prototype.Mesh.Materials[face.Face.Material];
+				if ((material.Flags & MaterialFlags.NoShadow) != 0 || material.BlendMode == MeshMaterialBlendMode.Additive)
+				{
+					continue;
+				}
 				if (material.DaytimeTexture != null && renderer.currentHost.LoadTexture(ref material.DaytimeTexture, (OpenGlTextureWrapMode)(material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp)))
 				{
 					GL.ActiveTexture(TextureUnit.Texture0);
@@ -194,8 +199,7 @@ namespace LibRender2.ShadowMapping
 				DepthShader.SetAlphaCutoff(0.5f);
 				DepthShader.SetMaterialAlpha(material.Color.A / 255.0f);
 				DepthShader.SetMaterialFlags(material.Flags);
-
-				ObjectState state = face.Object;
+				
 				if (state.Matricies != null && state.Matricies.Length > 0)
 				{
 					DepthShader.SetCurrentAnimationMatricies(state);
