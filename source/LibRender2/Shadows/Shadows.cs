@@ -153,10 +153,16 @@ namespace LibRender2.ShadowMapping
 				lock (renderer.VisibleObjects.LockObject)
 				{
 					int lastVAO = -1;
-					// Render both opaque and alpha-tested geometry (AlphaFaces).
-					// Alpha-tested objects (like trees) need to cast shadows for realism.
-					RenderFaces(renderer.VisibleObjects.OpaqueFaces, ref lastVAO);
-					RenderFaces(renderer.VisibleObjects.AlphaFaces, ref lastVAO); 
+					/*
+					 * Culling Per-Cascade:
+					 * Distant objects don't need to be rendered into near-field high-res shadow maps.
+					 * We use a safety margin (150m) to catch long shadows from tall objects.
+					 */
+					double maxDistance = renderer.currentOptions.ShadowFilterCascades ? Caster.SplitDistances[i] + 150.0 : double.MaxValue;
+					double maxDistanceSquared = maxDistance * maxDistance;
+
+					RenderFacesFiltered(renderer.VisibleObjects.OpaqueFaces, ref lastVAO, maxDistanceSquared);
+					RenderFacesFiltered(renderer.VisibleObjects.AlphaFaces, ref lastVAO, maxDistanceSquared); 
 				}
 				Map.Unbind();
 			}
@@ -177,6 +183,19 @@ namespace LibRender2.ShadowMapping
 		/// <param name="lastVAO">A reference to the last bound VAO handle, to avoid redundant binds.</param>
 		private void RenderFaces(IEnumerable<FaceState> faces, ref int lastVAO)
 		{
+			RenderFacesFiltered(faces, ref lastVAO, double.MaxValue);
+		}
+
+		/// <summary>
+		/// Renders a collection of faces filtered by distance to optimize per-cascade draw calls.
+		/// </summary>
+		/// <param name="faces">The faces to render.</param>
+		/// <param name="lastVAO">A reference to the last bound VAO handle, to avoid redundant binds.</param>
+		/// <param name="maxDistanceSquared">The squared maximum distance from camera for an object to cast shadows into this cascade.</param>
+		private void RenderFacesFiltered(IEnumerable<FaceState> faces, ref int lastVAO, double maxDistanceSquared)
+		{
+			Vector3 cameraPos = renderer.Camera.AbsolutePosition;
+
 			foreach (var face in faces)
 			{
 				if (face.Object.Prototype.Mesh.VAO == null || face.Object.DisableShadowCasting)
@@ -185,6 +204,20 @@ namespace LibRender2.ShadowMapping
 				}
 
 				ObjectState state = face.Object;
+
+				// Per-cascade distance culling
+				if (maxDistanceSquared < double.MaxValue)
+				{
+					double dx = state.WorldPosition.X - cameraPos.X;
+					double dy = state.WorldPosition.Y - cameraPos.Y;
+					double dz = state.WorldPosition.Z - cameraPos.Z;
+
+					if (dx * dx + dy * dy + dz * dz > maxDistanceSquared)
+					{
+						continue;
+					}
+				}
+
 				DepthShader.SetModelMatrix(state.ModelMatrix * renderer.Camera.TranslationMatrix);
 				DepthShader.SetTextureMatrix(state.TextureTranslation);
 

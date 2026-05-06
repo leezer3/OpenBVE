@@ -93,6 +93,8 @@ namespace OpenBveApi
 		public double ShadowBias = 0.000005; // default synced to 0.000005
 		/// <summary>Shadow normal bias (slope scale multiplier) to perfectly cure acne on curved/thin meshes.</summary>
 		public double ShadowNormalBias = 2.0;
+		/// <summary>Whether to filter shadow casters per cascade to improve performance.</summary>
+		public bool ShadowFilterCascades = true;
 
 
 		/// <summary>The sun azimuth in degrees</summary>

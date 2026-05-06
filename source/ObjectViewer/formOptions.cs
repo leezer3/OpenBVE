@@ -86,6 +86,7 @@ namespace ObjectViewer
 			comboBoxBackwards.DataSource = Enum.GetValues(typeof(Key));
 			comboBoxBackwards.SelectedItem = Interface.CurrentOptions.CameraMoveBackward;
 			checkBoxAutoReload.Checked = Interface.CurrentOptions.AutoReloadObjects;
+			checkBoxShadowFilterCascades.Checked = Interface.CurrentOptions.ShadowFilterCascades;
 		}
 
 		private void InitializeSunSliders()
@@ -109,6 +110,7 @@ namespace ObjectViewer
 			trackBarSunAzimuth.Enabled = enabled;
 
 			trackBarSunElevation.Enabled = enabled;
+			checkBoxShadowFilterCascades.Enabled = enabled;
 		}
 
 		private void comboBoxShadowResolution_SelectedIndexChanged(object sender, EventArgs e)
@@ -278,6 +280,7 @@ namespace ObjectViewer
 			Interface.CurrentOptions.ShadowStrength = (double)numericUpDownShadowStrength.Value / 100.0;
 			Interface.CurrentOptions.ShadowBias = (double)numericUpDownShadowBias.Value;
 			Interface.CurrentOptions.ShadowNormalBias = (double)numericUpDownShadowNormalBias.Value;
+			Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
 			
 			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));
 			Program.RefreshObjects();
