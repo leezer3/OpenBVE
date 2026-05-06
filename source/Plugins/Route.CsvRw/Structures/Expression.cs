@@ -92,6 +92,12 @@ namespace CsvRwRouteParser
 					// 普通播州赤穂行 - brackets in station name
 					Text = ".Sta [貨]"+ Text.Substring(8);
 				}
+				else if (Text.StartsWith(".freeobj (9"))
+				{
+					// East Linconshire Railway bridges
+					Text = ".freeobj(9" + Text.Substring(11);
+					int n = 0;
+				}
 
 				if (IsRw && CurrentSection.ToLowerInvariant() == "track")
 				{
