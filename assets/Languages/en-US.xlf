@@ -1240,6 +1240,9 @@
 					<trans-unit id="camera_transition_duration">
 						<source>Transition duration (sec):</source>
 					</trans-unit>
+					<trans-unit id="camera_zoom_scroll_speed">
+						<source>Zoom Scroll Speed:</source>
+					</trans-unit>
 					<trans-unit id="misc_simulation">
 						<source>Detail of simulation</source>
 					</trans-unit>
@@ -1336,6 +1339,7 @@
 					<trans-unit id="other_timetable_mode_prefercustom">
 						<source>Prefer custom timetable</source>
 					</trans-unit>
+
 					<trans-unit id="package_choose">
 						<source>Choose...</source>
 					</trans-unit>

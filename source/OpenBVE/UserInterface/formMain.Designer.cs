@@ -137,6 +137,8 @@ namespace OpenBve {
             this.trackbarTransparency = new System.Windows.Forms.TrackBar();
             this.panelOptionsRight = new System.Windows.Forms.Panel();
             this.groupBoxOther = new System.Windows.Forms.GroupBox();
+            this.labelZoomScrollSpeed = new System.Windows.Forms.Label();
+            this.updownZoomScrollSpeed = new System.Windows.Forms.NumericUpDown();
             this.comboBoxTimeTableDisplayMode = new System.Windows.Forms.ComboBox();
             this.labelTimeTableDisplayMode = new System.Windows.Forms.Label();
             this.groupBoxRailDriver = new System.Windows.Forms.GroupBox();
@@ -2093,10 +2095,42 @@ namespace OpenBve {
             this.groupBoxOther.ForeColor = System.Drawing.Color.Black;
             this.groupBoxOther.Location = new System.Drawing.Point(0, 347);
             this.groupBoxOther.Name = "groupBoxOther";
-            this.groupBoxOther.Size = new System.Drawing.Size(316, 48);
+            this.groupBoxOther.Size = new System.Drawing.Size(316, 50);
             this.groupBoxOther.TabIndex = 19;
             this.groupBoxOther.TabStop = false;
             this.groupBoxOther.Text = "Other";
+            // 
+            // labelZoomScrollSpeed
+            // 
+            this.labelZoomScrollSpeed.Location = new System.Drawing.Point(8, 98);
+            this.labelZoomScrollSpeed.Name = "labelZoomScrollSpeed";
+            this.labelZoomScrollSpeed.Size = new System.Drawing.Size(130, 18);
+            this.labelZoomScrollSpeed.TabIndex = 4;
+            this.labelZoomScrollSpeed.Text = "Zoom Scroll Speed:";
+            this.labelZoomScrollSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // updownZoomScrollSpeed
+            // 
+            this.updownZoomScrollSpeed.Location = new System.Drawing.Point(200, 96);
+            this.updownZoomScrollSpeed.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.updownZoomScrollSpeed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.updownZoomScrollSpeed.Name = "updownZoomScrollSpeed";
+            this.updownZoomScrollSpeed.Size = new System.Drawing.Size(152, 20);
+            this.updownZoomScrollSpeed.TabIndex = 3;
+            this.updownZoomScrollSpeed.Value = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+            this.updownZoomScrollSpeed.ValueChanged += new System.EventHandler(this.updownZoomScrollSpeed_ValueChanged);
             // 
             // comboBoxTimeTableDisplayMode
             // 
@@ -2658,10 +2692,12 @@ namespace OpenBve {
             this.groupboxCamera.Controls.Add(this.checkboxCameraExteriorTransition);
             this.groupboxCamera.Controls.Add(this.labelCameraTransitionSpeed);
             this.groupboxCamera.Controls.Add(this.updownCameraTransitionSpeed);
+            this.groupboxCamera.Controls.Add(this.labelZoomScrollSpeed);
+            this.groupboxCamera.Controls.Add(this.updownZoomScrollSpeed);
             this.groupboxCamera.ForeColor = System.Drawing.Color.Black;
             this.groupboxCamera.Location = new System.Drawing.Point(330, 0);
             this.groupboxCamera.Name = "groupboxCamera";
-            this.groupboxCamera.Size = new System.Drawing.Size(321, 120);
+            this.groupboxCamera.Size = new System.Drawing.Size(321, 150);
             this.groupboxCamera.TabIndex = 22;
             this.groupboxCamera.TabStop = false;
             this.groupboxCamera.Text = "Camera options";
@@ -6944,6 +6980,8 @@ namespace OpenBve {
 		private System.Windows.Forms.Button SaveFileNameButton;
 		private System.Windows.Forms.TextBox textBoxPackageFileName;
 		private System.Windows.Forms.GroupBox groupBoxOther;
+		private System.Windows.Forms.Label labelZoomScrollSpeed;
+		private System.Windows.Forms.NumericUpDown updownZoomScrollSpeed;
 		private System.Windows.Forms.ComboBox comboBoxTimeTableDisplayMode;
 		private System.Windows.Forms.Label labelTimeTableDisplayMode;
 		private System.Windows.Forms.Label labelSaveAs;

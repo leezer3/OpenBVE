@@ -195,5 +195,10 @@ namespace OpenBve {
 			if (Tag != null) return;
 			Cursors.SelectedCursor(comboboxCursor, pictureboxCursor);
 		}
+
+		private void updownZoomScrollSpeed_ValueChanged(object sender, EventArgs e)
+		{
+			Interface.CurrentOptions.ZoomScrollSpeed = (double)updownZoomScrollSpeed.Value;
+		}
 	}
 }

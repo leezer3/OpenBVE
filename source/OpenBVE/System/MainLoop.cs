@@ -280,6 +280,7 @@ namespace OpenBve
 				double zoomFactor = Math.Exp(Program.Renderer.Camera.Alignment.Zoom);
 				Program.Renderer.Camera.Alignment.Yaw += factor * MouseGrabTarget.X * 0.001 * zoomFactor;
 				Program.Renderer.Camera.Alignment.Pitch -= factor * MouseGrabTarget.Y * 0.001 * zoomFactor;
+				Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 				MouseGrabTarget = OpenBveApi.Math.Vector2.Null;
 			}
 		}
@@ -353,20 +354,22 @@ namespace OpenBve
 				if (MouseGrabIgnoreOnce)
 				{
 					MouseGrabIgnoreOnce = false;
-					lastMouseX = System.Windows.Forms.Cursor.Position.X;
-					lastMouseY = System.Windows.Forms.Cursor.Position.Y;
+					MouseState state = Mouse.GetCursorState();
+					lastMouseX = state.X;
+					lastMouseY = state.Y;
 					MouseGrabTarget = OpenBveApi.Math.Vector2.Null;
 				}
 				else
 				{
-					int curX = System.Windows.Forms.Cursor.Position.X;
-					int curY = System.Windows.Forms.Cursor.Position.Y;
+					MouseState state = Mouse.GetCursorState();
+					int curX = state.X;
+					int curY = state.Y;
 					MouseGrabTarget = new OpenBveApi.Math.Vector2(curX - lastMouseX, curY - lastMouseY);
 					lastMouseX = curX;
 					lastMouseY = curY;
 					if (Math.Abs(curX - screenCenter.X) > 400 || Math.Abs(curY - screenCenter.Y) > 400)
 					{
-						System.Windows.Forms.Cursor.Position = screenCenter;
+						Mouse.SetPosition(screenCenter.X, screenCenter.Y);
 						MouseGrabIgnoreOnce = true;
 					}
 				}

@@ -220,7 +220,7 @@ namespace OpenBve
 					double moveFactor = Control.AnalogState;
 					if (Control.Method == ControlMethod.Mouse && Control.Element >= 3)
 					{
-						moveFactor *= 30.0; 
+						moveFactor *= Interface.CurrentOptions.ZoomScrollSpeed; 
 					}
 					Program.Renderer.Camera.Move(Control.Command, moveFactor);
 					break;
@@ -244,7 +244,7 @@ namespace OpenBve
 						double factor = Control.AnalogState;
 						if (Control.Method == ControlMethod.Mouse && Control.Element >= 3)
 						{
-							factor *= 30.0; 
+							factor *= Interface.CurrentOptions.ZoomScrollSpeed; 
 						}
 						Program.Renderer.Camera.AlignmentDirection.Zoom = -CameraProperties.ZoomTopSpeed * factor;
 					}
@@ -257,7 +257,7 @@ namespace OpenBve
 						double factor = Control.AnalogState;
 						if (Control.Method == ControlMethod.Mouse && Control.Element >= 3)
 						{
-							factor *= 30.0; 
+							factor *= Interface.CurrentOptions.ZoomScrollSpeed; 
 						}
 						Program.Renderer.Camera.AlignmentDirection.Zoom = CameraProperties.ZoomTopSpeed * factor;
 					}

@@ -1515,6 +1515,26 @@
 						<source>Miscellaneous</source>
 						<target>Lainnya</target>
 					</trans-unit>
+					<trans-unit id="camera">
+						<source>Camera options</source>
+						<target>Pengaturan kamera</target>
+					</trans-unit>
+					<trans-unit id="camera_interior_transition">
+						<source>Smooth interior transition</source>
+						<target>Transisi interior halus</target>
+					</trans-unit>
+					<trans-unit id="camera_exterior_transition">
+						<source>Smooth exterior transition</source>
+						<target>Transisi eksterior halus</target>
+					</trans-unit>
+					<trans-unit id="camera_transition_duration">
+						<source>Transition duration (sec):</source>
+						<target>Durasi transisi (detik):</target>
+					</trans-unit>
+					<trans-unit id="camera_zoom_scroll_speed">
+						<source>Zoom Scroll Speed:</source>
+						<target>Kecepatan Scroll Zoom:</target>
+					</trans-unit>
 					<trans-unit id="misc_simulation">
 						<source>Detail of simulation</source>
 						<target>Detail simulasi</target>
@@ -1641,6 +1661,7 @@
 						<source>Prefer custom timetable</source>
 						<target>Buat sendiri</target>
 					</trans-unit>
+
 					<trans-unit id="package_choose">
 						<source>Choose...</source>
 						<target>Pilih....</target>
