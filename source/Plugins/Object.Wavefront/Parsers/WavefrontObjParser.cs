@@ -335,7 +335,10 @@ namespace Plugin
 						{
 							Array.Reverse(meshVerticies, 0, meshVerticies.Length);
 						}
-						meshBuilder.Faces.Add(currentMaterial == string.Empty ? new MeshFace(meshVerticies, 0) : new MeshFace(meshVerticies, (ushort)materialIndex));
+
+						MeshFace face = currentMaterial == string.Empty ? new MeshFace(meshVerticies, 0) : new MeshFace(meshVerticies, (ushort)materialIndex);
+						face.Flags |= FaceFlags.Face2Mask;
+						meshBuilder.Faces.Add(face);
 						break;
 					case WavefrontObjCommands.O:
 					case WavefrontObjCommands.G:

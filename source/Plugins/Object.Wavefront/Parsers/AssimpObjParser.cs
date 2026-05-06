@@ -133,6 +133,7 @@ namespace Plugin
 						}
 						
 						f.Material = 0;
+						f.Flags |= FaceFlags.Face2Mask;
 						builder.Faces.Add(f);
 						
 						if (model.Exporter >= ModelExporter.UnknownLeftHanded)
