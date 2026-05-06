@@ -249,7 +249,7 @@ namespace LibRender2.ShadowMapping
 				shader.SetCascadeLightSpaceMatrix(i, Caster.LightSpaceMatrices[i]);
 				shader.SetCascadeShadowMapUnit(i, 4 + i);
 				// Split distance = the view-space Z where this cascade ends.
-				shader.SetShadowSplitDistance(i, (float)Caster.SplitDistances[i]);
+				shader.SetShadowSplitDistance(i, (float)Caster.SplitDistances[i + 1]);
 				shader.SetCascadeBias(i, Caster.CascadeBiases[i] + (float)renderer.currentOptions.ShadowBias);
 				shader.SetNormalBias(i, (float)renderer.currentOptions.ShadowNormalBias);
 			}
