@@ -90,7 +90,7 @@ void main()
 	// OpenBVE explicitly negates Z for world geometry.
 	pos.z = -pos.z;
 
-	vUv = (uTextureMatrix * vec4(iUv, 0.0, 1.0)).xy;
+	vUv = (uTextureMatrix * vec4(iUv, 1.0, 1.0)).xy;
 	gl_Position = uLightSpaceMatrix * uModelMatrix * vec4(pos, 1.0);
 }
 

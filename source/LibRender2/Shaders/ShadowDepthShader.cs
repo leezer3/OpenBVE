@@ -66,6 +66,18 @@ namespace LibRender2.Shaders
 			GL.UniformMatrix4(uLightSpaceMatrix, false, ref matrix);
 		}
 
+		public void SetModelMatrix(OpenBveApi.Math.Matrix4D m)
+		{
+			OpenTK.Matrix4 matrix = ConvertToMatrix4(m);
+			GL.UniformMatrix4(uModelMatrix, false, ref matrix);
+		}
+
+		public void SetTextureMatrix(OpenBveApi.Math.Matrix4D m)
+		{
+			OpenTK.Matrix4 matrix = ConvertToMatrix4(m);
+			GL.UniformMatrix4(uTextureMatrix, false, ref matrix);
+		}
+
 		public void SetTexture(int unit)
 		{
 			GL.Uniform1(uTexture, unit);
@@ -91,18 +103,6 @@ namespace LibRender2.Shaders
 		public void SetMaterialFlags(MaterialFlags flags)
 		{
 			GL.Uniform1(uMaterialFlags, (int)flags);
-		}
-
-		public void SetModelMatrix(OpenBveApi.Math.Matrix4D m)
-		{
-			OpenTK.Matrix4 matrix = ConvertToMatrix4(m);
-			GL.UniformMatrix4(uModelMatrix, false, ref matrix);
-		}
-
-		public void SetTextureMatrix(OpenBveApi.Math.Matrix4D m)
-		{
-			OpenTK.Matrix4 matrix = ConvertToMatrix4(m);
-			GL.UniformMatrix4(uTextureMatrix, false, ref matrix);
 		}
 
 		public void SetCurrentAnimationMatricies(OpenBveApi.Objects.ObjectState objectState)
