@@ -132,7 +132,15 @@ namespace LibRender2.ShadowMapping
 			DepthShader.Activate();
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthFunc(DepthFunction.Less);
-			GL.Disable(EnableCap.CullFace);
+			if (renderer.OptionBackFaceCulling)
+			{
+				GL.Enable(EnableCap.CullFace);
+				GL.CullFace(CullFaceMode.Front); // OpenBVE culls Front faces by default
+			}
+			else
+			{
+				GL.Disable(EnableCap.CullFace);
+			}
 			GL.DepthMask(true);
 			DepthShader.SetTexture(0);
 
@@ -212,6 +220,18 @@ namespace LibRender2.ShadowMapping
 					vao.Bind();
 					lastVAO = vao.handle;
 				}
+				if (renderer.OptionBackFaceCulling)
+				{
+					if ((face.Face.Flags & FaceFlags.Face2Mask) != 0)
+					{
+						// Double-sided faces (Face2) must not be culled to ensure they cast shadows from both sides
+						GL.Disable(EnableCap.CullFace);
+					}
+					else
+					{
+						GL.Enable(EnableCap.CullFace);
+					}
+				}
 				PrimitiveType drawMode = renderer.GetPrimitiveType(face.Face.Flags);
 				vao.Draw(drawMode, face.Face.IboStartIndex, face.Face.Vertices.Length);
 			}
@@ -249,7 +269,7 @@ namespace LibRender2.ShadowMapping
 				shader.SetCascadeLightSpaceMatrix(i, Caster.LightSpaceMatrices[i]);
 				shader.SetCascadeShadowMapUnit(i, 4 + i);
 				// Split distance = the view-space Z where this cascade ends.
-				shader.SetShadowSplitDistance(i, (float)Caster.SplitDistances[i + 1]);
+				shader.SetShadowSplitDistance(i, (float)Caster.SplitDistances[i]);
 				shader.SetCascadeBias(i, Caster.CascadeBiases[i] + (float)renderer.currentOptions.ShadowBias);
 				shader.SetNormalBias(i, (float)renderer.currentOptions.ShadowNormalBias);
 			}
