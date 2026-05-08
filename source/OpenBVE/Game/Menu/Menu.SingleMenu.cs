@@ -224,7 +224,7 @@ namespace OpenBve
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.Options:
-						Items = new MenuEntry[11];
+						Items = new MenuEntry[12];
 						Items[0] = new MenuCaption(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","options"}));
 						Items[1] = new MenuOption(menu, OptionType.ScreenResolution, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","resolution"}), Program.Renderer.Screen.AvailableResolutions.ToArray());
 						Items[2] = new MenuOption(menu, OptionType.FullScreen, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_mode_fullscreen"}), new[] { "true", "false" });
@@ -250,7 +250,8 @@ namespace OpenBve
 							Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "shadows_resolution_high" }),
 							Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "shadows_resolution_ultra" })
 						});
-						Items[10] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","back"}), MenuTag.MenuBack, 0);
+						Items[10] = new MenuOption(menu, OptionType.ShadowFilterCascades, "Per-cascade culling", new[] { "true", "false" });
+						Items[11] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","back"}), MenuTag.MenuBack, 0);
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.RouteList:

@@ -53,6 +53,7 @@ namespace OpenBve {
 			labelShadowStrengthValue.Enabled = shadowEnabled;
 			updownShadowBias.Enabled = shadowEnabled;
 			updownShadowNormalBias.Enabled = shadowEnabled;
+			checkboxShadowFilterCascades.Enabled = shadowEnabled;
 
 			if (!shadowEnabled)
 			{

@@ -90,9 +90,11 @@ namespace OpenBveApi
 		/// <summary>Shadow darkness strength. 0.0 = invisible, 1.0 = full black.</summary>
 		public double ShadowStrength = 0.7;
 		/// <summary>Shadow bias to prevent shadow acne.</summary>
-		public double ShadowBias = 0.000050; // default synced to 0.000050
+		public double ShadowBias = 0.000005; // default synced to 0.000005
 		/// <summary>Shadow normal bias (slope scale multiplier) to perfectly cure acne on curved/thin meshes.</summary>
 		public double ShadowNormalBias = 2.0;
+		/// <summary>Whether to filter shadow casters per cascade to improve performance.</summary>
+		public bool ShadowFilterCascades = true;
 
 
 		/// <summary>The sun azimuth in degrees</summary>
