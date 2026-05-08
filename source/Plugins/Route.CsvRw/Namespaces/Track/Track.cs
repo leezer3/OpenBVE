@@ -628,10 +628,14 @@ namespace CsvRwRouteParser
 							num = -2;
 						}
 
-						if (num == 0 && IsRW)
+						if (num == 0)
 						{
-							//Aspects value of zero in RW routes produces a 2-aspect R/G signal
-							num = -2;
+							//Aspects value of zero produces a 2-aspect R/G signal in BVE2
+							if (IsRw || Plugin.CurrentOptions.EnableBveTsHacks)
+							{
+								num = -2;
+							}
+							
 						}
 
 						if (num != 1 & num != -2 & num != 2 & num != -3 & num != 3 & num != -4 & num != 4 & num != -5 & num != 5 & num != 6)
