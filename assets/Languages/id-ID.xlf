@@ -1865,11 +1865,11 @@
 					</trans-unit>
 					<trans-unit id="power">
 						<source>Power</source>
-						<target>Tenaga</target>
+						<target>T</target>
 					</trans-unit>
 					<trans-unit id="brake">
 						<source>Brake</source>
-						<target>Rem</target>
+						<target>R</target>
 					</trans-unit>
 					<trans-unit id="event">
 						<source>Event</source>
