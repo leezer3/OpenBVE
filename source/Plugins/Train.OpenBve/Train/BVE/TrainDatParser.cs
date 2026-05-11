@@ -1437,9 +1437,54 @@ namespace Train.OpenBve
 			{
 				Train.Cars[DriverCar].HasInteriorView = true;
 			}
+
 			
-			// finish
-			
+			/*
+			 * Determine the maximum width of the handle strings for drawing purposes
+			 * (As translators may use much longer strings than we expect)
+			 */
+			Vector2 rs = Plugin.Renderer.Fonts.NormalFont.MeasureString(Translations.QuickReferences.HandleForward);
+			if (rs.X > Train.Handles.Reverser.MaxWidth)
+			{
+				Train.Handles.Reverser.MaxWidth = rs.X;
+			}
+			rs = Plugin.Renderer.Fonts.NormalFont.MeasureString(Translations.QuickReferences.HandleNeutral);
+			if (rs.X > Train.Handles.Reverser.MaxWidth)
+			{
+				Train.Handles.Reverser.MaxWidth = rs.X;
+			}
+			rs = Plugin.Renderer.Fonts.NormalFont.MeasureString(Translations.QuickReferences.HandleBackward);
+			if (rs.X > Train.Handles.Reverser.MaxWidth)
+			{
+				Train.Handles.Reverser.MaxWidth = rs.X;
+			}
+
+			rs = Plugin.Renderer.Fonts.NormalFont.MeasureString(Translations.QuickReferences.HandlePower);
+			if (rs.X > Train.Handles.Power.MaxWidth)
+			{
+				Train.Handles.Power.MaxWidth = rs.X;
+			}
+			rs = Plugin.Renderer.Fonts.NormalFont.MeasureString(Translations.QuickReferences.HandlePowerNull);
+			if (rs.X > Train.Handles.Power.MaxWidth)
+			{
+				Train.Handles.Power.MaxWidth = rs.X;
+			}
+
+			rs = Plugin.Renderer.Fonts.NormalFont.MeasureString(Translations.QuickReferences.HandleBrake);
+			if (rs.X > Train.Handles.Brake.MaxWidth)
+			{
+				Train.Handles.Brake.MaxWidth = rs.X;
+			}
+			rs = Plugin.Renderer.Fonts.NormalFont.MeasureString(Translations.QuickReferences.HandleBrakeNull);
+			if (rs.X > Train.Handles.Brake.MaxWidth)
+			{
+				Train.Handles.Brake.MaxWidth = rs.X;
+			}
+			rs = Plugin.Renderer.Fonts.NormalFont.MeasureString(Translations.QuickReferences.HandleEmergency);
+			if (rs.X > Train.Handles.Brake.MaxWidth)
+			{
+				Train.Handles.Brake.MaxWidth = rs.X;
+			}
 		}
 
 	}
