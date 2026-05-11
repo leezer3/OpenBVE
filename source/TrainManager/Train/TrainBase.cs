@@ -662,7 +662,7 @@ namespace TrainManager.Trains
 				double min = Cars[p].Coupler.MinimumDistanceBetweenCars;
 				double max = Cars[p].Coupler.MaximumDistanceBetweenCars;
 				double d = CenterOfCarPositions[p] - CenterOfCarPositions[s] - 0.5 * (Cars[p].Length + Cars[s].Length);
-				if (d < min)
+				if (d < min && min < max)
 				{
 					double t = (min - d) / (Cars[p].CurrentMass + Cars[s].CurrentMass);
 					double tp = t * Cars[s].CurrentMass;
