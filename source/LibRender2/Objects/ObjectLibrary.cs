@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -18,12 +19,11 @@ namespace LibRender2.Objects
 
 		public readonly QuadTree quadTree;
 
-		private readonly List<ObjectState> myObjects;
+		public readonly ConcurrentDictionary<ObjectState, byte> Objects;
 		private readonly List<FaceState> myOpaqueFaces;
 		private readonly List<FaceState> myAlphaFaces;
 		private readonly List<FaceState> myOverlayOpaqueFaces;
 		private List<FaceState> myOverlayAlphaFaces;
-		public readonly ReadOnlyCollection<ObjectState> Objects;
 		public readonly ReadOnlyCollection<FaceState> OpaqueFaces;  // StaticOpaque and DynamicOpaque
 		public readonly ReadOnlyCollection<FaceState> OverlayOpaqueFaces;
 		public readonly ReadOnlyCollection<FaceState> AlphaFaces;  // DynamicAlpha
@@ -34,13 +34,14 @@ namespace LibRender2.Objects
 		internal VisibleObjectLibrary(BaseRenderer Renderer)
 		{
 			renderer = Renderer;
-			myObjects = new List<ObjectState>();
+			// Note: .Net has no Concurrent HashSet, so use a dictionary with a byte value instead
+			// previous approach used a List and Contains()
+			Objects = new ConcurrentDictionary<ObjectState, byte>();
 			myOpaqueFaces = new List<FaceState>();
 			myAlphaFaces = new List<FaceState>();
 			myOverlayOpaqueFaces = new List<FaceState>();
 			myOverlayAlphaFaces = new List<FaceState>();
 
-			Objects = myObjects.AsReadOnly();
 			OpaqueFaces = myOpaqueFaces.AsReadOnly();
 			AlphaFaces = myAlphaFaces.AsReadOnly();
 			OverlayOpaqueFaces = myOverlayOpaqueFaces.AsReadOnly();
@@ -50,22 +51,15 @@ namespace LibRender2.Objects
 
 		private bool AddObject(ObjectState state)
 		{
-			if (state.Prototype != null &&!myObjects.Contains(state))
-			{
-				myObjects.Add(state);
-				return true;
-			}
-
-			return false;
+			return state.Prototype != null && Objects.TryAdd(state, 0);
 		}
 
 		private void RemoveObject(ObjectState state)
 		{
 			lock (LockObject)
 			{
-				if (myObjects.Contains(state))
+				if (Objects.TryRemove(state, out _))
 				{
-					myObjects.Remove(state);
 					myOpaqueFaces.RemoveAll(x => x.Object == state);
 					myAlphaFaces.RemoveAll(x => x.Object == state);
 					myOverlayOpaqueFaces.RemoveAll(x => x.Object == state);
@@ -79,7 +73,7 @@ namespace LibRender2.Objects
 		{
 			lock (LockObject)
 			{
-				myObjects.Clear();
+				Objects.Clear();
 				myOpaqueFaces.Clear();
 				myAlphaFaces.Clear();
 				myOverlayOpaqueFaces.Clear();
@@ -113,15 +107,16 @@ namespace LibRender2.Objects
 						 * Unfortunately, there appear to be X objects in the wild which expect a non-default wrapping mode
 						 * which means the best fast exit we can do is to check for RepeatRepeat....
 						 *
-						 */ 
-						foreach (VertexTemplate vertex in State.Prototype.Mesh.Vertices)
+						 */
+						for (int i = 0; i < face.Vertices.Length; i++)
 						{
-							if (vertex.TextureCoordinates.X < 0.0f || vertex.TextureCoordinates.X > 1.0f)
+							int v = face.Vertices[i].Index;
+							if (State.Prototype.Mesh.Vertices[v].TextureCoordinates.X < 0.0f || State.Prototype.Mesh.Vertices[v].TextureCoordinates.X > 1.0f)
 							{
 								wrap |= OpenGlTextureWrapMode.RepeatClamp;
 							}
 
-							if (vertex.TextureCoordinates.Y < 0.0f || vertex.TextureCoordinates.Y > 1.0f)
+							if (State.Prototype.Mesh.Vertices[v].TextureCoordinates.Y < 0.0f || State.Prototype.Mesh.Vertices[v].TextureCoordinates.Y > 1.0f)
 							{
 								wrap |= OpenGlTextureWrapMode.ClampRepeat;
 							}

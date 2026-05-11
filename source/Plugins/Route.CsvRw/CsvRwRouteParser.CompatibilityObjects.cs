@@ -343,7 +343,7 @@ namespace CsvRwRouteParser
 				{
 					Block<CompatibilityObjectSection, CompatibilityObjectKey> fileBlock = objectListBlock.ReadNextBlock();
 					ReplacementObject o = new ReplacementObject();
-					if (!fileBlock.GetValue(CompatibilityObjectKey.Path, out o.ReplacementPath) || !fileBlock.TryGetStringArray(CompatibilityObjectKey.Name, ';', ref o.ObjectNames))
+					if (!fileBlock.GetPath(CompatibilityObjectKey.Path, Path.GetDirectoryName(fileName), out o.ReplacementPath) || !fileBlock.TryGetStringArray(CompatibilityObjectKey.Name, ';', ref o.ObjectNames))
 					{
 						continue;
 					}

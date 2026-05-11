@@ -53,6 +53,14 @@ layout(location = 4) in ivec3 iMatrixChain;
 uniform mat4 uCurrentProjectionMatrix;
 uniform mat4 uCurrentModelViewMatrix;
 uniform mat4 uCurrentTextureMatrix;
+uniform mat4 uCurrentViewMatrix;
+uniform bool uShadowEnabled;
+uniform mat4 uLightSpaceMatrix0;  // Cascade 0 (near)
+uniform mat4 uLightSpaceMatrix1;  // Cascade 1 (mid)
+uniform mat4 uLightSpaceMatrix2;  // Cascade 2 (far)
+uniform mat4 uLightSpaceMatrix3;  // Cascade 3 (extra far)
+uniform mat4 uModelMatrix;
+
 
 uniform bool uIsLight;
 uniform Light uLight;
@@ -67,12 +75,17 @@ out vec4 oViewPos;
 out vec2 oUv;
 out vec4 oColor;
 out vec4 oLightResult;
+out vec4 vPosLightSpace0;
+out vec4 vPosLightSpace1;
+out vec4 vPosLightSpace2;
+out vec4 vPosLightSpace3;
+out vec3 vNormal;
 
 vec4 getLightResult()
 {
-	vec3 normal = normalize(mat3(transpose(inverse(uCurrentModelViewMatrix))) * vec3(iNormal.x, iNormal.y, -iNormal.z));
-	float nDotVP = max(0.0, dot(normal, normalize(vec3(uLight.position))));
-	float nDotHV = max(0.0, dot(normal, normalize(vec3(oViewPos.xyz + uLight.position))));
+	vNormal = normalize(mat3(transpose(inverse(uCurrentModelViewMatrix))) * vec3(iNormal.x, iNormal.y, -iNormal.z));
+	float nDotVP = max(0.0, dot(vNormal, normalize(vec3(uLight.position))));
+	float nDotHV = max(0.0, dot(vNormal, normalize(vec3(oViewPos.xyz + uLight.position))));
 	float pf = nDotVP == 0.0 ? 0.0 : pow(nDotHV, uMaterial.shininess);
 
 	vec4 ambient = vec4(uLight.ambient, 1.0);
@@ -194,6 +207,28 @@ void main()
 
 	oViewPos = uCurrentModelViewMatrix * transformedPosition;
 	gl_Position = uCurrentProjectionMatrix * oViewPos;
+	
+	// Pass normal to fragment shader (un-negated Z to match lighting expected convention)
+	vNormal = normalize(mat3(transpose(inverse(uCurrentModelViewMatrix))) * vec3(iNormal.x, iNormal.y, -iNormal.z));
+
+	if (uShadowEnabled)
+	{
+		// Compute world space (relative to camera) accurately from the view position.
+		// OpenBVE does not bind uModelMatrix for regular mesh rendering.
+		vec4 worldPos4 = inverse(uCurrentViewMatrix) * oViewPos;
+		
+		vPosLightSpace0 = uLightSpaceMatrix0 * worldPos4;
+		vPosLightSpace1 = uLightSpaceMatrix1 * worldPos4;
+		vPosLightSpace2 = uLightSpaceMatrix2 * worldPos4;
+		vPosLightSpace3 = uLightSpaceMatrix3 * worldPos4;
+	}
+	else
+	{
+		vPosLightSpace0 = vec4(0.0);
+		vPosLightSpace1 = vec4(0.0);
+		vPosLightSpace2 = vec4(0.0);
+		vPosLightSpace3 = vec4(0.0);
+	}
 
 	oUv = (uCurrentTextureMatrix * vec4(iUv, 1.0, 1.0)).xy;
 	

@@ -402,7 +402,7 @@ namespace Texture.Dds
             //
             // Normalized number
             //
-            e += (127 - 15);
+            e += 127 - 15;
             m <<= 13;
 
             //
@@ -454,38 +454,38 @@ namespace Texture.Dds
             switch (pixelFormat)
             {
                 case PixelFormat.RGBA:
-                    rawData = this.DecompressRGBA(header, data, pixelFormat);
+                    rawData = DecompressRGBA(header, data, pixelFormat);
 	                break;
                 case PixelFormat.RGB:
-                    rawData = this.DecompressRGB(header, data, pixelFormat);
+                    rawData = DecompressRGB(header, data, pixelFormat);
                     break;
                 case PixelFormat.LUMINANCE:
                 case PixelFormat.LUMINANCE_ALPHA:
-                    rawData = this.DecompressLum(header, data, pixelFormat);
+                    rawData = DecompressLum(header, data, pixelFormat);
                     break;
                 case PixelFormat.DXT1:
-                    rawData = this.DecompressDXT1(header, data, pixelFormat);
+                    rawData = DecompressDXT1(header, data, pixelFormat);
                     break;
                 case PixelFormat.DXT2:
-                    rawData = this.DecompressDXT2(header, data, pixelFormat);
+                    rawData = DecompressDXT2(header, data, pixelFormat);
                     break;
                 case PixelFormat.DXT3:
-                    rawData = this.DecompressDXT3(header, data, pixelFormat);
+                    rawData = DecompressDXT3(header, data, pixelFormat);
                     break;
                 case PixelFormat.DXT4:
-                    rawData = this.DecompressDXT4(header, data, pixelFormat);
+                    rawData = DecompressDXT4(header, data, pixelFormat);
                     break;
                 case PixelFormat.DXT5:
-                    rawData = this.DecompressDXT5(header, data, pixelFormat);
+                    rawData = DecompressDXT5(header, data, pixelFormat);
                     break;
                 case PixelFormat.THREEDC:
-                    rawData = this.Decompress3Dc(header, data, pixelFormat);
+                    rawData = Decompress3Dc(header, data, pixelFormat);
                     break;
                 case PixelFormat.ATI1N:
-                    rawData = this.DecompressAti1n(header, data, pixelFormat);
+                    rawData = DecompressAti1n(header, data, pixelFormat);
                     break;
                 case PixelFormat.RXGB:
-                    rawData = this.DecompressRXGB(header, data, pixelFormat);
+                    rawData = DecompressRXGB(header, data, pixelFormat);
                     break;
                 case PixelFormat.R16F:
                 case PixelFormat.G16R16F:
@@ -493,7 +493,7 @@ namespace Texture.Dds
                 case PixelFormat.R32F:
                 case PixelFormat.G32R32F:
                 case PixelFormat.A32B32G32R32F:
-                    rawData = this.DecompressFloat(header, data, pixelFormat);
+                    rawData = DecompressFloat(header, data, pixelFormat);
                     break;
                 default:
                     throw new InvalidDataException("Unsupported DDS PixelFormat value");
@@ -506,8 +506,8 @@ namespace Texture.Dds
         {
             int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
-            int sizeofplane = bps * header.height;
-            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
+            int sizeOfPlane = bps * header.height;
+            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
 
             Color32[] colours = new Color32[4];
             colours[0].A = 0xFF;
@@ -562,7 +562,7 @@ namespace Texture.Dds
                                     Color32 col = colours[select];
                                     if (((x + i) < header.width) && ((y + j) < header.height))
                                     {
-                                        uint offset = (uint)(z * sizeofplane + (y + j) * bps + (x + i) * bpp);
+                                        uint offset = (uint)(z * sizeOfPlane + (y + j) * bps + (x + i) * bpp);
                                         rawData[offset + 0] = col.R;
                                         rawData[offset + 1] = col.G;
                                         rawData[offset + 2] = col.B;
@@ -589,8 +589,8 @@ namespace Texture.Dds
         {
             int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
-            int sizeofplane = bps * header.height;
-            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
+            int sizeOfPlane = bps * header.height;
+            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
             Color32[] colours = new Color32[4];
             fixed (byte* bytePtr = data)
             {
@@ -625,7 +625,7 @@ namespace Texture.Dds
 
                                     if (((x + i) < header.width) && ((y + j) < header.height))
                                     {
-                                        uint offset = (uint)(z * sizeofplane + (y + j) * bps + (x + i) * bpp);
+                                        uint offset = (uint)(z * sizeOfPlane + (y + j) * bps + (x + i) * bpp);
                                         rawData[offset + 0] = colours[select].R;
                                         rawData[offset + 1] = colours[select].G;
                                         rawData[offset + 2] = colours[select].B;
@@ -640,7 +640,7 @@ namespace Texture.Dds
                                 {
                                     if (((x + i) < header.width) && ((y + j) < header.height))
                                     {
-                                        uint offset = (uint)(z * sizeofplane + (y + j) * bps + (x + i) * bpp + 3);
+                                        uint offset = (uint)(z * sizeOfPlane + (y + j) * bps + (x + i) * bpp + 3);
                                         rawData[offset] = (byte)(word & 0x0F);
                                         rawData[offset] = (byte)(rawData[offset] | (rawData[offset] << 4));
                                     }
@@ -667,9 +667,9 @@ namespace Texture.Dds
             // allocate bitmap
             int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
-            int sizeofplane = bps * header.height;
+            int sizeOfPlane = bps * header.height;
 
-            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
             Color32[] colours = new Color32[4];
             ushort[] alphas = new ushort[8];
 
@@ -687,7 +687,7 @@ namespace Texture.Dds
 
                             alphas[0] = temp[0];
                             alphas[1] = temp[1];
-                            byte* alphamask = (temp + 2);
+                            byte* alphaMask = (temp + 2);
                             temp += 8;
 
                             DxtcReadColors(temp, ref colours);
@@ -709,7 +709,7 @@ namespace Texture.Dds
                                     // only put pixels out < width or height
                                     if (((x + i) < header.width) && ((y + j) < header.height))
                                     {
-                                        uint offset = (uint)(z * sizeofplane + (y + j) * bps + (x + i) * bpp);
+                                        uint offset = (uint)(z * sizeOfPlane + (y + j) * bps + (x + i) * bpp);
                                         rawData[offset] = col.R;
                                         rawData[offset + 1] = col.G;
                                         rawData[offset + 2] = col.B;
@@ -745,8 +745,7 @@ namespace Texture.Dds
                             // it operates on a 6-byte system.
 
                             // First three bytes
-                            //uint bits = (uint)(alphamask[0]);
-                            uint bits = (uint)((alphamask[0]) | (alphamask[1] << 8) | (alphamask[2] << 16));
+                            uint bits = (uint)((alphaMask[0]) | (alphaMask[1] << 8) | (alphaMask[2] << 16));
                             for (int j = 0; j < 2; j++)
                             {
                                 for (int i = 0; i < 4; i++)
@@ -754,7 +753,7 @@ namespace Texture.Dds
                                     // only put pixels out < width or height
                                     if (((x + i) < header.width) && ((y + j) < header.height))
                                     {
-                                        uint offset = (uint)(z * sizeofplane + (y + j) * bps + (x + i) * bpp + 3);
+                                        uint offset = (uint)(z * sizeOfPlane + (y + j) * bps + (x + i) * bpp + 3);
                                         rawData[offset] = (byte)alphas[bits & 0x07];
                                     }
                                     bits >>= 3;
@@ -762,8 +761,7 @@ namespace Texture.Dds
                             }
 
                             // Last three bytes
-                            //bits = (uint)(alphamask[3]);
-                            bits = (uint)((alphamask[3]) | (alphamask[4] << 8) | (alphamask[5] << 16));
+                            bits = (uint)((alphaMask[3]) | (alphaMask[4] << 8) | (alphaMask[5] << 16));
                             for (int j = 2; j < 4; j++)
                             {
                                 for (int i = 0; i < 4; i++)
@@ -771,7 +769,7 @@ namespace Texture.Dds
                                     // only put pixels out < width or height
                                     if (((x + i) < header.width) && ((y + j) < header.height))
                                     {
-                                        uint offset = (uint)(z * sizeofplane + (y + j) * bps + (x + i) * bpp + 3);
+                                        uint offset = (uint)(z * sizeOfPlane + (y + j) * bps + (x + i) * bpp + 3);
                                         rawData[offset] = (byte)alphas[bits & 0x07];
                                     }
                                     bits >>= 3;
@@ -790,9 +788,9 @@ namespace Texture.Dds
             // allocate bitmap
             int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
-            int sizeofplane = bps * header.height;
+            int sizeOfPlane = bps * header.height;
 
-            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
 	        uint valMask;
 	        unchecked
 	        {
@@ -833,9 +831,9 @@ namespace Texture.Dds
             // allocate bitmap
             int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
-            int sizeofplane = bps * header.height;
+            int sizeOfPlane = bps * header.height;
             
-            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
 	        uint valMask;
 	        unchecked
 	        {
@@ -880,9 +878,9 @@ namespace Texture.Dds
             // allocate bitmap
             int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
-            int sizeofplane = bps * header.height;
+            int sizeOfPlane = bps * header.height;
             
-            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
             byte[] yColours = new byte[8];
             byte[] xColours = new byte[8];
 
@@ -984,9 +982,9 @@ namespace Texture.Dds
             // allocate bitmap
             int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
-            int sizeofplane = bps * header.height;
+            int sizeOfPlane = bps * header.height;
 
-            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
             byte[] colours = new byte[8];
 
             uint offset = 0;
@@ -1053,9 +1051,9 @@ namespace Texture.Dds
             // allocate bitmap
             int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
-            int sizeofplane = bps * header.height;
+            int sizeOfPlane = bps * header.height;
 
-            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
 
             int lShift1; int lMul; int lShift2;
             ComputeMaskParams(header.pixelFormat.rbitmask, out lShift1, out lMul, out lShift2);
@@ -1083,9 +1081,9 @@ namespace Texture.Dds
             // allocate bitmap
             int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
-            int sizeofplane = bps * header.height;
+            int sizeOfPlane = bps * header.height;
 
-            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
 
             Color32 color_0 = new Color32();
             Color32 color_1 = new Color32();
@@ -1105,7 +1103,7 @@ namespace Texture.Dds
                                 break;
                             alphas[0] = temp[0];
                             alphas[1] = temp[1];
-                            byte* alphamask = temp + 2;
+                            byte* alphaMask = temp + 2;
                             temp += 8;
 
                             DxtcReadColors(temp, ref color_0, ref color_1);
@@ -1149,7 +1147,7 @@ namespace Texture.Dds
                                     // only put pixels out < width or height
                                     if (((x + i) < header.width) && ((y + j) < header.height))
                                     {
-                                        uint offset = (uint)(z * sizeofplane + (y + j) * bps + (x + i) * bpp);
+                                        uint offset = (uint)(z * sizeOfPlane + (y + j) * bps + (x + i) * bpp);
                                         rawData[offset + 0] = col.R;
                                         rawData[offset + 1] = col.G;
                                         rawData[offset + 2] = col.B;
@@ -1184,7 +1182,7 @@ namespace Texture.Dds
                             // Note: Have to separate the next two loops,
                             //	it operates on a 6-byte system.
                             // First three bytes
-                            uint bits = *((uint*)alphamask);
+                            uint bits = *((uint*)alphaMask);
                             for (int j = 0; j < 2; j++)
                             {
                                 for (int i = 0; i < 4; i++)
@@ -1192,7 +1190,7 @@ namespace Texture.Dds
                                     // only put pixels out < width or height
                                     if (((x + i) < header.width) && ((y + j) < header.height))
                                     {
-                                        uint offset = (uint)(z * sizeofplane + (y + j) * bps + (x + i) * bpp + 3);
+                                        uint offset = (uint)(z * sizeOfPlane + (y + j) * bps + (x + i) * bpp + 3);
                                         rawData[offset] = alphas[bits & 0x07];
                                     }
                                     bits >>= 3;
@@ -1200,7 +1198,7 @@ namespace Texture.Dds
                             }
 
                             // Last three bytes
-                            bits = *((uint*)&alphamask[3]);
+                            bits = *((uint*)&alphaMask[3]);
                             for (int j = 2; j < 4; j++)
                             {
                                 for (int i = 0; i < 4; i++)
@@ -1208,7 +1206,7 @@ namespace Texture.Dds
                                     // only put pixels out < width or height
                                     if (((x + i) < header.width) && ((y + j) < header.height))
                                     {
-                                        uint offset = (uint)(z * sizeofplane + (y + j) * bps + (x + i) * bpp + 3);
+                                        uint offset = (uint)(z * sizeOfPlane + (y + j) * bps + (x + i) * bpp + 3);
                                         rawData[offset] = alphas[bits & 0x07];
                                     }
                                     bits >>= 3;
@@ -1226,26 +1224,24 @@ namespace Texture.Dds
             // allocate bitmap
             int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
-            int sizeofplane = bps * header.height;
+            int sizeOfPlane = bps * header.height;
 
-            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
             
             fixed (byte* bytePtr = data)
             {
-	            byte* temp = bytePtr;
-                fixed (byte* destPtr = rawData)
+	            fixed (byte* destPtr = rawData)
                 {
-                    byte* destData = destPtr;
-                    int size;
+	                int size;
                     switch (pixelFormat)
                     {
                         case PixelFormat.R32F:  // Red float, green = blue = max
                             size = header.width * header.height * header.depth * 3;
                             for (int i = 0, j = 0; i < size; i += 3, j++)
                             {
-                                ((float*)destData)[i] = ((float*)temp)[j];
-                                ((float*)destData)[i + 1] = 1.0f;
-                                ((float*)destData)[i + 2] = 1.0f;
+                                ((float*)destPtr)[i] = ((float*)bytePtr)[j];
+                                ((float*)destPtr)[i + 1] = 1.0f;
+                                ((float*)destPtr)[i + 2] = 1.0f;
                             }
                             break;
 
@@ -1257,25 +1253,25 @@ namespace Texture.Dds
                             size = header.width * header.height * header.depth * 3;
                             for (int i = 0, j = 0; i < size; i += 3, j += 2)
                             {
-                                ((float*)destData)[i] = ((float*)temp)[j];
-                                ((float*)destData)[i + 1] = ((float*)temp)[j + 1];
-                                ((float*)destData)[i + 2] = 1.0f;
+                                ((float*)destPtr)[i] = ((float*)bytePtr)[j];
+                                ((float*)destPtr)[i + 1] = ((float*)bytePtr)[j + 1];
+                                ((float*)destPtr)[i + 2] = 1.0f;
                             }
                             break;
 
                         case PixelFormat.R16F:  // Red float, green = blue = max
                             size = header.width * header.height * header.depth * bpp;
-                            ConvR16ToFloat32((uint*)destData, (ushort*)temp, (uint)size);
+                            ConvR16ToFloat32((uint*)destPtr, (ushort*)bytePtr, (uint)size);
                             break;
 
                         case PixelFormat.A16B16G16R16F:  // Just convert from half to float.
                             size = header.width * header.height * header.depth * bpp;
-                            ConvFloat16ToFloat32((uint*)destData, (ushort*)temp, (uint)size);
+                            ConvFloat16ToFloat32((uint*)destPtr, (ushort*)bytePtr, (uint)size);
                             break;
 
                         case PixelFormat.G16R16F:  // Convert from half to float, set blue = max.
                             size = header.width * header.height * header.depth * bpp;
-                            ConvG16R16ToFloat32((uint*)destData, (ushort*)temp, (uint)size);
+                            ConvG16R16ToFloat32((uint*)destPtr, (ushort*)bytePtr, (uint)size);
                             break;
 	                    default:
 		                    throw new NotImplementedException("Decompression of PixelFormat " + pixelFormat + " has not been implemented in this plugin.");
@@ -1291,13 +1287,13 @@ namespace Texture.Dds
             // allocate bitmap
             int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
-            int sizeofplane = bps * header.height;
+            int sizeOfPlane = bps * header.height;
 
             if (header.Check16BitComponents())
                 return DecompressARGB16(header, data, pixelFormat);
 
             int sizeOfData = (header.width * header.pixelFormat.rgbbitcount / 8) * header.height * header.depth;
-            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
 
             if ((pixelFormat == PixelFormat.LUMINANCE) && (header.pixelFormat.rgbbitcount == 16) && (header.pixelFormat.rbitmask == 0xFFFF))
             {
@@ -1385,10 +1381,10 @@ namespace Texture.Dds
             // allocate bitmap
             int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
-            int sizeofplane = bps * header.height;
+            int sizeOfPlane = bps * header.height;
 
             int sizeOfData = (header.width * header.pixelFormat.rgbbitcount / 8) * header.height * header.depth;
-            byte[] rawData = new byte[header.depth * sizeofplane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
 
             uint readI = 0;
             uint redL, redR;

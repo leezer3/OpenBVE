@@ -95,7 +95,7 @@ namespace LibRender2.Menu
 		}
 
 		/// <summary>Computes the on-screen extent of the menu</summary>
-		public void ComputeExtent(MenuType menuType, OpenGlFont menuFont, double MaxWidth)
+		public void ComputeExtent(MenuType menuType, OpenGlFont menuFont, double MaxWidth, double LineHeight)
 		{
 			for (int i = 0; i < Items.Length; i++)
 			{
@@ -135,6 +135,7 @@ namespace LibRender2.Menu
 				if (!(Items[i] is MenuCaption && menuType != MenuType.RouteList && menuType != MenuType.GameStart && menuType != MenuType.Packages) && size.X > ItemWidth)
 					ItemWidth = size.X;
 			}
+			Height = Items.Length * LineHeight;
 		}
 	}
 }

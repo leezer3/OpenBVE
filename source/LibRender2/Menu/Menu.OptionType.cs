@@ -44,6 +44,10 @@ namespace LibRender2.Menu
 		/// <summary>Sets the total number of valid sounds</summary>
 		NumberOfSounds,
 		/// <summary>Sets whether to automatically reload the current objects</summary>
-		AutoReloadObjects
+		AutoReloadObjects,
+		/// <summary>Sets the shadow quality</summary>
+		ShadowQuality,
+		/// <summary>Sets whether shadow casters are filtered per cascade</summary>
+		ShadowFilterCascades
 	}
 }

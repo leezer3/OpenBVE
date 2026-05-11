@@ -83,11 +83,11 @@ namespace CsvRwRouteParser
 				wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
 				if (BeaconStructureIndex == -2)
 				{
-					obj.CreateObject(wpos, RailTransformation, new Transformation(Yaw, Pitch, Roll), -1, StartingDistance, EndingDistance, TrackPosition, Brightness);
+					obj.CreateObject(wpos, RailTransformation, new Transformation(Yaw, Pitch, Roll), new ObjectCreationParameters(TrackPosition, StartingDistance, EndingDistance));
 				}
 				else
 				{
-					obj.CreateObject(wpos, RailTransformation, new Transformation(Yaw, Pitch, Roll), StartingDistance, EndingDistance, TrackPosition);
+					obj.CreateObject(wpos, RailTransformation, new Transformation(Yaw, Pitch, Roll), new ObjectCreationParameters(TrackPosition, StartingDistance, EndingDistance));
 				}
 			}
 		}

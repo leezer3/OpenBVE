@@ -461,13 +461,19 @@ namespace ObjectBender {
 								}
 								break;
 							default:
-								if (isB3d) {
-									if (cells[j].Length == 0) {
-										builder.AppendLine();
-									} else if (cells[j].Length == 1) {
-										builder.AppendLine(cells[j][0]);
-									} else {
-										builder.AppendLine(cells[j][0] + " " + string.Join(",", cells[j], 1, cells[j].Length - 1));
+								if (isB3d)
+								{
+									switch (cells[j].Length)
+									{
+										case 0:
+											builder.AppendLine();
+											break;
+										case 1:
+											builder.AppendLine(cells[j][0]);
+											break;
+										default:
+											builder.AppendLine(cells[j][0] + " " + string.Join(",", cells[j], 1, cells[j].Length - 1));
+											break;
 									}
 								} else {
 									builder.AppendLine(string.Join(",", cells[j]));

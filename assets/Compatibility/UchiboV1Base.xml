@@ -84,7 +84,7 @@
 	</Object>
 	<Object>
 		<Name>CraTunR.b3d</Name>
-		<Path>Uchibo\CraTunR.csv</Path>
+		<Path>UchiboV1\CraTunR.csv</Path>
 		<Message></Message>
 	</Object>
 	<Object>
@@ -199,7 +199,7 @@
 	</Object>
 	<Object>
 		<Name>Signal3.b3d</Name>
-		<Path>Signals\Signal_3_0.csv</Path>
+		<Path>Signals\Japanese\Signal_3_0.csv</Path>
 		<Message></Message>
 	</Object>
 	<Object>

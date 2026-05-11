@@ -39,13 +39,13 @@
 	</Patch>
 	<Patch>
 		<Hash>11AF32EB117695B3B82C0FAA8C1B06E59605585423ACC64579C18124C1FBDF20</Hash>
-		<FileName>Gotha-Linie 1 - GT6 (ex Mannheim).rw</FileName>
+		<FileName>Gotha-Linie 4 - Abendliches Gewitter - KT4D.rw</FileName>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
 	<Patch>
 		<Hash>EC26F484327EE7CB930763772618BA1EC69D45C0F680AD33E41CC0BCBA869A53</Hash>
-		<FileName>Gotha-Linie 1 - GT6 (ex Mannheim).rw</FileName>
+		<FileName>Gotha-Linie 4 - KT4D.rw</FileName>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
@@ -94,6 +94,48 @@
 		<Hash>C066BADB3E14FF66F7CA89052CE6032E9995A16D2E4418D7F184644D22D0DB04</Hash>
 		<FileName>Linie 10_TW6000.rw</FileName>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<!-- Nokiabahn -->
+	<Patch>
+		<Hash>92B9842FC35C964ADFD5AB60D3BD27258F2F8C5D227D9B585C2E6FFA5FD1B8F9</Hash>
+		<FileName>bh.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>1EC61F55FFBCDA94B654829EE8D82E7562F7205897E29CC3889EB5627DAC0A25</Hash>
+		<FileName>hb.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<!-- Sued Wald -->
+	<Patch>
+		<Hash>E19915D2951969B7E5BD837389C7B6A67977EB33F5C86627DA0735FB3EA22FC9</Hash>
+		<FileName>MittenWassen BR628.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<SignalSet>DB_New.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>D597A01EB491EACB80621643FCA0297AD25AD064A4253BD39338C3DC73F6CA2E</Hash>
+		<FileName>MittenWassen CORADIA.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<SignalSet>DB_New.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>A81D435B334CF9FD101F200E47ABCF38846164AABD269B9B6A6AEA02F5F01857</Hash>
+		<FileName>WassenMitten BR628.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<SignalSet>DB_New.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>590224AF85CBA408C59B22568B4E978ECB24B49E53FF024B8C7380C75AB9014B</Hash>
+		<FileName>WassenMitten DESIRO.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<SignalSet>DB_New.xml</SignalSet>
 	</Patch>
   </RoutePatches>
 </openBVE>

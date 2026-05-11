@@ -1,4 +1,3 @@
-﻿using System;
 using System.Globalization;
 using OpenBveApi.World;
 // ReSharper disable UnusedMember.Global
@@ -272,12 +271,11 @@ namespace OpenBveApi.Math {
 		/// <summary>Divides two vectors.</summary>
 		/// <param name="a">The first vector.</param>
 		/// <param name="b">The second vector.</param>
-		/// <returns>The quotient of the two vectors.</returns>
-		/// <exception cref="System.DivideByZeroException">Raised when any member of the second vector is zero.</exception>
+		/// <returns>The quotient of the two vectors, or Vector3.Zero if any member of the second vector is zero.</returns>
 		public static Vector3 operator /(Vector3 a, Vector3 b)
 		{
 			if (b.X == 0.0 | b.Y == 0.0 | b.Z == 0.0) {
-				throw new DivideByZeroException();
+				return Vector3.Zero;
 			}
 
 			a.X /= b.X;
@@ -289,11 +287,10 @@ namespace OpenBveApi.Math {
 		/// <summary>Divides a vector by a scalar.</summary>
 		/// <param name="a">The vector.</param>
 		/// <param name="b">The scalar.</param>
-		/// <returns>The quotient of the vector and the scalar.</returns>
-		/// <exception cref="System.DivideByZeroException">Raised when the scalar is zero.</exception>
+		/// <returns>The quotient of the vector and the scalar, or Vector3.Zero if the scalar is zero.</returns>
 		public static Vector3 operator /(Vector3 a, double b) {
 			if (b == 0.0) {
-				throw new DivideByZeroException();
+				return Vector3.Zero;
 			}
 			double factor = 1.0 / b;
 			a.X *= factor;
@@ -305,12 +302,11 @@ namespace OpenBveApi.Math {
 		/// <summary>Divides a scalar by a vector.</summary>
 		/// <param name="a">The scalar.</param>
 		/// <param name="b">The vector.</param>
-		/// <returns>The quotient of the scalar and the vector.</returns>
-		/// <exception cref="DivideByZeroException">Raised when any member of the vector is zero.</exception>
+		/// <returns>The quotient of the scalar and the vector, or Vector3.Zero if any member of the vector is zero.</returns>
 		public static Vector3 operator /(double a, Vector3 b)
 		{
 			if (b.X == 0.0 | b.Y == 0.0 | b.Z == 0.0) {
-				throw new DivideByZeroException();
+				return Vector3.Zero;
 			}
 
 			b.X /= a;
@@ -568,12 +564,11 @@ namespace OpenBveApi.Math {
 		
 		/// <summary>Normalizes a vector.</summary>
 		/// <param name="vector">The vector.</param>
-		/// <returns>The normalized vector.</returns>
-		/// <exception cref="System.DivideByZeroException">Raised when the vector is a null vector.</exception>
+		/// <returns>The normalized vector, or Vector3.Zero if the input is a null vector.</returns>
 		public static Vector3 Normalize(Vector3 vector) {
 			double norm = vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z;
 			if (norm == 0.0) {
-				throw new DivideByZeroException();
+				return Vector3.Zero;
 			}
 
 			double factor = 1.0 / System.Math.Sqrt(norm);

@@ -75,13 +75,13 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <inheritdoc />
-		public override void CreateObject(Vector3 position, Transformation worldTransformation, Transformation localTransformation, int sectionIndex, double startingDistance, double endingDistance, double trackPosition, double brightness, bool duplicateMaterials = false)
+		public override void CreateObject(Vector3 position, Transformation worldTransformation, Transformation localTransformation, ObjectCreationParameters parameters)
 		{
 			// Update animations
 			for (int i = 0; i < Animations.Count; i++)
 			{
 				int key = Animations.ElementAt(i).Key;
-				Animations[key].Update(null, IsReversed, position, trackPosition, 0); // current state not applicable, no hand-crafted functions
+				Animations[key].Update(null, IsReversed, position, parameters.TrackPosition, 0); // current state not applicable, no hand-crafted functions
 			}
 			Transformation finalTransformation = new Transformation(localTransformation, worldTransformation);
 			Matrix4D[] matriciesToShader = new Matrix4D[Matricies.Length];
@@ -110,7 +110,7 @@ namespace OpenBveApi.Objects
 				Direction = finalTransformation.Z,
 				Up = finalTransformation.Y,
 				Side = finalTransformation.X,
-				TrackPosition = trackPosition
+				TrackPosition = parameters.TrackPosition
 			};
 			currentHost.AnimatedWorldObjects[a] = currentObject;
 			currentHost.AnimatedWorldObjectsUsed++;

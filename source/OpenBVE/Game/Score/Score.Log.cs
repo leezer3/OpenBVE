@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace OpenBve
 {
@@ -11,9 +12,7 @@ namespace OpenBve
 		/// <summary>The current time for score logging</summary>
 		internal static DateTime LogDateTime = DateTime.Now;
 		/// <summary>Holds all score log messages generated</summary>
-		internal static ScoreLog[] ScoreLogs = new ScoreLog[64];
-		/// <summary>The current score log message count</summary>
-		internal static int ScoreLogCount = 0;
+		internal static List<ScoreLog> ScoreLogs = new List<ScoreLog>();
 
 		/// <summary>Represents a score log message</summary>
 		internal struct ScoreLog
@@ -26,6 +25,14 @@ namespace OpenBve
 			internal double Position;
 			/// <summary>The in-game time at which this log message was generated at</summary>
 			internal double Time;
+
+			internal ScoreLog(double time, double position, int value, ScoreTextToken token)
+			{
+				Time = time;
+				Position = position;
+				Value = value;
+				TextToken = token;
+			}
 		}
 		
 	}

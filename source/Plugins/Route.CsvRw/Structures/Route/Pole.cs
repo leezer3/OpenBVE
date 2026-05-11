@@ -18,13 +18,13 @@ namespace CsvRwRouteParser
 		/// <summary>The structure type</summary>
 		internal int Type;
 
-		internal void Create(PoleDictionary Poles, Vector3 WorldPosition, Transformation RailTransformation, Vector2 Direction, double planar, double updown, double StartingDistance, double EndingDistance)
+		internal void Create(PoleDictionary Poles, Vector3 WorldPosition, Transformation RailTransformation, Vector2 Direction, double planar, double updown, ObjectCreationParameters parameters)
 		{
 			if (!Exists)
 			{
 				return;
 			}
-			double dz = StartingDistance / Interval;
+			double dz = parameters.StartingDistance / Interval;
 			dz -= Math.Floor(dz + 0.5);
 			if (dz >= -0.01 && dz <= 0.01)
 			{
@@ -32,12 +32,12 @@ namespace CsvRwRouteParser
 				{
 					if (Location <= 0.0)
 					{
-						Poles[0][Type].CreateObject(WorldPosition, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
+						Poles[0][Type].CreateObject(WorldPosition, RailTransformation, parameters);
 					}
 					else
 					{
 						UnifiedObject Pole = Poles[0][Type].Mirror();
-						Pole.CreateObject(WorldPosition, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
+						Pole.CreateObject(WorldPosition, RailTransformation, parameters);
 					}
 				}
 				else
@@ -51,7 +51,7 @@ namespace CsvRwRouteParser
 					double sz = -Direction.X;
 					Vector3 wpos = WorldPosition + new Vector3(sx * dx + w.X * dz, w.Y * dz, sz * dx + w.Z * dz);
 					int type = Type;
-					Poles[m][type].CreateObject(wpos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
+					Poles[m][type].CreateObject(wpos, RailTransformation, parameters);
 				}
 			}
 		}

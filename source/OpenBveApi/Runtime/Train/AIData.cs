@@ -17,9 +17,9 @@
 		/// <param name="handles">The driver handles.</param>
 		public AIData(Handles handles)
 		{
-			this.MyHandles = handles;
-			this.MyResponse = AIResponse.None;
-			this.TimeElapsed = 0;
+			MyHandles = handles;
+			MyResponse = AIResponse.None;
+			TimeElapsed = 0;
 		}
 
 		/// <summary>Creates a new instance of this class.</summary>
@@ -27,9 +27,9 @@
 		/// <param name="timeElapsed">The elapsed time</param>
 		public AIData(Handles handles, double timeElapsed)
 		{
-			this.MyHandles = handles;
-			this.MyResponse = AIResponse.None;
-			this.TimeElapsed = timeElapsed;
+			MyHandles = handles;
+			MyResponse = AIResponse.None;
+			TimeElapsed = timeElapsed;
 		}
 
 		/// <summary>Gets or sets the driver handles.</summary>

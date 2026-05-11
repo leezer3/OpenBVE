@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Math;
+using OpenBveApi.Objects;
 using OpenBveApi.World;
 using RouteManager2.SignalManager;
 
@@ -30,7 +31,7 @@ namespace CsvRwRouteParser
 				 */
 				Vector3 wpos2 = new Vector3(wpos);
 				wpos2 += Position.X * RailTransformation.X + dz * RailTransformation.Z;
-				CompatibilityObjects.SignalPost.CreateObject(wpos2, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, TrackPosition, Brightness);
+				CompatibilityObjects.SignalPost.CreateObject(wpos2, RailTransformation, Transformation.NullTransformation, new ObjectCreationParameters(TrackPosition, 0, StartingDistance, EndingDistance, Brightness));
 			}
 			if (ShowObject)
 			{

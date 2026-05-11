@@ -26,10 +26,7 @@ namespace SoundManager
 		private ContextHandle OpenAlContext;
 
 		/// <summary>A list of all sound buffers.</summary>
-		private SoundBuffer[] Buffers = new SoundBuffer[16];
-
-		/// <summary>The number of sound buffers.</summary>
-		private int BufferCount;
+		private List<SoundBuffer> Buffers = new List<SoundBuffer>();
 
 		/// <summary>A list of all sound sources.</summary>
 		protected internal static SoundSource[] Sources = new SoundSource[16];
@@ -66,7 +63,7 @@ namespace SoundManager
 		/// <summary>Whether sound events are currently suppressed</summary>
 		public static bool SuppressSoundEvents = false;
 
-		protected internal int systemMaxSounds = int.MaxValue;
+		protected internal int SystemMaxSounds = int.MaxValue;
 		// --- linear distance clamp model ---
 
 		/// <summary>The factor by which the inner radius is multiplied to give the outer radius.</summary>
@@ -140,12 +137,12 @@ namespace SoundManager
 			if ((Environment.OSVersion.Platform == PlatformID.Win32S | Environment.OSVersion.Platform == PlatformID.Win32Windows | Environment.OSVersion.Platform == PlatformID.Win32NT) && deviceName == "Generic Software")
 			{
 				/*
-				 * Creative OpenAL implementation on Windows seems to be limited to max 16 simulataneous sounds
+				 * Creative OpenAL implementation on Windows seems to be limited to max 16 simultaneous sounds
 				 * Now shipping OpenAL Soft, but detect this and don't glitch
 				 * Further note that the current version of OpenAL Soft (1.20.0 at the time of writing) does not like OpenTK
 				 * The version in use is 1.17.0 found here: https://openal-soft.org/openal-binaries/
 				 */
-				systemMaxSounds = 16;
+				SystemMaxSounds = 16;
 			}
 			try
 			{
@@ -240,7 +237,7 @@ namespace SoundManager
 			{
 				return null;
 			}
-			for (int i = 0; i < BufferCount; i++)
+			for (int i = 0; i < Buffers.Count; i++)
 			{
 				if (!(Buffers[i].Origin is PathOrigin))
 				{
@@ -252,21 +249,18 @@ namespace SoundManager
 					return Buffers[i];
 				}
 			}
-			if (Buffers.Length == BufferCount)
-			{
-				Array.Resize(ref Buffers, Buffers.Length << 1);
-			}
 
+			
 			try
 			{
-				Buffers[BufferCount] = new SoundBuffer(CurrentHost, path, radius);
+				SoundBuffer registeredBuffer = new SoundBuffer(CurrentHost, path, radius);
+				Buffers.Add(registeredBuffer);
+				return registeredBuffer;
 			}
 			catch
 			{
 				return null;
 			}
-			BufferCount++;
-			return Buffers[BufferCount - 1];
 		}
 
 		/// <summary>Registers a sound buffer and returns a handle to the buffer.</summary>
@@ -275,21 +269,16 @@ namespace SoundManager
 		/// <returns>The handle to the sound buffer.</returns>
 		public SoundBuffer RegisterBuffer(Sound data, double radius)
 		{
-			if (Buffers.Length == BufferCount)
-			{
-				Array.Resize(ref Buffers, Buffers.Length << 1);
-			}
-
 			try
 			{
-				Buffers[BufferCount] = new SoundBuffer(data, radius);
+				SoundBuffer registeredBuffer = new SoundBuffer(data, radius);
+				Buffers.Add(registeredBuffer);
+				return registeredBuffer;
 			}
 			catch
 			{
 				return null;
 			}
-			BufferCount++;
-			return Buffers[BufferCount - 1];
 		}
 
 		// --- loading buffers ---
@@ -307,10 +296,11 @@ namespace SoundManager
 		/// <summary>Unloads all sound buffers immediately.</summary>
 		internal void UnloadAllBuffers()
 		{
-			for (int i = 0; i < BufferCount; i++)
+			for (int i = 0; i < Buffers.Count; i++)
 			{
 				Buffers[i].Unload();
 			}
+			Buffers.Clear();
 		}
 
 		/// <summary>Unloads the specified microphone buffer.</summary>
@@ -342,24 +332,6 @@ namespace SoundManager
 		/// <param name="buffer">The sound buffer.</param>
 		/// <param name="pitch">The pitch change factor.</param>
 		/// <param name="volume">The volume change factor.</param>
-		/// <param name="position">The position. If a train and car are specified, the position is relative to the car, otherwise absolute.</param>
-		/// <param name="looped">Whether to play the sound in a loop.</param>
-		/// <returns>The sound source.</returns>
-		public SoundSource PlaySound(SoundBuffer buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, bool looped)
-		{
-			if (Sources.Length == SourceCount)
-			{
-				Array.Resize(ref Sources, Sources.Length << 1);
-			}
-			Sources[SourceCount] = new SoundSource(buffer, buffer.Radius, pitch, volume, position, null, looped);
-			SourceCount++;
-			return Sources[SourceCount - 1];
-		}
-
-		/// <summary>Plays a sound.</summary>
-		/// <param name="buffer">The sound buffer.</param>
-		/// <param name="pitch">The pitch change factor.</param>
-		/// <param name="volume">The volume change factor.</param>
 		/// <param name="position">The position. If a train car is specified, the position is relative to the car, otherwise absolute.</param>
 		/// <param name="parent">The parent object the sound is attached to, or a null reference.</param>
 		/// <param name="looped">Whether to play the sound in a loop.</param>
@@ -373,29 +345,6 @@ namespace SoundManager
 					Array.Resize(ref Sources, Sources.Length << 1);
 				}
 				Sources[SourceCount] = new SoundSource(b, b.Radius, pitch, volume, position, parent, looped);
-				SourceCount++;
-				return Sources[SourceCount - 1];
-			}
-
-			return null;
-		}
-
-		/// <summary>Plays a sound.</summary>
-		/// <param name="buffer">The sound buffer.</param>
-		/// <param name="pitch">The pitch change factor.</param>
-		/// <param name="volume">The volume change factor.</param>
-		/// <param name="position">The position. If a train car is specified, the position is relative to the car, otherwise absolute.</param>
-		/// <param name="looped">Whether to play the sound in a loop.</param>
-		/// <returns>The sound source.</returns>
-		public SoundSource PlaySound(SoundHandle buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, bool looped)
-		{
-			if (buffer is SoundBuffer b)
-			{
-				if (Sources.Length == SourceCount)
-				{
-					Array.Resize(ref Sources, Sources.Length << 1);
-				}
-				Sources[SourceCount] = new SoundSource(b, b.Radius, pitch, volume, position, null, looped);
 				SourceCount++;
 				return Sources[SourceCount - 1];
 			}
@@ -512,7 +461,7 @@ namespace SoundManager
 		/// <returns>The number of registered sound buffers.</returns>
 		public int GetNumberOfRegisteredBuffers()
 		{
-			return BufferCount;
+			return Buffers.Count;
 		}
 
 		/// <summary>Gets the number of loaded sound buffers.</summary>
@@ -520,7 +469,7 @@ namespace SoundManager
 		public int GetNumberOfLoadedBuffers()
 		{
 			int count = 0;
-			for (int i = 0; i < BufferCount; i++)
+			for (int i = 0; i < Buffers.Count; i++)
 			{
 				if (Buffers[i].Loaded == SoundBufferState.Loading || Buffers[i].Loaded == SoundBufferState.Loaded)
 				{

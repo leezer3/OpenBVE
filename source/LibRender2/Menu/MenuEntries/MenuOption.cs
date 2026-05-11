@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using OpenBveApi.Graphics;
+using OpenBveApi.Interface;
 
 namespace LibRender2.Menu
 {
@@ -148,6 +149,29 @@ namespace LibRender2.Menu
 							break;
 					}
 					return;
+				case OptionType.ShadowQuality:
+					switch (BaseMenu.CurrentOptions.ShadowResolution)
+					{
+						case ShadowMapResolution.Off:
+							CurrentlySelectedOption = 0;
+							break;
+						case ShadowMapResolution.Low:
+							CurrentlySelectedOption = 1;
+							break;
+						case ShadowMapResolution.Medium:
+							CurrentlySelectedOption = 2;
+							break;
+						case ShadowMapResolution.High:
+							CurrentlySelectedOption = 3;
+							break;
+						case ShadowMapResolution.Ultra:
+							CurrentlySelectedOption = 4;
+							break;
+					}
+					return;
+				case OptionType.ShadowFilterCascades:
+					CurrentlySelectedOption = BaseMenu.CurrentOptions.ShadowFilterCascades ? 0 : 1;
+					return;
 			}
 			CurrentlySelectedOption = 0;
 		}
@@ -264,6 +288,39 @@ namespace LibRender2.Menu
 					break;
 				case OptionType.NumberOfSounds:
 					BaseMenu.CurrentOptions.SoundNumber = int.Parse((string)CurrentOption, NumberStyles.Integer);
+					break;
+				case OptionType.ShadowQuality:
+					// if finer control is wanted, edit the options file (GL menu options are hacky at best)
+					switch (CurrentlySelectedOption)
+					{
+						case 0:
+							BaseMenu.CurrentOptions.ShadowResolution = ShadowMapResolution.Off;
+							break;
+						case 1:
+							BaseMenu.CurrentOptions.ShadowResolution = ShadowMapResolution.Low;
+							BaseMenu.CurrentOptions.ShadowDrawDistance = ShadowDistance.Medium;
+							BaseMenu.CurrentOptions.ShadowCascades = ShadowCascadeCount.Two;
+							break;
+						case 2:
+							BaseMenu.CurrentOptions.ShadowResolution = ShadowMapResolution.Medium;
+							BaseMenu.CurrentOptions.ShadowDrawDistance = ShadowDistance.Far;
+							BaseMenu.CurrentOptions.ShadowCascades = ShadowCascadeCount.Three;
+							break;
+						case 3:
+							BaseMenu.CurrentOptions.ShadowResolution = ShadowMapResolution.High;
+							BaseMenu.CurrentOptions.ShadowDrawDistance = ShadowDistance.VeryFar;
+							BaseMenu.CurrentOptions.ShadowCascades = ShadowCascadeCount.Four;
+							break;
+						case 4:
+							BaseMenu.CurrentOptions.ShadowResolution = ShadowMapResolution.Ultra;
+							BaseMenu.CurrentOptions.ShadowDrawDistance = ShadowDistance.ViewingDistance;
+							BaseMenu.CurrentOptions.ShadowCascades = ShadowCascadeCount.Four;
+							break;
+					}
+					BaseMenu.Renderer.InitializeShadows();
+					break;
+				case OptionType.ShadowFilterCascades:
+					BaseMenu.CurrentOptions.ShadowFilterCascades = !BaseMenu.CurrentOptions.ShadowFilterCascades;
 					break;
 
 			}

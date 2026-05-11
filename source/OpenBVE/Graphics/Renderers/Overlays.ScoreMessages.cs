@@ -15,7 +15,7 @@ namespace OpenBve.Graphics.Renderers
 		{
 			// score messages
 			int n = Game.ScoreMessages.Count;
-			double totalwidth = 16.0f;
+			double totalWidth = 16.0f;
 			double[] widths = new double[n];
 			double[] heights = new double[n];
 			for (int j = 0; j < n; j++)
@@ -24,16 +24,16 @@ namespace OpenBve.Graphics.Renderers
 				widths[j] = size.X;
 				heights[j] = size.Y;
 				double a = widths[j] - j * element.Value1;
-				if (a > totalwidth)
+				if (a > totalWidth)
 				{
-					totalwidth = a;
+					totalWidth = a;
 				}
 			}
-			Game.ScoreMessagesRendererSize.X += 16.0 * timeElapsed * (totalwidth - Game.ScoreMessagesRendererSize.X);
-			totalwidth = (float)Game.ScoreMessagesRendererSize.X;
+			Game.ScoreMessagesRendererSize.X += 16.0 * timeElapsed * (totalWidth - Game.ScoreMessagesRendererSize.X);
+			totalWidth = (float)Game.ScoreMessagesRendererSize.X;
 			element.CalculateViewingPlaneSize(out double lw, out double rw, out double lcrh);
 			// start
-			double w = element.Alignment.X == 0 ? lw + rw + 128 : totalwidth + lw + rw;
+			double w = element.Alignment.X == 0 ? lw + rw + 128 : totalWidth + lw + rw;
 			double h = element.Value2 * n;
 			double x = element.Alignment.X < 0 ? 0.0 : element.Alignment.X > 0 ? renderer.Screen.Width - w : 0.5 * (renderer.Screen.Width - w);
 			double y = element.Alignment.Y < 0 ? 0.0 : element.Alignment.Y > 0 ? renderer.Screen.Height - h : 0.5 * (renderer.Screen.Height - h);

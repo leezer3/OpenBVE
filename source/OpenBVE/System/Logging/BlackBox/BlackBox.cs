@@ -49,15 +49,12 @@ namespace OpenBve
 								Game.BlackBoxEntries.Add(new BlackBoxEntry(Reader));
 							}
 
-							Game.ScoreLogCount = Reader.ReadInt32();
-							Game.ScoreLogs = new Game.ScoreLog[Game.ScoreLogCount];
+
+							int scoreLogCount = Reader.ReadInt32();
 							Game.CurrentScore.CurrentValue = 0;
-							for (int i = 0; i < Game.ScoreLogCount; i++)
+							for (int i = 0; i < scoreLogCount; i++)
 							{
-								Game.ScoreLogs[i].Time = Reader.ReadDouble();
-								Game.ScoreLogs[i].Position = Reader.ReadDouble();
-								Game.ScoreLogs[i].Value = Reader.ReadInt32();
-								Game.ScoreLogs[i].TextToken = (Game.ScoreTextToken) Reader.ReadInt16();
+								Game.ScoreLogs.Add(new Game.ScoreLog(Reader.ReadDouble(), Reader.ReadDouble(), Reader.ReadInt32(), (Game.ScoreTextToken)Reader.ReadInt16()));
 								Game.CurrentScore.CurrentValue += Game.ScoreLogs[i].Value;
 							}
 
@@ -84,8 +81,7 @@ namespace OpenBve
 			Game.LogTrainName = "";
 			Game.LogDateTime = DateTime.Now;
 			Game.BlackBoxEntries = new List<BlackBoxEntry>();
-			Game.ScoreLogs = new Game.ScoreLog[64];
-			Game.ScoreLogCount = 0;
+			Game.ScoreLogs = new List<Game.ScoreLog>();
 		}
 
 
@@ -116,8 +112,8 @@ namespace OpenBve
 						const short Version = 1;
 						Writer.Write(Identifier);
 						Writer.Write(Version);
-						Writer.Write(Game.LogRouteName);
-						Writer.Write(Game.LogTrainName);
+						Writer.Write(Game.LogRouteName == null ? "Unknown" : Game.LogRouteName);
+						Writer.Write(Game.LogTrainName == null ? "Unknown" : Game.LogTrainName);
 						Writer.Write(Game.LogDateTime.ToBinary());
 						Writer.Write((short) CurrentOptions.GameMode);
 						Writer.Write(Game.BlackBoxEntries.Count);
@@ -136,8 +132,8 @@ namespace OpenBve
 							Writer.Write((short)0);
 						}
 
-						Writer.Write(Game.ScoreLogCount);
-						for (int i = 0; i < Game.ScoreLogCount; i++)
+						Writer.Write(Game.ScoreLogs.Count);
+						for (int i = 0; i < Game.ScoreLogs.Count; i++)
 						{
 							Writer.Write(Game.ScoreLogs[i].Time);
 							Writer.Write(Game.ScoreLogs[i].Position);

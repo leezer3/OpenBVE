@@ -34,7 +34,7 @@ namespace OpenBve
 		internal static void ExportScore(string File) {
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			System.Text.StringBuilder Builder = new System.Text.StringBuilder();
-			string[][] Lines = new string[Game.ScoreLogCount + 1][];
+			string[][] Lines = new string[Game.ScoreLogs.Count + 1][];
 			Lines[0] = new[] {
 				Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","time"}),
 				Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","position"}),
@@ -44,7 +44,7 @@ namespace OpenBve
 			};
 			int Columns = Lines[0].Length;
 			int TotalScore = 0;
-			for (int i = 0; i < Game.ScoreLogCount; i++) {
+			for (int i = 0; i < Game.ScoreLogs.Count; i++) {
 				int j = i + 1;
 				Lines[j] = new string[Columns];
 				{

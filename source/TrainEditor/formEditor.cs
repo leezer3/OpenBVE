@@ -4,6 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
 using System.Windows.Forms;
+using Formats.OpenBve;
 using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -299,16 +300,10 @@ namespace TrainEditor {
 			// finish
 			return true;
 		}
-		/// <summary>Specifies constants defining the allowed number range for a conversion process.</summary>
-		private enum NumberRange {
-			Any = 0,
-			Positive = 1,
-			NonNegative = 2
-		}
 		/// <summary>Saves the content of a textbox into an output parameter and creates a message box if the textbox contains invalid data.</summary>
 		/// <param name="Box">A textbox control.</param>
 		/// <param name="Description">The description of the textbox.</param>
-		/// <param name="Page">The tabpage the textbox resides in.</param>
+		/// <param name="Page">The TabPage the textbox resides in.</param>
 		/// <param name="Range">The allowed number range.</param>
 		/// <param name="Value">The output parameter that receives the numeric value of the textbox content.</param>
 		/// <returns>A boolean indicating the success of the operation.</returns>
@@ -642,7 +637,7 @@ namespace TrainEditor {
 		private void PictureboxAccelerationMouseMove(object sender, MouseEventArgs e) {
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			double x = e.X / (pictureboxAcceleration.ClientRectangle.Width - 1.0);
-			double y = (1.0 - e.Y / (pictureboxAcceleration.ClientRectangle.Height - 1.0));
+			double y = 1.0 - e.Y / (pictureboxAcceleration.ClientRectangle.Height - 1.0);
 			x = AccelerationMaximumX * x;
 			y = AccelerationMaximumY * y;
 			labelAccelerationInfo.Text =
@@ -1289,9 +1284,7 @@ namespace TrainEditor {
 							ib--;
 						}
 						int j;
-						if (!int.TryParse(comboboxSoundIndex.Text, NumberStyles.Integer, CultureInfo.InvariantCulture, out j)) {
-							j = -1;
-						} else if (j < -1) {
+						if (!int.TryParse(comboboxSoundIndex.Text, NumberStyles.Integer, CultureInfo.InvariantCulture, out j) || j < -1) {
 							j = -1;
 						}
 						for (int i = ia ; i <= ib; i++) {

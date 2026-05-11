@@ -52,10 +52,10 @@ namespace TrainManager.SafetySystems {
 			externalCrashed = false;
 			PluginTitle = System.IO.Path.GetFileName(pluginFile);
 			//Load the plugin via the proxy callback
-			var handle = Process.GetCurrentProcess().MainWindowHandle;
+			IntPtr handle = Process.GetCurrentProcess().MainWindowHandle;
 			try
 			{
-				var hostProcess = new Process();
+				Process hostProcess = new Process();
 				hostProcess.StartInfo.FileName = @"Win32PluginProxy.exe";
 				hostProcess.Start();
 				HostInterface.Win32PluginHostReady.WaitOne();

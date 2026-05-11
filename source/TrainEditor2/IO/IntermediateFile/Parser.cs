@@ -268,7 +268,7 @@ namespace TrainEditor2.IO.IntermediateFile
 				LocationY = sourceLocation.Y,
 				LocationZ = sourceLocation.Z,
 				InitialSize = (double)parent.Element("MaximumSize"),
-				MaximiumSize = (double)parent.Element("MaximumGrownSize"),
+				MaximumSize = (double)parent.Element("MaximumGrownSize"),
 				TextureFile = (string)parent.Element("Texture")
 			};
 		}

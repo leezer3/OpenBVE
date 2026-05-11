@@ -70,25 +70,22 @@ namespace ObjectBender {
 									if (!double.TryParse(value, NumberStyles.Float, culture, out options.RailGauge)) {
 										Console.WriteLine("Invalid float in -g parameter.");
 										return;
-									} else {
-										options.RailGauge *= 0.001;
 									}
+									options.RailGauge *= 0.001;
 									break;
 								case 'u':
 									if (!double.TryParse(value, NumberStyles.Float, culture, out options.InitialCant)) {
 										Console.WriteLine("Invalid float in -u parameter.");
 										return;
-									} else {
-										options.InitialCant *= 0.001;
 									}
+									options.InitialCant *= 0.001;
 									break;
 								case 'v':
 									if (!double.TryParse(value, NumberStyles.Float, culture, out options.FinalCant)) {
 										Console.WriteLine("Invalid float in -v parameter.");
 										return;
-									} else {
-										options.FinalCant *= 0.001;
 									}
+									options.FinalCant *= 0.001;
 									break;
 								default:
 									help = true;

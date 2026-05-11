@@ -356,15 +356,7 @@ namespace OpenBve
 				}
 				if (Value != 0 & Count)
 				{
-					if (ScoreLogCount == ScoreLogs.Length)
-					{
-						Array.Resize(ref ScoreLogs, ScoreLogs.Length << 1);
-					}
-					ScoreLogs[ScoreLogCount].Value = Value;
-					ScoreLogs[ScoreLogCount].TextToken = TextToken;
-					ScoreLogs[ScoreLogCount].Position = TrainManager.PlayerTrain.Cars[0].TrackPosition;
-					ScoreLogs[ScoreLogCount].Time = Program.CurrentRoute.SecondsSinceMidnight;
-					ScoreLogCount++;
+					ScoreLogs.Add(new ScoreLog(Program.CurrentRoute.SecondsSinceMidnight, TrainManager.PlayerTrain.Cars[0].TrackPosition, Value, TextToken));
 				}
 			}
 

@@ -65,7 +65,7 @@ namespace ObjectViewer
 								{
 									potentialFiles = Directory.GetFiles(SearchDirectory);
 									// n.b. sort order of returned files is not guaranteed, so case invariant sort
-									Array.Sort(potentialFiles,(x, y) => String.Compare(x, y, StringComparison.InvariantCultureIgnoreCase));
+									Array.Sort(potentialFiles,(x, y) => string.Compare(x, y, StringComparison.InvariantCultureIgnoreCase));
 									directoryList = Directory.GetDirectories(SearchDirectory);
 								}
 								catch
@@ -82,7 +82,7 @@ namespace ObjectViewer
 								{
 									potentialFiles = Directory.GetFiles(SearchDirectory);
 									// n.b. sort order of returned files is not guaranteed, so case invariant sort
-									Array.Sort(potentialFiles, (x, y) => String.Compare(x, y, StringComparison.InvariantCultureIgnoreCase));
+									Array.Sort(potentialFiles, (x, y) => string.Compare(x, y, StringComparison.InvariantCultureIgnoreCase));
 									directoryList = Directory.GetDirectories(SearchDirectory);
 								}
 								catch
@@ -194,8 +194,8 @@ namespace ObjectViewer
 						break;
 				}
 
-				ComputeExtent(menuType, Game.Menu.MenuFont, maxWidth);
-				Height = Items.Length * Game.Menu.lineHeight;
+				ComputeExtent(menuType, Game.Menu.MenuFont, maxWidth, Game.Menu.LineHeight);
+				Height = Items.Length * Game.Menu.LineHeight;
 				TopItem = 0;
 
 			}

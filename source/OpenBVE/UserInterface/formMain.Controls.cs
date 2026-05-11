@@ -859,6 +859,28 @@ namespace OpenBve {
 										}
 									}
 									break;
+								case ConfigurationLink.Zuiki:
+									for (int p = 0; p < InputDevicePlugin.AvailablePluginInfos.Count; p++)
+									{
+										if (string.Equals(InputDevicePlugin.AvailablePluginInfos[p].FileName, "ZuikiInput.dll", StringComparison.InvariantCultureIgnoreCase))
+										{
+											if (InputDevicePlugin.AvailablePluginInfos[p].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable)
+											{
+												InputDevicePlugin.AvailablePlugins[p].Config(this);
+											}
+											else if (InputDevicePlugin.AvailablePluginInfos[p].Status == InputDevicePlugin.PluginInfo.PluginStatus.Disable)
+											{
+												InputDevicePlugin.CallPluginLoad(p, Program.CurrentHost);
+												UpdateInputDeviceListViewItem(listviewInputDevice.Items[p], p, true);
+												if (listviewInputDevice.SelectedIndices.Contains(p))
+												{
+													UpdateInputDeviceComponent(InputDevicePlugin.AvailablePluginInfos[p].Status);
+												}
+												InputDevicePlugin.AvailablePlugins[p].Config(this);
+											}
+										}
+									}
+									break;
 								case ConfigurationLink.RailDriver:
 									using (FormRaildriverCalibration f = new FormRaildriverCalibration())
 									{

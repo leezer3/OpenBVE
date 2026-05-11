@@ -32,23 +32,41 @@ namespace LibRender2.Primitives
 	public class Button : GLControl
 	{
 		/// <summary>The text displayed on the button</summary>
-		public readonly string Text;
+		public string Text
+		{
+			get => _text;
+			set
+			{
+				_text = value;
+				Size = Font.MeasureString(Text) * 1.5 * Renderer.currentOptions.UserInterfaceScaleFactor;
+			}
+		}
+
+		/// <summary>Backing property for the text</summary>
+		private string _text;
+		/// <summary> Whether the button is currently enabled</summary>
+		public bool Enabled;
+
+		
 		/// <summary>The highlight color of the button</summary>
 		public Color128 HighlightColor;
-		/// <summary>The color of the text on the button</summary>
-		public Color128 TextColor;
+		/// <summary>The color of the text on the button, when enabled</summary>
+		public Color128 EnabledTextColor;
+		/// <summary>The color of the text on the button, when disabled</summary>
+		public Color128 DisabledTextColor;
 		/// <summary>The font for the button</summary>
 		public OpenGlFont Font;
 
 		public Button(BaseRenderer renderer, string text) : base(renderer)
 		{
-			Text = text;
 			Font = Renderer.Fonts.LargeFont;
-			Size = Font.MeasureString(Text) * 1.5;
+			Text = text;
+			Enabled = true;
 			// default colors to match GLMenu
 			BackgroundColor = Color128.Black;
 			HighlightColor = Color128.Orange;
-			TextColor = Color128.White;
+			EnabledTextColor = Color128.White;
+			DisabledTextColor = Color128.Grey;
 		}
 
 		public override void Draw()
@@ -58,11 +76,11 @@ namespace LibRender2.Primitives
 				return;
 			}
 			Renderer.Rectangle.Draw(Texture, Location, Size, BackgroundColor);
-			if (CurrentlySelected)
+			if (CurrentlySelected && Enabled)
 			{
 				Renderer.Rectangle.Draw(Texture, Location + Size * 0.1, Size - (Size * 0.2), HighlightColor);
 			}
-			Renderer.OpenGlString.Draw(Font, Text, Location + (Size * 0.15), TextAlignment.TopLeft, TextColor);
+			Renderer.OpenGlString.Draw(Font, Text, Location + (Size * 0.15), TextAlignment.TopLeft, Enabled ?  EnabledTextColor : DisabledTextColor);
 		}
 
 		public override void MouseMove(int x, int y)
@@ -73,7 +91,7 @@ namespace LibRender2.Primitives
 		public override void MouseDown(int x, int y)
 		{
 			MouseMove(x, y);
-			if (CurrentlySelected)
+			if (CurrentlySelected && Enabled)
 			{
 				OnClick?.Invoke(this, EventArgs.Empty);
 			}

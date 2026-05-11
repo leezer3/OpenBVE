@@ -151,7 +151,7 @@ namespace LibRender2.Backgrounds
 				// fog
 				if (renderer.Fog.Enabled)
 				{
-					renderer.DefaultShader.SetIsFog(true);
+					renderer.DefaultShader.SetFog(true);
 					renderer.DefaultShader.SetFog(renderer.Fog);
 				}
 

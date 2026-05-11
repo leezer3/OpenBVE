@@ -22,6 +22,8 @@ namespace OpenBveApi.Objects
 		public Matrix4D[] Matricies;
 		/// <summary>The index of the storage buffer for the matrices</summary>
 		public int MatrixBufferIndex;
+		/// <summary>Whether shadow casting is disabled for this object</summary>
+		public bool DisableShadowCasting;
 		/// <summary>The translation matrix to be applied</summary>
 		public Matrix4D Translation
 		{

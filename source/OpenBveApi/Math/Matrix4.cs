@@ -1,4 +1,4 @@
-﻿/*
+/*
 Some Matrix math code derived from OpenTK-
 
 Copyright (c) 2006 - 2008 The Open Toolkit library.
@@ -216,8 +216,8 @@ namespace OpenBveApi.Math
 				z = Vector3.Normalize(eyePosition - targetPosition);
 			}
 
-			Vector3 x = Vector3.Cross(Up, z);
-			Vector3 y = Vector3.Cross(z, x);
+			Vector3 x = Vector3.Normalize(Vector3.Cross(Up, z));
+			Vector3 y = Vector3.Normalize(Vector3.Cross(z, x));
 
 
 			Matrix4D rotationMatrix = new Matrix4D
@@ -600,6 +600,62 @@ namespace OpenBveApi.Math
             }
             return mat;
         }
+
+		/// <summary>Computes the inverse of a 4x4 matrix using cofactor expansion.</summary>
+		public static Matrix4D Inverse(Matrix4D m)
+		{
+			// Extract elements for readability
+			double a00 = m.Row0.X, a01 = m.Row0.Y, a02 = m.Row0.Z, a03 = m.Row0.W;
+			double a10 = m.Row1.X, a11 = m.Row1.Y, a12 = m.Row1.Z, a13 = m.Row1.W;
+			double a20 = m.Row2.X, a21 = m.Row2.Y, a22 = m.Row2.Z, a23 = m.Row2.W;
+			double a30 = m.Row3.X, a31 = m.Row3.Y, a32 = m.Row3.Z, a33 = m.Row3.W;
+
+			double b00 = a00 * a11 - a01 * a10;
+			double b01 = a00 * a12 - a02 * a10;
+			double b02 = a00 * a13 - a03 * a10;
+			double b03 = a01 * a12 - a02 * a11;
+			double b04 = a01 * a13 - a03 * a11;
+			double b05 = a02 * a13 - a03 * a12;
+			double b06 = a20 * a31 - a21 * a30;
+			double b07 = a20 * a32 - a22 * a30;
+			double b08 = a20 * a33 - a23 * a30;
+			double b09 = a21 * a32 - a22 * a31;
+			double b10 = a21 * a33 - a23 * a31;
+			double b11 = a22 * a33 - a23 * a32;
+
+			double det = b00 * b11 - b01 * b10 + b02 * b09 +
+			             b03 * b08 - b04 * b07 + b05 * b06;
+
+			if (System.Math.Abs(det) < 1e-12)
+			{
+				return Identity; // singular matrix fallback
+			}
+
+			double invDet = 1.0 / det;
+
+			Matrix4D result;
+			result.Row0.X = (a11 * b11 - a12 * b10 + a13 * b09) * invDet;
+			result.Row0.Y = (-a01 * b11 + a02 * b10 - a03 * b09) * invDet;
+			result.Row0.Z = (a31 * b05 - a32 * b04 + a33 * b03) * invDet;
+			result.Row0.W = (-a21 * b05 + a22 * b04 - a23 * b03) * invDet;
+
+			result.Row1.X = (-a10 * b11 + a12 * b08 - a13 * b07) * invDet;
+			result.Row1.Y = (a00 * b11 - a02 * b08 + a03 * b07) * invDet;
+			result.Row1.Z = (-a30 * b05 + a32 * b02 - a33 * b01) * invDet;
+			result.Row1.W = (a20 * b05 - a22 * b02 + a23 * b01) * invDet;
+
+			result.Row2.X = (a10 * b10 - a11 * b08 + a13 * b06) * invDet;
+			result.Row2.Y = (-a00 * b10 + a01 * b08 - a03 * b06) * invDet;
+			result.Row2.Z = (a30 * b04 - a31 * b02 + a33 * b00) * invDet;
+			result.Row2.W = (-a20 * b04 + a21 * b02 - a23 * b00) * invDet;
+
+			result.Row3.X = (-a10 * b09 + a11 * b07 - a12 * b06) * invDet;
+			result.Row3.Y = (a00 * b09 - a01 * b07 + a02 * b06) * invDet;
+			result.Row3.Z = (-a30 * b03 + a31 * b01 - a32 * b00) * invDet;
+			result.Row3.W = (a20 * b03 - a21 * b01 + a22 * b00) * invDet;
+
+			return result;
+		}
 
         /// <summary>
         /// Inverts a matrix

@@ -191,17 +191,17 @@ namespace OpenBve
 					}
 				}
 				// door states
-				bool doorsopen = false;
+				bool doorsOpen = false;
 				for (int i = 0; i < Train.Cars.Length; i++)
 				{
 					for (int j = 0; j < Train.Cars[i].Doors.Length; j++)
 					{
 						if (Train.Cars[i].Doors[j].State != 0.0)
 						{
-							doorsopen = true;
+							doorsOpen = true;
 							break;
 						}
-						if (doorsopen) break;
+						if (doorsOpen) break;
 					}
 				}
 				// do the ai
@@ -245,7 +245,7 @@ namespace OpenBve
 					Train.Handles.Power.ApplyState(-1, true);
 					CurrentInterval = 0.5;
 				}
-				else if (doorsopen | Train.StationState == TrainStopState.Boarding)
+				else if (doorsOpen | Train.StationState == TrainStopState.Boarding)
 				{
 					// door opened or boarding at station
 					PowerNotchAtWhichWheelSlipIsObserved = Train.Handles.Power.MaximumNotch + 1;
@@ -421,33 +421,33 @@ namespace OpenBve
 					{
 						lim = Train.CurrentSectionLimit;
 					}
-					double powerstart, powerend, brakestart;
+					double powerStart, powerEnd, brakeStart;
 					if (double.IsPositiveInfinity(lim))
 					{
-						powerstart = lim;
-						powerend = lim;
-						brakestart = lim;
+						powerStart = lim;
+						powerEnd = lim;
+						brakeStart = lim;
 					}
 					else
 					{
 						lim *= CurrentSpeedFactor;
 						if (Train.CurrentSpeed < 8.0)
 						{
-							powerstart = 0.75 * lim;
-							powerend = 0.95 * lim;
+							powerStart = 0.75 * lim;
+							powerEnd = 0.95 * lim;
 						}
 						else
 						{
-							powerstart = lim - 2.5;
-							powerend = lim - 1.5;
+							powerStart = lim - 2.5;
+							powerEnd = lim - 1.5;
 						}
 						if (BrakeMode)
 						{
-							brakestart = powerend;
+							brakeStart = powerEnd;
 						}
 						else
 						{
-							brakestart = lim + 0.5;
+							brakeStart = lim + 0.5;
 						}
 					}
 					dec = 0.0;
@@ -488,9 +488,9 @@ namespace OpenBve
 						decelerationStep *= 1.25;
 					}
 
-					if (Train.CurrentSpeed > 0.0 & Train.CurrentSpeed > brakestart)
+					if (Train.CurrentSpeed > 0.0 & Train.CurrentSpeed > brakeStart)
 					{
-						dec = decelerationStep + 0.1 * (Train.CurrentSpeed - brakestart);
+						dec = decelerationStep + 0.1 * (Train.CurrentSpeed - brakeStart);
 					}
 					reduceDecelerationCruiseAndStart = false;
 					// look ahead
@@ -523,8 +523,8 @@ namespace OpenBve
 									{
 										dist -= 5.0;
 									}
-									var edec = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
-									if (edec > dec) dec = edec;
+									double expectedDeceleration = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
+									if (expectedDeceleration > dec) dec = expectedDeceleration;
 								}
 								else
 								{
@@ -544,8 +544,8 @@ namespace OpenBve
 					{
 						// brake
 						BrakeMode = true;
-						double decdiff = -acc - dec;
-						if (decdiff < -decelerationStep)
+						double decelerationDifference = -acc - dec;
+						if (decelerationDifference < -decelerationStep)
 						{
 							// brake start
 							if (Train.Handles.Power.Driver == 0)
@@ -560,7 +560,7 @@ namespace OpenBve
 							CurrentInterval *= 0.4;
 							if (CurrentInterval < 0.3) CurrentInterval = 0.3;
 						}
-						else if (decdiff > decelerationStep)
+						else if (decelerationDifference > decelerationStep)
 						{
 							// brake stop
 							Train.Handles.Brake.ApplyState(-1, true);
@@ -589,7 +589,7 @@ namespace OpenBve
 					else if (dec > decelerationCruise)
 					{
 						BrakeMode = false;
-						if (Train.Handles.Power.Driver == 0 && Train.CurrentSpeed > powerend && Train.Specs.CurrentAverageAcceleration > 0)
+						if (Train.Handles.Power.Driver == 0 && Train.CurrentSpeed > powerEnd && Train.Specs.CurrentAverageAcceleration > 0)
 						{
 							// We are above the power end threshold, but still accelerating e.g. on a gradient
 							// Blip the brakes to slow us down
@@ -598,7 +598,7 @@ namespace OpenBve
 						}
 						else if (Train.Specs.CurrentAverageAcceleration < 0)
 						{
-							if (Train.CurrentSpeed < powerend)
+							if (Train.CurrentSpeed < powerEnd)
 							{
 								// No longer accelerating, so cut the brakes for cruise
 								Train.Handles.Brake.ApplyState(-1, true);
@@ -619,24 +619,24 @@ namespace OpenBve
 					{
 						// power
 						BrakeMode = false;
-						double acclim;
+						double accelerationLimit;
 						if (!double.IsInfinity(lim))
 						{
 							double d = lim - Train.CurrentSpeed;
 							if (d > 0.0)
 							{
-								acclim = 0.1 / (0.1 * d + 1.0) - 0.12;
+								accelerationLimit = 0.1 / (0.1 * d + 1.0) - 0.12;
 							}
 							else
 							{
-								acclim = -1.0;
+								accelerationLimit = -1.0;
 							}
 						}
 						else
 						{
-							acclim = -1.0;
+							accelerationLimit = -1.0;
 						}
-						if (Train.CurrentSpeed < powerstart)
+						if (Train.CurrentSpeed < powerStart)
 						{
 							// power start (under-speed)
 							if (Train.Handles.Brake.Driver == 0)
@@ -651,18 +651,18 @@ namespace OpenBve
 								Train.Handles.Brake.ApplyState(-1, true);
 							}
 							Train.Handles.Brake.ApplyState(AirBrakeHandleState.Release);
-							if (double.IsPositiveInfinity(powerstart))
+							if (double.IsPositiveInfinity(powerStart))
 							{
 								CurrentInterval = 0.3 + 0.1 * Train.Handles.Power.Driver;
 							}
 							else
 							{
 								double p = Train.Handles.Power.Driver / (double)Train.Handles.Power.MaximumNotch;
-								CurrentInterval = 0.3 + 15.0 * p / (powerstart - Train.CurrentSpeed + 1.0);
+								CurrentInterval = 0.3 + 15.0 * p / (powerStart - Train.CurrentSpeed + 1.0);
 							}
 							if (CurrentInterval > 1.3) CurrentInterval = 1.3;
 						}
-						else if (Train.CurrentSpeed > powerend)
+						else if (Train.CurrentSpeed > powerEnd)
 						{
 							// power end (over-speed)
 							if (Train.Handles.Power.Driver > 0)
@@ -677,7 +677,7 @@ namespace OpenBve
 							CurrentInterval *= 0.3;
 							if (CurrentInterval < 0.2) CurrentInterval = 0.2;
 						}
-						else if (acc < acclim)
+						else if (acc < accelerationLimit)
 						{
 							// power start (under-acceleration)
 							if (Train.Handles.Brake.Driver == 0)
@@ -803,8 +803,8 @@ namespace OpenBve
 								if (limitEvent.NextSpeedLimit < Train.CurrentSpeed)
 								{
 									double dist = stp + limitEvent.TrackPositionDelta - Train.FrontCarTrackPosition;
-									double edec = (Train.CurrentSpeed * Train.CurrentSpeed - limitEvent.NextSpeedLimit * limitEvent.NextSpeedLimit * CurrentSpeedFactor) / (2.0 * dist);
-									if (edec > dec) dec = edec;
+									double expectedDeceleration = (Train.CurrentSpeed * Train.CurrentSpeed - limitEvent.NextSpeedLimit * limitEvent.NextSpeedLimit * CurrentSpeedFactor) / (2.0 * dist);
+									if (expectedDeceleration > dec) dec = expectedDeceleration;
 								}
 							}
 							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is SectionChangeEvent sectionEvent)
@@ -818,35 +818,39 @@ namespace OpenBve
 										if (elim < Train.CurrentSpeed | Train.CurrentSpeed <= 0.0)
 										{
 											double dist = stp + sectionEvent.TrackPositionDelta - Train.FrontCarTrackPosition;
-											double edec;
+											double expectedDeceleration;
 											if (elim == 0.0)
 											{
-												double redstopdist;
-												if (Train.Station >= 0 & Train.StationState == TrainStopState.Completed & dist < 120.0)
+												double redSignalStopDistance;
+												if (Train.Station >= 0 & Train.StationState == TrainStopState.Completed)
 												{
-													dist = 1.0;
-													redstopdist = 25.0;
+													redSignalStopDistance = dist > 120 ? 35 : 25;
+													if (dist <= redSignalStopDistance)
+													{
+														// as otherwise the AI will get stuck
+														redSignalStopDistance = dist - 1;
+													}
 												}
 												else if (Train.Station >= 0 & Train.StationState == TrainStopState.Pending | stopDistance < dist)
 												{
-													redstopdist = 1.0;
+													redSignalStopDistance = 1.0;
 												}
 												else if (Train.CurrentSpeed > 9.72222222222222)
 												{
-													redstopdist = 55.0;
+													redSignalStopDistance = 55.0;
 												}
 												else
 												{
-													redstopdist = 35.0;
+													redSignalStopDistance = 35.0;
 												}
 
-												if (dist > redstopdist)
+												if (dist > redSignalStopDistance)
 												{
-													edec = (Train.CurrentSpeed * Train.CurrentSpeed) / (2.0 * (dist - redstopdist));
+													expectedDeceleration = (Train.CurrentSpeed * Train.CurrentSpeed) / (2.0 * (dist - redSignalStopDistance));
 												}
 												else
 												{
-													edec = brakeDeceleration;
+													expectedDeceleration = brakeDeceleration;
 												}
 
 												if (dist < 100.0)
@@ -858,15 +862,15 @@ namespace OpenBve
 											{
 												if (dist >= 1.0)
 												{
-													edec = (Train.CurrentSpeed * Train.CurrentSpeed - elim * elim) / (2.0 * dist);
+													expectedDeceleration = (Train.CurrentSpeed * Train.CurrentSpeed - elim * elim) / (2.0 * dist);
 												}
 												else
 												{
-													edec = 0.0;
+													expectedDeceleration = 0.0;
 												}
 											}
 
-											if (edec > dec) dec = edec;
+											if (expectedDeceleration > dec) dec = expectedDeceleration;
 										}
 									}
 								}
@@ -893,8 +897,8 @@ namespace OpenBve
 													dist -= 5.0;
 												}
 
-												var edec = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
-												if (edec > dec) dec = edec;
+												double expectedDeceleration = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
+												if (expectedDeceleration > dec) dec = expectedDeceleration;
 											}
 										}
 									}
@@ -924,8 +928,8 @@ namespace OpenBve
 
 												if (dist > 25)
 												{
-													var edec = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
-													if (edec > dec) dec = edec;
+													double expectedDeceleration = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
+													if (expectedDeceleration > dec) dec = expectedDeceleration;
 												}
 
 											}
@@ -955,8 +959,8 @@ namespace OpenBve
 													dist -= 5.0;
 												}
 
-												var edec = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
-												if (edec > dec) dec = edec;
+												double expectedDeceleration = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
+												if (expectedDeceleration > dec) dec = expectedDeceleration;
 											}
 										}
 									}
@@ -968,17 +972,17 @@ namespace OpenBve
 								if (Train.IsPlayerTrain)
 								{
 									double dist = stp + trackEndEvent.TrackPositionDelta - Train.FrontCarTrackPosition;
-									double edec;
+									double expectedDeceleration;
 									if (dist >= 15.0)
 									{
-										edec = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
+										expectedDeceleration = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
 									}
 									else
 									{
-										edec = brakeDeceleration;
+										expectedDeceleration = brakeDeceleration;
 									}
 
-									if (edec > dec) dec = edec;
+									if (expectedDeceleration > dec) dec = expectedDeceleration;
 								}
 							}
 						}
@@ -997,10 +1001,10 @@ namespace OpenBve
 						double dist = Program.CurrentRoute.BufferTrackPositions[i].TrackPosition - Train.FrontCarTrackPosition;
 						if (dist > 0.0)
 						{
-							double edec;
+							double expectedDeceleration;
 							if (dist >= 10.0)
 							{
-								edec = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
+								expectedDeceleration = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
 							}
 							else if (dist >= 5.0)
 							{
@@ -1020,7 +1024,7 @@ namespace OpenBve
 								return;
 							}
 
-							if (edec > dec) dec = edec;
+							if (expectedDeceleration > dec) dec = expectedDeceleration;
 						}
 					}
 				}
@@ -1035,11 +1039,11 @@ namespace OpenBve
 						{
 							const double minDistance = 10.0;
 							const double maxDistance = 100.0;
-							double edec;
+							double expectedDeceleration;
 							if (dist > minDistance)
 							{
 								double shift = 0.75 * minDistance + 1.0 * Train.CurrentSpeed;
-								edec = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * (dist - shift));
+								expectedDeceleration = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * (dist - shift));
 							}
 							else if (dist > 0.5 * minDistance)
 							{
@@ -1064,7 +1068,7 @@ namespace OpenBve
 								reduceDecelerationCruiseAndStart = true;
 							}
 
-							if (edec > dec) dec = edec;
+							if (expectedDeceleration > dec) dec = expectedDeceleration;
 						}
 					}
 				}
@@ -1118,8 +1122,8 @@ namespace OpenBve
 								if (limitEvent.NextSpeedLimit < Train.CurrentSpeed)
 								{
 									double dist = stp + Train.FrontCarTrackPosition - limitEvent.TrackPositionDelta;
-									double edec = (Train.CurrentSpeed * Train.CurrentSpeed - limitEvent.NextSpeedLimit * limitEvent.NextSpeedLimit * CurrentSpeedFactor) / (2.0 * dist);
-									if (edec > dec) dec = edec;
+									double expectedDeceleration = (Train.CurrentSpeed * Train.CurrentSpeed - limitEvent.NextSpeedLimit * limitEvent.NextSpeedLimit * CurrentSpeedFactor) / (2.0 * dist);
+									if (expectedDeceleration > dec) dec = expectedDeceleration;
 								}
 							}
 							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is SectionChangeEvent sectionEvent)
@@ -1133,35 +1137,39 @@ namespace OpenBve
 										if (elim < Train.CurrentSpeed | Train.CurrentSpeed <= 0.0)
 										{
 											double dist = stp + Train.FrontCarTrackPosition - sectionEvent.TrackPositionDelta;
-											double edec;
+											double expectedDeceleration;
 											if (elim == 0.0)
 											{
-												double redstopdist;
-												if (Train.Station >= 0 & Train.StationState == TrainStopState.Completed & dist < 120.0)
+												double redSignalStopDistance;
+												if (Train.Station >= 0 & Train.StationState == TrainStopState.Completed)
 												{
-													dist = 1.0;
-													redstopdist = 25.0;
+													redSignalStopDistance = dist > 120 ? 35 : 25;
+													if (dist <= redSignalStopDistance)
+													{
+														// as otherwise the AI will get stuck
+														redSignalStopDistance = dist - 1;
+													}
 												}
 												else if (Train.Station >= 0 & Train.StationState == TrainStopState.Pending | stopDistance < dist)
 												{
-													redstopdist = 1.0;
+													redSignalStopDistance = 1.0;
 												}
 												else if (Train.CurrentSpeed > 9.72222222222222)
 												{
-													redstopdist = 55.0;
+													redSignalStopDistance = 55.0;
 												}
 												else
 												{
-													redstopdist = 35.0;
+													redSignalStopDistance = 35.0;
 												}
 
-												if (dist > redstopdist)
+												if (dist > redSignalStopDistance)
 												{
-													edec = (Train.CurrentSpeed * Train.CurrentSpeed) / (2.0 * (dist - redstopdist));
+													expectedDeceleration = (Train.CurrentSpeed * Train.CurrentSpeed) / (2.0 * (dist - redSignalStopDistance));
 												}
 												else
 												{
-													edec = brakeDeceleration;
+													expectedDeceleration = brakeDeceleration;
 												}
 
 												if (dist < 100.0)
@@ -1173,15 +1181,15 @@ namespace OpenBve
 											{
 												if (dist >= 1.0)
 												{
-													edec = (Train.CurrentSpeed * Train.CurrentSpeed - elim * elim) / (2.0 * dist);
+													expectedDeceleration = (Train.CurrentSpeed * Train.CurrentSpeed - elim * elim) / (2.0 * dist);
 												}
 												else
 												{
-													edec = 0.0;
+													expectedDeceleration = 0.0;
 												}
 											}
 
-											if (edec > dec) dec = edec;
+											if (expectedDeceleration > dec) dec = expectedDeceleration;
 										}
 									}
 								}
@@ -1208,8 +1216,8 @@ namespace OpenBve
 													dist -= 5.0;
 												}
 
-												var edec = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
-												if (edec > dec) dec = edec;
+												double expectedDeceleration = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
+												if (expectedDeceleration > dec) dec = expectedDeceleration;
 											}
 										}
 									}
@@ -1239,8 +1247,8 @@ namespace OpenBve
 
 												if (dist > 25)
 												{
-													var edec = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
-													if (edec > dec) dec = edec;
+													double expectedDeceleration = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
+													if (expectedDeceleration > dec) dec = expectedDeceleration;
 												}
 
 											}
@@ -1270,8 +1278,8 @@ namespace OpenBve
 													dist -= 5.0;
 												}
 
-												var edec = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
-												if (edec > dec) dec = edec;
+												double expectedDeceleration = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
+												if (expectedDeceleration > dec) dec = expectedDeceleration;
 											}
 										}
 									}
@@ -1281,17 +1289,17 @@ namespace OpenBve
 							{
 								// track end (AI trains will simply carry on and disappear)
 								double dist = stp + Train.FrontCarTrackPosition - trackEndEvent.TrackPositionDelta;
-								double edec;
+								double expectedDeceleration;
 								if (dist >= 15.0)
 								{
-									edec = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
+									expectedDeceleration = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
 								}
 								else
 								{
-									edec = brakeDeceleration;
+									expectedDeceleration = brakeDeceleration;
 								}
 
-								if (edec > dec) dec = edec;
+								if (expectedDeceleration > dec) dec = expectedDeceleration;
 							}
 						}
 					}
@@ -1309,10 +1317,10 @@ namespace OpenBve
 						double dist = Train.RearCarTrackPosition - Program.CurrentRoute.BufferTrackPositions[i].TrackPosition;
 						if (dist > 0.0)
 						{
-							double edec;
+							double expectedDeceleration;
 							if (dist >= 10.0)
 							{
-								edec = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
+								expectedDeceleration = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
 							}
 							else if (dist >= 5.0)
 							{
@@ -1332,7 +1340,7 @@ namespace OpenBve
 								return;
 							}
 
-							if (edec > dec) dec = edec;
+							if (expectedDeceleration > dec) dec = expectedDeceleration;
 						}
 					}
 				}
@@ -1347,11 +1355,11 @@ namespace OpenBve
 						{
 							const double minDistance = 10.0;
 							const double maxDistance = 100.0;
-							double edec;
+							double expectedDeceleration;
 							if (dist > minDistance)
 							{
 								double shift = 0.75 * minDistance + 1.0 * Train.CurrentSpeed;
-								edec = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * (dist - shift));
+								expectedDeceleration = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * (dist - shift));
 							}
 							else if (dist > 0.5 * minDistance)
 							{
@@ -1376,13 +1384,13 @@ namespace OpenBve
 								reduceDecelerationCruiseAndStart = true;
 							}
 
-							if (edec > dec) dec = edec;
+							if (expectedDeceleration > dec) dec = expectedDeceleration;
 						}
 					}
 				}
 			}
 
-			/// <summary>The timer unti the doors may be opened</summary>
+			/// <summary>The timer until the doors may be opened</summary>
 			private double doorWaitingTimer = 2.0;
 			/// <summary>Controls the AI operating the wipers</summary>
 			private double wiperTimer;

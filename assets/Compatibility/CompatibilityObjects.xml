@@ -4,6 +4,8 @@
 	<ObjectList>UchiboBase.xml</ObjectList>
 	<!-- Uchibo base route objects (V1) -->
 	<ObjectList>UchiboV1Base.xml</ObjectList>
+	<!-- Uchibo base route objects (BVE4) -->
+	<ObjectList>UchiboX.xml</ObjectList>
 	<!-- Misc stuff -->
 	<ObjectList>Misc.xml</ObjectList>
   </Compatibility>

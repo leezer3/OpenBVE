@@ -13,9 +13,13 @@ namespace OpenBve.Input
 		{
 			Handle = joystickHandle;
 			Name = Joystick.GetName(Handle);
-			if (Name.IndexOf("mascon", StringComparison.InvariantCultureIgnoreCase) != -1)
+			if (Name.IndexOf("densha", StringComparison.InvariantCultureIgnoreCase) != -1 || Name.IndexOf("電車でGO", StringComparison.InvariantCultureIgnoreCase) != -1)
 			{
 				ConfigurationLink = ConfigurationLink.DenshaDeGo;
+			}
+			if (Name.IndexOf("mascon", StringComparison.InvariantCultureIgnoreCase) != -1)
+			{
+				ConfigurationLink = ConfigurationLink.Zuiki;
 			}
 			Guid = Joystick.GetGuid(Handle);
 		}

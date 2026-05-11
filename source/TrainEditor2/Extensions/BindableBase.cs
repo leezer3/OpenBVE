@@ -93,7 +93,7 @@ namespace TrainEditor2.Extensions
 		/// <param name="propertyName">Name of the property used to notify listeners. This
 		/// value is optional and can be provided automatically when invoked from compilers
 		/// that support <see cref="CallerMemberNameAttribute"/>.</param>
-		[Obsolete("Please use the new RaisePropertyChanged method. This method will be removed to comply wth .NET coding standards. If you are overriding this method, you should overide the OnPropertyChanged(PropertyChangedEventArgs args) signature instead.")]
+		[Obsolete("Please use the new RaisePropertyChanged method. This method will be removed to comply wth .NET coding standards. If you are overriding this method, you should override the OnPropertyChanged(PropertyChangedEventArgs args) signature instead.")]
 		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{

@@ -92,9 +92,9 @@ namespace TrainEditor2.IO.Panels.Bve4
 						{
 							needle.Minimum = minimum;
 						}
-						if (block.GetValue(Panel2Key.Maximum, out double maxiumum))
+						if (block.GetValue(Panel2Key.Maximum, out double maximum))
 						{
-							needle.Maximum = maxiumum;
+							needle.Maximum = maximum;
 						}
 						double naturalFrequency = -1.0;
 						if (block.TryGetValue(Panel2Key.NaturalFreq, ref naturalFrequency) && naturalFrequency < 0)
@@ -134,9 +134,9 @@ namespace TrainEditor2.IO.Panels.Bve4
 						{
 							linearGauge.Minimum = minimum;
 						}
-						if (block.GetValue(Panel2Key.Maximum, out maxiumum))
+						if (block.GetValue(Panel2Key.Maximum, out maximum))
 						{
-							linearGauge.Maximum = maxiumum;
+							linearGauge.Maximum = maximum;
 						}
 						block.GetValue(Panel2Key.Width, out int width);
 						linearGauge.Width = width;
@@ -186,9 +186,9 @@ namespace TrainEditor2.IO.Panels.Bve4
 						{
 							digitalGauge.Minimum = minimum;
 						}
-						if (block.GetValue(Panel2Key.Maximum, out maxiumum))
+						if (block.GetValue(Panel2Key.Maximum, out maximum))
 						{
-							digitalGauge.Maximum = maxiumum;
+							digitalGauge.Maximum = maximum;
 						}
 
 						block.GetValue(Panel2Key.Step, out double step);

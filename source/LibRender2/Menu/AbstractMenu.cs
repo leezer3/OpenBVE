@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2024, Maurizo M. Gavioli, The OpenBVE Project
 //
@@ -102,7 +102,7 @@ namespace LibRender2.Menu
 		public double topItemY;
 
 		/// <summary>The total height of one rendered menu item in pixels</summary>
-		public int lineHeight;
+		public int LineHeight;
 
 		/// <summary>The controls within the menu</summary>
 		public List<GLControl> menuControls = new List<GLControl>();
@@ -267,18 +267,18 @@ namespace LibRender2.Menu
 			if (menuMin.Y < Border.Y)
 			{
 				// the number of lines which fit in the screen
-				int numOfLines = (int)(Renderer.Screen.Height - Border.Y * 2) / lineHeight;
+				int numOfLines = (int)(Renderer.Screen.Height - Border.Y * 2) / LineHeight;
 				visibleItems = numOfLines - 2;                  // at least an empty line at the top and at the bottom
 																// split the menu in chunks of 'visibleItems' items
 																// and display the chunk which contains the currently selected item
 				menu.TopItem = menu.Selection - (menu.Selection % visibleItems);
 				visibleItems = menu.Items.Length - menu.TopItem < visibleItems ?    // in the last chunk,
 					menu.Items.Length - menu.TopItem : visibleItems;                // display remaining items only
-				menuMin.Y = (Renderer.Screen.Height - numOfLines * lineHeight) / 2.0;
-				menuMax.Y = menuMin.Y + numOfLines * lineHeight;
+				menuMin.Y = (Renderer.Screen.Height - numOfLines * LineHeight) / 2.0;
+				menuMax.Y = menuMin.Y + numOfLines * LineHeight;
 				// first menu item is drawn on second line (first line is empty
 				// on first screen and contains an ellipsis on following screens
-				topItemY = menuMin.Y + lineHeight;
+				topItemY = menuMin.Y + LineHeight;
 			}
 		}
 

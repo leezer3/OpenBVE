@@ -106,7 +106,7 @@ namespace TrainEditor2.ViewModels.Trains
 
 			MaximumSize = particleSource
 				.ToReactivePropertyAsSynchronized(
-					x => x.MaximiumSize,
+					x => x.MaximumSize,
 					x => x.ToString(culture),
 					x => x.Parse(),
 					ignoreValidationErrorValue: true

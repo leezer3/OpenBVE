@@ -57,7 +57,7 @@ namespace OpenBve {
 			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
 			listviewScore.Items.Clear();
 			int sum = 0;
-			for (int i = 0; i < Game.ScoreLogCount; i++) {
+			for (int i = 0; i < Game.ScoreLogs.Count; i++) {
 				sum += Game.ScoreLogs[i].Value;
 				if (!penaltiesOnly | Game.ScoreLogs[i].Value < 0) {
 					double x = Game.ScoreLogs[i].Time;

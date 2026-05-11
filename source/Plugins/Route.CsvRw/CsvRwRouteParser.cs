@@ -56,10 +56,7 @@ namespace CsvRwRouteParser {
 			Plugin.CurrentOptions.UnitOfSpeed = "km/h";
 			Plugin.CurrentOptions.SpeedConversionFactor = 0.0;
 			CompatibilityFolder = Plugin.FileSystem.GetDataFolder("Compatibility");
-			if (!PreviewOnly)
-			{
-				CompatibilityObjects.LoadCompatibilityObjects(Path.CombineFile(CompatibilityFolder,"CompatibilityObjects.xml"));
-			}
+			CompatibilityObjects.LoadCompatibilityObjects(Path.CombineFile(CompatibilityFolder, "CompatibilityObjects.xml"));
 
 			RoutePatchDatabaseParser.LoadRoutePatchDatabase(ref availableRoutefilePatches);
 			Plugin.CurrentOptions.ObjectDisposalMode = ObjectDisposalMode.Legacy;

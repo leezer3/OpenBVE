@@ -1,10 +1,3 @@
-// ╔═════════════════════════════════════════════════════════════╗
-// ║ Program.cs for the Structure Viewer                         ║
-// ╠═════════════════════════════════════════════════════════════╣
-// ║ This file cannot be used in the openBVE main program.       ║
-// ║ The file from the openBVE main program cannot be used here. ║
-// ╚═════════════════════════════════════════════════════════════╝
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +28,7 @@ namespace ObjectViewer {
 		internal static FileSystem FileSystem = null;
 
 		// members
-	    internal static List<string> Files = new List<string>();
+	    internal static HashSet<string> Files = new HashSet<string>();
         /// <summary>Last time the objects were reloaded (UTC).</summary>
         internal static DateTime LastReloadTime = DateTime.UtcNow;
 		/// <summary>The number of failed auto-reloads</summary>
@@ -57,6 +50,7 @@ namespace ObjectViewer {
         internal static int LightingTarget = 1;
         internal static double LightingRelative = 1.0;
         private static bool ShiftPressed = false;
+        private static bool RPRessed = false;
 
 		internal static HostInterface CurrentHost;
 
@@ -96,6 +90,13 @@ namespace ObjectViewer {
 	        Toolkit.Init(options);
 
 			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
+			// Apply persistent sun direction
+			double azimuthRad = Interface.CurrentOptions.LightAzimuth * Math.PI / 180.0;
+			double elevationRad = Interface.CurrentOptions.LightElevation * Math.PI / 180.0;
+			float lx = (float)(Math.Sin(azimuthRad) * Math.Cos(elevationRad));
+			float ly = (float)(Math.Sin(elevationRad));
+			float lz = (float)(Math.Cos(azimuthRad) * Math.Cos(elevationRad));
+			Renderer.Lighting.OptionLightPosition = new Vector3(lx, ly, lz);
 	        
 	        
 	        TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
@@ -161,7 +162,8 @@ namespace ObjectViewer {
 
 				if (filesToLoad.Count != 0)
 				{
-					Files = filesToLoad;
+					Files.Clear();
+					Files.UnionWith(filesToLoad);
 				}
 	        }
 
@@ -255,6 +257,10 @@ namespace ObjectViewer {
 
 		internal static void DragFile(object sender, FileDropEventArgs e)
 		{
+			if (Files.Contains(e.FileName))
+			{
+				return;
+			}
 			Files.Add(System.IO.Path.GetFullPath(e.FileName));
 			// reset
 			LightingRelative = -1.0;
@@ -314,16 +320,38 @@ namespace ObjectViewer {
 	    internal static void RefreshObjects(bool autoReload = false)
 	    {
 		    LightingRelative = -1.0;
+			
+			// Prune cache to allow actual reloading of modified files
+			var staticKeysToRemove = new List<ValueTuple<string, bool, DateTime>>();
+			foreach (var key in CurrentHost.StaticObjectCache.Keys)
+			{
+				try
+				{
+					if (!System.IO.File.Exists(key.Item1) || System.IO.File.GetLastWriteTime(key.Item1) != key.Item3)
+					{
+						staticKeysToRemove.Add(key);
+					}
+				}
+				catch { staticKeysToRemove.Add(key); }
+			}
+			foreach (var key in staticKeysToRemove)
+			{
+				CurrentHost.StaticObjectCache.Remove(key);
+			}
+			CurrentHost.AnimatedObjectCollectionCache.Clear();
+			// Let TextureManager check for texture changes
+			Renderer.TextureManager.UnloadAllTextures(true);
+
 			Renderer.Reset();
 		    Game.Reset();
 			formTrain.Instance?.DisableUI();
-		    for (int i = 0; i < Files.Count; i++)
-		    {
+			foreach (string currentFile in Files)
+			{
 			    try
 			    {
-				    if(Files[i].EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
+				    if(currentFile.EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || currentFile.EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || currentFile.EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase) || currentFile.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
 				    {
-					    string currentTrain = Files[i];
+					    string currentTrain = currentFile;
 						if (currentTrain.EndsWith("extensions.cfg", StringComparison.InvariantCultureIgnoreCase))
 					    {
 						    currentTrain = System.IO.Path.GetDirectoryName(currentTrain);
@@ -365,14 +393,14 @@ namespace ObjectViewer {
 					    else
 					    {
 							//As we now attempt to load the train as a whole, the most likely outcome is that the train.dat file is MIA
-						    Interface.AddMessage(MessageType.Critical, false, "No plugin found capable of loading file " + Files[i] + ".");
+						    Interface.AddMessage(MessageType.Critical, false, "No plugin found capable of loading file " + currentFile + ".");
 					    }
 				    }
 				    else
 				    {
-					    if (CurrentHost.LoadObject(Files[i], Encoding.UTF8, out UnifiedObject o))
+					    if (CurrentHost.LoadObject(currentFile, Encoding.UTF8, out UnifiedObject o))
 					    {
-						    o.CreateObject(Vector3.Zero, 0.0, 0.0, 0.0);
+						    o.CreateObject(Vector3.Zero, new ObjectCreationParameters());
 					    }
 					    
 				    }
@@ -386,11 +414,11 @@ namespace ObjectViewer {
 					    {
 							// failure counter must be above 5
 							Interface.CurrentOptions.AutoReloadObjects = false;
-							Interface.AddMessage(MessageType.Critical, false, "Stopped automatically re-loading objects due to the Unhandled error (" + ex.Message + ") encountered while processing the file " + Files[i] + ".");
+							Interface.AddMessage(MessageType.Critical, false, "Stopped automatically re-loading objects due to the Unhandled error (" + ex.Message + ") encountered while processing the file " + currentFile + ".");
 						}
 					    else
 					    {
-						    Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Files[i] + ".");
+						    Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + currentFile + ".");
 						}
 							
 				    }
@@ -419,13 +447,14 @@ namespace ObjectViewer {
 
 		    if (Files.Count == 1)
 		    {
-			    Renderer.GameWindow.Title = "Object Viewer - " + Path.GetFileName(Files[0]);
+			    Renderer.GameWindow.Title = "Object Viewer - " + Path.GetFileName(Files.ToList()[0]);
 		    }
 		    else
 		    {
 			    Renderer.GameWindow.Title = "Object Viewer";
 		    }
 		    LastReloadTime = DateTime.UtcNow;
+			UpdateWatchers();
 	    }
 
         /// <summary>Checks if any of the loaded files have been updated externally.</summary>
@@ -437,18 +466,18 @@ namespace ObjectViewer {
             }
             reloadCheckTimer = 0.0;
 
-            for (int i = 0; i < Files.Count; i++)
+            foreach (string currentFile in Files)
             {
-	            try
+				try
 	            {
-		            DateTime time = System.IO.File.GetLastWriteTimeUtc(Files[i]);
+		            DateTime time = System.IO.File.GetLastWriteTimeUtc(currentFile);
 		            if ((DateTime.Now - time).TotalSeconds < 5 || time.Year == 1601)
 		            {
 			            // file is held open for constant write (within last 5s)
 						// file no longer exists (returns 01/01/1601)
 			            continue;
 		            }
-		            if (System.IO.File.GetLastWriteTimeUtc(Files[i]) > LastReloadTime)
+		            if (System.IO.File.GetLastWriteTimeUtc(currentFile) > LastReloadTime)
 		            {
 			            RefreshObjects();
 			            return;
@@ -462,6 +491,49 @@ namespace ObjectViewer {
             }
         }
 
+
+		internal static List<System.IO.FileSystemWatcher> FileWatchers = new List<System.IO.FileSystemWatcher>();
+		internal static bool ReloadRequested = false;
+		private static DateTime LastFileChangedTime = DateTime.MinValue;
+
+		internal static void UpdateWatchers()
+		{
+			foreach (var watcher in FileWatchers)
+			{
+				watcher.EnableRaisingEvents = false;
+				watcher.Dispose();
+			}
+			FileWatchers.Clear();
+			foreach (string file in Files)
+			{
+				try
+				{
+					string dir = System.IO.Path.GetDirectoryName(file);
+					string name = System.IO.Path.GetFileName(file);
+					if (System.IO.Directory.Exists(dir))
+					{
+						var watcher = new System.IO.FileSystemWatcher(dir, name);
+						watcher.NotifyFilter = System.IO.NotifyFilters.LastWrite;
+						watcher.Changed += OnFileChanged;
+						watcher.EnableRaisingEvents = true;
+						FileWatchers.Add(watcher);
+					}
+				}
+				catch
+				{
+					// ignored
+				}
+			}
+		}
+
+		private static void OnFileChanged(object source, System.IO.FileSystemEventArgs e)
+		{
+			if ((DateTime.Now - LastFileChangedTime).TotalMilliseconds > 500)
+			{
+				LastFileChangedTime = DateTime.Now;
+				ReloadRequested = true;
+			}
+		}
 
 	    // process events
 	    internal static void KeyDown(object sender, KeyboardKeyEventArgs e)
@@ -556,7 +628,7 @@ namespace ObjectViewer {
 	            case Key.Delete:
 		            LightingRelative = -1.0;
 	                Game.Reset();
-		            Files = new List<string>();
+		            Files.Clear();
                     LastReloadTime = DateTime.UtcNow;
 					NearestTrain.UpdateSpecs();
 					Renderer.ApplyBackgroundColor();
@@ -635,7 +707,14 @@ namespace ObjectViewer {
 	                {
 		                return;
 	                }
-					formOptions.ShowOptions();
+
+	                if (formOptions.ShowOptions() == DialogResult.OK)
+	                {
+		                // Sun direction is already updated in real-time via slider events
+
+		                // Appy shadow map settings immediately
+		                Renderer.ReloadShadowSettings();
+					}
                     Application.DoEvents();
                     break;
                 case Key.F10:
@@ -673,7 +752,11 @@ namespace ObjectViewer {
 	                }
 	                break;
 				case Key.R:
-					Renderer.SwitchOpenGLVersion();
+					if (!RPRessed)
+					{
+						RPRessed = true;
+						Renderer.SwitchOpenGLVersion();
+					}
 					break;
 				case Key.F11:
 					Renderer.RenderStatsOverlay = !Renderer.RenderStatsOverlay;
@@ -733,6 +816,9 @@ namespace ObjectViewer {
 	            case Key.Keypad3:
 	                MoveZ = 0;
 	                break;
+				case Key.R:
+					RPRessed = false;
+					break;
 	        }
 	    }
 	}

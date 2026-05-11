@@ -65,16 +65,14 @@ namespace LibRender2.Primitives
 							}
 							string lineToAdd = currentLine.Substring(0, currentLine.Length - moveback);
 							wrappedLines.Add(lineToAdd.TrimStart());
-							currentLine = string.Empty;
 						}
 						else
 						{
 							i--;
 							string lineToAdd = currentLine.Substring(0, currentLine.Length - 1);
 							wrappedLines.Add(lineToAdd.TrimStart());
-							currentLine = string.Empty;
 						}
-						
+						currentLine = string.Empty;
 					}
 				}
 				wrappedLines.Add(currentLine.TrimStart());

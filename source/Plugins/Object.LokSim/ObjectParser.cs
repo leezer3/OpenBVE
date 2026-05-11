@@ -29,7 +29,6 @@ using System.Linq;
 using System.Xml;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
-using System.Linq;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 

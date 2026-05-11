@@ -193,9 +193,8 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Loads a texture and returns the texture data.</summary>
 		/// <param name="texture">Receives the texture.</param>
 		/// <param name="wrapMode">The openGL wrap mode</param>
-		/// <param name="renderThread">Whether this must be run in the render thread</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public virtual bool LoadTexture(ref Texture texture, OpenGlTextureWrapMode wrapMode, bool renderThread = false)
+		public virtual bool LoadTexture(ref Texture texture, OpenGlTextureWrapMode wrapMode)
 		{
 			return false;
 		}
@@ -341,7 +340,7 @@ namespace OpenBveApi.Hosts {
 		/// <returns>Whether loading the object was successful</returns>
 		public virtual bool LoadObject(string Path, System.Text.Encoding Encoding, out UnifiedObject Object)
 		{
-			ValueTuple<string, bool, DateTime> key = ValueTuple.Create(Path, false, System.IO.File.GetLastWriteTime(Path));
+			ValueTuple<string, bool, DateTime> key = ValueTuple.Create(Path.ToLowerInvariant(), false, System.IO.File.GetLastWriteTime(Path));
 
 			if (StaticObjectCache.TryGetValue(key, out var staticObject))
 			{
@@ -349,7 +348,7 @@ namespace OpenBveApi.Hosts {
 				return true;
 			}
 
-			if (AnimatedObjectCollectionCache.TryGetValue(Path, out var animatedObject))
+			if (AnimatedObjectCollectionCache.TryGetValue(Path.ToLowerInvariant(), out var animatedObject))
 			{
 				Object = animatedObject.Clone();
 				return true;
@@ -369,7 +368,7 @@ namespace OpenBveApi.Hosts {
 		/// Selecting to preserve vertices may be useful if using the object as a deformable.</remarks>
 		public virtual bool LoadStaticObject(string Path, System.Text.Encoding Encoding, bool PreserveVertices, out StaticObject Object)
 		{
-			ValueTuple<string, bool, DateTime> key = ValueTuple.Create(Path, PreserveVertices, System.IO.File.GetLastWriteTime(Path));
+			ValueTuple<string, bool, DateTime> key = ValueTuple.Create(Path.ToLowerInvariant(), PreserveVertices, System.IO.File.GetLastWriteTime(Path));
 
 			if (StaticObjectCache.TryGetValue(key, out var staticObject))
 			{
@@ -400,12 +399,9 @@ namespace OpenBveApi.Hosts {
 		/// <param name="Position">The world position</param>
 		/// <param name="WorldTransformation">The world transformation to apply (e.g. ground, rail)</param>
 		/// <param name="LocalTransformation">The local transformation to apply in order to rotate the model</param>
-		/// <param name="AccurateObjectDisposalZOffset">The offset for accurate Z-disposal</param>
-		/// <param name="StartingDistance">The absolute route based starting distance for the object</param>
-		/// <param name="EndingDistance">The absolute route based ending distance for the object</param>
-		/// <param name="TrackPosition">The absolute route based track position</param>
+		/// <param name="Parameters">The object creation parameters</param>
 		/// <returns>The index to the created object, or -1 if this call fails</returns>
-		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition)
+		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, ObjectCreationParameters Parameters, Transformation WorldTransformation, Transformation LocalTransformation = null)
 		{
 			return -1;
 		}
@@ -419,12 +415,9 @@ namespace OpenBveApi.Hosts {
 		/// </param>
 		/// <param name="Rotate">The rotation matrix to apply</param>
 		/// <param name="Translate">The translation matrix to apply</param>
-		/// <param name="AccurateObjectDisposalZOffset">The offset for accurate Z-disposal</param>
-		/// <param name="StartingDistance">The absolute route based starting distance for the object</param>
-		/// <param name="EndingDistance">The absolute route based ending distance for the object</param>
-		/// <param name="TrackPosition">The absolute route based track position</param>
+		/// <param name="Parameters">The object creation parameters</param>
 		/// <returns>The index to the created object, or -1 if this call fails</returns>
-		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition)
+		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, ObjectCreationParameters Parameters)
 		{
 			return -1;
 		}

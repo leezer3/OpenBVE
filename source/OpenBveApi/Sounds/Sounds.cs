@@ -10,17 +10,16 @@ namespace OpenBveApi.Sounds {
 	 *       Modifications can be made at will.
 	 * ---------------------------------------- */
 
-	// --- structures ---
-	
 	/// <summary>Represents a sound.</summary>
-	public class Sound {
-		// --- members ---
+	public class Sound 
+	{
 		/// <summary>The number of samples per second.</summary>
-		private readonly int MySampleRate;
+		public readonly int SampleRate;
 		/// <summary>The number of bits per sample. Allowed values are 8 or 16.</summary>
-		private readonly int MyBitsPerSample;
+		public readonly int BitsPerSample;
 		/// <summary>The PCM sound data per channel. For 8 bits per sample, samples are unsigned from 0 to 255. For 16 bits per sample, samples are signed from -32768 to 32767 and in little endian byte order.</summary>
-		private readonly byte[][] MyBytes;
+		public readonly byte[][] Bytes;
+
 		// --- constructors ---
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="sampleRate">The number of samples per second.</param>
@@ -54,22 +53,13 @@ namespace OpenBveApi.Sounds {
 					throw new ArgumentException("The data bytes of the channels are of unequal length.");
 				}
 			}
-			MySampleRate = sampleRate;
-			MyBitsPerSample = bitsPerSample;
-			MyBytes = bytes;
+			SampleRate = sampleRate;
+			BitsPerSample = bitsPerSample;
+			Bytes = bytes;
 		}
-		// --- properties ---
-		/// <summary>Gets the number of samples per second.</summary>
-		public int SampleRate => MySampleRate;
-
-		/// <summary>Gets the number of bits per sample. Allowed values are 8 or 16.</summary>
-		public int BitsPerSample => MyBitsPerSample;
-
-		/// <summary>Gets the PCM sound data per channel. For 8 bits per sample, samples are unsigned from 0 to 255. For 16 bits per sample, samples are signed from -32768 to 32767 and in little endian byte order.</summary>
-		public byte[][] Bytes => MyBytes;
-
+		
 		/// <summary>Gets the duration of the sound in seconds.</summary>
-		public double Duration => 8.0 * MyBytes[0].Length / MyBitsPerSample / MySampleRate;
+		public double Duration => 8.0 * Bytes[0].Length / BitsPerSample / SampleRate;
 
 		// --- operators ---
 		/// <summary>Checks whether two sound are equal.</summary>
@@ -80,13 +70,13 @@ namespace OpenBveApi.Sounds {
 			if (ReferenceEquals(a, b)) return true;
 			if (a is null) return false;
 			if (b is null) return false;
-			if (a.MySampleRate != b.MySampleRate) return false;
-			if (a.MyBitsPerSample != b.MyBitsPerSample) return false;
-			if (a.MyBytes.Length != b.MyBytes.Length) return false;
-			for (int i = 0; i < a.MyBytes.Length; i++) {
-				if (a.MyBytes[i].Length != b.MyBytes[i].Length) return false;
-				for (int j = 0; j < a.MyBytes[i].Length; j++) {
-					if (a.MyBytes[i][j] != b.MyBytes[i][j]) return false;
+			if (a.SampleRate != b.SampleRate) return false;
+			if (a.BitsPerSample != b.BitsPerSample) return false;
+			if (a.Bytes.Length != b.Bytes.Length) return false;
+			for (int i = 0; i < a.Bytes.Length; i++) {
+				if (a.Bytes[i].Length != b.Bytes[i].Length) return false;
+				for (int j = 0; j < a.Bytes[i].Length; j++) {
+					if (a.Bytes[i][j] != b.Bytes[i][j]) return false;
 				}
 			}
 			return true;
@@ -99,13 +89,13 @@ namespace OpenBveApi.Sounds {
 			if (ReferenceEquals(a, b)) return false;
 			if (a is null) return true;
 			if (b is null) return true;
-			if (a.MySampleRate != b.MySampleRate) return true;
-			if (a.MyBitsPerSample != b.MyBitsPerSample) return true;
-			if (a.MyBytes.Length != b.MyBytes.Length) return true;
-			for (int i = 0; i < a.MyBytes.Length; i++) {
-				if (a.MyBytes[i].Length != b.MyBytes[i].Length) return true;
-				for (int j = 0; j < a.MyBytes[i].Length; j++) {
-					if (a.MyBytes[i][j] != b.MyBytes[i][j]) return true;
+			if (a.SampleRate != b.SampleRate) return true;
+			if (a.BitsPerSample != b.BitsPerSample) return true;
+			if (a.Bytes.Length != b.Bytes.Length) return true;
+			for (int i = 0; i < a.Bytes.Length; i++) {
+				if (a.Bytes[i].Length != b.Bytes[i].Length) return true;
+				for (int j = 0; j < a.Bytes[i].Length; j++) {
+					if (a.Bytes[i][j] != b.Bytes[i][j]) return true;
 				}
 			}
 			return false;
@@ -118,13 +108,13 @@ namespace OpenBveApi.Sounds {
 			if (obj is null) return false;
 			if (!(obj is Sound)) return false;
 			Sound x = (Sound)obj;
-			if (MySampleRate != x.MySampleRate) return false;
-			if (MyBitsPerSample != x.MyBitsPerSample) return false;
-			if (MyBytes.Length != x.MyBytes.Length) return false;
-			for (int i = 0; i < MyBytes.Length; i++) {
-				if (MyBytes[i].Length != x.MyBytes[i].Length) return false;
-				for (int j = 0; j < MyBytes[i].Length; j++) {
-					if (MyBytes[i][j] != x.MyBytes[i][j]) return false;
+			if (SampleRate != x.SampleRate) return false;
+			if (BitsPerSample != x.BitsPerSample) return false;
+			if (Bytes.Length != x.Bytes.Length) return false;
+			for (int i = 0; i < Bytes.Length; i++) {
+				if (Bytes[i].Length != x.Bytes[i].Length) return false;
+				for (int j = 0; j < Bytes[i].Length; j++) {
+					if (Bytes[i][j] != x.Bytes[i][j]) return false;
 				}
 			}
 			return true;
@@ -141,32 +131,32 @@ namespace OpenBveApi.Sounds {
 			 * Convert integer samples to floating-point samples.
 			 */
 				float[][] samples;
-				if (MyBytes.Length == 1 || MyBytes[0].Length == 0)
+				if (Bytes.Length == 1 || Bytes[0].Length == 0)
 				{
-					return MyBytes[0];
+					return Bytes[0];
 				}
 				switch (BitsPerSample)
 				{
 					case 8:
-						samples = new float[MyBytes.Length][];
-						for (int i = 0; i < MyBytes.Length; i++)
+						samples = new float[Bytes.Length][];
+						for (int i = 0; i < Bytes.Length; i++)
 						{
-							samples[i] = new float[MyBytes[i].Length];
-							for (int j = 0; j < MyBytes[i].Length; j++)
+							samples[i] = new float[Bytes[i].Length];
+							for (int j = 0; j < Bytes[i].Length; j++)
 							{
-								byte value = MyBytes[i][j];
+								byte value = Bytes[i][j];
 								samples[i][j] = (value - 128.0f) / (value < 128 ? 128.0f : 127.0f);
 							}
 						}
 						break;
 					case 16:
-						samples = new float[MyBytes.Length][];
-						for (int i = 0; i < MyBytes.Length; i++)
+						samples = new float[Bytes.Length][];
+						for (int i = 0; i < Bytes.Length; i++)
 						{
-							samples[i] = new float[MyBytes[i].Length >> 1];
-							for (int j = 0; j + 1 < MyBytes[i].Length; j += 2)
+							samples[i] = new float[Bytes[i].Length >> 1];
+							for (int j = 0; j + 1 < Bytes[i].Length; j += 2)
 							{
-								short value = (short)(ushort)(MyBytes[i][j] | (MyBytes[i][j + 1] << 8));
+								short value = (short)(ushort)(Bytes[i][j] | (Bytes[i][j + 1] << 8));
 								samples[i][j >> 1] = value / (value < 0 ? 32768.0f : 32767.0f);
 							}
 						}

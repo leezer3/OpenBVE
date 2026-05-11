@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -144,12 +144,14 @@ namespace ObjectViewer.Graphics
 					Cube.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
 				}
 			}
-			GL.Disable(EnableCap.DepthTest);
 			// opaque face
 			if (AvailableNewRenderer)
 			{
+				PerformCSMShadowPass();
+
 				//Setup the shader for rendering the scene
 				DefaultShader.Activate();
+				BindCSMToDefaultShader();
 				if (OptionLighting)
 				{
 					DefaultShader.SetIsLight(true);
@@ -220,8 +222,6 @@ namespace ObjectViewer.Graphics
 							UnsetAlphaFunc();
 							additive = true;
 						}
-
-						face.Draw();
 					}
 					else
 					{
@@ -230,9 +230,8 @@ namespace ObjectViewer.Graphics
 							SetAlphaFunc();
 							additive = false;
 						}
-
-						face.Draw();
 					}
+					face.Draw();
 				}
 			}
 

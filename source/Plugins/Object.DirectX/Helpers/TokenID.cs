@@ -23,9 +23,10 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // ReSharper disable InconsistentNaming
+// ReSharper disable IdentifierTypo
 namespace OpenBve.Formats.DirectX
 {
-	enum TokenID : short
+	internal enum TokenID : short
 	{
 		NAME = 0x01,
 		STRING = 0x02,

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
 	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="id-ID">
 		<body>
@@ -1443,6 +1443,22 @@
 						<source>m</source>
 						<target>m</target>
 					</trans-unit>
+					<trans-unit id="quality_distance_nearclip">
+						<source>Near clip:</source>
+						<target>Near clip:</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_nearclip_scenery">
+						<source>Near clip (scenery):</source>
+						<target>Near clip (scenery):</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_nearclip_cab">
+						<source>Near clip (cab):</source>
+						<target>Near clip (cab):</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_nearclip_base">
+						<source>Near clip (base):</source>
+						<target>Near clip (base):</target>
+					</trans-unit>
 					<trans-unit id="quality_distance_motionblur">
 						<source>Motion blur:</source>
 						<target>Motion blur:</target>
@@ -1730,6 +1746,70 @@
 					<trans-unit id="compatibility_signals">
 						<source>Default Signals:</source>
 						<target>Sinyal standar:</target>
+					</trans-unit>
+					<trans-unit id="shadows_resolution_off">
+						<source>Off</source>
+						<target>Mati</target>
+					</trans-unit>
+					<trans-unit id="shadows_resolution_low">
+						<source>Low (512×512)</source>
+						<target>Rendah (512×512)</target>
+					</trans-unit>
+					<trans-unit id="shadows_resolution_medium">
+						<source>Medium (1024×1024)</source>
+						<target>Sedang (1024×1024)</target>
+					</trans-unit>
+					<trans-unit id="shadows_resolution_high">
+						<source>High (2048×2048)</source>
+						<target>Tinggi (2048×2048)</target>
+					</trans-unit>
+					<trans-unit id="shadows_resolution_ultra">
+						<source>Ultra (4096×4096)</source>
+						<target>Ultra (4096×4096)</target>
+					</trans-unit>
+					<trans-unit id="shadows_distance">
+						<source>Shadow Distance:</source>
+						<target>Jarak Bayangan:</target>
+					</trans-unit>
+					<trans-unit id="shadows_distance_near">
+						<source>Near (150m)</source>
+						<target>Dekat (150m)</target>
+					</trans-unit>
+					<trans-unit id="shadows_distance_medium">
+						<source>Medium (300m)</source>
+						<target>Sedang (300m)</target>
+					</trans-unit>
+					<trans-unit id="shadows_distance_far">
+						<source>Far (500m)</source>
+						<target>Jauh (500m)</target>
+					</trans-unit>
+					<trans-unit id="shadows_distance_veryfar">
+						<source>Very Far (800m)</source>
+						<target>Sangat Jauh (800m)</target>
+					</trans-unit>
+					<trans-unit id="shadows_distance_viewingdistance">
+						<source>Follow Viewing Distance</source>
+						<target>Ikuti Jarak Pandang</target>
+					</trans-unit>
+					<trans-unit id="shadows_cascades">
+						<source>Shadow Cascades:</source>
+						<target>Cascade Bayangan:</target>
+					</trans-unit>
+					<trans-unit id="shadows_cascades_2">
+						<source>2 Cascades (Fastest)</source>
+						<target>2 Cascade (Paling Cepat)</target>
+					</trans-unit>
+					<trans-unit id="shadows_cascades_3">
+						<source>3 Cascades (Balanced)</source>
+						<target>3 Cascade (Seimbang)</target>
+					</trans-unit>
+					<trans-unit id="shadows_cascades_4">
+						<source>4 Cascades (Best Quality)</source>
+						<target>4 Cascade (Kualitas Terbaik)</target>
+					</trans-unit>
+					<trans-unit id="shadows_strength">
+						<source>Shadow Strength:</source>
+						<target>Intensitas Bayangan:</target>
 					</trans-unit>
 				</group>
 				<group id="dialog">

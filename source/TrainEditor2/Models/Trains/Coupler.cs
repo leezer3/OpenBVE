@@ -56,7 +56,7 @@ namespace TrainEditor2.Models.Trains
 				new XElement("Max", Max),
 				new XElement("Object", Object),
 				new XElement("CanUncoupler", "false"),
-				new XElement("UncouplngBehaviour", "Emergency")
+				new XElement("UncouplingBehaviour", "Emergency")
 			));
 		}
 

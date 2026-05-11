@@ -76,5 +76,43 @@
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
 	</Patch>
+	<!-- Submarina -->
+	<Patch>
+		<Hash>481430BB87DACD205387290B0B4472136695DA25487A4B0C8B40D794392BD3A3</Hash>
+		<FileName>submarina_rapid.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>8A1883F9C0D4516B45464A06F209FA42C9F3DF934CC2360A420C44B6EB2DE1AD</Hash>
+		<FileName>submarina_regular.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>B7EC646294F81D97B5EA64208AFA1D4183315A4636624FA8F069ADE02407CE9A</Hash>
+		<FileName>submarina_toteestacions.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<!-- Telerific -->
+	<Patch>
+		<Hash>90F67FF38DC019E8644C9BFB6085505296C4C8393621F5630738FC7A179ADF33</Hash>
+		<FileName>telerific.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>0429ADE896699406653EFB3572286133286132948749106CB2B6216DC7756AF4</Hash>
+		<FileName>telerific_hivern.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>B2083ED2119D85ECF384318E522DC0167A057C621DBE35D75FE66B9A051C1C3A</Hash>
+		<FileName>telerific_nit.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
   </RoutePatches>
 </openBVE>

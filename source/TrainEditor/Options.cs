@@ -18,7 +18,7 @@ namespace TrainEditor
 			/// <summary>Creates a new instance of the options class with default values set</summary>
 			internal Options()
 			{
-				this.LanguageCode = "en-US";
+				LanguageCode = "en-US";
 			}
 		}
 		/// <summary>The current game options</summary>
@@ -35,8 +35,8 @@ namespace TrainEditor
 			string configFile = OpenBveApi.Path.CombineFile(optionsFolder, "options_te.cfg");
 			if (!File.Exists(configFile))
 			{
-				//If no route viewer specific configuration file exists, then try the main OpenBVE configuration file
-				//Write out to a new routeviewer specific file though
+				//If no train editor specific configuration file exists, then try the main OpenBVE configuration file
+				//Write out to a new train editor specific file though
 				configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
 			}
 

@@ -70,6 +70,7 @@ jobs:
      targetFolder: '/var/www/vps.bvecornwall.co.uk/public/OpenBVE/Builds/'
      overwrite: true
      readyTimeout: 90000
+    timeoutInMinutes: 5
 
 ### Linux makefile build
 ### This runs on the latest Mono version installed
@@ -95,3 +96,4 @@ jobs:
      targetFolder: '/var/www/vps.bvecornwall.co.uk/public/OpenBVE/Builds/'
      overwrite: true
      readyTimeout: 90000
+    timeoutInMinutes: 5

@@ -49,13 +49,13 @@ using System.Text;
 #pragma warning disable 0219, IDE0059
 namespace Plugin
 {
-	partial class MsTsShapeParser
+	internal partial class MsTsShapeParser
 	{
-		class VertexStates
+		private class VertexStates
 		{
 			internal uint flags; //Describes specular and some other stuff, unlikely to be supported
 			/// <summary>The hierarchy ID of the top-level transform matrix</summary>
-			/// <remarks>Remmeber that matricies transform down a chain</remarks>
+			/// <remarks>Remember that matricies transform down a chain</remarks>
 			internal readonly int hierarchyID;
 			internal int lightingMatrixID;
 			internal int lightingConfigIdx;
@@ -68,7 +68,7 @@ namespace Plugin
 			}
 		}
 
-		class VertexSet
+		private class VertexSet
 		{
 			internal readonly int hierarchyIndex;
 			internal int startVertex;
@@ -81,7 +81,7 @@ namespace Plugin
 		}
 
 
-		struct Animation
+		private struct Animation
 		{
 			internal int FrameCount;
 			internal Dictionary<string, KeyframeAnimation> Nodes;
@@ -92,18 +92,18 @@ namespace Plugin
 			 */
 			internal double FrameRate;
 		}
-		
-		class Vertex
+
+		private class Vertex
 		{
 			internal Vector3 Coordinates;
-			internal Vector3 Normal;
+			internal readonly Vector3 Normal;
 			internal Vector2 TextureCoordinates;
 			internal int[] matrixChain;
 
 			public Vertex(Vector3 c, Vector3 n)
 			{
-				this.Coordinates = new Vector3(c.X, c.Y, c.Z);
-				this.Normal = new Vector3(n.X, n.Y, n.Z);
+				Coordinates = new Vector3(c.X, c.Y, c.Z);
+				Normal = new Vector3(n.X, n.Y, n.Z);
 			}
 		}
 
@@ -188,12 +188,12 @@ namespace Plugin
 			/// <param name="distance">The maximum viewing distance for this LOD</param>
 			internal LOD(double distance)
 			{
-				this.viewingDistance = distance;
-				this.subObjects = new List<SubObject>();
+				viewingDistance = distance;
+				subObjects = new List<SubObject>();
 			}
 
 			internal readonly double viewingDistance;
-			internal List<SubObject> subObjects;
+			internal readonly List<SubObject> subObjects;
 			internal int[] hierarchy;
 		}
 
@@ -201,11 +201,11 @@ namespace Plugin
 		{
 			internal SubObject()
 			{
-				this.verticies = new List<Vertex>();
-				this.vertexSets = new List<VertexSet>();
-				this.faces = new List<Face>();
-				this.materials = new List<Material>();
-				this.hierarchy = new List<int>();
+				verticies = new List<Vertex>();
+				vertexSets = new List<VertexSet>();
+				faces = new List<Face>();
+				materials = new List<Material>();
+				hierarchy = new List<int>();
 			}
 
 			internal void TransformVerticies(MsTsShape shape)
@@ -300,13 +300,9 @@ namespace Plugin
 									}
 								}
 								
-								// used to pack 4 x matrix indicies into a int
-								int[] transformChain = new int[] { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 };
+								// used to pack matrix indicies into a int
+								int[] transformChain = { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 };
 								matrixChain.CopyTo(transformChain);
-								if (matrixChain.Count > 4)
-								{
-									int b = 0;
-								}
 								transformedVertices[i].matrixChain = transformChain;
 							}
 							break;
@@ -322,9 +318,7 @@ namespace Plugin
 				{
 					return;
 				}
-				//int mf = Object.Mesh.Faces.Length;
-				//int mm = Object.Mesh.Materials.Length;
-				//int mv = Object.Mesh.Vertices.Length;
+
 				Array.Resize(ref Object.Mesh.Faces, faces.Count);
 				Array.Resize(ref Object.Mesh.Materials, materials.Count);
 				Array.Resize(ref Object.Mesh.Vertices, verticies.Count);
@@ -1453,7 +1447,7 @@ namespace Plugin
 							// If we contain a single frame containing the Identity quaternion, this isn't actually an animation
 							// but is just a frame allowing sub-parts of the object to be grouped
 							// Don't add it to the list of animations in this case
-							// Found in BR_9f_92150.s stated to be built with TSM / polymaster
+							// Found in BR_9f_92150.s stated to be built with TSM / Polymaster
 							break;
 						}
 						animationNode.AnimationControllers[controllerIndex] = new TcbKey(animationNode.Name, quaternionFrames);

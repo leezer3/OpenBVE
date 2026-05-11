@@ -18,7 +18,7 @@ namespace SoundManager
 		/// <summary>The OpenAL sound name. Only valid if the sound is loaded.</summary>
 		public int OpenAlBufferName;
 		/// <summary>Backing property for duration</summary>
-		private double _duration;
+		private double duration;
 		/// <summary>The duration of the sound in seconds. Only valid if the sound is loaded.</summary>
 		public double Duration
 		{
@@ -26,11 +26,11 @@ namespace SoundManager
 			{
 				// N.B. This call is actually made on the main thread
 				Load();
-				return _duration;
+				return duration;
 			}
 			
 		}
-		/// <summary>Whether to ignore further attemps to load the sound after previous attempts have failed.</summary>
+		/// <summary>Whether to ignore further attempts to load the sound after previous attempts have failed.</summary>
 		internal bool Ignore;
 		/// <summary>The function script controlling this sound's volume.</summary>
 		internal FunctionScript PitchFunction;
@@ -49,7 +49,7 @@ namespace SoundManager
 			Radius = radius;
 			Loaded = SoundBufferState.NotLoaded;
 			OpenAlBufferName = 0;
-			_duration = 0.0;
+			duration = 0.0;
 			InternalVolumeFactor = 0.5;
 			Ignore = false;
 			PitchFunction = null;
@@ -66,7 +66,7 @@ namespace SoundManager
 			Radius = radius;
 			Loaded = SoundBufferState.NotLoaded;
 			OpenAlBufferName = 0;
-			_duration = 0.0;
+			duration = 0.0;
 			InternalVolumeFactor = 0.5;
 			Ignore = false;
 			PitchFunction = null;
@@ -80,7 +80,7 @@ namespace SoundManager
 			Radius = 0.0;
 			Loaded = SoundBufferState.NotLoaded;
 			OpenAlBufferName = 0;
-			_duration = 0.0;
+			duration = 0.0;
 			InternalVolumeFactor = 0.5;
 			Ignore = false;
 			PitchFunction = null;
@@ -95,7 +95,7 @@ namespace SoundManager
 			Radius = 0.0;
 			Loaded = SoundBufferState.NotLoaded;
 			OpenAlBufferName = 0;
-			_duration = 0.0;
+			duration = 0.0;
 			InternalVolumeFactor = 0.5;
 			Ignore = false;
 			PitchFunction = null;
@@ -107,16 +107,16 @@ namespace SoundManager
 		public SoundBuffer Clone(double radius = 0)
 		{
 			double r = radius > 0 ? radius : Radius;
-			return new SoundBuffer(this.Origin)
+			return new SoundBuffer(Origin)
 			{
 				Radius = r,
 				Loaded = SoundBufferState.NotLoaded,
 				OpenAlBufferName = 0,
-				_duration = 0.0,
-				InternalVolumeFactor = this.InternalVolumeFactor,
+				duration = 0.0,
+				InternalVolumeFactor = InternalVolumeFactor,
 				Ignore = false,
-				PitchFunction = this.PitchFunction,
-				VolumeFunction = this.VolumeFunction
+				PitchFunction = PitchFunction,
+				VolumeFunction = VolumeFunction
 			};
 		}
 
@@ -139,7 +139,7 @@ namespace SoundManager
 					AL.GenBuffers(1, out OpenAlBufferName);
 					ALFormat format = sound.BitsPerSample == 8 ? ALFormat.Mono8 : ALFormat.Mono16;
 					AL.BufferData(OpenAlBufferName, format, bytes, bytes.Length, sound.SampleRate);
-					_duration = sound.Duration;
+					duration = sound.Duration;
 					Loaded = SoundBufferState.Loaded;
 					return;
 				}

@@ -39,6 +39,11 @@ namespace OpenBveApi.Objects
 		/// <summary>Applies the MeshBuilder's data to a StaticObject</summary>
 		public void Apply(ref StaticObject Object, bool EnableHacks = false, bool IgnoreW = true)
 		{
+			if (Vertices.Count == 0)
+			{
+				return;
+			}
+
 			if (TransformMatrix != Matrix4D.NoTransformation)
 			{
 				for (int i = 0; i < Vertices.Count; i++)
@@ -85,11 +90,12 @@ namespace OpenBveApi.Objects
 					Object.Mesh.Materials[mm + i].Flags = Materials[i].Flags;
 					Object.Mesh.Materials[mm + i].Color = Materials[i].Color;
 					Object.Mesh.Materials[mm + i].TransparentColor = Materials[i].TransparentColor;
+					Object.Mesh.Materials[mm + i].SpecularColor = Materials[i].SpecularColor;
 					Texture transparency = null;
 					if (Materials[i].TransparencyTexture != null)
 					{
 						currentHost.LoadTexture(Materials[i].TransparencyTexture, new TextureParameters(null, null), out transparency);
-						currentHost.LoadTexture(ref transparency, OpenGlTextureWrapMode.ClampClamp, true);
+						currentHost.LoadTexture(ref transparency, OpenGlTextureWrapMode.ClampClamp);
 					}
 
 					TextureParameters parameters;
@@ -316,7 +322,7 @@ namespace OpenBveApi.Objects
 		public void ApplyColor(Color32 color, bool emissive) {
 			for (int i = 0; i < Materials.Length; i++) {
 				if (emissive) {
-					Materials[i].EmissiveColor = (Color24)color;
+					Materials[i].EmissiveColor = color;
 					Materials[i].Flags |= MaterialFlags.Emissive;
 				} else {
 					Materials[i].Color = color;

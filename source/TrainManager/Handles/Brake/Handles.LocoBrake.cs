@@ -244,23 +244,21 @@ namespace TrainManager.Handles
 
 				return Translations.QuickReferences.HandleBrakeNull;
 			}
-			else
+
+			if (baseTrain.Handles.EmergencyBrake.Driver)
 			{
-				if (baseTrain.Handles.EmergencyBrake.Driver)
-				{
-					color = MessageColor.Red;
-					return NotchDescriptions[0];
-				}
-
-
-				if (Driver != 0)
-				{
-					color = MessageColor.Orange;
-					return NotchDescriptions[Driver + 1];
-				}
-
-				return NotchDescriptions[1];
+				color = MessageColor.Red;
+				return NotchDescriptions[0];
 			}
+
+
+			if (Driver != 0)
+			{
+				color = MessageColor.Orange;
+				return NotchDescriptions[Driver + 1];
+			}
+
+			return NotchDescriptions[1];
 
 		}
 	}

@@ -97,10 +97,11 @@ namespace OpenBve
 			menuControls.Add(routeDescriptionBox);
 			menuControls.Add(nextImageButton);
 			menuControls.Add(previousImageButton);
+			menuControls.Add(nextStepButton);
 		}
 
 		/// <summary>Should be called when the screen resolution changes to re-position all items on the menu appropriately</summary>
-		private void OnResize()
+		internal void OnResize()
 		{
 			// choose the text font size according to screen height
 			// the boundaries follow approximately the progression
@@ -117,15 +118,18 @@ namespace OpenBve
 				MenuFont = Program.Renderer.Fonts.NextLargestFont(MenuFont);
 			}
 
-			lineHeight = (int)(MenuFont.FontSize * LineSpacing);
+			LineHeight = (int)(MenuFont.FontSize * LineSpacing);
 			int quarterWidth = (int)(Program.Renderer.Screen.Width / 4.0);
 			int quarterHeight = (int)(Program.Renderer.Screen.Height / 4.0);
+			nextStepButton.Location = new Vector2(Program.Renderer.Screen.Width - 10, Program.Renderer.Screen.Height - 10);
+			nextStepButton.Location -= nextStepButton.Size; // move into place
+			nextStepButton.IsVisible = false;
 			int descriptionLoc = Program.Renderer.Screen.Width - quarterWidth - quarterWidth / 2;
 			int descriptionWidth = quarterWidth + quarterWidth / 2;
 			int descriptionHeight = descriptionWidth;
-			if (descriptionHeight + quarterWidth > Program.Renderer.Screen.Height - 50)
+			if (descriptionHeight + quarterWidth > Program.Renderer.Screen.Height - 20 - nextStepButton.Size.Y)
 			{
-				descriptionHeight = Program.Renderer.Screen.Height - quarterWidth - 50;
+				descriptionHeight = Program.Renderer.Screen.Height - quarterWidth - 20 - (int)nextStepButton.Size.Y;
 			}
 			routeDescriptionBox.Location = new Vector2(descriptionLoc, quarterWidth);
 			routeDescriptionBox.Size = new Vector2(descriptionWidth, descriptionHeight);
@@ -137,6 +141,8 @@ namespace OpenBve
 			nextImageButton.IsVisible = false;
 			previousImageButton.Location = new Vector2(imageLoc - previousImageButton.Size.X * 2, quarterWidth / 2.0);
 			previousImageButton.IsVisible = false;
+			
+			
 			switchMainPictureBox.Location = new Vector2(imageLoc, quarterHeight);
 			switchMainPictureBox.Size = new Vector2(quarterWidth, quarterWidth);
 			switchMainPictureBox.BackgroundColor = Color128.Transparent;
@@ -154,6 +160,11 @@ namespace OpenBve
 			controlTextBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0 + quarterWidth);
 			controlTextBox.Size = new Vector2(quarterWidth, quarterWidth);
 			controlTextBox.BackgroundColor = Color128.Black;
+			if (CurrMenu >= 0)
+			{
+				Menus[CurrMenu].ComputeExtent(Menus[CurrMenu].Type, MenuFont, Renderer.Screen.Width / 2.0, LineHeight);
+			}
+			ComputePosition();
 		}
 
 		public override void Reset()
@@ -305,19 +316,14 @@ namespace OpenBve
 				nextImageButton.MouseMove(x, y);
 				previousImageButton.MouseMove(x, y);
 				routeDescriptionBox.MouseMove(x, y);
-				//HACK: Use this to trigger our menu start button!
-				if (x > Program.Renderer.Screen.Width - 200 && x < Program.Renderer.Screen.Width - 10 && y > Program.Renderer.Screen.Height - 40 && y < Program.Renderer.Screen.Height - 10)
-				{
-					menu.Selection = int.MaxValue;
-					return true;
-				}
+				nextStepButton.MouseMove(x, y);
 			}
 			if (x < menuMin.X || x > menuMax.X || y < menuMin.Y || y > menuMax.Y)
 			{
 				return false;
 			}
 
-			int item = (int) ((y - topItemY) / lineHeight + menu.TopItem);
+			int item = (int) ((y - topItemY) / LineHeight + menu.TopItem);
 			// if the mouse is above a command item, select it
 			if (item >= 0 && item < menu.Items.Length && (menu.Items[item] is MenuCommand || menu.Items[item] is MenuOption))
 			{
@@ -361,81 +367,6 @@ namespace OpenBve
 			
 			if (menu.Selection == SelectionNone)    // if menu has no selection, do nothing
 				return;
-			if (menu.Selection == int.MaxValue)
-			{
-				switch (menu.Type)
-				{
-					case MenuType.RouteList:
-						// Route not fully processed
-						if (RoutefileState != RouteState.Processed)
-							return;
-						Instance.PushMenu(MenuType.TrainDefault);
-						return;
-					case MenuType.TrainDefault:
-					case MenuType.TrainList:
-						// No train selected
-						if (Interface.CurrentOptions.TrainFolder == string.Empty)
-							return;
-						Reset();
-						//Launch the game!
-						Loading.Complete = false;
-						Loading.LoadAsynchronously(currentFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
-						OpenBVEGame g = Program.Renderer.GameWindow as OpenBVEGame;
-						// ReSharper disable once PossibleNullReferenceException
-						g.LoadingScreenLoop();
-						Program.Renderer.CurrentInterface = InterfaceType.Normal;
-						return;
-					case MenuType.PackageInstall:
-						if (currentPackage != null)
-						{
-							switch (currentPackage.PackageType)
-							{
-								case PackageType.Route:
-									installedFiles = string.Empty;
-									Manipulation.ExtractPackage(currentPackage, Program.FileSystem.RouteInstallationDirectory, Program.FileSystem.PackageDatabaseFolder, ref installedFiles);
-									break;
-								case PackageType.Train:
-									installedFiles = string.Empty;
-									Manipulation.ExtractPackage(currentPackage, Program.FileSystem.TrainInstallationDirectory, Program.FileSystem.PackageDatabaseFolder, ref installedFiles);
-									break;
-								case PackageType.Other:
-									installedFiles = string.Empty;
-									Manipulation.ExtractPackage(currentPackage, Program.FileSystem.OtherInstallationDirectory, Program.FileSystem.PackageDatabaseFolder, ref installedFiles);
-									break;
-							}
-						}
-						break;
-					case MenuType.UninstallRoute:
-					case MenuType.UninstallTrain:
-					case MenuType.UninstallOther:
-						string s = string.Empty;
-						if (Manipulation.UninstallPackage(currentPackage, Program.FileSystem.PackageDatabaseFolder, ref s))
-						{
-							switch (currentPackage.PackageType)
-							{
-								case PackageType.Route:
-									DatabaseFunctions.CleanDirectory(Program.FileSystem.RouteInstallationDirectory, ref s);
-									Database.currentDatabase.InstalledRoutes.Remove(currentPackage);
-									break;
-								case PackageType.Train:
-									DatabaseFunctions.CleanDirectory(Program.FileSystem.TrainInstallationDirectory, ref s);
-									Database.currentDatabase.InstalledTrains.Remove(currentPackage);
-									break;
-								case PackageType.Other:
-									DatabaseFunctions.CleanDirectory(Program.FileSystem.OtherInstallationDirectory, ref s);
-									Database.currentDatabase.InstalledOther.Remove(currentPackage);
-									break;
-							}
-							routeDescriptionBox.Text = s;
-							Database.SaveDatabase();
-						}
-						
-						PopMenu();
-						break;
-				}
-				return;
-
-			}
 			switch (cmd)
 			{
 				case Translations.Command.MenuUp:      // UP
@@ -472,8 +403,7 @@ namespace OpenBve
 								}
 								Instance.PopMenu();
 								OnResize();
-								Menus[CurrMenu].ComputeExtent(Menus[CurrMenu].Type, MenuFont, 0);
-								Menus[CurrMenu].Height = Menus[CurrMenu].Items.Length * lineHeight;
+								Menus[CurrMenu].ComputeExtent(Menus[CurrMenu].Type, MenuFont, 0, LineHeight);
 								ComputePosition();
 								break;
 							case MenuTag.MenuJumpToStation:     // TO STATIONS MENU
@@ -924,7 +854,7 @@ namespace OpenBve
 					Program.Renderer.OpenGlString.Draw(MenuFont, opt.CurrentOption.ToString(), new Vector2((menuMax.X - menuMin.X + 2.0f * Border.X) + 4.0f, itemY),
 						menu.Align, backgroundColor, false);
 				}
-				itemY += lineHeight;
+				itemY += LineHeight;
 				if (menu.Items[i].Icon != null)
 				{
 					Program.Renderer.Rectangle.DrawAlpha(menu.Items[i].Icon, new Vector2(iconX, itemY - itemHeight * 1.5), new Vector2(itemHeight, itemHeight), Color128.White);
@@ -963,40 +893,23 @@ namespace OpenBve
 					previousImageButton.Draw();
 					routePictureBox.Draw();
 					routeDescriptionBox.Draw();
+					nextStepButton.Text = menu.Type == MenuType.RouteList ? Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "start", "train_choose" }) : Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "start", "start_start" });
+					nextStepButton.IsVisible = true;
+					nextStepButton.Draw();
 
 					//Choose Train and Game start button
-					bool allowNextPhase = (menu.Type == MenuType.RouteList && RoutefileState == RouteState.Processed) || (menu.Type == MenuType.TrainList && Interface.CurrentOptions.TrainFolder != string.Empty);
-					
-					if (menu.Selection == int.MaxValue && allowNextPhase) //HACK: Special value to make this work with minimum extra code
-					{
-						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
-						Program.Renderer.OpenGlString.Draw(MenuFont, menu.Type == MenuType.RouteList ? Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_choose"}) : Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","start_start"}), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
-					}
-					else
-					{
-						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-						Program.Renderer.OpenGlString.Draw(MenuFont, menu.Type == MenuType.RouteList ? Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_choose"}) : Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","start_start"}), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, allowNextPhase ? Color128.White : Color128.Grey);
-					}
-					break;
+					bool allowNextPhase = 
+
+					nextStepButton.Enabled = (menu.Type == MenuType.RouteList && RoutefileState == RouteState.Processed) || (menu.Type == MenuType.TrainList && Interface.CurrentOptions.TrainFolder != string.Empty);
+						break;
 				}
 				case MenuType.PackageInstall:
 					routePictureBox.Draw();
 					routeDescriptionBox.Draw();
-					if (currentPackage != null)
-					{
-						if (menu.Selection == int.MaxValue) //HACK: Special value to make this work with minimum extra code
-						{
-							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_button"}), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
-						}
-						else
-						{
-							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_button"}), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
-						}
-					}
+					nextStepButton.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "packages", "install_button" });
+					nextStepButton.IsVisible = true;
+					nextStepButton.Enabled = currentPackage != null;
+					nextStepButton.Draw();
 					break;
 				case MenuType.PackageUninstall:
 					if (routeDescriptionBox.Text != string.Empty)
@@ -1013,20 +926,10 @@ namespace OpenBve
 				case MenuType.UninstallOther:
 					routePictureBox.Draw();
 					routeDescriptionBox.Draw();
-					if (currentPackage != null)
-					{
-						if (menu.Selection == int.MaxValue) //HACK: Special value to make this work with minimum extra code
-						{
-							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","uninstall_button"}), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
-						}
-						else
-						{
-							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","uninstall_button"}), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
-						}
-					}
+					nextStepButton.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "packages", "uninstall_button" });
+					nextStepButton.IsVisible = true;
+					nextStepButton.Enabled = currentPackage != null;
+					nextStepButton.Draw();
 					break;
 				case MenuType.Controls:
 					int data = (int)((MenuCommand)menu.Items[menu.Selection]).Data;

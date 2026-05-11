@@ -22,7 +22,7 @@ namespace RouteManager2.SignalManager
 		/// <summary>Creates the object within the game world</summary>
 		public override void Create(Vector3 wpos, Transformation railTransformation, Transformation localTransformation, int sectionIndex, double startingDistance, double endingDistance, double trackPosition, double brightness)
 		{
-			Object.CreateObject(wpos, railTransformation, localTransformation, sectionIndex, startingDistance, endingDistance, trackPosition, 1.0);
+			Object.CreateObject(wpos, railTransformation, localTransformation, new ObjectCreationParameters(trackPosition, startingDistance, endingDistance, 1.0, sectionIndex));
 		}
 	}
 }

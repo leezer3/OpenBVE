@@ -327,7 +327,7 @@ namespace Route.Bve5
 
 								wpos += Data.Blocks[i].FreeObjects[railKey][k].Position * Transformation;
 								Data.Objects.TryGetValue(key, out UnifiedObject obj);
-								obj?.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].FreeObjects[railKey][k].Yaw, Data.Blocks[i].FreeObjects[railKey][k].Pitch, Data.Blocks[i].FreeObjects[railKey][k].Roll), -1, StartingDistance, EndingDistance, Data.Blocks[i].FreeObjects[railKey][k].TrackPosition, 1.0);
+								obj?.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].FreeObjects[railKey][k].Yaw, Data.Blocks[i].FreeObjects[railKey][k].Pitch, Data.Blocks[i].FreeObjects[railKey][k].Roll), new ObjectCreationParameters(Data.Blocks[i].FreeObjects[railKey][k].TrackPosition, StartingDistance, EndingDistance));
 							}
 						}
 
@@ -346,30 +346,28 @@ namespace Route.Bve5
 								double sRadiusH = Data.Blocks[i].Rails[s].RadiusH;
 								double sx1 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[s].Position.X : sx0;
 
-								string key = Data.Blocks[i].Cracks[k].Key;
-								double tpos = Data.Blocks[i].Cracks[k].TrackPosition;
 								Vector3 wpos;
-								Transformation Transformation;
+								Transformation railTransformation;
 								if (j == 0)
 								{
-									GetPrimaryRailTransformation(Position, Data.Blocks, i, Data.Blocks[i].Cracks[k], Direction, out wpos, out Transformation);
+									GetPrimaryRailTransformation(Position, Data.Blocks, i, Data.Blocks[i].Cracks[k], Direction, out wpos, out railTransformation);
 								}
 								else
 								{
-									GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, Data.Blocks[i].Cracks[k], out wpos, out Transformation);
+									GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, Data.Blocks[i].Cracks[k], out wpos, out railTransformation);
 								}
 
-								double pInterpolateX0 = GetTrackCoordinate(StartingDistance, px0, nextStartingDistance, px1, pRadiusH, tpos);
-								double pInterpolateX1 = GetTrackCoordinate(StartingDistance, px0, nextStartingDistance, px1, pRadiusH, tpos + InterpolateInterval);
-								double sInterpolateX0 = GetTrackCoordinate(StartingDistance, sx0, nextStartingDistance, sx1, sRadiusH, tpos);
-								double sInterpolateX1 = GetTrackCoordinate(StartingDistance, sx0, nextStartingDistance, sx1, sRadiusH, tpos + InterpolateInterval);
+								double pInterpolateX0 = GetTrackCoordinate(StartingDistance, px0, nextStartingDistance, px1, pRadiusH, Data.Blocks[i].Cracks[k].TrackPosition);
+								double pInterpolateX1 = GetTrackCoordinate(StartingDistance, px0, nextStartingDistance, px1, pRadiusH, Data.Blocks[i].Cracks[k].TrackPosition + InterpolateInterval);
+								double sInterpolateX0 = GetTrackCoordinate(StartingDistance, sx0, nextStartingDistance, sx1, sRadiusH, Data.Blocks[i].Cracks[k].TrackPosition);
+								double sInterpolateX1 = GetTrackCoordinate(StartingDistance, sx0, nextStartingDistance, sx1, sRadiusH, Data.Blocks[i].Cracks[k].TrackPosition + InterpolateInterval);
 								double d0 = sInterpolateX0 - pInterpolateX0;
 								double d1 = sInterpolateX1 - pInterpolateX1;
 
-								if(Data.Objects.TryGetValue(key, out UnifiedObject obj) && obj != null)
+								if(Data.Objects.TryGetValue(Data.Blocks[i].Cracks[k].Key, out UnifiedObject obj) && obj != null)
 								{
 									UnifiedObject crack = d0 < 0.0 ? obj.TransformRight(d0, d1) : obj.TransformLeft(d0, d1);
-									crack.CreateObject(wpos, Transformation, new Transformation(0.0, 0.0, 0.0), -1, StartingDistance, EndingDistance, tpos, 1.0);
+									crack.CreateObject(wpos, railTransformation, new ObjectCreationParameters(Data.Blocks[i].Cracks[k].TrackPosition, StartingDistance, EndingDistance));
 								}
 							}
 						}
@@ -380,16 +378,16 @@ namespace Route.Bve5
 							for (int k = 0; k < Data.Blocks[i].Signals[j].Count; k++)
 							{
 								Vector3 wpos;
-								Transformation Transformation;
+								Transformation railTransformation;
 								if (j == 0)
 								{
-									GetPrimaryRailTransformation(Position, Data.Blocks, i, Data.Blocks[i].Signals[j][k], Direction, out wpos, out Transformation);
+									GetPrimaryRailTransformation(Position, Data.Blocks, i, Data.Blocks[i].Signals[j][k], Direction, out wpos, out railTransformation);
 								}
 								else
 								{
-									GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, Data.Blocks[i].Signals[j][k], out wpos, out Transformation);
+									GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, Data.Blocks[i].Signals[j][k], out wpos, out railTransformation);
 								}
-								wpos += Data.Blocks[i].Signals[j][k].Position * Transformation;
+								wpos += Data.Blocks[i].Signals[j][k].Position * railTransformation;
 
 								SignalData sd = Data.SignalObjects.Find(data => data.Key.Equals(Data.Blocks[i].Signals[j][k].Key, StringComparison.InvariantCultureIgnoreCase));
 								if (sd != null)
@@ -433,7 +431,7 @@ namespace Route.Bve5
 											aoc.Objects[m].RefreshRate = refreshRate;
 										}
 
-										aoc.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].Signals[j][k].Yaw, Data.Blocks[i].Signals[j][k].Pitch, Data.Blocks[i].Signals[j][k].Roll), Data.Blocks[i].Signals[j][k].SectionIndex, StartingDistance, EndingDistance, Data.Blocks[i].Signals[j][k].TrackPosition, 1.0);
+										aoc.CreateObject(wpos, railTransformation, new Transformation(Data.Blocks[i].Signals[j][k].Yaw, Data.Blocks[i].Signals[j][k].Pitch, Data.Blocks[i].Signals[j][k].Roll), new ObjectCreationParameters(Data.Blocks[i].Signals[j][k].TrackPosition, StartingDistance, EndingDistance, 1.0, Data.Blocks[i].Signals[j][k].SectionIndex));
 									}
 								}
 							}

@@ -48,6 +48,7 @@ namespace RouteViewer
 		private static bool ShiftPressed = false;
 		private static bool ControlPressed = false;
 		private static bool AltPressed = false;
+		private static bool RPressed = false;
 
 		// mouse
 		private static int MouseButton;
@@ -108,44 +109,45 @@ namespace RouteViewer
 			{
 				for (int i = 0; i < args.Length; i++)
 				{
-					if (args[i] != null)
+					if (args[i] == null)
 					{
-						if (System.IO.File.Exists(args[i]))
+						continue;
+					}
+					if (System.IO.File.Exists(args[i]))
+					{
+						for (int j = 0; j < CurrentHost.Plugins.Length; j++)
 						{
-							for (int j = 0; j < CurrentHost.Plugins.Length; j++)
+							if (CurrentHost.Plugins[j].Object != null && CurrentHost.Plugins[j].Object.CanLoadObject(args[i]))
 							{
-								if (CurrentHost.Plugins[j].Object != null && CurrentHost.Plugins[j].Object.CanLoadObject(args[i]))
-								{
-									objectsToLoad += args[i] + " ";
-									continue;
-								}
+								objectsToLoad += args[i] + " ";
+								continue;
+							}
 
-								if (CurrentHost.Plugins[j].Route != null && CurrentHost.Plugins[j].Route.CanLoadRoute(args[i]))
+							if (CurrentHost.Plugins[j].Route != null && CurrentHost.Plugins[j].Route.CanLoadRoute(args[i]))
+							{
+								if (string.IsNullOrEmpty(CurrentRouteFile))
 								{
-									if (string.IsNullOrEmpty(CurrentRouteFile))
-									{
-										CurrentRouteFile = args[i];
-										processCommandLineArgs = true;
-									}
+									CurrentRouteFile = args[i];
+									processCommandLineArgs = true;
 								}
 							}
 						}
-						else if (args[i].ToLowerInvariant() == "/enablehacks")
+					}
+					else if (args[i].ToLowerInvariant() == "/enablehacks")
+					{
+						//Deliberately undocumented option for debugging use
+						Interface.CurrentOptions.EnableBveTsHacks = true;
+						for (int j = 0; j < CurrentHost.Plugins.Length; j++)
 						{
-							//Deliberately undocumented option for debugging use
-							Interface.CurrentOptions.EnableBveTsHacks = true;
-							for (int j = 0; j < CurrentHost.Plugins.Length; j++)
+							if (CurrentHost.Plugins[j].Object != null)
 							{
-								if (CurrentHost.Plugins[j].Object != null)
+								CompatabilityHacks enabledHacks = new CompatabilityHacks
 								{
-									CompatabilityHacks enabledHacks = new CompatabilityHacks
-									{
-										BveTsHacks = true, 
-										CylinderHack = false,
-										BlackTransparency =  true
-									};
-									CurrentHost.Plugins[j].Object.SetCompatibilityHacks(enabledHacks);
-								}
+									BveTsHacks = true, 
+									CylinderHack = false,
+									BlackTransparency =  true
+								};
+								CurrentHost.Plugins[j].Object.SetCompatibilityHacks(enabledHacks);
 							}
 						}
 					}
@@ -608,9 +610,30 @@ namespace RouteViewer
 						//Don't allow the user to update the settings during loading, bad idea..
 						break;
 					}
+
+					// Shadows
+					var prevShadowRes = Interface.CurrentOptions.ShadowResolution;
+					var prevShadowDist = Interface.CurrentOptions.ShadowDrawDistance;
+					var prevShadowCasc = Interface.CurrentOptions.ShadowCascades;
+					var prevShadowStr = Interface.CurrentOptions.ShadowStrength;
+					var prevShadowBias = Interface.CurrentOptions.ShadowBias;
+					var prevShadowNormalBias = Interface.CurrentOptions.ShadowNormalBias;
+
 					if (FormOptions.ShowOptions() == DialogResult.OK)
 					{
 						UpdateGraphicsSettings();
+						if (prevShadowRes != Interface.CurrentOptions.ShadowResolution ||
+						    prevShadowDist != Interface.CurrentOptions.ShadowDrawDistance ||
+						    prevShadowCasc != Interface.CurrentOptions.ShadowCascades ||
+						    Math.Abs(prevShadowStr - Interface.CurrentOptions.ShadowStrength) > 0.01f ||
+						    Math.Abs(prevShadowBias - Interface.CurrentOptions.ShadowBias) > 0.000001f ||
+						    Math.Abs(prevShadowNormalBias - Interface.CurrentOptions.ShadowNormalBias) > 0.01f)
+						{
+							if (Program.Renderer.AvailableNewRenderer)
+							{
+								Program.Renderer.ReloadShadowSettings();
+							}
+						}
 					}
 					Application.DoEvents();
 					Renderer.Camera.AlignmentDirection.TrackPosition = 0;
@@ -841,7 +864,11 @@ namespace RouteViewer
 					}
 					break;
 				case Key.R:
-					Renderer.SwitchOpenGLVersion();
+					if (!RPressed)
+					{
+						RPressed = true;
+						Renderer.SwitchOpenGLVersion();
+					}
 					break;
 				case Key.P:
 					if (CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
@@ -924,6 +951,9 @@ namespace RouteViewer
 				case Key.Keypad0:
 				case Key.KeypadPeriod:
 					Renderer.Camera.AlignmentDirection.Zoom = 0.0;
+					break;
+				case Key.R:
+					RPressed = false;
 					break;
 			}
 		}

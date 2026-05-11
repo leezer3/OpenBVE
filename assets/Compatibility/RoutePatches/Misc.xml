@@ -318,5 +318,11 @@
 		<ReducedColorTransparency>true</ReducedColorTransparency>
 		<CylinderHack>true</CylinderHack>
 	</Patch>
+	<!-- Maglev -->
+	<Patch>
+		<Hash>70A845ECCF96A73A329E04A1DCDB79AD4FF6EB920AFCE731E2CC85EA31AA49FB</Hash>
+		<FileName>maglev.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
   </RoutePatches>
 </openBVE>

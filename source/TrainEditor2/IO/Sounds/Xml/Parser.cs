@@ -328,13 +328,7 @@ namespace TrainEditor2.IO.Sounds.Xml
 				{
 					XElement indexNode = childNode.Element("Index");
 
-					if (indexNode == null)
-					{
-						Interface.AddMessage(MessageType.Error, false, $"Invalid array index {childNode.Name.LocalName} in XML node {parentNode.Name.LocalName} at line {((IXmlLineInfo)childNode).LineNumber}");
-						return;
-					}
-
-					if (!NumberFormats.TryParseIntVb6(indexNode.Value, out int idx))
+					if (indexNode == null || !NumberFormats.TryParseIntVb6(indexNode.Value, out int idx))
 					{
 						Interface.AddMessage(MessageType.Error, false, $"Invalid array index {childNode.Name.LocalName} in XML node {parentNode.Name.LocalName} at line {((IXmlLineInfo)childNode).LineNumber}");
 						return;

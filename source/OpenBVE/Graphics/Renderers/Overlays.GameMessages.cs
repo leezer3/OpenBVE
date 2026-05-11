@@ -18,7 +18,7 @@ namespace OpenBve.Graphics.Renderers
 			//Calculate the size of the viewing plane
 			int n = MessageManager.TextualMessages.Count;
 			//Minimum initial width is 16px
-			double totalwidth = 16.0f;
+			double totalWidth = 16.0f;
 			for (int j = 0; j < n; j++)
 			{
 				//Update font size for the renderer
@@ -28,19 +28,19 @@ namespace OpenBve.Graphics.Renderers
 				//Run through the list of current messages
 				double a = MessageManager.TextualMessages[j].Width - j * Element.Value1;
 				//If our width is wider than the old, use this as the NEW viewing plane width
-				if (a > totalwidth)
+				if (a > totalWidth)
 				{
-					totalwidth = a;
+					totalWidth = a;
 				}
 			}
 			//Calculate the X-width of the viewing plane
-			MessagesRendererSize.X += 16.0 * TimeElapsed * (totalwidth -MessagesRendererSize.X);
-			totalwidth = (float)MessagesRendererSize.X;
+			MessagesRendererSize.X += 16.0 * TimeElapsed * (totalWidth -MessagesRendererSize.X);
+			totalWidth = (float)MessagesRendererSize.X;
 			//Calculate final viewing plane size to pass to openGL
 			Element.CalculateViewingPlaneSize(out double lw, out double rw, out double lcrh);
 
 			// start
-			double w = totalwidth + lw + rw;
+			double w = totalWidth + lw + rw;
 			double h = Element.Value2 * n;
 			double x = Element.Alignment.X < 0 ? 0.0 : Element.Alignment.X > 0 ? renderer.Screen.Width - w : 0.5 * (renderer.Screen.Width - w);
 			double y = Element.Alignment.Y < 0 ? 0.0 : Element.Alignment.Y > 0 ? renderer.Screen.Height - h : 0.5 * (renderer.Screen.Height - h);

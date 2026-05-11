@@ -13,7 +13,7 @@
 					<source>Unknown</source>
 				</trans-unit>
 				<trans-unit id="last_updated">
-					<source>2019-06-29</source>
+					<source>2026-04-18</source>
 				</trans-unit>
 			</group>
 			<group id="openbve">
@@ -1117,6 +1117,18 @@
 					<trans-unit id="quality_distance_viewingdistance_meters">
 						<source>m</source>
 					</trans-unit>
+					<trans-unit id="quality_distance_nearclip">
+						<source>Near clip:</source>
+					</trans-unit>
+					<trans-unit id="quality_distance_nearclip_scenery">
+						<source>Near clip (scenery):</source>
+					</trans-unit>
+					<trans-unit id="quality_distance_nearclip_cab">
+						<source>Near clip (cab):</source>
+					</trans-unit>
+					<trans-unit id="quality_distance_nearclip_base">
+						<source>Near clip (base):</source>
+					</trans-unit>
 					<trans-unit id="quality_distance_motionblur">
 						<source>Motion blur:</source>
 					</trans-unit>
@@ -1132,8 +1144,77 @@
 					<trans-unit id="quality_distance_motionblur_high">
 						<source>High</source>
 					</trans-unit>
+					<trans-unit id="shadows_header">
+						<source>Shadows</source>
+					</trans-unit>
+					<trans-unit id="shadows_resolution">
+						<source>Shadow Resolution:</source>
+					</trans-unit>
+					<trans-unit id="shadows_resolution_off">
+						<source>Off</source>
+					</trans-unit>
+					<trans-unit id="shadows_resolution_low">
+						<source>Low (512×512)</source>
+					</trans-unit>
+					<trans-unit id="shadows_resolution_medium">
+						<source>Medium (1024×1024)</source>
+					</trans-unit>
+					<trans-unit id="shadows_resolution_high">
+						<source>High (2048×2048)</source>
+					</trans-unit>
+					<trans-unit id="shadows_resolution_ultra">
+						<source>Ultra (4096×4096)</source>
+					</trans-unit>
+					<trans-unit id="shadows_distance">
+						<source>Shadow Distance:</source>
+					</trans-unit>
+					<trans-unit id="shadows_distance_near">
+						<source>Near (150m)</source>
+					</trans-unit>
+					<trans-unit id="shadows_distance_medium">
+						<source>Medium (300m)</source>
+					</trans-unit>
+					<trans-unit id="shadows_distance_far">
+						<source>Far (500m)</source>
+					</trans-unit>
+					<trans-unit id="shadows_distance_veryfar">
+						<source>Very Far (800m)</source>
+					</trans-unit>
+					<trans-unit id="shadows_distance_viewingdistance">
+						<source>Follow Viewing Distance</source>
+					</trans-unit>
+					<trans-unit id="shadows_cascades">
+						<source>Shadow Cascades:</source>
+					</trans-unit>
+					<trans-unit id="shadows_cascades_2">
+						<source>2 Cascades (Fastest)</source>
+					</trans-unit>
+					<trans-unit id="shadows_cascades_3">
+						<source>3 Cascades (Balanced)</source>
+					</trans-unit>
+					<trans-unit id="shadows_cascades_4">
+						<source>4 Cascades (Best Quality)</source>
+					</trans-unit>
+					<trans-unit id="shadows_strength">
+						<source>Shadow Strength:</source>
+					</trans-unit>
+					<trans-unit id="shadows_bias">
+						<source>Shadow Bias:</source>
+					</trans-unit>
 					<trans-unit id="misc">
 						<source>Miscellaneous</source>
+					</trans-unit>
+					<trans-unit id="camera">
+						<source>Camera options</source>
+					</trans-unit>
+					<trans-unit id="camera_interior_transition">
+						<source>Smooth interior transition</source>
+					</trans-unit>
+					<trans-unit id="camera_exterior_transition">
+						<source>Smooth exterior transition</source>
+					</trans-unit>
+					<trans-unit id="camera_transition_duration">
+						<source>Transition duration (sec):</source>
 					</trans-unit>
 					<trans-unit id="misc_simulation">
 						<source>Detail of simulation</source>
@@ -2865,6 +2946,107 @@
 					</trans-unit>
 					<trans-unit id="cancel_button">
 						<source>Cancel</source>
+					</trans-unit>
+				</group>
+				<group id="zuiki">
+					<trans-unit id="config_title">
+						<source>ZUIKI controller configuration</source>
+					</trans-unit>
+					<trans-unit id="input_section">
+						<source>Handle input</source>
+					</trans-unit>
+					<trans-unit id="label_brake">
+						<source>Brake: [notch]</source>
+					</trans-unit>
+					<trans-unit id="label_power">
+						<source>Power: [notch]</source>
+					</trans-unit>
+					<trans-unit id="label_reverser">
+						<source>Reverser: [notch]</source>
+					</trans-unit>
+					<trans-unit id="device">
+						<source>Device:</source>
+					</trans-unit>
+					<trans-unit id="button_section">
+						<source>Button mapping</source>
+					</trans-unit>
+					<trans-unit id="command_none">
+						<source>None</source>
+					</trans-unit>
+					<trans-unit id="handle_section">
+						<source>Handle mapping</source>
+					</trans-unit>
+					<trans-unit id="option_convert">
+						<source>Convert notches</source>
+					</trans-unit>
+					<trans-unit id="option_keep_minmax">
+						<source>Keep minimum and maximum</source>
+					</trans-unit>
+					<trans-unit id="option_holdbrake">
+						<source>Map hold brake to B1</source>
+					</trans-unit>
+					<trans-unit id="label_up">
+						<source>Up</source>
+					</trans-unit>
+					<trans-unit id="label_down">
+						<source>Down</source>
+					</trans-unit>
+					<trans-unit id="label_left">
+						<source>Left</source>
+					</trans-unit>
+					<trans-unit id="label_right">
+						<source>Right</source>
+					</trans-unit>
+					<trans-unit id="label_screenshot">
+						<source>Screenshot</source>
+					</trans-unit>
+					<trans-unit id="label_home">
+						<source>Home</source>
+					</trans-unit>
+					<trans-unit id="label_square">
+						<source>Square</source>
+					</trans-unit>
+					<trans-unit id="label_ats">
+						<source>ATS</source>
+					</trans-unit>
+					<trans-unit id="label_pantograph">
+						<source>Pantograph</source>
+					</trans-unit>
+					<trans-unit id="label_eb_reset">
+						<source>EB Reset</source>
+					</trans-unit>
+					<trans-unit id="label_hill_start">
+						<source>Hill Start</source>
+					</trans-unit>
+					<trans-unit id="label_horn">
+						<source>Horn</source>
+					</trans-unit>
+					<trans-unit id="label_pedal_l">
+						<source>Pedal L</source>
+					</trans-unit>
+					<trans-unit id="label_pedal_s">
+						<source>Pedal S</source>
+					</trans-unit>
+					<trans-unit id="lamp_link">
+						<source>The lamps are not working</source>
+					</trans-unit>
+					<trans-unit id="save_button">
+						<source>Save</source>
+					</trans-unit>
+					<trans-unit id="cancel_button">
+						<source>Cancel</source>
+					</trans-unit>
+					<trans-unit id="help_title">
+						<source>Help</source>
+					</trans-unit>
+					<trans-unit id="help_textbox">
+						<source>If the lamps are not working, it is possible that your user does not have HIDRAW access to the controller. Follow these steps:\r\n\r\n1. Extract the udev file.\r\n2. Copy the file to &quot;/etc/udev/rules.d/&quot; (root permissions required).\r\n3. Reboot or reload udev rules manually.</source>
+					</trans-unit>
+					<trans-unit id="help_extract_button">
+						<source>Extract files</source>
+					</trans-unit>
+					<trans-unit id="help_ok_button">
+						<source>OK</source>
 					</trans-unit>
 				</group>
 			</group>

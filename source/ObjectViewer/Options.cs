@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -61,6 +61,7 @@ namespace ObjectViewer
 		internal Options()
 		{
 			ObjectOptimizationMode = ObjectOptimizationMode.Low;
+			// Shadow settings use synced base defaults
 		}
 
 		public override void Save(string fileName)
@@ -78,6 +79,7 @@ namespace ObjectViewer
 				Builder.AppendLine("windowWidth = " + Program.Renderer.Screen.Width.ToString(Culture));
 				Builder.AppendLine("windowHeight = " + Program.Renderer.Screen.Height.ToString(Culture));
 				Builder.AppendLine("isUseNewRenderer = " + (IsUseNewRenderer ? "true" : "false"));
+				Builder.AppendLine("nearclipbase = " + NearClipBase.ToString(Culture));
 				Builder.AppendLine("autoReloadObjects = " + (AutoReloadObjects ? "true" : "false"));
 				Builder.AppendLine();
 				Builder.AppendLine("[quality]");
@@ -85,6 +87,14 @@ namespace ObjectViewer
 				Builder.AppendLine("anisotropicfilteringlevel = " + AnisotropicFilteringLevel.ToString(Culture));
 				Builder.AppendLine("antialiasinglevel = " + AntiAliasingLevel.ToString(Culture));
 				Builder.AppendLine("transparencyMode = " + ((int)TransparencyMode).ToString(Culture));
+				Builder.AppendLine("shadowresolution = " + (int)ShadowResolution);
+				Builder.AppendLine("shadowdrawdistance = " + ShadowDrawDistance);
+				Builder.AppendLine("shadowcascades = " + (int)ShadowCascades);
+				Builder.AppendLine("shadowstrength = " + ShadowStrength.ToString("0.00", Culture));
+				Builder.AppendLine("shadowbias = " + ShadowBias.ToString("0.000000", Culture));
+				Builder.AppendLine("shadownormalbias = " + ShadowNormalBias.ToString("0.00", Culture));
+				Builder.AppendLine("lightazimuth = " + LightAzimuth.ToString(Culture));
+				Builder.AppendLine("lightelevation = " + LightElevation.ToString(Culture));
 				Builder.AppendLine();
 				Builder.AppendLine("[Parsers]");
 				Builder.AppendLine("xObject = " + CurrentXParser);
@@ -155,7 +165,14 @@ namespace ObjectViewer
 						case OptionsSection.Display:
 							block.TryGetValue(OptionsKey.WindowWidth, ref Interface.CurrentOptions.WindowWidth, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.WindowHeight, ref Interface.CurrentOptions.WindowHeight, NumberRange.Positive);
-							block.GetValue(OptionsKey.IsUseNewRenderer, out Interface.CurrentOptions.IsUseNewRenderer);
+							block.TryGetValue(OptionsKey.IsUseNewRenderer, ref Interface.CurrentOptions.IsUseNewRenderer);
+							block.TryGetValue(OptionsKey.NearClipBase, ref Interface.CurrentOptions.NearClipBase, NumberRange.Positive);
+							// ensure viewing distance is greater than the near clipping plane to avoid rendering issues
+							if (Interface.CurrentOptions.ViewingDistance <= Interface.CurrentOptions.NearClipBase)
+							{
+								Interface.CurrentOptions.ViewingDistance = (int)Math.Ceiling(Interface.CurrentOptions.NearClipBase) + 1;
+							}
+
 							block.GetValue(OptionsKey.AutoReloadObjects, out Interface.CurrentOptions.AutoReloadObjects);
 							break;
 						case OptionsSection.Quality:
@@ -163,6 +180,14 @@ namespace ObjectViewer
 							block.TryGetValue(OptionsKey.AnisotropicFilteringLevel, ref Interface.CurrentOptions.AnisotropicFilteringLevel);
 							block.TryGetValue(OptionsKey.AntiAliasingLevel, ref Interface.CurrentOptions.AntiAliasingLevel);
 							block.GetEnumValue(OptionsKey.TransparencyMode, out Interface.CurrentOptions.TransparencyMode);
+							block.TryGetEnumValue(OptionsKey.ShadowResolution, ref Interface.CurrentOptions.ShadowResolution);
+							block.TryGetEnumValue(OptionsKey.ShadowDrawDistance, ref Interface.CurrentOptions.ShadowDrawDistance);
+							block.TryGetEnumValue(OptionsKey.ShadowCascades, ref Interface.CurrentOptions.ShadowCascades);
+							block.TryGetValue(OptionsKey.ShadowStrength, ref Interface.CurrentOptions.ShadowStrength, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.ShadowBias, ref Interface.CurrentOptions.ShadowBias);
+							block.TryGetValue(OptionsKey.ShadowNormalBias, ref Interface.CurrentOptions.ShadowNormalBias);
+							block.TryGetValue(OptionsKey.LightAzimuth, ref Interface.CurrentOptions.LightAzimuth);
+							block.TryGetValue(OptionsKey.LightElevation, ref Interface.CurrentOptions.LightElevation);
 							break;
 						case OptionsSection.Parsers:
 							block.GetEnumValue(OptionsKey.XObject, out Interface.CurrentOptions.CurrentXParser);

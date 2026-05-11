@@ -1,4 +1,4 @@
-﻿using OpenBveApi.Colors;
+using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
 
@@ -8,8 +8,10 @@ namespace OpenBveApi.Objects
 	public class Material {
 		/// <summary>The base color</summary>
 		public Color32 Color;
-		/// <summary>The emissive color</summary>
-		public Color24 EmissiveColor;
+		/// <summary>The emissive color (RGBA — supports optional alpha for advanced transparency effects)</summary>
+		public Color32 EmissiveColor;
+		/// <summary>The specular color</summary>
+		public Color24 SpecularColor;
 		/// <summary>The transparent color</summary>
 		public Color24 TransparentColor;
 		/// <summary>Describes the special properties (if any) of the material</summary>
@@ -32,10 +34,10 @@ namespace OpenBveApi.Objects
 		public string Text;
 		/// <summary></summary>
 		public string Key;
-		/// <summary>The color of the text to overlay</summary>
-		public Color24 TextColor;
-		/// <summary>The background color for the text</summary>
-		public Color24 BackgroundColor;
+		/// <summary>The color of the text to overlay (RGBA — alpha defaults to 255 for backward compatibility)</summary>
+		public Color32 TextColor;
+		/// <summary>The background color for the text (RGBA — alpha defaults to 255 for backward compatibility)</summary>
+		public Color32 BackgroundColor;
 		/// <summary>The font to use for the text</summary>
 		public string Font;
 		/// <summary>The text padding to apply</summary>
@@ -44,15 +46,16 @@ namespace OpenBveApi.Objects
 		/// <summary>Creates a new Material with default properties</summary>
 		public Material() {
 			this.Color = Color32.White;
-			this.EmissiveColor = Color24.Black;
+			this.EmissiveColor = Color32.Black;
 			this.TransparentColor = Color24.Black;
+			this.SpecularColor = Color24.Black;
 			this.Flags = MaterialFlags.None;
 			this.DaytimeTexture = null;
 			this.NighttimeTexture = null;
 			this.BlendMode = MeshMaterialBlendMode.Normal;
 			this.GlowAttenuationData = 0;
-			this.TextColor = Color24.Black;
-			this.BackgroundColor = Color24.White;
+			this.TextColor = Color32.Black;
+			this.BackgroundColor = Color32.White;
 			this.TextPadding = new Vector2(0, 0);
 			this.Font = "Arial";
 			this.WrapMode = null;
@@ -62,15 +65,16 @@ namespace OpenBveApi.Objects
 		/// <param name="textureFile"></param>
 		public Material(string textureFile) {
 			this.Color = Color32.White;
-			this.EmissiveColor = Color24.Black;
+			this.EmissiveColor = Color32.Black;
 			this.TransparentColor = Color24.Black;
+			this.SpecularColor = Color24.Black;
 			this.Flags = MaterialFlags.None;
 			this.DaytimeTexture = null;
 			this.NighttimeTexture = null;
 			this.BlendMode = MeshMaterialBlendMode.Normal;
 			this.GlowAttenuationData = 0;
-			this.TextColor = Color24.Black;
-			this.BackgroundColor = Color24.White;
+			this.TextColor = Color32.Black;
+			this.BackgroundColor = Color32.White;
 			this.TextPadding = new Vector2(0, 0);
 			this.Font = "Arial";
 			this.WrapMode = null;
@@ -82,6 +86,7 @@ namespace OpenBveApi.Objects
 			this.Color = prototypeMaterial.Color;
 			this.EmissiveColor = prototypeMaterial.EmissiveColor;
 			this.TransparentColor = prototypeMaterial.TransparentColor;
+			this.SpecularColor = prototypeMaterial.SpecularColor;
 			this.Flags = prototypeMaterial.Flags;
 			this.DaytimeTexture = prototypeMaterial.DaytimeTexture;
 			this.NighttimeTexture = prototypeMaterial.NighttimeTexture;

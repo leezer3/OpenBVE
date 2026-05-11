@@ -284,6 +284,12 @@ namespace ObjectViewer
 			RenderRealTimeElapsed += RealTimeElapsed;
 
             Program.CheckFileChanges(RealTimeElapsed);
+
+			if (Program.ReloadRequested)
+			{
+				Program.ReloadRequested = false;
+				Program.RefreshObjects();
+			}
 		}
 
         protected override void OnResize(EventArgs e)
@@ -320,6 +326,7 @@ namespace ObjectViewer
         {
 	        Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));
 			Program.Renderer.VisibilityThreadShouldRun = false;
+			Program.Renderer.DeInitialize();
 			if (Program.CurrentHost.MonoRuntime)
 			{
 				Environment.Exit(0);

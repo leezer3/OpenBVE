@@ -186,8 +186,7 @@ namespace RouteViewer
 						break;
 				}
 
-				ComputeExtent(menuType, Game.Menu.MenuFont, maxWidth);
-				Height = Items.Length * Game.Menu.lineHeight;
+				ComputeExtent(menuType, Game.Menu.MenuFont, maxWidth, Game.Menu.LineHeight);
 				TopItem = 0;
 
 			}

@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Math;
+using OpenBveApi.Objects;
 using OpenBveApi.World;
 
 namespace CsvRwRouteParser
@@ -31,7 +32,7 @@ namespace CsvRwRouteParser
 			return w;
 		}
 
-		internal void Create(Vector3 pos, Transformation RailTransformation, double StartingDistance, double EndingDistance)
+		internal void Create(Vector3 pos, Transformation RailTransformation, ObjectCreationParameters parameters)
 		{
 			if (!Exists)
 			{
@@ -41,7 +42,7 @@ namespace CsvRwRouteParser
 			{
 				if (leftObjects.ContainsKey(Type))
 				{
-					leftObjects[Type].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);	
+					leftObjects[Type].CreateObject(pos, RailTransformation, parameters);	
 				}
 				
 			}
@@ -49,7 +50,7 @@ namespace CsvRwRouteParser
 			{
 				if (rightObjects.ContainsKey(Type))
 				{
-					rightObjects[Type].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
+					rightObjects[Type].CreateObject(pos, RailTransformation, parameters);
 				}
 				
 			}

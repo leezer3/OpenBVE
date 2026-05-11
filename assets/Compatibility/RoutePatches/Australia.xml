@@ -35,6 +35,19 @@
 		<Expression Number="301">.freeobj 0;47;0;0</Expression>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
-	
+	<!-- ESR v1 -->
+	<Patch>
+		<Hash>5C3347192039B22C741CDB76F2CAB26215B50FFC5E570AC591BAB6A9166F2E01</Hash>
+		<FileName>ESR.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<SignalSet>Australian.xml</SignalSet>
+	</Patch>
+	<!-- ESR v2 -->
+	<Patch>
+		<Hash>EB59AD23E79907BD0174A462D565B3017AC30E770071B8265B45F28413F1AD6C</Hash>
+		<FileName>ESR.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<SignalSet>Australian.xml</SignalSet>
+	</Patch>
   </RoutePatches>
 </openBVE>

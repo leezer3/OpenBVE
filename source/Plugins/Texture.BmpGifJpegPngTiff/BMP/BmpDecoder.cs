@@ -72,7 +72,7 @@ namespace Plugin.BMP
 		internal BitsPerPixel BitsPerPixel;
 		/// <summary>The image data</summary>
 		internal byte[] ImageData;
-		/// <summary>Stores the color table when using a restricted pallette</summary>
+		/// <summary>Stores the color table when using a restricted palette</summary>
 		internal Color24[] ColorTable;
 		/// <summary>The bitmap format</summary>
 		internal BmpFormat Format;
@@ -791,10 +791,11 @@ namespace Plugin.BMP
 				// ReSharper disable once MustUseReturnValue
 				fileReader.Read(buffer, 0, possibleColorTableSize);
 				bool colorTableFound = false;
+				byte val = buffer[0];
 				for (int i = 0; i < buffer.Length; i++)
 				{
-					// sense check- there should be some colors here, not just pure black / white!
-					if (buffer[i] != byte.MinValue && buffer[i] != byte.MaxValue)
+					// sense check- there should be some colors here, not just zero / ones
+					if ((buffer[i] != byte.MinValue && buffer[i] != byte.MaxValue) || buffer[i] != val)
 					{
 						colorTableFound = true;
 						break;

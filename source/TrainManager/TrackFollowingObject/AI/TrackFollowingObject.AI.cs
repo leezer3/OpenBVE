@@ -29,6 +29,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Motor;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
+using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Motor;
 
@@ -145,7 +146,7 @@ namespace TrainManager.Trains
 				Train.Specs.CurrentAverageAcceleration = 0.0;
 			}
 
-			foreach (var Car in Train.Cars)
+			foreach (CarBase Car in Train.Cars)
 			{
 				SetRailIndex(NewMileage, NewDirection, Car.FrontAxle.Follower);
 				SetRailIndex(NewMileage, NewDirection, Car.RearAxle.Follower);

@@ -337,7 +337,7 @@ namespace OpenBve.Graphics.Renderers
 				{
 					if (!heading[1])
 					{
-						renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, "Auxillary reservoir", new Vector2(x, oy - 16), TextAlignment.TopLeft, Color128.White, true);
+						renderer.OpenGlString.Draw(renderer.Fonts.SmallFont, "Auxiliary reservoir", new Vector2(x, oy - 16), TextAlignment.TopLeft, Color128.White, true);
 						heading[1] = true;
 					}
 					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(w, h), Color128.Black);

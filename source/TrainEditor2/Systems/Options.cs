@@ -1,4 +1,4 @@
-﻿using Formats.OpenBve;
+using Formats.OpenBve;
 using OpenBveApi;
 using System;
 using System.Globalization;
@@ -32,6 +32,7 @@ namespace TrainEditor2.Systems
 					builder.AppendLine("[language]");
 					builder.AppendLine("code = " + LanguageCode);
 					File.WriteAllText(fileName, builder.ToString(), new UTF8Encoding(true));
+
 				}
 				catch
 				{
@@ -71,7 +72,10 @@ namespace TrainEditor2.Systems
 					{
 						block.TryGetValue(OptionsKey.Code, ref CurrentOptions.LanguageCode);
 					}
-
+					else
+					{
+						cfg.ReadNextBlock();
+					}
 				}
 
 				return;

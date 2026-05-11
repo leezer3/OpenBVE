@@ -4,6 +4,7 @@
 	{
 		None,
 		RailDriver,
-		DenshaDeGo
+		DenshaDeGo,
+		Zuiki
 	}
 }

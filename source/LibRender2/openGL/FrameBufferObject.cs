@@ -34,10 +34,10 @@ namespace LibRender2
 			switch (Target)
 			{
 				case TargetBuffer.Color:
-					if (colorBuffers.ContainsKey(Number))
+					if (colorBuffers.TryGetValue(Number, out I2dPixelArray colorBuffer))
 					{
 						UnBind();
-						colorBuffers[Number].Dispose();
+						colorBuffer.Dispose();
 						Bind();
 					}
 					colorBuffers[Number] = buffer;
@@ -73,10 +73,10 @@ namespace LibRender2
 			switch (Target)
 			{
 				case TargetBuffer.Color:
-					if (colorBuffers.ContainsKey(Number))
+					if (colorBuffers.TryGetValue(Number, out I2dPixelArray colorBuffer))
 					{
 						UnBind();
-						colorBuffers[Number].Dispose();
+						colorBuffer.Dispose();
 						Bind();
 					}
 					colorBuffers[Number] = buffer;

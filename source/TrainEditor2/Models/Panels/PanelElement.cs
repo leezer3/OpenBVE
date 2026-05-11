@@ -36,7 +36,7 @@ namespace TrainEditor2.Models.Panels
 
 		/// <summary>Writes the element to a Panel2.cfg file</summary>
 		/// <param name="fileName">The output filename</param>
-		/// <param name="builder">The stringbuilder</param>
+		/// <param name="builder">The StringBuilder</param>
 		public abstract void WriteCfg(string fileName, StringBuilder builder);
 
 		/// <summary>Writes the element to a Panel.xml file</summary>

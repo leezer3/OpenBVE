@@ -37,9 +37,9 @@ namespace SoundManager
 				return;
 			}
 
-			string absolutePathTosoundFile = Path.CombineFile(trainFolder, soundFile);
+			string absolutePathToSoundFile = Path.CombineFile(trainFolder, soundFile);
 
-			if (!System.IO.File.Exists(absolutePathTosoundFile))
+			if (!System.IO.File.Exists(absolutePathToSoundFile))
 			{
 				if (configurationFile != string.Empty)
 				{
@@ -48,9 +48,9 @@ namespace SoundManager
 				}
 				return;
 			}
-			currentHost.RegisterSound(absolutePathTosoundFile, radius, out SoundHandle handle);
+			currentHost.RegisterSound(absolutePathToSoundFile, radius, out SoundHandle handle);
 			Buffer = handle as SoundBuffer;
-			this.Position = position;
+			Position = position;
 		}
 
 		public CarSound(HostInterface currentHost, string soundFile, double radius, Vector3 position)
@@ -61,58 +61,58 @@ namespace SoundManager
 			}
 			currentHost.RegisterSound(soundFile, radius, out SoundHandle handle);
 			Buffer = handle as SoundBuffer;
-			this.Position = position;
+			Position = position;
 		}
 
 		/// <summary>Creates a new car sound</summary>
 		/// <param name="handle">The API handle to the sound buffer</param>
-		/// <param name="Position">The position that the sound is emitted from within the car</param>
+		/// <param name="position">The position that the sound is emitted from within the car</param>
 		/// <returns>The new car sound</returns>
-		public CarSound(SoundHandle handle, Vector3 Position)
+		public CarSound(SoundHandle handle, Vector3 position)
 		{
-			this.Buffer = handle as SoundBuffer;
-			this.Position = Position;
-			this.Source = null;
+			Buffer = handle as SoundBuffer;
+			Position = position;
+			Source = null;
 		}
 
 		/// <summary>Creates a new car sound</summary>
 		/// <param name="buffer">The sound buffer</param>
-		/// <param name="Position">The position that the sound is emitted from within the car</param>
+		/// <param name="position">The position that the sound is emitted from within the car</param>
 		/// <returns>The new car sound</returns>
-		public CarSound(SoundBuffer buffer, Vector3 Position)
+		public CarSound(SoundBuffer buffer, Vector3 position)
 		{
-			this.Position = Position;
-			this.Source = null;
-			this.Buffer = buffer;
+			Position = position;
+			Source = null;
+			Buffer = buffer;
 		}
 
 		/// <summary>Creates a new empty car sound</summary>
 		public CarSound()
 		{
-			this.Position = Vector3.Zero;
-			this.Source = null;
-			this.Buffer = null;
+			Position = Vector3.Zero;
+			Source = null;
+			Buffer = null;
 		}
 
 		public CarSound Clone()
 		{
-			return new CarSound(this.Buffer, this.Position);
+			return new CarSound(Buffer, Position);
 		}
 
 		/// <summary>Plays the sound at the original pitch and volume</summary>
-		/// <param name="Car">The parent car</param>
+		/// <param name="parentCar">The parent car</param>
 		/// <param name="looped">Whether the sound is to be played looped</param>
-		public void Play(AbstractCar Car, bool looped)
+		public void Play(AbstractCar parentCar, bool looped)
 		{
-			Play(1.0, 1.0, Car, looped);
+			Play(1.0, 1.0, parentCar, looped);
 		}
 
 		/// <summary>Plays the sound at the specified pitch and volume</summary>
 		/// <param name="pitch">The pitch</param>
 		/// <param name="volume">The volume</param>
-		/// <param name="Car">The parent car</param>
+		/// <param name="parentCar">The parent car</param>
 		/// <param name="looped">Whether the sound is to be played looped</param>
-		public void Play(double pitch, double volume, AbstractCar Car, bool looped)
+		public void Play(double pitch, double volume, AbstractCar parentCar, bool looped)
 		{
 			if (looped && IsPaused)
 			{
@@ -133,8 +133,8 @@ namespace SoundManager
 				{
 					Array.Resize(ref SoundsBase.Sources, SoundsBase.Sources.Length << 1);
 				}
-				SoundsBase.Sources[SoundsBase.SourceCount] = new SoundSource(Buffer, Buffer.Radius, pitch, volume, Position, Car, looped);
-				this.Source = SoundsBase.Sources[SoundsBase.SourceCount];
+				SoundsBase.Sources[SoundsBase.SourceCount] = new SoundSource(Buffer, Buffer.Radius, pitch, volume, Position, parentCar, looped);
+				Source = SoundsBase.Sources[SoundsBase.SourceCount];
 				SoundsBase.SourceCount++;
 			}
 			

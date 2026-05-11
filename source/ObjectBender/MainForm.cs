@@ -176,7 +176,7 @@ namespace ObjectBender {
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The event arguments.</param>
 		private void ButtonCloseClick(object sender, EventArgs e) {
-			this.Close();
+			Close();
 		}
 		
 	}

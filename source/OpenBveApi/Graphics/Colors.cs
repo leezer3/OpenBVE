@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 // ReSharper disable UnusedMember.Global
@@ -691,6 +691,14 @@ namespace OpenBveApi.Colors {
 		public static implicit operator Color32(System.Drawing.Color c)
 		{
 			return new Color32(c.R, c.G, c.B, c.A);
+		}
+
+		/// <summary>Casts a Color32 to a System.Drawing.Color, preserving the alpha channel</summary>
+		/// <param name="c">The Color32</param>
+		/// <returns>The new System.Drawing.Color</returns>
+		public static implicit operator System.Drawing.Color(Color32 c)
+		{
+			return System.Drawing.Color.FromArgb(c.A, c.R, c.G, c.B);
 		}
 	}
 	

@@ -756,7 +756,7 @@ namespace MechanikRouteParser
 					Transformation t = new Transformation(Math.Atan2(worldDirection.X, worldDirection.Y), 0, 0);
 					for (int j = 0; j < currentRouteData.Blocks[i].Objects.Count; j++)
 					{
-						AvailableObjects[currentRouteData.Blocks[i].Objects[j].objectIndex].Object.CreateObject(worldPosition + eyePosition, t, StartingDistance, StartingDistance + 25, 100);
+						AvailableObjects[currentRouteData.Blocks[i].Objects[j].objectIndex].Object.CreateObject(worldPosition + eyePosition, t, new ObjectCreationParameters(StartingDistance, StartingDistance + 25));
 					}
 					foreach (Semaphore signal in currentRouteData.Blocks[i].Signals)
 					{

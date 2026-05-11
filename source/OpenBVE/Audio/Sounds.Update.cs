@@ -27,7 +27,7 @@ namespace OpenBve
 			if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead | Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior) {
 				CarBase car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 				Vector3 diff = car.FrontAxle.Follower.WorldPosition - car.RearAxle.Follower.WorldPosition;
-				if (diff.IsNullVector()) {
+				if (diff.Norm() < 1e-10) {
 					listenerVelocity = car.CurrentSpeed * Vector3.Forward;
 				} else {
 					listenerVelocity = car.CurrentSpeed * Vector3.Normalize(diff);
@@ -120,7 +120,7 @@ namespace OpenBve
 							 * */
 							if (Sources[i].State == SoundSourceState.Playing) {
 								AL.GetSource(Sources[i].OpenAlSourceName, ALGetSourcei.SourceState, out int state);
-								if (state != (int)ALSourceState.Initial & state != (int)ALSourceState.Playing) {
+								if (state != (int)ALSourceState.Initial && state != (int)ALSourceState.Playing) {
 									/*
 									 * The sound is not playing any longer.
 									 * Remove it from the list of sound sources.
@@ -142,11 +142,11 @@ namespace OpenBve
 							switch (Sources[i].Type)
 							{
 								case SoundType.TrainCar:
-									var Car = (AbstractCar)Sources[i].Parent;
+									AbstractCar Car = (AbstractCar)Sources[i].Parent;
 									Car.CreateWorldCoordinates(Sources[i].Position, out position, out _);
 									break;
 								case SoundType.AnimatedObject:
-									var WorldSound = (WorldSound)Sources[i].Parent;
+									WorldSound WorldSound = (WorldSound)Sources[i].Parent;
 									position = WorldSound.Follower.WorldPosition + WorldSound.Position;
 									break;
 								default:
@@ -211,7 +211,7 @@ namespace OpenBve
 				toBePlayed[i].Gain += clampFactor * toBePlayed[i].Distance * toBePlayed[i].Distance;
 			}
 			double desiredLogClampFactor;
-			int index = Math.Min(systemMaxSounds, Interface.CurrentOptions.SoundNumber);
+			int index = Math.Min(SystemMaxSounds, Interface.CurrentOptions.SoundNumber);
 			if (toBePlayed.Count <= index) {
 				desiredLogClampFactor = MinLogClampFactor;
 			} else {

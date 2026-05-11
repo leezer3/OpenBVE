@@ -248,12 +248,8 @@ namespace LibRender2.Text
 			if (shadow)
 			{
 				Draw(font, text, new Vector2(location.X - 1, location.Y + 1), alignment, new Color128(0.0f, 0.0f, 0.0f, 0.5f * color.A));
-				Draw(font, text, location, alignment, color);
 			}
-			else
-			{
-				Draw(font, text, location, alignment, color);
-			}
+			Draw(font, text, location, alignment, color);
 		}
 	}
 }

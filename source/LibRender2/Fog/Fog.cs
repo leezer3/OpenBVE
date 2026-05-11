@@ -38,7 +38,7 @@ namespace LibRender2.Fogs
 			}
 			if (Renderer.AvailableNewRenderer)
 			{
-				Renderer.CurrentShader.SetIsFog(true);
+				Renderer.CurrentShader.SetFog(true);
 				Renderer.CurrentShader.SetFog(this);
 			}
 			else

@@ -559,11 +559,12 @@ namespace Train.OpenBve
 						{
 							bveMotorSound.Tables[i].Buffer = null;
 							bveMotorSound.Tables[i].Source = null;
+							ParseBlock(subBlock, out SoundBuffer buffer, ref Position, Radius);
 							for (int j = 0; j < bveMotorSound.Tables[i].Entries.Length; j++)
 							{
 								if (idx == bveMotorSound.Tables[i].Entries[j].SoundIndex)
 								{
-									ParseBlock(subBlock, out bveMotorSound.Tables[i].Entries[j].Buffer, ref Position, Radius);
+									bveMotorSound.Tables[i].Entries[j].Buffer = buffer;
 								}
 							}
 						}

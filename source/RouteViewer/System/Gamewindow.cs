@@ -1,4 +1,4 @@
-﻿using LibRender2.Viewports;
+using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
@@ -78,7 +78,6 @@ namespace RouteViewer
 	            Game.SecondsSinceMidnight = 3600 * d.Hour + 60 * d.Minute + d.Second + 0.001 * d.Millisecond;
 	            ObjectManager.UpdateAnimatedWorldObjects(TimeElapsed, false);
 	            World.UpdateAbsoluteCamera(TimeElapsed);
-	            Program.Renderer.UpdateVisibility(true);
 	            Program.Sounds.Update(TimeElapsed, SoundModels.Linear);
             }
             Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight, Program.CurrentRoute.LightDefinitions);
@@ -144,6 +143,7 @@ namespace RouteViewer
 				e.Cancel = true;
 				Loading.Cancel = true;
 			}
+			Program.Renderer.DeInitialize();
 			if (Program.CurrentHost.MonoRuntime)
 			{
 				// Mono often fails to close the main window properly
@@ -197,13 +197,15 @@ namespace RouteViewer
 				double time = CPreciseTimer.GetElapsedTime();
 				double wait = 1000.0 / 60.0 - time * 1000 - 50;
 				if (wait > 0)
-					Thread.Sleep((int)(wait));
+					Thread.Sleep((int)wait);
 			}
 			Program.Renderer.Loading.CompleteLoading();
 			if (!Loading.Cancel)
 			{
 				Program.Renderer.PopMatrix(MatrixMode.Modelview);
 				Program.Renderer.PopMatrix(MatrixMode.Projection);
+				// Reinitialize shadows after route loading completes
+				Program.Renderer.ReloadShadowSettings();
 			}
 			else
 			{

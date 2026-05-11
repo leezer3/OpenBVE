@@ -109,12 +109,39 @@ namespace Train.OpenBve
 			}
 		}
 
+		private static readonly string[] BlockedDirectories = new[]
+		{
+			"Application Data",
+			"Documents and Settings",
+			"Default User",
+			"Cookies",
+			"Local Settings",
+			"My Documents",
+			"MSOCache",
+			"NetHood",
+			"PrintHood",
+			"Recent",
+			"Recovery",
+			"SendTo",
+			"Start Menu",
+			"System Volume Information",
+			"Templates"
+		};
+
 		public override bool CanLoadTrain(string path)
 		{
-			if (string.IsNullOrEmpty(path) || !Directory.Exists(Path.GetDirectoryName(path)))
+			if (string.IsNullOrEmpty(path))
 			{
 				return false;
 			}
+			string directoryName = new DirectoryInfo(path).Name;
+			if (!Directory.Exists(Path.GetDirectoryName(path)) || BlockedDirectories.Contains(directoryName))
+			{
+				return false;
+			}
+
+			
+
 			if (Directory.Exists(path))
 			{
 				string vehicleTxt;
@@ -300,6 +327,11 @@ namespace Train.OpenBve
 					ExtensionsCfgParser.ParseExtensionsConfig(currentTrain.TrainFolder, encoding, ref carObjects, ref bogieObjects, ref couplerObjects, out visibleFromInterior, currentTrain);
 				}
 
+				// Ensure visibleFromInterior is valid even if both parsers fail
+				if (visibleFromInterior == null || visibleFromInterior.Length != currentTrain.Cars.Length)
+				{
+					visibleFromInterior = new bool[currentTrain.Cars.Length];
+				}
 				currentTrain.CameraCar = currentTrain.DriverCar;
 				Thread.Sleep(1);
 				if (Cancel)
@@ -383,7 +415,7 @@ namespace Train.OpenBve
 						numMotorCars++;
 						if (currentTrain.Cars[i].TractionModel.MotorSounds == null && TrainXmlParser.MotorSoundXMLParsed != null)
 						{
-							if(!TrainXmlParser.MotorSoundXMLParsed[i])
+							if(i < TrainXmlParser.MotorSoundXMLParsed.Length && !TrainXmlParser.MotorSoundXMLParsed[i])
 							{
 								currentTrain.Cars[i].TractionModel.MotorSounds = new BVEMotorSound(currentTrain.Cars[i], 18.0, MotorSoundTables);
 							}
@@ -450,7 +482,7 @@ namespace Train.OpenBve
 			    {
 				    if (encoding == null)
 				    {
-					    return File.ReadAllText(descriptionFile);
+					    return File.ReadAllText(descriptionFile, TextEncoding.GetSystemEncodingFromFile(descriptionFile));
 				    }
 				    return File.ReadAllText(descriptionFile, encoding);
 

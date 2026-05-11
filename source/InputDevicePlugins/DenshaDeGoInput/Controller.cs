@@ -182,24 +182,6 @@ namespace DenshaDeGoInput
 				{
 					switch (VID)
 					{
-						case 0x0f0d:
-							// Hori Inc
-							if (PID == 0x00c1)
-							{
-								return ControllerType.Zuiki;
-							}
-							// May actually be a USB fight stick, but if we get the PIDs for these we can block them
-							DenshaDeGoInput.CurrentHost.AddMessage("Densha de GO! Input: Unrecognised Hori Inc. PID " + PID + " - Please report this.");
-							break;
-						case 0x33dd:
-							// Zuiki Inc
-							if (PID >= 0x0001 && PID <= 0x0004)
-							{
-								return ControllerType.Zuiki;
-							}
-							// Something from Zuiki Inc, probably a future mascon revision
-							DenshaDeGoInput.CurrentHost.AddMessage("Densha de GO! Input: Unrecognised Zuiki Inc. PID " + PID + " - Please report this.");
-							return ControllerType.Zuiki;
 						case 0x0ae4:
 							// Taito Corp
 							switch (PID)
@@ -252,8 +234,6 @@ namespace DenshaDeGoInput
 		{
 			/// <summary>Classic controllers, connected via USB adapter</summary>
 			GenericUSB,
-			/// <summary>Zuiki One Handle Controller for Switch</summary>
-			Zuiki,
 			// ** PS2 USB Controllers **
 			/// <summary>TCPP-20009 (Type II)</summary>
 			PS2TypeII,

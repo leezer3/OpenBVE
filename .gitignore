@@ -6,6 +6,7 @@
 *.user
 *.suo
 .vs/
+.idea/
 
 #macOS directory metadata
 .DS_Store

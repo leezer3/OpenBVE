@@ -43,30 +43,28 @@ namespace OpenBve
 			for (int i = 0; i < Interface.CurrentControls.Length; i++)
 			{
 				//If we're using keyboard for this input
-				if (Interface.CurrentControls[i].Method == ControlMethod.Keyboard)
+				if (Interface.CurrentControls[i].Method != ControlMethod.Keyboard) continue;
+				//Compare the current and previous keyboard states
+				//Only process if they are different
+				if (!Enum.IsDefined(typeof(OpenBveApi.Input.Key), Interface.CurrentControls[i].Key)) continue;
+				if ((OpenBveApi.Input.Key)e.Key == Interface.CurrentControls[i].Key & Interface.CurrentControls[i].Modifier == CurrentKeyboardModifier)
 				{
-					//Compare the current and previous keyboard states
-					//Only process if they are different
-					if (!Enum.IsDefined(typeof(OpenBveApi.Input.Key), Interface.CurrentControls[i].Key)) continue;
-					if ((OpenBveApi.Input.Key)e.Key == Interface.CurrentControls[i].Key & Interface.CurrentControls[i].Modifier == CurrentKeyboardModifier)
-					{
 
-						Interface.CurrentControls[i].AnalogState = 1.0;
-						Interface.CurrentControls[i].DigitalState = DigitalControlState.Pressed;
-						//Key repeats should not be added in non-game interface modes, unless they are Menu Up/ Menu Down commands
-						if (Program.Renderer.CurrentInterface == InterfaceType.Normal || Interface.CurrentControls[i].Command == Translations.Command.MenuUp || Interface.CurrentControls[i].Command == Translations.Command.MenuDown)
+					Interface.CurrentControls[i].AnalogState = 1.0;
+					Interface.CurrentControls[i].DigitalState = DigitalControlState.Pressed;
+					//Key repeats should not be added in non-game interface modes, unless they are Menu Up/ Menu Down commands
+					if (Program.Renderer.CurrentInterface == InterfaceType.Normal || Interface.CurrentControls[i].Command == Translations.Command.MenuUp || Interface.CurrentControls[i].Command == Translations.Command.MenuDown)
+					{
+						if (Interface.CurrentControls[i].Command == Translations.Command.CameraInterior |
+						    Interface.CurrentControls[i].Command == Translations.Command.CameraExterior |
+						    Interface.CurrentControls[i].Command == Translations.Command.CameraFlyBy |
+						    Interface.CurrentControls[i].Command == Translations.Command.CameraTrack |
+						    Interface.CurrentControls[i].Command == Translations.Command.MiscFullscreen)
 						{
-							if (Interface.CurrentControls[i].Command == Translations.Command.CameraInterior |
-								Interface.CurrentControls[i].Command == Translations.Command.CameraExterior |
-								Interface.CurrentControls[i].Command == Translations.Command.CameraFlyBy |
-								Interface.CurrentControls[i].Command == Translations.Command.CameraTrack |
-								Interface.CurrentControls[i].Command == Translations.Command.MiscFullscreen)
-							{
-								//HACK: We don't want to bounce between camera modes when holding down the mode switch key
-								continue;
-							}
-							AddControlRepeat(i);
+							//HACK: We don't want to bounce between camera modes when holding down the mode switch key
+							continue;
 						}
+						AddControlRepeat(i);
 					}
 				}
 			}

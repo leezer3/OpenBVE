@@ -42,7 +42,7 @@ namespace TrainEditor2.Models.Trains
 			set => SetProperty(ref initialSize, value);
 		}
 
-		internal double MaximiumSize
+		internal double MaximumSize
 		{
 			get => maximumSize;
 			set => SetProperty(ref maximumSize, value);
@@ -75,7 +75,7 @@ namespace TrainEditor2.Models.Trains
 		internal ParticleSource()
 		{
 			InitialSize = 0.1;
-			MaximiumSize = 1.0;
+			MaximumSize = 1.0;
 			InitialDirectionX = 0;
 			InitialDirectionY = 1;
 			InitialDirectionZ = 0;

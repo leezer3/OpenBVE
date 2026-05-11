@@ -1,0 +1,3 @@
+# This rule allows non-root access to the ZUIKI Mascon Pro control, making it possible to toggle the lamps
+
+KERNEL=="hidraw*", ATTRS{idVendor}=="33dd", ATTRS{idProduct}=="0006", MODE="0660", TAG+="uaccess"

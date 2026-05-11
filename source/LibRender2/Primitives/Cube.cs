@@ -72,6 +72,18 @@ namespace LibRender2.Primitives
 				},
 				new LibRenderVertex
 				{
+					Position = new Vector3f(1.0f, 1.0f, 1.0f),
+					UV = Vector2f.Null,
+					Color = color
+				},
+				new LibRenderVertex
+				{
+					Position = new Vector3f(-1.0f, -1.0f, 1.0f),
+					UV = Vector2f.One,
+					Color = color
+				},
+				new LibRenderVertex
+				{
 					Position = new Vector3f(1.0f, -1.0f, 1.0f),
 					UV = Vector2f.Down,
 					Color = color
@@ -88,6 +100,18 @@ namespace LibRender2.Primitives
 				{
 					Position = new Vector3f(1.0f, -1.0f, 1.0f),
 					UV = Vector2f.One,
+					Color = color
+				},
+				new LibRenderVertex
+				{
+					Position = new Vector3f(1.0f, -1.0f, -1.0f),
+					UV = Vector2f.Down,
+					Color = color
+				},
+				new LibRenderVertex
+				{
+					Position = new Vector3f(1.0f, 1.0f, 1.0f),
+					UV = Vector2f.Right,
 					Color = color
 				},
 				new LibRenderVertex
@@ -124,6 +148,18 @@ namespace LibRender2.Primitives
 				},
 				new LibRenderVertex
 				{
+					Position = new Vector3f(1.0f, 1.0f, 1.0f),
+					UV = Vector2f.Right,
+					Color = color
+				},
+				new LibRenderVertex
+				{
+					Position = new Vector3f(-1.0f, 1.0f, -1.0f),
+					UV = Vector2f.Down,
+					Color = color
+				},
+				new LibRenderVertex
+				{
 					Position = new Vector3f(-1.0f, 1.0f, 1.0f),
 					UV = Vector2f.Null,
 					Color = color
@@ -140,6 +176,18 @@ namespace LibRender2.Primitives
 				{
 					Position = new Vector3f(-1.0f, 1.0f, -1.0f),
 					UV = Vector2f.Null,
+					Color = color
+				},
+				new LibRenderVertex
+				{
+					Position = new Vector3f(1.0f, 1.0f, -1.0f),
+					UV = Vector2f.Right,
+					Color = color
+				},
+				new LibRenderVertex
+				{
+					Position = new Vector3f(-1.0f, -1.0f, -1.0f),
+					UV = Vector2f.Down,
 					Color = color
 				},
 				new LibRenderVertex
@@ -176,6 +224,18 @@ namespace LibRender2.Primitives
 				},
 				new LibRenderVertex
 				{
+					Position = new Vector3f(-1.0f, -1.0f, -1.0f),
+					UV = Vector2f.One,
+					Color = color
+				},
+				new LibRenderVertex
+				{
+					Position = new Vector3f(-1.0f, 1.0f, 1.0f),
+					UV = Vector2f.Null,
+					Color = color
+				},
+				new LibRenderVertex
+				{
 					Position = new Vector3f(-1.0f, 1.0f, -1.0f),
 					UV = Vector2f.Right,
 					Color = color
@@ -202,10 +262,22 @@ namespace LibRender2.Primitives
 				},
 				new LibRenderVertex
 				{
+					Position = new Vector3f(-1.0f, -1.0f, -1.0f),
+					UV = Vector2f.Null,
+					Color = color
+				},
+				new LibRenderVertex
+				{
 					Position = new Vector3f(-1.0f, -1.0f, 1.0f),
 					UV = Vector2f.Down,
 					Color = color
-				}
+				},
+				new LibRenderVertex
+				{
+					Position = new Vector3f(1.0f, -1.0f, 1.0f),
+					UV = Vector2f.One,
+					Color = color
+				},
 			};
 
 			if (!renderer.ForceLegacyOpenGL)
@@ -297,7 +369,7 @@ namespace LibRender2.Primitives
 
 			// render polygon
 			VAO.Bind();
-			VAO.Draw(PrimitiveType.Quads);
+			VAO.Draw(PrimitiveType.Triangles);
 			GL.Disable(EnableCap.Texture2D);
 		}
 

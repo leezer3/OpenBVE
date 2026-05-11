@@ -22,10 +22,10 @@ namespace TrainEditor {
 			internal BveAccelerationCurve[] Entries;
 			internal Acceleration() {
 				const int n = 8;
-				this.Entries = new BveAccelerationCurve[n];
+				Entries = new BveAccelerationCurve[n];
 				for (int i = 0; i < n; i++)
 				{
-					this.Entries[i] = new BveAccelerationCurve
+					Entries[i] = new BveAccelerationCurve
 					{
 						StageZeroAcceleration = 1.0,
 						StageOneAcceleration = 1.0,

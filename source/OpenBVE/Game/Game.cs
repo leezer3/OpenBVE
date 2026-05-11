@@ -71,8 +71,7 @@ namespace OpenBve
 				LogDateTime = DateTime.Now;
 				CurrentScore = new Score();
 				ScoreMessages.Clear();
-				ScoreLogs = new ScoreLog[64];
-				ScoreLogCount = 0;
+				ScoreLogs = new List<ScoreLog>();
 				BlackBoxEntries = new List<BlackBoxEntry>();
 				BlackBoxNextUpdate = 0.0;
 			}
@@ -94,48 +93,50 @@ namespace OpenBve
 				BlackBoxNextUpdate = Program.CurrentRoute.SecondsSinceMidnight + 1.0;
 			}
 		}
-		internal static void AddBlackBoxEntry() {
-			if (Interface.CurrentOptions.BlackBox) {
-				
-				BlackBoxEntry newEntry = new BlackBoxEntry();
-				newEntry.Time = Program.CurrentRoute.SecondsSinceMidnight;
-				newEntry.Position = TrainManager.PlayerTrain.Cars[0].TrackPosition;
-				newEntry.Speed = (float)TrainManager.PlayerTrain.CurrentSpeed;
-				newEntry.Acceleration = (float)TrainManager.PlayerTrain.Specs.CurrentAverageAcceleration;
-				newEntry.ReverserDriver = (short)TrainManager.PlayerTrain.Handles.Reverser.Driver;
-				newEntry.ReverserSafety = (short)TrainManager.PlayerTrain.Handles.Reverser.Actual;
-				newEntry.PowerDriver = (BlackBoxPower)TrainManager.PlayerTrain.Handles.Power.Driver;
-				newEntry.PowerSafety = (BlackBoxPower)TrainManager.PlayerTrain.Handles.Power.Safety;
-				if (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver) {
-					newEntry.BrakeDriver = BlackBoxBrake.Emergency;
-				} else if (TrainManager.PlayerTrain.Handles.HoldBrake.Driver) {
-					newEntry.BrakeDriver = BlackBoxBrake.HoldBrake;
-				} else if (TrainManager.PlayerTrain.Handles.Brake is AirBrakeHandle) {
-					switch ((AirBrakeHandleState)TrainManager.PlayerTrain.Handles.Brake.Driver) {
-							case AirBrakeHandleState.Release: newEntry.BrakeDriver = BlackBoxBrake.Release; break;
-							case AirBrakeHandleState.Lap: newEntry.BrakeDriver = BlackBoxBrake.Lap; break;
-							case AirBrakeHandleState.Service: newEntry.BrakeDriver = BlackBoxBrake.Service; break;
-							default: newEntry.BrakeDriver = BlackBoxBrake.Emergency; break;
-					}
-				} else {
-					newEntry.BrakeDriver = (BlackBoxBrake)TrainManager.PlayerTrain.Handles.Brake.Driver;
-				}
-				if (TrainManager.PlayerTrain.Handles.EmergencyBrake.Safety) {
-					newEntry.BrakeSafety = BlackBoxBrake.Emergency;
-				} else if (TrainManager.PlayerTrain.Handles.HoldBrake.Actual) {
-					newEntry.BrakeSafety = BlackBoxBrake.HoldBrake;
-				} else if (TrainManager.PlayerTrain.Handles.Brake is AirBrakeHandle) {
-					switch ((AirBrakeHandleState)TrainManager.PlayerTrain.Handles.Brake.Safety) {
-							case AirBrakeHandleState.Release: newEntry.BrakeSafety = BlackBoxBrake.Release; break;
-							case AirBrakeHandleState.Lap: newEntry.BrakeSafety = BlackBoxBrake.Lap; break;
-							case AirBrakeHandleState.Service: newEntry.BrakeSafety = BlackBoxBrake.Service; break;
-							default: newEntry.BrakeSafety = BlackBoxBrake.Emergency; break;
-					}
-				} else {
-					newEntry.BrakeSafety = (BlackBoxBrake)TrainManager.PlayerTrain.Handles.Brake.Safety;
-				}
-				BlackBoxEntries.Add(newEntry);
+		internal static void AddBlackBoxEntry()
+		{
+			if (!Interface.CurrentOptions.BlackBox)
+			{
+				return;
 			}
+			BlackBoxEntry newEntry = new BlackBoxEntry();
+			newEntry.Time = Program.CurrentRoute.SecondsSinceMidnight;
+			newEntry.Position = TrainManager.PlayerTrain.Cars[0].TrackPosition;
+			newEntry.Speed = (float)TrainManager.PlayerTrain.CurrentSpeed;
+			newEntry.Acceleration = (float)TrainManager.PlayerTrain.Specs.CurrentAverageAcceleration;
+			newEntry.ReverserDriver = (short)TrainManager.PlayerTrain.Handles.Reverser.Driver;
+			newEntry.ReverserSafety = (short)TrainManager.PlayerTrain.Handles.Reverser.Actual;
+			newEntry.PowerDriver = (BlackBoxPower)TrainManager.PlayerTrain.Handles.Power.Driver;
+			newEntry.PowerSafety = (BlackBoxPower)TrainManager.PlayerTrain.Handles.Power.Safety;
+			if (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver) {
+				newEntry.BrakeDriver = BlackBoxBrake.Emergency;
+			} else if (TrainManager.PlayerTrain.Handles.HoldBrake.Driver) {
+				newEntry.BrakeDriver = BlackBoxBrake.HoldBrake;
+			} else if (TrainManager.PlayerTrain.Handles.Brake is AirBrakeHandle) {
+				switch ((AirBrakeHandleState)TrainManager.PlayerTrain.Handles.Brake.Driver) {
+					case AirBrakeHandleState.Release: newEntry.BrakeDriver = BlackBoxBrake.Release; break;
+					case AirBrakeHandleState.Lap: newEntry.BrakeDriver = BlackBoxBrake.Lap; break;
+					case AirBrakeHandleState.Service: newEntry.BrakeDriver = BlackBoxBrake.Service; break;
+					default: newEntry.BrakeDriver = BlackBoxBrake.Emergency; break;
+				}
+			} else {
+				newEntry.BrakeDriver = (BlackBoxBrake)TrainManager.PlayerTrain.Handles.Brake.Driver;
+			}
+			if (TrainManager.PlayerTrain.Handles.EmergencyBrake.Safety) {
+				newEntry.BrakeSafety = BlackBoxBrake.Emergency;
+			} else if (TrainManager.PlayerTrain.Handles.HoldBrake.Actual) {
+				newEntry.BrakeSafety = BlackBoxBrake.HoldBrake;
+			} else if (TrainManager.PlayerTrain.Handles.Brake is AirBrakeHandle) {
+				switch ((AirBrakeHandleState)TrainManager.PlayerTrain.Handles.Brake.Safety) {
+					case AirBrakeHandleState.Release: newEntry.BrakeSafety = BlackBoxBrake.Release; break;
+					case AirBrakeHandleState.Lap: newEntry.BrakeSafety = BlackBoxBrake.Lap; break;
+					case AirBrakeHandleState.Service: newEntry.BrakeSafety = BlackBoxBrake.Service; break;
+					default: newEntry.BrakeSafety = BlackBoxBrake.Emergency; break;
+				}
+			} else {
+				newEntry.BrakeSafety = (BlackBoxBrake)TrainManager.PlayerTrain.Handles.Brake.Safety;
+			}
+			BlackBoxEntries.Add(newEntry);
 		}
 	}
 }

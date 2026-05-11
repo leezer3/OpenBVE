@@ -36,7 +36,7 @@ using OpenBveApi.Objects;
 
 namespace Plugin
 {
-	class NewXParser
+	internal class NewXParser
 	{
 		internal static StaticObject ReadObject(string fileName, Encoding encoding)
 		{
@@ -379,13 +379,9 @@ namespace Plugin
 						{
 							// YUCKY: skip bracket strings
 							string materialName = block.ReadString();
-							if (rootMaterials.ContainsKey(materialName))
+							if (!rootMaterials.TryGetValue(materialName, out builder.Materials[i + 1]))
 							{
-								builder.Materials[i + 1] = rootMaterials[materialName];
-							}
-							else
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"Material { materialName } was not found in DirectX binary file { currentFile }");
+								Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"Material {materialName} was not found in DirectX binary file {currentFile}");
 								builder.Materials[i + 1] = new Material();
 							}
 							
@@ -422,9 +418,19 @@ namespace Plugin
 					Material newMaterial = new Material();
 					newMaterial.Color = new Color32(block.ReadColor128);
 					double mPower = block.ReadSingle(); //TODO: Unsure what this does...
-					Color24 mSpecular = new Color24(block.ReadColor96);
-					newMaterial.EmissiveColor = new Color24(block.ReadColor96);
-					newMaterial.Flags |= MaterialFlags.Emissive; //TODO: Check exact behaviour
+					newMaterial.SpecularColor = new Color24(block.ReadColor96);
+					if (newMaterial.SpecularColor != Color24.Black)
+					{
+						Color24 c = (Color24)newMaterial.Color;
+						newMaterial.Flags |= MaterialFlags.Specular;
+					}
+					// Convert Color96 → Color24 → Color32; alpha defaults to 255 (opaque)
+					newMaterial.EmissiveColor = new Color32(new Color24(block.ReadColor96));
+					if (newMaterial.EmissiveColor != Color32.Black)
+					{
+						newMaterial.Flags |= MaterialFlags.Emissive;
+					}
+					
 					if (Plugin.EnabledHacks.BlackTransparency)
 					{
 						newMaterial.TransparentColor = Color24.Black; //TODO: Check, also can we optimise which faces have the transparent color set?
@@ -565,10 +571,7 @@ namespace Plugin
 					int ml = builder.Materials.Length;
 					Array.Resize(ref builder.Materials, ml + 1);
 					builder.Materials[ml] = new Material();
-					if (rootMaterials.ContainsKey(block.Label))
-					{
-						builder.Materials[ml] = rootMaterials[block.Label];
-					}
+					rootMaterials.TryGetValue(block.Label, out builder.Materials[ml]);
 					break;
 				case TemplateID.DeclData:
 					int numTemplates = (int)block.ReadDword();

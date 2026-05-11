@@ -844,6 +844,7 @@ namespace Object.CsvB3d
 								if (Arguments.Length > 4) {
 									currentHost.AddMessage(MessageType.Warning, false, "At most 4 arguments are expected in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
+								// Supports 3 args (RGB, alpha=255) or 4 args (RGBA) for backward compatibility
 								int r = 0, g = 0, b = 0, a = 255;
 								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[0], out r)) {
 									currentHost.AddMessage(MessageType.Error, false, "Invalid value for Red in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -859,7 +860,7 @@ namespace Object.CsvB3d
 									a = 255; // special-case
 								}
 
-								if (a == 0 && enabledHacks.BveTsHacks || enabledHacks.DisableSemiTransparentFaces)
+								if (a == 0 && (enabledHacks.BveTsHacks || enabledHacks.DisableSemiTransparentFaces))
 								{
 									/*
 									 * BVE2 didn't support semi-transparent faces at all
@@ -910,6 +911,7 @@ namespace Object.CsvB3d
 								if (Arguments.Length > 4) {
 									currentHost.AddMessage(MessageType.Warning, false, "At most 4 arguments are expected in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
+								// Supports 3 args (RGB, alpha=255) or 4 args (RGBA) for backward compatibility
 								int r = 0, g = 0, b = 0, a = 255;
 								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[0], out r)) {
 									currentHost.AddMessage(MessageType.Error, false, "Invalid value for Red in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -919,7 +921,6 @@ namespace Object.CsvB3d
 								} 
 								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[2], out b)) {
 									currentHost.AddMessage(MessageType.Error, false, "Invalid value for Blue in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									b = 0;
 								} 
 								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[3], out a)) {
 									currentHost.AddMessage(MessageType.Error, false, "Invalid value for Alpha in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -942,7 +943,8 @@ namespace Object.CsvB3d
 								if (Arguments.Length > 4) {
 									currentHost.AddMessage(MessageType.Warning, false, "At most 4 arguments are expected in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								int r = 0, g = 0, b = 0;
+								// Supports 3 args (RGB, alpha=255) or 4 args (RGBA) for backward compatibility
+								int r = 0, g = 0, b = 0, a = 255;
 								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[0], out r)) {
 									currentHost.AddMessage(MessageType.Error, false, "Invalid value for Red in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
@@ -952,7 +954,11 @@ namespace Object.CsvB3d
 								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[2], out b)) {
 									currentHost.AddMessage(MessageType.Error, false, "Invalid value for Blue in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								Color32 newColor = new Color32((byte)r, (byte)g, (byte)b);
+								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[3], out a)) {
+									currentHost.AddMessage(MessageType.Error, false, "Invalid value for Alpha in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									a = 255;
+								}
+								Color32 newColor = new Color32((byte)r, (byte)g, (byte)b, (byte)a);
 								Builder.ApplyColor(newColor, true);
 								Object.ApplyColor(newColor, true);
 							}
@@ -965,10 +971,11 @@ namespace Object.CsvB3d
 								} else if (cmd == B3DCsvCommands.EmissiveColor & !IsB3D) {
 									currentHost.AddMessage(MessageType.Warning, false, "EmissiveColor is not a supported command - did you mean SetEmissiveColor? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								if (Arguments.Length > 3) {
-									currentHost.AddMessage(MessageType.Warning, false, "At most 3 arguments are expected in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								if (Arguments.Length > 4) {
+									currentHost.AddMessage(MessageType.Warning, false, "At most 4 arguments are expected in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								int r = 0, g = 0, b = 0;
+								// Supports 3 args (RGB, alpha=255) or 4 args (RGBA) for backward compatibility
+								int r = 0, g = 0, b = 0, a = 255;
 								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[0], out r)) {
 									currentHost.AddMessage(MessageType.Error, false, "Invalid value for Red in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
@@ -978,12 +985,16 @@ namespace Object.CsvB3d
 								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[2], out b)) {
 									currentHost.AddMessage(MessageType.Error, false, "Invalid value for Blue in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
+								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[3], out a)) {
+									currentHost.AddMessage(MessageType.Error, false, "Invalid value for Alpha in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									a = 255;
+								}
 								int m = Builder.Materials.Length;
 								Array.Resize(ref Builder.Materials, m << 1);
 								for (int j = m; j < Builder.Materials.Length; j++) {
 									Builder.Materials[j] = new Material(Builder.Materials[j - m])
 									{
-										EmissiveColor = new Color24((byte)r, (byte)g, (byte)b),
+										EmissiveColor = new Color32((byte)r, (byte)g, (byte)b, (byte)a),
 										Flags = Builder.Materials[0].Flags | MaterialFlags.Emissive,
 										BlendMode = Builder.Materials[0].BlendMode,
 										GlowAttenuationData = Builder.Materials[0].GlowAttenuationData,
@@ -1328,12 +1339,13 @@ namespace Object.CsvB3d
 									  FileName);
 								}
 
-								if (Arguments.Length != 3)
+								if (Arguments.Length > 4)
 								{
 									currentHost.AddMessage(MessageType.Warning, false,
-									  "3 arguments are expected in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									  "At most 4 arguments are expected in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								int r = 0, g = 0, b = 0;
+								// Supports 3 args (RGB, alpha=255) or 4 args (RGBA) for backward compatibility
+								int r = 0, g = 0, b = 0, a = 255;
 								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !int.TryParse(Arguments[0], out r))
 								{
 									currentHost.AddMessage(MessageType.Error, false, "Invalid argument R in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -1346,7 +1358,12 @@ namespace Object.CsvB3d
 								{
 									currentHost.AddMessage(MessageType.Error, false, "Invalid argument B in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								Color24 textColor = new Color24((byte)r, (byte)g, (byte)b);
+								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !int.TryParse(Arguments[3], out a))
+								{
+									currentHost.AddMessage(MessageType.Error, false, "Invalid argument A in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									a = 255;
+								}
+								Color32 textColor = new Color32((byte)r, (byte)g, (byte)b, (byte)a);
 								for (int j = 0; j < Builder.Materials.Length; j++)
 								{
 									Builder.Materials[j].TextColor = textColor;
@@ -1367,12 +1384,13 @@ namespace Object.CsvB3d
 									  "BackgroundColor is not a supported command - did you mean SetBackgroundColor? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 
-								if (Arguments.Length != 3)
+								if (Arguments.Length > 4)
 								{
 									currentHost.AddMessage(MessageType.Warning, false,
-									  "3 arguments are expected in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									  "At most 4 arguments are expected in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								int r = 0, g = 0, b = 0;
+								// Supports 3 args (RGB, alpha=255) or 4 args (RGBA) for backward compatibility
+								int r = 0, g = 0, b = 0, a = 255;
 								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !int.TryParse(Arguments[0], out r))
 								{
 									currentHost.AddMessage(MessageType.Error, false, "Invalid argument R in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -1385,7 +1403,12 @@ namespace Object.CsvB3d
 								{
 									currentHost.AddMessage(MessageType.Error, false, "Invalid argument B in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								Color24 backgroundColor = new Color24((byte)r, (byte)g, (byte)b);
+								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !int.TryParse(Arguments[3], out a))
+								{
+									currentHost.AddMessage(MessageType.Error, false, "Invalid argument A in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									a = 255;
+								}
+								Color32 backgroundColor = new Color32((byte)r, (byte)g, (byte)b, (byte)a);
 								for (int j = 0; j < Builder.Materials.Length; j++)
 								{
 									Builder.Materials[j].BackgroundColor = backgroundColor;
@@ -1525,6 +1548,32 @@ namespace Object.CsvB3d
 									{
 										material.Flags &= ~MaterialFlags.CrossFadeTexture;
 									}
+								}
+							}
+							break;
+						case B3DCsvCommands.DisableShadowCasting:
+							if (Arguments.Length > 1)
+							{
+								currentHost.AddMessage(MessageType.Warning, false, $"At most 1 arguments are expected in {Command} at line {(i + 1).ToString(Culture)} in file {FileName}");
+							}
+
+							bool noShadow = false;
+
+							if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !bool.TryParse(Arguments[0], out noShadow))
+							{
+								currentHost.AddMessage(MessageType.Error, false, $"Invalid argument Value in {Command} at line {(i + 1).ToString(Culture)} in file {FileName}");
+								noShadow = false;
+							}
+
+							foreach (Material material in Builder.Materials)
+							{
+								if (noShadow)
+								{
+									material.Flags |= MaterialFlags.NoShadow;
+								}
+								else
+								{
+									material.Flags &= ~MaterialFlags.NoShadow;
 								}
 							}
 							break;

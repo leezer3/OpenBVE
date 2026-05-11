@@ -633,7 +633,7 @@ namespace CsvRwRouteParser
 					int gi = Data.Blocks[i].Cycle[ci];
 					if (Data.Structure.Ground.ContainsKey(gi))
 					{
-						Data.Structure.Ground[Data.Blocks[i].Cycle[ci]].CreateObject(Position + new Vector3(0.0, -Data.Blocks[i].Height, 0.0), GroundTransformation, StartingDistance, EndingDistance, StartingDistance);
+						Data.Structure.Ground[Data.Blocks[i].Cycle[ci]].CreateObject(Position + new Vector3(0.0, -Data.Blocks[i].Height, 0.0), GroundTransformation, Transformation.NullTransformation, new ObjectCreationParameters(StartingDistance, EndingDistance));
 					}
 				}
 				// ground-aligned free objects
@@ -647,7 +647,7 @@ namespace CsvRwRouteParser
 				if (!PreviewOnly && Data.Structure.WeatherObjects.ContainsKey(Data.Blocks[i].WeatherObject))
 				{
 					UnifiedObject obj = Data.Structure.WeatherObjects[Data.Blocks[i].WeatherObject];
-					obj.CreateObject(Position, GroundTransformation, Data.Blocks[i].Height, StartingDistance, EndingDistance);
+					obj.CreateObject(Position, GroundTransformation, new ObjectCreationParameters(StartingDistance, EndingDistance));
 				}
 				// rail-aligned objects
 				{
@@ -768,6 +768,8 @@ namespace CsvRwRouteParser
 							CurrentRoute.Tracks[railKey].Elements[n].IsDriveable = Data.Blocks[i].Rails[railKey].IsDriveable;
 						}
 
+						ObjectCreationParameters railParameters = new ObjectCreationParameters(StartingDistance, EndingDistance);
+
 						if (!PreviewOnly)
 						{
 							if (railKey > 0 && !Data.Blocks[i].Rails[railKey].RailStarted)
@@ -784,7 +786,7 @@ namespace CsvRwRouteParser
 
 							if (Data.Structure.RailObjects.ContainsKey(Data.Blocks[i].RailType[railKey]))
 							{
-								Data.Structure.RailObjects[Data.Blocks[i].RailType[railKey]]?.CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
+								Data.Structure.RailObjects[Data.Blocks[i].RailType[railKey]]?.CreateObject(pos, RailTransformation, railParameters);
 							}
 
 							// points of interest
@@ -819,22 +821,24 @@ namespace CsvRwRouteParser
 								}
 							}
 
+							
+
 							// poles
 							if (Data.Blocks[i].RailPole.Length > railKey)
 							{
-								Data.Blocks[i].RailPole[railKey].Create(Data.Structure.Poles, pos, RailTransformation, Direction, planar, updown, StartingDistance, EndingDistance);
+								Data.Blocks[i].RailPole[railKey].Create(Data.Structure.Poles, pos, RailTransformation, Direction, planar, updown, railParameters);
 							}
 
 							// walls
 							if (Data.Blocks[i].RailWall.ContainsKey(railKey))
 							{
-								Data.Blocks[i].RailWall[railKey].Create(pos, RailTransformation, StartingDistance, EndingDistance);
+								Data.Blocks[i].RailWall[railKey].Create(pos, RailTransformation, railParameters);
 							}
 
 							// dikes
 							if (Data.Blocks[i].RailDike.ContainsKey(railKey))
 							{
-								Data.Blocks[i].RailDike[railKey].Create(pos, RailTransformation, StartingDistance, EndingDistance);
+								Data.Blocks[i].RailDike[railKey].Create(pos, RailTransformation, railParameters);
 							}
 
 							// sounds
@@ -852,20 +856,20 @@ namespace CsvRwRouteParser
 								// primary rail
 								if (Data.Blocks[i].Forms[k].PrimaryRail == railKey)
 								{
-									Data.Blocks[i].Forms[k].CreatePrimaryRail(Data.Blocks[i], Data.Blocks[i + 1], pos, RailTransformation, StartingDistance, EndingDistance);
+									Data.Blocks[i].Forms[k].CreatePrimaryRail(Data.Blocks[i], Data.Blocks[i + 1], pos, RailTransformation, railParameters);
 								}
 
 								// secondary rail
 								if (Data.Blocks[i].Forms[k].SecondaryRail == railKey)
 								{
-									Data.Blocks[i].Forms[k].CreateSecondaryRail(Data.Blocks[i], pos, RailTransformation, StartingDistance, EndingDistance);
+									Data.Blocks[i].Forms[k].CreateSecondaryRail(Data.Blocks[i], pos, RailTransformation, railParameters);
 								}
 							}
 
 							// cracks
 							for (int k = 0; k < Data.Blocks[i].Cracks.Length; k++)
 							{
-								Data.Blocks[i].Cracks[k].Create(railKey, RailTransformation, pos, Data.Blocks[i], Data.Blocks[i + 1], Data.Structure, StartingDistance, EndingDistance);
+								Data.Blocks[i].Cracks[k].Create(railKey, RailTransformation, pos, Data.Blocks[i], Data.Blocks[i + 1], Data.Structure, railParameters);
 							}
 
 							// free objects

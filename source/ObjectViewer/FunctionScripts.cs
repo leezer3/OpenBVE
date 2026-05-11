@@ -265,7 +265,17 @@ namespace ObjectViewer {
 							Function.Stack[s] = 1;
 						}
 						s++; break;
-						// train
+					case Instructions.CameraCar:
+						if (IsPartOfTrain && Train != null)
+						{
+							Function.Stack[s] = Train.CameraCar;
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					// train
 					case Instructions.PlayerTrain:
 						if (IsPartOfTrain && Train != null)
 						{
@@ -356,8 +366,9 @@ namespace ObjectViewer {
 						}
 						break;
 					case Instructions.TrainAccelerationMotor:
+						Function.Stack[s] = 0.0;
 						if (Train != null) {
-							Function.Stack[s] = 0.0;
+							
 							for (int j = 0; j < Train.Cars.Length; j++) {
 								if (Train.Cars[j].TractionModel.ProvidesPower) {
 									// hack: MotorAcceleration does not distinguish between forward/backward
@@ -371,8 +382,6 @@ namespace ObjectViewer {
 									break;
 								}
 							}
-						} else {
-							Function.Stack[s] = 0.0;
 						}
 						s++; break;
 					case Instructions.TrainAccelerationMotorOfCar:
@@ -449,132 +458,24 @@ namespace ObjectViewer {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
-					// OBJECT VIEWER: Track is not simulated, so distance to train must be zero
+					// OBJECT VIEWER: Track is not simulated, so these return zero
 					case Instructions.PlayerTrackDistance:
 					case Instructions.TrainTrackDistance:
+					case Instructions.CurveRadius:
+					case Instructions.FrontAxleCurveRadius:
+					case Instructions.RearAxleCurveRadius:
+					case Instructions.CurveCant:
+					case Instructions.Pitch:
+					case Instructions.Odometer:
 						Function.Stack[s] = 0.0; 
 						s++; break;
-					case Instructions.CurveRadius:
-						Function.Stack[s] = 0.0;
-						s++;
-						break;
-                    case Instructions.CurveRadiusOfCar:
-                        if (Train == null)
-                        {
-                            Function.Stack[s - 1] = 0.0;
-                        }
-                        else
-                        {
-                            int j = (int)Math.Round(Function.Stack[s - 1]);
-                            if (j < 0) j += Train.Cars.Length;
-                            if (j >= 0 & j < Train.Cars.Length)
-                            {
-                                Function.Stack[s - 1] = (Train.Cars[j].FrontAxle.Follower.CurveRadius + Train.Cars[j].RearAxle.Follower.CurveRadius) / 2;
-                            }
-                            else
-                            {
-                                Function.Stack[s - 1] = 0.0;
-                            }
-                        }
-                        break;
-					case Instructions.FrontAxleCurveRadius:
-						Function.Stack[s] = 0.0;
-						s++;
-						break;
-                    case Instructions.FrontAxleCurveRadiusOfCar:
-                        if (Train == null)
-                        {
-                            Function.Stack[s - 1] = 0.0;
-                        }
-                        else
-                        {
-                            int j = (int)Math.Round(Function.Stack[s - 1]);
-                            if (j < 0) j += Train.Cars.Length;
-                            if (j >= 0 & j < Train.Cars.Length)
-                            {
-                                Function.Stack[s - 1] = Train.Cars[j].FrontAxle.Follower.CurveRadius;
-                            }
-                            else
-                            {
-                                Function.Stack[s - 1] = 0.0;
-                            }
-                        }
-                        break;
-					case Instructions.RearAxleCurveRadius:
-						Function.Stack[s] = 0.0;
-						s++;
-						break;
-                    case Instructions.RearAxleCurveRadiusOfCar:
-                        if (Train == null)
-                        {
-                            Function.Stack[s - 1] = 0.0;
-                        }
-                        else
-                        {
-                            int j = (int)Math.Round(Function.Stack[s - 1]);
-                            if (j < 0) j += Train.Cars.Length;
-                            if (j >= 0 & j < Train.Cars.Length)
-                            {
-                                Function.Stack[s - 1] = Train.Cars[j].RearAxle.Follower.CurveRadius;
-                            }
-                            else
-                            {
-                                Function.Stack[s - 1] = 0.0;
-                            }
-                        }
-                        break;
-					case Instructions.CurveCant:
-						Function.Stack[s] = 0.0;
-						s++;
-						break;
-                    case Instructions.CurveCantOfCar:
-                        if (Train == null)
-                        {
-                            Function.Stack[s - 1] = 0.0;
-                        }
-                        else
-                        {
-                            int j = (int)Math.Round(Function.Stack[s - 1]);
-                            if (j < 0) j += Train.Cars.Length;
-                            if (j >= 0 & j < Train.Cars.Length)
-                            {
-                                Function.Stack[s - 1] = Train.Cars[j].FrontAxle.Follower.CurveCant;
-                            }
-                            else
-                            {
-                                Function.Stack[s - 1] = 0.0;
-                            }
-                        }
-                        break;
-					case Instructions.Pitch:
-						Function.Stack[s] = 0.0;
-						s++;
-						break;
+					case Instructions.FrontAxleCurveRadiusOfCar:
+					case Instructions.RearAxleCurveRadiusOfCar:
+					case Instructions.CurveRadiusOfCar:
+					case Instructions.CurveCantOfCar:
 					case Instructions.PitchOfCar:
-						if (Train == null)
-						{
-							Function.Stack[s - 1] = 0.0;
-						}
-						else
-						{
-							int j = (int)Math.Round(Function.Stack[s - 1]);
-							if (j < 0) j += Train.Cars.Length;
-							if (j >= 0 & j < Train.Cars.Length)
-							{
-								Function.Stack[s - 1] = Train.Cars[j].FrontAxle.Follower.Pitch;
-							}
-							else
-							{
-								Function.Stack[s - 1] = 0.0;
-							}
-						}
-						break;
-					case Instructions.Odometer:
-						Function.Stack[s] = 0.0;
-						s++;
-						break;
 					case Instructions.OdometerOfCar:
-						Function.Stack[s -1] = 0.0;
+						Function.Stack[s - 1] = 0.0;
 						break;
 					case Instructions.TrainTrackDistanceToCar:
 						if (Train != null) {

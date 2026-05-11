@@ -7,14 +7,15 @@ namespace Plugin
     {
 	    public DataChunk(byte[] dataBytes, WaveFormatEx format) : base(format.Channels)
 	    {
-		    if (!(format is WaveFormatAdPcm))
-		    {
-			    BytesPerSample = format.BitsPerSample / 8;
-		    }
-		    else
+		    if (format is WaveFormatAdPcm)
 		    {
 			    BytesPerSample = 2;
 		    }
+		    else
+		    {
+			    BytesPerSample = format.BitsPerSample / 8;
+			}
+		    
 
 		    // The size of the data chunk may not be correct, so we use sampleCount as the standard thereafter.
 		    int sampleCount = dataBytes.Length / (format.Channels * BytesPerSample);

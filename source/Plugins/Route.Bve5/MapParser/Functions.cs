@@ -179,6 +179,11 @@ namespace Route.Bve5
 
 		private static double GetTrackCoordinate(double distance0, double xy0, double distance1, double xy1, double radius, double distance)
 		{
+			if (distance0 == 0)
+			{
+				// first block, no interpolation possible
+				return xy0;
+			}
 			Vector2 center = GetCenterOfCircle(distance0, xy0, distance1, xy1, radius);
 			double squaring = Math.Pow(radius, 2.0) - Math.Pow(distance - center.X, 2.0);
 			if (squaring >= 0.0)

@@ -44,7 +44,7 @@ namespace ObjectViewer
 			else if (Renderer.Screen.Height <= 1150) MenuFont = Renderer.Fonts.VeryLargeFont;
 			else MenuFont = Renderer.Fonts.EvenLargerFont;
 
-			lineHeight = (int)(MenuFont.FontSize * LineSpacing);
+			LineHeight = (int)(MenuFont.FontSize * LineSpacing);
 			MenuBackKey = Key.Escape; // fixed in viewers
 			int quarterWidth = (int)(Renderer.Screen.Width / 4.0);
 			int quarterHeight = (int)(Renderer.Screen.Height / 4.0);
@@ -252,7 +252,7 @@ namespace ObjectViewer
 				return false;
 			}
 
-			int item = (int)((y - topItemY) / lineHeight + menu.TopItem);
+			int item = (int)((y - topItemY) / LineHeight + menu.TopItem);
 			// if the mouse is above a command item, select it
 			if (item >= 0 && item < menu.Items.Length && (menu.Items[item] is MenuCommand || menu.Items[item] is MenuOption))
 			{
@@ -372,7 +372,7 @@ namespace ObjectViewer
 					Renderer.OpenGlString.Draw(MenuFont, opt.CurrentOption.ToString(), new Vector2((menuMax.X - menuMin.X + 2.0f * Border.X) + 4.0f, itemY),
 						menu.Align, backgroundColor, false);
 				}
-				itemY += lineHeight;
+				itemY += LineHeight;
 				if (menu.Items[i].Icon != null)
 				{
 					Renderer.Rectangle.DrawAlpha(menu.Items[i].Icon, new Vector2(iconX, itemY - itemHeight * 1.5), new Vector2(itemHeight, itemHeight), Color128.White);

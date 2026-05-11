@@ -79,7 +79,6 @@
     <Compile Include="Controller.Classic.cs" />
     <Compile Include="Controller.Unbalance.cs" />
     <Compile Include="Controller.Ps2Ddgo.cs" />
-    <Compile Include="Controller.Zuiki.cs" />
     <Compile Include="Controller.Ps2TS.cs" />
   </ItemGroup>
   <ItemGroup>
