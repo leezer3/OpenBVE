@@ -52,8 +52,15 @@ namespace OpenBveApi.Textures {
 		        throw new ArgumentException();
 		    }
 		    int width = texture.Width;
-		    byte[] bytes = texture.Bytes;
-		    int clipLeft = region.Left;
+		    byte[] bytes;
+		    if (texture.Bytes == null)
+		    {
+			    texture.Origin.GetTexture(out texture);
+		    }
+		    
+		    bytes = texture.Bytes;
+
+			int clipLeft = region.Left;
 		    int clipTop = region.Top;
 		    int clipWidth = region.Width;
 		    int clipHeight = region.Height;
@@ -209,33 +216,57 @@ namespace OpenBveApi.Textures {
 				case PixelFormat.Grayscale:
 					for (int i = 0; i < source.Length; i++, targetIndex += 4)
 					{
-						Color24 c = transparencyTexture.GetPixel(i);
+						
 						target[targetIndex] = source[i];
 						target[targetIndex + 1] = source[i];
 						target[targetIndex + 2] = source[i];
-						target[targetIndex + 3] = (byte)(255 * c.GetBrightness());
+						if (transparencyTexture.PixelFormat == PixelFormat.Grayscale || transparencyTexture.PixelFormat == PixelFormat.RGB)
+						{
+							Color24 c = transparencyTexture.GetPixel(i);
+							target[targetIndex + 3] = (byte)(255 * c.GetBrightness());
+						}
+						else
+						{
+							target[i + 3] = System.Math.Min(source[i + 1], transparencyTexture.GetAlpha(i));
+						}
+						
 					}
 					break;
 				case PixelFormat.GrayscaleAlpha:
 					for (int i = 0; i < source.Length; i += 2, targetIndex += 4)
 					{
 						int pix = i / 2;
-						Color24 c = transparencyTexture.GetPixel(pix);
 						target[targetIndex] = source[i];
 						target[targetIndex + 1] = source[i];
 						target[targetIndex + 2] = source[i];
-						target[targetIndex + 3] = (byte)(255 * c.GetBrightness());
+						if (transparencyTexture.PixelFormat == PixelFormat.Grayscale || transparencyTexture.PixelFormat == PixelFormat.RGB)
+						{
+							Color24 c = transparencyTexture.GetPixel(pix);
+							target[targetIndex + 3] = (byte)(255 * c.GetBrightness());
+						}
+						else
+						{
+							target[i + 3] = System.Math.Min(source[i + 1], transparencyTexture.GetAlpha(pix));
+						}
 					}
 					break;
 				case PixelFormat.RGB:
 					for (int i = 0; i < source.Length; i += 3, targetIndex += 4)
 					{
 						int pix = i / 3;
-						Color24 c = transparencyTexture.GetPixel(pix);
 						target[targetIndex] = source[i];
 						target[targetIndex + 1] = source[i + 1];
 						target[targetIndex + 2] = source[i + 2];
-						target[targetIndex + 3] = (byte)(255 * c.GetBrightness());
+						if (transparencyTexture.PixelFormat == PixelFormat.Grayscale ||
+						    transparencyTexture.PixelFormat == PixelFormat.RGB)
+						{
+							Color24 c = transparencyTexture.GetPixel(pix);
+							target[targetIndex + 3] = (byte)(255 * c.GetBrightness());
+						}
+						else
+						{
+							target[i + 3] = System.Math.Min(source[i + 3], transparencyTexture.GetAlpha(pix));
+						}
 					}
 					break;
 				case PixelFormat.RGBAlpha:
@@ -248,11 +279,19 @@ namespace OpenBveApi.Textures {
 					for (int i = 4; i < source.Length; i += 4)
 					{
 						int pix = i / 4;
-						Color24 c = transparencyTexture.GetPixel(pix);
 						target[i + 0] = source[i + 0];
 						target[i + 1] = source[i + 1];
 						target[i + 2] = source[i + 2];
-						target[i + 3] = (byte)(255 * c.GetBrightness());
+						if (transparencyTexture.PixelFormat == PixelFormat.Grayscale || transparencyTexture.PixelFormat == PixelFormat.RGB)
+						{
+							Color24 c = transparencyTexture.GetPixel(pix);
+							target[i + 3] = (byte)(255 * c.GetBrightness());
+						}
+						else
+						{
+							target[i + 3] = System.Math.Min(source[i + 3], transparencyTexture.GetAlpha(pix));
+						}
+							
 					}
 					break;
 			}
