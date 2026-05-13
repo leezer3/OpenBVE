@@ -181,10 +181,6 @@ namespace Train.OpenBve
 						}
 						break;
 					case SoundXMLSection.Door:
-						if (!isDriverCar)
-						{
-							break;
-						}
 						while (subBlock.RemainingSubBlocks > 0)
 						{
 							Block<SoundXMLSection, SoundXMLKey> doorSubBlock = subBlock.ReadNextBlock();
