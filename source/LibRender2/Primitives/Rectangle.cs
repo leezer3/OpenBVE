@@ -42,14 +42,11 @@ namespace LibRender2.Primitives
 			this.renderer = renderer;
 			try
 			{
-				if (!renderer.ForceLegacyOpenGL)
-				{
-					Shader = new Shader(renderer, "rectangle", "rectangle", true);
-				}
-			}
+				Shader = new Shader(renderer, "rectangle", "rectangle", true);
+            }
 			catch
 			{
-				renderer.ForceLegacyOpenGL = true;
+				//
 			}
 		}
 
@@ -104,7 +101,7 @@ namespace LibRender2.Primitives
 		/// <param name="wrapMode">A wrap mode if overriding that of the texture</param>
 		public void Draw(Texture texture, Vector2 point, Vector2 size, Color128? color = null, Vector2? textureCoordinates = null, OpenGlTextureWrapMode? wrapMode = null)
 		{
-			if (renderer.AvailableNewRenderer && Shader != null)
+			if (Shader != null)
 			{
 				if (textureCoordinates == null)
 				{
@@ -132,7 +129,7 @@ namespace LibRender2.Primitives
 			{
 				return;
 			}
-			if (renderer.AvailableNewRenderer && Shader != null)
+			if (Shader != null)
 			{
 				if (textureCoordinates == null)
 				{
@@ -142,10 +139,6 @@ namespace LibRender2.Primitives
 				{
 					DrawWithShader(texture, point, texture.Size, color, (Vector2)textureCoordinates);
 				}
-			}
-			else
-			{
-				DrawImmediate(texture, point, texture.Size, color, textureCoordinates);	
 			}
 		}
 

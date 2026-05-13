@@ -1,5 +1,4 @@
 ﻿using OpenBveApi.Colors;
-using OpenTK.Graphics.OpenGL;
 
 namespace LibRender2.Fogs
 {
@@ -36,34 +35,8 @@ namespace LibRender2.Fogs
 			{
 				return;
 			}
-			if (Renderer.AvailableNewRenderer)
-			{
-				Renderer.CurrentShader.SetFog(true);
-				Renderer.CurrentShader.SetFog(this);
-			}
-			else
-			{
-				SetForImmediateMode();
-			}
-		}
-
-		private void SetForImmediateMode()
-		{
-			const float inv255 = 1.0f / 255.0f;
-			if (IsLinear)
-			{
-				GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
-				GL.Fog(FogParameter.FogStart, Start);
-				GL.Fog(FogParameter.FogEnd, End);
-			}
-			else
-			{
-				GL.Fog(FogParameter.FogMode, (int)FogMode.Exp2);
-				GL.Fog(FogParameter.FogDensity, Density);	
-			}
-			
-			
-			GL.Fog(FogParameter.FogColor, new[] { inv255 * Color.R, inv255 * Color.G, inv255 * Color.B, 1.0f });
-		}
+			Renderer.CurrentShader.SetFog(true);
+			Renderer.CurrentShader.SetFog(this);
+        }
 	}
 }

@@ -112,11 +112,6 @@ namespace RouteViewer
 			}
 			TransformedLightPosition = new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z);
 			TransformedLightPosition.Transform(CurrentViewMatrix);
-			if (!AvailableNewRenderer)
-			{
-				GL.Light(LightName.Light0, LightParameter.Position, new[] { (float)TransformedLightPosition.X, (float)TransformedLightPosition.Y, (float)TransformedLightPosition.Z, 0.0f });
-			}
-			
 			
 			Lighting.OptionLightingResultingAmount = (Lighting.OptionAmbientColor.R + Lighting.OptionAmbientColor.G + Lighting.OptionAmbientColor.B) / 480.0f;
 
@@ -147,16 +142,12 @@ namespace RouteViewer
 				Program.CurrentRoute.CurrentFog = Program.CurrentRoute.PreviousFog;
 			}
 
-			if (AvailableNewRenderer)
-			{
-				PerformCSMShadowPass();
-				DefaultShader.Activate();
-				BindCSMToDefaultShader();
-			}
-			
+			PerformCSMShadowPass();
+			DefaultShader.Activate();
+			BindCSMToDefaultShader();
 
-			// render background
-			GL.Disable(EnableCap.DepthTest);
+            // render background
+            GL.Disable(EnableCap.DepthTest);
 			DefaultShader.SetShadowEnabled(false);
 			Program.CurrentRoute.UpdateBackground(timeElapsed, false);
 			DefaultShader.SetShadowEnabled(ShadowsEnabled);
@@ -180,27 +171,24 @@ namespace RouteViewer
 				Fog.Enabled = false;
 			}
 
-			// world layer
-			// opaque face
+            // world layer
+            // opaque face
 			
-			
-			if (AvailableNewRenderer)
-			{
-				//Setup the shader for rendering the scene
-				if (OptionLighting)
-				{
-					DefaultShader.SetIsLight(true);
-					DefaultShader.SetLightPosition(TransformedLightPosition);
-					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
-					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
-					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
-					DefaultShader.SetLightModel(Lighting.LightModel);
-				}
-				Fog.Set();
-				DefaultShader.SetTexture(0);
-				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
-			}
-			ResetOpenGlState();
+            //Setup the shader for rendering the scene
+            if (OptionLighting)
+            {
+	            DefaultShader.SetIsLight(true);
+	            DefaultShader.SetLightPosition(TransformedLightPosition);
+	            DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
+	            DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
+	            DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
+	            DefaultShader.SetLightModel(Lighting.LightModel);
+            }
+
+            Fog.Set();
+            DefaultShader.SetTexture(0);
+            DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
+            ResetOpenGlState();
 			List<FaceState> opaqueFaces, alphaFaces;
 			lock (VisibleObjects.LockObject)
 			{
@@ -275,11 +263,10 @@ namespace RouteViewer
 			{
 				// TODO: Write a shader to draw point list....
 				ResetOpenGlState();
-				if (AvailableNewRenderer)
-				{
-					DefaultShader.Deactivate();
-				}
-				unsafe
+
+				DefaultShader.Deactivate();
+
+                unsafe
 				{
 					GL.MatrixMode(MatrixMode.Projection);
 					GL.PushMatrix();
@@ -339,12 +326,10 @@ namespace RouteViewer
 
 			}
 
-			// render overlays
-			if (AvailableNewRenderer)
-			{
-				DefaultShader.Deactivate();
-			}
-			ResetOpenGlState();
+            // render overlays
+            DefaultShader.Deactivate();
+
+            ResetOpenGlState();
 			OptionLighting = false;
 			Fog.Enabled = false;
 			UnsetAlphaFunc();
@@ -617,32 +602,16 @@ namespace RouteViewer
 					OpenGlString.Draw(Fonts.SmallFont, "Mute:", new Vector2(Screen.Width - (32 * scaleFactor), 64), TextAlignment.TopRight, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, "Hide interface:", new Vector2(Screen.Width - (32 * scaleFactor), 84), TextAlignment.TopRight, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, $"{(RenderStatsOverlay ? "Hide" : "Show")} renderer statistics", new Vector2(Screen.Width - 32, 104), TextAlignment.TopRight, Color128.White, true);
-					if (!ForceLegacyOpenGL)
+					if (Program.CurrentHost.Platform != HostPlatform.AppleOSX || IntPtr.Size == 4)
 					{
-						OpenGlString.Draw(Fonts.SmallFont, "Switch renderer type:", new Vector2(Screen.Width - (32 * scaleFactor), 124), TextAlignment.TopRight, Color128.White, true);
-						keys = new[] { new[] { "R" } };
+						// only works on WinForms supporting systems
+						OpenGlString.Draw(Fonts.SmallFont, "Rail Paths:", new Vector2(Screen.Width - (32 * scaleFactor), 124), TextAlignment.TopRight, Color128.White, true);
+						keys = new[] { new[] { "P" } };
 						Keys.Render(Screen.Width - (int)(20 * scaleFactor), 124, 16, Fonts.SmallFont, keys);
-						if (Program.CurrentHost.Platform != HostPlatform.AppleOSX || IntPtr.Size == 4)
-						{
-							// only works on WinForms supporting systems
-							OpenGlString.Draw(Fonts.SmallFont, "Draw Rail Paths:", new Vector2(Screen.Width - (32 * scaleFactor), 144), TextAlignment.TopRight, Color128.White, true);
-							keys = new[] { new[] { "P" } };
-							Keys.Render(Screen.Width - (int)(20 * scaleFactor), 144, 16, Fonts.SmallFont, keys);
-						}
 					}
-					else
-					{
-						if (Program.CurrentHost.Platform != HostPlatform.AppleOSX || IntPtr.Size == 4)
-						{
-							// only works on WinForms supporting systems
-							OpenGlString.Draw(Fonts.SmallFont, "Rail Paths:", new Vector2(Screen.Width - (32 * scaleFactor), 124), TextAlignment.TopRight, Color128.White, true);
-							keys = new[] { new[] { "P" } };
-							Keys.Render(Screen.Width - (int)(20 * scaleFactor), 124, 16, Fonts.SmallFont, keys);
-						}
-					}
-					
 
-					keys = new[] { new[] { "F10" } };
+
+                    keys = new[] { new[] { "F10" } };
 					Keys.Render(Screen.Width - (int)(32 * scaleFactor), 104, 30, Fonts.SmallFont, keys);
 					
 					keys = new[] { new[] { null, "W", null }, new[] { "A", "S", "D" } };
@@ -682,7 +651,7 @@ namespace RouteViewer
 					double Yaw = Camera.Alignment.Yaw * 57.2957795130824;
 					OpenGlString.Draw(Fonts.SmallFont, $"Position: {GetLengthString(Camera.Alignment.TrackPosition)} (X={GetLengthString(Camera.Alignment.Position.X)}, Y={GetLengthString(Camera.Alignment.Position.Y)}), Orientation: (Yaw={Yaw.ToString("0.00", culture)}°, Pitch={(Camera.Alignment.Pitch * 57.2957795130824).ToString("0.00", culture)}°, Roll={(Camera.Alignment.Roll * 57.2957795130824).ToString("0.00", culture)}°)", new Vector2((int)x, 4), TextAlignment.TopLeft, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, $"Radius: {GetLengthString(CameraTrackFollower.CurveRadius)}, Cant: {(1000.0 * CameraTrackFollower.CurveCant).ToString("0", culture)} mm, Pitch: {CameraTrackFollower.Pitch.ToString("0", culture)} ‰, Adhesion={(100.0 * CameraTrackFollower.AdhesionMultiplier).ToString("0", culture)}" + " , Rain intensity= " + CameraTrackFollower.RainIntensity +"%", new Vector2((int)x, 20), TextAlignment.TopLeft, Color128.White, true);
-					OpenGlString.Draw(Fonts.SmallFont, ForceLegacyOpenGL ? "Renderer: Old (GL 1.2)- GL 4 not available" : $"Renderer: {(AvailableNewRenderer ? "New (GL 4)" : "Old (GL 1.2)")}", new Vector2((int)x, 40), TextAlignment.TopLeft, Color128.White, true);
+					OpenGlString.Draw(Fonts.SmallFont, "Renderer: New (GL 4)", new Vector2((int)x, 40), TextAlignment.TopLeft, Color128.White, true);
 
 
 					int stationIndex = Program.Renderer.CameraTrackFollower.StationIndex;
