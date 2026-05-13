@@ -38,7 +38,6 @@ namespace RouteViewer
 				Builder.AppendLine("vsync = " + (VerticalSynchronization ? "true" : "false"));
 				Builder.AppendLine("windowWidth = " + Program.Renderer.Screen.Width.ToString(Culture));
 				Builder.AppendLine("windowHeight = " + Program.Renderer.Screen.Height.ToString(Culture));
-				Builder.AppendLine("isUseNewRenderer = " + (IsUseNewRenderer ? "true" : "false"));
 				Builder.AppendLine("viewingdistance = " + ViewingDistance);
 				Builder.AppendLine("nearclipbase = " + NearClipBase.ToString(Culture));
 				Builder.AppendLine("quadleafsize = " + QuadTreeLeafSize);
@@ -112,7 +111,6 @@ namespace RouteViewer
 							block.TryGetValue(OptionsKey.WindowWidth, ref Interface.CurrentOptions.WindowWidth, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.WindowHeight, ref Interface.CurrentOptions.WindowHeight, NumberRange.Positive);
 							block.GetValue(OptionsKey.VSync, out Interface.CurrentOptions.VerticalSynchronization);
-							block.GetValue(OptionsKey.IsUseNewRenderer, out Interface.CurrentOptions.IsUseNewRenderer);
 							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.QuadLeafSize, ref Interface.CurrentOptions.QuadTreeLeafSize, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.NearClipBase, ref Interface.CurrentOptions.NearClipBase, NumberRange.Positive);

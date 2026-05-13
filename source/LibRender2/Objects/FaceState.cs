@@ -17,22 +17,16 @@ namespace LibRender2.Objects
 			Object = _object;
 			Face = face;
 			Renderer = renderer;
-			if (Object.Prototype.Mesh.VAO == null && !Renderer.ForceLegacyOpenGL)
+			if (Object.Prototype.Mesh.VAO == null)
 			{
 				VAOExtensions.CreateVAO(Object.Prototype.Mesh, Object.Prototype.Dynamic, Renderer.DefaultShader.VertexLayout, Renderer);
-			}
-		}
+            }
+			
+        }
 
 		public void Draw()
 		{
-			if (Renderer.AvailableNewRenderer)
-			{
-				Renderer.RenderFace(this);
-			}
-			else
-			{
-				Renderer.RenderFaceImmediateMode(this);
-			}
+			Renderer.RenderFace(this);
 		}
 	}
 }

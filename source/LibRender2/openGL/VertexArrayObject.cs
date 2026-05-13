@@ -169,6 +169,10 @@ namespace LibRender2
 		/// <param name="renderer">A reference to the base renderer</param>
 		public static void CreateVAO(Mesh mesh, bool isDynamic, VertexLayout vertexLayout, BaseRenderer renderer)
 		{
+			if (mesh.VAO is VertexArrayObject)
+			{
+				return;
+			}
 			if (!renderer.GameWindow.Context.IsCurrent)
 			{
 				renderer.RunInRenderThread(() =>
@@ -262,7 +266,6 @@ namespace LibRender2
 			}
 			catch (Exception e)
 			{
-				renderer.ForceLegacyOpenGL = true;
 				renderer.currentHost.AddMessage(MessageType.Error, false, $"Creating VAO failed with the following error: {e}");
 			}
 		}
@@ -391,7 +394,6 @@ namespace LibRender2
 			}
 			catch (Exception e)
 			{
-				renderer.ForceLegacyOpenGL = true;
 				renderer.currentHost.AddMessage(MessageType.Error, false, $"Creating VAO failed with the following error: {e}");
 			}
 		}
