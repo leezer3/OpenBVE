@@ -555,11 +555,12 @@ namespace Train.OpenBve
 
 					if (motorSound is BVEMotorSound bveMotorSound)
 					{
+						ParseBlock(subBlock, out SoundBuffer buffer, ref Position, Radius);
 						for (int i = 0; i < bveMotorSound.Tables.Length; i++)
 						{
 							bveMotorSound.Tables[i].Buffer = null;
 							bveMotorSound.Tables[i].Source = null;
-							ParseBlock(subBlock, out SoundBuffer buffer, ref Position, Radius);
+							
 							for (int j = 0; j < bveMotorSound.Tables[i].Entries.Length; j++)
 							{
 								if (idx == bveMotorSound.Tables[i].Entries[j].SoundIndex)
