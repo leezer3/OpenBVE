@@ -1,3 +1,4 @@
+using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
@@ -143,6 +144,9 @@ namespace OpenBveApi
 		public double NearClipCab = 0.025;
 		/// <summary>The near clipping plane for the base renderer</summary>
 		public double NearClipBase = 0.2;
+		/// <summary>The color used by the renderer when issuing GL.Clear()</summary>
+		/// <remarks>Not saved</remarks>
+		public Color24 ClearColor = new Color24(170, 170, 170);
 
 		/// <summary>Saves the options to the specified filename</summary>
 		/// <param name="fileName">The filename to save the options to</param>

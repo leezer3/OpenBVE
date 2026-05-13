@@ -123,7 +123,7 @@ namespace OpenBve.Graphics
 			}
 			else
 			{
-				GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
+				GL.ClearColor(Interface.CurrentOptions.ClearColor.R * inv255, Interface.CurrentOptions.ClearColor.G * inv255, Interface.CurrentOptions.ClearColor.B * inv255, 1.0f);
 			}
 
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);

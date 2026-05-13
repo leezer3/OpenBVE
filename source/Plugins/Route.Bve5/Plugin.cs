@@ -25,6 +25,7 @@
 using System;
 using System.Text;
 using OpenBveApi;
+using OpenBveApi.Colors;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
@@ -103,6 +104,7 @@ namespace Route.Bve5
 			    }
 		    }
 
+		    CurrentOptions.ClearColor = Color24.Black;
 			return true;
 
 	    }
