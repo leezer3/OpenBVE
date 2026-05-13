@@ -175,10 +175,11 @@ namespace OpenBve
 				if (cameraProperties.IsTransitioning) cameraProperties.CameraCarTransitionTimer += RealTimeElapsed;
 				if (cameraProperties.ModeTransitionTimer < 1.0) cameraProperties.ModeTransitionTimer += RealTimeElapsed / Interface.CurrentOptions.CameraTransitionSpeed;
 				double carTransitionProgress = Math.Min(1.0, cameraProperties.CameraCarTransitionTimer / Interface.CurrentOptions.CameraTransitionSpeed);
-				if ((cameraMode == CameraViewMode.Exterior && Interface.CurrentOptions.CameraExteriorTransition == false) || (cameraMode != CameraViewMode.Exterior && Interface.CurrentOptions.CameraInteriorTransition == false))
+				if ((cameraMode == CameraViewMode.Exterior && Interface.CurrentOptions.CameraExteriorTransition == false) || (cameraMode != CameraViewMode.Exterior && Interface.CurrentOptions.CameraInteriorTransition == false) || cameraMode == CameraViewMode.Interior)
 				{
 					// disabled transition
 					carTransitionProgress = 1.0;
+					cameraProperties.ModeTransitionTimer = 1.0;
 				}
 				if (carTransitionProgress >= 1.0)
 				{
