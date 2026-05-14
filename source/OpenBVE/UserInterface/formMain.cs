@@ -29,6 +29,7 @@ namespace OpenBve {
 		private formMain()
 		{
 			InitializeComponent();
+			toolTip = new ToolTip(components);
 		}
 
 		public sealed override string Text
@@ -57,6 +58,7 @@ namespace OpenBve {
 		}
 
 		// members
+		private readonly ToolTip toolTip;
 		private LaunchParameters Result;
 		private int[] EncodingCodepages;
 		private Image JoystickImage;
@@ -1161,6 +1163,32 @@ namespace OpenBve {
 			}
 
 
+			
+			ApplyToolTips();
+		}
+
+		/// <summary>Applies tooltips to the various controls on the form</summary>
+		private void ApplyToolTips()
+		{
+			SetToolTip("interpolation", labelInterpolation, comboboxInterpolation);
+			SetToolTip("anisotropic", labelAnisotropic, updownAnisotropic);
+			SetToolTip("antialiasing", labelAntiAliasing, updownAntiAliasing);
+			SetToolTip("transparency", labelTransparency, trackbarTransparency);
+			SetToolTip("viewingdistance", labelDistance, updownDistance);
+			SetToolTip("motionblur", labelMotionBlur, comboboxMotionBlur);
+			SetToolTip("new_renderer", checkBoxIsUseNewRenderer);
+		}
+
+		/// <summary>Sets the tooltip for one or more controls using a translation key</summary>
+		/// <param name="key">The translation key in the 'tooltips' group</param>
+		/// <param name="controls">The controls to apply the tooltip to</param>
+		private void SetToolTip(string key, params Control[] controls)
+		{
+			string text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "tooltips", key });
+			foreach (Control control in controls)
+			{
+				toolTip.SetToolTip(control, text);
+			}
 		}
 
 		// form closing
