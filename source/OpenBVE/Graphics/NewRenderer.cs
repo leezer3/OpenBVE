@@ -188,9 +188,17 @@ namespace OpenBve.Graphics
 			// render background
 			// n.b. must disable shadows
 			GL.Disable(EnableCap.DepthTest);
-			DefaultShader.SetShadowEnabled(false);
+			if (AvailableNewRenderer)
+			{
+				DefaultShader.SetShadowEnabled(false);
+			}
+			
 			Program.CurrentRoute.UpdateBackground(TimeElapsed, Program.Renderer.CurrentInterface != InterfaceType.Normal);
-			DefaultShader.SetShadowEnabled(ShadowsEnabled);
+			if (AvailableNewRenderer)
+			{
+				DefaultShader.SetShadowEnabled(ShadowsEnabled);
+			}
+			
 
 			// fog
 			float aa = Program.CurrentRoute.CurrentFog.Start;
