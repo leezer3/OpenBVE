@@ -98,7 +98,7 @@ namespace OpenBve
 			{
 				using (var ProblemReport = File.OpenWrite(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), fileName)))
 				{
-					using (var zipWriter = WriterFactory.Open(ProblemReport, ArchiveType.Zip, CompressionType.LZMA))
+					using (var zipWriter = WriterFactory.OpenWriter(ProblemReport, ArchiveType.Zip, new WriterOptions(CompressionType.LZMA)))
 					{
 						//Add log file to the archive
 						var file = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "log.txt");

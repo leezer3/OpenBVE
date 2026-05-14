@@ -123,7 +123,7 @@ namespace OpenBve.Graphics
 			}
 			else
 			{
-				GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
+				GL.ClearColor(Interface.CurrentOptions.ClearColor.R * inv255, Interface.CurrentOptions.ClearColor.G * inv255, Interface.CurrentOptions.ClearColor.B * inv255, 1.0f);
 			}
 
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -188,9 +188,17 @@ namespace OpenBve.Graphics
 			// render background
 			// n.b. must disable shadows
 			GL.Disable(EnableCap.DepthTest);
-			DefaultShader.SetShadowEnabled(false);
+			if (AvailableNewRenderer)
+			{
+				DefaultShader.SetShadowEnabled(false);
+			}
+			
 			Program.CurrentRoute.UpdateBackground(TimeElapsed, Program.Renderer.CurrentInterface != InterfaceType.Normal);
-			DefaultShader.SetShadowEnabled(ShadowsEnabled);
+			if (AvailableNewRenderer)
+			{
+				DefaultShader.SetShadowEnabled(ShadowsEnabled);
+			}
+			
 
 			// fog
 			float aa = Program.CurrentRoute.CurrentFog.Start;

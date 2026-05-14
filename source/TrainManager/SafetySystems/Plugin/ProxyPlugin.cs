@@ -134,12 +134,24 @@ namespace TrainManager.SafetySystems {
 
 		public override void Unload()
 		{
-			pipeProxy.Unload();
+			if (externalCrashed == false)
+			{
+				pipeProxy.Unload();
+			}
 		}
 
 		public override void BeginJump(InitializationModes mode)
 		{
-			pipeProxy.BeginJump(mode);
+			try
+			{
+				pipeProxy.BeginJump(mode);
+			}
+			catch(Exception ex)
+			{
+				lastError = ex.ToString();
+				externalCrashed = true;
+			}
+			
 			if (SupportsAI == AISupport.Program)
 			{
 				AI.BeginJump(mode);
@@ -168,15 +180,16 @@ namespace TrainManager.SafetySystems {
 					}
 				}
 				Train.UnloadPlugin();
+				if (!string.IsNullOrEmpty(lastError))
+				{
+
+					TrainManagerBase.currentHost.AddMessage("The train plugin " + PluginTitle + " has been unloaded due to an error. Some train features may no longer work.");
+					TrainManagerBase.FileSystem.AppendToLogFile(lastError);
+					lastError = string.Empty;
+				}
 				return;
 			}
-			if (!string.IsNullOrEmpty(lastError))
-			{
-				
-				//TrainManagercurrentHost.A("ERROR: The proxy plugin " + PluginFile + " generated the following error:");
-				//Program.FileSystem.AppendToLogFile(pluginProxy.callback.lastError);
-				lastError = string.Empty;
-			}
+			
 
 			try
 			{
