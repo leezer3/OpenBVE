@@ -673,6 +673,22 @@ namespace TrainManager.Trains
 					CenterOfCarPositions[s] -= ts;
 					CouplerCollision[p] = true;
 				}
+				else if (d < min)
+				{
+					/*
+					 * References:
+					 * https://github.com/leezer3/OpenBVE/issues/1258
+					 * https://github.com/leezer3/OpenBVE/issues/1298
+					 * If min == max we don't want to move our cars here
+					 * (as the following code may then move them again in the opposite direction, causing a 'vibrating' effect)
+					 *
+					 * However what the original fix overlooked, is that if we don't set the collision flag, and collision
+					 * is not detected in the following code, when the speed is updated the car carries on 'into' the car in front,
+					 * as the updates speeds loop relies on the CouplerCollisions array 
+					 * 
+					 */
+					CouplerCollision[p] = true;
+				}
 				else if (d > max & !Cars[p].Derailed & !Cars[s].Derailed)
 				{
 					double t = (d - max) / (Cars[p].CurrentMass + Cars[s].CurrentMass);
