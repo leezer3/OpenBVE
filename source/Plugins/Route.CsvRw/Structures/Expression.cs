@@ -96,7 +96,6 @@ namespace CsvRwRouteParser
 				{
 					// East Linconshire Railway bridges
 					Text = ".freeobj(9" + Text.Substring(11);
-					int n = 0;
 				}
 
 				if (IsRw && CurrentSection.ToLowerInvariant() == "track")
