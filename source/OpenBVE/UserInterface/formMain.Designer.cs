@@ -2919,7 +2919,7 @@ namespace OpenBve {
             this.buttonOptionsNext.TabIndex = 18;
             this.buttonOptionsNext.Text = "Next Page...";
             this.buttonOptionsNext.UseVisualStyleBackColor = true;
-            this.buttonOptionsNext.Click += new System.EventHandler(this.buttonOptionsPrevious_Click);
+            this.buttonOptionsNext.Click += new System.EventHandler(this.buttonOptionsNext_Click);
             // 
             // panelOptionsPage3
             // 

@@ -1667,6 +1667,10 @@ namespace OpenBve {
 			panelPackages.Visible = false;
 			pictureboxJoysticks.Visible = false;
 			UpdatePanelColor();
+			if (radiobuttonOptions.Checked)
+			{
+				SetOptionsPage(0);
+			}
 		}
 		private void radioButtonPackages_CheckedChanged(object sender, EventArgs e)
 		{
@@ -2087,26 +2091,50 @@ namespace OpenBve {
 			CheckForUpdate();
 		}
 
-		private void buttonOptionsPrevious_Click(object sender, EventArgs e)
+		private Control[][] optionsPages;
+		private int currentOptionsPage = 0;
+
+		private void SetOptionsPage(int pageIndex)
 		{
-			if (panelOptionsLeft.Visible)
+			if (optionsPages == null)
 			{
-				panelOptionsLeft.Hide();
-				panelOptionsRight.Hide();
-				panelOptionsPage2.Show();
+				optionsPages = new[] {
+					new Control[] { panelOptionsLeft, panelOptionsRight },
+					new Control[] { panelOptionsPage2 },
+					new Control[] { panelOptionsPage3 }
+				};
+			}
+			currentOptionsPage = pageIndex;
+			for (int i = 0; i < optionsPages.Length; i++)
+			{
+				for (int j = 0; j < optionsPages[i].Length; j++)
+				{
+					optionsPages[i][j].Visible = (i == pageIndex);
+				}
+			}
+			buttonOptionsPrevious.Enabled = (currentOptionsPage > 0);
+			buttonOptionsNext.Enabled = (currentOptionsPage < optionsPages.Length - 1);
+
+			if (panelOptionsPage2.Visible)
+			{
 				//HACK: Column Header in list view won't appear in Mono without resizing it...
 				listviewInputDevice.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
 			}
-			else if(panelOptionsPage2.Visible)
+		}
+
+		private void buttonOptionsPrevious_Click(object sender, EventArgs e)
+		{
+			if (currentOptionsPage > 0)
 			{
-				panelOptionsPage2.Hide();
-				panelOptionsPage3.Show();
+				SetOptionsPage(currentOptionsPage - 1);
 			}
-			else
+		}
+
+		private void buttonOptionsNext_Click(object sender, EventArgs e)
+		{
+			if (currentOptionsPage < optionsPages.Length - 1)
 			{
-				panelOptionsPage3.Hide();
-				panelOptionsLeft.Show();
-				panelOptionsRight.Show();
+				SetOptionsPage(currentOptionsPage + 1);
 			}
 		}
 
