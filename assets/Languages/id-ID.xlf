@@ -1635,11 +1635,11 @@
 					</trans-unit>
 					<trans-unit id="page_previous">
 						<source>Previous Page...</source>
-						<target>Berikutnya...</target>
+						<target>Sebelumnya...</target>
 					</trans-unit>
 					<trans-unit id="page_next">
 						<source>Next Page...</source>
-						<target>Sebelumnya..</target>
+						<target>Berikutnya...</target>
 					</trans-unit>
 					<trans-unit id="kiosk_mode">
 						<source>Kiosk Mode</source>
