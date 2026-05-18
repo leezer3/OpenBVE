@@ -232,7 +232,7 @@ namespace OpenBveApi.Interface
 				Assembly Plugin;
 				try
 				{
-					Plugin = Assembly.LoadFrom(File);
+					Plugin = Assembly.LoadFile(File);
 				}
 				catch
 				{
