@@ -75,11 +75,11 @@ namespace OpenBve {
 		private void formMain_Load(object sender, EventArgs e)
 		{
 			MinimumSize = Size;
-			if (Interface.CurrentOptions.MainMenuWidth == -1 & Interface.CurrentOptions.MainMenuHeight == -1)
+			if (Interface.CurrentOptions.MainMenuWidth == -1 && Interface.CurrentOptions.MainMenuHeight == -1)
 			{
 				WindowState = FormWindowState.Maximized;
 			}
-			else if (Interface.CurrentOptions.MainMenuWidth > 0 & Interface.CurrentOptions.MainMenuHeight > 0)
+			else if (Interface.CurrentOptions.MainMenuWidth > 0 && Interface.CurrentOptions.MainMenuHeight > 0)
 			{
 				Size = new Size(Interface.CurrentOptions.MainMenuWidth, Interface.CurrentOptions.MainMenuHeight);
 				CenterToScreen();
@@ -934,7 +934,7 @@ namespace OpenBve {
 				case GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","arcade"}); break;
 				case GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","normal"}); break;
 				case GameMode.Expert: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","expert"}); break;
-				default: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","unkown"}); break;
+				default: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","unknown"}); break;
 			}
 			{
 				double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.CurrentValue / Game.CurrentScore.Maximum;
@@ -1570,7 +1570,7 @@ namespace OpenBve {
 			if (WindowState != FormWindowState.Maximized)
 			{
 				System.Windows.Forms.Screen s = System.Windows.Forms.Screen.FromControl(this);
-				if (Width >= 0.95 * s.WorkingArea.Width | Height >= 0.95 * s.WorkingArea.Height)
+				if (Width >= 0.95 * s.WorkingArea.Width || Height >= 0.95 * s.WorkingArea.Height)
 				{
 					WindowState = FormWindowState.Maximized;
 				}
