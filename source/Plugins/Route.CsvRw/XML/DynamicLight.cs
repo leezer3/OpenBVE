@@ -1,4 +1,4 @@
-﻿using Formats.OpenBve;
+using Formats.OpenBve;
 using Formats.OpenBve.XML;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -48,7 +48,8 @@ namespace CsvRwRouteParser
 				ld = lightBlock.TryGetVector3(DynamicLightKey.LightDirection, ',', ref currentLight.LightPosition);
 				if (!ld && lightBlock.GetVector2(DynamicLightKey.SphericalLightDirection, ',', out Vector2 temp))
 				{
-					currentLight.LightPosition = new Vector3(Math.Cos(temp.X) * Math.Sin(temp.Y), -Math.Sin(temp.X), Math.Cos(temp.X) * Math.Cos(temp.Y));
+					double theta = temp.X.ToRadians(), phi = temp.Y.ToRadians();
+					currentLight.LightPosition = new Vector3(-Math.Cos(theta) * Math.Sin(phi), Math.Sin(theta), -Math.Cos(theta) * Math.Cos(phi));
 					ld = true;
 				}
 				//We want to be able to add a completely default light element,  but not one that's not been defined in the XML properly
