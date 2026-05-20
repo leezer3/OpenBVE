@@ -537,6 +537,12 @@ namespace CsvRwRouteParser
 											}
 										} else {
 											continueWithNextExpression = true;
+											if (NumberFormats.TryParseIntVb6(s, out int r))
+											{
+												// only one number- return this as the result
+												Expressions[i].Text = Expressions[i].Text.Substring(0, j) + r.ToString(Culture) + Expressions[i].Text.Substring(h + 1);
+												continueWithNextExpression = false;
+											}
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + t + Epilog);
 										}
 									} break;
