@@ -14,7 +14,7 @@ namespace CsvRwRouteParser
 	{
 		internal Dictionary<string, RoutefilePatch> availableRoutefilePatches = new Dictionary<string, RoutefilePatch>();
 
-		private void CheckForAvailablePatch(string FileName, ref RouteData Data, ref List<Expression> Expressions, bool PreviewOnly)
+		private void CheckForAvailablePatch(string FileName, ref RouteData Data, ref IList<Expression> Expressions, bool PreviewOnly)
 		{
 			if (Plugin.CurrentOptions.EnableBveTsHacks == false)
 			{

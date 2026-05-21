@@ -140,7 +140,7 @@ namespace CsvRwRouteParser {
 		private void ParseRouteForData(string FileName, System.Text.Encoding Encoding, ref RouteData Data, bool PreviewOnly) {
 			//Read the entire routefile into memory
 			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
-			PreprocessSplitIntoExpressions(FileName, Lines, out List<Expression> Expressions, true);
+			PreprocessSplitIntoExpressions(FileName, Lines, out IList<Expression> Expressions, true);
 			PreprocessChrRndSub(FileName, Encoding, ref Expressions);
 			double[] UnitOfLength = { 1.0 };
 			//Set units of speed initially to km/h
@@ -158,7 +158,7 @@ namespace CsvRwRouteParser {
 		private readonly System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 
 		// parse route for data
-		private void ParseRouteForData(string FileName, System.Text.Encoding Encoding, List<Expression> Expressions, double[] UnitOfLength, ref RouteData Data, bool PreviewOnly) {
+		private void ParseRouteForData(string FileName, System.Text.Encoding Encoding, IList<Expression> Expressions, double[] UnitOfLength, ref RouteData Data, bool PreviewOnly) {
 			CurrentStation = -1;
 			CurrentStop = -1;
 			CurrentSection = 0;

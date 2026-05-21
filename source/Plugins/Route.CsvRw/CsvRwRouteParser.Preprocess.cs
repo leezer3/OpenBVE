@@ -12,7 +12,7 @@ namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
-		private void PreprocessSplitIntoExpressions(string FileName, List<string> Lines, out List<Expression> Expressions, bool AllowRwRouteDescription, double trackPositionOffset = 0.0) {
+		private void PreprocessSplitIntoExpressions(string FileName, List<string> Lines, out IList<Expression> Expressions, bool AllowRwRouteDescription, double trackPositionOffset = 0.0) {
 			// use a high initial capacity to try and minimize churn
 			Expressions = new List<Expression>(20000); 
 			// full-line rw comments
@@ -191,7 +191,7 @@ namespace CsvRwRouteParser
 		}
 
 		/// <summary>This function processes the list of expressions for $Char, $Rnd, $If and $Sub directives, and evaluates them into the final expressions dataset</summary>
-		private void PreprocessChrRndSub(string FileName, System.Text.Encoding Encoding, ref List<Expression> Expressions) {
+		private void PreprocessChrRndSub(string FileName, System.Text.Encoding Encoding, ref IList<Expression> Expressions) {
 			string[] Subs = new string[16];
 			int openIfs = 0;
 			for (int i = 0; i < Expressions.Count; i++) {
@@ -440,10 +440,11 @@ namespace CsvRwRouteParser
 											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The text encoding of the $Include file " + files[chosenIndex] + " does not match that of the base routefile.");
 										}
 										List<string> lines = System.IO.File.ReadAllLines(files[chosenIndex], includeEncoding).ToList();
-										PreprocessSplitIntoExpressions(files[chosenIndex], lines, out List<Expression> expr, false, offsets[chosenIndex] + Expressions[i].TrackPositionOffset);
+										PreprocessSplitIntoExpressions(files[chosenIndex], lines, out IList<Expression> expr, false, offsets[chosenIndex] + Expressions[i].TrackPositionOffset);
 										if (expr.Count != 0) {
 											Expressions[i].Skip = true;
-											Expressions.InsertRange(i, expr);
+											// at this point, Expressions will always be List<T>
+											((List<Expression>)Expressions).InsertRange(i, expr);
 										}
 										i--;
 										continueWithNextExpression = true;
@@ -604,7 +605,7 @@ namespace CsvRwRouteParser
 			}
 		}
 
-		private void PreprocessSortByTrackPosition(double[] unitFactors, ref List<Expression> Expressions) {
+		private void PreprocessSortByTrackPosition(double[] unitFactors, ref IList<Expression> Expressions) {
 			SortedList<double, Expression> positionedExpressions = new SortedList<double, Expression>(new DuplicateLessThanKeyComparer<double>());
 			double a = -1.0, pa = -1.0;
 			bool numberCheck = !IsRW;
@@ -658,7 +659,7 @@ namespace CsvRwRouteParser
 					positionedExpressions.Add(a, Expressions[i]);
 				}
 			}
-			Expressions = positionedExpressions.Values.ToList();
+			Expressions = positionedExpressions.Values;
 		}
 	}
 }
