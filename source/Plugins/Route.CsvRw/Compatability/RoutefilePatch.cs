@@ -14,7 +14,7 @@ namespace CsvRwRouteParser
 	{
 		internal Dictionary<string, RoutefilePatch> availableRoutefilePatches = new Dictionary<string, RoutefilePatch>();
 
-		private void CheckForAvailablePatch(string FileName, ref RouteData Data, ref Expression[] Expressions, bool PreviewOnly)
+		private void CheckForAvailablePatch(string FileName, ref RouteData Data, ref List<Expression> Expressions, bool PreviewOnly)
 		{
 			if (Plugin.CurrentOptions.EnableBveTsHacks == false)
 			{
@@ -97,7 +97,7 @@ namespace CsvRwRouteParser
 
 				if (patch.ColonFix)
 				{
-					for (int i = 0; i < Expressions.Length; i++)
+					for (int i = 0; i < Expressions.Count; i++)
 					{
 						Expressions[i].Text = Expressions[i].Text.Replace(':', ';');
 					}
