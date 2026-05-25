@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using DavyKager;
 using LibRender2.Overlays;
 using LibRender2.Screens;
@@ -45,10 +45,16 @@ namespace OpenBve.Graphics.Renderers
 			//Initialize openGL
 			renderer.SetBlendFunc();
 			GL.Enable(EnableCap.Blend);
+			GL.Disable(EnableCap.DepthTest);
 			renderer.PushMatrix(MatrixMode.Projection);
 			Matrix4D.CreateOrthographicOffCenter(0.0f, renderer.Screen.Width, renderer.Screen.Height, 0.0f, -1.0f, 1.0f, out renderer.CurrentProjectionMatrix);
+			if (renderer.AvailableNewRenderer)
+			{
+				renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
+			}
 			renderer.PushMatrix(MatrixMode.Modelview);
 			renderer.CurrentViewMatrix = Matrix4D.Identity;
+			renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 
 			//Check which overlays to show
 			switch (renderer.CurrentOutputMode)
@@ -194,6 +200,7 @@ namespace OpenBve.Graphics.Renderers
 			}
 
 			// finalize
+			GL.Enable(EnableCap.DepthTest);
 			renderer.PopMatrix(MatrixMode.Projection);
 			renderer.PopMatrix(MatrixMode.Modelview);
 		}

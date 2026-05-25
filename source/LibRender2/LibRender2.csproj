@@ -120,7 +120,16 @@
     <Compile Include="Shadows\CascadedShadowCaster.cs" />
     <Compile Include="Shadows\CascadedShadowMap.cs" />
     <Compile Include="Shadows\FrustumUtils.cs" />
-    <Compile Include="Shadows\Shadows.cs" />
+    <Compile Include="Managers\SceneManager.cs" />
+    <Compile Include="Managers\GpuResourceManager.cs" />
+    <Compile Include="Pipeline\RenderContext.cs" />
+    <Compile Include="Pipeline\IRenderPass.cs" />
+    <Compile Include="Pipeline\GraphicsDevice.cs" />
+    <Compile Include="Pipeline\RenderPipeline.cs" />
+    <Compile Include="Passes\ShadowPass.cs" />
+    <Compile Include="Passes\GeometryPass.cs" />
+    <Compile Include="Passes\SkyPass.cs" />
+    <Compile Include="Passes\OverlayPass.cs" />
     <Compile Include="Textures\TextureManager.cs" />
     <Compile Include="Text\Fonts.BlockedFonts.cs" />
     <Compile Include="Text\Fonts.cs" />

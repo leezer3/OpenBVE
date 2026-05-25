@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, The OpenBVE Project
 //
@@ -112,7 +112,7 @@ namespace LibRender2.Smoke
 
 		public void Update(double timeElapsed, bool currentlyVisible)
 		{
-			if (!Renderer.AvailableNewRenderer || Controller == null)
+			if (!Renderer.AvailableNewRenderer)
 			{
 				return;
 			}

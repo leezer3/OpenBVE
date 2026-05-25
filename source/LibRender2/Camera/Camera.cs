@@ -61,7 +61,7 @@ namespace LibRender2.Cameras
 			get => alignmentDirection;
 			set
 			{
-				Renderer.UpdateVisibility(true);
+				Renderer.Scene.UpdateVisibility(true);
 				alignmentDirection = value;
 			}
 		}
@@ -102,21 +102,6 @@ namespace LibRender2.Cameras
 		public CameraAlignment SavedTrack;
 		/// <summary>The current quad tree leaf node</summary>
 		public QuadTreeLeafNode QuadTreeLeaf;
-
-		/// <summary>The target camera car index for queued transitions</summary>
-		public int TargetCameraCar = -1;
-		/// <summary>The previous camera car index (used for transitions)</summary>
-		public int PreviousCameraCar = -1;
-		/// <summary>The current transition timer</summary>
-		public double CameraCarTransitionTimer = 0.0;
-		/// <summary>Whether the camera is transitioning between cars</summary>
-		public bool IsTransitioning = false;
-		/// <summary>The start anchor for mode transitions (fly-in)</summary>
-		public (Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, double TrackPosition, CameraAlignment Alignment) ModeTransitionStart;
-		/// <summary>The timer for mode transitions (fly-in)</summary>
-		public double ModeTransitionTimer = 1.0;
-		/// <summary>The duration of the camera car transition in seconds</summary>
-		public const double CameraCarTransitionDuration = 0.4;
 		
 		private Vector3 absolutePosition;
 		private CameraAlignment alignmentDirection;

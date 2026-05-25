@@ -960,6 +960,7 @@ namespace OpenBveApi.Objects
 			{
 				Array.Resize(ref Mesh.Faces, f);
 			}
+			Mesh.CreateBoundingBox();
 		}
 	}
 }

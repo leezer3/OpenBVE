@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
@@ -29,10 +29,6 @@ namespace Plugin
 			
 			using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
 			{
-				if (stream.Length == 0)
-				{
-					return false;
-				}
 				using (BinaryReader reader = new BinaryReader(stream))
 				{
 					Endianness endianness;

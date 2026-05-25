@@ -64,6 +64,11 @@ namespace ObjectViewer
 			numericUpDownShadowStrength.Value = (decimal)(Interface.CurrentOptions.ShadowStrength * 100.0);
 			numericUpDownShadowBias.Value = (decimal)Interface.CurrentOptions.ShadowBias;
 			numericUpDownShadowNormalBias.Value = (decimal)Interface.CurrentOptions.ShadowNormalBias;
+			numericUpDownViewingDistance.Value = (decimal)Interface.CurrentOptions.ViewingDistance;
+			if (numericUpDownShadowBias.Value == 0)
+			{
+				numericUpDownShadowBias.Value = 0.000050m;
+			}
 
 
 			// Initialize sun direction sliders from current light position
@@ -86,13 +91,12 @@ namespace ObjectViewer
 			comboBoxBackwards.DataSource = Enum.GetValues(typeof(Key));
 			comboBoxBackwards.SelectedItem = Interface.CurrentOptions.CameraMoveBackward;
 			checkBoxAutoReload.Checked = Interface.CurrentOptions.AutoReloadObjects;
-			checkBoxShadowFilterCascades.Checked = Interface.CurrentOptions.ShadowFilterCascades;
 		}
 
 		private void InitializeSunSliders()
 		{
-			trackBarSunElevation.Value = Math.Max(trackBarSunElevation.Minimum, Math.Min((int)Interface.CurrentOptions.LightElevation, trackBarSunElevation.Maximum));
-			trackBarSunAzimuth.Value = Math.Max(trackBarSunAzimuth.Minimum, Math.Min((int)Interface.CurrentOptions.LightAzimuth, trackBarSunAzimuth.Maximum));
+			trackBarSunElevation.Value = (int)Interface.CurrentOptions.LightElevation;
+			trackBarSunAzimuth.Value = (int)Interface.CurrentOptions.LightAzimuth;
 			labelSunAzimuthValue.Text = trackBarSunAzimuth.Value + "\u00b0";
 			labelSunElevationValue.Text = trackBarSunElevation.Value + "\u00b0";
 		}
@@ -110,7 +114,6 @@ namespace ObjectViewer
 			trackBarSunAzimuth.Enabled = enabled;
 
 			trackBarSunElevation.Enabled = enabled;
-			checkBoxShadowFilterCascades.Enabled = enabled;
 		}
 
 		private void comboBoxShadowResolution_SelectedIndexChanged(object sender, EventArgs e)
@@ -280,7 +283,7 @@ namespace ObjectViewer
 			Interface.CurrentOptions.ShadowStrength = (double)numericUpDownShadowStrength.Value / 100.0;
 			Interface.CurrentOptions.ShadowBias = (double)numericUpDownShadowBias.Value;
 			Interface.CurrentOptions.ShadowNormalBias = (double)numericUpDownShadowNormalBias.Value;
-			Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
+			Interface.CurrentOptions.ViewingDistance = (int)numericUpDownViewingDistance.Value;
 			
 			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));
 			Program.RefreshObjects();

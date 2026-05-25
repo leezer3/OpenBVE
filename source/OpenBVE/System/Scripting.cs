@@ -29,19 +29,20 @@ namespace OpenBve
                 if (IsPartOfTrain)
                 {
                     int nextSectionIndex = Train.CurrentSectionIndex + 1;
-                    if (nextSectionIndex >= 0 && nextSectionIndex < Program.CurrentRoute.Sections.Length)
+                    if (nextSectionIndex >= 0 & nextSectionIndex < Program.CurrentRoute.Sections.Length)
                     {
                         int a = Program.CurrentRoute.Sections[nextSectionIndex].CurrentAspect;
-                        if (a >= 0 && a < Program.CurrentRoute.Sections[nextSectionIndex].Aspects.Length)
+                        if (a >= 0 & a < Program.CurrentRoute.Sections[nextSectionIndex].Aspects.Length)
                         {
                             return Program.CurrentRoute.Sections[nextSectionIndex].Aspects[a].Number;
                         }
+                        return 0;
                     }
                 }
-                else if (SectionIndex >= 0 && SectionIndex < Program.CurrentRoute.Sections.Length)
+                else if (SectionIndex >= 0 & SectionIndex < Program.CurrentRoute.Sections.Length)
                 {
                     int a = Program.CurrentRoute.Sections[SectionIndex].CurrentAspect;
-                    if (a >= 0 && a < Program.CurrentRoute.Sections[SectionIndex].Aspects.Length)
+                    if (a >= 0 & a < Program.CurrentRoute.Sections[SectionIndex].Aspects.Length)
                     {
                         return Program.CurrentRoute.Sections[SectionIndex].Aspects[a].Number;
                     }

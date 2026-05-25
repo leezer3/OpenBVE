@@ -52,10 +52,10 @@ namespace TrainManager.SafetySystems {
 			externalCrashed = false;
 			PluginTitle = System.IO.Path.GetFileName(pluginFile);
 			//Load the plugin via the proxy callback
-			IntPtr handle = Process.GetCurrentProcess().MainWindowHandle;
+			var handle = Process.GetCurrentProcess().MainWindowHandle;
 			try
 			{
-				Process hostProcess = new Process();
+				var hostProcess = new Process();
 				hostProcess.StartInfo.FileName = @"Win32PluginProxy.exe";
 				hostProcess.Start();
 				HostInterface.Win32PluginHostReady.WaitOne();
@@ -134,24 +134,12 @@ namespace TrainManager.SafetySystems {
 
 		public override void Unload()
 		{
-			if (externalCrashed == false)
-			{
-				pipeProxy.Unload();
-			}
+			pipeProxy.Unload();
 		}
 
 		public override void BeginJump(InitializationModes mode)
 		{
-			try
-			{
-				pipeProxy.BeginJump(mode);
-			}
-			catch(Exception ex)
-			{
-				lastError = ex.ToString();
-				externalCrashed = true;
-			}
-			
+			pipeProxy.BeginJump(mode);
 			if (SupportsAI == AISupport.Program)
 			{
 				AI.BeginJump(mode);
@@ -180,16 +168,15 @@ namespace TrainManager.SafetySystems {
 					}
 				}
 				Train.UnloadPlugin();
-				if (!string.IsNullOrEmpty(lastError))
-				{
-
-					TrainManagerBase.currentHost.AddMessage("The train plugin " + PluginTitle + " has been unloaded due to an error. Some train features may no longer work.");
-					TrainManagerBase.FileSystem.AppendToLogFile(lastError);
-					lastError = string.Empty;
-				}
 				return;
 			}
-			
+			if (!string.IsNullOrEmpty(lastError))
+			{
+				
+				//TrainManagercurrentHost.A("ERROR: The proxy plugin " + PluginFile + " generated the following error:");
+				//Program.FileSystem.AppendToLogFile(pluginProxy.callback.lastError);
+				lastError = string.Empty;
+			}
 
 			try
 			{

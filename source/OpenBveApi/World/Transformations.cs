@@ -1,4 +1,4 @@
-﻿using OpenBveApi.Math;
+using OpenBveApi.Math;
 
 namespace OpenBveApi.World
 {
@@ -81,9 +81,9 @@ namespace OpenBveApi.World
 		/// </param>
 		public Transformation(Transformation Transformation, double Yaw, double Pitch, double Roll)
 		{
-			X = new Vector3(Transformation.X);
-			Y = new Vector3(Transformation.Y);
-			Z = new Vector3(Transformation.Z);
+			X = new Vector3(Transformation?.X ?? Vector3.Right);
+			Y = new Vector3(Transformation?.Y ?? Vector3.Down);
+			Z = new Vector3(Transformation?.Z ?? Vector3.Forward);
 			X.Rotate(Y, Yaw);
 			Z.Rotate(Y, Yaw);
 			// In the left-handed coordinate system, the clock-wise rotation is positive when the origin is viewed from the positive direction of the axis.
@@ -99,9 +99,10 @@ namespace OpenBveApi.World
 		/// <param name="secondTransformation">The transformation to apply second</param>
 		public Transformation(Transformation firstTransformation, Transformation secondTransformation)
 		{
-			X = new Vector3(firstTransformation.X);
-			Y = new Vector3(firstTransformation.Y);
-			Z = new Vector3(firstTransformation.Z);
+			X = new Vector3(firstTransformation?.X ?? Vector3.Right);
+			Y = new Vector3(firstTransformation?.Y ?? Vector3.Down);
+			Z = new Vector3(firstTransformation?.Z ?? Vector3.Forward);
+			secondTransformation = secondTransformation ?? NullTransformation;
 			X.Rotate(secondTransformation);
 			Y.Rotate(secondTransformation);
 			Z.Rotate(secondTransformation);

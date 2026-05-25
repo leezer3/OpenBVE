@@ -53,6 +53,8 @@ namespace ObjectViewer
             this.labelInterpolationMode = new System.Windows.Forms.Label();
             this.labelInterpolationSettings = new System.Windows.Forms.Label();
             this.InterpolationMode = new System.Windows.Forms.ComboBox();
+            this.labelViewingDistance = new System.Windows.Forms.Label();
+            this.numericUpDownViewingDistance = new System.Windows.Forms.NumericUpDown();
             this.tabPageKeys = new System.Windows.Forms.TabPage();
             this.labelControls = new System.Windows.Forms.Label();
             this.comboBoxBackwards = new System.Windows.Forms.ComboBox();
@@ -90,8 +92,6 @@ namespace ObjectViewer
             this.numericUpDownShadowBias = new System.Windows.Forms.NumericUpDown();
             this.labelShadowNormalBias = new System.Windows.Forms.Label();
             this.numericUpDownShadowNormalBias = new System.Windows.Forms.NumericUpDown();
-            this.labelShadowFilterCascades = new System.Windows.Forms.Label();
-            this.checkBoxShadowFilterCascades = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPageOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AntialiasingLevel)).BeginInit();
@@ -117,7 +117,7 @@ namespace ObjectViewer
             this.tabControl1.Location = new System.Drawing.Point(1, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(312, 411);
+            this.tabControl1.Size = new System.Drawing.Size(312, 381);
             this.tabControl1.TabIndex = 26;
             // 
             // tabPageOptions
@@ -147,11 +147,13 @@ namespace ObjectViewer
             this.tabPageOptions.Controls.Add(this.labelInterpolationMode);
             this.tabPageOptions.Controls.Add(this.labelInterpolationSettings);
             this.tabPageOptions.Controls.Add(this.InterpolationMode);
+            this.tabPageOptions.Controls.Add(this.labelViewingDistance);
+            this.tabPageOptions.Controls.Add(this.numericUpDownViewingDistance);
             this.tabPageOptions.AutoScroll = true;
             this.tabPageOptions.Location = new System.Drawing.Point(4, 22);
             this.tabPageOptions.Name = "tabPageOptions";
             this.tabPageOptions.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageOptions.Size = new System.Drawing.Size(304, 385);
+            this.tabPageOptions.Size = new System.Drawing.Size(304, 355);
             this.tabPageOptions.TabIndex = 0;
             this.tabPageOptions.Text = "Options";
             this.tabPageOptions.UseVisualStyleBackColor = true;
@@ -419,6 +421,37 @@ namespace ObjectViewer
             this.labelInterpolationSettings.TabIndex = 27;
             this.labelInterpolationSettings.Text = "Interpolation Settings";
             // 
+            // labelViewingDistance
+            // 
+            this.labelViewingDistance.AutoSize = true;
+            this.labelViewingDistance.Location = new System.Drawing.Point(6, 131);
+            this.labelViewingDistance.Name = "labelViewingDistance";
+            this.labelViewingDistance.Size = new System.Drawing.Size(92, 13);
+            this.labelViewingDistance.TabIndex = 50;
+            this.labelViewingDistance.Text = "Viewing Distance:";
+            // 
+            // numericUpDownViewingDistance
+            // 
+            this.numericUpDownViewingDistance.Location = new System.Drawing.Point(160, 131);
+            this.numericUpDownViewingDistance.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.numericUpDownViewingDistance.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownViewingDistance.Name = "numericUpDownViewingDistance";
+            this.numericUpDownViewingDistance.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDownViewingDistance.TabIndex = 51;
+            this.numericUpDownViewingDistance.Value = new decimal(new int[] {
+            600,
+            0,
+            0,
+            0});
+            // 
             // InterpolationMode
             // 
             this.InterpolationMode.FormattingEnabled = true;
@@ -455,8 +488,6 @@ namespace ObjectViewer
             this.tabPageShadows.Controls.Add(this.numericUpDownShadowBias);
             this.tabPageShadows.Controls.Add(this.labelShadowNormalBias);
             this.tabPageShadows.Controls.Add(this.numericUpDownShadowNormalBias);
-            this.tabPageShadows.Controls.Add(this.checkBoxShadowFilterCascades);
-            this.tabPageShadows.Controls.Add(this.labelShadowFilterCascades);
             this.tabPageShadows.AutoScroll = true;
             this.tabPageShadows.Location = new System.Drawing.Point(4, 22);
             this.tabPageShadows.Name = "tabPageShadows";
@@ -561,7 +592,7 @@ namespace ObjectViewer
             // 
             this.labelSunDirection.AutoSize = true;
             this.labelSunDirection.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelSunDirection.Location = new System.Drawing.Point(6, 220);
+            this.labelSunDirection.Location = new System.Drawing.Point(6, 190);
             this.labelSunDirection.Name = "labelSunDirection";
             this.labelSunDirection.Size = new System.Drawing.Size(96, 15);
             this.labelSunDirection.TabIndex = 36;
@@ -570,7 +601,7 @@ namespace ObjectViewer
             // labelSunAzimuth
             // 
             this.labelSunAzimuth.AutoSize = true;
-            this.labelSunAzimuth.Location = new System.Drawing.Point(6, 242);
+            this.labelSunAzimuth.Location = new System.Drawing.Point(6, 212);
             this.labelSunAzimuth.Name = "labelSunAzimuth";
             this.labelSunAzimuth.Size = new System.Drawing.Size(47, 13);
             this.labelSunAzimuth.TabIndex = 37;
@@ -578,7 +609,7 @@ namespace ObjectViewer
             // 
             // trackBarSunAzimuth
             // 
-            this.trackBarSunAzimuth.Location = new System.Drawing.Point(6, 258);
+            this.trackBarSunAzimuth.Location = new System.Drawing.Point(6, 228);
             this.trackBarSunAzimuth.Maximum = 180;
             this.trackBarSunAzimuth.Minimum = -180;
             this.trackBarSunAzimuth.Name = "trackBarSunAzimuth";
@@ -591,7 +622,7 @@ namespace ObjectViewer
             // labelSunAzimuthValue
             // 
             this.labelSunAzimuthValue.AutoSize = true;
-            this.labelSunAzimuthValue.Location = new System.Drawing.Point(247, 262);
+            this.labelSunAzimuthValue.Location = new System.Drawing.Point(247, 232);
             this.labelSunAzimuthValue.Name = "labelSunAzimuthValue";
             this.labelSunAzimuthValue.Size = new System.Drawing.Size(31, 13);
             this.labelSunAzimuthValue.TabIndex = 39;
@@ -600,7 +631,7 @@ namespace ObjectViewer
             // labelSunElevation
             // 
             this.labelSunElevation.AutoSize = true;
-            this.labelSunElevation.Location = new System.Drawing.Point(6, 306);
+            this.labelSunElevation.Location = new System.Drawing.Point(6, 276);
             this.labelSunElevation.Name = "labelSunElevation";
             this.labelSunElevation.Size = new System.Drawing.Size(54, 13);
             this.labelSunElevation.TabIndex = 40;
@@ -608,7 +639,7 @@ namespace ObjectViewer
             // 
             // trackBarSunElevation
             // 
-            this.trackBarSunElevation.Location = new System.Drawing.Point(6, 322);
+            this.trackBarSunElevation.Location = new System.Drawing.Point(6, 292);
             this.trackBarSunElevation.Maximum = 90;
             this.trackBarSunElevation.Minimum = -90;
             this.trackBarSunElevation.Name = "trackBarSunElevation";
@@ -621,7 +652,7 @@ namespace ObjectViewer
             // labelSunElevationValue
             // 
             this.labelSunElevationValue.AutoSize = true;
-            this.labelSunElevationValue.Location = new System.Drawing.Point(247, 326);
+            this.labelSunElevationValue.Location = new System.Drawing.Point(247, 296);
             this.labelSunElevationValue.Name = "labelSunElevationValue";
             this.labelSunElevationValue.Size = new System.Drawing.Size(25, 13);
             this.labelSunElevationValue.TabIndex = 42;
@@ -816,48 +847,29 @@ namespace ObjectViewer
             // 
             // labelAutoReloadChanged
             // 
-            this.labelAutoReloadChanged.AutoSize = true;
-            this.labelAutoReloadChanged.Location = new System.Drawing.Point(10, 353);
+            this.labelAutoReloadChanged.Location = new System.Drawing.Point(10, 324);
             this.labelAutoReloadChanged.Name = "labelAutoReloadChanged";
-            this.labelAutoReloadChanged.Size = new System.Drawing.Size(201, 13);
+            this.labelAutoReloadChanged.Size = new System.Drawing.Size(131, 28);
             this.labelAutoReloadChanged.TabIndex = 48;
             this.labelAutoReloadChanged.Text = "Automatically Reload Changed Objects:";
             // 
             // checkBoxAutoReload
             // 
             this.checkBoxAutoReload.AutoSize = true;
-            this.checkBoxAutoReload.Location = new System.Drawing.Point(265, 353);
+            this.checkBoxAutoReload.Location = new System.Drawing.Point(265, 328);
             this.checkBoxAutoReload.Name = "checkBoxAutoReload";
             this.checkBoxAutoReload.Size = new System.Drawing.Size(15, 14);
             this.checkBoxAutoReload.TabIndex = 49;
             this.checkBoxAutoReload.UseVisualStyleBackColor = true;
             // 
-            // labelShadowFilterCascades
-            // 
-            this.labelShadowFilterCascades.AutoSize = true;
-            this.labelShadowFilterCascades.Location = new System.Drawing.Point(6, 190);
-            this.labelShadowFilterCascades.Name = "labelShadowFilterCascades";
-            this.labelShadowFilterCascades.Size = new System.Drawing.Size(126, 13);
-            this.labelShadowFilterCascades.TabIndex = 54;
-            this.labelShadowFilterCascades.Text = "Per-cascade culling:";
-            // 
-            // checkBoxShadowFilterCascades
-            // 
-            this.checkBoxShadowFilterCascades.AutoSize = true;
-            this.checkBoxShadowFilterCascades.Location = new System.Drawing.Point(160, 190);
-            this.checkBoxShadowFilterCascades.Name = "checkBoxShadowFilterCascades";
-            this.checkBoxShadowFilterCascades.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxShadowFilterCascades.TabIndex = 55;
-            this.checkBoxShadowFilterCascades.UseVisualStyleBackColor = true;
-            // 
             // formOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(311, 464);
+            this.ClientSize = new System.Drawing.Size(311, 434);
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.tabControl1);
-            this.MinimumSize = new System.Drawing.Size(330, 500);
+            this.MinimumSize = new System.Drawing.Size(330, 400);
             this.Name = "formOptions";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -876,6 +888,7 @@ namespace ObjectViewer
             ((System.ComponentModel.ISupportInitialize)(this.trackBarSunElevation)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowBias)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowNormalBias)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownViewingDistance)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nearClip)).EndInit();
             this.tabPageKeys.ResumeLayout(false);
             this.tabPageKeys.PerformLayout();
@@ -947,7 +960,7 @@ namespace ObjectViewer
 		private System.Windows.Forms.NumericUpDown numericUpDownShadowNormalBias;
 		private System.Windows.Forms.CheckBox checkBoxAutoReload;
 		private System.Windows.Forms.Label labelAutoReloadChanged;
-		private System.Windows.Forms.Label labelShadowFilterCascades;
-		private System.Windows.Forms.CheckBox checkBoxShadowFilterCascades;
+		private System.Windows.Forms.Label labelViewingDistance;
+		private System.Windows.Forms.NumericUpDown numericUpDownViewingDistance;
 	}
 }

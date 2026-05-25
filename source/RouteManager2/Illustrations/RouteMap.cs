@@ -18,6 +18,10 @@ namespace RouteManager2
 	/// <summary>Used for creating illustrations</summary>
 	public static class Illustrations
 	{
+		/// <summary>Holds the current lock for the illustrations drawing functions</summary>
+		/// <remarks>GDI Plus is not thread-safe- This object should be locked on when drawing a route illustration / gradient profile</remarks>
+		public static readonly object Locker =  new object();
+
 		internal static CurrentRoute CurrentRoute;
 
 		private const double	LeftPad			= 8.0;

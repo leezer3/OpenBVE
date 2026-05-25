@@ -1,7 +1,7 @@
 using System;
 using OpenBveApi.Math;
 
-namespace LibRender2.ShadowMapping
+namespace LibRender2.Shadows
 {
     /// <summary>
     /// Computes per-cascade light-space matrices by fitting an orthographic
@@ -29,12 +29,8 @@ namespace LibRender2.ShadowMapping
         public Matrix4D[] LightSpaceMatrices { get; private set; }
 
 		/// <summary>Per-cascade split distances (view-space Z).</summary>
-		/// <remarks>
-		/// Length = CascadeCount. Renamed from FarDistance to SplitDistance to better reflect
-		/// standard CSM/PSSM terminology. These values represent the frustum slice boundaries
-		/// in view-space Z where the shadow transition between cascades occurs.
-		/// </remarks> 
-		public float[] SplitDistances { get; private set; }
+		///<remarks>>Length = CascadeCount. Used in the fragment shader to pick cascade.</remarks> 
+		public float[] CascadeFarDistances { get; private set; }
 
         /// <summary>Per-cascade depth bias for shadow acne prevention.</summary>
         public float[] CascadeBiases { get; private set; }
@@ -43,7 +39,7 @@ namespace LibRender2.ShadowMapping
         {
             CascadeCount = cascadeCount;
             LightSpaceMatrices = new Matrix4D[cascadeCount];
-            SplitDistances = new float[cascadeCount];
+            CascadeFarDistances = new float[cascadeCount];
             CascadeBiases = new float[cascadeCount];
 
             for (int i = 0; i < cascadeCount; i++)
@@ -141,7 +137,7 @@ namespace LibRender2.ShadowMapping
                 Matrix4D.CreateOrthographic(orthoSize * 2.0, orthoSize * 2.0, zNear, zFar, out Matrix4D lightProj);
 
                 LightSpaceMatrices[i] = lightView * lightProj;
-                SplitDistances[i] = (float)splits[i + 1];
+                CascadeFarDistances[i] = (float)splits[i + 1];
 
                 // Z-Bias: Convert physical texel size into a Depth Buffer fraction.
                 // This ensures we push the depth exactly enough to cure acne, but no more.

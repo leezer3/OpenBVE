@@ -1,4 +1,4 @@
-﻿using OpenBveApi.Colors;
+using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
 namespace OpenBveApi.Objects
@@ -19,6 +19,8 @@ namespace OpenBveApi.Objects
 		public object VAO;
 		/// <summary>The OpenGL/OpenTK VAO for the normals</summary>
 		public object NormalsVAO;
+		/// <summary>The radius of the bounding sphere</summary>
+		public double BoundingSphereRadius;
 
 		/// <summary>Creates a new empty mesh</summary>
 		public Mesh()
@@ -122,7 +124,49 @@ namespace OpenBveApi.Objects
 				}
 			}
 		}
+		/// <summary>Creates the bounding box and bounding sphere for this mesh</summary>
+		public void CreateBoundingBox()
+		{
+			if (Vertices.Length == 0)
+			{
+				BoundingBox = new[] { Vector3.Zero, Vector3.Zero };
+				BoundingSphereRadius = 0;
+				return;
+			}
 
-		
+			Vector3 min = new Vector3(double.MaxValue, double.MaxValue, double.MaxValue);
+			Vector3 max = new Vector3(double.MinValue, double.MinValue, double.MinValue);
+
+			for (int i = 0; i < Vertices.Length; i++)
+			{
+				if (Vertices[i].Coordinates.X < min.X) min.X = Vertices[i].Coordinates.X;
+				if (Vertices[i].Coordinates.Y < min.Y) min.Y = Vertices[i].Coordinates.Y;
+				if (Vertices[i].Coordinates.Z < min.Z) min.Z = Vertices[i].Coordinates.Z;
+
+				if (Vertices[i].Coordinates.X > max.X) max.X = Vertices[i].Coordinates.X;
+				if (Vertices[i].Coordinates.Y > max.Y) max.Y = Vertices[i].Coordinates.Y;
+				if (Vertices[i].Coordinates.Z > max.Z) max.Z = Vertices[i].Coordinates.Z;
+			}
+
+			BoundingBox = new[] { min, max };
+			
+			// Compute bounding sphere radius (from center of box)
+			Vector3 center = (min + max) * 0.5;
+			double maxRadiusSq = 0;
+			for (int i = 0; i < Vertices.Length; i++)
+			{
+				double distSq = (Vertices[i].Coordinates - center).NormSquared();
+				if (distSq > maxRadiusSq) maxRadiusSq = distSq;
+			}
+			BoundingSphereRadius = System.Math.Sqrt(maxRadiusSq) + center.Norm(); // Add center norm for radius from origin if needed, but standard radius is from center
+			// Actually, OpenBVE uses origin as anchor usually. Let's use max distance from origin for simplest culling.
+			double maxDistFromOriginSq = 0;
+			for (int i = 0; i < Vertices.Length; i++)
+			{
+				double distSq = Vertices[i].Coordinates.NormSquared();
+				if (distSq > maxDistFromOriginSq) maxDistFromOriginSq = distSq;
+			}
+			BoundingSphereRadius = System.Math.Sqrt(maxDistFromOriginSq);
+		}
 	}
 }

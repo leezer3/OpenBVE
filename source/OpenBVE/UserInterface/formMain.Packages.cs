@@ -663,9 +663,21 @@ namespace OpenBve
 
 		private void buttonUninstallPackage_Click(object sender, EventArgs e)
 		{
-			if (currentPackage != null && currentPackage.PackageType != PackageType.NotFound)
+			if (currentPackage != null)
 			{
-				UninstallPackage(currentPackage);
+				switch (currentPackage.PackageType)
+				{
+					case PackageType.Route:
+						UninstallPackage(currentPackage);
+						break;
+					case PackageType.Train:
+						UninstallPackage(currentPackage);
+						break;
+					case PackageType.Other:
+					case PackageType.Loksim3D:
+						UninstallPackage(currentPackage);
+						break;
+				}
 			}
 			else
 			{
@@ -1083,6 +1095,7 @@ namespace OpenBve
 				panelReplacePackage.Hide();
 				panelNewPackage.Show();
 				panelNewPackage.Enabled = true;
+				string GUID = Guid.NewGuid().ToString();
 				currentPackage = new Package
 				{
 					Name = textBoxPackageName.Text,
@@ -1090,7 +1103,7 @@ namespace OpenBve
 					Description = textBoxPackageDescription.Text.Replace("\r\n", "\\r\\n"),
 					//TODO:
 					//Website = linkLabelPackageWebsite.Links[0],
-					GUID = Guid.NewGuid().ToString(),
+					GUID = GUID,
 					PackageVersion = new Version(0, 0, 0, 0),
 					PackageType = newPackageType
 				};
@@ -1448,13 +1461,13 @@ namespace OpenBve
 			{
 
 				filesToPackageBox.Text += folderDisplay + Environment.NewLine;
-				List<PackageFile> tempList = new List<PackageFile>();
+				var tempList = new List<PackageFile>();
 				for (int i = 0; i < files.Length; i++)
 				{
-					PackageFile tempFile = new PackageFile
+					var tempFile = new PackageFile
 					{
 						absolutePath = files[i],
-						relativePath = files[i].Replace(folder, "")
+						relativePath = files[i].Replace(folder, ""),
 					};
 					tempList.Add(tempFile);
 				}

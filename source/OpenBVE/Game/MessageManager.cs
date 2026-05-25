@@ -71,7 +71,7 @@ namespace OpenBve
 				ImageMessages.Add(message);
 				return;
 			}
-			GameMessage m = message as GameMessage;
+			var m = message as GameMessage;
 			if (m != null && m.Depencency == MessageDependency.PassedRedSignal)
 			{
 				for (int i = TextualMessages.Count -1; i >= 0; i--)

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using LibRender2.Menu;
@@ -28,7 +27,7 @@ namespace ObjectViewer {
 		internal static FileSystem FileSystem = null;
 
 		// members
-	    internal static HashSet<string> Files = new HashSet<string>();
+	    internal static List<string> Files = new List<string>();
         /// <summary>Last time the objects were reloaded (UTC).</summary>
         internal static DateTime LastReloadTime = DateTime.UtcNow;
 		/// <summary>The number of failed auto-reloads</summary>
@@ -162,8 +161,7 @@ namespace ObjectViewer {
 
 				if (filesToLoad.Count != 0)
 				{
-					Files.Clear();
-					Files.UnionWith(filesToLoad);
+					Files = filesToLoad;
 				}
 	        }
 
@@ -257,10 +255,6 @@ namespace ObjectViewer {
 
 		internal static void DragFile(object sender, FileDropEventArgs e)
 		{
-			if (Files.Contains(e.FileName))
-			{
-				return;
-			}
 			Files.Add(System.IO.Path.GetFullPath(e.FileName));
 			// reset
 			LightingRelative = -1.0;
@@ -345,13 +339,13 @@ namespace ObjectViewer {
 			Renderer.Reset();
 		    Game.Reset();
 			formTrain.Instance?.DisableUI();
-			foreach (string currentFile in Files)
-			{
+		    for (int i = 0; i < Files.Count; i++)
+		    {
 			    try
 			    {
-				    if(currentFile.EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || currentFile.EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || currentFile.EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase) || currentFile.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
+				    if(Files[i].EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
 				    {
-					    string currentTrain = currentFile;
+					    string currentTrain = Files[i];
 						if (currentTrain.EndsWith("extensions.cfg", StringComparison.InvariantCultureIgnoreCase))
 					    {
 						    currentTrain = System.IO.Path.GetDirectoryName(currentTrain);
@@ -393,12 +387,12 @@ namespace ObjectViewer {
 					    else
 					    {
 							//As we now attempt to load the train as a whole, the most likely outcome is that the train.dat file is MIA
-						    Interface.AddMessage(MessageType.Critical, false, "No plugin found capable of loading file " + currentFile + ".");
+						    Interface.AddMessage(MessageType.Critical, false, "No plugin found capable of loading file " + Files[i] + ".");
 					    }
 				    }
 				    else
 				    {
-					    if (CurrentHost.LoadObject(currentFile, Encoding.UTF8, out UnifiedObject o))
+					    if (CurrentHost.LoadObject(Files[i], Encoding.UTF8, out UnifiedObject o))
 					    {
 						    o.CreateObject(Vector3.Zero, new ObjectCreationParameters());
 					    }
@@ -414,11 +408,11 @@ namespace ObjectViewer {
 					    {
 							// failure counter must be above 5
 							Interface.CurrentOptions.AutoReloadObjects = false;
-							Interface.AddMessage(MessageType.Critical, false, "Stopped automatically re-loading objects due to the Unhandled error (" + ex.Message + ") encountered while processing the file " + currentFile + ".");
+							Interface.AddMessage(MessageType.Critical, false, "Stopped automatically re-loading objects due to the Unhandled error (" + ex.Message + ") encountered while processing the file " + Files[i] + ".");
 						}
 					    else
 					    {
-						    Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + currentFile + ".");
+						    Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Files[i] + ".");
 						}
 							
 				    }
@@ -439,7 +433,7 @@ namespace ObjectViewer {
 			formTrain.Instance?.EnableUI();
 
 		    Renderer.InitializeVisibility();
-		    Renderer.UpdateViewingDistances(600);
+		    Renderer.UpdateViewingDistances(Interface.CurrentOptions.ViewingDistance);
 		    Renderer.UpdateVisibility(true);
 		    ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
 		    Program.TrainManager.UpdateTrainObjects(0.0, true);
@@ -447,7 +441,7 @@ namespace ObjectViewer {
 
 		    if (Files.Count == 1)
 		    {
-			    Renderer.GameWindow.Title = "Object Viewer - " + Path.GetFileName(Files.ToList()[0]);
+			    Renderer.GameWindow.Title = "Object Viewer - " + Path.GetFileName(Files[0]);
 		    }
 		    else
 		    {
@@ -466,18 +460,18 @@ namespace ObjectViewer {
             }
             reloadCheckTimer = 0.0;
 
-            foreach (string currentFile in Files)
+            for (int i = 0; i < Files.Count; i++)
             {
-				try
+	            try
 	            {
-		            DateTime time = System.IO.File.GetLastWriteTimeUtc(currentFile);
+		            DateTime time = System.IO.File.GetLastWriteTimeUtc(Files[i]);
 		            if ((DateTime.Now - time).TotalSeconds < 5 || time.Year == 1601)
 		            {
 			            // file is held open for constant write (within last 5s)
 						// file no longer exists (returns 01/01/1601)
 			            continue;
 		            }
-		            if (System.IO.File.GetLastWriteTimeUtc(currentFile) > LastReloadTime)
+		            if (System.IO.File.GetLastWriteTimeUtc(Files[i]) > LastReloadTime)
 		            {
 			            RefreshObjects();
 			            return;
@@ -628,7 +622,7 @@ namespace ObjectViewer {
 	            case Key.Delete:
 		            LightingRelative = -1.0;
 	                Game.Reset();
-		            Files.Clear();
+		            Files = new List<string>();
                     LastReloadTime = DateTime.UtcNow;
 					NearestTrain.UpdateSpecs();
 					Renderer.ApplyBackgroundColor();

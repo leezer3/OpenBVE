@@ -152,6 +152,9 @@ namespace LibRender2
 		/// The handle of "uTexture" within the shader
 		/// </summary>
 		public short Texture = -1;
+		public short NightTexture = -1;
+		public short IsNightTexture = -1;
+		public short NightBlendFactor = -1;
 
 		/// <summary>
 		/// The handle of "uBrightness" within the shader

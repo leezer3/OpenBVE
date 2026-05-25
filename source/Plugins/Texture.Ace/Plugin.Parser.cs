@@ -118,7 +118,12 @@ namespace Texture.Ace {
 			}
 
 			identifier = LittleEndianBinaryExtensions.ToUInt64(data, 8);
-			return identifier == DataStart;
+			if (identifier != DataStart)
+			{
+				return false;
+			}
+
+			return true;
 		}
 
 		/// <summary>Queries the texture dimensions of the specified file.</summary>
@@ -345,7 +350,7 @@ namespace Texture.Ace {
 							int counter = 0;
 							for (int x = 0; x < width; x++)
 							{
-								byte mask = (byte)(0x80 >> (x & 0x7));
+								var mask = (byte)(0x80 >> (x & 0x7));
 								if (counter == 0)
 								{
 									value = reader.ReadByte();
@@ -521,6 +526,7 @@ namespace Texture.Ace {
 					}
 
 					byte flg = reader.ReadByte();
+					// int fcheck = flg & 31;
 					if ((256 * cmf + flg) % 31 != 0)
 					{
 						throw new InvalidDataException();

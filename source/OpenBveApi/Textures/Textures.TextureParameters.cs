@@ -9,11 +9,20 @@ namespace OpenBveApi.Textures
 	{
 		// --- members ---
 		/// <summary>The region in the texture to be extracted, or a null reference for the entire texture.</summary>
-		public readonly TextureClipRegion ClipRegion;
+		private readonly TextureClipRegion myClipRegion;
 		/// <summary>The color in the texture that should become transparent, or a null reference for no transparent color.</summary>
-		public readonly Color24? TransparentColor;
+		private readonly Color24? myTransparentColor;
 		/// <summary>The alpha channel texture</summary>
-		public Texture TransparencyTexture;
+		private readonly Texture myTransparencyTexture;
+		// --- properties ---
+		/// <summary>Gets the region in the texture to be extracted, or a null reference for the entire texture.</summary>
+		public TextureClipRegion ClipRegion => myClipRegion;
+
+		/// <summary>Gets the color in the texture that should become transparent, or a null reference for no transparent color.</summary>
+		public Color24? TransparentColor => myTransparentColor;
+
+		/// <summary>Gets the separate alpha channel texture</summary>
+		public Texture TransparencyTexture => myTransparencyTexture;
 
 		/// <summary>Texture parameters, which apply no changes.</summary>
 		public static TextureParameters NoChange = new TextureParameters(null, null);
@@ -24,9 +33,9 @@ namespace OpenBveApi.Textures
 		/// <param name="transparencyTexture">The texture to be applied to the alpha channel</param>
 		public TextureParameters(TextureClipRegion clipRegion, Color24? transparentColor, Texture transparencyTexture = null)
 		{
-			ClipRegion = clipRegion;
-			TransparentColor = transparentColor;
-			TransparencyTexture = transparencyTexture;
+			myClipRegion = clipRegion;
+			myTransparentColor = transparentColor;
+			myTransparencyTexture = transparencyTexture;
 		}
 
 		// --- operators ---
@@ -39,8 +48,8 @@ namespace OpenBveApi.Textures
 			if (ReferenceEquals(a, b)) return true;
 			if (a is null) return false;
 			if (b is null) return false;
-			if (a.ClipRegion != b.ClipRegion) return false;
-			if (a.TransparentColor != b.TransparentColor) return false;
+			if (a.myClipRegion != b.myClipRegion) return false;
+			if (a.myTransparentColor != b.myTransparentColor) return false;
 			return true;
 		}
 
@@ -53,8 +62,8 @@ namespace OpenBveApi.Textures
 			if (ReferenceEquals(a, b)) return false;
 			if (a is null) return true;
 			if (b is null) return true;
-			if (a.ClipRegion != b.ClipRegion) return true;
-			if (a.TransparentColor != b.TransparentColor) return true;
+			if (a.myClipRegion != b.myClipRegion) return true;
+			if (a.myTransparentColor != b.myTransparentColor) return true;
 			return false;
 		}
 
@@ -67,8 +76,8 @@ namespace OpenBveApi.Textures
 			if (obj is null) return false;
 			if (!(obj is TextureParameters)) return false;
 			TextureParameters x = (TextureParameters) obj;
-			if (ClipRegion != x.ClipRegion) return false;
-			if (TransparentColor != x.TransparentColor) return false;
+			if (myClipRegion != x.myClipRegion) return false;
+			if (myTransparentColor != x.myTransparentColor) return false;
 			return true;
 		}
 	}

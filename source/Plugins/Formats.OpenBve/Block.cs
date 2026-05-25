@@ -178,7 +178,7 @@ namespace Formats.OpenBve
 								value = newValue;
 								return true;
 							}
-							currentHost.AddMessage(MessageType.Warning, false, "Value " + s.Value + " is not a positive double in Key " + key + " in Section " + Key + " at line " + s.Key);
+							currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a positive double in Key " + key + " in Section " + Key + " at line " + s.Key);
 							return false;
 						case NumberRange.NonNegative:
 							if (newValue >= 0)
@@ -186,7 +186,7 @@ namespace Formats.OpenBve
 								value = newValue;
 								return true;
 							}
-							currentHost.AddMessage(MessageType.Warning, false, "Value " + s.Value + " is not a non-negative double in Key " + key + " in Section " + Key + " at line " + s.Key);
+							currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a non-negative double in Key " + key + " in Section " + Key + " at line " + s.Key);
 							return false;
 						case NumberRange.NonZero:
 							if (newValue != 0)
@@ -194,11 +194,11 @@ namespace Formats.OpenBve
 								value = newValue;
 								return true;
 							}
-							currentHost.AddMessage(MessageType.Warning, false, "Value " + s.Value + " is not a non-zero double in Key " + key + " in Section " + Key + " at line " + s.Key);
+							currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a non-zero double in Key " + key + " in Section " + Key + " at line " + s.Key);
 							return false;
 					}
 				}
-				currentHost.AddMessage(MessageType.Warning, false, "Value " + s.Value + " is not a valid double in Key " + key + " in Section " + Key + " at line " + s.Key);
+				currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a valid double in Key " + key + " in Section " + Key + " at line " + s.Key);
 			}
 			return false;
 		}
@@ -233,7 +233,7 @@ namespace Formats.OpenBve
 								value = newValue;
 								return true;
 							}
-							currentHost.AddMessage(MessageType.Warning, false, "Value " + s.Value + " is not a positive integer in Key " + key + " in Section " + Key + " at line " + s.Key);
+							currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a positive integer in Key " + key + " in Section " + Key + " at line " + s.Key);
 							return false;
 						case NumberRange.NonNegative:
 							if (newValue >= 0)
@@ -241,7 +241,7 @@ namespace Formats.OpenBve
 								value = newValue;
 								return true;
 							}
-							currentHost.AddMessage(MessageType.Warning, false, "Value " + s.Value + " is not a non-negative integer in Key " + key + " in Section " + Key + " at line " + s.Key);
+							currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a non-negative integer in Key " + key + " in Section " + Key + " at line " + s.Key);
 							return false;
 						case NumberRange.NonZero:
 							if (newValue != 0)
@@ -249,7 +249,7 @@ namespace Formats.OpenBve
 								value = newValue;
 								return true;
 							}
-							currentHost.AddMessage(MessageType.Warning, false, "Value " + s.Value + " is not a non-zero integer in Key " + key + " in Section " + Key + " at line " + s.Key);
+							currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a non-zero integer in Key " + key + " in Section " + Key + " at line " + s.Key);
 							return false;
 					}
 				}
@@ -291,7 +291,7 @@ namespace Formats.OpenBve
 
 				try
 				{
-					finalPath = value.Value != string.Empty ? Path.CombineFile(absolutePath, value.Value) : string.Empty;
+					finalPath = Path.CombineFile(absolutePath, value.Value);
 				}
 				catch
 				{

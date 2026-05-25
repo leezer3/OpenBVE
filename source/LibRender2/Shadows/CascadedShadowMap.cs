@@ -1,7 +1,7 @@
 using System;
 using OpenTK.Graphics.OpenGL;
 
-namespace LibRender2.ShadowMapping
+namespace LibRender2.Shadows
 {
     /// <summary>
     /// Manages multiple depth-only FBOs for Cascaded Shadow Mapping.

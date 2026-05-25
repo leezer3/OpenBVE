@@ -71,10 +71,7 @@ namespace LibRender2
 				return;
 			}
 
-			lock (BaseRenderer.iboToDelete)
-			{
-				BaseRenderer.iboToDelete.Add(handle);
-			}
+			Managers.GpuResourceManager.QueueIboForDeletion(handle);
 		}
 	}
 

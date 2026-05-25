@@ -719,7 +719,6 @@ namespace OpenBveApi.Objects
 				double dz = -Camera.Alignment.Position.Z;
 				Vector3 add = Camera.AbsolutePosition + dx * Camera.AbsoluteSide + dy * Camera.AbsoluteUp + dz * Camera.AbsoluteDirection;
 				internalObject.Translation = Matrix4D.CreateTranslation(add.X, add.Y, -add.Z);
-				internalObject.WorldPosition = add;
 			}
 			else
 			{
@@ -728,7 +727,6 @@ namespace OpenBveApi.Objects
 
 				// translate
 				internalObject.Translation = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
-				internalObject.WorldPosition = Position;
 			}
 
 			if (ColorFunction != null && Colors != null)

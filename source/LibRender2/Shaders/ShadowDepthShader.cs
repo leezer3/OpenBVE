@@ -37,7 +37,13 @@ namespace LibRender2.Shaders
 		private readonly int uAlphaCutoff;
 		private readonly int uMaterialAlpha; // Uniform location for material color alpha
 		private readonly int uMaterialFlags;
-		private readonly int uTextureMatrix;
+		
+		// Cache
+		private bool? lastHasTexture;
+		private float? lastAlphaCutoff;
+		private float? lastMaterialAlpha;
+		private int? lastMaterialFlags;
+		private OpenTK.Matrix4[] matrixCache;
 
 		public ShadowDepthShader(BaseRenderer Renderer,  string vertexShaderName, string fragmentShaderName, bool isFromStream = false) : base(Renderer, vertexShaderName, fragmentShaderName, isFromStream, false)
 		{
@@ -57,25 +63,12 @@ namespace LibRender2.Shaders
 			uAlphaCutoff = GL.GetUniformLocation(Handle, "uAlphaCutoff");
 			uMaterialAlpha = GL.GetUniformLocation(Handle, "uMaterialAlpha"); // Cache the material alpha location
 			uMaterialFlags = GL.GetUniformLocation(Handle, "uMaterialFlags");
-			uTextureMatrix = GL.GetUniformLocation(Handle, "uTextureMatrix");
 		}
 
 		public void SetLightSpaceMatrix(OpenBveApi.Math.Matrix4D m)
 		{
 			OpenTK.Matrix4 matrix = ConvertToMatrix4(m);
 			GL.UniformMatrix4(uLightSpaceMatrix, false, ref matrix);
-		}
-
-		public void SetModelMatrix(OpenBveApi.Math.Matrix4D m)
-		{
-			OpenTK.Matrix4 matrix = ConvertToMatrix4(m);
-			GL.UniformMatrix4(uModelMatrix, false, ref matrix);
-		}
-
-		public void SetTextureMatrix(OpenBveApi.Math.Matrix4D m)
-		{
-			OpenTK.Matrix4 matrix = ConvertToMatrix4(m);
-			GL.UniformMatrix4(uTextureMatrix, false, ref matrix);
 		}
 
 		public void SetTexture(int unit)
@@ -85,33 +78,63 @@ namespace LibRender2.Shaders
 
 		public void SetHasTexture(bool hasTexture)
 		{
-			GL.Uniform1(uHasTexture, hasTexture ? 1 : 0);
+			if (lastHasTexture != hasTexture)
+			{
+				GL.Uniform1(uHasTexture, hasTexture ? 1 : 0);
+				lastHasTexture = hasTexture;
+			}
 		}
 
 		public void SetAlphaCutoff(float cutoff)
 		{
-			GL.Uniform1(uAlphaCutoff, cutoff);
+			if (lastAlphaCutoff != cutoff)
+			{
+				GL.Uniform1(uAlphaCutoff, cutoff);
+				lastAlphaCutoff = cutoff;
+			}
 		}
 
 		/// <summary>Sets the material color alpha (0.0–1.0) for semi-transparent shadow discard</summary>
 		public void SetMaterialAlpha(float alpha)
 		{
-			GL.Uniform1(uMaterialAlpha, alpha);
+			if (lastMaterialAlpha != alpha)
+			{
+				GL.Uniform1(uMaterialAlpha, alpha);
+				lastMaterialAlpha = alpha;
+			}
 		}
 
 		/// <summary>Sets the material flags for shadow discard</summary>
 		public void SetMaterialFlags(MaterialFlags flags)
 		{
-			GL.Uniform1(uMaterialFlags, (int)flags);
+			if (lastMaterialFlags != (int)flags)
+			{
+				GL.Uniform1(uMaterialFlags, (int)flags);
+				lastMaterialFlags = (int)flags;
+			}
+		}
+
+		public void SetModelMatrix(OpenBveApi.Math.Matrix4D m)
+		{
+			OpenTK.Matrix4 matrix = ConvertToMatrix4(m);
+			GL.UniformMatrix4(uModelMatrix, false, ref matrix);
 		}
 
 		public void SetCurrentAnimationMatricies(OpenBveApi.Objects.ObjectState objectState)
 		{
-			OpenTK.Matrix4[] matriciesToShader = new OpenTK.Matrix4[objectState.Matricies.Length];
-
-			for (int i = 0; i < objectState.Matricies.Length; i++)
+			if (objectState.Matricies == null)
 			{
-				matriciesToShader[i] = ConvertToMatrix4(objectState.Matricies[i]);
+				return;
+			}
+			int count = objectState.Matricies.Length;
+			if (matrixCache == null || matrixCache.Length < count)
+			{
+				matrixCache = new OpenTK.Matrix4[count];
+			}
+
+			for (int i = 0; i < count; i++)
+			{
+				matrixCache[i] = ConvertToMatrix4(objectState.Matricies[i]);
 			}
 
 			unsafe
@@ -122,7 +145,7 @@ namespace LibRender2.Shaders
 				}
 
 				GL.BindBuffer(BufferTarget.UniformBuffer, objectState.MatrixBufferIndex);
-				GL.BufferData(BufferTarget.UniformBuffer, sizeof(OpenTK.Matrix4) * matriciesToShader.Length, matriciesToShader, BufferUsageHint.StaticDraw);
+				GL.BufferData(BufferTarget.UniformBuffer, sizeof(OpenTK.Matrix4) * count, matrixCache, BufferUsageHint.StaticDraw);
 			}
 		}
 

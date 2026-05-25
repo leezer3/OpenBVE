@@ -244,7 +244,7 @@ namespace OpenBve {
 					// cab pitch and yaw
 					Vector3 d2 = new Vector3(dF);
 					Vector3 u2 = new Vector3(uF);
-					if (TrainManager.PlayerTrain != null && (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead)) {
+					if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) & TrainManager.PlayerTrain != null) {
 						int c = TrainManager.PlayerTrain.DriverCar;
 						if (c >= 0) {
 							if (TrainManager.PlayerTrain.Cars[c].CarSections.ContainsKey(CarSectionType.Interior)) {
@@ -259,12 +259,16 @@ namespace OpenBve {
 				}
 				// yaw, pitch, roll
 				double headYaw = Program.Renderer.Camera.Alignment.Yaw + lookaheadYaw;
-				if (TrainManager.PlayerTrain != null && (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead)) {
-					headYaw += TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DriverYaw;
+				if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) & TrainManager.PlayerTrain != null) {
+					if (TrainManager.PlayerTrain.DriverCar >= 0) {
+						headYaw += TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DriverYaw;
+					}
 				}
 				double headPitch = Program.Renderer.Camera.Alignment.Pitch + lookaheadPitch;
 				if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) & TrainManager.PlayerTrain != null) {
-					headPitch += TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DriverPitch;
+					if (TrainManager.PlayerTrain.DriverCar >= 0) {
+						headPitch += TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DriverPitch;
+					}
 				}
 				
 				double headRoll = Program.Renderer.Camera.Alignment.Roll;
@@ -354,16 +358,6 @@ namespace OpenBve {
 				Program.Renderer.Camera.AbsoluteDirection = dF;
 				Program.Renderer.Camera.AbsoluteUp = uF;
 				Program.Renderer.Camera.AbsoluteSide = sF;
-
-				if (Program.Renderer.Camera.ModeTransitionTimer < 1.0)
-				{
-					double transitionProgress = Program.Renderer.Camera.ModeTransitionTimer;
-					var start = Program.Renderer.Camera.ModeTransitionStart;
-					Program.Renderer.Camera.AbsolutePosition = Vector3.CosineInterpolate(start.Position, Program.Renderer.Camera.AbsolutePosition, transitionProgress);
-					Program.Renderer.Camera.AbsoluteDirection = Vector3.CosineInterpolate(start.Direction, Program.Renderer.Camera.AbsoluteDirection, transitionProgress);
-					Program.Renderer.Camera.AbsoluteUp = Vector3.CosineInterpolate(start.Up, Program.Renderer.Camera.AbsoluteUp, transitionProgress);
-					Program.Renderer.Camera.AbsoluteSide = Vector3.CosineInterpolate(start.Side, Program.Renderer.Camera.AbsoluteSide, transitionProgress);
-				}
 			}
 		}
 	}

@@ -13,6 +13,25 @@ using OpenBveApi.Textures;
 
 namespace LibRender2.Objects
 {
+	public class FaceComparer : IComparer<FaceState>
+	{
+		/// <summary>Compares two faces for sorting, primarily by distance from camera.</summary>
+		public int Compare(FaceState a, FaceState b)
+		{
+			if (ReferenceEquals(a, b)) return 0;
+			if (a == null) return -1;
+			if (b == null) return 1;
+
+			// Sort by distance from camera (Back-to-Front for alpha blending)
+			int result = b.SortDistance.CompareTo(a.SortDistance);
+
+			// Tie-breakers to ensure stable sort order and prevent flickering
+			if (result == 0) result = a.InternalIndex.CompareTo(b.InternalIndex);
+
+			return result;
+		}
+	}
+
 	public class VisibleObjectLibrary
 	{
 		private readonly BaseRenderer renderer;
@@ -24,12 +43,15 @@ namespace LibRender2.Objects
 		private readonly List<FaceState> myAlphaFaces;
 		private readonly List<FaceState> myOverlayOpaqueFaces;
 		private List<FaceState> myOverlayAlphaFaces;
+		private readonly FaceComparer faceComparer = new FaceComparer();
 		public readonly ReadOnlyCollection<FaceState> OpaqueFaces;  // StaticOpaque and DynamicOpaque
 		public readonly ReadOnlyCollection<FaceState> OverlayOpaqueFaces;
 		public readonly ReadOnlyCollection<FaceState> AlphaFaces;  // DynamicAlpha
 		public ReadOnlyCollection<FaceState> OverlayAlphaFaces;
 
 		public readonly object LockObject = new object();
+		private bool needsSort;
+		private int faceCount;
 
 		internal VisibleObjectLibrary(BaseRenderer Renderer)
 		{
@@ -64,6 +86,7 @@ namespace LibRender2.Objects
 					myAlphaFaces.RemoveAll(x => x.Object == state);
 					myOverlayOpaqueFaces.RemoveAll(x => x.Object == state);
 					myOverlayAlphaFaces.RemoveAll(x => x.Object == state);
+					needsSort = true;
 				}	
 			}
 			
@@ -78,8 +101,8 @@ namespace LibRender2.Objects
 				myAlphaFaces.Clear();
 				myOverlayOpaqueFaces.Clear();
 				myOverlayAlphaFaces.Clear();
-				renderer.StaticObjectStates.Clear();
-				renderer.DynamicObjectStates.Clear();
+				renderer.Scene.StaticObjectStates = new List<ObjectState>();
+				renderer.Scene.DynamicObjectStates = new List<ObjectState>();
 			}
 		}
 
@@ -107,16 +130,15 @@ namespace LibRender2.Objects
 						 * Unfortunately, there appear to be X objects in the wild which expect a non-default wrapping mode
 						 * which means the best fast exit we can do is to check for RepeatRepeat....
 						 *
-						 */
-						for (int i = 0; i < face.Vertices.Length; i++)
+						 */ 
+						foreach (VertexTemplate vertex in State.Prototype.Mesh.Vertices)
 						{
-							int v = face.Vertices[i].Index;
-							if (State.Prototype.Mesh.Vertices[v].TextureCoordinates.X < 0.0f || State.Prototype.Mesh.Vertices[v].TextureCoordinates.X > 1.0f)
+							if (vertex.TextureCoordinates.X < 0.0f || vertex.TextureCoordinates.X > 1.0f)
 							{
 								wrap |= OpenGlTextureWrapMode.RepeatClamp;
 							}
 
-							if (State.Prototype.Mesh.Vertices[v].TextureCoordinates.Y < 0.0f || State.Prototype.Mesh.Vertices[v].TextureCoordinates.Y > 1.0f)
+							if (vertex.TextureCoordinates.Y < 0.0f || vertex.TextureCoordinates.Y > 1.0f)
 							{
 								wrap |= OpenGlTextureWrapMode.ClampRepeat;
 							}
@@ -132,7 +154,7 @@ namespace LibRender2.Objects
 
 				bool alpha = false;
 
-				if (Type == ObjectType.Overlay && renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
+				if (Type == ObjectType.Overlay && (renderer.Camera.CurrentRestriction == CameraRestrictionMode.On || renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off))
 				{
 					alpha = true;
 				}
@@ -233,42 +255,15 @@ namespace LibRender2.Objects
 				{
 					if (!alpha)
 					{
-						/*
-						 * If an opaque face, itinerate through the list to see if the prototype is present in the list
-						 * When the new renderer is in use, this prevents re-binding the VBO as it is simply re-drawn with
-						 * a different translation matrix
-						 * NOTE: The shader isn't currently smart enough to do depth discards, so if this changes may need to
-						 * be revisited
-						 */
-						if (list.Count == 0)
-						{
-							list.Add(new FaceState(State, face, renderer));
-						}
-						else
-						{
-							for (int i = 0; i < list.Count; i++)
-							{
-
-								if (list[i].Object.Prototype == State.Prototype)
-								{
-									list.Insert(i, new FaceState(State, face, renderer));
-									break;
-								}
-
-								if (i == list.Count - 1)
-								{
-									list.Add(new FaceState(State, face, renderer));
-									break;
-								}
-							}
-						}
+						list.Add(new FaceState(State, face, renderer, faceCount++));
+						needsSort = true;
 					}
 					else
 					{
 						/*
 						 * Alpha faces should be inserted at the end of the list- We're going to sort it anyway so it makes no odds
 						 */
-						list.Add(new FaceState(State, face, renderer));
+						list.Add(new FaceState(State, face, renderer, faceCount++));
 					}
 				}
 			}
@@ -281,52 +276,52 @@ namespace LibRender2.Objects
 
 		public List<FaceState> GetSortedPolygons(bool overlay = false)
 		{
-			if (overlay)
+			lock (LockObject)
 			{
-				myOverlayAlphaFaces = GetSortedPolygons(myOverlayAlphaFaces.AsReadOnly());
-				OverlayAlphaFaces = myOverlayAlphaFaces.AsReadOnly();
-				return OverlayAlphaFaces.ToList();
-			}
-			return GetSortedPolygons(AlphaFaces);
-		}
-
-		private List<FaceState> GetSortedPolygons(ReadOnlyCollection<FaceState> faces)
-		{
-			// calculate distance
-			double[] distances = new double[faces.Count];
-
-			Parallel.For(0, faces.Count, i =>
-			{
-				if (faces[i].Face.Vertices.Length >= 3)
+				if (overlay)
 				{
-					Vector4 v0 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[0].Index].Coordinates, 1.0);
-					Vector4 v1 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[1].Index].Coordinates, 1.0);
-					Vector4 v2 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[2].Index].Coordinates, 1.0);
-					Vector4 w1 = v1 - v0;
-					Vector4 w2 = v2 - v0;
-					v0.Z *= -1.0;
-					w1.Z *= -1.0;
-					w2.Z *= -1.0;
-					v0 = Vector4.Transform(v0, faces[i].Object.ModelMatrix);
-					w1 = Vector4.Transform(w1, faces[i].Object.ModelMatrix);
-					w2 = Vector4.Transform(w2, faces[i].Object.ModelMatrix);
-					v0.Z *= -1.0;
-					w1.Z *= -1.0;
-					w2.Z *= -1.0;
-					Vector3 d = Vector3.Cross(w1.Xyz, w2.Xyz);
-					double t = d.Norm();
-
-					if (t != 0.0)
-					{
-						d /= t;
-						Vector3 w0 = v0.Xyz - renderer.Camera.AbsolutePosition;
-						t = Vector3.Dot(d, w0);
-						distances[i] = -t * t;
-					}
+					SortPolygons(myOverlayAlphaFaces, true);
+					return new List<FaceState>(myOverlayAlphaFaces);
 				}
-			});
-			// sort
-			return faces.Select((face, index) => new { Face = face, Distance = distances[index] }).OrderBy(list => list.Distance).Select(list => list.Face).ToList();
+
+				if (needsSort)
+				{
+					/*
+					 * Sort opaque faces by Prototype (VAO) to minimize binds
+					 * When the new renderer is in use, this prevents re-binding the VBO as it is simply re-drawn with
+					 * a different translation matrix
+					 * NOTE: The shader isn't currently smart enough to do depth discards, so if this changes may need to
+					 * be revisited (e.g. Front-to-Back sorting for Early-Z)
+					 */
+					myOpaqueFaces.Sort((x, y) =>
+					{
+						if (x.Object.Prototype == y.Object.Prototype) return 0;
+						return x.Object.Prototype.GetHashCode().CompareTo(y.Object.Prototype.GetHashCode());
+					});
+					needsSort = false;
+				}
+
+				SortPolygons(myAlphaFaces);
+				return new List<FaceState>(myAlphaFaces);
+			}
 		}
+
+		private void SortPolygons(List<FaceState> faces, bool overlay = false)
+		{
+			// calculate distance from camera forward vector
+			Vector3 forward = overlay
+				? new Vector3(renderer.Camera.AbsoluteDirection.X, renderer.Camera.AbsoluteDirection.Y, -renderer.Camera.AbsoluteDirection.Z)
+				: renderer.Camera.AbsoluteDirection;
+
+			Vector3 cameraPos = overlay ? Vector3.Zero : renderer.Camera.AbsolutePosition;
+
+			foreach (var face in faces)
+			{
+				face.SortDistance = Vector3.Dot(face.Object.WorldPosition - cameraPos, forward);
+			}
+			// sort
+			faces.Sort(faceComparer);
+		}
+
 	}
 }

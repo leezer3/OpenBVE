@@ -187,25 +187,27 @@ namespace TrainManager.Handles
 
 				return Translations.QuickReferences.HandleBrakeNull;
 			}
-
-			if (baseTrain.Handles.EmergencyBrake.Driver)
+			else
 			{
-				color = MessageColor.Red;
-				return NotchDescriptions[0];
-			}
+				if (baseTrain.Handles.EmergencyBrake.Driver)
+				{
+					color = MessageColor.Red;
+					return NotchDescriptions[0];
+				}
 
-			if (baseTrain.Handles.HasHoldBrake && baseTrain.Handles.HoldBrake.Driver) {
-				color = MessageColor.Green;
-				return NotchDescriptions[1];
-			}
+				if (baseTrain.Handles.HasHoldBrake && baseTrain.Handles.HoldBrake.Driver) {
+					color = MessageColor.Green;
+					return NotchDescriptions[1];
+				}
 
-			if (Driver != 0)
-			{
-				color = MessageColor.Orange;
-				return NotchDescriptions[offset + Driver];
-			}
+				if (Driver != 0)
+				{
+					color = MessageColor.Orange;
+					return NotchDescriptions[offset + Driver];
+				}
 
-			return NotchDescriptions[offset];
+				return NotchDescriptions[offset];
+			}
 
 		}
 	}

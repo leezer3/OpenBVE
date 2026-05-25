@@ -196,8 +196,10 @@ namespace TrainManager.Handles
 
 				return Translations.QuickReferences.HandlePowerNull;
 			}
-
-			return NotchDescriptions[Driver];
+			else
+			{
+				return NotchDescriptions[Driver];
+			}
 		}
 	}
 }

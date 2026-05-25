@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
@@ -16,6 +16,9 @@ namespace LibRender2.Lightings
 
 		/// <summary>The current dynamic cab brightness</summary>
 		public double DynamicCabBrightness = 255;
+
+		/// <summary>The strength of the shadows (0.0 to 1.0)</summary>
+		public float ShadowStrength = 1.0f;
 
 		/// <summary>The current ambient light color</summary>
 		public Color24 OptionAmbientColor = Color24.LightGrey;

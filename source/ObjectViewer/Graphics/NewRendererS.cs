@@ -4,6 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using LibRender2;
+using LibRender2.Pipeline;
+using LibRender2.Passes;
 using LibRender2.Objects;
 using LibRender2.Primitives;
 using LibRender2.Screens;
@@ -51,6 +53,16 @@ namespace ObjectViewer.Graphics
 				greenAxisVAO = new Cube(this, Color128.Green);
 				blueAxisVAO = new Cube(this, Color128.Blue);
 			}
+
+			// Initialize Pipeline
+			Pipeline.Clear();
+			Pipeline.AddPass(new ShadowPass());
+			Pipeline.AddPass(new GeometryPass());
+			Pipeline.AddPass(new OverlayPass(ctx => RenderOverlays(ctx.TimeElapsed)));
+
+			// Set the viewing distance for ObjectViewer from options
+			Camera.ForwardViewingDistance = currentOptions.ViewingDistance;
+			Camera.BackwardViewingDistance = currentOptions.ViewingDistance;
 		}
 
 		internal string GetBackgroundColorName()
@@ -144,111 +156,15 @@ namespace ObjectViewer.Graphics
 					Cube.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
 				}
 			}
-			// opaque face
-			if (AvailableNewRenderer)
-			{
-				PerformCSMShadowPass();
 
-				//Setup the shader for rendering the scene
-				DefaultShader.Activate();
-				BindCSMToDefaultShader();
-				if (OptionLighting)
-				{
-					DefaultShader.SetIsLight(true);
-					DefaultShader.SetLightPosition(TransformedLightPosition);
-					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
-					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
-					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
-					DefaultShader.SetLightModel(Lighting.LightModel);
-				}
-				DefaultShader.SetTexture(0);
-				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
-			}
-			ResetOpenGlState();
-			List<FaceState> opaqueFaces, alphaFaces;
-			lock (VisibleObjects.LockObject)
-			{
-				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
-				alphaFaces = VisibleObjects.GetSortedPolygons();
-			}
-
-			foreach (FaceState face in opaqueFaces)
-			{
-				face.Draw();
-			}
-
-			// alpha face
-			ResetOpenGlState();
-
-			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
-			{
-				SetBlendFunc();
-				SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-				GL.DepthMask(false);
-
-				foreach (FaceState face in alphaFaces)
-				{
-					face.Draw();
-				}
-			}
-			else
-			{
-				UnsetBlendFunc();
-				SetAlphaFunc(AlphaFunction.Equal, 1.0f);
-				GL.DepthMask(true);
-
-				foreach (FaceState face in alphaFaces)
-				{
-					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Normal && face.Object.Prototype.Mesh.Materials[face.Face.Material].GlowAttenuationData == 0)
-					{
-						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
-						{
-							face.Draw();
-						}
-					}
-				}
-
-				SetBlendFunc();
-				SetAlphaFunc(AlphaFunction.Less, 1.0f);
-				GL.DepthMask(false);
-				bool additive = false;
-
-				foreach (FaceState face in alphaFaces)
-				{
-					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
-					{
-						if (!additive)
-						{
-							UnsetAlphaFunc();
-							additive = true;
-						}
-					}
-					else
-					{
-						if (additive)
-						{
-							SetAlphaFunc();
-							additive = false;
-						}
-					}
-					face.Draw();
-				}
-			}
+			// Execute Pipeline
+			RenderContext context = new RenderContext(this, timeElapsed);
+			ExecutePipeline(context);
 
 			if (AvailableNewRenderer)
 			{
-				DefaultShader.Deactivate();
-				lastVAO = -1;
+				CurrentShader.Deactivate();
 			}
-
-			// render overlays
-			ResetOpenGlState();
-			OptionLighting = false;
-			UnsetAlphaFunc();
-			GL.Disable(EnableCap.DepthTest);
-			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
-			RenderOverlays(timeElapsed);
-			OptionLighting = true;
 		}
 
 		private void RenderOverlays(double timeElapsed)
@@ -267,7 +183,7 @@ namespace ObjectViewer.Graphics
 			{
 				string[][] keys;
 				int objectCount, animatedObjectsUsed, opaqueFaces, alphaFaces;
-				lock (VisibilityUpdateLock)
+				lock (Scene.VisibilityUpdateLock)
 				{
 					objectCount = VisibleObjects.Objects.Count;
 					animatedObjectsUsed = ObjectManager.AnimatedWorldObjectsUsed;

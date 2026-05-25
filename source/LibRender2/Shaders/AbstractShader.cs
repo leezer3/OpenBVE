@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2024, Christopher Lees, S520, Aditiya Afrizal, The OpenBVE Project
 //
@@ -147,6 +147,7 @@ namespace LibRender2.Shaders
 			GL.UseProgram(Handle);
 			IsActive = true;
 			Renderer.lastVAO = -1;
+			Renderer.lastObjectState = null;
 			Renderer.CurrentShader = this;
 			Renderer.RestoreAlphaFunc();
 		}

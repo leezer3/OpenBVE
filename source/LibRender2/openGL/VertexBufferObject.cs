@@ -172,10 +172,7 @@ namespace LibRender2
 				return;
 			}
 
-			lock (BaseRenderer.vboToDelete)
-			{
-				BaseRenderer.vboToDelete.Add(handle);
-			}
+			Managers.GpuResourceManager.QueueVboForDeletion(handle);
 		}
 	}
 }

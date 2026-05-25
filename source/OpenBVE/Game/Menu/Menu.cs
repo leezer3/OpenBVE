@@ -898,6 +898,8 @@ namespace OpenBve
 					nextStepButton.Draw();
 
 					//Choose Train and Game start button
+					bool allowNextPhase = 
+
 					nextStepButton.Enabled = (menu.Type == MenuType.RouteList && RoutefileState == RouteState.Processed) || (menu.Type == MenuType.TrainList && Interface.CurrentOptions.TrainFolder != string.Empty);
 						break;
 				}

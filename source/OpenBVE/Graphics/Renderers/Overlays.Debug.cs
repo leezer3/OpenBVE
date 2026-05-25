@@ -187,7 +187,7 @@ namespace OpenBve.Graphics.Renderers
 				"=route",
 				"track limit: " + (TrainManager.PlayerTrain.CurrentRouteLimit == double.PositiveInfinity ? "unlimited" : ((TrainManager.PlayerTrain.CurrentRouteLimit * 3.6).ToString("0.0", Culture) + " km/h")),
 				"signal limit: " + (TrainManager.PlayerTrain.CurrentSectionLimit == double.PositiveInfinity ? "unlimited" : ((TrainManager.PlayerTrain.CurrentSectionLimit * 3.6).ToString("0.0", Culture) + " km/h")),
-				"total static objects: " + (Program.Renderer.StaticObjectStates.Count + Program.Renderer.DynamicObjectStates.Count).ToString(Culture),
+				"total static objects: " + (Program.Renderer.Scene.StaticObjectStates.Count + Program.Renderer.Scene.DynamicObjectStates.Count).ToString(Culture),
 				"total static GL_TRIANGLES: " + Program.Renderer.InfoTotalTriangles.ToString(Culture),
 				"total static GL_TRIANGLE_STRIP: " + Program.Renderer.InfoTotalTriangleStrip.ToString(Culture),
 				"total static GL_QUADS: " + Program.Renderer.InfoTotalQuads.ToString(Culture),

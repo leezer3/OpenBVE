@@ -124,11 +124,11 @@ namespace LibRender2.Backgrounds
 				renderer.LastBoundTexture = t.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp];
 				if (alpha == 1.0f)
 				{
-					GL.Disable(EnableCap.Blend);
+					renderer.UnsetBlendFunc();
 				}
 				else
 				{
-					GL.Enable(EnableCap.Blend);
+					renderer.SetBlendFunc();
 				}
 
 				if (data.VAO == null)
@@ -205,11 +205,11 @@ namespace LibRender2.Backgrounds
 				GL.Enable(EnableCap.Texture2D);
 				if (alpha == 1.0f)
 				{
-					GL.Disable(EnableCap.Blend);
+					renderer.UnsetBlendFunc();
 				}
 				else
 				{
-					GL.Enable(EnableCap.Blend);
+					renderer.SetBlendFunc();
 					renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 				}
 				GL.BindTexture(TextureTarget.Texture2D, t.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);
@@ -223,7 +223,7 @@ namespace LibRender2.Backgrounds
 				{
 					GL.CallList(data.DisplayList);
 					GL.Disable(EnableCap.Texture2D);
-					GL.Enable(EnableCap.Blend);
+					renderer.SetBlendFunc();
 					GL.PopMatrix();
 					GL.MatrixMode(MatrixMode.Projection);
 					GL.PopMatrix();
@@ -301,7 +301,7 @@ namespace LibRender2.Backgrounds
 				GL.EndList();
 				GL.CallList(data.DisplayList);
 				GL.Disable(EnableCap.Texture2D);
-				GL.Enable(EnableCap.Blend);
+				renderer.SetBlendFunc();
 				GL.PopMatrix();
 				GL.MatrixMode(MatrixMode.Projection);
 				GL.PopMatrix();
@@ -312,7 +312,7 @@ namespace LibRender2.Backgrounds
 		/// <param name="data">The background object</param>
 		private void RenderBackgroundObject(BackgroundObject data)
 		{
-			GL.Enable(EnableCap.Blend);
+			renderer.SetBlendFunc();
 			// alpha test
 			renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 			if (renderer.AvailableNewRenderer)

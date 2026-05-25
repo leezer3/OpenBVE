@@ -83,12 +83,7 @@ namespace Train.OpenBve
 					}
 					
 					carBlocks[i].GetValue(TrainXMLKey.Minimum, out Train.Cars[carIndex - 1].Coupler.MinimumDistanceBetweenCars);
-					carBlocks[i].GetValue(TrainXMLKey.Maximum, out Train.Cars[carIndex - 1].Coupler.MaximumDistanceBetweenCars);
-					if (Train.Cars[carIndex - 1].Coupler.MaximumDistanceBetweenCars < Train.Cars[carIndex - 1].Coupler.MinimumDistanceBetweenCars)
-					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Maximum should be greater than or equal to Minimum for Coupler " + (carIndex -1) + " in XML file " + xmlFile.FileName);
-						Train.Cars[carIndex - 1].Coupler.MaximumDistanceBetweenCars = Train.Cars[carIndex - 1].Coupler.MinimumDistanceBetweenCars;
-					}
+					carBlocks[i].GetValue(TrainXMLKey.Maximum, out Train.Cars[carIndex - 1].Coupler.MinimumDistanceBetweenCars);
 					if (carBlocks[i].GetPath(TrainXMLKey.Object, currentPath, out string objectPath))
 					{
 						Plugin.CurrentHost.LoadObject(objectPath, Encoding.Default, out couplerObjects[carIndex - 1]);
@@ -136,7 +131,7 @@ namespace Train.OpenBve
 								}
 							}
 						}
-						if (subBlock.TryGetStringArray(TrainXMLKey.LocoBrake, separatorChars, ref Train.Handles.LocoBrake.NotchDescriptions))
+						if (subBlock.TryGetStringArray(TrainXMLKey.Brake, separatorChars, ref Train.Handles.LocoBrake.NotchDescriptions))
 						{
 							for (int j = 0; j < Train.Handles.LocoBrake.NotchDescriptions.Length; j++)
 							{

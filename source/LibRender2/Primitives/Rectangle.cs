@@ -86,11 +86,11 @@ namespace LibRender2.Primitives
 			}
 			renderer.UnsetBlendFunc();
 			renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
-			GL.DepthMask(true);
+			renderer.Device.SetDepthMask(true);
 			Draw(texture, point, texture.Size, color, textureCoordinates);
 			renderer.SetBlendFunc();
 			renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
-			GL.DepthMask(false);
+			renderer.Device.SetDepthMask(false);
 			Draw(texture, point, texture.Size, color, textureCoordinates);
 			renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 		}

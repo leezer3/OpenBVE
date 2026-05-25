@@ -71,7 +71,7 @@ namespace TrainManager.Car.Systems
 				return;
 			}
 
-			if (State == SandersState.Active)
+			if (State != SandersState.Inactive)
 			{
 				if ((ActivationSound != null && !ActivationSound.IsPlaying) || ActivationSound == null)
 				{
@@ -98,7 +98,7 @@ namespace TrainManager.Car.Systems
 			}
 			else
 			{
-				if (State == SandersState.Active && SandingRate > 0 && SandingRate < double.MaxValue)
+				if (SandingRate > 0 && SandingRate < double.MaxValue)
 				{
 					SandLevel -= SandingRate * timeElapsed;
 				}
@@ -179,7 +179,10 @@ namespace TrainManager.Car.Systems
 				ActivationSound?.Play(Car, false);
 			}
 
-			State = willBeActive ? SandersState.Active : SandersState.Inactive;
+			if (willBeActive)
+			{
+				State = SandersState.Active;
+			}
 		}
 
 		public void Toggle()

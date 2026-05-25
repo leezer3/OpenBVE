@@ -320,7 +320,7 @@ namespace Flac {
 											predictor += coefficients[k] * blockSamples[j - k - 1];
 										}
 										predictor >>= predictorShift;
-										blockSamples[j] = (sbyte)(predictor + residuals[j]);
+										blockSamples[j] = (int)(sbyte)(predictor + residuals[j]);
 									}
 								} else {
 									for (int j = predictorOrder; j < blockNumberOfSamples; j++) {
@@ -329,7 +329,7 @@ namespace Flac {
 											predictor += (long)coefficients[k] * (long)blockSamples[j - k - 1];
 										}
 										predictor >>= predictorShift;
-										blockSamples[j] = (sbyte)(predictor + residuals[j]);
+										blockSamples[j] = (int)(sbyte)(predictor + residuals[j]);
 									}
 								}
 							} else if (subframeBitsPerSample == 16) {
@@ -340,7 +340,7 @@ namespace Flac {
 											predictor += coefficients[k] * blockSamples[j - k - 1];
 										}
 										predictor >>= predictorShift;
-										blockSamples[j] = (short)(predictor + residuals[j]);
+										blockSamples[j] = (int)(short)(predictor + residuals[j]);
 									}
 								} else {
 									for (int j = predictorOrder; j < blockNumberOfSamples; j++) {
@@ -349,7 +349,7 @@ namespace Flac {
 											predictor += (long)coefficients[k] * (long)blockSamples[j - k - 1];
 										}
 										predictor >>= predictorShift;
-										blockSamples[j] = (short)(predictor + residuals[j]);
+										blockSamples[j] = (int)(short)(predictor + residuals[j]);
 									}
 								}
 							} else {
@@ -420,92 +420,74 @@ namespace Flac {
 						break;
 					}
 				}
-				if (md5Set)
-				{
-					int pos = 0;
-					MD5CryptoServiceProvider provider = new MD5CryptoServiceProvider();
-					byte[] check;
-					switch (bitsPerSample)
-					{
-						case 8:
-							/* For 8 bits per sample */
-							bytes = new byte[numberOfChannels * samplesUsed];
-							for (int i = 0; i < samplesUsed; i++)
-							{
-								for (int j = 0; j < numberOfChannels; j++)
-								{
-									bytes[pos] = (byte)(samples[j][i] >> 24);
-									pos++;
-								}
+				if (md5Set) {
+					if (bitsPerSample == 8) {
+						/* For 8 bits per sample */
+					bytes = new byte[numberOfChannels * samplesUsed];
+						int pos = 0;
+						for (int i = 0; i < samplesUsed; i++) {
+							for (int j = 0; j < numberOfChannels; j++) {
+								bytes[pos] = (byte)(samples[j][i] >> 24);
+								pos++;
 							}
-							
-							check = provider.ComputeHash(bytes);
-							if (check.Length != md5.Length)
-							{
-								throw new InvalidOperationException();
+						}
+						MD5CryptoServiceProvider provider = new MD5CryptoServiceProvider();
+						byte[] check = provider.ComputeHash(bytes);
+						if (check.Length != md5.Length) {
+							throw new InvalidOperationException();
+						}
+						for (int i = 0; i < check.Length; i++) {
+							if (check[i] != md5[i]) {
+								throw new InvalidDataException("MD5 failed.");
 							}
-							for (int i = 0; i < check.Length; i++)
-							{
-								if (check[i] != md5[i])
-								{
-									throw new InvalidDataException("MD5 failed.");
-								}
+						}
+					} else if (bitsPerSample == 16) {
+						/* For 16 bits per sample */
+						bytes = new byte[2 * numberOfChannels * samplesUsed];
+						int pos = 0;
+						for (int i = 0; i < samplesUsed; i++) {
+							for (int j = 0; j < numberOfChannels; j++) {
+								bytes[pos + 0] = (byte)(samples[j][i] >> 16);
+								bytes[pos + 1] = (byte)(samples[j][i] >> 24);
+								pos += 2;
 							}
-							break;
-						case 16:
-							/* For 16 bits per sample */
-							bytes = new byte[2 * numberOfChannels * samplesUsed];
-							for (int i = 0; i < samplesUsed; i++)
-							{
-								for (int j = 0; j < numberOfChannels; j++)
-								{
-									bytes[pos + 0] = (byte)(samples[j][i] >> 16);
-									bytes[pos + 1] = (byte)(samples[j][i] >> 24);
-									pos += 2;
-								}
+						}
+						MD5CryptoServiceProvider provider = new MD5CryptoServiceProvider();
+						byte[] check = provider.ComputeHash(bytes);
+						if (check.Length != md5.Length) {
+							throw new InvalidOperationException();
+						}
+						for (int i = 0; i < check.Length; i++) {
+							if (check[i] != md5[i]) {
+								throw new InvalidDataException("MD5 failed.");
 							}
-							check = provider.ComputeHash(bytes);
-							if (check.Length != md5.Length)
-							{
-								throw new InvalidOperationException();
+						}
+					} else if (bitsPerSample == 24) {
+						/* For 24 bits per sample */
+						bytes = new byte[3 * numberOfChannels * samplesUsed];
+						int pos = 0;
+						for (int i = 0; i < samplesUsed; i++) {
+							for (int j = 0; j < numberOfChannels; j++) {
+								bytes[pos + 0] = (byte)(samples[j][i] >> 8);
+								bytes[pos + 1] = (byte)(samples[j][i] >> 16);
+								bytes[pos + 2] = (byte)(samples[j][i] >> 24);
+								pos += 3;
 							}
-							for (int i = 0; i < check.Length; i++)
-							{
-								if (check[i] != md5[i])
-								{
-									throw new InvalidDataException("MD5 failed.");
-								}
+						}
+						MD5CryptoServiceProvider provider = new MD5CryptoServiceProvider();
+						byte[] check = provider.ComputeHash(bytes);
+						if (check.Length != md5.Length) {
+							throw new InvalidOperationException();
+						}
+						for (int i = 0; i < check.Length; i++) {
+							if (check[i] != md5[i]) {
+								throw new InvalidDataException("MD5 failed.");
 							}
-							break;
-						case 24:
-							/* For 24 bits per sample */
-							bytes = new byte[3 * numberOfChannels * samplesUsed];
-							for (int i = 0; i < samplesUsed; i++)
-							{
-								for (int j = 0; j < numberOfChannels; j++)
-								{
-									bytes[pos + 0] = (byte)(samples[j][i] >> 8);
-									bytes[pos + 1] = (byte)(samples[j][i] >> 16);
-									bytes[pos + 2] = (byte)(samples[j][i] >> 24);
-									pos += 3;
-								}
-							}
-							check = provider.ComputeHash(bytes);
-							if (check.Length != md5.Length)
-							{
-								throw new InvalidOperationException();
-							}
-							for (int i = 0; i < check.Length; i++)
-							{
-								if (check[i] != md5[i])
-								{
-									throw new InvalidDataException("MD5 failed.");
-								}
-							}
-							break;
+						}
+					} else {
+						/* Let's just skip the MD5 check in other cases
+						 * or feel free to implement the check here. */
 					}
-					/* Let's just skip the MD5 check in other cases
-					 * or feel free to implement the check here. */
 				}
 				#endif
 				// --- end of file ---
@@ -559,22 +541,22 @@ namespace Flac {
 					}
 				}
 				return residuals;
+			} else {
+				// --- not supported ---
+				throw new InvalidDataException();
 			}
-			// --- not supported ---  (methods 3+ are stated as reserved in FLAC specification)
-			throw new InvalidDataException();
 		}
 		
 		/// <summary>Gets a signed integer from an unsigned integer assuming the unsigned integer is stored in two's complement notation.</summary>
 		/// <param name="value">The unsigned integer.</param>
 		/// <param name="range">The value range, e.g. 16 for 4 bits, 256 for 8 bits, 65536 for 16 bits, etc.</param>
 		/// <returns>The signed integer.</returns>
-		private static int FromTwosComplement(uint value, uint range)
-		{
+		private static int FromTwosComplement(uint value, uint range) {
 			if (value < (range >> 1)) {
 				return (int)value;
+			} else {
+				return (int)value - (int)range;
 			}
-
-			return (int)value - (int)range;
 		}
 		
 	}

@@ -1,4 +1,3 @@
-using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
@@ -91,11 +90,9 @@ namespace OpenBveApi
 		/// <summary>Shadow darkness strength. 0.0 = invisible, 1.0 = full black.</summary>
 		public double ShadowStrength = 0.7;
 		/// <summary>Shadow bias to prevent shadow acne.</summary>
-		public double ShadowBias = 0.000005; // default synced to 0.000005
+		public double ShadowBias = 0.000050; // default synced to 0.000050
 		/// <summary>Shadow normal bias (slope scale multiplier) to perfectly cure acne on curved/thin meshes.</summary>
 		public double ShadowNormalBias = 2.0;
-		/// <summary>Whether to filter shadow casters per cascade to improve performance.</summary>
-		public bool ShadowFilterCascades = true;
 
 
 		/// <summary>The sun azimuth in degrees</summary>
@@ -144,9 +141,6 @@ namespace OpenBveApi
 		public double NearClipCab = 0.025;
 		/// <summary>The near clipping plane for the base renderer</summary>
 		public double NearClipBase = 0.2;
-		/// <summary>The color used by the renderer when issuing GL.Clear()</summary>
-		/// <remarks>Not saved</remarks>
-		public Color24 ClearColor = new Color24(170, 170, 170);
 
 		/// <summary>Saves the options to the specified filename</summary>
 		/// <param name="fileName">The filename to save the options to</param>

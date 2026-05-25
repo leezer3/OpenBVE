@@ -5,6 +5,8 @@ using LibRender2.Overlays;
 using LibRender2.Screens;
 using LibRender2.Shaders;
 using LibRender2.Viewports;
+using LibRender2.Pipeline;
+using LibRender2.Passes;
 using OpenBve.Graphics.Renderers;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -16,6 +18,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
+using OpenBveApi.World;
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
@@ -39,6 +42,10 @@ namespace OpenBve.Graphics
 		private Events events;
 		private Overlays overlays;
 		internal Touch Touch;
+
+		public NewRenderer(HostInterface currentHost, BaseOptions currentOptions, FileSystem fileSystem) : base(currentHost, currentOptions, fileSystem)
+		{
+		}
 
 		public override void Initialize()
 		{
@@ -66,141 +73,23 @@ namespace OpenBve.Graphics
 			events = new Events(this);
 			overlays = new Overlays(this);
 			Touch = new Touch(this);
-			ObjectsSortedByStart = new int[] { };
-			ObjectsSortedByEnd = new int[] { };
-			
-			
+
+			// Initialize Pipeline
+			Pipeline.Clear();
+			Pipeline.AddPass(new ShadowPass());
+			Pipeline.AddPass(new SkyPass(UpdateBackground));
+			Pipeline.AddPass(new GeometryPass());
+			Pipeline.AddPass(new MotionBlurPass(this));
+			Pipeline.AddPass(new OverlayPass(RenderUI));
+			Pipeline.AddPass(new TouchPickingPass(this));
+
 			Program.FileSystem.AppendToLogFile("Renderer initialised successfully.");
 		}
-		
-		protected override void UpdateViewport(int width, int height)
+		private void UpdateBackground(RenderContext context)
 		{
-			_programLogo = null;
-			Screen.Width = width;
-			Screen.Height = height;
-			GL.Viewport(0, 0, Screen.Width, Screen.Height);
+			Program.CurrentRoute.UpdateBackground(context.TimeElapsed, Program.Renderer.CurrentInterface != InterfaceType.Normal);
 
-			Screen.AspectRatio = Screen.Width / (double)Screen.Height;
-			Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Camera.VerticalViewingAngle) * Screen.AspectRatio);
-
-			switch (CurrentViewportMode)
-			{
-				case ViewportMode.Scenery:
-					double cd = Program.CurrentRoute.CurrentBackground is BackgroundObject b ? Math.Max(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, b.ClipDistance) : Program.CurrentRoute.CurrentBackground.BackgroundImageDistance;
-					double nearClipScenery = Math.Max(0.01, Interface.CurrentOptions.NearClipScenery);
-					CurrentProjectionMatrix = Matrix4D.CreatePerspectiveFieldOfView(Camera.VerticalViewingAngle, Screen.AspectRatio, nearClipScenery, cd);
-					break;
-				case ViewportMode.Cab:
-					double nearClipCab = Math.Max(0.01, Interface.CurrentOptions.NearClipCab);
-					CurrentProjectionMatrix = Matrix4D.CreatePerspectiveFieldOfView(Camera.VerticalViewingAngle, Screen.AspectRatio, nearClipCab, 50.0);
-					break;
-			}
-
-			Touch.UpdateViewport();
-		}
-		
-		internal void RenderScene(double TimeElapsed, double RealTimeElapsed)
-		{
-			ReleaseResources();
-			// initialize
-			ResetOpenGlState();
-
-			if (OptionWireFrame)
-			{
-				if (Program.CurrentRoute.CurrentFog.Start < Program.CurrentRoute.CurrentFog.End)
-				{
-					const float fogDistance = 600.0f;
-					float n = (fogDistance - Program.CurrentRoute.CurrentFog.Start) / (Program.CurrentRoute.CurrentFog.End - Program.CurrentRoute.CurrentFog.Start);
-					float cr = n * inv255 * Program.CurrentRoute.CurrentFog.Color.R;
-					float cg = n * inv255 * Program.CurrentRoute.CurrentFog.Color.G;
-					float cb = n * inv255 * Program.CurrentRoute.CurrentFog.Color.B;
-					GL.ClearColor(cr, cg, cb, 1.0f);
-				}
-				else
-				{
-					GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-				}
-			}
-			else
-			{
-				GL.ClearColor(Interface.CurrentOptions.ClearColor.R * inv255, Interface.CurrentOptions.ClearColor.G * inv255, Interface.CurrentOptions.ClearColor.B * inv255, 1.0f);
-			}
-
-			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-			
-			// set up camera and lighting early for shadows
-			CurrentViewMatrix = Matrix4D.LookAt(Vector3.Zero, new Vector3(Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, -Camera.AbsoluteDirection.Z), new Vector3(Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, -Camera.AbsoluteUp.Z));
-			TransformedLightPosition = new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z);
-			TransformedLightPosition.Transform(CurrentViewMatrix);
-
-			UpdateViewport(ViewportChangeMode.ChangeToScenery);
-
-			if (AvailableNewRenderer)
-			{
-				PerformCSMShadowPass();
-			}
-
-			if (Lighting.ShouldInitialize)
-			{
-				Lighting.Initialize();
-				Lighting.ShouldInitialize = false;
-			}
-			
-			if (!AvailableNewRenderer)
-			{
-				GL.Light(LightName.Light0, LightParameter.Position, new[] { (float)TransformedLightPosition.X, (float)TransformedLightPosition.Y, (float)TransformedLightPosition.Z, 0.0f });
-			}
-
-			Lighting.OptionLightingResultingAmount = (Lighting.OptionAmbientColor.R + Lighting.OptionAmbientColor.G + Lighting.OptionAmbientColor.B) / 480.0f;
-
-			if (Lighting.OptionLightingResultingAmount > 1.0f)
-			{
-				Lighting.OptionLightingResultingAmount = 1.0f;
-			}
-			// fog
-			double fd = Program.CurrentRoute.NextFog.TrackPosition - Program.CurrentRoute.PreviousFog.TrackPosition;
-
-			if (fd != 0.0)
-			{
-				float fr = (float)((CameraTrackFollower.TrackPosition - Program.CurrentRoute.PreviousFog.TrackPosition) / fd);
-				float frc = 1.0f - fr;
-				Program.CurrentRoute.CurrentFog.Start = Program.CurrentRoute.PreviousFog.Start * frc + Program.CurrentRoute.NextFog.Start * fr;
-				Program.CurrentRoute.CurrentFog.End = Program.CurrentRoute.PreviousFog.End * frc + Program.CurrentRoute.NextFog.End * fr;
-				Program.CurrentRoute.CurrentFog.Color.R = (byte)(Program.CurrentRoute.PreviousFog.Color.R * frc + Program.CurrentRoute.NextFog.Color.R * fr);
-				Program.CurrentRoute.CurrentFog.Color.G = (byte)(Program.CurrentRoute.PreviousFog.Color.G * frc + Program.CurrentRoute.NextFog.Color.G * fr);
-				Program.CurrentRoute.CurrentFog.Color.B = (byte)(Program.CurrentRoute.PreviousFog.Color.B * frc + Program.CurrentRoute.NextFog.Color.B * fr);
-				if (!Program.CurrentRoute.CurrentFog.IsLinear)
-				{
-					Program.CurrentRoute.CurrentFog.Density = Program.CurrentRoute.PreviousFog.Density * frc + Program.CurrentRoute.NextFog.Density * fr;
-				}
-			}
-			else
-			{
-				Program.CurrentRoute.CurrentFog = Program.CurrentRoute.PreviousFog;
-			}
-
-			if (AvailableNewRenderer)
-			{
-				DefaultShader.Activate();
-				BindCSMToDefaultShader();
-			}
-
-			// render background
-			// n.b. must disable shadows
-			GL.Disable(EnableCap.DepthTest);
-			if (AvailableNewRenderer)
-			{
-				DefaultShader.SetShadowEnabled(false);
-			}
-			
-			Program.CurrentRoute.UpdateBackground(TimeElapsed, Program.Renderer.CurrentInterface != InterfaceType.Normal);
-			if (AvailableNewRenderer)
-			{
-				DefaultShader.SetShadowEnabled(ShadowsEnabled);
-			}
-			
-
-			// fog
+			// fog setup
 			float aa = Program.CurrentRoute.CurrentFog.Start;
 			float bb = Program.CurrentRoute.CurrentFog.End;
 
@@ -218,130 +107,22 @@ namespace OpenBve.Graphics
 			{
 				Fog.Enabled = false;
 			}
+		}
 
-			// world layer
-			// opaque face
-			if (AvailableNewRenderer)
-			{
-				//Setup the shader for rendering the scene
-				if (OptionLighting)
-				{
-					DefaultShader.SetIsLight(true);
-					DefaultShader.SetLightPosition(TransformedLightPosition);
-					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
-					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
-					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
-					DefaultShader.SetLightModel(Lighting.LightModel);
-				}
-				Fog.Set();
-				DefaultShader.SetTexture(0);
-				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
-			}
-			ResetOpenGlState();
-			List<FaceState> opaqueFaces, alphaFaces, overlayOpaqueFaces, overlayAlphaFaces;
-			lock (VisibleObjects.LockObject)
-			{
-				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
-				alphaFaces = VisibleObjects.GetSortedPolygons();
-				overlayOpaqueFaces = VisibleObjects.OverlayOpaqueFaces.ToList();
-				overlayAlphaFaces = VisibleObjects.GetSortedPolygons(true);
-			}
-
-			foreach (FaceState face in opaqueFaces)
-			{
-				face.Draw();
-			}
-
-			// alpha face
-			ResetOpenGlState();
-			
-			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
-			{
-				SetBlendFunc();
-				SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-				GL.DepthMask(false);
-
-				foreach (FaceState face in alphaFaces)
-				{
-					face.Draw();
-				}
-			}
-			else
-			{
-				UnsetBlendFunc();
-				SetAlphaFunc(AlphaFunction.Equal, 1.0f);
-				GL.DepthMask(true);
-
-				foreach (FaceState face in alphaFaces)
-				{
-					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Normal && face.Object.Prototype.Mesh.Materials[face.Face.Material].GlowAttenuationData == 0)
-					{
-						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
-						{
-							face.Draw();
-						}
-					}
-				}
-
-				SetBlendFunc();
-				SetAlphaFunc(AlphaFunction.Less, 1.0f);
-				GL.DepthMask(false);
-				bool additive = false;
-
-				foreach (FaceState face in alphaFaces)
-				{
-					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
-					{
-						if (!additive)
-						{
-							UnsetAlphaFunc();
-							additive = true;
-						}
-					}
-					else
-					{
-						if (additive)
-						{
-							SetAlphaFunc();
-							additive = false;
-						}
-					}
-					face.Draw();
-				}
-			}
-
-			// motion blur
-			ResetOpenGlState();
-			SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-			GL.Disable(EnableCap.DepthTest);
-			GL.DepthMask(false);
-			OptionLighting = false;
-
-			if (Interface.CurrentOptions.MotionBlur != MotionBlurMode.None)
-			{
-				if (AvailableNewRenderer)
-				{
-					DefaultShader.Deactivate();
-				}
-				MotionBlur.RenderFullscreen(Interface.CurrentOptions.MotionBlur, FrameRate, Math.Abs(Camera.CurrentSpeed));
-			}
-
+		private void RenderUI(RenderContext context)
+		{
 			// particle sources
-			SetBlendFunc();
-			SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-			if(CurrentInterface != InterfaceType.GLMainMenu)
+			if (CurrentInterface != InterfaceType.GLMainMenu)
 			{
 				foreach (TrainBase train in Program.TrainManager.Trains)
 				{
-					train.UpdateParticleSources(TimeElapsed);
+					train.UpdateParticleSources(context.TimeElapsed);
 				}
 
-				// ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
 				foreach (ScriptedTrain scriptedTrain in Program.TrainManager.TFOs)
 				{
-					scriptedTrain.UpdateParticleSources(TimeElapsed);
+					scriptedTrain.UpdateParticleSources(context.TimeElapsed);
 				}
-				
 			}
 
 			if (Interface.CurrentOptions.ShowEvents)
@@ -367,162 +148,180 @@ namespace OpenBve.Graphics
 				}
 			}
 
-			// overlay (cab / interior) layer
-			Fog.Enabled = false;
-			UpdateViewport(ViewportChangeMode.ChangeToCab);
-			
-			if (AvailableNewRenderer)
-			{
-				/*
-				 * We must reset the shader between overlay and world layers for correct lighting results.
-				 * Additionally, the viewport change updates the projection matrix
-				 */
-				DefaultShader.Activate();
-				ResetShader(DefaultShader);
-				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
-			}
-			CurrentViewMatrix = Matrix4D.LookAt(Vector3.Zero, new Vector3(Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, -Camera.AbsoluteDirection.Z), new Vector3(Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, -Camera.AbsoluteUp.Z));
-			
-			if (Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable || Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D)
-			{
-				ResetOpenGlState(); // TODO: inserted
-				GL.Clear(ClearBufferMask.DepthBufferBit);
-				OptionLighting = true;
-				Color24 prevOptionAmbientColor = Lighting.OptionAmbientColor;
-				Color24 prevOptionDiffuseColor = Lighting.OptionDiffuseColor;
-				Lighting.OptionAmbientColor = Color24.LightGrey;
-				Lighting.OptionDiffuseColor = Color24.LightGrey;
-				if (AvailableNewRenderer)
-				{
-					DefaultShader.SetIsLight(true);
-					TransformedLightPosition = new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z);
-					DefaultShader.SetLightPosition(TransformedLightPosition);
-					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
-					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
-					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
-					DefaultShader.SetLightModel(Lighting.LightModel);
-				}
-				else
-				{
-					GL.Light(LightName.Light0, LightParameter.Ambient, new[] { inv255 * 178, inv255 * 178, inv255 * 178, 1.0f });
-					GL.Light(LightName.Light0, LightParameter.Diffuse, new[] { inv255 * 178, inv255 * 178, inv255 * 178, 1.0f });	
-				}
-				
-
-				// overlay opaque face
-				foreach (FaceState face in overlayOpaqueFaces)
-				{
-					face.Draw();
-				}
-
-				// overlay alpha face
-				ResetOpenGlState();
-				if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
-				{
-					SetBlendFunc();
-					SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-					GL.DepthMask(false);
-
-					foreach (FaceState face in overlayAlphaFaces)
-					{
-						face.Draw();
-					}
-				}
-				else
-				{
-					UnsetBlendFunc();
-					SetAlphaFunc(AlphaFunction.Equal, 1.0f);
-					GL.DepthMask(true);
-
-					foreach (FaceState face in overlayAlphaFaces)
-					{
-						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Normal && face.Object.Prototype.Mesh.Materials[face.Face.Material].GlowAttenuationData == 0)
-						{
-							if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
-							{
-								face.Draw();
-							}
-						}
-					}
-
-					SetBlendFunc();
-					SetAlphaFunc(AlphaFunction.Less, 1.0f);
-					GL.DepthMask(false);
-					bool additive = false;
-
-					foreach (FaceState face in overlayAlphaFaces)
-					{
-						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
-						{
-							if (!additive)
-							{
-								UnsetAlphaFunc();
-								additive = true;
-							}
-						}
-						else
-						{
-							if (additive)
-							{
-								SetAlphaFunc();
-								additive = false;
-							}
-						}
-						face.Draw();
-					}
-				}
-
-				Lighting.OptionAmbientColor = prevOptionAmbientColor;
-				Lighting.OptionDiffuseColor = prevOptionDiffuseColor;
-				Lighting.Initialize();
-			}
-			else
-			{
-				/*
-                 * Render 2D Cab
-                 * This is actually an animated object generated on the fly and held in memory
-                 */
-				ResetOpenGlState();
-				OptionLighting = false;
-				if (AvailableNewRenderer)
-				{
-					DefaultShader.SetIsLight(false);
-				}
-				
-				SetBlendFunc();
-				UnsetAlphaFunc();
-				GL.Disable(EnableCap.DepthTest);
-				GL.DepthMask(false);
-				foreach (FaceState face in overlayAlphaFaces)
-				{
-					face.Draw();
-				}
-			}
-			// render touch
-			OptionLighting = false;
-			Touch.RenderScene();
-			
-			// render overlays
-			ResetOpenGlState();
-			UnsetAlphaFunc();
-			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
-			GL.Disable(EnableCap.DepthTest);
-			overlays.Render(RealTimeElapsed);
+			overlays.Render(context.RealTimeElapsed);
 			switch (CurrentInterface)
 			{
 				case InterfaceType.Menu:
 				case InterfaceType.GLMainMenu:
-					Game.Menu.Draw(TimeElapsed);
+					Game.Menu.Draw(context.TimeElapsed);
 					break;
 				case InterfaceType.SwitchChangeMap:
 					Game.SwitchChangeDialog.Draw();
 					break;
 			}
-			OptionLighting = true;
 		}
 
-		public NewRenderer(HostInterface currentHost, BaseOptions CurrentOptions, FileSystem fileSystem) : base(currentHost, CurrentOptions, fileSystem)
+		internal int CreateStaticObject(UnifiedObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectDisposalMode AccurateObjectDisposal, ObjectCreationParameters Parameters, double BlockLength)
 		{
+			if (!(Prototype is StaticObject obj))
+			{
+				Interface.AddMessage(MessageType.Error, false, "Attempted to use an animated object where only static objects are allowed.");
+				return -1;
+			}
+			return base.CreateStaticObject(obj, Position, WorldTransformation, LocalTransformation, AccurateObjectDisposal, Parameters, BlockLength);
+		}
+
+		protected override void UpdateViewport(int width, int height)
+		{
+			_programLogo = null;
+			Screen.Width = width;
+			Screen.Height = height;
+			GL.Viewport(0, 0, Screen.Width, Screen.Height);
+
+			Screen.AspectRatio = Screen.Width / (double)Screen.Height;
+			Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Camera.VerticalViewingAngle) * Screen.AspectRatio);
+
+			switch (CurrentViewportMode)
+			{
+				case ViewportMode.Scenery:
+					double cd = Program.CurrentRoute.CurrentBackground is BackgroundObject b ? Math.Max(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, b.ClipDistance) : Program.CurrentRoute.CurrentBackground.BackgroundImageDistance;
+					cd = Math.Max(cd, currentOptions.ViewingDistance);
+					double nearClipScenery = Math.Max(0.01, currentOptions.NearClipScenery);
+					CurrentProjectionMatrix = Matrix4D.CreatePerspectiveFieldOfView(Camera.VerticalViewingAngle, Screen.AspectRatio, nearClipScenery, cd);
+					break;
+				case ViewportMode.Cab:
+					double nearClipCab = Math.Max(0.01, currentOptions.NearClipCab);
+					CurrentProjectionMatrix = Matrix4D.CreatePerspectiveFieldOfView(Camera.VerticalViewingAngle, Screen.AspectRatio, nearClipCab, 50.0);
+					break;
+			}
+
+			Touch.UpdateViewport();
+		}
+
+		internal void RenderScene(double TimeElapsed, double RealTimeElapsed)
+		{
+			if (GameWindow != null && !Screen.Minimized)
+			{
+				Screen.Width = GameWindow.Width;
+				Screen.Height = GameWindow.Height;
+			}
+			UpdateViewport(ViewportChangeMode.ChangeToScenery);
+			UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
+			ReleaseResources();
+			ResetOpenGlState();
+
+			if (OptionWireFrame)
+			{
+				if (Program.CurrentRoute.CurrentFog.Start < Program.CurrentRoute.CurrentFog.End)
+				{
+					const float fogDistance = 600.0f;
+					float n = (fogDistance - Program.CurrentRoute.CurrentFog.Start) / (Program.CurrentRoute.CurrentFog.End - Program.CurrentRoute.CurrentFog.Start);
+					float cr = n * inv255 * Program.CurrentRoute.CurrentFog.Color.R;
+					float cg = n * inv255 * Program.CurrentRoute.CurrentFog.Color.G;
+					float cb = n * inv255 * Program.CurrentRoute.CurrentFog.Color.B;
+					GL.ClearColor(cr, cg, cb, 1.0f);
+				}
+				else
+				{
+					GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+				}
+			}
+			else
+			{
+				GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
+			}
+
+			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+			// Setup Render Context
+			RenderContext context = new RenderContext(this, TimeElapsed)
+			{
+				RealTimeElapsed = RealTimeElapsed,
+				Camera = Camera,
+				ProjectionMatrix = CurrentProjectionMatrix
+			};
+
+			// Update View Matrix
+			CurrentViewMatrix = Matrix4D.LookAt(Vector3.Zero, new Vector3(Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, -Camera.AbsoluteDirection.Z), new Vector3(Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, -Camera.AbsoluteUp.Z));
+			context.ViewMatrix = CurrentViewMatrix;
+
+			if (Lighting.ShouldInitialize)
+			{
+				Lighting.Initialize();
+				Lighting.ShouldInitialize = false;
+			}
+
+			Lighting.OptionLightingResultingAmount = (Lighting.OptionAmbientColor.R + Lighting.OptionAmbientColor.G + Lighting.OptionAmbientColor.B) / 480.0f;
+			if (Lighting.OptionLightingResultingAmount > 1.0f) Lighting.OptionLightingResultingAmount = 1.0f;
+
+			// Fog track interpolation
+			double fd = Program.CurrentRoute.NextFog.TrackPosition - Program.CurrentRoute.PreviousFog.TrackPosition;
+			if (fd != 0.0)
+			{
+				float fr = (float)((CameraTrackFollower.TrackPosition - Program.CurrentRoute.PreviousFog.TrackPosition) / fd);
+				float frc = 1.0f - fr;
+				Program.CurrentRoute.CurrentFog.Start = Program.CurrentRoute.PreviousFog.Start * frc + Program.CurrentRoute.NextFog.Start * fr;
+				Program.CurrentRoute.CurrentFog.End = Program.CurrentRoute.PreviousFog.End * frc + Program.CurrentRoute.NextFog.End * fr;
+				Program.CurrentRoute.CurrentFog.Color.R = (byte)(Program.CurrentRoute.PreviousFog.Color.R * frc + Program.CurrentRoute.NextFog.Color.R * fr);
+				Program.CurrentRoute.CurrentFog.Color.G = (byte)(Program.CurrentRoute.PreviousFog.Color.G * frc + Program.CurrentRoute.NextFog.Color.G * fr);
+				Program.CurrentRoute.CurrentFog.Color.B = (byte)(Program.CurrentRoute.PreviousFog.Color.B * frc + Program.CurrentRoute.NextFog.Color.B * fr);
+				if (!Program.CurrentRoute.CurrentFog.IsLinear)
+				{
+					Program.CurrentRoute.CurrentFog.Density = Program.CurrentRoute.PreviousFog.Density * frc + Program.CurrentRoute.NextFog.Density * fr;
+				}
+			}
+			else
+			{
+				Program.CurrentRoute.CurrentFog = Program.CurrentRoute.PreviousFog;
+			}
+
+			TransformedLightPosition = new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z);
+			TransformedLightPosition.Transform(CurrentViewMatrix);
+
+			// Execute Pipeline
+			ExecutePipeline(context);
+		}
+	}
+	internal class MotionBlurPass : IRenderPass
+	{
+		private readonly NewRenderer renderer;
+		internal MotionBlurPass(NewRenderer renderer)
+		{
+			this.renderer = renderer;
+		}
+		public void Execute(RenderContext context)
+		{
+			renderer.ResetOpenGlState();
+			renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
+			GL.Disable(EnableCap.DepthTest);
+			GL.DepthMask(false);
+			renderer.OptionLighting = false;
+
+			if (Interface.CurrentOptions.MotionBlur != MotionBlurMode.None)
+			{
+				if (renderer.AvailableNewRenderer)
+				{
+					renderer.DefaultShader.Deactivate();
+				}
+				renderer.MotionBlur.RenderFullscreen(Interface.CurrentOptions.MotionBlur, renderer.FrameRate, Math.Abs(renderer.Camera.CurrentSpeed));
+			}
+
+			renderer.OptionLighting = true;
+		}
+	}
+
+	internal class TouchPickingPass : IRenderPass
+	{
+		private readonly NewRenderer renderer;
+		internal TouchPickingPass(NewRenderer renderer)
+		{
+			this.renderer = renderer;
+		}
+		public void Execute(RenderContext context)
+		{
+			renderer.OptionLighting = false;
+			renderer.Touch.RenderScene();
+			renderer.OptionLighting = true;
 		}
 	}
 }

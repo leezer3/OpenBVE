@@ -153,10 +153,7 @@ namespace LibRender2
 				return;
 			}
 
-			lock (BaseRenderer.vaoToDelete)
-			{
-				BaseRenderer.vaoToDelete.Add(handle);
-			}
+			Managers.GpuResourceManager.QueueVaoForDeletion(handle);
 		}
 	}
 

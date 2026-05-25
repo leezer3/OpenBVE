@@ -109,10 +109,6 @@ namespace OpenBveApi
 		/// <param name="Text">The string for which all line-endings should be converted to CR-LF</param>
 		/// <returns>The converted StringBuilder</returns>
 		public static string ConvertNewlinesToCrLf(this string Text) {
-			if (string.IsNullOrEmpty(Text))
-			{
-				return string.Empty;
-			}
 			StringBuilder Builder = new StringBuilder();
 			for (int i = 0; i < Text.Length; i++) {
 				int a = char.ConvertToUtf32(Text, i);

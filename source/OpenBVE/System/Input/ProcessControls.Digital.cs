@@ -61,9 +61,9 @@ namespace OpenBve
 						Game.Menu.PushMenu(MenuType.Quit);
 						break;
 					case Translations.Command.CameraInterior:
-						// camera: interior (Handle camera transition from exterior mode to cab mode)
+						// camera: interior
 						SaveCameraSettings();
-						if (Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead && Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
+						if (Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead & Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
 						{
 							MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","interior_lookahead"}),
 								MessageDependency.CameraView, GameMode.Expert,
@@ -77,35 +77,13 @@ namespace OpenBve
 								MessageColor.White, 2, null);
 						}
 
-						bool hasCab = TrainManager.PlayerTrain.Cars[0].InteriorCamera != null || TrainManager.PlayerTrain.Cars[0].HasInteriorView;
-						bool isAtCabCar = TrainManager.PlayerTrain.CameraCar == 0 || TrainManager.PlayerTrain.CameraCar == TrainManager.PlayerTrain.DriverCar;
-						bool transition = false;
-						// Transition only if switching from Exterior mode and at the head of the train (Car 0 or Driver Car)
-						if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior && isAtCabCar && hasCab && Interface.CurrentOptions.CameraInteriorTransition)
-						{
-							Program.Renderer.Camera.ModeTransitionStart = (
-									Program.Renderer.Camera.AbsolutePosition,
-									Program.Renderer.Camera.AbsoluteDirection,
-									Program.Renderer.Camera.AbsoluteUp,
-									Program.Renderer.Camera.AbsoluteSide,
-									Program.Renderer.CameraTrackFollower.TrackPosition,
-								new CameraAlignment(
-									Program.Renderer.Camera.AlignmentDirection.Position,
-									Program.Renderer.Camera.AlignmentDirection.Yaw,
-									Program.Renderer.Camera.AlignmentDirection.Pitch,
-									Program.Renderer.Camera.AlignmentDirection.Roll,
-									Program.Renderer.Camera.AlignmentDirection.TrackPosition,
-									Program.Renderer.Camera.AlignmentDirection.Zoom)
-							);
-							transition = true;
-						}
 						Program.Renderer.Camera.CurrentMode = CameraViewMode.Interior;
 						RestoreCameraSettings();
 						for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 						{
 							if (j == TrainManager.PlayerTrain.CameraCar)
 							{
-								if (TrainManager.PlayerTrain.Cars[j].HasInteriorView)
+								if (TrainManager.PlayerTrain.Cars[j].CarSections.ContainsKey(CarSectionType.Interior))
 								{
 									TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Interior);
 								}
@@ -128,10 +106,7 @@ namespace OpenBve
 							TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(CarSectionType.Interior);
 						}
 						
-						if (!hasCab)
-						{
-							Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
-						}
+						Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 						Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 						Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 						World.UpdateAbsoluteCamera(TimeElapsed);
@@ -147,11 +122,6 @@ namespace OpenBve
 						if (lookahead)
 						{
 							Program.Renderer.Camera.CurrentMode = CameraViewMode.InteriorLookAhead;
-						}
-
-						if (transition)
-						{
-							Program.Renderer.Camera.ModeTransitionTimer = 0.0;
 						}
 						break;
 					case Translations.Command.CameraHeadOutLeft:
@@ -286,29 +256,7 @@ namespace OpenBve
 						}
 						break;
 					case Translations.Command.CameraExterior:
-						// camera: exterior (Handle camera transition from cab mode to exterior mode)
-						bool hasCabLeaving = TrainManager.PlayerTrain.Cars[0].InteriorCamera != null || TrainManager.PlayerTrain.Cars[0].HasInteriorView;
-						bool isAtCabCarLeaving = TrainManager.PlayerTrain.CameraCar == 0 || TrainManager.PlayerTrain.CameraCar == TrainManager.PlayerTrain.DriverCar;
-						bool transitionLeaving = false;
-						// Transition only if switching from Interior mode and at the head of the train
-						if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior || Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) && isAtCabCarLeaving && hasCabLeaving && Interface.CurrentOptions.CameraExteriorTransition)
-						{
-							Program.Renderer.Camera.ModeTransitionStart = (
-									Program.Renderer.Camera.AbsolutePosition,
-									Program.Renderer.Camera.AbsoluteDirection,
-									Program.Renderer.Camera.AbsoluteUp,
-									Program.Renderer.Camera.AbsoluteSide,
-									Program.Renderer.CameraTrackFollower.TrackPosition,
-								new CameraAlignment(
-									Program.Renderer.Camera.AlignmentDirection.Position,
-									Program.Renderer.Camera.AlignmentDirection.Yaw,
-									Program.Renderer.Camera.AlignmentDirection.Pitch,
-									Program.Renderer.Camera.AlignmentDirection.Roll,
-									Program.Renderer.Camera.AlignmentDirection.TrackPosition,
-									Program.Renderer.Camera.AlignmentDirection.Zoom)
-							);
-							transitionLeaving = true;
-						}
+						// camera: exterior
 						SaveCameraSettings();
 						Program.Renderer.Camera.CurrentMode = CameraViewMode.Exterior;
 						RestoreCameraSettings();
@@ -334,11 +282,6 @@ namespace OpenBve
 						Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 						World.UpdateAbsoluteCamera(TimeElapsed);
 						Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
-
-						if (transitionLeaving)
-						{
-							Program.Renderer.Camera.ModeTransitionTimer = 0.0;
-						}
 						break;
 					case Translations.Command.CameraTrack:
 					case Translations.Command.CameraFlyBy:
@@ -715,7 +658,7 @@ namespace OpenBve
 						break;
 					case Translations.Command.UncoupleFront:
 						/*
-						 * Need to remember that the coupler we're talking about here is actually that on the rear of the preceding car, i.e. IDX - 1
+						 * Need to remember that the coupler we're talking about here is actually that on the rear of the preceeding car, i.e. IDX - 1
 						 * This connects to the following car and is therefore it's front coupler
 						 *
 						 * However, car indexing is zero-based, so we need to *add* one to get the correct display number

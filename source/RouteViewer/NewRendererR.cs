@@ -4,6 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using LibRender2;
+using LibRender2.Pipeline;
+using LibRender2.Passes;
 using LibRender2.Objects;
 using LibRender2.Screens;
 using OpenBveApi;
@@ -70,11 +72,19 @@ namespace RouteViewer
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "runsound.png"), out RunSoundTexture);
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "lighting.png"), out LightingEventTexture);
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "weather.png"), out WeatherEventTexture);
+
+			// Initialize Pipeline
+			Pipeline.Clear();
+			Pipeline.AddPass(new ShadowPass());
+			Pipeline.AddPass(new SkyPass(ctx => Program.CurrentRoute.UpdateBackground(ctx.TimeElapsed, false)));
+			Pipeline.AddPass(new GeometryPass());
+			Pipeline.AddPass(new OverlayPass(ctx => RenderOverlays(ctx.TimeElapsed)));
 		}
 
 		// render scene
 		internal void RenderScene(double timeElapsed)
 		{
+			UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 			lastObjectState = null;
 			ReleaseResources();
 			// initialize
@@ -98,7 +108,7 @@ namespace RouteViewer
 			}
 			else
 			{
-				GL.ClearColor(Interface.CurrentOptions.ClearColor.R * inv255, Interface.CurrentOptions.ClearColor.G * inv255, Interface.CurrentOptions.ClearColor.B * inv255, 1.0f);
+				GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
 			}
 
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -147,129 +157,9 @@ namespace RouteViewer
 				Program.CurrentRoute.CurrentFog = Program.CurrentRoute.PreviousFog;
 			}
 
-			if (AvailableNewRenderer)
-			{
-				PerformCSMShadowPass();
-				DefaultShader.Activate();
-				BindCSMToDefaultShader();
-			}
-			
-
-			// render background
-			GL.Disable(EnableCap.DepthTest);
-			DefaultShader.SetShadowEnabled(false);
-			Program.CurrentRoute.UpdateBackground(timeElapsed, false);
-			DefaultShader.SetShadowEnabled(ShadowsEnabled);
-
-			// fog
-			float aa = Program.CurrentRoute.CurrentFog.Start;
-			float bb = Program.CurrentRoute.CurrentFog.End;
-
-			if (aa < bb & aa < Program.CurrentRoute.CurrentBackground.BackgroundImageDistance)
-			{
-				Fog.Enabled = true;
-				Fog.Start = aa;
-				Fog.End = bb;
-				Fog.Color = Program.CurrentRoute.CurrentFog.Color;
-				Fog.Density = Program.CurrentRoute.CurrentFog.Density;
-				Fog.IsLinear = Program.CurrentRoute.CurrentFog.IsLinear;
-				Fog.Set();
-			}
-			else
-			{
-				Fog.Enabled = false;
-			}
-
-			// world layer
-			// opaque face
-			
-			
-			if (AvailableNewRenderer)
-			{
-				//Setup the shader for rendering the scene
-				if (OptionLighting)
-				{
-					DefaultShader.SetIsLight(true);
-					DefaultShader.SetLightPosition(TransformedLightPosition);
-					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
-					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
-					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
-					DefaultShader.SetLightModel(Lighting.LightModel);
-				}
-				Fog.Set();
-				DefaultShader.SetTexture(0);
-				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
-			}
-			ResetOpenGlState();
-			List<FaceState> opaqueFaces, alphaFaces;
-			lock (VisibleObjects.LockObject)
-			{
-				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
-				alphaFaces = VisibleObjects.GetSortedPolygons();
-			}
-			
-			foreach (FaceState face in opaqueFaces)
-			{
-				face.Draw();
-			}
-
-			// alpha face
-			ResetOpenGlState();
-
-			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
-			{
-				SetBlendFunc();
-				SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-				GL.DepthMask(false);
-
-				foreach (FaceState face in alphaFaces)
-				{
-					face.Draw();
-				}
-			}
-			else
-			{
-				UnsetBlendFunc();
-				SetAlphaFunc(AlphaFunction.Equal, 1.0f);
-				GL.DepthMask(true);
-
-				foreach (FaceState face in alphaFaces)
-				{
-					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Normal && face.Object.Prototype.Mesh.Materials[face.Face.Material].GlowAttenuationData == 0)
-					{
-						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
-						{
-							face.Draw();
-						}
-					}
-				}
-
-				SetBlendFunc();
-				SetAlphaFunc(AlphaFunction.Less, 1.0f);
-				GL.DepthMask(false);
-				bool additive = false;
-
-				foreach (FaceState face in alphaFaces)
-				{
-					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
-					{
-						if (!additive)
-						{
-							UnsetAlphaFunc();
-							additive = true;
-						}
-					}
-					else
-					{
-						if (additive)
-						{
-							SetAlphaFunc();
-							additive = false;
-						}
-					}
-					face.Draw();
-				}
-			}
+			// Execute Pipeline
+			RenderContext context = new RenderContext(this, timeElapsed);
+			ExecutePipeline(context);
 
 			if (OptionPaths)
 			{
@@ -339,19 +229,10 @@ namespace RouteViewer
 
 			}
 
-			// render overlays
 			if (AvailableNewRenderer)
 			{
 				DefaultShader.Deactivate();
 			}
-			ResetOpenGlState();
-			OptionLighting = false;
-			Fog.Enabled = false;
-			UnsetAlphaFunc();
-			GL.Disable(EnableCap.DepthTest);
-			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
-			RenderOverlays(timeElapsed);
-			OptionLighting = true;
 		}
 
 		private double lastTrackPosition;
