@@ -1204,6 +1204,18 @@
 					<trans-unit id="misc">
 						<source>Miscellaneous</source>
 					</trans-unit>
+					<trans-unit id="camera">
+						<source>Camera options</source>
+					</trans-unit>
+					<trans-unit id="camera_interior_transition">
+						<source>Smooth interior transition</source>
+					</trans-unit>
+					<trans-unit id="camera_exterior_transition">
+						<source>Smooth exterior transition</source>
+					</trans-unit>
+					<trans-unit id="camera_transition_duration">
+						<source>Transition duration (sec):</source>
+					</trans-unit>
 					<trans-unit id="misc_simulation">
 						<source>Detail of simulation</source>
 					</trans-unit>
@@ -1407,6 +1419,29 @@
 					</trans-unit>
 					<trans-unit id="ui_scalefactor">
 						<source>UI Scale Factor:</source>
+					</trans-unit>
+				</group>
+				<group id="tooltips">
+					<trans-unit id="interpolation">
+						<source>The texture filtering mode used to smooth textures.</source>
+					</trans-unit>
+					<trans-unit id="anisotropic">
+						<source>Higher levels of anisotropic filtering improve texture quality when viewed at an angle.</source>
+					</trans-unit>
+					<trans-unit id="antialiasing">
+						<source>Reduces jagged edges on polygons.</source>
+					</trans-unit>
+					<trans-unit id="transparency">
+						<source>Sets the quality of transparency rendering.</source>
+					</trans-unit>
+					<trans-unit id="viewingdistance">
+						<source>The maximum distance at which objects are rendered.</source>
+					</trans-unit>
+					<trans-unit id="motionblur">
+						<source>Enables motion blur effects when moving at speed.</source>
+					</trans-unit>
+					<trans-unit id="new_renderer">
+						<source>Enable the modern shader-based renderer. Recommended for better visuals and performance on modern hardware.</source>
 					</trans-unit>
 				</group>
 				<group id="dialog">

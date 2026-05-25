@@ -45,14 +45,14 @@ namespace TrainManager.Car.Systems
 					NextReasynchronizationPosition = baseCar.baseTrain.Cars[0].FrontAxle.Follower.TrackPosition;
 				}
 			}
-			else if (NextReasynchronizationPosition == double.MaxValue & baseCar.FrontAxle.RunIndex >= 0)
+			else if (double.IsPositiveInfinity(NextReasynchronizationPosition) & baseCar.FrontAxle.RunIndex >= 0)
 			{
 				double distance = Math.Abs(baseCar.FrontAxle.Follower.TrackPosition - TrainManagerBase.Renderer.CameraTrackFollower.TrackPosition);
 				const double minDistance = 150.0;
 				const double maxDistance = 750.0;
 				if (distance > minDistance)
 				{
-					if (Sounds.TryGetValue(baseCar.FrontAxle.RunIndex, out var runSound) && runSound.Buffer != null)
+					if (Sounds.TryGetValue(baseCar.FrontAxle.RunIndex, out CarSound runSound) && runSound.Buffer != null)
 					{
 						if (runSound.Buffer.Duration > 0.0)
 						{
@@ -65,7 +65,7 @@ namespace TrainManager.Car.Systems
 
 			if (baseCar.FrontAxle.Follower.TrackPosition >= NextReasynchronizationPosition)
 			{
-				NextReasynchronizationPosition = double.MaxValue;
+				NextReasynchronizationPosition = double.PositiveInfinity;
 				basegain = 0.0;
 			}
 			else

@@ -201,5 +201,12 @@
 		<FileName>1367S（曳舟→渋谷）bve4.csv</FileName>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
 	</Patch>
+	<!-- Tangumi -->
+	<!-- NOTE: Cannot use AccurateObjectDisposal due to crossing light animation -->
+	<Patch>
+		<Hash>DF28B51375CD2E1ECB1A894876A18398BBDCB42D1F3F09D6BA0EBE26EDA6E60E</Hash>
+		<FileName>l-ﾃｴSlJoﾃｩﾃ嘘.csv</FileName>
+		<Expression Number="38">Texture.Background(1) gaku2\Back_Mt1.bmp</Expression>
+	</Patch>
   </RoutePatches>
 </openBVE>

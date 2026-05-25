@@ -545,7 +545,7 @@ namespace Plugin.GIF
 									app += (char) block[i];
 								}
 
-								if (app.Equals("NETSCAPE2.0") || app.Equals("ANIMEXTS1.0"))
+								if (app.Equals(@"NETSCAPE2.0") || app.Equals(@"ANIMEXTS1.0"))
 								{
 									ReadNetscapeExt();
 								}
@@ -731,7 +731,7 @@ namespace Plugin.GIF
 			dispose = DisposeMode.NoAction;
 		}
 
-		/// <summary>Skips variable length blocks upto and including the next zero length block</summary>
+		/// <summary>Skips variable length blocks up-to and including the next zero length block</summary>
 		protected void Skip() 
 		{
 			do 

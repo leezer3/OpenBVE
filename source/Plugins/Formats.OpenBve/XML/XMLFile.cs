@@ -120,6 +120,55 @@ namespace Formats.OpenBve.XML
 
 		}
 
+		public override bool GetPath(T2 key, string absolutePath, out string finalPath)
+		{
+			if (keyValuePairs.TryRemove(key, out var value))
+			{
+				if (!Path.ContainsInvalidChars(value.Value))
+				{
+
+					string relativePath = value.Value;
+					try
+					{
+						finalPath = Path.CombineFile(absolutePath, relativePath);
+					}
+					catch
+					{
+						finalPath = string.Empty;
+					}
+
+					if (File.Exists(finalPath))
+					{
+						return true;
+					}
+
+					try
+					{
+						finalPath = Path.CombineFile(absolutePath, relativePath);
+					}
+					catch
+					{
+						finalPath = string.Empty;
+						return false;
+					}
+
+					if (File.Exists(finalPath))
+					{
+						return true;
+					}
+
+					currentHost.AddMessage(MessageType.Warning, false, "File " + value.Value + " was not found in Key " + key + " in Section " + Key + " at line " + value.Key);
+					finalPath = string.Empty;
+					return false;
+
+				}
+
+				currentHost.AddMessage(MessageType.Warning, false, "Path contains invalid characters for " + key + " in Section " + Key + " at line " + value.Key);
+			}
+			finalPath = string.Empty;
+			return false;
+		}
+
 		public override Block<T1, T2> ReadNextBlock()
 		{
 			Block<T1, T2> block = subBlocks[0];

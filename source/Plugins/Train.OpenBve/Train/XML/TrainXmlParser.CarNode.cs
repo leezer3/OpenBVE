@@ -26,6 +26,7 @@ using Formats.OpenBve;
 using LibRender2.Smoke;
 using LibRender2.Trains;
 using OpenBveApi;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -455,6 +456,16 @@ namespace Train.OpenBve
 					Plugin.CurrentHost.RegisterTexture(texturePath, TextureParameters.NoChange, out particleTexture);
 				}
 				ParticleSource particleSource = new ParticleSource(Plugin.Renderer, Train.Cars[Car], emitterLocation, maximumSize, maximumGrownSize, initialMotion, maximumLifeSpan);
+				
+				if(particleSourceBlock.GetFunctionScript(new [] {TrainXMLKey.Function }, currentXMLPath, out AnimationScript function))
+				{
+					particleSource.Controller = function as FunctionScript;
+				}
+				else
+				{
+					particleSource.Controller = new FunctionScript(Plugin.CurrentHost, Car + " enginepowerindex", false);
+				}
+				
 				particleSourceBlock.TryGetValue(TrainXMLKey.EmitsAtIdle, ref particleSource.EmitsAtIdle);
 				particleSource.ParticleTexture = particleTexture;
 				Train.Cars[Car].ParticleSources.Add(particleSource);

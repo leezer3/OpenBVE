@@ -479,7 +479,7 @@ namespace RouteViewer
 
 		public override void ExecuteFunctionScript(OpenBveApi.FunctionScripting.FunctionScript functionScript, AbstractTrain train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
 		{
-			FunctionScripts.ExecuteFunctionScript(functionScript, (TrainManager.Train)train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+			FunctionScripts.ExecuteFunctionScript(functionScript, (TrainBase)train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 		}
 
 		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, ObjectCreationParameters Parameters, Transformation WorldTransformation, Transformation LocalTransformation = null)
@@ -575,11 +575,11 @@ namespace RouteViewer
 			{
 				for (int i = 0; i < Program.TrainManager.Trains.Count; i++)
 				{
-					if (Program.TrainManager.Trains[i] != baseTrain & Program.TrainManager.Trains[i].State == TrainState.Available & baseTrain.Cars.Length > 0)
+					if (Program.TrainManager.Trains[i] != baseTrain && Program.TrainManager.Trains[i].State == TrainState.Available && baseTrain.Cars.Length > 0)
 					{
 						int c = Program.TrainManager.Trains[i].Cars.Length - 1;
 						double z = Program.TrainManager.Trains[i].Cars[c].RearAxle.Follower.TrackPosition - Program.TrainManager.Trains[i].Cars[c].RearAxle.Position - 0.5 * Program.TrainManager.Trains[i].Cars[c].Length;
-						if (z >= baseTrain.FrontCarTrackPosition & z < bestLocation)
+						if (z >= baseTrain.FrontCarTrackPosition && z < bestLocation)
 						{
 							bestLocation = z;
 							closestTrain = Program.TrainManager.Trains[i];

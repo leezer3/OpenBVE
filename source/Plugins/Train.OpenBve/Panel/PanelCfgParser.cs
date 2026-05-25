@@ -40,6 +40,9 @@ namespace Train.OpenBve
 		private double WorldLeft, WorldTop;
 		private double SemiHeight = 240;
 
+		private Texture panelTexture;
+		private bool isBackground = true;
+
 		/// <summary>Parses a BVE1 panel.cfg file</summary>
 		/// <param name="TrainPath">The on-disk path to the train</param>
 		/// <param name="Encoding">The train's text encoding</param>
@@ -81,10 +84,12 @@ namespace Train.OpenBve
 
 			if (File.Exists(PanelBackground))
 			{
-				Plugin.CurrentHost.RegisterTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out var panelTexture, true);
+				Plugin.CurrentHost.RegisterTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out panelTexture, true);
 				SemiHeight = PanelSize.Y - panelTexture.Height;
-				CreateElement(Car, 0, SemiHeight, panelTexture.Width, panelTexture.Height, WorldZ + EyeDistance, panelTexture, Color32.White);
+				CreateElement(Car, 0, SemiHeight, panelTexture.Width, panelTexture.Height, WorldZ + EyeDistance, false, panelTexture, Color32.White);
 			}
+
+			isBackground = false;
 
 			string compatibilityFolder = Plugin.FileSystem.GetDataFolder("Compatibility");
 			while (cfg.RemainingSubBlocks > 0)
@@ -111,7 +116,7 @@ namespace Train.OpenBve
 					case PanelSections.PressureGauge:
 						Angle = 45;
 						Block.GetValue(PanelKey.Type, out Type);
-						int[] NeedleType = { 0, 0 };
+						PanelSubject[] NeedleType = { PanelSubject.Unknown, PanelSubject.Unknown };
 						Color32[] NeedleColor = { Color32.Black, Color32.Black };
 						double UnitFactor = 1000;
 						
@@ -124,13 +129,13 @@ namespace Train.OpenBve
 
 						if (Block.GetEnumValue(PanelKey.LowerHand, out PanelSubject lowerSubject, out Color32 lowerColor))
 						{
-							NeedleType[0] = (int)lowerSubject;
+							NeedleType[0] = lowerSubject;
 							NeedleColor[0] = lowerColor;
 						}
 
 						if (Block.GetEnumValue(PanelKey.UpperHand, out PanelSubject upperSubject, out Color32 upperColor))
 						{
-							NeedleType[1] = (int)upperSubject;
+							NeedleType[1] = upperSubject;
 							NeedleColor[1] = upperColor;
 						}
 
@@ -171,14 +176,14 @@ namespace Train.OpenBve
 						if (!string.IsNullOrEmpty(Background) && File.Exists(Background))
 						{
 							Plugin.CurrentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out var pressureBackgroundTexture, true);
-							CreateElement(Car, Center.X - 0.5 * pressureBackgroundTexture.Width, Center.Y + SemiHeight - 0.5 * pressureBackgroundTexture.Height, WorldZ + EyeDistance - 3.0 * StackDistance, pressureBackgroundTexture);
+							CreateElement(Car, Center.X - 0.5 * pressureBackgroundTexture.Width, Center.Y + SemiHeight - 0.5 * pressureBackgroundTexture.Height, WorldZ + EyeDistance - 3.0 * StackDistance, false, pressureBackgroundTexture);
 						}
 
 						// cover
 						if (!string.IsNullOrEmpty(Cover) && File.Exists(Cover))
 						{
 							Plugin.CurrentHost.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out var pressureCoverTexture, true);
-							CreateElement(Car, Center.X - 0.5 * pressureCoverTexture.Width, Center.Y + SemiHeight - 0.5 * pressureCoverTexture.Height, WorldZ + EyeDistance - 6.0 * StackDistance, pressureCoverTexture);
+							CreateElement(Car, Center.X - 0.5 * pressureCoverTexture.Width, Center.Y + SemiHeight - 0.5 * pressureCoverTexture.Height, WorldZ + EyeDistance - 6.0 * StackDistance, false, pressureCoverTexture);
 						}
 
 						if (Type == 0)
@@ -190,7 +195,7 @@ namespace Train.OpenBve
 								{
 									TextureFile = Path.CombineFile(compatibilityFolder, k == 0 ? "needle_pressuregauge_lower.png" : "needle_pressuregauge_upper.png");
 									Plugin.CurrentHost.RegisterTexture(TextureFile, TextureParameters.NoChange, out var pressureNeedleTexture, true);
-									int j = CreateElement(Car, Center.X - Radius * pressureNeedleTexture.AspectRatio, Center.Y + SemiHeight - Radius, 2.0 * Radius * pressureNeedleTexture.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - (4 + k) * StackDistance, pressureNeedleTexture, NeedleColor[k]);
+									int j = CreateElement(Car, Center.X - Radius * pressureNeedleTexture.AspectRatio, Center.Y + SemiHeight - Radius, 2.0 * Radius * pressureNeedleTexture.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - (4 + k) * StackDistance, true, pressureNeedleTexture, NeedleColor[k]);
 									Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 									Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
 									Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateZDirection, Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateXDirection);
@@ -199,19 +204,19 @@ namespace Train.OpenBve
 									string Variable = "0";
 									switch (NeedleType[k])
 									{
-										case 1:
+										case PanelSubject.BC:
 											Variable = "brakecylinder";
 											break;
-										case 2:
+										case PanelSubject.SAP:
 											Variable = "straightairpipe";
 											break;
-										case 3:
+										case PanelSubject.BP:
 											Variable = "brakepipe";
 											break;
-										case 4:
+										case PanelSubject.ER:
 											Variable = "equalizingreservoir";
 											break;
-										case 5:
+										case PanelSubject.MR:
 											Variable = "mainreservoir";
 											break;
 									}
@@ -225,7 +230,7 @@ namespace Train.OpenBve
 							// leds
 							if (NeedleType[1] != 0)
 							{
-								int j = CreateElement(Car, Center.X - Radius, Center.Y + SemiHeight - Radius, 2.0 * Radius, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, null, NeedleColor[1]);
+								int j = CreateElement(Car, Center.X - Radius, Center.Y + SemiHeight - Radius, 2.0 * Radius, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, true, null, NeedleColor[1]);
 								double x0 = Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
 								double y0 = Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Y;
 								double z0 = Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Z;
@@ -273,19 +278,19 @@ namespace Train.OpenBve
 								string Variable;
 								switch (NeedleType[1])
 								{
-									case 1:
+									case PanelSubject.BC:
 										Variable = "brakecylinder";
 										break;
-									case 2:
+									case PanelSubject.SAP:
 										Variable = "straightairpipe";
 										break;
-									case 3:
+									case PanelSubject.BP:
 										Variable = "brakepipe";
 										break;
-									case 4:
+									case PanelSubject.ER:
 										Variable = "equalizingreservoir";
 										break;
-									case 5:
+									case PanelSubject.MR:
 										Variable = "mainreservoir";
 										break;
 									default:
@@ -338,14 +343,14 @@ namespace Train.OpenBve
 						{
 							// background/led
 							Plugin.CurrentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out var speedometerBackgroundTexture, true);
-							CreateElement(Car, Center.X - 0.5 * speedometerBackgroundTexture.Width, Center.Y + SemiHeight - 0.5 * speedometerBackgroundTexture.Height, WorldZ + EyeDistance - 3.0 * StackDistance, speedometerBackgroundTexture);
+							CreateElement(Car, Center.X - 0.5 * speedometerBackgroundTexture.Width, Center.Y + SemiHeight - 0.5 * speedometerBackgroundTexture.Height, WorldZ + EyeDistance - 3.0 * StackDistance, false, speedometerBackgroundTexture);
 						}
 
 						if (!string.IsNullOrEmpty(Cover))
 						{
 							// cover
 							Plugin.CurrentHost.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out var speedometerCoverTexture, true);
-							CreateElement(Car, Center.X - 0.5 * speedometerCoverTexture.Width, Center.Y + SemiHeight - 0.5 * speedometerCoverTexture.Height, WorldZ + EyeDistance - 6.0 * StackDistance, speedometerCoverTexture);
+							CreateElement(Car, Center.X - 0.5 * speedometerCoverTexture.Width, Center.Y + SemiHeight - 0.5 * speedometerCoverTexture.Height, WorldZ + EyeDistance - 6.0 * StackDistance, false, speedometerCoverTexture);
 						}
 
 						if (!string.IsNullOrEmpty(ATCPath))
@@ -415,11 +420,11 @@ namespace Train.OpenBve
 									Plugin.CurrentHost.RegisterTexture(ATCPath, new TextureParameters(new TextureClipRegion(j * atcHeight, 0, atcHeight, atcHeight), Color24.Blue), out var ATCTexture, true);
 									if (j == 0)
 									{
-										k = CreateElement(Car, x, y, atcHeight, atcHeight, WorldZ + EyeDistance - 4.0 * StackDistance, ATCTexture, Color32.White);
+										k = CreateElement(Car, x, y, atcHeight, atcHeight, WorldZ + EyeDistance - 4.0 * StackDistance, false, ATCTexture, Color32.White);
 									}
 									else
 									{
-										CreateElement(Car, x, y, atcHeight, atcHeight, WorldZ + EyeDistance - 4.0 * StackDistance, ATCTexture, Color32.White, true);
+										CreateElement(Car, x, y, atcHeight, atcHeight, WorldZ + EyeDistance - 4.0 * StackDistance, false, ATCTexture, Color32.White, true);
 									}
 								}
 
@@ -432,7 +437,7 @@ namespace Train.OpenBve
 							// needle
 							TextureFile = Path.CombineFile(compatibilityFolder, "needle_speedometer.png");
 							Plugin.CurrentHost.RegisterTexture(TextureFile, TextureParameters.NoChange, out var speedometerNeedleTexture, true);
-							int j = CreateElement(Car, Center.X - Radius * speedometerNeedleTexture.AspectRatio, Center.Y + SemiHeight - Radius, 2.0 * Radius * speedometerNeedleTexture.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, speedometerNeedleTexture, needleColor);
+							int j = CreateElement(Car, Center.X - Radius * speedometerNeedleTexture.AspectRatio, Center.Y + SemiHeight - Radius, 2.0 * Radius * speedometerNeedleTexture.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, true, speedometerNeedleTexture, needleColor);
 							Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 							Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
 							Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateZDirection, Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateXDirection);
@@ -444,7 +449,7 @@ namespace Train.OpenBve
 						{
 							// led
 							if (!needleColorOverridden) needleColor = Color32.Black;
-							int j = CreateElement(Car, Center.X - Radius, Center.Y + SemiHeight - Radius, 2.0 * Radius, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, null, needleColor);
+							int j = CreateElement(Car, Center.X - Radius, Center.Y + SemiHeight - Radius, 2.0 * Radius, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, true, null, needleColor);
 							double x0 = Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
 							double y0 = Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Y;
 							double z0 = Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Z;
@@ -584,11 +589,11 @@ namespace Train.OpenBve
 							{
 								if (j == 0)
 								{
-									k = CreateElement(Car, Corner.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White);
+									k = CreateElement(Car, Corner.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, false, digitalNumberTextures[j], Color32.White);
 								}
 								else
 								{
-									CreateElement(Car, Corner.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White, true);
+									CreateElement(Car, Corner.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, false, digitalNumberTextures[j], Color32.White, true);
 								}
 							}
 							Car.CarSections[CarSectionType.Interior].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.CurrentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * ~ 100 >= <> 100 quotient 10 mod 10 ?", false);
@@ -599,11 +604,11 @@ namespace Train.OpenBve
 							{
 								if (j == 0)
 								{
-									k = CreateElement(Car, Corner.X + Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White);
+									k = CreateElement(Car, Corner.X + Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, false, digitalNumberTextures[j], Color32.White);
 								}
 								else
 								{
-									CreateElement(Car, Corner.X + Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White, true);
+									CreateElement(Car, Corner.X + Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, false, digitalNumberTextures[j], Color32.White, true);
 								}
 							}
 							Car.CarSections[CarSectionType.Interior].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.CurrentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * ~ 10 >= <> 10 quotient 10 mod 10 ?", false);
@@ -614,11 +619,11 @@ namespace Train.OpenBve
 							{
 								if (j == 0)
 								{
-									k = CreateElement(Car, Corner.X + 2.0 * Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White);
+									k = CreateElement(Car, Corner.X + 2.0 * Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, false, digitalNumberTextures[j], Color32.White);
 								}
 								else
 								{
-									CreateElement(Car, Corner.X + 2.0 * Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White, true);
+									CreateElement(Car, Corner.X + 2.0 * Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, false, digitalNumberTextures[j], Color32.White, true);
 								}
 							}
 
@@ -639,8 +644,8 @@ namespace Train.OpenBve
 
 						Plugin.CurrentHost.RegisterTexture(turnOnPath, new TextureParameters(null, Color24.Blue), out var t0, true);
 						Plugin.CurrentHost.RegisterTexture(turnOffPath, new TextureParameters(null, Color24.Blue), out var t1, true);
-						int elementIndex = CreateElement(Car, Corner.X, Corner.Y + SemiHeight, WorldZ + EyeDistance - 2.0 * StackDistance, t0);
-						CreateElement(Car, Corner.X, Corner.Y + SemiHeight, WorldZ + EyeDistance - 2.0 * StackDistance, t1, true);
+						int elementIndex = CreateElement(Car, Corner.X, Corner.Y + SemiHeight, WorldZ + EyeDistance - 2.0 * StackDistance, false, t0);
+						CreateElement(Car, Corner.X, Corner.Y + SemiHeight, WorldZ + EyeDistance - 2.0 * StackDistance, false, t1, true);
 						Car.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].StateFunction = new FunctionScript(Plugin.CurrentHost, "doors 0 !=", false);
 						break;
 					case PanelSections.Watch:
@@ -658,13 +663,13 @@ namespace Train.OpenBve
 						if (!string.IsNullOrEmpty(Background))
 						{
 							Plugin.CurrentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out var watchBackgroundTexture, true);
-							CreateElement(Car, Center.X - 0.5 * watchBackgroundTexture.Width, Center.Y + SemiHeight - 0.5 * watchBackgroundTexture.Height, WorldZ + EyeDistance - 3.0 * StackDistance, watchBackgroundTexture);
+							CreateElement(Car, Center.X - 0.5 * watchBackgroundTexture.Width, Center.Y + SemiHeight - 0.5 * watchBackgroundTexture.Height, WorldZ + EyeDistance - 3.0 * StackDistance, false, watchBackgroundTexture);
 						}
 
 						// hour
 						TextureFile = Path.CombineFile(compatibilityFolder, "needle_hour.png");
 						Plugin.CurrentHost.RegisterTexture(TextureFile, TextureParameters.NoChange, out var hourTexture, true);
-						int handElement = CreateElement(Car, Center.X - handRadius * hourTexture.AspectRatio, Center.Y + SemiHeight - handRadius, 2.0 * handRadius * hourTexture.AspectRatio, 2.0 * handRadius, WorldZ + EyeDistance - 4.0 * StackDistance, hourTexture, handColor);
+						int handElement = CreateElement(Car, Center.X - handRadius * hourTexture.AspectRatio, Center.Y + SemiHeight - handRadius, 2.0 * handRadius * hourTexture.AspectRatio, 2.0 * handRadius, WorldZ + EyeDistance - 4.0 * StackDistance, true, hourTexture, handColor);
 						Car.CarSections[CarSectionType.Interior].Groups[0].Elements[handElement].RotateZDirection = Vector3.Backward;
 						Car.CarSections[CarSectionType.Interior].Groups[0].Elements[handElement].RotateXDirection = Vector3.Right;
 						Car.CarSections[CarSectionType.Interior].Groups[0].Elements[handElement].RotateYDirection = Vector3.Cross(Car.CarSections[CarSectionType.Interior].Groups[0].Elements[handElement].RotateZDirection, Car.CarSections[CarSectionType.Interior].Groups[0].Elements[handElement].RotateXDirection);
@@ -673,7 +678,7 @@ namespace Train.OpenBve
 						// minute
 						TextureFile = Path.CombineFile(compatibilityFolder, "needle_minute.png");
 						Plugin.CurrentHost.RegisterTexture(TextureFile, TextureParameters.NoChange, out var minuteTexture, true);
-						handElement = CreateElement(Car, Center.X - handRadius * minuteTexture.AspectRatio, Center.Y + SemiHeight - handRadius, 2.0 * handRadius * minuteTexture.AspectRatio, 2.0 * handRadius, WorldZ + EyeDistance - 5.0 * StackDistance, minuteTexture, handColor);
+						handElement = CreateElement(Car, Center.X - handRadius * minuteTexture.AspectRatio, Center.Y + SemiHeight - handRadius, 2.0 * handRadius * minuteTexture.AspectRatio, 2.0 * handRadius, WorldZ + EyeDistance - 5.0 * StackDistance, true, minuteTexture, handColor);
 						Car.CarSections[CarSectionType.Interior].Groups[0].Elements[handElement].RotateZDirection = Vector3.Backward;
 						Car.CarSections[CarSectionType.Interior].Groups[0].Elements[handElement].RotateXDirection = Vector3.Right;
 						Car.CarSections[CarSectionType.Interior].Groups[0].Elements[handElement].RotateYDirection = Vector3.Cross(Car.CarSections[CarSectionType.Interior].Groups[0].Elements[handElement].RotateZDirection, Car.CarSections[CarSectionType.Interior].Groups[0].Elements[handElement].RotateXDirection);
@@ -682,7 +687,7 @@ namespace Train.OpenBve
 						// second
 						TextureFile = Path.CombineFile(compatibilityFolder, "needle_second.png");
 						Plugin.CurrentHost.RegisterTexture(TextureFile, TextureParameters.NoChange, out var secondTexture, true);
-						handElement = CreateElement(Car, Center.X - handRadius * secondTexture.AspectRatio, Center.Y + SemiHeight - handRadius, 2.0 * handRadius * secondTexture.AspectRatio, 2.0 * handRadius, WorldZ + EyeDistance - 6.0 * StackDistance, secondTexture, handColor);
+						handElement = CreateElement(Car, Center.X - handRadius * secondTexture.AspectRatio, Center.Y + SemiHeight - handRadius, 2.0 * handRadius * secondTexture.AspectRatio, 2.0 * handRadius, WorldZ + EyeDistance - 6.0 * StackDistance, true, secondTexture, handColor);
 						Car.CarSections[CarSectionType.Interior].Groups[0].Elements[handElement].RotateZDirection = Vector3.Backward;
 						Car.CarSections[CarSectionType.Interior].Groups[0].Elements[handElement].RotateXDirection = Vector3.Right;
 						Car.CarSections[CarSectionType.Interior].Groups[0].Elements[handElement].RotateYDirection = Vector3.Cross(Car.CarSections[CarSectionType.Interior].Groups[0].Elements[handElement].RotateZDirection, Car.CarSections[CarSectionType.Interior].Groups[0].Elements[handElement].RotateXDirection);
@@ -714,11 +719,11 @@ namespace Train.OpenBve
 								Plugin.CurrentHost.RegisterTexture(brakeIndicatorPath, new TextureParameters(clip, Color24.Blue), out var brakeIndicatorTexture);
 								if (j == 0)
 								{
-									k = CreateElement(Car, Corner.X, Corner.Y + SemiHeight, indicatorWidth, h, WorldZ + EyeDistance - StackDistance, brakeIndicatorTexture, Color32.White);
+									k = CreateElement(Car, Corner.X, Corner.Y + SemiHeight, indicatorWidth, h, WorldZ + EyeDistance - StackDistance, false, brakeIndicatorTexture, Color32.White);
 								}
 								else
 								{
-									CreateElement(Car, Corner.X, Corner.Y + SemiHeight,  indicatorWidth, h, WorldZ + EyeDistance - StackDistance, brakeIndicatorTexture, Color32.White, true);
+									CreateElement(Car, Corner.X, Corner.Y + SemiHeight,  indicatorWidth, h, WorldZ + EyeDistance - StackDistance, false, brakeIndicatorTexture, Color32.White, true);
 								}
 							}
 
@@ -751,14 +756,63 @@ namespace Train.OpenBve
 			}
 		}
 
-		private int CreateElement(CarBase Car, double Left, double Top, double WorldZ, Texture Texture, bool AddStateToLastElement = false)
+		private int CreateElement(CarBase Car, double Left, double Top, double WorldZ, bool IsNeedle, Texture Texture, bool AddStateToLastElement = false)
 		{
-			return CreateElement(Car, Left, Top, Texture.Width, Texture.Height, WorldZ, Texture, Color32.White, AddStateToLastElement);
+			return CreateElement(Car, Left, Top, Texture.Width, Texture.Height, WorldZ, IsNeedle, Texture, Color32.White, AddStateToLastElement);
 		}
 
 		// create element
-		private int CreateElement(CarBase Car, double Left, double Top, double Width, double Height, double WorldZ, Texture Texture, Color32 Color, bool AddStateToLastElement = false)
+		private int CreateElement(CarBase Car, double Left, double Top, double Width, double Height, double WorldZ, bool IsNeedle, Texture Texture, Color32 Color, bool AddStateToLastElement = false)
 		{
+			if (Plugin.CurrentOptions.EnableBveTsHacks && isBackground == false)
+			{
+				/*
+				 * In regions where the main panel texture is transparent,
+				 * BVE2 renders any other overlapping elements as transparent also
+				 *
+				 * e.g. Portuguese trains:
+				 * CP1400
+				 * CP2100
+				 * CP3500
+				 * CP4000
+				 *
+				 * All of these have junk extra elements in the main panel view
+				 * (Appears to have come from copy+pasting between trains)
+				 *
+				 * So, what we need to do is to extract the region of the main overlapping texture
+				 * Now, if this is *not* opaque, apply as a mask to the alpha channel
+				 *
+				 */
+				double clipWidth = Math.Min(Width, panelTexture.Width - Left);
+				double clipHeight = Math.Min(Height, panelTexture.Height + SemiHeight - Top);
+				Texture temp = panelTexture.ApplyParameters(new TextureParameters(new TextureClipRegion(Math.Max(0, (int)Left)
+					, Math.Max(0, (int)(Top - SemiHeight)), (int)clipWidth, (int)clipHeight), Color24.Blue));
+				
+				temp.Origin.GetTexture(out Texture t);
+				switch (t.GetTransparencyType())
+				{
+					case TextureTransparencyType.Transparent:
+						// totally hidden
+						Texture = new Texture(1, 1, PixelFormat.RGBAlpha, new byte[] { 0, 0, 0, 0 }, new Color24[] { });
+						break;
+					case TextureTransparencyType.Partial:
+						if (IsNeedle)
+						{
+							// as needles rotate, we can't just apply a mask and have to hide the whole thing
+							Texture = new Texture(1, 1, PixelFormat.RGBAlpha, new byte[] { 0, 0, 0, 0 }, new Color24[] { });
+						}
+						else
+						{
+							Texture.Origin.GetTexture(out Texture tt);
+							Texture = tt.ApplyParameters(new TextureParameters(null, null, t));
+						}
+						
+						break;
+				}
+
+			}
+
+
 			// create object
 			StaticObject Object = new StaticObject(Plugin.CurrentHost);
 			Vector3[] v = new Vector3[4];

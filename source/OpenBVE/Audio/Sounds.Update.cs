@@ -37,7 +37,7 @@ namespace OpenBve
 			}
 			AL.Listener(ALListener3f.Position, 0.0f, 0.0f, 0.0f);
 			AL.Listener(ALListener3f.Velocity, (float)listenerVelocity.X, (float)listenerVelocity.Y, (float)listenerVelocity.Z);
-		    var Orientation = new[]{(float) listenerOrientation.Z.X, (float) listenerOrientation.Z.Y, (float) listenerOrientation.Z.Z,-(float) listenerOrientation.Y.X, -(float) listenerOrientation.Y.Y, -(float) listenerOrientation.Y.Z};
+		    float[] Orientation = {(float) listenerOrientation.Z.X, (float) listenerOrientation.Z.Y, (float) listenerOrientation.Z.Z,-(float) listenerOrientation.Y.X, -(float) listenerOrientation.Y.Y, -(float) listenerOrientation.Y.Z};
 			AL.Listener(ALListenerfv.Orientation, ref Orientation);
 			/*
 			 * Set up the atmospheric attributes.
@@ -120,7 +120,7 @@ namespace OpenBve
 							 * */
 							if (Sources[i].State == SoundSourceState.Playing) {
 								AL.GetSource(Sources[i].OpenAlSourceName, ALGetSourcei.SourceState, out int state);
-								if (state != (int)ALSourceState.Initial & state != (int)ALSourceState.Playing) {
+								if (state != (int)ALSourceState.Initial && state != (int)ALSourceState.Playing) {
 									/*
 									 * The sound is not playing any longer.
 									 * Remove it from the list of sound sources.
@@ -142,11 +142,11 @@ namespace OpenBve
 							switch (Sources[i].Type)
 							{
 								case SoundType.TrainCar:
-									var Car = (AbstractCar)Sources[i].Parent;
+									AbstractCar Car = (AbstractCar)Sources[i].Parent;
 									Car.CreateWorldCoordinates(Sources[i].Position, out position, out _);
 									break;
 								case SoundType.AnimatedObject:
-									var WorldSound = (WorldSound)Sources[i].Parent;
+									WorldSound WorldSound = (WorldSound)Sources[i].Parent;
 									position = WorldSound.Follower.WorldPosition + WorldSound.Position;
 									break;
 								default:

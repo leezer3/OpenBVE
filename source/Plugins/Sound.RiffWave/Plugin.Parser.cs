@@ -1,22 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using NAudio.Wave;
-using NLayer.NAudioSupport;
 using OpenBveApi;
 using OpenBveApi.Math;
-using OpenBveApi.Objects;
 using OpenBveApi.Sounds;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Plugin
 {
 	public partial class Plugin
 	{
-		
-
-
-		// --- functions ---
-
 		/// <summary>Reads wave data from a WAVE file.</summary>
 		/// <param name="fileName">The file name of the WAVE file.</param>
 		/// <returns>The wave data.</returns>
@@ -24,49 +17,54 @@ namespace Plugin
 		{
 			using (FileStream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
 			{
-				using (BinaryReader reader = new BinaryReader(stream))
-				{
-					Endianness endianness;
-					uint headerCkID = reader.ReadUInt32();
-
-					// "RIFF"
-					if (headerCkID == 0x46464952)
-					{
-						endianness = Endianness.Little;
-					}
-					// "RIFX"
-					else if (headerCkID == 0x58464952)
-					{
-						endianness = Endianness.Big;
-					}
-					else
-					{
-						// unsupported format
-						throw new InvalidDataException("Invalid header chunk ID");
-					}
-
-					uint headerCkSize = reader.ReadUInt32(endianness);
-
-					uint formType = reader.ReadUInt32(endianness);
-
-					// "WAVE"
-					if (formType == 0x45564157)
-					{
-						return WaveLoadFromStream(reader, endianness, headerCkSize + 8);
-					}
-
-					// unsupported format
-					throw new InvalidDataException("Unsupported format");
-				}
+				return LoadFromStream(stream);
 			}
 		}
 
-		/// <summary>Reads sound data from a MP3 stream.</summary>
-		/// <param name="stream">The stream of the MP3.</param>
-		/// <returns>The raw sound data.</returns>
+		private static Sound LoadFromStream(Stream stream)
+		{
+			using (BinaryReader reader = new BinaryReader(stream))
+			{
+				Endianness endianness;
+				uint headerCkID = reader.ReadUInt32();
+
+				// "RIFF"
+				if (headerCkID == 0x46464952)
+				{
+					endianness = Endianness.Little;
+				}
+				// "RIFX"
+				else if (headerCkID == 0x58464952)
+				{
+					endianness = Endianness.Big;
+				}
+				else
+				{
+					// unsupported format
+					throw new InvalidDataException("Invalid header chunk ID");
+				}
+
+				uint headerCkSize = reader.ReadUInt32(endianness);
+
+				uint formType = reader.ReadUInt32(endianness);
+
+				// "WAVE"
+				if (formType == 0x45564157)
+				{
+					return WaveLoadFromStream(reader, endianness, headerCkSize + 8);
+				}
+
+				// unsupported format
+				throw new InvalidDataException("Unsupported format");
+			}
+		}
+
+		/// <summary>Reads sound data from a MP3 stream, using NAudio</summary>
+		/// <param name="stream">The stream of the MP3</param>
+		/// <returns>The raw sound data</returns>
 		private static Sound Mp3LoadFromStream(Stream stream)
 		{
-			using (Mp3FileReader reader = new Mp3FileReader(stream, wf => new Mp3FrameDecompressor(wf)))
+			using (Mp3FileReader reader = new Mp3FileReader(stream))
 			{
 				byte[] dataBytes = new byte[reader.Length];
 
@@ -100,6 +98,11 @@ namespace Plugin
 							sample = 1.0f;
 						}
 
+						if (float.IsNaN(sample))
+						{
+							sample = 0;
+						}
+
 						writer.Write((short)(sample * short.MaxValue));
 					}
 				}
@@ -120,6 +123,25 @@ namespace Plugin
 			}
 		}
 
+		/// <summary>Loads sound data from a stream using NAudio to resample it to something we can read</summary>
+		/// <param name="stream">The stream</param>
+		/// <returns>The sound</returns>
+		private static Sound NAudioLoadFromStream(Stream stream)
+		{
+			using (WaveStream wf = new WaveFileReader(stream))
+			{
+				using (WaveFormatConversionStream cf = (WaveFormatConversionStream)WaveFormatConversionStream.CreatePcmStream(wf))
+				{
+					using (MemoryStream ms = new MemoryStream())
+					{
+						WaveFileWriter.WriteWavFileToStream(ms, cf);
+						ms.Seek(0, SeekOrigin.Begin);
+						return LoadFromStream(ms);
+					}
+				}
+			}
+		}
+
 		private static Sound WaveLoadFromStream(BinaryReader reader, Endianness endianness, uint fileSize)
 		{
 			long stopPosition = Math.Min(fileSize, reader.BaseStream.Length);
@@ -132,6 +154,7 @@ namespace Plugin
 			{
 				ChunkID ckID = (ChunkID)reader.ReadUInt32(endianness);
 				uint ckSize = reader.ReadUInt32(endianness);
+				long ckStart = reader.BaseStream.Position;
 
 				// "fmt "
 				switch (ckID)
@@ -153,6 +176,12 @@ namespace Plugin
 							case 0x0002:
 								format = new WaveFormatAdPcm(wFormatTag);
 								break;
+							case 0x0011:
+							case 0x0031:
+								// 0x0011 - Intel DVI ADPCM
+								// 0x0031 - GSM610
+								reader.BaseStream.Seek(0, 0);
+								return NAudioLoadFromStream(reader.BaseStream);
 							case 0x0050:
 							case 0x0055:
 								format = new WaveFormatMp3(wFormatTag);
@@ -365,6 +394,15 @@ namespace Plugin
 								}
 							}
 						}
+
+						if (format is WaveFormatMp3)
+						{
+							using (MemoryStream dataStream = new MemoryStream(dataBytes))
+							{
+								return Mp3LoadFromStream(dataStream);
+							}
+						}
+
 						chunks.Add(new DataChunk(dataBytes, format));
 						break;
 					case ChunkID.CUE:
@@ -389,6 +427,9 @@ namespace Plugin
 						break;
 				}
 
+				// ensure we're actually at the end of the chunk
+				reader.BaseStream.Seek(ckStart + ckSize, SeekOrigin.Begin);
+
 				// pad byte
 				if ((ckSize & 1) == 1)
 				{
@@ -400,14 +441,6 @@ namespace Plugin
 			if (chunks.Count == 0)
 			{
 				throw new InvalidDataException("File contains no DATA or SLNT chunks.");
-			}
-
-			if (format is WaveFormatMp3)
-			{
-				using (MemoryStream dataStream = new MemoryStream(dataBytes))
-				{
-					return Mp3LoadFromStream(dataStream);
-				}
 			}
 
 			byte[][] buffers = new byte[format.Channels][];

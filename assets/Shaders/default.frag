@@ -28,26 +28,32 @@ in vec4 oViewPos;
 in vec2 oUv;
 in vec4 oColor;
 in vec4 oLightResult;
-uniform sampler2DShadow uShadowMap0;  // Cascade 0 (near)
-uniform sampler2DShadow uShadowMap1;  // Cascade 1 (mid)
-uniform sampler2DShadow uShadowMap2;  // Cascade 2 (far)
-uniform sampler2DShadow uShadowMap3;  // Cascade 3 (extra far)
-uniform float uCascadeFarDist0;
-uniform float uCascadeFarDist1;
-uniform float uCascadeFarDist2;
-uniform float uCascadeFarDist3;
-uniform float uCascadeBias0;
-uniform float uCascadeBias1;
-uniform float uCascadeBias2;
-uniform float uCascadeBias3;
-uniform float uNormalBias0;
-uniform float uNormalBias1;
-uniform float uNormalBias2;
-uniform float uNormalBias3;
-uniform float uShadowStrength;
-uniform bool  uShadowEnabled;
-uniform int   uCascadeCount;  // 2, 3, or 4
-uniform vec2  uAlphaTest;
+// --- SHADOW MAPPING ---
+uniform bool              uShadowEnabled;
+uniform float             uShadowStrength;
+uniform int               uShadowCascadeCount;
+
+uniform sampler2DShadow   uShadowMap0;
+uniform sampler2DShadow   uShadowMap1;
+uniform sampler2DShadow   uShadowMap2;
+uniform sampler2DShadow   uShadowMap3;
+
+uniform float             uShadowSplit0;      // Boundary where cascade 0 ends and 1 begins
+uniform float             uShadowSplit1;      // Boundary where cascade 1 ends and 2 begins
+uniform float             uShadowSplit2;      // Boundary where cascade 2 ends and 3 begins
+uniform float             uShadowSplit3;      // Final shadow distance boundary
+
+uniform float             uShadowBias0;
+uniform float             uShadowBias1;
+uniform float             uShadowBias2;
+uniform float             uShadowBias3;
+
+uniform float             uShadowNormalBias0;
+uniform float             uShadowNormalBias1;
+uniform float             uShadowNormalBias2;
+uniform float             uShadowNormalBias3;
+
+uniform vec2              uAlphaTest;
 uniform sampler2D uTexture;
 uniform sampler2D uNightTexture;
 uniform bool uIsNightTexture;
@@ -69,7 +75,6 @@ in vec4  vPosLightSpace0;
 in vec4  vPosLightSpace1;
 in vec4  vPosLightSpace2;
 in vec4  vPosLightSpace3;
-in float vViewDepth;
 uniform int uMaterialFlags;
 uniform float uBrightness;
 uniform float uOpacity;
@@ -81,8 +86,8 @@ uniform float uFogDensity;
 uniform bool uFogIsLinear;
 out vec4 fragColor;
 
-/// Samples a single cascade with 4-tap PCF via hardware comparison.
-float SampleCascade(sampler2DShadow shadowMap, vec4 posLightSpace, float bias, float normalBias)
+/// Samples a single cascade using hardware PCF.
+float GetCascadeShadowFactor(sampler2DShadow shadowMap, vec4 posLightSpace, float bias, float normalBias)
 {
     vec3 projCoords = posLightSpace.xyz / posLightSpace.w;
     projCoords = projCoords * 0.5 + 0.5;
@@ -100,7 +105,7 @@ float SampleCascade(sampler2DShadow shadowMap, vec4 posLightSpace, float bias, f
     vec3 lightDir = normalize(uLight.position);
     float biasScale = clamp(1.0 - dot(normal, lightDir), 0.0, 1.0);
     // Multiply the base Z-bias by a slope factor to perfectly cure acne on thin meshes
-    float activeBias = bias * (1.1 + biasScale * normalBias); 
+    float activeBias = bias * (1.0 + biasScale * normalBias); 
 
     float currentDepth = projCoords.z - activeBias;
 
@@ -119,43 +124,50 @@ float SampleCascade(sampler2DShadow shadowMap, vec4 posLightSpace, float bias, f
     return shadow;
 }
 
+/// Helper to sample a cascade by index.
 float SampleCascadeByIndex(int idx)
 {
-    if (idx == 0) return SampleCascade(uShadowMap0, vPosLightSpace0, uCascadeBias0, uNormalBias0);
-    if (idx == 1) return SampleCascade(uShadowMap1, vPosLightSpace1, uCascadeBias1, uNormalBias1);
-    if (idx == 2) return SampleCascade(uShadowMap2, vPosLightSpace2, uCascadeBias2, uNormalBias2);
-    if (idx == 3) return SampleCascade(uShadowMap3, vPosLightSpace3, uCascadeBias3, uNormalBias3);
+    if (idx == 0) return GetCascadeShadowFactor(uShadowMap0, vPosLightSpace0, uShadowBias0, uShadowNormalBias0);
+    if (idx == 1) return GetCascadeShadowFactor(uShadowMap1, vPosLightSpace1, uShadowBias1, uShadowNormalBias1);
+    if (idx == 2) return GetCascadeShadowFactor(uShadowMap2, vPosLightSpace2, uShadowBias2, uShadowNormalBias2);
+    if (idx == 3) return GetCascadeShadowFactor(uShadowMap3, vPosLightSpace3, uShadowBias3, uShadowNormalBias3);
     return 1.0;
 }
 
-float GetCascadeFarDist(int idx)
+/// Helper to get the split distance of a cascade by index.
+float GetShadowSplitDistance(int idx)
 {
-    if (idx == 0) return uCascadeFarDist0;
-    if (idx == 1) return uCascadeFarDist1;
-    if (idx == 2) return uCascadeFarDist2;
-    if (idx == 3) return uCascadeFarDist3;
+    if (idx == 0) return uShadowSplit0;
+    if (idx == 1) return uShadowSplit1;
+    if (idx == 2) return uShadowSplit2;
+    if (idx == 3) return uShadowSplit3;
     return 0.0;
 }
 
-/// Full CSM sampling with cascade selection and smooth blending.
-float CSMShadow()
+/// Calculates the final shadow factor using CSM with smooth blending.
+float CalculateShadowFactor()
 {
+    if (!uShadowEnabled) return 1.0;
+    
+    // Calculate view depth per-pixel for perspective correctness (crucial for large polygons like ground)
+    float vViewDepth = abs(oViewPos.z);
+
     float blendRange = 15.0;
     float shadow = 1.0;
-    int cascadeCount = uCascadeCount;
+    int cascadeCount = uShadowCascadeCount;
 
     for (int i = 0; i < cascadeCount; i++)
     {
-        float farDist = GetCascadeFarDist(i);
+        float splitDist = GetShadowSplitDistance(i);
 
-        if (vViewDepth < farDist)
+        if (vViewDepth < splitDist)
         {
             shadow = SampleCascadeByIndex(i);
 
             // Blend toward next cascade near the boundary
             if (i < cascadeCount - 1)
             {
-                float blendStart = farDist - blendRange;
+                float blendStart = splitDist - blendRange;
                 if (vViewDepth > blendStart)
                 {
                     float nextShadow = SampleCascadeByIndex(i + 1);
@@ -166,15 +178,15 @@ float CSMShadow()
             else
             {
                 // Last cascade: fade out at far edge
-                float fadeStart = farDist - blendRange * 2.0;
+                float fadeStart = splitDist - blendRange * 2.0;
                 if (vViewDepth > fadeStart)
                 {
-                    float t = (vViewDepth - fadeStart) / (farDist - fadeStart);
+                    float t = (vViewDepth - fadeStart) / (splitDist - fadeStart);
                     shadow = mix(shadow, 1.0, t);
                 }
             }
 
-            break;  // Found our cascade, stop searching
+            break;
         }
     }
 
@@ -241,11 +253,7 @@ void main(void)
 	 * as otherwise light coming through a semi-transparent material will 
 	 * affect it's final opacity, and hence whether its discarded or not
 	 */
-	float shadow = 1.0;
-	if (uShadowEnabled)
-	{
-		shadow = CSMShadow();
-	}
+	float shadow = CalculateShadowFactor();
 	
 	if ((uMaterialFlags & 1) == 0 && (uMaterialFlags & 4) == 0)
 	{

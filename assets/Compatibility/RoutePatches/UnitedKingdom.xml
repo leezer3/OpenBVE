@@ -51,6 +51,21 @@
 		<CylinderHack>true</CylinderHack>
 		<LogMessage>Bakerloo v3 routefile detected- Applying cylinder hack.</LogMessage>
 	</Patch>
+	<!-- Northern Line v3.2 -->
+	<Patch>
+		<Hash>58A8458F15C8C007EA0333652E1D9F06D6716A700C925E052E3E4774049C91DE</Hash>
+		<FileName>BVE2 Edgware-Morden via Bank.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<LogMessage>Northern Line v3.2 routefile detected- Applying cylinder hack.</LogMessage>
+		<SignalSet>LU.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>310C70EF764E226062E40B094E5C8A2CAAD80BA4EA97E100E42D3307C033EB33</Hash>
+		<FileName>BVE2 Kennington-High Barnet.csv</FileName>
+		<CylinderHack>true</CylinderHack>
+		<LogMessage>Northern Line v3.2 routefile detected- Applying cylinder hack.</LogMessage>
+		<SignalSet>LU.xml</SignalSet>
+	</Patch>
 	<!-- Northern Line v4 -->
 	<!-- 1938TS -->
 	<Patch>

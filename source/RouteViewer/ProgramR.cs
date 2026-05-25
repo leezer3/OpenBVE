@@ -109,44 +109,45 @@ namespace RouteViewer
 			{
 				for (int i = 0; i < args.Length; i++)
 				{
-					if (args[i] != null)
+					if (args[i] == null)
 					{
-						if (System.IO.File.Exists(args[i]))
+						continue;
+					}
+					if (System.IO.File.Exists(args[i]))
+					{
+						for (int j = 0; j < CurrentHost.Plugins.Length; j++)
 						{
-							for (int j = 0; j < CurrentHost.Plugins.Length; j++)
+							if (CurrentHost.Plugins[j].Object != null && CurrentHost.Plugins[j].Object.CanLoadObject(args[i]))
 							{
-								if (CurrentHost.Plugins[j].Object != null && CurrentHost.Plugins[j].Object.CanLoadObject(args[i]))
-								{
-									objectsToLoad += args[i] + " ";
-									continue;
-								}
+								objectsToLoad += args[i] + " ";
+								continue;
+							}
 
-								if (CurrentHost.Plugins[j].Route != null && CurrentHost.Plugins[j].Route.CanLoadRoute(args[i]))
+							if (CurrentHost.Plugins[j].Route != null && CurrentHost.Plugins[j].Route.CanLoadRoute(args[i]))
+							{
+								if (string.IsNullOrEmpty(CurrentRouteFile))
 								{
-									if (string.IsNullOrEmpty(CurrentRouteFile))
-									{
-										CurrentRouteFile = args[i];
-										processCommandLineArgs = true;
-									}
+									CurrentRouteFile = args[i];
+									processCommandLineArgs = true;
 								}
 							}
 						}
-						else if (args[i].ToLowerInvariant() == "/enablehacks")
+					}
+					else if (args[i].ToLowerInvariant() == "/enablehacks")
+					{
+						//Deliberately undocumented option for debugging use
+						Interface.CurrentOptions.EnableBveTsHacks = true;
+						for (int j = 0; j < CurrentHost.Plugins.Length; j++)
 						{
-							//Deliberately undocumented option for debugging use
-							Interface.CurrentOptions.EnableBveTsHacks = true;
-							for (int j = 0; j < CurrentHost.Plugins.Length; j++)
+							if (CurrentHost.Plugins[j].Object != null)
 							{
-								if (CurrentHost.Plugins[j].Object != null)
+								CompatabilityHacks enabledHacks = new CompatabilityHacks
 								{
-									CompatabilityHacks enabledHacks = new CompatabilityHacks
-									{
-										BveTsHacks = true, 
-										CylinderHack = false,
-										BlackTransparency =  true
-									};
-									CurrentHost.Plugins[j].Object.SetCompatibilityHacks(enabledHacks);
-								}
+									BveTsHacks = true, 
+									CylinderHack = false,
+									BlackTransparency =  true
+								};
+								CurrentHost.Plugins[j].Object.SetCompatibilityHacks(enabledHacks);
 							}
 						}
 					}

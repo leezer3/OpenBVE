@@ -105,6 +105,13 @@ namespace OpenBve
 			internal int FPSLimit;
 
 			internal bool DailyBuildUpdates;
+
+			/// <summary>Whether smooth transitions are enabled for interior camera modes</summary>
+			internal bool CameraInteriorTransition;
+			/// <summary>Whether smooth transitions are enabled for exterior camera modes</summary>
+			internal bool CameraExteriorTransition;
+			/// <summary>The duration of camera transitions in seconds</summary>
+			internal double CameraTransitionSpeed;
 			
 			/// <summary>Creates a new instance of the options class with default values set</summary>
 			internal Options()
@@ -179,6 +186,9 @@ namespace OpenBve
 				UseGDIDecoders = false;
 				EnableBve5ScriptedTrain = true;
 				UserInterfaceScaleFactor = 1;
+				CameraInteriorTransition = true;
+				CameraExteriorTransition = true;
+				CameraTransitionSpeed = 0.4;
 				CultureInfo currentCultureInfo = CultureInfo.CurrentCulture;
 				switch (Program.CurrentHost.Platform)
 				{
@@ -292,6 +302,9 @@ namespace OpenBve
 				Builder.AppendLine("isUseNewRenderer = " + (IsUseNewRenderer ? "true" : "false"));
 				Builder.AppendLine("forwardsCompatibleContext = " + (ForceForwardsCompatibleContext ? "true" : "false"));
 				Builder.AppendLine("uiscalefactor = " + UserInterfaceScaleFactor);
+				Builder.AppendLine("cameraInteriorTransition = " + (CameraInteriorTransition ? "true" : "false"));
+				Builder.AppendLine("cameraExteriorTransition = " + (CameraExteriorTransition ? "true" : "false"));
+				Builder.AppendLine("cameraTransitionSpeed = " + CameraTransitionSpeed.ToString(Culture));
 				Builder.AppendLine();
 				Builder.AppendLine("[quality]");
 				Builder.AppendLine("interpolation = " + Interpolation);
@@ -312,6 +325,7 @@ namespace OpenBve
 				Builder.AppendLine("shadowstrength = " + ShadowStrength.ToString(Culture));
 				Builder.AppendLine("shadowbias = " + ShadowBias.ToString(Culture));
 				Builder.AppendLine("shadownormalbias = " + ShadowNormalBias.ToString(Culture));
+				Builder.AppendLine("shadowfiltercascades = " + (ShadowFilterCascades ? "true" : "false"));
 				Builder.AppendLine("fpslimit = " + FPSLimit.ToString(Culture));
 				Builder.AppendLine();
 				Builder.AppendLine("[objectOptimization]");
@@ -456,6 +470,7 @@ namespace OpenBve
 							block.GetValue(OptionsKey.DailyBuildUpdates, out Interface.CurrentOptions.DailyBuildUpdates);
 							break;
 						case OptionsSection.Display:
+						{
 							block.GetValue(OptionsKey.PreferNativeBackend, out CurrentOptions.PreferNativeBackend);
 							block.GetValue(OptionsKey.Mode, out string m);
 							CurrentOptions.FullscreenMode = string.Compare(m, "fullscreen", StringComparison.OrdinalIgnoreCase) == 0;
@@ -485,16 +500,35 @@ namespace OpenBve
 							}
 
 							block.TryGetValue(OptionsKey.UIScaleFactor, ref CurrentOptions.UserInterfaceScaleFactor);
+							block.GetValue(OptionsKey.CameraInteriorTransition, out CurrentOptions.CameraInteriorTransition);
+							block.GetValue(OptionsKey.CameraExteriorTransition, out CurrentOptions.CameraExteriorTransition);
+							block.TryGetValue(OptionsKey.CameraTransitionSpeed, ref CurrentOptions.CameraTransitionSpeed, NumberRange.Positive);
+							if (CurrentOptions.CameraTransitionSpeed == 0)
+							{
+								CurrentOptions.CameraTransitionSpeed = 0.4;
+							}
 							break;
+						}
 						case OptionsSection.Quality:
+						{
 							block.GetEnumValue(OptionsKey.Interpolation, out Interface.CurrentOptions.Interpolation);
 							block.TryGetValue(OptionsKey.AnisotropicFilteringMaximum, ref CurrentOptions.AnisotropicFilteringMaximum);
 							block.TryGetValue(OptionsKey.AnisotropicFilteringLevel, ref Interface.CurrentOptions.AnisotropicFilteringLevel);
 							block.TryGetValue(OptionsKey.AntiAliasingLevel, ref Interface.CurrentOptions.AntiAliasingLevel);
 							block.GetEnumValue(OptionsKey.TransparencyMode, out Interface.CurrentOptions.TransparencyMode);
 							block.GetValue(OptionsKey.OldTransparencyMode, out CurrentOptions.OldTransparencyMode);
-							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance);
-							block.TryGetValue(OptionsKey.QuadLeafSize, ref CurrentOptions.QuadTreeLeafSize);
+							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.QuadLeafSize, ref Interface.CurrentOptions.QuadTreeLeafSize, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.NearClipScenery, ref Interface.CurrentOptions.NearClipScenery, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.NearClipCab, ref Interface.CurrentOptions.NearClipCab, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.NearClipBase, ref Interface.CurrentOptions.NearClipBase, NumberRange.Positive);
+							// ensure viewing distance is greater than the near clipping plane to avoid rendering issues
+							double maxNearClip = Math.Max(Interface.CurrentOptions.NearClipScenery, Math.Max(Interface.CurrentOptions.NearClipCab, Interface.CurrentOptions.NearClipBase));
+
+							if (Interface.CurrentOptions.ViewingDistance <= maxNearClip)
+							{
+								Interface.CurrentOptions.ViewingDistance = (int)Math.Ceiling(maxNearClip) + 1;
+							}
 							block.GetEnumValue(OptionsKey.MotionBlur, out CurrentOptions.MotionBlur);
 							block.TryGetEnumValue(OptionsKey.ShadowResolution, ref Interface.CurrentOptions.ShadowResolution);
 							block.TryGetEnumValue(OptionsKey.ShadowDrawDistance, ref Interface.CurrentOptions.ShadowDrawDistance);
@@ -505,6 +539,7 @@ namespace OpenBve
 							if (CurrentOptions.ShadowBias > 1.0) CurrentOptions.ShadowBias = 1.0;
 							block.TryGetValue(OptionsKey.ShadowNormalBias, ref CurrentOptions.ShadowNormalBias);
 							if (CurrentOptions.ShadowNormalBias < 0.0) CurrentOptions.ShadowNormalBias = 0.0;
+							block.GetValue(OptionsKey.ShadowFilterCascades, out Interface.CurrentOptions.ShadowFilterCascades);
 							block.GetValue(OptionsKey.FPSLimit, out CurrentOptions.FPSLimit);
 							if (CurrentOptions.FPSLimit < 0)
 							{
@@ -512,11 +547,14 @@ namespace OpenBve
 							}
 
 							break;
+						}
 						case OptionsSection.ObjectOptimization:
+						{
 							block.GetValue(OptionsKey.BasicThreshold, out CurrentOptions.ObjectOptimizationBasicThreshold);
 							block.GetValue(OptionsKey.FullThreshold, out CurrentOptions.ObjectOptimizationFullThreshold);
 							block.GetValue(OptionsKey.VertexCulling, out CurrentOptions.ObjectOptimizationVertexCulling);
 							break;
+						}
 						case OptionsSection.Simulation:
 							block.GetValue(OptionsKey.Toppling, out CurrentOptions.Toppling);
 							block.GetValue(OptionsKey.Collisions, out CurrentOptions.Collisions);

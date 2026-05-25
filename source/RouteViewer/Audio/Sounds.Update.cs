@@ -24,7 +24,7 @@ namespace RouteViewer
 			Vector3 listenerPosition = Program.Renderer.Camera.AbsolutePosition;
 			Orientation3 listenerOrientation = new Orientation3(Program.Renderer.Camera.AbsoluteSide, Program.Renderer.Camera.AbsoluteUp, Program.Renderer.Camera.AbsoluteDirection);
 			Vector3 listenerVelocity;
-			if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead | Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior)
+			if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior || Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead || Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior)
 			{
 				CarBase car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 				Vector3 diff = car.FrontAxle.Follower.WorldPosition - car.RearAxle.Follower.WorldPosition;
@@ -44,7 +44,7 @@ namespace RouteViewer
 
 			AL.Listener(ALListener3f.Position, 0.0f, 0.0f, 0.0f);
 			AL.Listener(ALListener3f.Velocity, (float)listenerVelocity.X, (float)listenerVelocity.Y, (float)listenerVelocity.Z);
-		    float[] Orientation = new[]{(float) listenerOrientation.Z.X, (float) listenerOrientation.Z.Y, (float) listenerOrientation.Z.Z,-(float) listenerOrientation.Y.X, -(float) listenerOrientation.Y.Y, -(float) listenerOrientation.Y.Z};
+		    float[] Orientation = { (float) listenerOrientation.Z.X, (float) listenerOrientation.Z.Y, (float) listenerOrientation.Z.Z,-(float) listenerOrientation.Y.X, -(float) listenerOrientation.Y.Y, -(float) listenerOrientation.Y.Z };
 			AL.Listener(ALListenerfv.Orientation, ref Orientation);
 			/*
 			 * Set up the atmospheric attributes.
@@ -135,7 +135,7 @@ namespace RouteViewer
 							if (Sources[i].State == SoundSourceState.Playing)
 							{
 								AL.GetSource(Sources[i].OpenAlSourceName, ALGetSourcei.SourceState, out int state);
-								if (state != (int)ALSourceState.Initial & state != (int)ALSourceState.Playing)
+								if (state != (int)ALSourceState.Initial && state != (int)ALSourceState.Playing)
 								{
 									/*
 									 * The sound is not playing any longer.
@@ -174,7 +174,7 @@ namespace RouteViewer
 							Vector3 positionDifference = position - listenerPosition;
 							double distance = positionDifference.Norm();
 							double radius = Sources[i].Radius;
-							if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead)
+							if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior || Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead)
 							{
 								if (Sources[i].Parent != TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar])
 								{

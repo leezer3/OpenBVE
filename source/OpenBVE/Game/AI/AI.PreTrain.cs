@@ -32,7 +32,7 @@ namespace OpenBve
 				double bp = double.MinValue, bt = double.MinValue;
 				for (int i = 0; i < Program.CurrentRoute.BogusPreTrainInstructions.Length; i++)
 				{
-					if (Program.CurrentRoute.BogusPreTrainInstructions[i].Time < Program.CurrentRoute.SecondsSinceMidnight | at == double.MaxValue)
+					if (Program.CurrentRoute.BogusPreTrainInstructions[i].Time < Program.CurrentRoute.SecondsSinceMidnight || at == double.MaxValue)
 					{
 						at = Program.CurrentRoute.BogusPreTrainInstructions[i].Time;
 						ap = Program.CurrentRoute.BogusPreTrainInstructions[i].TrackPosition;
@@ -40,13 +40,13 @@ namespace OpenBve
 				}
 				for (int i = Program.CurrentRoute.BogusPreTrainInstructions.Length - 1; i >= 0; i--)
 				{
-					if (Program.CurrentRoute.BogusPreTrainInstructions[i].Time > at | bt == double.MinValue)
+					if (Program.CurrentRoute.BogusPreTrainInstructions[i].Time > at || bt == double.MinValue)
 					{
 						bt = Program.CurrentRoute.BogusPreTrainInstructions[i].Time;
 						bp = Program.CurrentRoute.BogusPreTrainInstructions[i].TrackPosition;
 					}
 				}
-				if (at != double.MaxValue & bt != double.MinValue & Program.CurrentRoute.SecondsSinceMidnight <= Program.CurrentRoute.BogusPreTrainInstructions[Program.CurrentRoute.BogusPreTrainInstructions.Length - 1].Time)
+				if (at != double.MaxValue && bt != double.MinValue && Program.CurrentRoute.SecondsSinceMidnight <= Program.CurrentRoute.BogusPreTrainInstructions[Program.CurrentRoute.BogusPreTrainInstructions.Length - 1].Time)
 				{
 					double r = bt - at;
 					if (r > 0.0)

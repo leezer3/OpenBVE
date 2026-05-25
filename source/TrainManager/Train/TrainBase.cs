@@ -1,3 +1,4 @@
+using LibRender2.Cameras;
 using LibRender2.Screens;
 using LibRender2.Trains;
 using OpenBveApi;
@@ -15,7 +16,6 @@ using RouteManager2.Stations;
 using SoundManager;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using TrainManager.BrakeSystems;
@@ -662,7 +662,7 @@ namespace TrainManager.Trains
 				double min = Cars[p].Coupler.MinimumDistanceBetweenCars;
 				double max = Cars[p].Coupler.MaximumDistanceBetweenCars;
 				double d = CenterOfCarPositions[p] - CenterOfCarPositions[s] - 0.5 * (Cars[p].Length + Cars[s].Length);
-				if (d < min)
+				if (d < min && min < max)
 				{
 					double t = (min - d) / (Cars[p].CurrentMass + Cars[s].CurrentMass);
 					double tp = t * Cars[s].CurrentMass;
@@ -671,6 +671,22 @@ namespace TrainManager.Trains
 					Cars[s].UpdateTrackFollowers(-ts, false, false);
 					CenterOfCarPositions[p] += tp;
 					CenterOfCarPositions[s] -= ts;
+					CouplerCollision[p] = true;
+				}
+				else if (d < min)
+				{
+					/*
+					 * References:
+					 * https://github.com/leezer3/OpenBVE/issues/1258
+					 * https://github.com/leezer3/OpenBVE/issues/1298
+					 * If min == max we don't want to move our cars here
+					 * (as the following code may then move them again in the opposite direction, causing a 'vibrating' effect)
+					 *
+					 * However what the original fix overlooked, is that if we don't set the collision flag, and collision
+					 * is not detected in the following code, when the speed is updated the car carries on 'into' the car in front,
+					 * as the updates speeds loop relies on the CouplerCollisions array 
+					 * 
+					 */
 					CouplerCollision[p] = true;
 				}
 				else if (d > max & !Cars[p].Derailed & !Cars[s].Derailed)
@@ -1099,25 +1115,31 @@ namespace TrainManager.Trains
 				// If in the reverse direction, the last car is Car0 and the direction of increase is reversed
 				shouldIncrement = !shouldIncrement;
 			}
-
-			if (shouldIncrement)
+			
+			int currentTarget = TrainManagerBase.Renderer.Camera.TargetCameraCar != -1 ? TrainManagerBase.Renderer.Camera.TargetCameraCar : CameraCar;
+			int nextCar = shouldIncrement ? currentTarget + 1 : currentTarget - 1;
+			
+			if (nextCar >= 0 && nextCar < Cars.Length)
 			{
-				if (CameraCar < Cars.Length - 1)
+				TrainManagerBase.Renderer.Camera.TargetCameraCar = nextCar;
+				
+				if (!TrainManagerBase.Renderer.Camera.IsTransitioning)
 				{
-					CameraCar++;
-					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"notification","exterior"}) + " " + (CurrentDirection == TrackDirection.Reverse ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
-						MessageColor.White, 2.0, null);
+					TrainManagerBase.Renderer.Camera.PreviousCameraCar = CameraCar;
+					CameraCar = nextCar;
+					TrainManagerBase.Renderer.Camera.TargetCameraCar = -1;
+					TrainManagerBase.Renderer.Camera.IsTransitioning = true;
+					TrainManagerBase.Renderer.Camera.CameraCarTransitionTimer = 0.0;
 				}
+				
+				TrainManagerBase.currentHost.AddMessage(
+					Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "notification", "exterior" }) + " " + (CurrentDirection == TrackDirection.Reverse ? Cars.Length - nextCar : nextCar + 1),
+					MessageDependency.CameraView,
+					GameMode.Expert,
+					MessageColor.White,
+					2.0,
+					null);
 			}
-			else
-			{
-				if (CameraCar > 0)
-				{
-					CameraCar--;
-					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"notification","exterior"}) + " " + (CurrentDirection == TrackDirection.Reverse ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert, MessageColor.White, 2.0, null);
-				}
-			}
-
 		}
 
 		public override void Couple(AbstractTrain train, bool front)

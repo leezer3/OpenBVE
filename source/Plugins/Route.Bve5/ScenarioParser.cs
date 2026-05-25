@@ -90,7 +90,7 @@ namespace Route.Bve5
 			ScenarioGrammarParser Parser = new ScenarioGrammarParser();
 			ScenarioData Data = Parser.Parse(File.ReadAllText(fileName, Encoding));
 
-			Plugin.CurrentRoute.Comment = Data.Comment;
+			Plugin.CurrentRoute.Comment = Data.Comment ?? string.Empty;
 			Plugin.CurrentRoute.Stations = Array.Empty<RouteStation>();
 			CurrentStation = 0;
 			if (!string.IsNullOrEmpty(Data.Image))

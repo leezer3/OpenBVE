@@ -117,6 +117,7 @@
 		StageTwoSpeed,
 		StageTwoExponent,
 		Multiplier,
-		MotorBrakeNotch
+		MotorBrakeNotch,
+		Function
 	}
 }

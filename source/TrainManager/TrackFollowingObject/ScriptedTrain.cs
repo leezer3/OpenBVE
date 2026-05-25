@@ -1,6 +1,7 @@
 ﻿using System;
 using LibRender2.Trains;
 using OpenBveApi.Trains;
+using TrainManager.Car;
 using TrainManager.SafetySystems;
 
 namespace TrainManager.Trains
@@ -134,7 +135,7 @@ namespace TrainManager.Trains
 			UpdateDoors(TimeElapsed);
 
 			// Update Run and Motor sounds
-			foreach (var Car in Cars)
+			foreach (CarBase Car in Cars)
 			{
 				Car.Run.Update(TimeElapsed);
 				Car.TractionModel?.Update(TimeElapsed);

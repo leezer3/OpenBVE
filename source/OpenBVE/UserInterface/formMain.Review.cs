@@ -59,7 +59,7 @@ namespace OpenBve {
 			int sum = 0;
 			for (int i = 0; i < Game.ScoreLogs.Count; i++) {
 				sum += Game.ScoreLogs[i].Value;
-				if (!penaltiesOnly | Game.ScoreLogs[i].Value < 0) {
+				if (!penaltiesOnly || Game.ScoreLogs[i].Value < 0) {
 					double x = Game.ScoreLogs[i].Time;
 					int h = (int)Math.Floor(x / 3600.0);
 					x -= 3600.0 * h;

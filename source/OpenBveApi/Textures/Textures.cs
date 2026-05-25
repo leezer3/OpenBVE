@@ -11,13 +11,13 @@ namespace OpenBveApi.Textures {
 	public class Texture
 	{
 		/// <summary>The size of the texture in pixels</summary>
-		private Vector2 MySize;
+		public Vector2 Size;
 		/// <summary>The pixel format of the texture.</summary>
-		private readonly PixelFormat MyPixelFormat;
+		public readonly PixelFormat PixelFormat;
 		/// <summary>The texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</summary>
 		private readonly byte[][] MyBytes;
 		/// <summary>The restricted color palette for this texture, or a null reference if the texture was 24/ 32 bit originally</summary>
-		private readonly Color24[] MyPalette;
+		public readonly Color24[] Palette;
 		/// <summary>Whether the texture is invalid and should be ignored</summary>
 		/// <remarks>Set when loading the texture fails unexpectedly</remarks>
 		public bool Ignore;
@@ -49,7 +49,7 @@ namespace OpenBveApi.Textures {
 		/// <param name="frame">The frame</param>
 		public Color24 GetPixel(int pix, int frame = 0)
 		{
-			if (pix > MySize.X * MySize.Y)
+			if (pix > Size.X * Size.Y)
 			{
 				throw new ArgumentException("Pixel is outside the bounds of the image");
 			}
@@ -59,20 +59,39 @@ namespace OpenBveApi.Textures {
 			{
 				case PixelFormat.Grayscale:
 					firstByte = pix;
-					break;
+					return new Color24(MyBytes[frame][firstByte], MyBytes[frame][firstByte], MyBytes[frame][firstByte]);
 				case PixelFormat.GrayscaleAlpha:
 					firstByte = 2 * pix;
-					break;
+					return new Color24(MyBytes[frame][firstByte], MyBytes[frame][firstByte], MyBytes[frame][firstByte]);
 				case PixelFormat.RGB:
 					firstByte = 3 * pix;
-					break;
+					return new Color24(MyBytes[frame][firstByte], MyBytes[frame][firstByte + 1], MyBytes[frame][firstByte + 2]);
 				case PixelFormat.RGBAlpha:
 					firstByte = 4 * pix;
-					break;
+					return new Color24(MyBytes[frame][firstByte], MyBytes[frame][firstByte + 1], MyBytes[frame][firstByte + 2]);
 				default:
 					throw new Exception("Unable to get a pixel value with invalid data.");
 			}
-			return new Color24(MyBytes[frame][firstByte], MyBytes[frame][firstByte + 1], MyBytes[frame][firstByte + 2]);
+		}
+
+		/// <summary>Gets the alpha value of the given pixel</summary>
+		/// <param name="pix">The pixel index</param>
+		/// <param name="frame">The frame</param>
+		/// <returns></returns>
+		public byte GetAlpha(int pix, int frame = 0)
+		{
+			switch (PixelFormat)
+			{
+				case PixelFormat.Grayscale:
+				case PixelFormat.RGB:
+					return 255;
+				case PixelFormat.GrayscaleAlpha:
+					return MyBytes[frame][2 * pix + 1];
+				case PixelFormat.RGBAlpha:
+					return MyBytes[frame][4 * pix + 3];
+				default:
+					return 255;
+			}
 		}
 
 		/// <summary>Creates a new instance of this class.</summary>
@@ -98,12 +117,12 @@ namespace OpenBveApi.Textures {
 			this.Origin = new ByteArrayOrigin(width, height, bytes);
 			this.MyOpenGlTextures = new OpenGlTexture[1][];
 			this.MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
-			this.MySize.X = width;
-			this.MySize.Y = height;
-			this.MyPixelFormat = pixelFormat;
+			this.Size.X = width;
+			this.Size.Y = height;
+			this.PixelFormat = pixelFormat;
 			this.MyBytes = new byte[1][];
 			this.MyBytes[0] = bytes;
-			this.MyPalette = palette;
+			this.Palette = palette;
 		}
 
 		/// <summary>Creates a new instance of this class.</summary>
@@ -128,11 +147,11 @@ namespace OpenBveApi.Textures {
 			}
 
 			Origin = new ByteArrayOrigin(width, height, bytes, frameInterval);
-			MySize.X = width;
-			MySize.Y = height;
-			MyPixelFormat = pixelFormat;
+			Size.X = width;
+			Size.Y = height;
+			PixelFormat = pixelFormat;
 			MyBytes = bytes;
-			MyPalette = null;
+			Palette = null;
 			MultipleFrames = true;
 			FrameInterval = frameInterval;
 			TotalFrames = bytes.Length;
@@ -150,6 +169,8 @@ namespace OpenBveApi.Textures {
 		public Texture(string path, TextureParameters parameters, Hosts.HostInterface currentHost)
 		{
 			Origin = new PathOrigin(path, parameters, currentHost);
+			Origin.GetTexture(out Texture t);
+			PixelFormat = t.PixelFormat;
 			MyOpenGlTextures = new OpenGlTexture[1][];
 			MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 			
@@ -195,37 +216,29 @@ namespace OpenBveApi.Textures {
 		/// <summary>Gets the width of the texture in pixels.</summary>
 		public int Width
 		{
-			get => (int)MySize.X;
-			set => MySize.X = value;
+			get => (int)Size.X;
+			set => Size.X = value;
 		}
 		/// <summary>Gets the height of the texture in pixels.</summary>
 		public int Height
 		{
-			get => (int)MySize.Y;
-			set => MySize.Y = value;
+			get => (int)Size.Y;
+			set => Size.Y = value;
 		}
-
-		/// <summary>Gets the size of the texture in pixels</summary>
-		public Vector2 Size
-		{
-			get => MySize;
-			set => MySize = value;
-		}
-
+		
 		/// <summary>Gets the aspect ratio of the texture</summary>
-		public double AspectRatio => MySize.X / MySize.Y;
-
-		/// <summary>Gets the pixel format.</summary>
-		public PixelFormat PixelFormat => MyPixelFormat;
-
-		/// <summary>Gets the restricted color palette for this texture, or a null reference if not applicable</summary>
-		public Color24[] Palette => MyPalette;
-
+		public double AspectRatio => Size.X / Size.Y;
+		
 		/// <summary>Gets the texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</summary>
 		public byte[] Bytes
 		{
 			get
 			{
+				if (MyBytes == null && Origin != null)
+				{
+					Origin.GetTexture(out Texture t);
+					return t.Bytes;
+				}
 				if (MultipleFrames == false)
 				{
 					return MyBytes[0];
@@ -259,9 +272,8 @@ namespace OpenBveApi.Textures {
 			if (b is null) return false;
 			if (a.MultipleFrames != b.MultipleFrames) return false;
 			if (a.Origin != b.Origin) return false;
-			if (a.MySize.X != b.MySize.X) return false;
-			if (a.MySize.Y != b.MySize.Y) return false;
-			if (a.MyPixelFormat != b.MyPixelFormat) return false;
+			if (a.Size != b.Size) return false;
+			if (a.PixelFormat != b.PixelFormat) return false;
 			if (a.MyBytes.Length != b.MyBytes.Length) return false;
 			for (int i = 0; i < a.MyBytes.Length; i++)
 			{
@@ -281,9 +293,8 @@ namespace OpenBveApi.Textures {
 			if (b is null) return true;
 			if (a.MultipleFrames != b.MultipleFrames) return true;
 			if (a.Origin != b.Origin) return true;
-			if (a.MySize.X != b.MySize.X) return true;
-			if (a.MySize.Y != b.MySize.Y) return true;
-			if (a.MyPixelFormat != b.MyPixelFormat) return true;
+			if (a.Size != b.Size) return true;
+			if (a.PixelFormat != b.PixelFormat) return true;
 			if (a.MyBytes == null)
 			{
 				return b.MyBytes != null;
@@ -306,9 +317,8 @@ namespace OpenBveApi.Textures {
 			if (!(obj is Texture x)) return false;
 			if (MultipleFrames != x.MultipleFrames) return false;
 			if (Origin != x.Origin) return false;
-			if (MySize.X != x.MySize.X) return false;
-			if (MySize.Y != x.MySize.Y) return false;
-			if (MyPixelFormat != x.MyPixelFormat) return false;
+			if (Size != x.Size) return false;
+			if (PixelFormat != x.PixelFormat) return false;
 			if (MyBytes == null)
 			{
 				return x.MyBytes == null;
@@ -343,30 +353,46 @@ namespace OpenBveApi.Textures {
 			}
 
 			knownTransparencyType = true;
-			switch (MyPixelFormat)
+			switch (PixelFormat)
 			{
 				case PixelFormat.RGB:
 					transparencyType = TextureTransparencyType.Opaque;
 					break;
 				case PixelFormat.RGBAlpha:
+					transparencyType = TextureTransparencyType.Opaque;
 					for (int i = 3; i < this.MyBytes[CurrentFrame].Length; i += 4)
 					{
-						if (this.MyBytes[CurrentFrame][i] != 255)
-						{
-							for (int j = i; j < this.MyBytes[CurrentFrame].Length; j += 4)
-							{
-								if (this.MyBytes[CurrentFrame][j] != 0 & this.MyBytes[CurrentFrame][j] != 255)
-								{
-									transparencyType = TextureTransparencyType.Alpha;
-									return TextureTransparencyType.Alpha;
-								}
-							}
 
-							transparencyType = TextureTransparencyType.Partial;
-							return TextureTransparencyType.Partial;
+						switch (MyBytes[CurrentFrame][i])
+						{
+							case 0:
+								if (i == 3)
+								{
+									transparencyType = TextureTransparencyType.Transparent;
+								}
+								else
+								{
+									if (transparencyType == TextureTransparencyType.Opaque)
+									{
+										transparencyType = TextureTransparencyType.Partial;
+									}
+								}
+								break;
+							case 255:
+								if (transparencyType != TextureTransparencyType.Opaque)
+								{
+									transparencyType = TextureTransparencyType.Partial;
+								}
+								// nothing
+								break;
+							default:
+								transparencyType = TextureTransparencyType.Alpha;
+								return transparencyType;
 						}
 					}
-					break;
+
+					return transparencyType;
+				
 			}
 			return TextureTransparencyType.Opaque;
 		}

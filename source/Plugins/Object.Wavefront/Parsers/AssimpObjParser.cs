@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing.Text;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -32,10 +31,11 @@ using OpenBveApi.Objects;
 using AssimpNET.Obj;
 using OpenBveApi;
 using Material = AssimpNET.Obj.Material;
+using Mesh = AssimpNET.Obj.Mesh;
 
 namespace Plugin
 {
-	class AssimpObjParser
+	internal class AssimpObjParser
 	{
 		private static string currentFolder;
 
@@ -47,118 +47,98 @@ namespace Plugin
 				ObjFileParser parser = new ObjFileParser(System.IO.File.ReadAllLines(fileName), null, System.IO.Path.GetFileNameWithoutExtension(fileName), fileName);
 				Model model = parser.GetModel();
 
-				StaticObject obj = new StaticObject(Plugin.currentHost);
-				MeshBuilder builder = new MeshBuilder(Plugin.currentHost);
-
-				List<Vertex> allVertices = new List<Vertex>();
-				foreach (var vertex in model.Vertices)
-				{
-					allVertices.Add(new Vertex(vertex * model.ScaleFactor));
-				}
-
-				List<Vector2> allTexCoords = new List<Vector2>();
-				foreach (var texCoord in model.TextureCoord)
-				{
-					Vector2 textureCoordinate = new Vector2(texCoord.X, texCoord.Y);
-					switch (model.Exporter)
-					{
-						case ModelExporter.SketchUp:
-							textureCoordinate.X *= -1.0;
-							textureCoordinate.Y *= -1.0;
-							break;
-						case ModelExporter.Blender:
-						case ModelExporter.BlockBench:
-							textureCoordinate.Y *= -1.0;
-							break;
-					}
-					allTexCoords.Add(textureCoordinate);
-					
-				}
-
-				List<Vector3> allNormals = new List<Vector3>();
-				foreach (var normal in model.Normals)
-				{
-					allNormals.Add(new Vector3(normal.X, normal.Y, normal.Z));
-				}
-
+				StaticObject obj = new StaticObject(Plugin.CurrentHost);
+				MeshBuilder builder = new MeshBuilder(Plugin.CurrentHost);
 				Material lastMaterial = null;
 
-				foreach (AssimpNET.Obj.Mesh mesh in model.Meshes)
+				foreach (Mesh mesh in model.Meshes)
 				{
+					//mesh.Faces.GroupBy(x => x.Material).OrderByDescending(g => g.Count()).SelectMany(x => x).ToList();
 					foreach (Face face in mesh.Faces)
 					{
-						int nVerts = face.Vertices.Count;
-						int bVerts = builder.Vertices.Count;
-						if (nVerts == 0)
+						if (face.Material != lastMaterial)
+						{
+							builder.Apply(ref obj);
+							builder = new MeshBuilder(Plugin.CurrentHost);
+							uint materialIndex = mesh.MaterialIndex;
+							if (materialIndex != Mesh.NoMaterial)
+							{
+								Material material = model.MaterialMap[model.MaterialLib[(int)materialIndex]];
+								builder.Materials[0].Color = new Color32(material.Diffuse);
+#pragma warning disable 0219
+								//Current openBVE renderer does not support specular color
+								// ReSharper disable once UnusedVariable
+								Color24 mSpecular = new Color24(material.Specular);
+#pragma warning restore 0219
+								// Wrap Color24 in Color32 for RGBA support; alpha defaults to 255 (opaque)
+								builder.Materials[0].EmissiveColor = new Color32(new Color24(material.Emissive));
+								builder.Materials[0].Flags |= MaterialFlags.Emissive; //TODO: Check exact behaviour
+								if (material.TransparentUsed)
+								{
+									builder.Materials[0].TransparentColor = new Color24(material.Transparent);
+									builder.Materials[0].Flags |= MaterialFlags.TransparentColor;
+								}
+
+								if (material.Texture != null)
+								{
+									builder.Materials[0].DaytimeTexture = Path.CombineFile(currentFolder, material.Texture);
+									if (!System.IO.File.Exists(builder.Materials[0].DaytimeTexture))
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, true, "Texture " + builder.Materials[0].DaytimeTexture + " was not found in file " + fileName);
+										builder.Materials[0].DaytimeTexture = null;
+									}
+								}
+							}
+						}
+						
+						if (face.Vertices.Count == 0)
 						{
 							throw new Exception("nVertices must be greater than zero");
 						}
-						for (int i = 0; i < nVerts; i++)
+						int startingVertex = builder.Vertices.Count;
+						for (int i = 0; i < face.Vertices.Count; i++)
 						{
-							VertexTemplate v = allVertices[(int)face.Vertices[i]].Clone();
-							if (allTexCoords.Count > 0 && i <= allTexCoords.Count && face.TexturCoords.Count > 0 && i <= face.TexturCoords.Count)
+							VertexTemplate v = new Vertex(model.Vertices[(int)face.Vertices[i]] * model.ScaleFactor);
+							
+							if (model.TextureCoord.Count > 0 && i <= model.TextureCoord.Count && face.TexturCoords.Count > 0 && i <= face.TexturCoords.Count)
 							{
-								v.TextureCoordinates = allTexCoords[(int)face.TexturCoords[i]];
+								Vector2 textureCoordinate = new Vector2(model.TextureCoord[i].X, model.TextureCoord[i].Y);
+								switch (model.Exporter)
+								{
+									case ModelExporter.SketchUp:
+										textureCoordinate.X *= -1.0;
+										textureCoordinate.Y *= -1.0;
+										break;
+									case ModelExporter.Blender:
+									case ModelExporter.BlockBench:
+										textureCoordinate.Y *= -1.0;
+										break;
+								}
+								v.TextureCoordinates = textureCoordinate;
 							}
+							
 							builder.Vertices.Add(v);
 							
 						}
 
-						MeshFace f = new MeshFace(nVerts);
-						for (int i = 0; i < nVerts; i++)
+						MeshFace f = new MeshFace(face.Vertices.Count);
+						
+						for (int i = 0; i < face.Vertices.Count; i++)
 						{
-							f.Vertices[i].Index = bVerts + i;
+							f.Vertices[i].Index = startingVertex + i;
 							if (face.Normals.Count > i)
 							{
-								f.Vertices[i].Normal = allNormals[(int)face.Normals[i]];
+								f.Vertices[i].Normal = model.Normals[(int)face.Normals[i]];
 							}
 						}
-						f.Material = 1;
+						
+						f.Material = 0;
+						f.Flags |= FaceFlags.Face2Mask;
 						builder.Faces.Add(f);
 						
-
-						int m = builder.Materials.Length;
-						Array.Resize(ref builder.Materials, m + 1);
-						builder.Materials[m] = new OpenBveApi.Objects.Material();
-						uint materialIndex = mesh.MaterialIndex;
-						if (materialIndex != AssimpNET.Obj.Mesh.NoMaterial)
-						{
-							AssimpNET.Obj.Material material = model.MaterialMap[model.MaterialLib[(int)materialIndex]];
-							builder.Materials[m].Color = new Color32(material.Diffuse);
-#pragma warning disable 0219
-							//Current openBVE renderer does not support specular color
-							// ReSharper disable once UnusedVariable
-							Color24 mSpecular = new Color24(material.Specular);
-#pragma warning restore 0219
-							// Wrap Color24 in Color32 for RGBA support; alpha defaults to 255 (opaque)
-							builder.Materials[m].EmissiveColor = new Color32(new Color24(material.Emissive));
-							builder.Materials[m].Flags |= MaterialFlags.Emissive; //TODO: Check exact behaviour
-							if (material.TransparentUsed)
-							{
-								builder.Materials[m].TransparentColor = new Color24(material.Transparent);
-								builder.Materials[m].Flags |= MaterialFlags.TransparentColor;
-							}
-							
-							if (material.Texture != null)
-							{
-								builder.Materials[m].DaytimeTexture = Path.CombineFile(currentFolder, material.Texture);
-								if (!System.IO.File.Exists(builder.Materials[m].DaytimeTexture))
-								{
-									Plugin.currentHost.AddMessage(MessageType.Error, true, "Texture " + builder.Materials[m].DaytimeTexture + " was not found in file " + fileName);
-									builder.Materials[m].DaytimeTexture = null;
-								}
-							}
-						}
-
 						if (model.Exporter >= ModelExporter.UnknownLeftHanded)
 						{
 							Array.Reverse(builder.Faces[builder.Faces.Count -1].Vertices, 0, builder.Faces[builder.Faces.Count -1].Vertices.Length);
-						}
-
-						if (face.Material != lastMaterial)
-						{
-							builder.Apply(ref obj);
-							builder = new MeshBuilder(Plugin.currentHost);
 						}
 						lastMaterial = face.Material;
 					}
@@ -169,7 +149,7 @@ namespace Plugin
 			}
 			catch (Exception e)
 			{
-				Plugin.currentHost.AddMessage(MessageType.Error, false, e.Message + " in " + fileName);
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, e.Message + " in " + fileName);
 				return null;
 			}
 		}

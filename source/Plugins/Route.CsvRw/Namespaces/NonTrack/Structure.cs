@@ -84,7 +84,7 @@ namespace CsvRwRouteParser
 								string f = Path.CombineFile(ObjectPath, Arguments[0]);
 								if (!File.Exists(f))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + Arguments[0] + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 								}
 								else
 								{

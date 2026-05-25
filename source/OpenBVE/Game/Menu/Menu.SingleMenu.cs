@@ -198,7 +198,7 @@ namespace OpenBve
 							}
 							Items[totalEntries] = new MenuCommand(menu, fileName, MenuTag.File, 0);
 							string ext = System.IO.Path.GetExtension(fileName);
-							if (!iconCache.ContainsKey(ext))
+							if (!iconCache.TryGetValue(ext, out Items[totalEntries].Icon))
 							{
 								// As some people have used arbitrary extensions for packages, let's show all files
 								// Try and pull out the default icon from the cache for something a little nicer looking
@@ -218,17 +218,13 @@ namespace OpenBve
 								}
 								
 							}
-							else
-							{
-								Items[totalEntries].Icon = iconCache[ext];
-							}
 							totalEntries++;
 						}
 						Array.Resize(ref Items, totalEntries);
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.Options:
-						Items = new MenuEntry[11];
+						Items = new MenuEntry[12];
 						Items[0] = new MenuCaption(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","options"}));
 						Items[1] = new MenuOption(menu, OptionType.ScreenResolution, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","resolution"}), Program.Renderer.Screen.AvailableResolutions.ToArray());
 						Items[2] = new MenuOption(menu, OptionType.FullScreen, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_mode_fullscreen"}), new[] { "true", "false" });
@@ -254,7 +250,8 @@ namespace OpenBve
 							Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "shadows_resolution_high" }),
 							Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "shadows_resolution_ultra" })
 						});
-						Items[10] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","back"}), MenuTag.MenuBack, 0);
+						Items[10] = new MenuOption(menu, OptionType.ShadowFilterCascades, "Per-cascade culling", new[] { "true", "false" });
+						Items[11] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","back"}), MenuTag.MenuBack, 0);
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.RouteList:

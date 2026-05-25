@@ -1269,7 +1269,7 @@ namespace OpenBve
 
 			// ReSharper disable once RedundantCast
 			object route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
-			string railwayFolder = Loading.GetRailwayFolder(result.RouteFile);
+			string railwayFolder = Program.FileSystem.GetRailwayFolder(result.RouteFile, Application.StartupPath);
 			string objectFolder = Path.CombineDirectory(railwayFolder, "Object");
 			string soundFolder = Path.CombineDirectory(railwayFolder, "Sound");
 
@@ -1346,9 +1346,9 @@ namespace OpenBve
 					}
 
 					// description
-					string Description = Program.CurrentRoute.Comment.ConvertNewlinesToCrLf();
-					textboxRouteDescription.Text = Description.Length != 0 ? Description : System.IO.Path.GetFileNameWithoutExtension(Result.RouteFile);
-					textboxRouteEncodingPreview.Text = Description.ConvertNewlinesToCrLf();
+					string routeDescription = Program.CurrentRoute.Comment.ConvertNewlinesToCrLf();
+					textboxRouteDescription.Text = routeDescription.Length != 0 ? routeDescription : System.IO.Path.GetFileNameWithoutExtension(Result.RouteFile);
+					textboxRouteEncodingPreview.Text = routeDescription.ConvertNewlinesToCrLf();
 					if (Interface.CurrentOptions.TrainName != null)
 					{
 						checkboxTrainDefault.Text = $@"{Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_usedefault"})} ({Interface.CurrentOptions.TrainName})";
@@ -1414,7 +1414,7 @@ namespace OpenBve
 
 
 		// show route
-		private void ShowRoute(bool UserSelectedEncoding)
+		private void ShowRoute(bool userSelectedEncoding)
 		{
 			Cursor = System.Windows.Forms.Cursors.WaitCursor;
 			TryLoadImage(pictureboxRouteImage, "loading.png");
@@ -1422,7 +1422,7 @@ namespace OpenBve
 			textboxRouteDescription.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route_processing"});
 
 			// determine encoding
-			if (!UserSelectedEncoding)
+			if (!userSelectedEncoding)
 			{
 				Result.RouteEncoding = TextEncoding.GetSystemEncodingFromFile(Result.RouteFile);
 				comboboxRouteEncoding.Tag = new object();
@@ -1469,7 +1469,7 @@ namespace OpenBve
 		}
 
 		// show train
-		private void ShowTrain(bool UserSelectedEncoding)
+		private void ShowTrain(bool userSelectedEncoding)
 		{
 			lock (previewLock)
 			{
@@ -1487,7 +1487,7 @@ namespace OpenBve
 					{
 						canLoad = true;
 						trainImage = Program.CurrentHost.Plugins[i].Train.GetImage(Result.TrainFolder);
-						if (!UserSelectedEncoding)
+						if (!userSelectedEncoding)
 						{
 							string descriptionFile = Path.CombineFile(Result.TrainFolder, "train.txt");
 							if (!File.Exists(descriptionFile))

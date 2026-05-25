@@ -79,7 +79,7 @@ namespace TrainManager.Car
 			{
 				int nextDrop = PickDrop();
 				dropTimer += TimeElapsed * 1000;
-				var dev = (int)(0.4 * 2000 / Intensity);
+				int dev = (int)(0.4 * 2000 / Intensity);
 				int dropInterval =  2000 / Intensity + TrainManagerBase.RandomNumberGenerator.Next(dev, dev * 2);
 				if (dropTimer > dropInterval)
 				{

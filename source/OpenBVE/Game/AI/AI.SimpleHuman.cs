@@ -822,10 +822,14 @@ namespace OpenBve
 											if (elim == 0.0)
 											{
 												double redSignalStopDistance;
-												if (Train.Station >= 0 & Train.StationState == TrainStopState.Completed & dist < 120.0)
+												if (Train.Station >= 0 & Train.StationState == TrainStopState.Completed)
 												{
-													dist = 1.0;
-													redSignalStopDistance = 25.0;
+													redSignalStopDistance = dist > 120 ? 35 : 25;
+													if (dist <= redSignalStopDistance)
+													{
+														// as otherwise the AI will get stuck
+														redSignalStopDistance = dist - 1;
+													}
 												}
 												else if (Train.Station >= 0 & Train.StationState == TrainStopState.Pending | stopDistance < dist)
 												{
@@ -1137,10 +1141,14 @@ namespace OpenBve
 											if (elim == 0.0)
 											{
 												double redSignalStopDistance;
-												if (Train.Station >= 0 & Train.StationState == TrainStopState.Completed & dist < 120.0)
+												if (Train.Station >= 0 & Train.StationState == TrainStopState.Completed)
 												{
-													dist = 1.0;
-													redSignalStopDistance = 25.0;
+													redSignalStopDistance = dist > 120 ? 35 : 25;
+													if (dist <= redSignalStopDistance)
+													{
+														// as otherwise the AI will get stuck
+														redSignalStopDistance = dist - 1;
+													}
 												}
 												else if (Train.Station >= 0 & Train.StationState == TrainStopState.Pending | stopDistance < dist)
 												{
@@ -1382,7 +1390,7 @@ namespace OpenBve
 				}
 			}
 
-			/// <summary>The timer unti the doors may be opened</summary>
+			/// <summary>The timer until the doors may be opened</summary>
 			private double doorWaitingTimer = 2.0;
 			/// <summary>Controls the AI operating the wipers</summary>
 			private double wiperTimer;

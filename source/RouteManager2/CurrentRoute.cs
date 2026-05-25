@@ -221,13 +221,10 @@ namespace RouteManager2
 
 					foreach (AbstractTrain t in currentHost.Trains)
 					{
-						if (t.State == TrainState.Available)
+						if (t.State == TrainState.Available && t.TimetableDelta > b)
 						{
-							if (t.TimetableDelta > b)
-							{
-								b = t.TimetableDelta;
-								train = t;
-							}
+							b = t.TimetableDelta;
+							train = t;
 						}
 					}
 				}
@@ -566,13 +563,10 @@ namespace RouteManager2
 				t = double.NegativeInfinity;
 				for (int i = 0; i < PointsOfInterest.Length; i++)
 				{
-					if (PointsOfInterest[i].TrackPosition < renderer.CameraTrackFollower.TrackPosition)
+					if (PointsOfInterest[i].TrackPosition < renderer.CameraTrackFollower.TrackPosition && PointsOfInterest[i].TrackPosition > t)
 					{
-						if (PointsOfInterest[i].TrackPosition > t)
-						{
-							t = PointsOfInterest[i].TrackPosition;
-							j = i;
-						}
+						t = PointsOfInterest[i].TrackPosition;
+						j = i;
 					}
 				}
 			}
@@ -581,13 +575,10 @@ namespace RouteManager2
 				t = double.PositiveInfinity;
 				for (int i = 0; i < PointsOfInterest.Length; i++)
 				{
-					if (PointsOfInterest[i].TrackPosition > renderer.CameraTrackFollower.TrackPosition)
+					if (PointsOfInterest[i].TrackPosition > renderer.CameraTrackFollower.TrackPosition && PointsOfInterest[i].TrackPosition < t)
 					{
-						if (PointsOfInterest[i].TrackPosition < t)
-						{
-							t = PointsOfInterest[i].TrackPosition;
-							j = i;
-						}
+						t = PointsOfInterest[i].TrackPosition;
+						j = i;
 					}
 				}
 			}
@@ -621,14 +612,11 @@ namespace RouteManager2
 				{
 					for (int i = Stations.Length -1; i > 0; i--)
 					{
-						if (!string.IsNullOrEmpty(InitialStationName))
+						if (!string.IsNullOrEmpty(InitialStationName) && string.Equals(InitialStationName, Stations[i].Name, StringComparison.InvariantCultureIgnoreCase))
 						{
-							if (string.Equals(InitialStationName, Stations[i].Name, StringComparison.InvariantCultureIgnoreCase))
-							{
-								return i;
-							}
+							return i;
 						}
-						if (Stations[i].StopMode == StationStopMode.AllStop | Stations[i].StopMode == StationStopMode.PlayerStop & Stations[i].Stops.Length != 0)
+						if (Stations[i].StopMode == StationStopMode.AllStop | Stations[i].StopMode == StationStopMode.PlayerStop && Stations[i].Stops.Length != 0)
 						{
 							if (f == false)
 							{
@@ -642,14 +630,11 @@ namespace RouteManager2
 				{
 					for (int i = 0; i < Stations.Length; i++)
 					{
-						if (!string.IsNullOrEmpty(InitialStationName))
+						if (!string.IsNullOrEmpty(InitialStationName) && string.Equals(InitialStationName, Stations[i].Name, StringComparison.InvariantCultureIgnoreCase))
 						{
-							if (string.Equals(InitialStationName, Stations[i].Name, StringComparison.InvariantCultureIgnoreCase))
-							{
-								return i;
-							}
+							return i;
 						}
-						if (Stations[i].StopMode == StationStopMode.AllStop | Stations[i].StopMode == StationStopMode.PlayerStop & Stations[i].Stops.Length != 0)
+						if (Stations[i].StopMode == StationStopMode.AllStop | Stations[i].StopMode == StationStopMode.PlayerStop && Stations[i].Stops.Length != 0)
 						{
 							if (f == false)
 							{

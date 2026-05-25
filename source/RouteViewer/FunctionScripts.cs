@@ -8,12 +8,13 @@ using TrainManager.BrakeSystems;
 using TrainManager.Handles;
 using TrainManager.Car.Systems;
 using TrainManager.SafetySystems;
+using TrainManager.Trains;
 
 namespace RouteViewer {
 	internal static class FunctionScripts {
 
 		// execute function script
-		internal static void ExecuteFunctionScript(FunctionScript Function, TrainManager.Train Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
+		internal static void ExecuteFunctionScript(FunctionScript Function, TrainBase Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
 			int s = 0, c = 0;
 			for (int i = 0; i < Function.InstructionSet.Length; i++) {
 				switch (Function.InstructionSet[i]) {
@@ -263,7 +264,17 @@ namespace RouteViewer {
 							Function.Stack[s] = 1;
 						}
 						s++; break;
-						// train
+					case Instructions.CameraCar:
+						if (IsPartOfTrain && Train != null)
+						{
+							Function.Stack[s] = Train.CameraCar;
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					// train
 					case Instructions.PlayerTrain:
 						if (IsPartOfTrain && Train != null)
 						{
@@ -701,13 +712,7 @@ namespace RouteViewer {
 						}
 						break;
 					case Instructions.PilotLamp:
-						//Not currently supported in viewers
-						Function.Stack[s] = 0.0;
-						s++; break;
 					case Instructions.PassAlarm:
-						//Not currently supported in viewers
-						Function.Stack[s] = 0.0;
-						s++; break;
 					case Instructions.StationAdjustAlarm:
 						//Not currently supported in viewers
 						Function.Stack[s] = 0.0;
