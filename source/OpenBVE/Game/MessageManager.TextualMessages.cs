@@ -118,7 +118,7 @@ namespace OpenBve
 					case MessageDependency.StationDeparture:
 					{
 						int j = TrainManager.PlayerTrain.Station;
-						if (j >= 0 && TrainManager.PlayerTrain.StationState != TrainStopState.Completed)
+						if (j >= 0 & TrainManager.PlayerTrain.StationState != TrainStopState.Completed)
 						{
 							double d = TrainManager.PlayerTrain.StationDepartureTime - Program.CurrentRoute.SecondsSinceMidnight + 1.0;
 							if (d < 0.0) d = 0.0;
@@ -158,7 +158,7 @@ namespace OpenBve
 					}
 					//Remove the message if it has completely faded out
 					//NOTE: The fadeout is done in the renderer itself...
-					if (Timeout <= 0 && RendererAlpha == 0.0)
+					if (Timeout <= 0 & RendererAlpha == 0.0)
 					{
 						QueueForRemoval = true;
 					}

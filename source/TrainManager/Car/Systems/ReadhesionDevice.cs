@@ -1,4 +1,5 @@
-﻿using TrainManager.Car.Systems;
+﻿using System;
+using TrainManager.Car.Systems;
 
 namespace TrainManager.Car
 {

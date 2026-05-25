@@ -628,14 +628,10 @@ namespace CsvRwRouteParser
 							num = -2;
 						}
 
-						if (num == 0)
+						if (num == 0 && IsRW)
 						{
-							//Aspects value of zero produces a 2-aspect R/G signal in BVE2
-							if (IsRw || Plugin.CurrentOptions.EnableBveTsHacks)
-							{
-								num = -2;
-							}
-							
+							//Aspects value of zero in RW routes produces a 2-aspect R/G signal
+							num = -2;
 						}
 
 						if (num != 1 & num != -2 & num != 2 & num != -3 & num != 3 & num != -4 & num != 4 & num != -5 & num != 5 & num != 6)
@@ -2589,19 +2585,13 @@ namespace CsvRwRouteParser
 
 								if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out pitch))
 								{
-									if (!Data.IgnorePitchRoll)
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in Track.FreeObj at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-									}
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in Track.FreeObj at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 									pitch = 0.0;
 								}
 
 								if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], out roll))
 								{
-									if (!Data.IgnorePitchRoll)
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in Track.FreeObj at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-									}
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in Track.FreeObj at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 									roll = 0.0;
 								}
 

@@ -53,22 +53,21 @@ namespace OpenBve {
 			labelShadowStrengthValue.Enabled = shadowEnabled;
 			updownShadowBias.Enabled = shadowEnabled;
 			updownShadowNormalBias.Enabled = shadowEnabled;
-			checkboxShadowFilterCascades.Enabled = shadowEnabled;
 
 			if (!shadowEnabled)
 			{
 				// Visual hint: grey out the strength label
-				labelShadowStrengthValue.Text = @"—";
+				labelShadowStrengthValue.Text = "—";
 			}
 			else
 			{
-				labelShadowStrengthValue.Text = trackbarShadowStrength.Value + @"%";
+				labelShadowStrengthValue.Text = trackbarShadowStrength.Value + "%";
 			}
 		}
 
 		private void trackbarShadowStrength_Scroll(object sender, EventArgs e)
 		{
-			labelShadowStrengthValue.Text = trackbarShadowStrength.Value + @"%";
+			labelShadowStrengthValue.Text = trackbarShadowStrength.Value + "%";
 		}
 
 		private void updownShadowBias_ValueChanged(object sender, EventArgs e)

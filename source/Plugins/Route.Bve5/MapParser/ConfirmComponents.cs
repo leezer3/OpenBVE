@@ -587,13 +587,10 @@ namespace Route.Bve5
 
 								
 								Repeater.ObjectKeys = new string[d.StructureKeys.Count];
-								HashSet<string> missingObjectKeys = new HashSet<string>();
 								d.StructureKeys.CopyTo(Repeater.ObjectKeys, 0);
 								for (int i = 0; i < Repeater.ObjectKeys.Length; i++)
 								{
-									// empty string == no object placed
-									// also only add the error once per position (even if the object appears multiple times in the cycle)
-									if (!RouteData.Objects.ContainsKey(Repeater.ObjectKeys[i]) && missingObjectKeys.Add(Repeater.ObjectKeys[i]) && !string.IsNullOrEmpty(Repeater.ObjectKeys[i]))
+									if (!RouteData.Objects.ContainsKey(Repeater.ObjectKeys[i]))
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Structure " + Repeater.ObjectKeys[i] + " was not found in Repeater " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
 									}

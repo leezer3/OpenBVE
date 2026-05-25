@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -49,6 +50,8 @@ namespace RouteViewer {
 		private static string CurrentRouteFile;
 		private static Encoding CurrentRouteEncoding;
 
+		internal static bool JobAvailable;
+
 		// load
 		internal static void Load(string routeFile, Encoding routeEncoding, byte[] textureBytes)
 		{
@@ -67,10 +70,85 @@ namespace RouteViewer {
 			CurrentRouteFile = routeFile;
 			CurrentRouteEncoding = routeEncoding;
 			// thread
-			LoadAsynchronously(CurrentRouteFile, CurrentRouteEncoding);
+			Loading.LoadAsynchronously(CurrentRouteFile, CurrentRouteEncoding);
 			RouteViewer.LoadingScreenLoop();
 		}
-		
+
+		/// <summary>Gets the absolute Railway folder for a given route file</summary>
+		/// <returns>The absolute on-disk path of the railway folder</returns>
+		internal static string GetRailwayFolder(string RouteFile) {
+			try
+			{
+				string Folder = Path.GetDirectoryName(RouteFile);
+
+				while (true)
+				{
+					string Subfolder = Path.CombineDirectory(Folder, "Railway");
+					if (System.IO.Directory.Exists(Subfolder))
+					{
+						if (System.IO.Directory.EnumerateDirectories(Subfolder).Any() || System.IO.Directory.EnumerateFiles(Subfolder).Any())
+						{
+							//HACK: Ignore completely empty directories
+							//Doesn't handle wrong directories, or those with stuff missing, TODO.....
+							return Subfolder;
+						}
+					}
+
+					if (Folder == null) continue;
+					System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
+					if (Info == null) break;
+					Folder = Info.FullName;
+				}
+			}
+			catch
+			{
+				//ignored
+			}
+			
+			//If the Route, Object and Sound folders exist, but are not in a railway folder.....
+			try
+			{
+				string Folder = Path.GetDirectoryName(RouteFile);
+				if (Folder == null)
+				{
+					// Unlikely to work, but attempt to make the best of it
+					return Application.StartupPath;
+				}
+				string candidate = null;
+				while (true)
+				{
+					string RouteFolder = Path.CombineDirectory(Folder, "Route");
+					string ObjectFolder = Path.CombineDirectory(Folder, "Object");
+					string SoundFolder = Path.CombineDirectory(Folder, "Sound");
+					if (System.IO.Directory.Exists(RouteFolder) && System.IO.Directory.Exists(ObjectFolder) && System.IO.Directory.Exists(SoundFolder))
+					{
+						return Folder;
+					}
+
+					if (System.IO.Directory.Exists(RouteFolder) && System.IO.Directory.Exists(ObjectFolder))
+					{
+						candidate = Folder;
+					}
+
+					System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
+					if (Info == null)
+					{
+						if (candidate != null)
+						{
+							return candidate;
+						}
+						break;
+					}
+					Folder = Info.FullName;
+				}
+			}
+			catch
+			{
+				//ignored
+			}
+			return Application.StartupPath;
+		}
+
 		// load threaded
 		private static async Task LoadThreaded()
 		{
@@ -102,7 +180,7 @@ namespace RouteViewer {
 		}
 
 		private static void LoadEverythingThreaded() {
-			string RailwayFolder = Program.FileSystem.GetRailwayFolder(CurrentRouteFile, Application.StartupPath);
+			string RailwayFolder = GetRailwayFolder(CurrentRouteFile);
 			string ObjectFolder = Path.CombineDirectory(RailwayFolder, "Object");
 			string SoundFolder = Path.CombineDirectory(RailwayFolder, "Sound");
 			Program.Renderer.Camera.CurrentMode = CameraViewMode.Track;

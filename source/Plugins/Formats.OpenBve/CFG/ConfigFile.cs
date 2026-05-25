@@ -317,7 +317,7 @@ namespace Formats.OpenBve
 					string relativePath = value.Value;
 					try
 					{
-						finalPath = relativePath != string.Empty ? Path.CombineFile(absolutePath, relativePath) : string.Empty;
+						finalPath = Path.CombineFile(absolutePath, relativePath);
 					}
 					catch
 					{

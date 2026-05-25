@@ -344,43 +344,37 @@ namespace OpenBve
 					default:
 						if (!NumberFormats.TryParseIntVb6(doorDirection, out doorSide))
 						{
-							Interface.AddMessage(MessageType.Error, false,
-								$"Door direction is invalid in in {sectionElement.Key} in {sectionElement.FileName}");
+							Interface.AddMessage(MessageType.Error, false, $"Door direction is invalid in in {sectionElement.Key} in {sectionElement.FileName}");
 						}
 						break;
 				}
+
+				if (sectionElement.GetValue(TrackFollowingObjectKey.Direction, out string travelDirection))
+				{
+					int d;
+					switch (travelDirection.ToLowerInvariant())
+					{
+						case "f":
+							d = 1;
+							break;
+						case "r":
+							d = -1;
+							break;
+						default:
+							if (!NumberFormats.TryParseIntVb6(travelDirection, out d) || !Enum.IsDefined(typeof(TravelDirection), d))
+							{
+								Interface.AddMessage(MessageType.Error, false, $"TravelDirection is invalid in {sectionElement.Key} in {sectionElement.FileName}");
+								d = 1;
+							}
+							break;
+					}
+
+					travelStopData.Direction = (TravelDirection)d;
+				}
+
 				travelStopData.OpenLeftDoors = doorSide < 0.0 | doorBoth;
 				travelStopData.OpenRightDoors = doorSide > 0.0 | doorBoth;
 			}
-
-			if (sectionElement.GetValue(TrackFollowingObjectKey.Direction, out string travelDirection))
-			{
-				int d;
-				switch (travelDirection.ToLowerInvariant())
-				{
-					case "f":
-						d = 1;
-						break;
-					case "r":
-						d = -1;
-						break;
-					default:
-						if (!NumberFormats.TryParseIntVb6(travelDirection, out d) ||
-						    !Enum.IsDefined(typeof(TravelDirection), d))
-						{
-							Interface.AddMessage(MessageType.Error, false,
-								$"TravelDirection is invalid in {sectionElement.Key} in {sectionElement.FileName}");
-							d = 1;
-						}
-
-						break;
-				}
-
-				travelStopData.Direction = (TravelDirection)d;
-			}
-
-			
-			
 			return travelStopData;
 		}
 

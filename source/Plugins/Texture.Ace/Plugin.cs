@@ -28,7 +28,10 @@ namespace Texture.Ace {
 		/// <returns>Whether the plugin can load the specified texture.</returns>
 		public override bool CanLoadTexture(string path)
 		{
-			return File.Exists(path) && CanLoadFile(path);
+		    if (File.Exists(path)) {
+				return CanLoadFile(path);
+			}
+		    return false;
 		}
 
 	    /// <summary>Loads the specified texture.</summary>

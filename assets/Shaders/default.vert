@@ -79,6 +79,7 @@ out vec4 vPosLightSpace0;
 out vec4 vPosLightSpace1;
 out vec4 vPosLightSpace2;
 out vec4 vPosLightSpace3;
+out float vViewDepth;
 out vec3 vNormal;
 
 vec4 getLightResult()
@@ -221,6 +222,8 @@ void main()
 		vPosLightSpace1 = uLightSpaceMatrix1 * worldPos4;
 		vPosLightSpace2 = uLightSpaceMatrix2 * worldPos4;
 		vPosLightSpace3 = uLightSpaceMatrix3 * worldPos4;
+
+		vViewDepth = abs(oViewPos.z);
 	}
 	else
 	{
@@ -228,6 +231,7 @@ void main()
 		vPosLightSpace1 = vec4(0.0);
 		vPosLightSpace2 = vec4(0.0);
 		vPosLightSpace3 = vec4(0.0);
+		vViewDepth = 0.0;
 	}
 
 	oUv = (uCurrentTextureMatrix * vec4(iUv, 1.0, 1.0)).xy;

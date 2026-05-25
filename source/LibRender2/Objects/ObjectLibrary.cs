@@ -130,16 +130,15 @@ namespace LibRender2.Objects
 						 * Unfortunately, there appear to be X objects in the wild which expect a non-default wrapping mode
 						 * which means the best fast exit we can do is to check for RepeatRepeat....
 						 *
-						 */
-						for (int i = 0; i < face.Vertices.Length; i++)
+						 */ 
+						foreach (VertexTemplate vertex in State.Prototype.Mesh.Vertices)
 						{
-							int v = face.Vertices[i].Index;
-							if (State.Prototype.Mesh.Vertices[v].TextureCoordinates.X < 0.0f || State.Prototype.Mesh.Vertices[v].TextureCoordinates.X > 1.0f)
+							if (vertex.TextureCoordinates.X < 0.0f || vertex.TextureCoordinates.X > 1.0f)
 							{
 								wrap |= OpenGlTextureWrapMode.RepeatClamp;
 							}
 
-							if (State.Prototype.Mesh.Vertices[v].TextureCoordinates.Y < 0.0f || State.Prototype.Mesh.Vertices[v].TextureCoordinates.Y > 1.0f)
+							if (vertex.TextureCoordinates.Y < 0.0f || vertex.TextureCoordinates.Y > 1.0f)
 							{
 								wrap |= OpenGlTextureWrapMode.ClampRepeat;
 							}

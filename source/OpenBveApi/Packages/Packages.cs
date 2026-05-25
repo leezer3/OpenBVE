@@ -239,7 +239,7 @@ namespace OpenBveApi.Packages
 				using (Stream stream = File.OpenRead(currentPackage.PackageFile))
 				{
 
-					var reader = ArchiveFactory.OpenArchive(stream);
+					var reader = ArchiveFactory.Open(stream);
 					List<string> PackageFiles = new List<string>();
 					j = reader.Entries.Count();
 					foreach (var archiveEntry in reader.Entries)
@@ -256,7 +256,7 @@ namespace OpenBveApi.Packages
 						else
 						{
 							//Extract everything else, preserving directory structure
-							archiveEntry.WriteToDirectory(extractionDirectory, new ExtractionOptions(true, true));
+							archiveEntry.WriteToDirectory(extractionDirectory, new ExtractionOptions { ExtractFullPath = true, Overwrite = true });
 							//We don't want to add directories to the list of files
 							if (!archiveEntry.IsDirectory)
 							{
@@ -308,7 +308,7 @@ namespace OpenBveApi.Packages
 			string fp = string.Empty;
 			try
 			{
-				using (FileStream zip = File.OpenWrite(packageFile))
+				using (var zip = File.OpenWrite(packageFile))
 				{
 					ArchiveType type;
 					SharpCompress.Common.CompressionType compression;
@@ -331,7 +331,7 @@ namespace OpenBveApi.Packages
 							compression = SharpCompress.Common.CompressionType.LZMA;
 							break;
 					}
-					using (var zipWriter = WriterFactory.OpenWriter(zip, type, new WriterOptions(compression)))
+					using (var zipWriter = WriterFactory.Open(zip, type, compression))
 					{
 						if (packageFiles != null && packageFiles.Count > 0)
 						{
@@ -455,14 +455,14 @@ namespace OpenBveApi.Packages
 			{
 				try
 				{
-					var reader = ReaderFactory.OpenReader(stream);
+					var reader = ReaderFactory.Open(stream);
 					while (reader.MoveToNextEntry())
 					{
 
 						//Search for the package.xml file- This must be located in the archive root
 						if (reader.Entry.Key.ToLowerInvariant() == "package.xml" && !InfoFound)
 						{
-							reader.WriteEntryToDirectory(TempDirectory, new ExtractionOptions(true, true));
+							reader.WriteEntryToDirectory(TempDirectory, new ExtractionOptions { ExtractFullPath = true, Overwrite = true });
 							//Load the XML file
 							InfoFound = true;
 							XmlSerializer listReader = new XmlSerializer(typeof(SerializedPackage));
@@ -474,7 +474,7 @@ namespace OpenBveApi.Packages
 						if (reader.Entry.Key.ToLowerInvariant() == "packageinfo.xml" &&
 						    packageFile.ToLowerInvariant().EndsWith(".l3dpack") && !InfoFound)
 						{
-							reader.WriteEntryToDirectory(TempDirectory, new ExtractionOptions(true, true));
+							reader.WriteEntryToDirectory(TempDirectory, new ExtractionOptions { ExtractFullPath = true, Overwrite = true });
 							//Load the XML file
 							try
 							{
@@ -496,7 +496,7 @@ namespace OpenBveApi.Packages
 						if (reader.Entry.Key.ToLowerInvariant() == ImageFile && currentPackage.PackageImage == null)
 						{
 							//Extract the package.png to the uniquely assigned temp directory
-							reader.WriteEntryToDirectory(TempDirectory, new ExtractionOptions(true, true));
+							reader.WriteEntryToDirectory(TempDirectory, new ExtractionOptions { ExtractFullPath = true, Overwrite = true });
 							try
 							{
 								packageImage = Image.FromFile(Path.CombineFile(TempDirectory, ImageFile));
@@ -515,7 +515,7 @@ namespace OpenBveApi.Packages
 						if (reader.Entry.Key.ToLowerInvariant() == "package.rtf")
 						{
 							//Extract the package.rtf description file to the uniquely assigned temp directory
-							reader.WriteEntryToDirectory(TempDirectory, new ExtractionOptions(true, true));
+							reader.WriteEntryToDirectory(TempDirectory, new ExtractionOptions { ExtractFullPath = true, Overwrite = true });
 							//PackageDescription.LoadFile(OpenBveApi.Path.CombineFile(TempDirectory, "package.rtf"));
 						}
 

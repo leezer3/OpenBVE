@@ -38,9 +38,6 @@ namespace OpenBveApi
 		NearClipCab,
 		NearClipBase,
 		AutoReloadObjects,
-		CameraInteriorTransition,
-		CameraExteriorTransition,
-		CameraTransitionSpeed,
 		// Quality
 		Interpolation,
 		AnisotropicFilteringLevel,
@@ -56,7 +53,6 @@ namespace OpenBveApi
 		ShadowStrength,
 		ShadowBias,
 		ShadowNormalBias,
-		ShadowFilterCascades,
 		LightAzimuth,
 
 		LightElevation,

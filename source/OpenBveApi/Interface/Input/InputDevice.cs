@@ -19,7 +19,7 @@ namespace OpenBveApi.Interface
 		/// <param name="control">Control's information</param>
 		public InputEventArgs(InputControl control)
 		{
-			Control = control;
+			this.Control = control;
 		}
 
 		/// <summary>
@@ -232,7 +232,7 @@ namespace OpenBveApi.Interface
 				Assembly Plugin;
 				try
 				{
-					Plugin = Assembly.LoadFile(File);
+					Plugin = Assembly.LoadFrom(File);
 				}
 				catch
 				{

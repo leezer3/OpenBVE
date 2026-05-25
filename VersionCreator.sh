@@ -69,7 +69,7 @@ Maintainer: leezer3 <leezer3@gmail.com>
 Architecture: all
 Version: $Version
 Provides: bve-engine
-Depends: debhelper (>= 9), mono-runtime (>= 5.20.1), libmono-corlib4.5-cil (>= 5.20.1), libmono-system-drawing4.0-cil (>= 1.0), libmono-system-windows-forms4.0-cil (>= 1.0), libmono-system4.0-cil (>= 5.20.1), libmono-system-xml-linq4.0-cil (>= 5.20.1), libmono-i18n-cjk4.0-cil, libmono-i18n-mideast4.0-cil, libmono-i18n-other4.0-cil, libmono-i18n-rare4.0-cil, libmono-i18n-west4.0-cil, libmono-microsoft-csharp4.0-cil (>= 5.20.1), libopenal1, libusb-1.0-0, fonts-noto-core, fonts-noto-cjk
+Depends: debhelper (>= 9), mono-runtime (>= 5.20.1), libmono-corlib4.5-cil (>= 5.20.1), libmono-system-drawing4.0-cil (>= 1.0), libmono-system-windows-forms4.0-cil (>= 1.0), libmono-system4.0-cil (>= 5.20.1), libmono-system-xml-linq4.0-cil (>= 5.20.1), libmono-i18n4.0-all, libmono-microsoft-csharp4.0-cil (>= 5.20.1), libopenal1, libusb-1.0-0, fonts-noto-core, fonts-noto-cjk
 Recommends: bve-route, bve-train
 Homepage: http://openbve-project.net
 Description: realistic 3D train/railway simulator (main program)

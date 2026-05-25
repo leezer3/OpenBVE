@@ -29,7 +29,6 @@ namespace OpenBve {
 		private formMain()
 		{
 			InitializeComponent();
-			toolTip = new ToolTip(components);
 		}
 
 		public sealed override string Text
@@ -40,25 +39,24 @@ namespace OpenBve {
 		
 		internal static LaunchParameters ShowMainDialog(LaunchParameters initial)
 		{
-			using (formMain mainDialog = new formMain())
+			using (formMain Dialog = new formMain())
 			{
-				mainDialog.Result = initial;
-				mainDialog.ShowDialog();
-				LaunchParameters result = mainDialog.Result;
+				Dialog.Result = initial;
+				Dialog.ShowDialog();
+				LaunchParameters result = Dialog.Result;
 				//Dispose of the worker thread when closing the form
 				//If it's still running, it attempts to update a non-existent form and crashes nastily
-				mainDialog.DisposePreviewRouteThread();
+				Dialog.DisposePreviewRouteThread();
 				if (!OpenTK.Configuration.RunningOnMacOS)
 				{
-					mainDialog.trainWatcher.Dispose();
-					mainDialog.routeWatcher.Dispose();
+					Dialog.trainWatcher.Dispose();
+					Dialog.routeWatcher.Dispose();
 				}
 				return result;
 			}
 		}
 
 		// members
-		private readonly ToolTip toolTip;
 		private LaunchParameters Result;
 		private int[] EncodingCodepages;
 		private Image JoystickImage;
@@ -75,11 +73,11 @@ namespace OpenBve {
 		private void formMain_Load(object sender, EventArgs e)
 		{
 			MinimumSize = Size;
-			if (Interface.CurrentOptions.MainMenuWidth == -1 && Interface.CurrentOptions.MainMenuHeight == -1)
+			if (Interface.CurrentOptions.MainMenuWidth == -1 & Interface.CurrentOptions.MainMenuHeight == -1)
 			{
 				WindowState = FormWindowState.Maximized;
 			}
-			else if (Interface.CurrentOptions.MainMenuWidth > 0 && Interface.CurrentOptions.MainMenuHeight > 0)
+			else if (Interface.CurrentOptions.MainMenuWidth > 0 & Interface.CurrentOptions.MainMenuHeight > 0)
 			{
 				Size = new Size(Interface.CurrentOptions.MainMenuWidth, Interface.CurrentOptions.MainMenuHeight);
 				CenterToScreen();
@@ -493,15 +491,13 @@ namespace OpenBve {
 			}
 			// Shadow Strength
 			trackbarShadowStrength.Value = (int)(Interface.CurrentOptions.ShadowStrength * 100.0);
-			labelShadowStrengthValue.Text = trackbarShadowStrength.Value + @"%";
+			labelShadowStrengthValue.Text = trackbarShadowStrength.Value + "%";
 			updownShadowBias.Value = (decimal)Interface.CurrentOptions.ShadowBias;
 			updownShadowNormalBias.Value = (decimal)Interface.CurrentOptions.ShadowNormalBias;
-			checkboxShadowFilterCascades.Checked = Interface.CurrentOptions.ShadowFilterCascades;
 			// Enable/disable shadow sub-controls based on resolution setting
 			bool shadowEnabled = Interface.CurrentOptions.ShadowResolution != ShadowMapResolution.Off;
 			comboboxShadowDistance.Enabled = shadowEnabled;
 			comboboxShadowCascades.Enabled = shadowEnabled;
-			checkboxShadowFilterCascades.Enabled = shadowEnabled;
 			trackbarShadowStrength.Enabled = shadowEnabled;
 			updownShadowBias.Enabled = shadowEnabled;
 			updownShadowNormalBias.Enabled = shadowEnabled;
@@ -526,9 +522,6 @@ namespace OpenBve {
 			checkBoxEnableKiosk.Checked = Interface.CurrentOptions.KioskMode;
 			numericUpDownKioskTimeout.Value = (decimal)Interface.CurrentOptions.KioskModeTimer;
 			checkBoxAccessibility.Checked = Interface.CurrentOptions.Accessibility;
-			checkboxCameraInteriorTransition.Checked = Interface.CurrentOptions.CameraInteriorTransition;
-			checkboxCameraExteriorTransition.Checked = Interface.CurrentOptions.CameraExteriorTransition;
-			updownCameraTransitionSpeed.Value = (decimal)Interface.CurrentOptions.CameraTransitionSpeed;
 			ListInputDevicePlugins();
 			if (Program.CurrentHost.MonoRuntime)
 			{
@@ -779,10 +772,6 @@ namespace OpenBve {
 			comboboxShadowCascades.Items[2] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "shadows_cascades_4" });
 			//Simulation
 			groupboxSimulation.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation"});
-			groupboxCamera.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","camera"});
-			checkboxCameraInteriorTransition.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","camera_interior_transition"});
-			checkboxCameraExteriorTransition.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","camera_exterior_transition"});
-			labelCameraTransitionSpeed.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","camera_transition_duration"});
 			checkboxToppling.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation_toppling"});
 			checkboxCollisions.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation_collisions"});
 			checkboxDerailments.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation_derailments"});
@@ -934,7 +923,7 @@ namespace OpenBve {
 				case GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","arcade"}); break;
 				case GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","normal"}); break;
 				case GameMode.Expert: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","expert"}); break;
-				default: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","unknown"}); break;
+				default: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","unkown"}); break;
 			}
 			{
 				double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.CurrentValue / Game.CurrentScore.Maximum;
@@ -1163,32 +1152,6 @@ namespace OpenBve {
 			}
 
 
-			
-			ApplyToolTips();
-		}
-
-		/// <summary>Applies tooltips to the various controls on the form</summary>
-		private void ApplyToolTips()
-		{
-			SetToolTip("interpolation", labelInterpolation, comboboxInterpolation);
-			SetToolTip("anisotropic", labelAnisotropic, updownAnisotropic);
-			SetToolTip("antialiasing", labelAntiAliasing, updownAntiAliasing);
-			SetToolTip("transparency", labelTransparency, trackbarTransparency);
-			SetToolTip("viewingdistance", labelDistance, updownDistance);
-			SetToolTip("motionblur", labelMotionBlur, comboboxMotionBlur);
-			SetToolTip("new_renderer", checkBoxIsUseNewRenderer);
-		}
-
-		/// <summary>Sets the tooltip for one or more controls using a translation key</summary>
-		/// <param name="key">The translation key in the 'tooltips' group</param>
-		/// <param name="controls">The controls to apply the tooltip to</param>
-		private void SetToolTip(string key, params Control[] controls)
-		{
-			string text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "tooltips", key });
-			foreach (Control control in controls)
-			{
-				toolTip.SetToolTip(control, text);
-			}
 		}
 
 		// form closing
@@ -1263,7 +1226,6 @@ namespace OpenBve {
 			Interface.CurrentOptions.ShadowStrength = trackbarShadowStrength.Value / 100.0;
 			Interface.CurrentOptions.ShadowBias = (double)updownShadowBias.Value;
 			Interface.CurrentOptions.ShadowNormalBias = (double)updownShadowNormalBias.Value;
-			Interface.CurrentOptions.ShadowFilterCascades = checkboxShadowFilterCascades.Checked;
 			Interface.CurrentOptions.GameMode = (GameMode)comboboxMode.SelectedIndex;
 			Interface.CurrentOptions.BlackBox = checkboxBlackBox.Checked;
 			Interface.CurrentOptions.LoadingSway = checkBoxLoadingSway.Checked;
@@ -1283,9 +1245,6 @@ namespace OpenBve {
 			Interface.CurrentOptions.CurrentObjParser = (ObjParsers)comboBoxObjparser.SelectedIndex;
 			Interface.CurrentOptions.Panel2ExtendedMode = checkBoxPanel2Extended.Checked;
 			Interface.CurrentOptions.Accessibility = checkBoxAccessibility.Checked;
-			Interface.CurrentOptions.CameraInteriorTransition = checkboxCameraInteriorTransition.Checked;
-			Interface.CurrentOptions.CameraExteriorTransition = checkboxCameraExteriorTransition.Checked;
-			Interface.CurrentOptions.CameraTransitionSpeed = (double)updownCameraTransitionSpeed.Value;
 			switch (trackBarHUDSize.Value)
 			{
 				case 0:
@@ -1570,7 +1529,7 @@ namespace OpenBve {
 			if (WindowState != FormWindowState.Maximized)
 			{
 				System.Windows.Forms.Screen s = System.Windows.Forms.Screen.FromControl(this);
-				if (Width >= 0.95 * s.WorkingArea.Width || Height >= 0.95 * s.WorkingArea.Height)
+				if (Width >= 0.95 * s.WorkingArea.Width | Height >= 0.95 * s.WorkingArea.Height)
 				{
 					WindowState = FormWindowState.Maximized;
 				}
@@ -1667,10 +1626,6 @@ namespace OpenBve {
 			panelPackages.Visible = false;
 			pictureboxJoysticks.Visible = false;
 			UpdatePanelColor();
-			if (radiobuttonOptions.Checked)
-			{
-				SetOptionsPage(0);
-			}
 		}
 		private void radioButtonPackages_CheckedChanged(object sender, EventArgs e)
 		{
@@ -2091,50 +2046,26 @@ namespace OpenBve {
 			CheckForUpdate();
 		}
 
-		private Control[][] optionsPages;
-		private int currentOptionsPage = 0;
-
-		private void SetOptionsPage(int pageIndex)
+		private void buttonOptionsPrevious_Click(object sender, EventArgs e)
 		{
-			if (optionsPages == null)
+			if (panelOptionsLeft.Visible)
 			{
-				optionsPages = new[] {
-					new Control[] { panelOptionsLeft, panelOptionsRight },
-					new Control[] { panelOptionsPage2 },
-					new Control[] { panelOptionsPage3 }
-				};
-			}
-			currentOptionsPage = pageIndex;
-			for (int i = 0; i < optionsPages.Length; i++)
-			{
-				for (int j = 0; j < optionsPages[i].Length; j++)
-				{
-					optionsPages[i][j].Visible = (i == pageIndex);
-				}
-			}
-			buttonOptionsPrevious.Enabled = (currentOptionsPage > 0);
-			buttonOptionsNext.Enabled = (currentOptionsPage < optionsPages.Length - 1);
-
-			if (panelOptionsPage2.Visible)
-			{
+				panelOptionsLeft.Hide();
+				panelOptionsRight.Hide();
+				panelOptionsPage2.Show();
 				//HACK: Column Header in list view won't appear in Mono without resizing it...
 				listviewInputDevice.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
 			}
-		}
-
-		private void buttonOptionsPrevious_Click(object sender, EventArgs e)
-		{
-			if (currentOptionsPage > 0)
+			else if(panelOptionsPage2.Visible)
 			{
-				SetOptionsPage(currentOptionsPage - 1);
+				panelOptionsPage2.Hide();
+				panelOptionsPage3.Show();
 			}
-		}
-
-		private void buttonOptionsNext_Click(object sender, EventArgs e)
-		{
-			if (currentOptionsPage < optionsPages.Length - 1)
+			else
 			{
-				SetOptionsPage(currentOptionsPage + 1);
+				panelOptionsPage3.Hide();
+				panelOptionsLeft.Show();
+				panelOptionsRight.Show();
 			}
 		}
 

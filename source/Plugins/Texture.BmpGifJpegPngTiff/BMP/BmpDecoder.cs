@@ -72,7 +72,7 @@ namespace Plugin.BMP
 		internal BitsPerPixel BitsPerPixel;
 		/// <summary>The image data</summary>
 		internal byte[] ImageData;
-		/// <summary>Stores the color table when using a restricted palette</summary>
+		/// <summary>Stores the color table when using a restricted pallette</summary>
 		internal Color24[] ColorTable;
 		/// <summary>The bitmap format</summary>
 		internal BmpFormat Format;

@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using OpenBveApi.World;
 // ReSharper disable UnusedMember.Global

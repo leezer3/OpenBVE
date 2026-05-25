@@ -7,14 +7,27 @@ namespace OpenBveApi.Textures
 	/// <summary>Represents a region in a texture to be extracted.</summary>
 	public class TextureClipRegion
 	{
+		// --- members ---
+		/// <summary>The left coordinate.</summary>
+		private readonly int MyLeft;
+		/// <summary>The top coordinate.</summary>
+		private readonly int MyTop;
+		/// <summary>The width.</summary>
+		private readonly int MyWidth;
+		/// <summary>The height.</summary>
+		private readonly int MyHeight;
+		// --- properties ---
 		/// <summary>Gets the left coordinate.</summary>
-		public readonly int Left;
+		public int Left => MyLeft;
+
 		/// <summary>Gets the top coordinate.</summary>
-		public readonly int Top;
+		public int Top => MyTop;
+
 		/// <summary>Gets the width.</summary>
-		public readonly int Width;
+		public int Width => MyWidth;
+
 		/// <summary>Gets the height.</summary>
-		public readonly int Height;
+		public int Height => MyHeight;
 
 		// --- constructors ---
 		/// <summary>Creates a new clip region.</summary>
@@ -36,10 +49,10 @@ namespace OpenBveApi.Textures
 				throw new ArgumentException("The width or height are non-positive.");
 			}
 
-			Left = left;
-			Top = top;
-			Width = width;
-			Height = height;
+			MyLeft = left;
+			MyTop = top;
+			MyWidth = width;
+			MyHeight = height;
 		}
 
 		// --- operators ---
@@ -52,10 +65,10 @@ namespace OpenBveApi.Textures
 			if (ReferenceEquals(a, b)) return true;
 			if (a is null) return false;
 			if (b is null) return false;
-			if (a.Left != b.Left) return false;
-			if (a.Top != b.Top) return false;
-			if (a.Width != b.Width) return false;
-			if (a.Height != b.Height) return false;
+			if (a.MyLeft != b.MyLeft) return false;
+			if (a.MyTop != b.MyTop) return false;
+			if (a.MyWidth != b.MyWidth) return false;
+			if (a.MyHeight != b.MyHeight) return false;
 			return true;
 		}
 
@@ -68,10 +81,10 @@ namespace OpenBveApi.Textures
 			if (ReferenceEquals(a, b)) return false;
 			if (a is null) return true;
 			if (b is null) return true;
-			if (a.Left != b.Left) return true;
-			if (a.Top != b.Top) return true;
-			if (a.Width != b.Width) return true;
-			if (a.Height != b.Height) return true;
+			if (a.MyLeft != b.MyLeft) return true;
+			if (a.MyTop != b.MyTop) return true;
+			if (a.MyWidth != b.MyWidth) return true;
+			if (a.MyHeight != b.MyHeight) return true;
 			return false;
 		}
 
@@ -84,10 +97,10 @@ namespace OpenBveApi.Textures
 			if (obj is null) return false;
 			if (!(obj is TextureClipRegion)) return false;
 			TextureClipRegion x = (TextureClipRegion) obj;
-			if (Left != x.Left) return false;
-			if (Top != x.Top) return false;
-			if (Width != x.Width) return false;
-			if (Height != x.Height) return false;
+			if (MyLeft != x.MyLeft) return false;
+			if (MyTop != x.MyTop) return false;
+			if (MyWidth != x.MyWidth) return false;
+			if (MyHeight != x.MyHeight) return false;
 			return true;
 		}
 	}

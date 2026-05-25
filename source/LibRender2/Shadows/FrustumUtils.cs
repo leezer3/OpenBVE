@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using OpenBveApi.Math;
 
-namespace LibRender2.ShadowMapping
+namespace LibRender2.Shadows
 {
 	/// <summary>
 	/// Utility class for camera frustum calculations, specifically for Cascaded Shadow Mapping.

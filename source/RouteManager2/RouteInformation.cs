@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using LibRender2;
 using OpenBveApi.Textures;
 
 namespace RouteManager2
@@ -41,7 +40,7 @@ namespace RouteManager2
 
 		public void LoadInformation()
 		{
-			lock (BaseRenderer.GdiPlusLock)
+			lock (Illustrations.Locker)
 			{
 				RouteMap = Illustrations.CreateRouteMap(500, 500, true, out _);
 				RouteMinX = Illustrations.LastRouteMinX;

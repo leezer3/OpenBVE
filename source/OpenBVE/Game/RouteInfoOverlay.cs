@@ -88,8 +88,9 @@ namespace OpenBve
 			case OverlayState.Gradient:
 				Program.Renderer.Rectangle.Draw(gradientImage, origin, gradientSize);
 				// get current train position in track
+				int trackPos = (int)(TrainManager.PlayerTrain.FrontCarTrackPosition);
 				// convert to gradient profile offset
-				Pos.X = gradientSize.Y * (TrainManager.PlayerTrain.FrontCarTrackPosition - Program.CurrentRoute.Information.GradientMinTrack) /
+				Pos.X = gradientSize.Y * (trackPos - Program.CurrentRoute.Information.GradientMinTrack) /
 						(Program.CurrentRoute.Information.GradientMaxTrack - Program.CurrentRoute.Information.GradientMinTrack);
 				// draw a vertical bar at the current train position
 				Program.Renderer.Rectangle.Draw(null, new Vector2(Pos.X, gradientSize.Y / 2),
@@ -104,26 +105,21 @@ namespace OpenBve
 		{
 			switch (newState)
 			{
-				case OverlayState.Map:
-					if (mapImage == null)
-					{
-						mapImage = new Texture(Program.CurrentRoute.Information.RouteMap);
-						mapSize = new Vector2(Program.CurrentRoute.Information.RouteMap.Width,
-							Program.CurrentRoute.Information.RouteMap.Height);
-					}
-
-					break;
-				case OverlayState.Gradient:
-					if (gradientImage == null)
-					{
-						gradientImage = new Texture(Program.CurrentRoute.Information.GradientProfile);
-						gradientSize = new Vector2(Program.CurrentRoute.Information.GradientProfile.Width,
-							Program.CurrentRoute.Information.GradientProfile.Height);
-					}
-
-					break;
+			case OverlayState.Map:
+				if (mapImage == null)
+				{
+					mapImage = new Texture(Program.CurrentRoute.Information.RouteMap);
+					mapSize	= new Vector2(Program.CurrentRoute.Information.RouteMap.Width, Program.CurrentRoute.Information.RouteMap.Height);
+				}
+				break;
+			case OverlayState.Gradient:
+				if (gradientImage == null)
+				{
+					gradientImage = new Texture(Program.CurrentRoute.Information.GradientProfile);
+					gradientSize = new Vector2(Program.CurrentRoute.Information.GradientProfile.Width, Program.CurrentRoute.Information.GradientProfile.Height);
+				}
+				break;
 			}
-
 			currentState	= newState;
 		}
 	}

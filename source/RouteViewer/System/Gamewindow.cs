@@ -197,7 +197,7 @@ namespace RouteViewer
 				double time = CPreciseTimer.GetElapsedTime();
 				double wait = 1000.0 / 60.0 - time * 1000 - 50;
 				if (wait > 0)
-					Thread.Sleep((int)wait);
+					Thread.Sleep((int)(wait));
 			}
 			Program.Renderer.Loading.CompleteLoading();
 			if (!Loading.Cancel)

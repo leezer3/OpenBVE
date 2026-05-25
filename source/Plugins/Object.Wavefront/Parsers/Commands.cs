@@ -16,7 +16,7 @@ namespace Object.Wavefront
 		/// <summary>Adds a face</summary>
 		F,
 		/// <summary>Creates a new object</summary>
-		/// <remarks>Roughly analogous to a new MeshBuilder</remarks>
+		/// <remarks>Rougly analagous to a new MeshBuilder</remarks>
 		O,
 		/// <summary>Starts a new face group</summary>
 		/// <remarks>Usually applies a new texture</remarks>
@@ -28,7 +28,7 @@ namespace Object.Wavefront
 		/// <summary>
 		/// Uses a material from the library
 		/// </summary>
-		UseMtl
+		UseMtl,
 	}
 
 	internal enum WavefrontMtlCommands

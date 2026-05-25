@@ -222,11 +222,11 @@ namespace OpenBve {
 				}
 				// prepare timetable
 				int w = 384, h = 192;
-				int xOffset = 0;
-				int actualHeight = h;
-				float descriptionWidth = 256;
-				float descriptionHeight = 16;
-				float stationNameWidth = 16;
+				int offsetx = 0;
+				int actualheight = h;
+				float descriptionwidth = 256;
+				float descriptionheight = 16;
+				float stationnamewidth = 16;
 				for (int k = 0; k < 2; k++)
 				{
 					Bitmap b = new Bitmap(w, h);
@@ -234,20 +234,20 @@ namespace OpenBve {
 					g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 					g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 					g.Clear(Color.Transparent);
-					g.FillRectangle(Brushes.White, new RectangleF(xOffset, 0, w, actualHeight));
+					g.FillRectangle(Brushes.White, new RectangleF(offsetx, 0, w, actualheight));
 					Font f = new Font(FontFamily.GenericSansSerif, 13.0f, GraphicsUnit.Pixel);
 					Font fs = new Font(FontFamily.GenericSansSerif, 11.0f, GraphicsUnit.Pixel);
 					Font fss = new Font(FontFamily.GenericSansSerif, 9.0f, GraphicsUnit.Pixel);
 					// draw timetable
 					string t;
 					// description
-					float x0 = xOffset + 8;
+					float x0 = offsetx + 8;
 					float y0 = 8;
 					if (k == 1)
 					{
 						t = Program.CurrentRoute.Information.DefaultTimetableDescription;
-						g.DrawString(t, f, Brushes.Black, new RectangleF(x0, 6, descriptionWidth, descriptionHeight + 8));
-						y0 += descriptionHeight + 2;
+						g.DrawString(t, f, Brushes.Black, new RectangleF(x0, 6, descriptionwidth, descriptionheight + 8));
+						y0 += descriptionheight + 2;
 					}
 
 					// highest speed
@@ -266,7 +266,7 @@ namespace OpenBve {
 						if (x > x1) x1 = x;
 					}
 
-					g.DrawLine(Pens.LightGray, new PointF(x1 - 2, 4 + descriptionHeight), new PointF(x1 - 2, y0a + 18 * Tracks.Length - 1));
+					g.DrawLine(Pens.LightGray, new PointF(x1 - 2, 4 + descriptionheight), new PointF(x1 - 2, y0a + 18 * Tracks.Length - 1));
 					// driving time
 					t = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"timetable","drivingtime"});
 					s = g.MeasureString(t, fs);
@@ -309,10 +309,10 @@ namespace OpenBve {
 					for (int i = 0; i < Tracks.Length; i++)
 					{
 						float y = y0a + 18 * i;
-						g.DrawLine(Pens.LightGray, new PointF(xOffset + 4, y - 1), new PointF(x2 - 2, y - 1));
+						g.DrawLine(Pens.LightGray, new PointF(offsetx + 4, y - 1), new PointF(x2 - 2, y - 1));
 					}
 
-					g.DrawLine(Pens.LightGray, new PointF(x2 - 2, 4 + descriptionHeight), new PointF(x2 - 2, y0a + 18 * Tracks.Length - 1));
+					g.DrawLine(Pens.LightGray, new PointF(x2 - 2, 4 + descriptionheight), new PointF(x2 - 2, y0a + 18 * Tracks.Length - 1));
 					// station name
 					float y2 = y0;
 					t = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"timetable","stationname"});
@@ -324,7 +324,7 @@ namespace OpenBve {
 						float y = y0 + 18 * (i + 1) + 2;
 						g.DrawLine(Pens.LightGray, new PointF(x2 - 2, y - 1), new PointF(w - 4, y - 1));
 						t = Stations[i].Name;
-						if (Stations[i].NameJapanese && Stations[i].Name.Length > 1)
+						if (Stations[i].NameJapanese & Stations[i].Name.Length > 1)
 						{
 							float[] sizes = new float[t.Length];
 							float totalsize = 0.0f;
@@ -334,7 +334,7 @@ namespace OpenBve {
 								totalsize += sizes[j];
 							}
 
-							float space = (stationNameWidth - totalsize) / (t.Length - 1);
+							float space = (stationnamewidth - totalsize) / (t.Length - 1);
 							float x = 0.0f;
 							for (int j = 0; j < t.Length; j++)
 							{
@@ -354,10 +354,10 @@ namespace OpenBve {
 						}
 					}
 
-					g.DrawLine(Pens.LightGray, new PointF(x3 - 2, 4 + descriptionHeight), new PointF(x3 - 2, y0 + 18 * (Stations.Count + 1)));
+					g.DrawLine(Pens.LightGray, new PointF(x3 - 2, 4 + descriptionheight), new PointF(x3 - 2, y0 + 18 * (Stations.Count + 1)));
 					if (k == 0)
 					{
-						stationNameWidth = x3 - x2 - 6;
+						stationnamewidth = x3 - x2 - 6;
 					}
 
 					// arrival time
@@ -393,7 +393,7 @@ namespace OpenBve {
 
 							s = g.MeasureString(t, fs);
 							float x = x3 + s.Width;
-							if (Stations[i].Arrival.Minute.Length != 0 && Stations[i].Arrival.Second.Length != 0)
+							if (Stations[i].Arrival.Minute.Length != 0 & Stations[i].Arrival.Second.Length != 0)
 							{
 								t = Stations[i].Arrival.Minute + ":" + Stations[i].Arrival.Second;
 							}
@@ -406,7 +406,7 @@ namespace OpenBve {
 						}
 					}
 
-					g.DrawLine(Pens.LightGray, new PointF(x4 - 2, 4 + descriptionHeight), new PointF(x4 - 2, y0 + 18 * (Stations.Count + 1)));
+					g.DrawLine(Pens.LightGray, new PointF(x4 - 2, 4 + descriptionheight), new PointF(x4 - 2, y0 + 18 * (Stations.Count + 1)));
 					// departure time
 					t = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"timetable","departuretime"});
 					s = g.MeasureString(t, f);
@@ -429,20 +429,23 @@ namespace OpenBve {
 						}
 						else
 						{
-							t = "00";
 							if (Stations[i].Departure.Hour.Length != 0)
 							{
 								t = Stations[i].Departure.Hour;
 								g.DrawString(t, fs, Brushes.Black, x4, y);
 							}
+							else
+							{
+								t = "00";
+							}
+
 							s = g.MeasureString(t, fs);
 							float x = x4 + s.Width;
-
-							t = "";
-							if (Stations[i].Departure.Minute.Length != 0 && Stations[i].Departure.Second.Length != 0)
+							if (Stations[i].Departure.Minute.Length != 0 & Stations[i].Departure.Second.Length != 0)
 							{
 								t = Stations[i].Departure.Minute + ":" + Stations[i].Departure.Second;
 							}
+							else t = "";
 
 							g.DrawString(t, f, Brushes.Black, x, y);
 							s = g.MeasureString(t, f);
@@ -460,10 +463,10 @@ namespace OpenBve {
 					// border
 					if (k == 1)
 					{
-						g.DrawLine(Pens.Black, new PointF(xOffset + 4, 4), new PointF(xOffset + 4, y0a + 18 * Tracks.Length - 1));
-						g.DrawLine(Pens.Black, new PointF(xOffset + 4, y0a + 18 * Tracks.Length - 1), new PointF(x2 - 2, y0a + 18 * Tracks.Length - 1));
-						g.DrawLine(Pens.Black, new PointF(xOffset + 4, 4), new PointF(w - 4, 4));
-						g.DrawLine(Pens.Black, new PointF(xOffset + 4, 4 + descriptionHeight), new PointF(w - 4, 4 + descriptionHeight));
+						g.DrawLine(Pens.Black, new PointF(offsetx + 4, 4), new PointF(offsetx + 4, y0a + 18 * Tracks.Length - 1));
+						g.DrawLine(Pens.Black, new PointF(offsetx + 4, y0a + 18 * Tracks.Length - 1), new PointF(x2 - 2, y0a + 18 * Tracks.Length - 1));
+						g.DrawLine(Pens.Black, new PointF(offsetx + 4, 4), new PointF(w - 4, 4));
+						g.DrawLine(Pens.Black, new PointF(offsetx + 4, 4 + descriptionheight), new PointF(w - 4, 4 + descriptionheight));
 						g.DrawLine(Pens.Black, new PointF(x2 - 2, y0 + 18 * (Stations.Count + 1)), new PointF(w - 4, y0 + 18 * (Stations.Count + 1)));
 						g.DrawLine(Pens.Black, new PointF(w - 4, 4), new PointF(w - 4, y0 + 18 * (Stations.Count + 1)));
 						g.DrawLine(Pens.Black, new PointF(x2 - 2, y0a + 18 * Tracks.Length - 1), new PointF(x2 - 2, y0 + 18 * (Stations.Count + 1)));
@@ -477,8 +480,8 @@ namespace OpenBve {
 					{
 						t = Program.CurrentRoute.Information.DefaultTimetableDescription;
 						s = g.MeasureString(t, f, w - 16);
-						descriptionWidth = s.Width;
-						descriptionHeight = s.Height + 2;
+						descriptionwidth = s.Width;
+						descriptionheight = s.Height + 2;
 						h += (int) Math.Ceiling(s.Height) + 4;
 					}
 					f.Dispose();
@@ -489,9 +492,9 @@ namespace OpenBve {
 					{
 						// measures
 						int nw = Program.Renderer.TextureManager.RoundUpToPowerOfTwo(w);
-						xOffset = nw - w;
+						offsetx = nw - w;
 						w = nw;
-						actualHeight = h;
+						actualheight = h;
 						h = Program.Renderer.TextureManager.RoundUpToPowerOfTwo(h);
 					}
 					else
@@ -540,7 +543,7 @@ namespace OpenBve {
 			if (nighttime != null) {
 				CurrentCustomTimetableNighttimeTexture = nighttime;
 			}
-			if (CurrentCustomTimetableDaytimeTexture != null || CurrentCustomTimetableNighttimeTexture != null) {
+			if (CurrentCustomTimetableDaytimeTexture != null | CurrentCustomTimetableNighttimeTexture != null) {
 				CustomTimetableAvailable = true;
 			} else {
 				CustomTimetableAvailable = false;
