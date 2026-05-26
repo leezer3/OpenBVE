@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>net.openbve_project.OpenBVE</id>
+
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>BSD-2-Clause</project_license>
+
+  <name>OpenBVE</name>
+  <summary>Free train simulator</summary>
+
+  <developer id="net.openbve_project">
+    <name>OpenBVE Project</name>
+  </developer>
+
+  <description>
+    <p>
+      OpenBVE is an open-source train driving simulator.
+      It features detailed per-car simulation of the brake systems, friction, air resistance, toppling and more.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">net.openbve_project.OpenBVE.desktop</launchable>
+
+  <content_rating type="oars-1.1" />
+
+  <url type="bugtracker">https://github.com/leezer3/OpenBVE/issues</url>
+  <url type="homepage">https://openbve-project.net</url>
+  <url type="vcs-browser">https://github.com/leezer3/OpenBVE</url>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://openbve-project.net/images/driving_1.jpg</image>
+    </screenshot>
+    <screenshot>
+      <image>https://openbve-project.net/images/driving_2.jpg</image>
+    </screenshot>
+    <screenshot>
+      <image>https://openbve-project.net/images/driving_3.jpg</image>
+    </screenshot>
+  </screenshots>
+
+  <releases>
+    <release version="1.13.0.2" date="2026-05-14">
+      <url type="details">https://openbve-project.net/V1.13.0.2/</url>
+    </release>
+  </releases>
+</component>
