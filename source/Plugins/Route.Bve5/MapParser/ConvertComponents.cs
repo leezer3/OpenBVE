@@ -992,7 +992,7 @@ namespace Route.Bve5
 				case MapFunctionName.Interpolate:
 				case MapFunctionName.Set:
 					RouteData.TryAddBlock(Statement.Distance);
-					float Density = 1.0f, r = 1.0f, g = 1.0f, b = 1.0f;
+					float Density = 0.0f, r = 1.0f, g = 1.0f, b = 1.0f;
 					if (!Statement.HasArgument(ArgumentName.Red) && !Statement.HasArgument(ArgumentName.Green) &&
 					    !Statement.HasArgument(ArgumentName.Blue))
 					{
