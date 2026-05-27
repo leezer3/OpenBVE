@@ -5,40 +5,24 @@ uniform vec2 uPoint;
 uniform vec2 uSize;
 uniform vec2 uCoordinates;
 out vec2 textureCoord;
-vec4 viewPos = vec4(0,0,0,0);
+out vec2 fragOffset;
+
+// Offset lookup table to map gl_VertexID to quad corners without branching
+const vec2 offsets[6] = vec2[](
+	vec2(0.0, 0.0), // Top-left
+	vec2(1.0, 0.0), // Top-right
+	vec2(1.0, 1.0), // Bottom-right
+	vec2(0.0, 0.0), // Top-left (second triangle)
+	vec2(0.0, 1.0), // Bottom-left
+	vec2(1.0, 1.0)  // Bottom-right
+);
 
 void main()
 {
-	if(gl_VertexID == 0)
-	{
-		viewPos = uCurrentModelViewMatrix * vec4(vec3(uPoint.x, uPoint.y, 0), 1.0);
-		textureCoord = vec2(0,0);
-	}
-	else if (gl_VertexID == 1)
-	{
-		viewPos = uCurrentModelViewMatrix * vec4(vec3(uPoint.x + uSize.x, uPoint.y, 0), 1.0);
-		textureCoord = vec2(uCoordinates.x,0);
-	}
-	else if (gl_VertexID == 2)
-	{
-		viewPos = uCurrentModelViewMatrix * vec4(vec3(uPoint.x + uSize.x, uPoint.y + uSize.y, 0), 1.0);
-		textureCoord = uCoordinates;
-	}
-	else if (gl_VertexID == 3)
-	{
-		viewPos = uCurrentModelViewMatrix * vec4(vec3(uPoint.x, uPoint.y, 0), 1.0);
-		textureCoord = vec2(0,0);
-	}
-	else if (gl_VertexID == 4)
-	{
-		viewPos = uCurrentModelViewMatrix * vec4(vec3(uPoint.x, uPoint.y + uSize.y, 0), 1.0);
-		textureCoord = vec2(0, uCoordinates.y);
-	}
-	else if (gl_VertexID == 5)
-	{
-		viewPos = uCurrentModelViewMatrix * vec4(vec3(uPoint.x + uSize.x, uPoint.y + uSize.y, 0), 1.0);
-		textureCoord = uCoordinates;
-	}
-
+	// Calculate vertex position and texture coordinates based on current vertex ID offsets
+	vec2 offset = offsets[gl_VertexID];
+	vec4 viewPos = uCurrentModelViewMatrix * vec4(uPoint + offset * uSize, 0.0, 1.0);
+	textureCoord = offset * uCoordinates;
+	fragOffset = offset;
 	gl_Position = uCurrentProjectionMatrix * viewPos;
 }

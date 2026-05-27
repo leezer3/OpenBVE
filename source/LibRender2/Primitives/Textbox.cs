@@ -86,7 +86,9 @@ namespace LibRender2.Primitives
 			return wrappedLines;
 		}
 
-		public Textbox(BaseRenderer Renderer, OpenGlFont Font, Color128 FontColor, Color128 backgroundColor) : base(Renderer)
+		private BaseRenderer baseRenderer => Renderer as BaseRenderer;
+
+		public Textbox(IGLRenderer Renderer, OpenGlFont Font, Color128 FontColor, Color128 backgroundColor) : base(Renderer)
 		{
 			myFont = Font;
 			myFontColor = FontColor;
@@ -108,7 +110,7 @@ namespace LibRender2.Primitives
 
 		public override void Draw()
 		{
-			Renderer.Rectangle.Draw(Texture, Location, Size, BackgroundColor); //Draw the backing rectangle first
+			baseRenderer.Rectangle.Draw(Texture, Location, Size, BackgroundColor); //Draw the backing rectangle first
 			if (string.IsNullOrEmpty(Text))
 			{
 				return;
@@ -118,7 +120,7 @@ namespace LibRender2.Primitives
 			if (splitString.Count == 1)
 			{
 				//DRAW SINGLE LINE
-				Renderer.OpenGlString.Draw(myFont, Text, new Vector2(Location.X + Border, Location.Y + Border), TextAlignment.TopLeft, myFontColor);
+				baseRenderer.OpenGlString.Draw(myFont, Text, new Vector2(Location.X + Border, Location.Y + Border), TextAlignment.TopLeft, myFontColor);
 				CanScroll = false;
 			}
 			else
@@ -131,14 +133,14 @@ namespace LibRender2.Primitives
 				CanScroll = maxFittingLines < splitString.Count;
 				if (CanScroll)
 				{
-					Renderer.Rectangle.Draw(null, new Vector2(Location.X + Size.X - 12, Location.Y + 2), new Vector2(8, Size.Y - 4), Color128.Grey); //Backing rectangle
+					baseRenderer.Rectangle.Draw(null, new Vector2(Location.X + Size.X - 12, Location.Y + 2), new Vector2(8, Size.Y - 4), Color128.Grey); //Backing rectangle
 				}
 				//DRAW SPLIT LINES
 				int currentLine = topLine;
 				int bottomLine = Math.Min(maxFittingLines, splitString.Count);
 				for (int i = 0; i < bottomLine; i++)
 				{
-					Renderer.OpenGlString.Draw(myFont, splitString[currentLine], new Vector2(Location.X + Border, Location.Y + Border + myFont.FontSize * i), TextAlignment.TopLeft, myFontColor);
+					baseRenderer.OpenGlString.Draw(myFont, splitString[currentLine], new Vector2(Location.X + Border, Location.Y + Border + myFont.FontSize * i), TextAlignment.TopLeft, myFontColor);
 					currentLine++;
 				}
 
@@ -146,7 +148,7 @@ namespace LibRender2.Primitives
 				{
 					double scrollBarHeight = (Size.Y - 4) * maxFittingLines / splitString.Count;
 					double percentageScroll = topLine / (double)(splitString.Count - maxFittingLines);
-					Renderer.Rectangle.Draw(null, new Vector2(Location.X + Size.X - 13, Location.Y + (Size.Y - scrollBarHeight) * percentageScroll), new Vector2(10, scrollBarHeight), myScrollbarColor);
+					baseRenderer.Rectangle.Draw(null, new Vector2(Location.X + Size.X - 13, Location.Y + (Size.Y - scrollBarHeight) * percentageScroll), new Vector2(10, scrollBarHeight), myScrollbarColor);
 				}
 
 			}
@@ -157,11 +159,11 @@ namespace LibRender2.Primitives
 			if (x > Location.X && x < Location.X + Size.X && y > Location.Y && y < Location.Y + Size.Y)
 			{
 				CurrentlySelected = true;
-				Renderer.SetCursor(CanScroll ? AvailableCursors.ScrollCursor : OpenTK.MouseCursor.Default); 
+				baseRenderer.SetCursor(CanScroll ? AvailableCursors.ScrollCursor : OpenTK.MouseCursor.Default); 
 			}
 			else
 			{
-				Renderer.SetCursor(OpenTK.MouseCursor.Default);
+				baseRenderer.SetCursor(OpenTK.MouseCursor.Default);
 				CurrentlySelected = false;
 			}
 		}
