@@ -169,67 +169,21 @@ namespace OpenBveApi.Objects
 			 * If our vertex windings do not conform, it's also broken.
 			 *
 			 */
-			StaticObject transformResult = (StaticObject)this.Clone();
-			int n = 0;
-			double x2 = 0.0, x3 = 0.0, x6 = 0.0, x7 = 0.0;
-			for (int i = 0; i < transformResult.Mesh.Vertices.Length; i++)
+			/*
+			 * BUGFIX: The original algorithm only transformed the first 4 or 8 vertices in the mesh, leaving
+			 * all subsequent vertices at their original coordinates. This distorted or hid objects with larger
+			 * vertex counts (such as the .x platform and roof center objects 'FormCL/CR' and 'RoofCL/CR').
+			 * We now delegate to TransformLeft or TransformRight based on whether the secondary rail is on the
+			 * left (nearDistance < 0.0) or right side of the primary rail.
+			 */
+			if (nearDistance < 0.0)
 			{
-				if (n == 2)
-				{
-					x2 = transformResult.Mesh.Vertices[i].Coordinates.X;
-				}
-				else if (n == 3)
-				{
-					x3 = transformResult.Mesh.Vertices[i].Coordinates.X;
-				}
-				else if (n == 6)
-				{
-					x6 = transformResult.Mesh.Vertices[i].Coordinates.X;
-				}
-				else if (n == 7)
-				{
-					x7 = transformResult.Mesh.Vertices[i].Coordinates.X;
-				}
-				n++;
-				if (n == 8)
-				{
-					break;
-				}
+				return TransformRight(nearDistance, farDistance);
 			}
-			if (n >= 4)
+			else
 			{
-				int m = 0;
-				for (int i = 0; i < transformResult.Mesh.Vertices.Length; i++)
-				{
-					if (m == 0)
-					{
-						transformResult.Mesh.Vertices[i].Coordinates.X = nearDistance - x3;
-					}
-					else if (m == 1)
-					{
-						transformResult.Mesh.Vertices[i].Coordinates.X = farDistance - x2;
-						if (n < 8)
-						{
-							break;
-						}
-					}
-					else if (m == 4)
-					{
-						transformResult.Mesh.Vertices[i].Coordinates.X = nearDistance - x7;
-					}
-					else if (m == 5)
-					{
-						transformResult.Mesh.Vertices[i].Coordinates.X = farDistance - x6;
-						break;
-					}
-					m++;
-					if (m == 8)
-					{
-						break;
-					}
-				}
+				return TransformLeft(nearDistance, farDistance);
 			}
-			return transformResult;
 		}
 
 		/// <inheritdoc/>
@@ -244,13 +198,19 @@ namespace OpenBveApi.Objects
 			 * To be improved.....
 			 */
 
+			if (Mesh.Vertices.Length == 0)
+			{
+				return (StaticObject)Clone();
+			}
+
 			bool vertical = true;
 			double zPos = Mesh.Vertices[0].Coordinates.Z;
 			double minX = double.MaxValue, maxX = double.MinValue;
 			for (int i = 0; i < Mesh.Vertices.Length; i++)
 			{
 				minX = System.Math.Min(Mesh.Vertices[i].Coordinates.X, minX);
-				maxX = System.Math.Min(Mesh.Vertices[i].Coordinates.X, maxX);
+				// BUGFIX: Was System.Math.Min, which caused maxX to remain double.MinValue and width to be 0/negative
+				maxX = System.Math.Max(Mesh.Vertices[i].Coordinates.X, maxX);
 				if (System.Math.Abs(Mesh.Vertices[i].Coordinates.Z - zPos) > 0.1)
 				{
 					vertical = false;
@@ -259,11 +219,14 @@ namespace OpenBveApi.Objects
 
 			StaticObject transformResult = (StaticObject)Clone();
 
-			if (vertical || System.Math.Abs(nearDistance - farDistance) > 0.1)
+			// BUGFIX: Only use scale if the object is vertical (flat in Z), as scale ruins clearance/alignment for non-vertical objects
+			if (vertical)
 			{
-				// If vertical, or both distances are within 0.1m use scale instead (this works for all object types)
+				// If vertical, use scale instead (this works for all object types)
 				double width = maxX - minX;
-				transformResult.ApplyScale(width / (nearDistance + width), 1,1);
+				// BUGFIX: Was width / (nearDistance + width), which was the reciprocal and crashed with negative nearDistance
+				double scaleFactor = width > 0.0 ? System.Math.Abs(nearDistance) / width : 1.0;
+				transformResult.ApplyScale(scaleFactor, 1, 1);
 				return transformResult;
 			}
 
@@ -288,13 +251,19 @@ namespace OpenBveApi.Objects
 		/// <inheritdoc/>
 		public override UnifiedObject TransformRight(double nearDistance, double farDistance)
 		{
+			if (Mesh.Vertices.Length == 0)
+			{
+				return (StaticObject)Clone();
+			}
+
 			bool vertical = true;
 			double zPos = Mesh.Vertices[0].Coordinates.Z;
 			double minX = double.MaxValue, maxX = double.MinValue;
 			for (int i = 0; i < Mesh.Vertices.Length; i++)
 			{
 				minX = System.Math.Min(Mesh.Vertices[i].Coordinates.X, minX);
-				maxX = System.Math.Min(Mesh.Vertices[i].Coordinates.X, maxX);
+				// BUGFIX: Was System.Math.Min, which caused maxX to remain double.MinValue and width to be 0/negative
+				maxX = System.Math.Max(Mesh.Vertices[i].Coordinates.X, maxX);
 				if (System.Math.Abs(Mesh.Vertices[i].Coordinates.Z - zPos) > 0.1)
 				{
 					vertical = false;
@@ -303,10 +272,13 @@ namespace OpenBveApi.Objects
 
 			StaticObject transformResult = (StaticObject)Clone();
 
-			if (vertical || System.Math.Abs(nearDistance - farDistance) > 0.1)
+			// BUGFIX: Only use scale if the object is vertical (flat in Z), as scale ruins clearance/alignment for non-vertical objects
+			if (vertical)
 			{
 				double width = maxX - minX;
-				transformResult.ApplyScale(width / (nearDistance + width), 1, 1);
+				// BUGFIX: Was width / (nearDistance + width), which was the reciprocal and crashed with negative nearDistance
+				double scaleFactor = width > 0.0 ? System.Math.Abs(nearDistance) / width : 1.0;
+				transformResult.ApplyScale(scaleFactor, 1, 1);
 				return transformResult;
 			}
 
