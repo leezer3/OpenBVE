@@ -1363,7 +1363,23 @@ namespace AssimpNET.X
 		//! checks for closing curly brace
 		protected void CheckForClosingBrace()
 		{
-			if (GetNextToken() != "}")
+			string s = GetNextToken();
+			/*
+			 * 3;0,0,0,0;;
+			 *
+			 * if we have unexpected extra components in an array, s
+			 * will be a number (note that at this point it will not
+			 * be , or ; as these have been consumed by the caller)
+			 *
+			 * In this case, parse and discard the number and any
+			 * following separators / terminators
+			 *
+			 */
+			while (double.TryParse(s, out _) || s == "," || s == ";")
+			{
+				s = GetNextToken();
+			}
+			if (s != "}")
 			{
 				ThrowException("Closing brace expected.");
 			}
