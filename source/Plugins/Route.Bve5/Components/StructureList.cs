@@ -70,7 +70,7 @@ namespace Route.Bve5
 			{
 				//Cycle through the list of objects
 				//An object index is formatted as follows:
-				// --KEY USED BY ROUTEFILE-- , --PATH TO OBJECT RELATIVE TO STRUCTURE FILE--
+				// --KEY USED BY ROUTEFILE-- , --PATH TO OBJECT RELATIVE TO STRUCTURE FILE-- , --OPTIONAL COMMENT ETC.--
 
 				Lines[i] = Lines[i].TrimBVE5Comments();
 				if (string.IsNullOrEmpty(Lines[i]))
@@ -78,17 +78,23 @@ namespace Route.Bve5
 					continue;
 				}
 
-				int a = Lines[i].IndexOf(',');
-				string FilePath = Lines[i].Substring(a + 1, Lines[i].Length - a - 1).Trim();
+				if (string.IsNullOrEmpty(Lines[i]))
+				{
+					continue;
+				}
 
-				if (string.IsNullOrEmpty(FilePath) || a == -1)
+				string[] splitStrings = Lines[i].Split(',');
+
+
+				if (splitStrings.Length < 2 || string.IsNullOrEmpty(splitStrings[1]))
 				{
 					// empty object name
 					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: No object file was specified for key " + Lines[i]);
 					continue;
 				}
 
-				string Key = Lines[i].Substring(0, a).Trim();
+				string Key = splitStrings[0].Trim();
+				string FilePath = splitStrings[1].Trim();
 				try
 				{
 					FilePath = Path.CombineFile(BaseDirectory, FilePath);
@@ -100,7 +106,7 @@ namespace Route.Bve5
 
 				if (!File.Exists(FilePath))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Object File " + FilePath + " with key " + Key + " was not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Object File " + splitStrings[1] + " with key " + Key + " was not found.");
 					continue;
 				}
 
