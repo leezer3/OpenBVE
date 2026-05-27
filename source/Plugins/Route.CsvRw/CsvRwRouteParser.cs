@@ -140,7 +140,7 @@ namespace CsvRwRouteParser {
 		private void ParseRouteForData(string FileName, System.Text.Encoding Encoding, ref RouteData Data, bool PreviewOnly) {
 			//Read the entire routefile into memory
 			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
-			PreprocessSplitIntoExpressions(FileName, Lines, out Expression[] Expressions, true);
+			PreprocessSplitIntoExpressions(FileName, Lines, out IList<Expression> Expressions, true);
 			PreprocessChrRndSub(FileName, Encoding, ref Expressions);
 			double[] UnitOfLength = { 1.0 };
 			//Set units of speed initially to km/h
@@ -158,7 +158,7 @@ namespace CsvRwRouteParser {
 		private readonly System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 
 		// parse route for data
-		private void ParseRouteForData(string FileName, System.Text.Encoding Encoding, Expression[] Expressions, double[] UnitOfLength, ref RouteData Data, bool PreviewOnly) {
+		private void ParseRouteForData(string FileName, System.Text.Encoding Encoding, IList<Expression> Expressions, double[] UnitOfLength, ref RouteData Data, bool PreviewOnly) {
 			CurrentStation = -1;
 			CurrentStop = -1;
 			CurrentSection = 0;
@@ -168,7 +168,7 @@ namespace CsvRwRouteParser {
 			int BlockIndex = 0;
 			CurrentRoute.Tracks[0].Direction = TrackDirection.Forwards;
 			CurrentRoute.Stations = new RouteStation[] { };
-			double progressFactor = Expressions.Length == 0 ? 0.3333 : 0.3333 / Expressions.Length;
+			double progressFactor = Expressions.Count == 0 ? 0.3333 : 0.3333 / Expressions.Count;
 			// process non-track namespaces
 			//Check for any special-cased fixes we might need
 			CheckForAvailablePatch(FileName, ref Data, ref Expressions, PreviewOnly);
@@ -189,7 +189,7 @@ namespace CsvRwRouteParser {
 				}
 			}
 			
-			for (int j = 0; j < Expressions.Length; j++) {
+			for (int j = 0; j < Expressions.Count; j++) {
 				Plugin.CurrentProgress = j * progressFactor;
 				if ((j & 255) == 0) {
 					System.Threading.Thread.Sleep(1);
@@ -391,7 +391,7 @@ namespace CsvRwRouteParser {
 			Data.Blocks[0].LightDefinition = new LightDefinition(Plugin.CurrentRoute.Atmosphere.AmbientLightColor, Plugin.CurrentRoute.Atmosphere.DiffuseLightColor, Plugin.CurrentRoute.Atmosphere.LightPosition, -1, -1);
 			Data.Blocks[0].DynamicLightDefinition = int.MaxValue;
 			// process track namespace
-			for (int j = 0; j < Expressions.Length; j++) {
+			for (int j = 0; j < Expressions.Count; j++) {
 				Plugin.CurrentProgress = 0.3333 + j * progressFactor;
 				if ((j & 255) == 0) {
 					System.Threading.Thread.Sleep(1);
