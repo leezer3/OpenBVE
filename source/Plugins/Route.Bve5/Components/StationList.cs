@@ -26,7 +26,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -37,31 +36,28 @@ namespace Route.Bve5
 {
 	internal static partial class Bve5ScenarioParser
 	{
-		private static void LoadStationList(string FileName, MapData ParseData, RouteData RouteData)
+		private static void LoadStationList(string FileName, string StationListPath, RouteData RouteData)
 		{
 			RouteData.StationList = new Dictionary<string, Station>();
 			// Everything breaks if no station list
-			if (string.IsNullOrEmpty(ParseData.StationListPath))
+			if (string.IsNullOrEmpty(StationListPath))
 			{
-				Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: No Station List file was specified.");
 				return;
 			}
-
-			string stationList = ParseData.StationListPath;
-
-			if (!File.Exists(stationList))
+			
+			if (!File.Exists(StationListPath))
 			{
-				stationList = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), stationList);
+				StationListPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), StationListPath);
 
-				if (!File.Exists(stationList))
+				if (!File.Exists(StationListPath))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Station List file " + stationList + " was not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Station List file " + StationListPath + " was not found.");
 					return;
 				}
 			}
 
-			System.Text.Encoding Encoding = Text.DetermineBVE5FileEncoding(stationList);
-			string[] Lines = File.ReadAllLines(stationList, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
+			System.Text.Encoding Encoding = Text.DetermineBVE5FileEncoding(StationListPath);
+			string[] Lines = File.ReadAllLines(StationListPath, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
 
 			for (int currentLine = 1; currentLine < Lines.Length; currentLine++)
 			{
@@ -201,7 +197,7 @@ namespace Route.Bve5
 					// Key and name *must* be set, everything else can be ignored
 					if (RouteData.StationList.ContainsKey(stationKey))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: The station with key " + stationKey + " has been declared twice in BVE5 station list file " + ParseData.StationListPath);
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: The station with key " + stationKey + " has been declared twice in BVE5 station list file " + StationListPath);
 						RouteData.StationList[stationKey] = newStation;
 					}
 					else

@@ -25,7 +25,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -35,33 +34,31 @@ namespace Route.Bve5
 {
 	internal static partial class Bve5ScenarioParser
 	{
-		private static void LoadStructureList(string FileName, bool PreviewOnly, MapData ParseData, RouteData RouteData)
+		private static void LoadStructureList(string FileName, bool PreviewOnly, string StructureListPath, RouteData RouteData)
 		{
 			RouteData.Objects = new ObjectDictionary();
 
-			if (PreviewOnly || string.IsNullOrEmpty(ParseData.StructureListPath))
+			if (PreviewOnly || string.IsNullOrEmpty(StructureListPath))
 			{
 				return;
 			}
 
-			string structureList = ParseData.StructureListPath;
-
-			if (!File.Exists(structureList))
+			if (!File.Exists(StructureListPath))
 			{
-				structureList = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), structureList);
+				StructureListPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), StructureListPath);
 
-				if (!File.Exists(structureList))
+				if (!File.Exists(StructureListPath))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Structure List file " + structureList + " was not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Structure List file " + StructureListPath + " was not found.");
 					return;
 				}
 			}
 
-			string BaseDirectory = System.IO.Path.GetDirectoryName(structureList);
+			string BaseDirectory = System.IO.Path.GetDirectoryName(StructureListPath);
 
-			System.Text.Encoding Encoding = Text.DetermineBVE5FileEncoding(structureList);
-			string[] Lines = File.ReadAllLines(structureList, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
-			if (structureList.IndexOf("Tn_E235", StringComparison.InvariantCultureIgnoreCase) != -1 || structureList.IndexOf("TSLSeoul4", StringComparison.InvariantCultureIgnoreCase) != -1)
+			System.Text.Encoding Encoding = Text.DetermineBVE5FileEncoding(StructureListPath);
+			string[] Lines = File.ReadAllLines(StructureListPath, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
+			if (StructureListPath.IndexOf("Tn_E235", StringComparison.InvariantCultureIgnoreCase) != -1 || StructureListPath.IndexOf("TSLSeoul4", StringComparison.InvariantCultureIgnoreCase) != -1)
 			{
 				// Some routes with badly optimized objects- Use a much lower threshold to avoid killing the renderer
 				Plugin.CurrentOptions.ObjectOptimizationBasicThreshold = 2000;

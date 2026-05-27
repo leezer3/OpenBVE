@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Bve5_Parsing;
@@ -124,12 +125,38 @@ namespace Route.Bve5
 			RouteData.TryAddBlock(0);
 			RouteData.Blocks[0].Fog = new Fog(0, 1, Color24.Grey, 0, false);
 			RouteData.TryAddBlock(ParseData.Statements[0].Distance);
+			
+			if (ParseData.StationListPaths.Count == 0)
+			{
+				Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: No Station List file was specified.");
+				return;
+			}
 
-			LoadStationList(FileName, ParseData, RouteData);
-			LoadStructureList(FileName, PreviewOnly, ParseData, RouteData);
-			LoadSignalList(FileName, PreviewOnly, ParseData, RouteData);
-			LoadSoundList(FileName, PreviewOnly, ParseData, RouteData);
-			LoadSound3DList(FileName, PreviewOnly, ParseData, RouteData);
+			foreach (string path in ParseData.StationListPaths)
+			{
+				LoadStationList(FileName, path, RouteData);
+			}
+
+			foreach (string path in ParseData.StructureListPaths)
+			{
+				LoadStructureList(FileName, PreviewOnly, path, RouteData);
+			}
+			
+			foreach (string path in ParseData.SignalListPaths)
+			{
+				LoadSignalList(FileName, PreviewOnly, path, RouteData);
+			}
+
+			foreach (string path in ParseData.SoundListPaths)
+			{
+				LoadSoundList(FileName, PreviewOnly, path, RouteData);
+			}
+
+			foreach (string path in ParseData.Sound3DListPaths)
+			{
+				LoadSound3DList(FileName, PreviewOnly, path, RouteData);
+			}
+			
 			if (Plugin.CurrentOptions.EnableBve5ScriptedTrain)
 			{
 				LoadScriptedTrain(FileName, PreviewOnly, ParseData, RouteData);
