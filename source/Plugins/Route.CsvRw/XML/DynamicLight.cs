@@ -46,6 +46,10 @@ namespace CsvRwRouteParser
 				al = lightBlock.TryGetColor24(DynamicLightKey.AmbientLight, ref currentLight.AmbientColor);
 				dl = lightBlock.TryGetColor24(DynamicLightKey.DirectionalLight, ref currentLight.DiffuseColor);
 				ld = lightBlock.TryGetVector3(DynamicLightKey.LightDirection, ',', ref currentLight.LightPosition);
+				if (ld)
+				{
+					currentLight.LightPosition = -currentLight.LightPosition;
+				}
 				if (!ld && lightBlock.GetVector2(DynamicLightKey.SphericalLightDirection, ',', out Vector2 temp))
 				{
 					double theta = temp.X.ToRadians(), phi = temp.Y.ToRadians();

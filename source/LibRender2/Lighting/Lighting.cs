@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
@@ -86,64 +86,30 @@ namespace LibRender2.Lightings
 			}
 
 			//Run through the array
-			int j = 0;
-
-			for (int i = j; i < LightDefinitions.Length; i++)
+			// Find the current time block index j and next time block index k.
+			// Handled wrapping around midnight using modulo. Supports > 2 time blocks.
+			int j = LightDefinitions.Length - 1;
+			for (int i = 0; i < LightDefinitions.Length; i++)
 			{
 				if (Time < LightDefinitions[i].Time)
 				{
 					break;
 				}
-
 				j = i;
 			}
-
-			//We now know that our light definition is between the values defined in j and j + 1 (Or 0 if this is the end of the array)
-			int k;
-
-			if (j == 0)
-			{
-				//Our NEW light is to be the first entry in the array
-				//This means the OLD light is the last entry, but j and k do not need reversing
-				k = 0;
-				j = LightDefinitions.Length - 1;
-			}
-			else if (j == LightDefinitions.Length - 1)
-			{
-				//We are wrapping around to the end of the array
-				//Reverse j and k, as we have not yet passed the time for the first array entry
-				j = 0;
-				k = LightDefinitions.Length - 1;
-			}
-			else
-			{
-				//Somewhere in the middle, so the NEW light is simply one greater
-				k = j + 1;
-			}
+			int k = (j + 1) % LightDefinitions.Length;
 
 			double t1 = LightDefinitions[j].Time, t2 = LightDefinitions[k].Time;
+			// Fixed typo: cb2 previously assigned LightDefinitions[k].Time instead of CabBrightness
+			double cb1 = LightDefinitions[j].CabBrightness, cb2 = LightDefinitions[k].CabBrightness;
 
-			double cb1 = LightDefinitions[j].CabBrightness, cb2 = LightDefinitions[k].Time;
-			//Calculate, inverting if necessary
-
-			//Ensure we're not about to divide by zero
-			if (t2 == 0)
-			{
-				t2 = 1;
-			}
-
-			if (t1 == 0)
-			{
-				t1 = 1;
-			}
-
-			//Calculate the percentage
 			double mu;
-
-			if (k == LightDefinitions.Length - 1)
+			// Calculate the interpolation factor mu (handles wrap-around when j > k)
+			if (j > k)
 			{
-				//Wrapping around
-				mu = (86400 - Time + t1) / (86400 - t2 + t1);
+				double duration = 86400 - t1 + t2;
+				double elapsed = Time >= t1 ? Time - t1 : 86400 - t1 + Time;
+				mu = elapsed / duration;
 			}
 			else
 			{
