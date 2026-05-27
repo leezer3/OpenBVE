@@ -99,15 +99,8 @@ vec4 getLightResult()
 
 vec3 transformVector(vec3 initialVector, int matrixIndex)
 {
-	float X = (initialVector.x * modelMatricies[matrixIndex][0].x) + (initialVector.y * modelMatricies[matrixIndex][1].x) + (initialVector.z * modelMatricies[matrixIndex][2].x);
-	float Y = (initialVector.x * modelMatricies[matrixIndex][0].y) + (initialVector.y * modelMatricies[matrixIndex][1].y) + (initialVector.z * modelMatricies[matrixIndex][2].y);
-	float Z = (initialVector.x * modelMatricies[matrixIndex][0].z) + (initialVector.y * modelMatricies[matrixIndex][1].z) + (initialVector.z * modelMatricies[matrixIndex][2].z);
-	// ignoreW per DirectX
-
-	X += 1 * modelMatricies[matrixIndex][3].x;
-	Y += 1 * modelMatricies[matrixIndex][3].y;
-	Z += 1 * modelMatricies[matrixIndex][3].z;
-	return vec3(X, Y, Z);
+	// ignoreW per DirectX by casting vec4 result to vec3
+	return vec3(modelMatricies[matrixIndex] * vec4(initialVector, 1.0));
 }
 
 void main()
@@ -120,7 +113,8 @@ void main()
 	for (int i = 0; i < 3; ++i)
 	{
 		int chain = iMatrixChain[i];
-		if (chain != 0)
+		// Skip empty (0) and default static/unanimated (-1) matrix chain components
+		if (chain != 0 && chain != -1)
 		{
 			// Extract individual matrix index bytes (0-254)
 			int m0 = (chain >> 24) & 0xff;

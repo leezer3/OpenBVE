@@ -53,7 +53,8 @@ void main()
 	for (int i = 0; i < 3; ++i)
 	{
 		int chain = iMatrixChain[i];
-		if (chain != 0)
+		// Skip empty (0) and default static/unanimated (-1) matrix chain components
+		if (chain != 0 && chain != -1)
 		{
 			// Extract individual matrix index bytes (0-254)
 			int m0 = (chain >> 24) & 0xff;
