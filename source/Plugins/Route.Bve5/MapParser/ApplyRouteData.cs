@@ -316,14 +316,7 @@ namespace Route.Bve5
 								string key = Data.Blocks[i].FreeObjects[railKey][k].Key;
 								Vector3 wpos;
 								Transformation Transformation;
-								if (j == 0)
-								{
-									GetPrimaryRailTransformation(Position, Data.Blocks, i, Data.Blocks[i].FreeObjects[railKey][k], Direction, out wpos, out Transformation);
-								}
-								else
-								{
-									GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, Data.Blocks[i].FreeObjects[railKey][k], out wpos, out Transformation);
-								}
+								GetRailTransformation(railKey, Position, Data.Blocks, i, Data.Blocks[i].FreeObjects[railKey][k], Direction, out wpos, out Transformation);
 
 								wpos += Data.Blocks[i].FreeObjects[railKey][k].Position * Transformation;
 								Data.Objects.TryGetValue(key, out UnifiedObject obj);
@@ -348,14 +341,7 @@ namespace Route.Bve5
 
 								Vector3 wpos;
 								Transformation railTransformation;
-								if (j == 0)
-								{
-									GetPrimaryRailTransformation(Position, Data.Blocks, i, Data.Blocks[i].Cracks[k], Direction, out wpos, out railTransformation);
-								}
-								else
-								{
-									GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, Data.Blocks[i].Cracks[k], out wpos, out railTransformation);
-								}
+								GetRailTransformation(railKey, Position, Data.Blocks, i, Data.Blocks[i].Cracks[k], Direction, out wpos, out railTransformation);
 
 								double pInterpolateX0 = GetTrackCoordinate(StartingDistance, px0, nextStartingDistance, px1, pRadiusH, Data.Blocks[i].Cracks[k].TrackPosition);
 								double pInterpolateX1 = GetTrackCoordinate(StartingDistance, px0, nextStartingDistance, px1, pRadiusH, Data.Blocks[i].Cracks[k].TrackPosition + InterpolateInterval);
@@ -379,14 +365,7 @@ namespace Route.Bve5
 							{
 								Vector3 wpos;
 								Transformation railTransformation;
-								if (j == 0)
-								{
-									GetPrimaryRailTransformation(Position, Data.Blocks, i, Data.Blocks[i].Signals[j][k], Direction, out wpos, out railTransformation);
-								}
-								else
-								{
-									GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, Data.Blocks[i].Signals[j][k], out wpos, out railTransformation);
-								}
+								GetRailTransformation(railKey, Position, Data.Blocks, i, Data.Blocks[i].Signals[j][k], Direction, out wpos, out railTransformation);
 								wpos += Data.Blocks[i].Signals[j][k].Position * railTransformation;
 
 								SignalData sd = Data.SignalObjects.Find(data => data.Key.Equals(Data.Blocks[i].Signals[j][k].Key, StringComparison.InvariantCultureIgnoreCase));
