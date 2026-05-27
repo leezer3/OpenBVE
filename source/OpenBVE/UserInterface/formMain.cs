@@ -29,6 +29,7 @@ namespace OpenBve {
 		private formMain()
 		{
 			InitializeComponent();
+			toolTip = new ToolTip(components);
 		}
 
 		public sealed override string Text
@@ -57,6 +58,7 @@ namespace OpenBve {
 		}
 
 		// members
+		private readonly ToolTip toolTip;
 		private LaunchParameters Result;
 		private int[] EncodingCodepages;
 		private Image JoystickImage;
@@ -73,11 +75,11 @@ namespace OpenBve {
 		private void formMain_Load(object sender, EventArgs e)
 		{
 			MinimumSize = Size;
-			if (Interface.CurrentOptions.MainMenuWidth == -1 & Interface.CurrentOptions.MainMenuHeight == -1)
+			if (Interface.CurrentOptions.MainMenuWidth == -1 && Interface.CurrentOptions.MainMenuHeight == -1)
 			{
 				WindowState = FormWindowState.Maximized;
 			}
-			else if (Interface.CurrentOptions.MainMenuWidth > 0 & Interface.CurrentOptions.MainMenuHeight > 0)
+			else if (Interface.CurrentOptions.MainMenuWidth > 0 && Interface.CurrentOptions.MainMenuHeight > 0)
 			{
 				Size = new Size(Interface.CurrentOptions.MainMenuWidth, Interface.CurrentOptions.MainMenuHeight);
 				CenterToScreen();
@@ -932,7 +934,7 @@ namespace OpenBve {
 				case GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","arcade"}); break;
 				case GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","normal"}); break;
 				case GameMode.Expert: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","expert"}); break;
-				default: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","unkown"}); break;
+				default: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","unknown"}); break;
 			}
 			{
 				double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.CurrentValue / Game.CurrentScore.Maximum;
@@ -1161,6 +1163,32 @@ namespace OpenBve {
 			}
 
 
+			
+			ApplyToolTips();
+		}
+
+		/// <summary>Applies tooltips to the various controls on the form</summary>
+		private void ApplyToolTips()
+		{
+			SetToolTip("interpolation", labelInterpolation, comboboxInterpolation);
+			SetToolTip("anisotropic", labelAnisotropic, updownAnisotropic);
+			SetToolTip("antialiasing", labelAntiAliasing, updownAntiAliasing);
+			SetToolTip("transparency", labelTransparency, trackbarTransparency);
+			SetToolTip("viewingdistance", labelDistance, updownDistance);
+			SetToolTip("motionblur", labelMotionBlur, comboboxMotionBlur);
+			SetToolTip("new_renderer", checkBoxIsUseNewRenderer);
+		}
+
+		/// <summary>Sets the tooltip for one or more controls using a translation key</summary>
+		/// <param name="key">The translation key in the 'tooltips' group</param>
+		/// <param name="controls">The controls to apply the tooltip to</param>
+		private void SetToolTip(string key, params Control[] controls)
+		{
+			string text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "tooltips", key });
+			foreach (Control control in controls)
+			{
+				toolTip.SetToolTip(control, text);
+			}
 		}
 
 		// form closing
@@ -1542,7 +1570,7 @@ namespace OpenBve {
 			if (WindowState != FormWindowState.Maximized)
 			{
 				System.Windows.Forms.Screen s = System.Windows.Forms.Screen.FromControl(this);
-				if (Width >= 0.95 * s.WorkingArea.Width | Height >= 0.95 * s.WorkingArea.Height)
+				if (Width >= 0.95 * s.WorkingArea.Width || Height >= 0.95 * s.WorkingArea.Height)
 				{
 					WindowState = FormWindowState.Maximized;
 				}
@@ -1639,6 +1667,10 @@ namespace OpenBve {
 			panelPackages.Visible = false;
 			pictureboxJoysticks.Visible = false;
 			UpdatePanelColor();
+			if (radiobuttonOptions.Checked)
+			{
+				SetOptionsPage(0);
+			}
 		}
 		private void radioButtonPackages_CheckedChanged(object sender, EventArgs e)
 		{
@@ -2059,26 +2091,50 @@ namespace OpenBve {
 			CheckForUpdate();
 		}
 
-		private void buttonOptionsPrevious_Click(object sender, EventArgs e)
+		private Control[][] optionsPages;
+		private int currentOptionsPage = 0;
+
+		private void SetOptionsPage(int pageIndex)
 		{
-			if (panelOptionsLeft.Visible)
+			if (optionsPages == null)
 			{
-				panelOptionsLeft.Hide();
-				panelOptionsRight.Hide();
-				panelOptionsPage2.Show();
+				optionsPages = new[] {
+					new Control[] { panelOptionsLeft, panelOptionsRight },
+					new Control[] { panelOptionsPage2 },
+					new Control[] { panelOptionsPage3 }
+				};
+			}
+			currentOptionsPage = pageIndex;
+			for (int i = 0; i < optionsPages.Length; i++)
+			{
+				for (int j = 0; j < optionsPages[i].Length; j++)
+				{
+					optionsPages[i][j].Visible = (i == pageIndex);
+				}
+			}
+			buttonOptionsPrevious.Enabled = (currentOptionsPage > 0);
+			buttonOptionsNext.Enabled = (currentOptionsPage < optionsPages.Length - 1);
+
+			if (panelOptionsPage2.Visible)
+			{
 				//HACK: Column Header in list view won't appear in Mono without resizing it...
 				listviewInputDevice.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
 			}
-			else if(panelOptionsPage2.Visible)
+		}
+
+		private void buttonOptionsPrevious_Click(object sender, EventArgs e)
+		{
+			if (currentOptionsPage > 0)
 			{
-				panelOptionsPage2.Hide();
-				panelOptionsPage3.Show();
+				SetOptionsPage(currentOptionsPage - 1);
 			}
-			else
+		}
+
+		private void buttonOptionsNext_Click(object sender, EventArgs e)
+		{
+			if (currentOptionsPage < optionsPages.Length - 1)
 			{
-				panelOptionsPage3.Hide();
-				panelOptionsLeft.Show();
-				panelOptionsRight.Show();
+				SetOptionsPage(currentOptionsPage + 1);
 			}
 		}
 

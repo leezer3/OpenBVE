@@ -163,6 +163,7 @@ namespace Plugin
 		private static int currentLevel = 0;
 		private static int transformStart = 0;
 		private static VertexElement[] vertexElements;
+		private static bool currentMaterialUsed;
 
 		private static readonly Dictionary<string, Material> rootMaterials = new Dictionary<string, Material>();
 
@@ -344,11 +345,13 @@ namespace Plugin
 					break;
 				case TemplateID.MeshMaterialList:
 					int nMaterials = block.ReadInt();
+					bool[] materialsUsed = new bool[nMaterials];
 					int nFaceIndices = block.ReadInt();
 					if (nFaceIndices == 1 && builder.Faces.Count > 1)
 					{
 						//Single material for all faces
 						int globalMaterial = block.ReadInt();
+						materialsUsed[globalMaterial] = true;
 						for (int i = 0; i < builder.Faces.Count; i++)
 						{
 							MeshFace f = builder.Faces[i];
@@ -361,6 +364,7 @@ namespace Plugin
 						for (int i = 0; i < nFaceIndices; i++)
 						{
 							int fMaterial = block.ReadInt();
+							materialsUsed[fMaterial] = true;
 							MeshFace f = builder.Faces[i];
 							f.Material = (ushort) (fMaterial + 1);
 							builder.Faces[i] = f;
@@ -377,6 +381,7 @@ namespace Plugin
 						Array.Resize(ref builder.Materials, nMaterials + 1);
 						for (int i = 0; i < nMaterials; i++)
 						{
+							currentMaterialUsed = materialsUsed[i];
 							// YUCKY: skip bracket strings
 							string materialName = block.ReadString();
 							if (!rootMaterials.TryGetValue(materialName, out builder.Materials[i + 1]))
@@ -397,6 +402,7 @@ namespace Plugin
 					{
 						for (int i = 0; i < nMaterials; i++)
 						{
+							currentMaterialUsed = materialsUsed[i];
 							try
 							{
 								subBlock = block.ReadSubBlock(new[] { TemplateID.Material, TemplateID.TextureKey });
@@ -459,7 +465,7 @@ namespace Plugin
 					break;
 				case TemplateID.TextureFilename:
 					string texturePath = block.ReadString();
-					if (string.IsNullOrEmpty(texturePath))
+					if (string.IsNullOrEmpty(texturePath) && currentMaterialUsed)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"An empty texture was specified for material { material.Key }");
 						material.DaytimeTexture = null;
@@ -479,13 +485,27 @@ namespace Plugin
 					}
 					catch (Exception e)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"Texture file path { texturePath } in file { currentFile } has the problem: { e.Message }");
+						if (currentMaterialUsed)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"Texture file path {texturePath} in file {currentFile} has the problem: {e.Message}");
+						}
+						else
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, $"Referenced, but unused Texture file path {texturePath} in file {currentFile} has the problem: {e.Message}");
+						}
 						material.DaytimeTexture = null;
 					}
 
 					if (!File.Exists(material.DaytimeTexture) && material.DaytimeTexture != null)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, true, $"Texture { material.DaytimeTexture } was not found in file { currentFile }");
+						if (currentMaterialUsed)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, true, $"Texture {material.DaytimeTexture} was not found in file {currentFile}");
+						}
+						else
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, true, $"Referenced, but unused Texture {material.DaytimeTexture} was not found in file {currentFile}");
+						}
 						material.DaytimeTexture = null;
 					}
 					break;

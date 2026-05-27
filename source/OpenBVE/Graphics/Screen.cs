@@ -48,7 +48,7 @@ namespace OpenBve
 									GameWindowFlags.Default, GraphicsContextFlags.ForwardCompatible)
 								{
 									Visible = true,
-									WindowState = WindowState.Fullscreen,
+									WindowState = WindowState.Fullscreen
 								};
 							}
 							else
@@ -57,7 +57,7 @@ namespace OpenBve
 									GameWindowFlags.Default)
 								{
 									Visible = true,
-									WindowState = WindowState.Fullscreen,
+									WindowState = WindowState.Fullscreen
 								};	
 							}
 							

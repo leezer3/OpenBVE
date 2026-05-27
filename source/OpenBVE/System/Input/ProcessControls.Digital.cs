@@ -63,7 +63,7 @@ namespace OpenBve
 					case Translations.Command.CameraInterior:
 						// camera: interior (Handle camera transition from exterior mode to cab mode)
 						SaveCameraSettings();
-						if (Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead & Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
+						if (Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead && Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
 						{
 							MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","interior_lookahead"}),
 								MessageDependency.CameraView, GameMode.Expert,

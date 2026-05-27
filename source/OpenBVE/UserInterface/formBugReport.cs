@@ -44,8 +44,8 @@ namespace OpenBve
 		private void buttonViewLog_Click(object sender, EventArgs e)
 		{
 			try
-			{
-				var file = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "log.txt");
+			{ 
+				string file = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "log.txt");
 				if(File.Exists(file))
 				{
 					if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
@@ -73,8 +73,8 @@ namespace OpenBve
 		{
 			try
 			{
-				var directory = new DirectoryInfo(Program.FileSystem.SettingsFolder);
-				var file = directory.GetFiles("OpenBVE Crash*.log").OrderByDescending(f => f.LastWriteTime).First();
+				DirectoryInfo directory = new DirectoryInfo(Program.FileSystem.SettingsFolder);
+				FileInfo file = directory.GetFiles("OpenBVE Crash*.log").OrderByDescending(f => f.LastWriteTime).First();
 				if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 				{
 					Process.Start(file.FullName);

@@ -1590,7 +1590,6 @@ namespace OpenBve {
             this.panelOptionsLeft.Controls.Add(this.groupboxDisplayMode);
             this.panelOptionsLeft.Controls.Add(this.groupboxWindow);
             this.panelOptionsLeft.Controls.Add(this.groupboxFullscreen);
-            this.panelOptionsLeft.Controls.Add(this.groupboxInterpolation);
             this.panelOptionsLeft.Location = new System.Drawing.Point(8, 72);
             this.panelOptionsLeft.Name = "panelOptionsLeft";
             this.panelOptionsLeft.Size = new System.Drawing.Size(316, 576);
@@ -1941,9 +1940,9 @@ namespace OpenBve {
             this.groupboxInterpolation.Controls.Add(this.labelInterpolation);
             this.groupboxInterpolation.Controls.Add(this.trackbarTransparency);
             this.groupboxInterpolation.ForeColor = System.Drawing.Color.Black;
-            this.groupboxInterpolation.Location = new System.Drawing.Point(0, 381);
+            this.groupboxInterpolation.Location = new System.Drawing.Point(0, 158);
             this.groupboxInterpolation.Name = "groupboxInterpolation";
-            this.groupboxInterpolation.Size = new System.Drawing.Size(316, 160);
+            this.groupboxInterpolation.Size = new System.Drawing.Size(321, 160);
             this.groupboxInterpolation.TabIndex = 7;
             this.groupboxInterpolation.TabStop = false;
             this.groupboxInterpolation.Text = "Interpolation";
@@ -2074,7 +2073,7 @@ namespace OpenBve {
             this.panelOptionsRight.Controls.Add(this.groupBoxRailDriver);
             this.panelOptionsRight.Controls.Add(this.groupboxControls);
             this.panelOptionsRight.Controls.Add(this.groupboxVerbosity);
-            this.panelOptionsRight.Controls.Add(this.groupboxSimulation);
+            this.panelOptionsRight.Controls.Add(this.groupBoxKioskMode);
             this.panelOptionsRight.Controls.Add(this.groupboxSound);
             this.panelOptionsRight.Location = new System.Drawing.Point(360, 72);
             this.panelOptionsRight.Name = "panelOptionsRight";
@@ -2088,7 +2087,7 @@ namespace OpenBve {
             this.groupBoxOther.Controls.Add(this.comboBoxTimeTableDisplayMode);
             this.groupBoxOther.Controls.Add(this.labelTimeTableDisplayMode);
             this.groupBoxOther.ForeColor = System.Drawing.Color.Black;
-            this.groupBoxOther.Location = new System.Drawing.Point(0, 347);
+            this.groupBoxOther.Location = new System.Drawing.Point(0, 365);
             this.groupBoxOther.Name = "groupBoxOther";
             this.groupBoxOther.Size = new System.Drawing.Size(316, 48);
             this.groupBoxOther.TabIndex = 19;
@@ -2247,7 +2246,7 @@ namespace OpenBve {
             this.groupboxVerbosity.Controls.Add(this.checkboxErrorMessages);
             this.groupboxVerbosity.Controls.Add(this.checkboxWarningMessages);
             this.groupboxVerbosity.ForeColor = System.Drawing.Color.Black;
-            this.groupboxVerbosity.Location = new System.Drawing.Point(0, 283);
+            this.groupboxVerbosity.Location = new System.Drawing.Point(0, 298);
             this.groupboxVerbosity.Name = "groupboxVerbosity";
             this.groupboxVerbosity.Size = new System.Drawing.Size(316, 64);
             this.groupboxVerbosity.TabIndex = 12;
@@ -2294,9 +2293,9 @@ namespace OpenBve {
             this.groupboxSimulation.Controls.Add(this.checkboxCollisions);
             this.groupboxSimulation.Controls.Add(this.checkboxToppling);
             this.groupboxSimulation.ForeColor = System.Drawing.Color.Black;
-            this.groupboxSimulation.Location = new System.Drawing.Point(0, 203);
+            this.groupboxSimulation.Location = new System.Drawing.Point(330, 485);
             this.groupboxSimulation.Name = "groupboxSimulation";
-            this.groupboxSimulation.Size = new System.Drawing.Size(316, 80);
+            this.groupboxSimulation.Size = new System.Drawing.Size(321, 80);
             this.groupboxSimulation.TabIndex = 11;
             this.groupboxSimulation.TabStop = false;
             this.groupboxSimulation.Text = "Detail of simulation";
@@ -2411,6 +2410,10 @@ namespace OpenBve {
             this.panelOptionsPage2.Controls.Add(this.groupboxCamera);
             this.panelOptionsPage2.Controls.Add(this.groupboxDistance);
             this.panelOptionsPage2.Controls.Add(this.groupboxShadows);
+            this.panelOptionsPage2.Controls.Add(this.groupboxInterpolation);
+            this.panelOptionsPage2.Controls.Add(this.groupBoxAdvancedOptions);
+            this.panelOptionsPage2.Controls.Add(this.groupBoxObjectParser);
+            this.panelOptionsPage2.Controls.Add(this.groupboxSimulation);
             this.panelOptionsPage2.Location = new System.Drawing.Point(0, 72);
             this.panelOptionsPage2.Name = "panelOptionsPage2";
             this.panelOptionsPage2.Size = new System.Drawing.Size(683, 583);
@@ -2643,7 +2646,7 @@ namespace OpenBve {
             this.groupboxShadows.Controls.Add(this.updownShadowNormalBias);
             this.groupboxShadows.Controls.Add(this.checkboxShadowFilterCascades);
             this.groupboxShadows.ForeColor = System.Drawing.Color.Black;
-            this.groupboxShadows.Location = new System.Drawing.Point(0, 155);
+            this.groupboxShadows.Location = new System.Drawing.Point(330, 0);
             this.groupboxShadows.Name = "groupboxShadows";
             this.groupboxShadows.Size = new System.Drawing.Size(321, 240);
             this.groupboxShadows.TabIndex = 30;
@@ -2657,7 +2660,7 @@ namespace OpenBve {
             this.groupboxCamera.Controls.Add(this.labelCameraTransitionSpeed);
             this.groupboxCamera.Controls.Add(this.updownCameraTransitionSpeed);
             this.groupboxCamera.ForeColor = System.Drawing.Color.Black;
-            this.groupboxCamera.Location = new System.Drawing.Point(330, 0);
+            this.groupboxCamera.Location = new System.Drawing.Point(330, 245);
             this.groupboxCamera.Name = "groupboxCamera";
             this.groupboxCamera.Size = new System.Drawing.Size(321, 120);
             this.groupboxCamera.TabIndex = 22;
@@ -2919,7 +2922,7 @@ namespace OpenBve {
             this.buttonOptionsNext.TabIndex = 18;
             this.buttonOptionsNext.Text = "Next Page...";
             this.buttonOptionsNext.UseVisualStyleBackColor = true;
-            this.buttonOptionsNext.Click += new System.EventHandler(this.buttonOptionsPrevious_Click);
+            this.buttonOptionsNext.Click += new System.EventHandler(this.buttonOptionsNext_Click);
             // 
             // panelOptionsPage3
             // 
@@ -2927,9 +2930,6 @@ namespace OpenBve {
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelOptionsPage3.Controls.Add(this.groupBoxInputDevice);
-            this.panelOptionsPage3.Controls.Add(this.groupBoxObjectParser);
-            this.panelOptionsPage3.Controls.Add(this.groupBoxKioskMode);
-            this.panelOptionsPage3.Controls.Add(this.groupBoxAdvancedOptions);
             this.panelOptionsPage3.Controls.Add(this.groupBoxPackageOptions);
             this.panelOptionsPage3.Location = new System.Drawing.Point(0, 72);
             this.panelOptionsPage3.Name = "panelOptionsPage3";
@@ -2946,9 +2946,9 @@ namespace OpenBve {
             this.groupBoxInputDevice.Controls.Add(this.checkBoxInputDeviceEnable);
             this.groupBoxInputDevice.Controls.Add(this.buttonInputDeviceConfig);
             this.groupBoxInputDevice.ForeColor = System.Drawing.Color.Black;
-            this.groupBoxInputDevice.Location = new System.Drawing.Point(6, 396);
+            this.groupBoxInputDevice.Location = new System.Drawing.Point(0, 190);
             this.groupBoxInputDevice.Name = "groupBoxInputDevice";
-            this.groupBoxInputDevice.Size = new System.Drawing.Size(674, 181);
+            this.groupBoxInputDevice.Size = new System.Drawing.Size(674, 385);
             this.groupBoxInputDevice.TabIndex = 24;
             this.groupBoxInputDevice.TabStop = false;
             this.groupBoxInputDevice.Text = "Input Device Plugin";
@@ -2983,7 +2983,7 @@ namespace OpenBve {
             this.listviewInputDevice.MultiSelect = false;
             this.listviewInputDevice.Name = "listviewInputDevice";
             this.listviewInputDevice.ShowGroups = false;
-            this.listviewInputDevice.Size = new System.Drawing.Size(658, 103);
+            this.listviewInputDevice.Size = new System.Drawing.Size(658, 303);
             this.listviewInputDevice.TabIndex = 1;
             this.listviewInputDevice.UseCompatibleStateImageBehavior = false;
             this.listviewInputDevice.View = System.Windows.Forms.View.Details;
@@ -3015,7 +3015,7 @@ namespace OpenBve {
             // 
             this.checkBoxInputDeviceEnable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxInputDeviceEnable.Enabled = false;
-            this.checkBoxInputDeviceEnable.Location = new System.Drawing.Point(8, 144);
+            this.checkBoxInputDeviceEnable.Location = new System.Drawing.Point(8, 344);
             this.checkBoxInputDeviceEnable.Name = "checkBoxInputDeviceEnable";
             this.checkBoxInputDeviceEnable.Size = new System.Drawing.Size(230, 34);
             this.checkBoxInputDeviceEnable.TabIndex = 2;
@@ -3029,7 +3029,7 @@ namespace OpenBve {
             this.buttonInputDeviceConfig.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.buttonInputDeviceConfig.Enabled = false;
             this.buttonInputDeviceConfig.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.buttonInputDeviceConfig.Location = new System.Drawing.Point(270, 148);
+            this.buttonInputDeviceConfig.Location = new System.Drawing.Point(270, 352);
             this.buttonInputDeviceConfig.MaximumSize = new System.Drawing.Size(106, 25);
             this.buttonInputDeviceConfig.Name = "buttonInputDeviceConfig";
             this.buttonInputDeviceConfig.Size = new System.Drawing.Size(106, 25);
@@ -3046,9 +3046,9 @@ namespace OpenBve {
             this.groupBoxObjectParser.Controls.Add(this.labelXparser);
             this.groupBoxObjectParser.Controls.Add(this.comboBoxXparser);
             this.groupBoxObjectParser.ForeColor = System.Drawing.Color.Black;
-            this.groupBoxObjectParser.Location = new System.Drawing.Point(377, 288);
+            this.groupBoxObjectParser.Location = new System.Drawing.Point(330, 370);
             this.groupBoxObjectParser.Name = "groupBoxObjectParser";
-            this.groupBoxObjectParser.Size = new System.Drawing.Size(305, 110);
+            this.groupBoxObjectParser.Size = new System.Drawing.Size(321, 110);
             this.groupBoxObjectParser.TabIndex = 23;
             this.groupBoxObjectParser.TabStop = false;
             this.groupBoxObjectParser.Text = "Object Parser";
@@ -3098,14 +3098,15 @@ namespace OpenBve {
             // 
             // groupBoxKioskMode
             // 
-            this.groupBoxKioskMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxKioskMode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxKioskMode.Controls.Add(this.labelKioskTimeout);
             this.groupBoxKioskMode.Controls.Add(this.numericUpDownKioskTimeout);
             this.groupBoxKioskMode.Controls.Add(this.checkBoxEnableKiosk);
             this.groupBoxKioskMode.ForeColor = System.Drawing.Color.Black;
-            this.groupBoxKioskMode.Location = new System.Drawing.Point(377, 190);
+            this.groupBoxKioskMode.Location = new System.Drawing.Point(0, 203);
             this.groupBoxKioskMode.Name = "groupBoxKioskMode";
-            this.groupBoxKioskMode.Size = new System.Drawing.Size(305, 92);
+            this.groupBoxKioskMode.Size = new System.Drawing.Size(316, 92);
             this.groupBoxKioskMode.TabIndex = 22;
             this.groupBoxKioskMode.TabStop = false;
             this.groupBoxKioskMode.Text = "Kiosk Mode";
@@ -3158,9 +3159,9 @@ namespace OpenBve {
             this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxIsUseNewRenderer);
             this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxLoadInAdvance);
             this.groupBoxAdvancedOptions.ForeColor = System.Drawing.Color.Black;
-            this.groupBoxAdvancedOptions.Location = new System.Drawing.Point(8, 190);
+            this.groupBoxAdvancedOptions.Location = new System.Drawing.Point(0, 323);
             this.groupBoxAdvancedOptions.Name = "groupBoxAdvancedOptions";
-            this.groupBoxAdvancedOptions.Size = new System.Drawing.Size(358, 208);
+            this.groupBoxAdvancedOptions.Size = new System.Drawing.Size(321, 208);
             this.groupBoxAdvancedOptions.TabIndex = 21;
             this.groupBoxAdvancedOptions.TabStop = false;
             this.groupBoxAdvancedOptions.Text = "Advanced Options";
