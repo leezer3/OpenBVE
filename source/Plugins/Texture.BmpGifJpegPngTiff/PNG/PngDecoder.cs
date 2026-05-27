@@ -1,4 +1,4 @@
-//Simplified BSD License (BSD-2-Clause)
+﻿//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2023- 2025, Christopher Lees, The OpenBVE Project
 //
@@ -174,13 +174,23 @@ namespace Plugin.PNG
 								colorPalette = new Palette(chunkBuffer);
 								break;
 							case ChunkType.tRNS:
-								if (colorPalette == null)
+								if (colorPalette != null)
 								{
-									Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "The tRNS chunk must be preceeded by a PLTE chunk in PNG file " + fileName);
-									return false;
+									colorPalette.SetAlphaValues(chunkBuffer);
+									break;
 								}
-								colorPalette.SetAlphaValues(chunkBuffer);
-								return false;
+
+								for (int i = 0; i < chunkBuffer.Length; i++)
+								{
+									if (chunkBuffer[i] != 0)
+									{
+										// if tRNS chunk actually contains no alpha, ignore it silently with no errors
+										// e.g. Estobr\Scenarios\瀬戸大橋・予讃・土讃線\Structures\gojikisha\ship\tag\Tag_A03.png
+										Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "The tRNS chunk must be preceded by a PLTE chunk in PNG file " + fileName);
+										return false;
+									}
+								}
+								break;
 							case ChunkType.IDAT:
 								// IDAT chunks contain image data
 								// Data may be split over one or more chunks
