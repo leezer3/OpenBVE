@@ -81,16 +81,23 @@ namespace Route.Bve5
 				}
 
 				string[] splitStrings = Lines[i].Split(',');
-
+				string Key = splitStrings[0].Trim();
 
 				if (splitStrings.Length < 2 || string.IsNullOrEmpty(splitStrings[1]))
 				{
-					// empty object name
-					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: No object file was specified for key " + Lines[i]);
+					// empty object file name
+					if (string.Equals(Key, "null", StringComparison.InvariantCultureIgnoreCase) || string.Equals(Key, "empty", StringComparison.InvariantCultureIgnoreCase))
+					{
+						RouteData.Objects.Add(Key, new StaticObject(Plugin.CurrentHost));
+					}
+					else
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: No object file was specified for key " + Lines[i]);
+					}
 					continue;
 				}
 
-				string Key = splitStrings[0].Trim();
+				
 				string FilePath = splitStrings[1].Trim();
 				try
 				{
