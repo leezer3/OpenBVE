@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, S520, The OpenBVE Project
 //
@@ -77,8 +77,12 @@ namespace Route.Bve5
 
 				string stationKey = string.Empty;
 				Station newStation = new Station();
+
+				char[] quotes = { '"', '\'' };
 				for (int i = 0; i < splitLine.Length; i++)
 				{
+					// Uchibo20 encloses names and some times in quotes, which BVE5 / BVE6 seems to accept
+					splitLine[i] = splitLine[i].Trim(quotes);
 					splitLine[i] = splitLine[i].Trim();
 					switch (i)
 					{
