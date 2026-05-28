@@ -247,12 +247,21 @@ namespace Route.Bve5
 		/// <summary>Gets the transformation for an object on the primary rail</summary>
 		private static void GetRailTransformation(string RailKey, Vector3 StartingPosition, IList<Block> Blocks, int StartingBlock, AbstractStructure Structure, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
 		{
-			Direction.Rotate(-Math.Atan(Blocks[StartingBlock].Turn));
-
 			ObjectPosition = StartingPosition;
 			Transformation = new Transformation();
 			if (Structure.Span == 0)
 			{
+				Direction.Rotate(-Math.Atan(Blocks[StartingBlock].Turn));
+
+				if (RailKey != "0")
+				{
+					int nextBlock = StartingBlock < Blocks.Count - 1 ? StartingBlock + 1 : StartingBlock;
+					double InterpolateX = GetTrackCoordinate(Blocks[StartingBlock].StartingDistance, Blocks[StartingBlock].Rails[RailKey].Position.X, Blocks[nextBlock].StartingDistance, Blocks[nextBlock].Rails[RailKey].Position.X, Blocks[StartingBlock].Rails[RailKey].RadiusH, Structure.TrackPosition);
+					double InterpolateY = GetTrackCoordinate(Blocks[StartingBlock].StartingDistance, Blocks[StartingBlock].Rails[RailKey].Position.Y, Blocks[nextBlock].StartingDistance, Blocks[nextBlock].Rails[RailKey].Position.Y, Blocks[StartingBlock].Rails[RailKey].RadiusV, Structure.TrackPosition);
+					Vector3 Offset = new Vector3(Direction.Y * InterpolateX, InterpolateY, -Direction.X * InterpolateX);
+					ObjectPosition += Offset;
+				}
+
 				double radius = Blocks[StartingBlock].CurrentTrackState.CurveRadius;
 				double pitch = Blocks[StartingBlock].Pitch;
 				double cant = Blocks[StartingBlock].CurrentTrackState.CurveCant;
