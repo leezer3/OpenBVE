@@ -36,8 +36,6 @@ namespace Route.Bve5
 	{
 		private static void LoadSoundList(string FileName, bool PreviewOnly, string SoundListPath, RouteData RouteData)
 		{
-			RouteData.Sounds = new SoundDictionary();
-
 			if (PreviewOnly || string.IsNullOrEmpty(SoundListPath))
 			{
 				return;
@@ -104,8 +102,6 @@ namespace Route.Bve5
 
 		private static void LoadSound3DList(string FileName, bool PreviewOnly, string Sound3DListPath, RouteData RouteData)
 		{
-			RouteData.Sound3Ds = new SoundDictionary();
-
 			if (PreviewOnly || string.IsNullOrEmpty(Sound3DListPath))
 			{
 				return;
