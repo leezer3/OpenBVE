@@ -1423,7 +1423,7 @@ namespace AssimpNET.X
 			}
 
 			// test and skip
-			if (Buffer[currentPosition] == ';' || Buffer[currentPosition] == ',')
+			while (Buffer[currentPosition] == ';' || Buffer[currentPosition] == ',')
 			{
 				currentPosition++;
 			}
