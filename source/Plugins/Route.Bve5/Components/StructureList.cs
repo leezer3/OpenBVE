@@ -25,7 +25,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -35,33 +34,31 @@ namespace Route.Bve5
 {
 	internal static partial class Bve5ScenarioParser
 	{
-		private static void LoadStructureList(string FileName, bool PreviewOnly, MapData ParseData, RouteData RouteData)
+		private static void LoadStructureList(string FileName, bool PreviewOnly, string StructureListPath, RouteData RouteData)
 		{
 			RouteData.Objects = new ObjectDictionary();
 
-			if (PreviewOnly || string.IsNullOrEmpty(ParseData.StructureListPath))
+			if (PreviewOnly || string.IsNullOrEmpty(StructureListPath))
 			{
 				return;
 			}
 
-			string structureList = ParseData.StructureListPath;
-
-			if (!File.Exists(structureList))
+			if (!File.Exists(StructureListPath))
 			{
-				structureList = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), structureList);
+				StructureListPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), StructureListPath);
 
-				if (!File.Exists(structureList))
+				if (!File.Exists(StructureListPath))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Structure List file " + structureList + " was not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Structure List file " + StructureListPath + " was not found.");
 					return;
 				}
 			}
 
-			string BaseDirectory = System.IO.Path.GetDirectoryName(structureList);
+			string BaseDirectory = System.IO.Path.GetDirectoryName(StructureListPath);
 
-			System.Text.Encoding Encoding = Text.DetermineBVE5FileEncoding(structureList);
-			string[] Lines = File.ReadAllLines(structureList, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
-			if (structureList.IndexOf("Tn_E235", StringComparison.InvariantCultureIgnoreCase) != -1 || structureList.IndexOf("TSLSeoul4", StringComparison.InvariantCultureIgnoreCase) != -1)
+			System.Text.Encoding Encoding = Text.DetermineBVE5FileEncoding(StructureListPath);
+			string[] Lines = File.ReadAllLines(StructureListPath, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
+			if (StructureListPath.IndexOf("Tn_E235", StringComparison.InvariantCultureIgnoreCase) != -1 || StructureListPath.IndexOf("TSLSeoul4", StringComparison.InvariantCultureIgnoreCase) != -1)
 			{
 				// Some routes with badly optimized objects- Use a much lower threshold to avoid killing the renderer
 				Plugin.CurrentOptions.ObjectOptimizationBasicThreshold = 2000;
@@ -70,7 +67,7 @@ namespace Route.Bve5
 			{
 				//Cycle through the list of objects
 				//An object index is formatted as follows:
-				// --KEY USED BY ROUTEFILE-- , --PATH TO OBJECT RELATIVE TO STRUCTURE FILE--
+				// --KEY USED BY ROUTEFILE-- , --PATH TO OBJECT RELATIVE TO STRUCTURE FILE-- , --OPTIONAL COMMENT ETC.--
 
 				Lines[i] = Lines[i].TrimBVE5Comments();
 				if (string.IsNullOrEmpty(Lines[i]))
@@ -78,17 +75,30 @@ namespace Route.Bve5
 					continue;
 				}
 
-				int a = Lines[i].IndexOf(',');
-				string FilePath = Lines[i].Substring(a + 1, Lines[i].Length - a - 1).Trim();
-
-				if (string.IsNullOrEmpty(FilePath) || a == -1)
+				if (string.IsNullOrEmpty(Lines[i]))
 				{
-					// empty object name
-					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: No object file was specified for key " + Lines[i]);
 					continue;
 				}
 
-				string Key = Lines[i].Substring(0, a).Trim();
+				string[] splitStrings = Lines[i].Split(',');
+				string Key = splitStrings[0].Trim();
+
+				if (splitStrings.Length < 2 || string.IsNullOrEmpty(splitStrings[1]))
+				{
+					// empty object file name
+					if (string.Equals(Key, "null", StringComparison.InvariantCultureIgnoreCase) || string.Equals(Key, "empty", StringComparison.InvariantCultureIgnoreCase))
+					{
+						RouteData.Objects.Add(Key, new StaticObject(Plugin.CurrentHost));
+					}
+					else
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: No object file was specified for key " + Lines[i]);
+					}
+					continue;
+				}
+
+				
+				string FilePath = splitStrings[1].Trim();
 				try
 				{
 					FilePath = Path.CombineFile(BaseDirectory, FilePath);
@@ -100,7 +110,7 @@ namespace Route.Bve5
 
 				if (!File.Exists(FilePath))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Object File " + FilePath + " with key " + Key + " was not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Object File " + splitStrings[1] + " with key " + Key + " was not found.");
 					continue;
 				}
 

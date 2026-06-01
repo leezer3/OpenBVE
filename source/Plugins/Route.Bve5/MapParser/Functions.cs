@@ -245,14 +245,23 @@ namespace Route.Bve5
 		}
 
 		/// <summary>Gets the transformation for an object on the primary rail</summary>
-		private static void GetPrimaryRailTransformation(Vector3 StartingPosition, IList<Block> Blocks, int StartingBlock, AbstractStructure Structure, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
+		private static void GetRailTransformation(string RailKey, Vector3 StartingPosition, IList<Block> Blocks, int StartingBlock, AbstractStructure Structure, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
 		{
-			Direction.Rotate(-Math.Atan(Blocks[StartingBlock].Turn));
-
 			ObjectPosition = StartingPosition;
 			Transformation = new Transformation();
 			if (Structure.Span == 0)
 			{
+				Direction.Rotate(-Math.Atan(Blocks[StartingBlock].Turn));
+
+				if (RailKey != "0")
+				{
+					int nextBlock = StartingBlock < Blocks.Count - 1 ? StartingBlock + 1 : StartingBlock;
+					double InterpolateX = GetTrackCoordinate(Blocks[StartingBlock].StartingDistance, Blocks[StartingBlock].Rails[RailKey].Position.X, Blocks[nextBlock].StartingDistance, Blocks[nextBlock].Rails[RailKey].Position.X, Blocks[StartingBlock].Rails[RailKey].RadiusH, Structure.TrackPosition);
+					double InterpolateY = GetTrackCoordinate(Blocks[StartingBlock].StartingDistance, Blocks[StartingBlock].Rails[RailKey].Position.Y, Blocks[nextBlock].StartingDistance, Blocks[nextBlock].Rails[RailKey].Position.Y, Blocks[StartingBlock].Rails[RailKey].RadiusV, Structure.TrackPosition);
+					Vector3 Offset = new Vector3(Direction.Y * InterpolateX, InterpolateY, -Direction.X * InterpolateX);
+					ObjectPosition += Offset;
+				}
+
 				double radius = Blocks[StartingBlock].CurrentTrackState.CurveRadius;
 				double pitch = Blocks[StartingBlock].Pitch;
 				double cant = Blocks[StartingBlock].CurrentTrackState.CurveCant;
@@ -288,17 +297,10 @@ namespace Route.Bve5
 			else
 			{
 				int nextBlock = StartingBlock < Blocks.Count - 1 ? StartingBlock + 1 : StartingBlock;
-				GetTransformation(StartingPosition, Blocks[StartingBlock], Blocks[nextBlock], "0", Blocks[StartingBlock].Pitch, Structure.TrackPosition, Structure.Type, Structure.Span, Direction, out ObjectPosition, out Transformation);
+				GetTransformation(StartingPosition, Blocks[StartingBlock], Blocks[nextBlock], RailKey, Blocks[StartingBlock].Pitch, Structure.TrackPosition, Structure.Type, Structure.Span, Direction, out ObjectPosition, out Transformation);
 			}
 			
 			
-		}
-
-		/// <summary>Gets the transformation for an object on a secondary rail</summary>
-		private static void GetSecondaryRailTransformation(Vector3 StartingPosition, Vector2 StartingDirection, IList<Block> Blocks, int StartingBlock, string RailKey, AbstractStructure Structure, out Vector3 pos, out Transformation t)
-		{
-			int nextBlock = StartingBlock < Blocks.Count - 1 ? StartingBlock + 1 : StartingBlock;
-			GetTransformation(StartingPosition, Blocks[StartingBlock], Blocks[nextBlock], RailKey, Blocks[StartingBlock].Pitch, Structure.TrackPosition, Structure.Type, Structure.Span, StartingDirection, out pos, out t);
 		}
 
 		/// <summary>Gets the transformation between two blocks</summary>

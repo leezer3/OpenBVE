@@ -236,9 +236,9 @@ namespace Plugin
 					string texturePath = mesh.Materials[i].Textures[0].Name;
 					if (string.IsNullOrEmpty(texturePath))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"An empty texture was specified for material { mesh.Materials[i].Name }");
+						Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"An empty texture was specified for material {mesh.Materials[i].Name}");
 						builder.Materials[m].DaytimeTexture = null;
-						break;
+						continue;
 					}
 					// If the specified file name is an absolute path, make it the file name only.
 					// Some object files specify absolute paths.
@@ -254,13 +254,13 @@ namespace Plugin
 					}
 					catch (Exception e)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"Texture file path {texturePath} in file {currentFile} has the problem: {e.Message}");
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"Texture file path {texturePath} in file {currentFile} for material {mesh.Materials[i].Name} has the problem: {e.Message}");
 						builder.Materials[m].DaytimeTexture = null;
 					}
 
 					if (builder.Materials[m].DaytimeTexture != null && !File.Exists(builder.Materials[m].DaytimeTexture))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, true, "Texture " + builder.Materials[m].DaytimeTexture + " was not found in file " + currentFile);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, true, "Texture " + builder.Materials[m].DaytimeTexture + $" for material {mesh.Materials[i].Name} was not found in file " + currentFile);
 						builder.Materials[m].DaytimeTexture = null;
 					}
 				}

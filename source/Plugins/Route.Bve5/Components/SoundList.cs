@@ -34,38 +34,34 @@ namespace Route.Bve5
 {
 	internal static partial class Bve5ScenarioParser
 	{
-		private static void LoadSoundList(string FileName, bool PreviewOnly, MapData ParseData, RouteData RouteData)
+		private static void LoadSoundList(string FileName, bool PreviewOnly, string SoundListPath, RouteData RouteData)
 		{
-			RouteData.Sounds = new SoundDictionary();
-
-			if (PreviewOnly || string.IsNullOrEmpty(ParseData.SoundListPath))
+			if (PreviewOnly || string.IsNullOrEmpty(SoundListPath))
 			{
 				return;
 			}
-
-			string soundList = ParseData.SoundListPath;
-
-			if (!File.Exists(soundList))
+			
+			if (!File.Exists(SoundListPath))
 			{
-				soundList = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), soundList);
+				SoundListPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), SoundListPath);
 
-				if (!File.Exists(soundList))
+				if (!File.Exists(SoundListPath))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Sound List file " + soundList + " was not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Sound List file " + SoundListPath + " was not found.");
 					return;
 				}
 			}
 
-			string BaseDirectory = System.IO.Path.GetDirectoryName(soundList);
+			string BaseDirectory = System.IO.Path.GetDirectoryName(SoundListPath);
 
-			System.Text.Encoding Encoding = Text.DetermineBVE5FileEncoding(soundList);
-			string[] Lines = File.ReadAllLines(soundList, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
+			System.Text.Encoding Encoding = Text.DetermineBVE5FileEncoding(SoundListPath);
+			string[] Lines = File.ReadAllLines(SoundListPath, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
 
 			for (int i = 1; i < Lines.Length; i++)
 			{
 				//Cycle through the list of sounds
 				//A sound index is formatted as follows:
-				// --KEY USED BY ROUTEFILE-- , --PATH TO OBJECT RELATIVE TO SOUND FILE--
+				// --KEY USED BY ROUTEFILE-- , --PATH TO SOUND RELATIVE TO SOUND FILE-- , --OPTIONAL COMMENT ETC.--
 
 				Lines[i] = Lines[i].TrimBVE5Comments();
 				if (string.IsNullOrEmpty(Lines[i]))
@@ -73,17 +69,17 @@ namespace Route.Bve5
 					continue;
 				}
 
-				int a = Lines[i].IndexOf(',');
-				string FilePath = Lines[i].Substring(a + 1, Lines[i].Length - a - 1).Trim();
+				string[] splitStrings = Lines[i].Split(',');
 
-				if (string.IsNullOrEmpty(FilePath) || a == -1)
+				if (splitStrings.Length < 2 || string.IsNullOrEmpty(splitStrings[1]))
 				{
 					// empty object name
 					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: No sound file was specified for key " + Lines[i]);
 					continue;
 				}
 
-				string Key = Lines[i].Substring(0, a).Trim();
+				string Key = splitStrings[0].Trim();
+				string FilePath = splitStrings[1].Trim();
 				try
 				{
 					FilePath = Path.CombineFile(BaseDirectory, FilePath);
@@ -95,7 +91,7 @@ namespace Route.Bve5
 
 				if (!File.Exists(FilePath))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Sound File " + FilePath + " with key " + Key + " was not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Sound File " + splitStrings[1] + " with key " + Key + " was not found.");
 					continue;
 				}
 
@@ -104,32 +100,28 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void LoadSound3DList(string FileName, bool PreviewOnly, MapData ParseData, RouteData RouteData)
+		private static void LoadSound3DList(string FileName, bool PreviewOnly, string Sound3DListPath, RouteData RouteData)
 		{
-			RouteData.Sound3Ds = new SoundDictionary();
-
-			if (PreviewOnly || string.IsNullOrEmpty(ParseData.Sound3DListPath))
+			if (PreviewOnly || string.IsNullOrEmpty(Sound3DListPath))
 			{
 				return;
 			}
 
-			string sound3DList = ParseData.Sound3DListPath;
-
-			if (!File.Exists(sound3DList))
+			if (!File.Exists(Sound3DListPath))
 			{
-				sound3DList = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), sound3DList);
+				Sound3DListPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Sound3DListPath);
 
-				if (!File.Exists(sound3DList))
+				if (!File.Exists(Sound3DListPath))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Sound3D List file " + sound3DList + " was not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Sound3D List file " + Sound3DListPath + " was not found.");
 					return;
 				}
 			}
 
-			string BaseDirectory = System.IO.Path.GetDirectoryName(sound3DList);
+			string BaseDirectory = System.IO.Path.GetDirectoryName(Sound3DListPath);
 
-			System.Text.Encoding Encoding = Text.DetermineBVE5FileEncoding(sound3DList);
-			string[] Lines = File.ReadAllLines(sound3DList, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
+			System.Text.Encoding Encoding = Text.DetermineBVE5FileEncoding(Sound3DListPath);
+			string[] Lines = File.ReadAllLines(Sound3DListPath, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
 
 			for (int i = 1; i < Lines.Length; i++)
 			{

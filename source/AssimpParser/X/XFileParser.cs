@@ -309,12 +309,6 @@ namespace AssimpNET.X
 
 			Scene = new Scene();
 			ParseFile();
-
-			// filter the imported hierarchy for some degenerated cases
-			if (Scene.RootNode != null)
-			{
-				FilterHierarchy(Scene.RootNode);
-			}
 		}
 
 		/** Returns the temporary representation of the imported data */
@@ -1429,7 +1423,7 @@ namespace AssimpNET.X
 			}
 
 			// test and skip
-			if (Buffer[currentPosition] == ';' || Buffer[currentPosition] == ',')
+			while (Buffer[currentPosition] == ';' || Buffer[currentPosition] == ',')
 			{
 				currentPosition++;
 			}
@@ -1697,39 +1691,6 @@ namespace AssimpNET.X
 				throw new Exception(text);
 			}
 			throw new Exception("Line " + LineNumber + ": " + text);
-		}
-
-		// Filters the imported hierarchy for some degenerated cases that some exporters produce.
-		protected void FilterHierarchy(Node node)
-		{
-			// if the node has just a single unnamed child containing a mesh, remove
-			// the anonymous node between. The 3DSMax kwXport plugin seems to produce this
-			// mess in some cases
-			if (node.Children.Count == 1 && node.Meshes.Count == 0)
-			{
-				Node child = node.Children.First();
-				if (child.Name.Length == 0 && child.Meshes.Count > 0)
-				{
-					// transfer its meshes to us
-					for (int a = 0; a < child.Meshes.Count; a++)
-					{
-						node.Meshes.Add(child.Meshes[a]);
-					}
-					child.Meshes.Clear();
-
-					// transfer the transform as well
-					node.TrafoMatrix *= child.TrafoMatrix;
-
-					// then kill it
-					node.Children.Clear();
-				}
-			}
-
-			// recurse
-			for (int a = 0; a < node.Children.Count; a++)
-			{
-				FilterHierarchy(node.Children[a]);
-			}
 		}
 
 		protected int ConvertToFloat(int position, out float result, bool check_comma = true)
