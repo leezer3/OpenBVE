@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi;
@@ -37,6 +37,7 @@ namespace CsvRwRouteParser
 
 				EnabledHacks.CylinderHack = patch.CylinderHack;
 				EnabledHacks.DisableSemiTransparentFaces = patch.DisableSemiTransparentFaces;
+				EnabledHacks.InsufficientWallDikeArguments = patch.InsufficientWallDikeArguments;
 				Plugin.CurrentOptions.ObjectDisposalMode = patch.AccurateObjectDisposal ? ObjectDisposalMode.Accurate : ObjectDisposalMode.Legacy;
 
 				for (int i = 0; i < patch.ExpressionFixes.Count; i++)
@@ -163,5 +164,7 @@ namespace CsvRwRouteParser
 		internal bool DelayedAnimatedUpdates = false;
 		/// <summary>Whether adhesion is infinite (no wheelslip)</summary>
 		internal bool AdhesionHack = false;
+		/// <summary>Whether walls / dikes with insufficient arguments are allowed</summary>
+		internal bool InsufficientWallDikeArguments;
 	}
 }
