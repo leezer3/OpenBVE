@@ -737,7 +737,7 @@ namespace OpenBveApi.Objects
 				internalObject.WorldPosition = Position;
 			}
 
-			if (ColorFunction != null && Colors != null)
+			if (ColorFunction != null && Colors != null && internalObject.Prototype != null && internalObject.Prototype.Mesh != null && internalObject.Prototype.Mesh.Materials != null && internalObject.Prototype.Mesh.Materials.Length > 0)
 			{
 				int color = (int)ColorFunction.LastResult;
 				if (UpdateFunctions)

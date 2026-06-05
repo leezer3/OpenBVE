@@ -370,9 +370,29 @@ namespace Plugin
 
 						break;
 					case AnimatedSection.Light:
-						if (ObjectCount > 0)
 						{
-							AnimatedObject animatedObj = Result.Objects[ObjectCount - 1];
+							if (Result.Objects.Length == ObjectCount)
+							{
+								Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
+							}
+							AnimatedObject animatedObj = new AnimatedObject(currentHost, FileName)
+							{
+								CurrentState = 0,
+								States = new ObjectState[] { new ObjectState() },
+								TranslateXDirection = Vector3.Right,
+								TranslateYDirection = Vector3.Down,
+								TranslateZDirection = Vector3.Forward,
+								RotateXDirection = Vector3.Right,
+								RotateYDirection = Vector3.Down,
+								RotateZDirection = Vector3.Forward,
+								TextureShiftXDirection = Vector2.Right,
+								TextureShiftYDirection = Vector2.Down,
+								RefreshRate = 0.0,
+							};
+							animatedObj.States[0].Prototype = new StaticObject(currentHost);
+							animatedObj.States[0].Prototype.Dynamic = true;
+							animatedObj.States[0].Translation = Matrix4D.Identity;
+
 							SceneLight light = new SceneLight();
 
 							if (Block.GetEnumValue(AnimatedKey.Type, out SceneLightType type))
@@ -427,12 +447,29 @@ namespace Plugin
 							{
 								light.Visual = visual;
 							}
-							
+
 							animatedObj.Lights.Add(light);
-							if (animatedObj.Light == null)
-							{
-								animatedObj.Light = light;
-							}
+							animatedObj.Light = light;
+
+							// Parse animation functions for the light object itself
+							Block.GetFunctionScript(new[] { AnimatedKey.RotateXFunction, AnimatedKey.RotateXFunctionRPN, AnimatedKey.RotateXScript }, Folder, out animatedObj.RotateXFunction);
+							Block.GetFunctionScript(new[] { AnimatedKey.RotateYFunction, AnimatedKey.RotateYFunctionRPN, AnimatedKey.RotateYScript }, Folder, out animatedObj.RotateYFunction);
+							Block.GetFunctionScript(new[] { AnimatedKey.RotateZFunction, AnimatedKey.RotateZFunctionRPN, AnimatedKey.RotateZScript }, Folder, out animatedObj.RotateZFunction);
+							Block.GetFunctionScript(new[] { AnimatedKey.TranslateXFunction, AnimatedKey.TranslateXFunctionRPN, AnimatedKey.TranslateXScript }, Folder, out animatedObj.TranslateXFunction);
+							Block.GetFunctionScript(new[] { AnimatedKey.TranslateYFunction, AnimatedKey.TranslateYFunctionRPN, AnimatedKey.TranslateYScript }, Folder, out animatedObj.TranslateYFunction);
+							Block.GetFunctionScript(new[] { AnimatedKey.TranslateZFunction, AnimatedKey.TranslateZFunctionRPN, AnimatedKey.TranslateZScript }, Folder, out animatedObj.TranslateZFunction);
+							Block.TryGetVector3(AnimatedKey.TranslateXDirection, ',', ref animatedObj.TranslateXDirection);
+							Block.TryGetVector3(AnimatedKey.TranslateYDirection, ',', ref animatedObj.TranslateYDirection);
+							Block.TryGetVector3(AnimatedKey.TranslateZDirection, ',', ref animatedObj.TranslateZDirection);
+							Block.TryGetVector3(AnimatedKey.RotateXDirection, ',', ref animatedObj.RotateXDirection);
+							Block.TryGetVector3(AnimatedKey.RotateYDirection, ',', ref animatedObj.RotateYDirection);
+							Block.TryGetVector3(AnimatedKey.RotateZDirection, ',', ref animatedObj.RotateZDirection);
+							Block.GetDamping(AnimatedKey.RotateXDamping, ',', out animatedObj.RotateXDamping);
+							Block.GetDamping(AnimatedKey.RotateYDamping, ',', out animatedObj.RotateYDamping);
+							Block.GetDamping(AnimatedKey.RotateZDamping, ',', out animatedObj.RotateZDamping);
+
+							Result.Objects[ObjectCount] = animatedObj;
+							ObjectCount++;
 						}
 						break;
 				}
