@@ -27,16 +27,28 @@ namespace OpenBveApi.Objects
 		public float Range;
 		/// <summary>Squared range of the light</summary>
 		public float RangeSquared;
-		/// <summary>Linear attenuation factor</summary>
-		public float AttenuationLinear;
-		/// <summary>Quadratic attenuation factor</summary>
-		public float AttenuationQuadratic;
 		/// <summary>Spotlight cutoff cosine (pre-calculated on CPU)</summary>
 		public float SpotCutoff;
-		/// <summary>Spotlight exponent concentration factor</summary>
-		public float SpotExponent;
 		/// <summary>Whether to show a visual helper for this light</summary>
 		public bool Visual;
+		/// <summary>Power of the light in Watts</summary>
+		public float Power;
+		/// <summary>Exposure multiplier</summary>
+		public float Exposure;
+		/// <summary>Whether to normalize power</summary>
+		public bool NormalizeCone;
+		/// <summary>Source radius (size) of the light source</summary>
+		public float Radius;
+		/// <summary>Whether to use soft falloff</summary>
+		public bool SoftFalloff;
+		/// <summary>Spot angle in degrees</summary>
+		public float Angle;
+		/// <summary>Spot softness factor (0 to 1)</summary>
+		public float Softness;
+		/// <summary>Whether to show the cone helper</summary>
+		public bool ShowCone;
+		/// <summary>Whether this light casts shadows</summary>
+		public bool CastShadow;
  
  		/// <summary>Creates a default scene light</summary>
  		public SceneLight()
@@ -47,11 +59,17 @@ namespace OpenBveApi.Objects
  			Color = Color128.White;
  			Range = 10.0f;
  			RangeSquared = 100.0f;
- 			AttenuationLinear = 1.0f;
- 			AttenuationQuadratic = 0.0f;
  			SpotCutoff = 0.5f; // cos(45 deg)
- 			SpotExponent = 1.0f;
 			Visual = false;
+			Power = 12.5663706f; // 4 * PI (so default multiplier is 1.0)
+			Exposure = 0.0f;
+			NormalizeCone = true;
+			Radius = 0.0f;
+			SoftFalloff = true;
+			Angle = 45.0f;
+			Softness = 1.0f;
+			ShowCone = true;
+			CastShadow = false;
  		}
  
  		/// <summary>Clones the light source</summary>
@@ -65,11 +83,17 @@ namespace OpenBveApi.Objects
  				Color = this.Color,
  				Range = this.Range,
  				RangeSquared = this.RangeSquared,
- 				AttenuationLinear = this.AttenuationLinear,
- 				AttenuationQuadratic = this.AttenuationQuadratic,
  				SpotCutoff = this.SpotCutoff,
- 				SpotExponent = this.SpotExponent,
-				Visual = this.Visual
+				Visual = this.Visual,
+				Power = this.Power,
+				Exposure = this.Exposure,
+				NormalizeCone = this.NormalizeCone,
+				Radius = this.Radius,
+				SoftFalloff = this.SoftFalloff,
+				Angle = this.Angle,
+				Softness = this.Softness,
+				ShowCone = this.ShowCone,
+				CastShadow = this.CastShadow
  			};
  		}
 	}

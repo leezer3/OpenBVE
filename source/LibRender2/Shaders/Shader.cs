@@ -75,10 +75,13 @@ namespace LibRender2.Shaders
 		private readonly int[] uDynamicLightColorLocation = new int[16];
 		private readonly int[] uDynamicLightRangeLocation = new int[16];
 		private readonly int[] uDynamicLightRangeSquaredLocation = new int[16];
-		private readonly int[] uDynamicLightAttenuationLinearLocation = new int[16];
-		private readonly int[] uDynamicLightAttenuationQuadraticLocation = new int[16];
 		private readonly int[] uDynamicLightSpotCutoffLocation = new int[16];
-		private readonly int[] uDynamicLightSpotExponentLocation = new int[16];
+		private readonly int[] uDynamicLightPowerLocation = new int[16];
+		private readonly int[] uDynamicLightExposureLocation = new int[16];
+		private readonly int[] uDynamicLightNormalizeLocation = new int[16];
+		private readonly int[] uDynamicLightRadiusLocation = new int[16];
+		private readonly int[] uDynamicLightSoftFalloffLocation = new int[16];
+		private readonly int[] uDynamicLightSoftnessLocation = new int[16];
 
 
 		/// <summary>
@@ -124,10 +127,13 @@ namespace LibRender2.Shaders
 				uDynamicLightColorLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].color");
 				uDynamicLightRangeLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].range");
 				uDynamicLightRangeSquaredLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].rangeSquared");
-				uDynamicLightAttenuationLinearLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].attenuationLinear");
-				uDynamicLightAttenuationQuadraticLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].attenuationQuadratic");
 				uDynamicLightSpotCutoffLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].spotCutoff");
-				uDynamicLightSpotExponentLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].spotExponent");
+				uDynamicLightPowerLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].power");
+				uDynamicLightExposureLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].exposure");
+				uDynamicLightNormalizeLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].isNormalize");
+				uDynamicLightRadiusLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].radius");
+				uDynamicLightSoftFalloffLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].softFalloff");
+				uDynamicLightSoftnessLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].softness");
 			}
 
 			VertexLayout = GetVertexLayout();
@@ -567,11 +573,11 @@ namespace LibRender2.Shaders
 		{
 			int count = System.Math.Min(lights.Count, maxLimit);
 			GL.ProgramUniform1(Handle, uDynamicLightCountLocation, count);
-			Matrix4D lightViewMatrix = Renderer.Camera != null ? Renderer.Camera.TranslationMatrix * viewMatrix : viewMatrix;
 			for (int i = 0; i < count; i++)
 			{
 				SceneLight light = lights[i];
 				
+				Matrix4D lightViewMatrix = Renderer.Camera != null ? Renderer.Camera.TranslationMatrix * viewMatrix : viewMatrix;
 				Vector3 viewPos = light.Position;
 				viewPos.Transform(lightViewMatrix, false);
 
@@ -585,10 +591,13 @@ namespace LibRender2.Shaders
 				GL.ProgramUniform4(Handle, uDynamicLightColorLocation[i], light.Color.R, light.Color.G, light.Color.B, light.Color.A);
 				GL.ProgramUniform1(Handle, uDynamicLightRangeLocation[i], light.Range);
 				GL.ProgramUniform1(Handle, uDynamicLightRangeSquaredLocation[i], light.RangeSquared);
-				GL.ProgramUniform1(Handle, uDynamicLightAttenuationLinearLocation[i], light.AttenuationLinear);
-				GL.ProgramUniform1(Handle, uDynamicLightAttenuationQuadraticLocation[i], light.AttenuationQuadratic);
 				GL.ProgramUniform1(Handle, uDynamicLightSpotCutoffLocation[i], light.SpotCutoff);
-				GL.ProgramUniform1(Handle, uDynamicLightSpotExponentLocation[i], light.SpotExponent);
+				GL.ProgramUniform1(Handle, uDynamicLightPowerLocation[i], light.Power);
+				GL.ProgramUniform1(Handle, uDynamicLightExposureLocation[i], light.Exposure);
+				GL.ProgramUniform1(Handle, uDynamicLightNormalizeLocation[i], light.NormalizeCone ? 1 : 0);
+				GL.ProgramUniform1(Handle, uDynamicLightRadiusLocation[i], light.Radius);
+				GL.ProgramUniform1(Handle, uDynamicLightSoftFalloffLocation[i], light.SoftFalloff ? 1 : 0);
+				GL.ProgramUniform1(Handle, uDynamicLightSoftnessLocation[i], light.Softness);
 			}
 		}
 

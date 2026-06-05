@@ -215,6 +215,7 @@ namespace OpenBveApi.Objects
 			if (this.TextureShiftXFunction != null | this.TextureShiftYFunction != null) return false;
 			if (this.LEDFunction != null) return false;
 			if (this.TrackFollowerFunction != null) return false;
+			if (this.Light != null || this.Lights.Count > 0) return false;
 			return true;
 		}
 
@@ -787,11 +788,17 @@ namespace OpenBveApi.Objects
 					internalLight.Color = light.Color;
 					internalLight.Range = light.Range;
 					internalLight.RangeSquared = light.RangeSquared;
-					internalLight.AttenuationLinear = light.AttenuationLinear;
-					internalLight.AttenuationQuadratic = light.AttenuationQuadratic;
 					internalLight.SpotCutoff = light.SpotCutoff;
-					internalLight.SpotExponent = light.SpotExponent;
 					internalLight.Visual = light.Visual;
+					internalLight.Power = light.Power;
+					internalLight.Exposure = light.Exposure;
+					internalLight.NormalizeCone = light.NormalizeCone;
+					internalLight.Radius = light.Radius;
+					internalLight.SoftFalloff = light.SoftFalloff;
+					internalLight.Angle = light.Angle;
+					internalLight.Softness = light.Softness;
+					internalLight.ShowCone = light.ShowCone;
+					internalLight.CastShadow = light.CastShadow;
 
 					Vector3 pos = new Vector3(light.Position.X, light.Position.Y, -light.Position.Z);
 					pos.Transform(lightMatrix, false);
@@ -814,11 +821,17 @@ namespace OpenBveApi.Objects
 					internalObject.Light.Color = this.Light.Color;
 					internalObject.Light.Range = this.Light.Range;
 					internalObject.Light.RangeSquared = this.Light.RangeSquared;
-					internalObject.Light.AttenuationLinear = this.Light.AttenuationLinear;
-					internalObject.Light.AttenuationQuadratic = this.Light.AttenuationQuadratic;
 					internalObject.Light.SpotCutoff = this.Light.SpotCutoff;
-					internalObject.Light.SpotExponent = this.Light.SpotExponent;
 					internalObject.Light.Visual = this.Light.Visual;
+					internalObject.Light.Power = this.Light.Power;
+					internalObject.Light.Exposure = this.Light.Exposure;
+					internalObject.Light.NormalizeCone = this.Light.NormalizeCone;
+					internalObject.Light.Radius = this.Light.Radius;
+					internalObject.Light.SoftFalloff = this.Light.SoftFalloff;
+					internalObject.Light.Angle = this.Light.Angle;
+					internalObject.Light.Softness = this.Light.Softness;
+					internalObject.Light.ShowCone = this.Light.ShowCone;
+					internalObject.Light.CastShadow = this.Light.CastShadow;
 
 					Vector3 pos = new Vector3(this.Light.Position.X, this.Light.Position.Y, -this.Light.Position.Z);
 					pos.Transform(lightMatrix, false);
@@ -907,7 +920,21 @@ namespace OpenBveApi.Objects
 					}
 				}
 
-				currentObject.Radius = System.Math.Sqrt(r);
+				double radius = System.Math.Sqrt(r);
+				if (currentObject.Object.Light != null || currentObject.Object.Lights.Count > 0)
+				{
+					double maxLightRange = 25.0;
+					if (currentObject.Object.Light != null)
+					{
+						maxLightRange = System.Math.Max(maxLightRange, currentObject.Object.Light.Range);
+					}
+					for (int k = 0; k < currentObject.Object.Lights.Count; k++)
+					{
+						maxLightRange = System.Math.Max(maxLightRange, currentObject.Object.Lights[k].Range);
+					}
+					radius = System.Math.Max(radius, maxLightRange);
+				}
+				currentObject.Radius = radius;
 				currentObject.Visible = false;
 				currentObject.Object.Initialize(0, ObjectType.Dynamic, false);
 				currentHost.AnimatedWorldObjects[a] = currentObject;
@@ -946,7 +973,21 @@ namespace OpenBveApi.Objects
 					}
 				}
 
-				currentObject.Radius = System.Math.Sqrt(r);
+				double radius = System.Math.Sqrt(r);
+				if (currentObject.Object.Light != null || currentObject.Object.Lights.Count > 0)
+				{
+					double maxLightRange = 25.0;
+					if (currentObject.Object.Light != null)
+					{
+						maxLightRange = System.Math.Max(maxLightRange, currentObject.Object.Light.Range);
+					}
+					for (int k = 0; k < currentObject.Object.Lights.Count; k++)
+					{
+						maxLightRange = System.Math.Max(maxLightRange, currentObject.Object.Lights[k].Range);
+					}
+					radius = System.Math.Max(radius, maxLightRange);
+				}
+				currentObject.Radius = radius;
 				currentObject.Visible = false;
 				currentObject.Object.Initialize(0, ObjectType.Dynamic, false);
 				currentHost.AnimatedWorldObjects[a] = currentObject;
