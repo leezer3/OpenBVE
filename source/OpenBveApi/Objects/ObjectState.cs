@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Math;
 
 namespace OpenBveApi.Objects
@@ -77,6 +77,10 @@ namespace OpenBveApi.Objects
 		private bool updateModelMatrix;
 		/// <summary>The texture translation matrix to be applied</summary>
 		public Matrix4D TextureTranslation;
+		/// <summary>The active scene light source for this object instance</summary>
+		public SceneLight Light;
+		/// <summary>The active scene light sources for this object instance</summary>
+		public System.Collections.Generic.List<SceneLight> Lights = new System.Collections.Generic.List<SceneLight>();
 		/// <summary>The starting track position, for static objects only.</summary>
 		public float StartingDistance;
 		/// <summary>The ending track position, for static objects only.</summary>
@@ -104,7 +108,13 @@ namespace OpenBveApi.Objects
 		/// <summary>Clones this ObjectState</summary>
 		public object Clone()
 		{
-			return MemberwiseClone();
+			ObjectState cloned = (ObjectState)MemberwiseClone();
+			cloned.Lights = new System.Collections.Generic.List<SceneLight>();
+			foreach (var l in this.Lights)
+			{
+				cloned.Lights.Add(l.Clone());
+			}
+			return cloned;
 		}
 
 		/// <summary>Reverses this ObjectState</summary>

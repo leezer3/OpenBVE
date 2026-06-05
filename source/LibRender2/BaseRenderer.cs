@@ -156,6 +156,8 @@ namespace LibRender2
 		protected internal AbstractShader CurrentShader;
 
 		public Shader DefaultShader;
+
+		public List<SceneLight> ActiveSceneLights = new List<SceneLight>();
 		
 		/// <summary>Manages the Cascaded Shadow Mapping (CSM) system.</summary>
 		public Shadows Shadows;
@@ -1168,6 +1170,63 @@ namespace LibRender2
 			shader.SetTexture(0);
 			shader.SetBrightness(1.0f);
 			shader.SetOpacity(1.0f);
+			shader.SetDynamicLights(new List<SceneLight>(), Matrix4D.Identity, 0);
+		}
+
+		private static bool logged = false;
+
+		public void UpdateActiveLights(Shader shader)
+		{
+			if (shader == null)
+			{
+				return;
+			}
+			ActiveSceneLights.Clear();
+			Vector3 cameraPos = Camera.AbsolutePosition;
+			lock (VisibleObjects.LockObject)
+			{
+				foreach (var kvp in VisibleObjects.Objects)
+				{
+					ObjectState obj = kvp.Key;
+					if (obj.Lights != null && obj.Lights.Count > 0)
+					{
+						for (int j = 0; j < obj.Lights.Count; j++)
+						{
+							ActiveSceneLights.Add(obj.Lights[j]);
+						}
+					}
+					else if (obj.Light != null)
+					{
+						ActiveSceneLights.Add(obj.Light);
+					}
+				}
+			}
+			// Sort by squared distance to camera
+			ActiveSceneLights.Sort((a, b) =>
+			{
+				double distA = (a.Position - cameraPos).NormSquared();
+				double distB = (b.Position - cameraPos).NormSquared();
+				return distA.CompareTo(distB);
+			});
+
+			if (ActiveSceneLights.Count > 0 && !logged)
+			{
+				logged = true;
+				for (int i = 0; i < ActiveSceneLights.Count; i++)
+				{
+					SceneLight light = ActiveSceneLights[i];
+					Matrix4D lightViewMatrix = Camera.TranslationMatrix * CurrentViewMatrix;
+					Vector3 viewPos = light.Position;
+					viewPos.Transform(lightViewMatrix, false);
+					Vector3 viewDir = light.Direction;
+					viewDir.Transform(CurrentViewMatrix, true);
+					viewDir.Normalize();
+					System.Console.WriteLine(
+						$"[LIGHT_LOG] CamPos={cameraPos}, LightPos={light.Position}, ViewPos={viewPos}, LightDir={light.Direction}, ViewDir={viewDir}");
+				}
+			}
+
+			shader.SetDynamicLights(ActiveSceneLights, CurrentViewMatrix, currentOptions.DynamicLightLimit);
 			shader.SetObjectIndex(0);
 			shader.SetAlphaTest(false);
 		}
@@ -1854,6 +1913,145 @@ namespace LibRender2
 			{
 				SetWindowState(WindowState.Maximized);
 			}
+		}
+
+		public void DrawLightVisuals()
+		{
+			bool anyVisual = false;
+			for (int i = 0; i < ActiveSceneLights.Count; i++)
+			{
+				if (ActiveSceneLights[i].Visual)
+				{
+					anyVisual = true;
+					break;
+				}
+			}
+			if (!anyVisual) return;
+
+			ResetOpenGlState();
+			if (AvailableNewRenderer)
+			{
+				CurrentShader.Deactivate();
+			}
+
+			unsafe
+			{
+				GL.MatrixMode(MatrixMode.Projection);
+				GL.PushMatrix();
+				fixed (double* matrixPointer = &CurrentProjectionMatrix.Row0.X)
+				{
+					GL.LoadMatrix(matrixPointer);
+				}
+
+				GL.MatrixMode(MatrixMode.Modelview);
+				GL.PushMatrix();
+				fixed (double* matrixPointer = &CurrentViewMatrix.Row0.X)
+				{
+					GL.LoadMatrix(matrixPointer);
+				}
+
+				Matrix4D m = Camera.TranslationMatrix;
+				double* matrixPointer2 = &m.Row0.X;
+				GL.MultMatrix(matrixPointer2);
+			}
+
+			GL.Disable(EnableCap.Texture2D);
+			GL.Disable(EnableCap.Lighting);
+			GL.Disable(EnableCap.DepthTest);
+
+			for (int i = 0; i < ActiveSceneLights.Count; i++)
+			{
+				SceneLight light = ActiveSceneLights[i];
+				if (!light.Visual) continue;
+
+				// Draw a small cross at light position
+				GL.Begin(PrimitiveType.Lines);
+				GL.Color4(light.Color.R, light.Color.G, light.Color.B, 1.0f);
+				
+				Vector3 pos = light.Position;
+				double size = 0.5;
+				GL.Vertex3(pos.X - size, pos.Y, pos.Z);
+				GL.Vertex3(pos.X + size, pos.Y, pos.Z);
+				
+				GL.Vertex3(pos.X, pos.Y - size, pos.Z);
+				GL.Vertex3(pos.X, pos.Y + size, pos.Z);
+				
+				GL.Vertex3(pos.X, pos.Y, pos.Z - size);
+				GL.Vertex3(pos.X, pos.Y, pos.Z + size);
+
+				if (light.Type == SceneLightType.Spot)
+				{
+					Vector3 dir = light.Direction;
+					Vector3 target = pos + dir * light.Range;
+
+					// Draw central direction line
+					GL.Vertex3(pos.X, pos.Y, pos.Z);
+					GL.Vertex3(target.X, target.Y, target.Z);
+
+					// Draw cone base outline
+					double cutoffAngle = Math.Acos(light.SpotCutoff);
+					double radius = light.Range * Math.Tan(cutoffAngle);
+
+					Vector3 right = Vector3.Cross(dir, Vector3.Up);
+					if (right.NormSquared() < 0.001)
+					{
+						right = Vector3.Cross(dir, Vector3.Right);
+					}
+					right.Normalize();
+					Vector3 up = Vector3.Cross(right, dir);
+					up.Normalize();
+
+					int segments = 8;
+					Vector3 lastConePoint = Vector3.Zero;
+					for (int j = 0; j <= segments; j++)
+					{
+						double angle = (j * 2.0 * Math.PI) / segments;
+						Vector3 conePoint = target + (right * Math.Cos(angle) + up * Math.Sin(angle)) * radius;
+
+						GL.Vertex3(pos.X, pos.Y, pos.Z);
+						GL.Vertex3(conePoint.X, conePoint.Y, conePoint.Z);
+
+						if (j > 0)
+						{
+							GL.Vertex3(lastConePoint.X, lastConePoint.Y, lastConePoint.Z);
+							GL.Vertex3(conePoint.X, conePoint.Y, conePoint.Z);
+						}
+						lastConePoint = conePoint;
+					}
+				}
+				else if (light.Type == SceneLightType.Point)
+				{
+					int segments = 16;
+					for (int plane = 0; plane < 3; plane++)
+					{
+						Vector3 lastPt = Vector3.Zero;
+						for (int j = 0; j <= segments; j++)
+						{
+							double angle = (j * 2.0 * Math.PI) / segments;
+							double dx = light.Range * Math.Cos(angle);
+							double dy = light.Range * Math.Sin(angle);
+
+							Vector3 pt = pos;
+							if (plane == 0) { pt.X += dx; pt.Y += dy; }
+							else if (plane == 1) { pt.Y += dx; pt.Z += dy; }
+							else { pt.X += dx; pt.Z += dy; }
+
+							if (j > 0)
+							{
+								GL.Vertex3(lastPt.X, lastPt.Y, lastPt.Z);
+								GL.Vertex3(pt.X, pt.Y, pt.Z);
+							}
+							lastPt = pt;
+						}
+					}
+				}
+				GL.End();
+			}
+
+			GL.PopMatrix();
+			GL.MatrixMode(MatrixMode.Projection);
+			GL.PopMatrix();
+			GL.Enable(EnableCap.DepthTest);
 		}
 
 		public ConcurrentQueue<ThreadStart> RenderThreadJobs;

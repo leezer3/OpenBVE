@@ -66,6 +66,8 @@ namespace OpenBve {
 		private Image GamepadImage;
 		private Image XboxImage;
 		private Image ZukiImage;
+		private NumericUpDown updownDynamicLightLimit;
+		private Label labelDynamicLightLimit;
 
 		// ====
 		// form
@@ -120,6 +122,41 @@ namespace OpenBve {
 			radioButtonPackages.AutoSize = false;
 			radioButtonPackages.Size = new Size(buttonClose.Width, buttonClose.Height);
 			radioButtonPackages.TextAlign = ContentAlignment.MiddleCenter;
+			// Shift controls in panelOptionsRight for dynamic light limit option
+			{
+				int shift = 28;
+				groupboxSound.Height += shift;
+				foreach (Control c in panelOptionsRight.Controls)
+				{
+					if (c != groupboxSound && c.Top >= groupboxSound.Top)
+					{
+						c.Top += shift;
+					}
+				}
+			}
+
+			// Create updownDynamicLightLimit
+			updownDynamicLightLimit = new NumericUpDown();
+			updownDynamicLightLimit.Name = "updownDynamicLightLimit";
+			updownDynamicLightLimit.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+			updownDynamicLightLimit.Location = new Point(updownSoundNumber.Left, updownSoundNumber.Top + 28);
+			updownDynamicLightLimit.Size = updownSoundNumber.Size;
+			updownDynamicLightLimit.Minimum = 0;
+			updownDynamicLightLimit.Maximum = 16;
+			updownDynamicLightLimit.Value = Interface.CurrentOptions.DynamicLightLimit;
+
+			// Create labelDynamicLightLimit
+			labelDynamicLightLimit = new Label();
+			labelDynamicLightLimit.Name = "labelDynamicLightLimit";
+			labelDynamicLightLimit.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			labelDynamicLightLimit.Location = new Point(labelSoundNumber.Left, labelSoundNumber.Top + 28);
+			labelDynamicLightLimit.Size = labelSoundNumber.Size;
+			labelDynamicLightLimit.Text = "Max dynamic lights:";
+			labelDynamicLightLimit.TextAlign = ContentAlignment.TopRight;
+
+			groupboxSound.Controls.Add(updownDynamicLightLimit);
+			groupboxSound.Controls.Add(labelDynamicLightLimit);
+
 			// options
 			Interface.LoadLogs();
 			{
@@ -519,6 +556,7 @@ namespace OpenBve {
 				trackbarJoystickAxisThreshold.Value = b;
 			}
 			updownSoundNumber.Value = Interface.CurrentOptions.SoundNumber;
+			updownDynamicLightLimit.Value = Interface.CurrentOptions.DynamicLightLimit;
 			checkboxWarningMessages.Checked = Interface.CurrentOptions.ShowWarningMessages;
 			checkboxErrorMessages.Checked = Interface.CurrentOptions.ShowErrorMessages;
 			comboBoxCompressionFormat.SelectedIndex = (int)Interface.CurrentOptions.packageCompressionType;
@@ -796,6 +834,11 @@ namespace OpenBve {
 			//Sound
 			groupboxSound.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_sound"});
 			labelSoundNumber.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_sound_number"});
+			labelDynamicLightLimit.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_sound_dynamiclights"});
+			if (labelDynamicLightLimit.Text == "misc_sound_dynamiclights")
+			{
+				labelDynamicLightLimit.Text = "Max dynamic lights:";
+			}
 			//Verbosity
 			groupboxVerbosity.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","verbosity"});
 			checkboxWarningMessages.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","verbosity_warningmessages"});
@@ -1271,6 +1314,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.AllowAxisEB = checkBoxEBAxis.Checked;
 			Interface.CurrentOptions.JoystickAxisThreshold = (trackbarJoystickAxisThreshold.Value - (double)trackbarJoystickAxisThreshold.Minimum) / (trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum);
 			Interface.CurrentOptions.SoundNumber = (int)Math.Round(updownSoundNumber.Value);
+			Interface.CurrentOptions.DynamicLightLimit = (int)Math.Round(updownDynamicLightLimit.Value);
 			Interface.CurrentOptions.ShowWarningMessages = checkboxWarningMessages.Checked;
 			Interface.CurrentOptions.ShowErrorMessages = checkboxErrorMessages.Checked;
 			Interface.CurrentOptions.RouteFolder = textboxRouteFolder.Text;

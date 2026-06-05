@@ -1,4 +1,5 @@
 using Formats.OpenBve;
+using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -367,6 +368,72 @@ namespace Plugin
 							}
 						}
 
+						break;
+					case AnimatedSection.Light:
+						if (ObjectCount > 0)
+						{
+							AnimatedObject animatedObj = Result.Objects[ObjectCount - 1];
+							SceneLight light = new SceneLight();
+
+							if (Block.GetEnumValue(AnimatedKey.Type, out SceneLightType type))
+							{
+								light.Type = type;
+							}
+
+							Block.TryGetVector3(AnimatedKey.Position, ',', ref light.Position);
+							Block.TryGetVector3(AnimatedKey.Direction, ',', ref light.Direction);
+							light.Direction.Normalize();
+
+							Color32 color32 = Color32.White;
+							if (Block.TryGetColor32(AnimatedKey.Color, ref color32))
+							{
+								light.Color = new Color128(color32.R / 255.0f, color32.G / 255.0f, color32.B / 255.0f, color32.A / 255.0f);
+							}
+
+							double range = 10.0;
+							if (Block.TryGetValue(AnimatedKey.Range, ref range, NumberRange.Positive))
+							{
+								light.Range = (float)range;
+								light.RangeSquared = light.Range * light.Range;
+							}
+
+							double[] att = { };
+							if (Block.TryGetDoubleArray(AnimatedKey.Attenuation, ',', ref att))
+							{
+								if (att.Length > 0 && att[0] >= 0)
+								{
+									light.AttenuationLinear = (float)att[0];
+								}
+								if (att.Length > 1 && att[1] >= 0)
+								{
+									light.AttenuationQuadratic = (float)att[1];
+								}
+							}
+
+							double spotCutoff = 30.0;
+							if (Block.TryGetValue(AnimatedKey.SpotCutoff, ref spotCutoff, NumberRange.Positive))
+							{
+								light.SpotCutoff = (float)System.Math.Cos(spotCutoff * System.Math.PI / 180.0);
+							}
+
+							double spotExponent = 1.0;
+							if (Block.TryGetValue(AnimatedKey.SpotExponent, ref spotExponent, NumberRange.Positive))
+							{
+								light.SpotExponent = (float)spotExponent;
+							}
+
+							bool visual = false;
+							if (Block.TryGetValue(AnimatedKey.Visual, ref visual))
+							{
+								light.Visual = visual;
+							}
+							
+							animatedObj.Lights.Add(light);
+							if (animatedObj.Light == null)
+							{
+								animatedObj.Light = light;
+							}
+						}
 						break;
 				}
 				Block.ReportErrors();
