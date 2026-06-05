@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System.Collections.Generic;
 using LibRender2.Fogs;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -67,6 +68,17 @@ namespace LibRender2.Shaders
 		private readonly int uLightSpaceMatrix3Location;
 		private readonly int uModelMatrixLocation;
 		private readonly int uCurrentViewMatrixLocation;
+		private readonly int uDynamicLightCountLocation;
+		private readonly int[] uDynamicLightTypeLocation = new int[16];
+		private readonly int[] uDynamicLightPositionLocation = new int[16];
+		private readonly int[] uDynamicLightDirectionLocation = new int[16];
+		private readonly int[] uDynamicLightColorLocation = new int[16];
+		private readonly int[] uDynamicLightRangeLocation = new int[16];
+		private readonly int[] uDynamicLightRangeSquaredLocation = new int[16];
+		private readonly int[] uDynamicLightAttenuationLinearLocation = new int[16];
+		private readonly int[] uDynamicLightAttenuationQuadraticLocation = new int[16];
+		private readonly int[] uDynamicLightSpotCutoffLocation = new int[16];
+		private readonly int[] uDynamicLightSpotExponentLocation = new int[16];
 
 
 		/// <summary>
@@ -103,6 +115,20 @@ namespace LibRender2.Shaders
 			uLightSpaceMatrix3Location = GL.GetUniformLocation(Handle, "uLightSpaceMatrix3");
 			uModelMatrixLocation = GL.GetUniformLocation(Handle, "uModelMatrix");
 			uCurrentViewMatrixLocation = GL.GetUniformLocation(Handle, "uCurrentViewMatrix");
+			uDynamicLightCountLocation = GL.GetUniformLocation(Handle, "uDynamicLightCount");
+			for (int i = 0; i < 16; i++)
+			{
+				uDynamicLightTypeLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].type");
+				uDynamicLightPositionLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].position");
+				uDynamicLightDirectionLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].direction");
+				uDynamicLightColorLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].color");
+				uDynamicLightRangeLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].range");
+				uDynamicLightRangeSquaredLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].rangeSquared");
+				uDynamicLightAttenuationLinearLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].attenuationLinear");
+				uDynamicLightAttenuationQuadraticLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].attenuationQuadratic");
+				uDynamicLightSpotCutoffLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].spotCutoff");
+				uDynamicLightSpotExponentLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].spotExponent");
+			}
 
 			VertexLayout = GetVertexLayout();
 			UniformLayout = GetUniformLayout();
@@ -535,6 +561,35 @@ namespace LibRender2.Shaders
 				(float)m.Row2.X, (float)m.Row2.Y, (float)m.Row2.Z, (float)m.Row2.W,
 				(float)m.Row3.X, (float)m.Row3.Y, (float)m.Row3.Z, (float)m.Row3.W
 			};
+		}
+
+		public void SetDynamicLights(List<SceneLight> lights, Matrix4D viewMatrix, int maxLimit)
+		{
+			int count = System.Math.Min(lights.Count, maxLimit);
+			GL.ProgramUniform1(Handle, uDynamicLightCountLocation, count);
+			Matrix4D lightViewMatrix = Renderer.Camera != null ? Renderer.Camera.TranslationMatrix * viewMatrix : viewMatrix;
+			for (int i = 0; i < count; i++)
+			{
+				SceneLight light = lights[i];
+				
+				Vector3 viewPos = light.Position;
+				viewPos.Transform(lightViewMatrix, false);
+
+				Vector3 viewDir = light.Direction;
+				viewDir.Transform(viewMatrix, true);
+				viewDir.Normalize();
+
+				GL.ProgramUniform1(Handle, uDynamicLightTypeLocation[i], (int)light.Type);
+				GL.ProgramUniform3(Handle, uDynamicLightPositionLocation[i], (float)viewPos.X, (float)viewPos.Y, (float)viewPos.Z);
+				GL.ProgramUniform3(Handle, uDynamicLightDirectionLocation[i], (float)viewDir.X, (float)viewDir.Y, (float)viewDir.Z);
+				GL.ProgramUniform4(Handle, uDynamicLightColorLocation[i], light.Color.R, light.Color.G, light.Color.B, light.Color.A);
+				GL.ProgramUniform1(Handle, uDynamicLightRangeLocation[i], light.Range);
+				GL.ProgramUniform1(Handle, uDynamicLightRangeSquaredLocation[i], light.RangeSquared);
+				GL.ProgramUniform1(Handle, uDynamicLightAttenuationLinearLocation[i], light.AttenuationLinear);
+				GL.ProgramUniform1(Handle, uDynamicLightAttenuationQuadraticLocation[i], light.AttenuationQuadratic);
+				GL.ProgramUniform1(Handle, uDynamicLightSpotCutoffLocation[i], light.SpotCutoff);
+				GL.ProgramUniform1(Handle, uDynamicLightSpotExponentLocation[i], light.SpotExponent);
+			}
 		}
 
 		#endregion

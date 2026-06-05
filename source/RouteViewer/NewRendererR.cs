@@ -172,21 +172,26 @@ namespace RouteViewer
             // world layer
             // opaque face
 			
-            //Setup the shader for rendering the scene
-            if (OptionLighting)
-            {
-	            DefaultShader.SetIsLight(true);
-	            DefaultShader.SetLightPosition(TransformedLightPosition);
-	            DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
-	            DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
-	            DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
-	            DefaultShader.SetLightModel(Lighting.LightModel);
-            }
+			//Setup the shader for rendering the scene
+			if (OptionLighting)
+			{
+				DefaultShader.SetIsLight(true);
+				DefaultShader.SetLightPosition(TransformedLightPosition);
+				DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
+				DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
+				DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
+				DefaultShader.SetLightModel(Lighting.LightModel);
+				UpdateActiveLights(DefaultShader);
+			}
+			else
+			{
+				DefaultShader.SetDynamicLights(new List<SceneLight>(), CurrentViewMatrix, 0);
+			}
+			Fog.Set();
+			DefaultShader.SetTexture(0);
+			DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 
-            Fog.Set();
-            DefaultShader.SetTexture(0);
-            DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
-            ResetOpenGlState();
+			ResetOpenGlState();
 			List<FaceState> opaqueFaces, alphaFaces;
 			lock (VisibleObjects.LockObject)
 			{
@@ -324,10 +329,13 @@ namespace RouteViewer
 
 			}
 
-            // render overlays
-            DefaultShader.Deactivate();
-
-            ResetOpenGlState();
+			// render overlays
+			DrawLightVisuals();
+			if (AvailableNewRenderer)
+			{
+				DefaultShader.Deactivate();
+			}
+			ResetOpenGlState();
 			OptionLighting = false;
 			Fog.Enabled = false;
 			UnsetAlphaFunc();

@@ -66,6 +66,21 @@ struct Light
 };
 uniform Light uLight;
 
+struct DynamicLight {
+	int type;
+	vec3 position;
+	vec3 direction;
+	vec4 color;
+	float range;
+	float rangeSquared;
+	float attenuationLinear;
+	float attenuationQuadratic;
+	float spotCutoff;
+	float spotExponent;
+};
+uniform int uDynamicLightCount;
+uniform DynamicLight uDynamicLights[16];
+
 // Inputs from vertex shader
 in vec3  vNormal;
 in vec4  vPosLightSpace0;
@@ -252,10 +267,46 @@ void main(void)
 	 */
 	float shadow = CalculateShadowFactor();
 	
+	vec3 dynamicLightSum = vec3(0.0);
 	if ((uMaterialFlags & 1) == 0 && (uMaterialFlags & 4) == 0)
 	{
-		// Material is not emissive, apply shadow to the light factor
-		finalColor.rgb *= (oLightResult.rgb * shadow);
+		vec3 N = normalize(vNormal);
+		for (int i = 0; i < uDynamicLightCount; i++)
+		{
+			vec3 toLight = uDynamicLights[i].position - oViewPos.xyz;
+			float d2 = dot(toLight, toLight);
+			if (d2 <= uDynamicLights[i].rangeSquared)
+			{
+				float d = sqrt(d2);
+				vec3 L = toLight / d;
+				float att = 1.0 / (1.0 + uDynamicLights[i].attenuationLinear * d + uDynamicLights[i].attenuationQuadratic * d2);
+				if (uDynamicLights[i].type == 1) // Spot
+				{
+					vec3 lightToFrag = -L;
+					float spotDot = dot(lightToFrag, uDynamicLights[i].direction);
+					float outerCutoff = uDynamicLights[i].spotCutoff;
+					if (spotDot > outerCutoff)
+					{
+						float innerCutoff = outerCutoff + max(0.001, (1.0 - outerCutoff) * 0.15);
+						float intensity = clamp((spotDot - outerCutoff) / (innerCutoff - outerCutoff), 0.0, 1.0);
+						att *= intensity * pow(spotDot, uDynamicLights[i].spotExponent);
+					}
+					else
+					{
+						att = 0.0;
+					}
+				}
+				float nDotL = max(0.0, dot(N, L));
+				dynamicLightSum += uDynamicLights[i].color.rgb * nDotL * att;
+			}
+		}
+	}
+
+	if ((uMaterialFlags & 1) == 0 && (uMaterialFlags & 4) == 0)
+	{
+		// Material is not emissive, apply shadow to the light factor and add dynamic lights
+		vec3 totalLight = oLightResult.rgb * shadow + dynamicLightSum;
+		finalColor.rgb *= totalLight;
 		finalColor.a *= oLightResult.a;
 	}
 	else
