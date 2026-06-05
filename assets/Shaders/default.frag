@@ -73,10 +73,13 @@ struct DynamicLight {
 	vec4 color;
 	float range;
 	float rangeSquared;
-	float attenuationLinear;
-	float attenuationQuadratic;
 	float spotCutoff;
-	float spotExponent;
+	float power;
+	float exposure;
+	int isNormalize;
+	float radius;
+	int softFalloff;
+	float softness;
 };
 uniform int uDynamicLightCount;
 uniform DynamicLight uDynamicLights[16];
@@ -279,25 +282,60 @@ void main(void)
 			{
 				float d = sqrt(d2);
 				vec3 L = toLight / d;
-				float att = 1.0 / (1.0 + uDynamicLights[i].attenuationLinear * d + uDynamicLights[i].attenuationQuadratic * d2);
+				
+				// 1. Calculate Intensity: Power in Watts, Exposure, Normalize
+				float intensity = uDynamicLights[i].power * exp2(uDynamicLights[i].exposure);
+				if (uDynamicLights[i].type == 1 && uDynamicLights[i].isNormalize != 0) // Spot with Normalize
+				{
+					float outerCutoff = uDynamicLights[i].spotCutoff;
+					float solidAngle = 2.0 * 3.1415926535 * (1.0 - outerCutoff);
+					intensity /= max(solidAngle, 0.0001);
+				}
+				else
+				{
+					// Point, or Spot without Normalize (defaults to dividing by 4 * PI)
+					intensity /= 12.566370614;
+				}
+				vec3 lightColor = uDynamicLights[i].color.rgb * intensity;
+
+				// 2. Attenuation: SoftFalloff, Radius
+				float denom = d2 + uDynamicLights[i].radius * uDynamicLights[i].radius;
+				float att = 1.0 / max(denom, 0.0001);
+				if (uDynamicLights[i].softFalloff != 0)
+				{
+					// Smoothly fade out at the range boundary
+					float fade = clamp((uDynamicLights[i].range - d) / max(0.001, uDynamicLights[i].range * 0.2), 0.0, 1.0);
+					att *= fade;
+				}
+
 				if (uDynamicLights[i].type == 1) // Spot
 				{
 					vec3 lightToFrag = -L;
 					float spotDot = dot(lightToFrag, uDynamicLights[i].direction);
 					float outerCutoff = uDynamicLights[i].spotCutoff;
+					
 					if (spotDot > outerCutoff)
 					{
-						float innerCutoff = outerCutoff + max(0.001, (1.0 - outerCutoff) * 0.15);
-						float intensity = clamp((spotDot - outerCutoff) / (innerCutoff - outerCutoff), 0.0, 1.0);
-						att *= intensity * pow(spotDot, uDynamicLights[i].spotExponent);
+						// Spot softness / blend transition
+						float softnessFactor = clamp(uDynamicLights[i].softness, 0.0, 1.0);
+						float innerCutoff = mix(1.0, outerCutoff, 1.0 - softnessFactor);
+						
+						float intensityFactor = 1.0;
+						if (innerCutoff > outerCutoff)
+						{
+							intensityFactor = clamp((spotDot - outerCutoff) / (innerCutoff - outerCutoff), 0.0, 1.0);
+						}
+						
+						intensityFactor = smoothstep(0.0, 1.0, intensityFactor);
+						att *= intensityFactor;
 					}
 					else
 					{
 						att = 0.0;
 					}
 				}
-				float nDotL = max(0.0, dot(N, L));
-				dynamicLightSum += uDynamicLights[i].color.rgb * nDotL * att;
+				float nDotL = abs(dot(N, L));
+				dynamicLightSum += lightColor * nDotL * att;
 			}
 		}
 	}

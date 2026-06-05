@@ -417,35 +417,67 @@ namespace Plugin
 								light.RangeSquared = light.Range * light.Range;
 							}
 
-							double[] att = { };
-							if (Block.TryGetDoubleArray(AnimatedKey.Attenuation, ',', ref att))
-							{
-								if (att.Length > 0 && att[0] >= 0)
-								{
-									light.AttenuationLinear = (float)att[0];
-								}
-								if (att.Length > 1 && att[1] >= 0)
-								{
-									light.AttenuationQuadratic = (float)att[1];
-								}
-							}
-
-							double spotCutoff = 30.0;
-							if (Block.TryGetValue(AnimatedKey.SpotCutoff, ref spotCutoff, NumberRange.Positive))
-							{
-								light.SpotCutoff = (float)System.Math.Cos(spotCutoff * System.Math.PI / 180.0);
-							}
-
-							double spotExponent = 1.0;
-							if (Block.TryGetValue(AnimatedKey.SpotExponent, ref spotExponent, NumberRange.Positive))
-							{
-								light.SpotExponent = (float)spotExponent;
-							}
-
 							bool visual = false;
 							if (Block.TryGetValue(AnimatedKey.Visual, ref visual))
 							{
 								light.Visual = visual;
+								light.ShowCone = visual;
+							}
+
+							double power = 12.5663706;
+							if (Block.TryGetValue(AnimatedKey.Power, ref power, NumberRange.Positive))
+							{
+								light.Power = (float)power;
+							}
+
+							double exposure = 0.0;
+							if (Block.TryGetValue(AnimatedKey.Exposure, ref exposure))
+							{
+								light.Exposure = (float)exposure;
+							}
+
+							if (Block.GetValue(AnimatedKey.Normalize, out string normStr))
+							{
+								string s = normStr.ToLowerInvariant().Trim();
+								light.NormalizeCone = (s == "1" || s == "true");
+							}
+
+							double radius = 0.0;
+							if (Block.TryGetValue(AnimatedKey.Radius, ref radius, NumberRange.NonNegative))
+							{
+								light.Radius = (float)radius;
+							}
+
+							if (Block.GetValue(AnimatedKey.SoftFalloff, out string sfStr))
+							{
+								string s = sfStr.ToLowerInvariant().Trim();
+								light.SoftFalloff = (s == "1" || s == "true");
+							}
+
+							double angle = 45.0;
+							if (Block.TryGetValue(AnimatedKey.Angle, ref angle, NumberRange.Positive))
+							{
+								light.Angle = (float)angle;
+								light.SpotCutoff = (float)System.Math.Cos((angle / 2.0) * System.Math.PI / 180.0);
+							}
+
+							double softness = 1.0;
+							if (Block.TryGetValue(AnimatedKey.Softness, ref softness, NumberRange.NonNegative))
+							{
+								light.Softness = (float)softness;
+							}
+
+							if (Block.GetValue(AnimatedKey.ShowCone, out string scStr))
+							{
+								string s = scStr.ToLowerInvariant().Trim();
+								light.ShowCone = (s == "1" || s == "true");
+								light.Visual = light.ShowCone;
+							}
+
+							if (Block.GetValue(AnimatedKey.Shadow, out string shadowStr))
+							{
+								string s = shadowStr.ToLowerInvariant().Trim();
+								light.CastShadow = (s == "1" || s == "true");
 							}
 
 							animatedObj.Lights.Add(light);

@@ -68,9 +68,14 @@ namespace Plugin
 		Direction,
 		Color,
 		Range,
-		Attenuation,
-		SpotCutoff,
-		SpotExponent,
-		Visual
+		Visual,
+		Power,
+		Exposure,
+		Normalize,
+		SoftFalloff,
+		Angle,
+		Softness,
+		ShowCone,
+		Shadow
 	}
 }
