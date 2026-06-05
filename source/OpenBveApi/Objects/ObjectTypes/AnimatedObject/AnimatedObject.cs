@@ -113,6 +113,10 @@ namespace OpenBveApi.Objects
 		public AnimationScript ColorFunction;
 		/// <summary>Array of colors for ColorFunction</summary>
 		public Color24[] Colors;
+		/// <summary>The dynamic light source associated with this object</summary>
+		public SceneLight Light;
+		/// <summary>The dynamic light sources associated with this object</summary>
+		public System.Collections.Generic.List<SceneLight> Lights = new System.Collections.Generic.List<SceneLight>();
 
 		/// <summary>Creates a new animated object</summary>
 		public AnimatedObject(HostInterface host, string fileName = "")
@@ -170,7 +174,9 @@ namespace OpenBveApi.Objects
 				LEDInitialAngle = this.LEDInitialAngle,
 				LEDLastAngle = this.LEDLastAngle,
 				SectionIndex = this.SectionIndex,
-				IsPartOfTrain = false // will be set by the CarSection load if appropriate
+				IsPartOfTrain = false, // will be set by the CarSection load if appropriate
+				Light = this.Light?.Clone(),
+				Lights = this.Lights.Select(x => x.Clone()).ToList()
 			};
 
 			if (this.LEDVectors != null)
@@ -740,6 +746,100 @@ namespace OpenBveApi.Objects
 				}
 				internalObject.Prototype.Mesh.Materials[0].Color = Colors[color];
 			}
+
+			if (this.Light != null || this.Lights.Count > 0)
+			{
+				Matrix4D lightMatrix = Matrix4D.Identity;
+				if (rotateX)
+				{
+					lightMatrix *= Matrix4D.CreateFromAxisAngle(new Vector3(RotateXDirection.X, RotateXDirection.Y, -RotateXDirection.Z), 2.0 * System.Math.PI - radianX);
+				}
+				if (rotateY)
+				{
+					lightMatrix *= Matrix4D.CreateFromAxisAngle(new Vector3(RotateYDirection.X, RotateYDirection.Y, -RotateYDirection.Z), 2.0 * System.Math.PI - radianY);
+				}
+				if (rotateZ)
+				{
+					lightMatrix *= Matrix4D.CreateFromAxisAngle(new Vector3(RotateZDirection.X, RotateZDirection.Y, -RotateZDirection.Z), 2.0 * System.Math.PI - radianZ);
+				}
+				lightMatrix *= (Matrix4D)new Transformation(Direction, Up, Side);
+				lightMatrix *= Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
+
+				// Process Lights list
+				if (internalObject.Lights == null)
+				{
+					internalObject.Lights = new System.Collections.Generic.List<SceneLight>();
+				}
+				while (internalObject.Lights.Count < this.Lights.Count)
+				{
+					internalObject.Lights.Add(new SceneLight());
+				}
+				while (internalObject.Lights.Count > this.Lights.Count)
+				{
+					internalObject.Lights.RemoveAt(internalObject.Lights.Count - 1);
+				}
+
+				for (int j = 0; j < this.Lights.Count; j++)
+				{
+					SceneLight light = this.Lights[j];
+					SceneLight internalLight = internalObject.Lights[j];
+					internalLight.Type = light.Type;
+					internalLight.Color = light.Color;
+					internalLight.Range = light.Range;
+					internalLight.RangeSquared = light.RangeSquared;
+					internalLight.AttenuationLinear = light.AttenuationLinear;
+					internalLight.AttenuationQuadratic = light.AttenuationQuadratic;
+					internalLight.SpotCutoff = light.SpotCutoff;
+					internalLight.SpotExponent = light.SpotExponent;
+					internalLight.Visual = light.Visual;
+
+					Vector3 pos = new Vector3(light.Position.X, light.Position.Y, -light.Position.Z);
+					pos.Transform(lightMatrix, false);
+					internalLight.Position = pos;
+
+					Vector3 dir = new Vector3(light.Direction.X, light.Direction.Y, -light.Direction.Z);
+					dir.Transform(lightMatrix, true);
+					dir.Normalize();
+					internalLight.Direction = dir;
+				}
+
+				// Process single Light (compatibility)
+				if (this.Light != null)
+				{
+					if (internalObject.Light == null)
+					{
+						internalObject.Light = new SceneLight();
+					}
+					internalObject.Light.Type = this.Light.Type;
+					internalObject.Light.Color = this.Light.Color;
+					internalObject.Light.Range = this.Light.Range;
+					internalObject.Light.RangeSquared = this.Light.RangeSquared;
+					internalObject.Light.AttenuationLinear = this.Light.AttenuationLinear;
+					internalObject.Light.AttenuationQuadratic = this.Light.AttenuationQuadratic;
+					internalObject.Light.SpotCutoff = this.Light.SpotCutoff;
+					internalObject.Light.SpotExponent = this.Light.SpotExponent;
+					internalObject.Light.Visual = this.Light.Visual;
+
+					Vector3 pos = new Vector3(this.Light.Position.X, this.Light.Position.Y, -this.Light.Position.Z);
+					pos.Transform(lightMatrix, false);
+					internalObject.Light.Position = pos;
+
+					Vector3 dir = new Vector3(this.Light.Direction.X, this.Light.Direction.Y, -this.Light.Direction.Z);
+					dir.Transform(lightMatrix, true);
+					dir.Normalize();
+					internalObject.Light.Direction = dir;
+				}
+				else
+				{
+					internalObject.Light = internalObject.Lights.Count > 0 ? internalObject.Lights[0] : null;
+				}
+			}
+			else
+			{
+				internalObject.Light = null;
+				internalObject.Lights = new System.Collections.Generic.List<SceneLight>();
+			}
+
 			// visibility changed
 			// TouchElement is handled by another function.
 			if (!IsTouch)
@@ -870,6 +970,20 @@ namespace OpenBveApi.Objects
 				t.Row3.X *= -1.0f;
 				t.Row3.Z *= -1.0f;
 				state.Translation = t;
+			}
+			if (Light != null)
+			{
+				Light.Position.X *= -1.0;
+				Light.Position.Z *= -1.0;
+				Light.Direction.X *= -1.0;
+				Light.Direction.Z *= -1.0;
+			}
+			for (int j = 0; j < Lights.Count; j++)
+			{
+				Lights[j].Position.X *= -1.0;
+				Lights[j].Position.Z *= -1.0;
+				Lights[j].Direction.X *= -1.0;
+				Lights[j].Direction.Z *= -1.0;
 			}
 			TranslateXDirection.X *= -1.0;
 			TranslateXDirection.Z *= -1.0;
