@@ -569,9 +569,38 @@ namespace LibRender2.Shaders
 			};
 		}
 
+		private readonly List<SceneLight> lastBoundLights = new List<SceneLight>();
+		private Matrix4D lastViewMatrix = Matrix4D.Identity;
+
 		public void SetDynamicLights(List<SceneLight> lights, Matrix4D viewMatrix, int maxLimit)
 		{
 			int count = System.Math.Min(lights.Count, maxLimit);
+			
+			bool identical = lastBoundLights.Count == count && lastViewMatrix == viewMatrix;
+			if (identical)
+			{
+				for (int i = 0; i < count; i++)
+				{
+					if (lastBoundLights[i] != lights[i])
+					{
+						identical = false;
+						break;
+					}
+				}
+			}
+
+			if (identical)
+			{
+				return;
+			}
+
+			lastBoundLights.Clear();
+			for (int i = 0; i < count; i++)
+			{
+				lastBoundLights.Add(lights[i]);
+			}
+			lastViewMatrix = viewMatrix;
+
 			GL.ProgramUniform1(Handle, uDynamicLightCountLocation, count);
 			for (int i = 0; i < count; i++)
 			{
