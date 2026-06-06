@@ -474,12 +474,6 @@ namespace Plugin
 								light.Visual = light.ShowCone;
 							}
 
-							if (Block.GetValue(AnimatedKey.Shadow, out string shadowStr))
-							{
-								string s = shadowStr.ToLowerInvariant().Trim();
-								light.CastShadow = (s == "1" || s == "true");
-							}
-
 							animatedObj.Lights.Add(light);
 							animatedObj.Light = light;
 

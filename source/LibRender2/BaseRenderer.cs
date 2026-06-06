@@ -158,6 +158,7 @@ namespace LibRender2
 		public Shader DefaultShader;
 
 		public List<SceneLight> ActiveSceneLights = new List<SceneLight>();
+		public List<SceneLight> TempObjectLights = new List<SceneLight>();
 		
 		/// <summary>Manages the Cascaded Shadow Mapping (CSM) system.</summary>
 		public Shadows Shadows;
@@ -1175,6 +1176,27 @@ namespace LibRender2
 
 		private static bool logged = false;
 
+		private void UpdateLightsForObject(Shader shader, ObjectState state)
+		{
+			if (ActiveSceneLights.Count <= currentOptions.DynamicLightLimit)
+			{
+				return;
+			}
+
+			Vector3 objPos = new Vector3(state.ModelMatrix.Row3.X, state.ModelMatrix.Row3.Y, state.ModelMatrix.Row3.Z);
+
+			TempObjectLights.Clear();
+			TempObjectLights.AddRange(ActiveSceneLights);
+			TempObjectLights.Sort((a, b) =>
+			{
+				double distA = (a.Position - objPos).NormSquared();
+				double distB = (b.Position - objPos).NormSquared();
+				return distA.CompareTo(distB);
+			});
+
+			shader.SetDynamicLights(TempObjectLights, CurrentViewMatrix, currentOptions.DynamicLightLimit);
+		}
+
 		public void UpdateActiveLights(Shader shader)
 		{
 			if (shader == null)
@@ -1183,6 +1205,33 @@ namespace LibRender2
 			}
 			ActiveSceneLights.Clear();
 			Vector3 cameraPos = Camera.AbsolutePosition;
+			Matrix4D lightViewMatrix = Camera.TranslationMatrix * CurrentViewMatrix;
+
+			var halfHFOV = Camera.HorizontalViewingAngle * 0.5;
+			var halfVFOV = Camera.VerticalViewingAngle * 0.5;
+			var tanH = Math.Tan(halfHFOV);
+			var tanV = Math.Tan(halfVFOV);
+			var viewDistance = currentOptions.ViewingDistance;
+
+			bool IsLightInFrustum(SceneLight light)
+			{
+				var dist = (light.Position - cameraPos).Norm();
+				if (dist - light.Range > viewDistance) return false;
+
+				Vector3 viewPos = light.Position;
+				viewPos.Transform(lightViewMatrix, false);
+
+				if (viewPos.Z - light.Range > 0) return false;
+
+				var xLimit = -viewPos.Z * tanH + light.Range;
+				if (Math.Abs(viewPos.X) > xLimit) return false;
+
+				var yLimit = -viewPos.Z * tanV + light.Range;
+				if (Math.Abs(viewPos.Y) > yLimit) return false;
+
+				return true;
+			}
+
 			lock (VisibleObjects.LockObject)
 			{
 				foreach (var kvp in VisibleObjects.Objects)
@@ -1192,12 +1241,19 @@ namespace LibRender2
 					{
 						for (int j = 0; j < obj.Lights.Count; j++)
 						{
-							ActiveSceneLights.Add(obj.Lights[j]);
+							SceneLight light = obj.Lights[j];
+							if (IsLightInFrustum(light))
+							{
+								ActiveSceneLights.Add(light);
+							}
 						}
 					}
 					else if (obj.Light != null)
 					{
-						ActiveSceneLights.Add(obj.Light);
+						if (IsLightInFrustum(obj.Light))
+						{
+							ActiveSceneLights.Add(obj.Light);
+						}
 					}
 				}
 			}
@@ -1215,7 +1271,6 @@ namespace LibRender2
 				for (int i = 0; i < ActiveSceneLights.Count; i++)
 				{
 					SceneLight light = ActiveSceneLights[i];
-					Matrix4D lightViewMatrix = Camera.TranslationMatrix * CurrentViewMatrix;
 					Vector3 viewPos = light.Position;
 					viewPos.Transform(lightViewMatrix, false);
 					Vector3 viewDir = light.Direction;
@@ -1378,6 +1433,7 @@ namespace LibRender2
 				lastModelMatrix = state.ModelMatrix * Camera.TranslationMatrix;
 				lastModelViewMatrix = lastModelMatrix * CurrentViewMatrix;
 				sendToShader = true;
+				UpdateLightsForObject(shader, state);
 			}
 
 			if (state.Prototype.Mesh.Vertices.Length < 1)

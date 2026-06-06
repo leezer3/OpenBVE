@@ -798,7 +798,6 @@ namespace OpenBveApi.Objects
 					internalLight.Angle = light.Angle;
 					internalLight.Softness = light.Softness;
 					internalLight.ShowCone = light.ShowCone;
-					internalLight.CastShadow = light.CastShadow;
 
 					Vector3 pos = new Vector3(light.Position.X, light.Position.Y, -light.Position.Z);
 					pos.Transform(lightMatrix, false);
@@ -831,7 +830,6 @@ namespace OpenBveApi.Objects
 					internalObject.Light.Angle = this.Light.Angle;
 					internalObject.Light.Softness = this.Light.Softness;
 					internalObject.Light.ShowCone = this.Light.ShowCone;
-					internalObject.Light.CastShadow = this.Light.CastShadow;
 
 					Vector3 pos = new Vector3(this.Light.Position.X, this.Light.Position.Y, -this.Light.Position.Z);
 					pos.Transform(lightMatrix, false);

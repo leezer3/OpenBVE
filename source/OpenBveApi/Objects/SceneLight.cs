@@ -47,8 +47,6 @@ namespace OpenBveApi.Objects
 		public float Softness;
 		/// <summary>Whether to show the cone helper</summary>
 		public bool ShowCone;
-		/// <summary>Whether this light casts shadows</summary>
-		public bool CastShadow;
  
  		/// <summary>Creates a default scene light</summary>
  		public SceneLight()
@@ -69,7 +67,6 @@ namespace OpenBveApi.Objects
 			Angle = 45.0f;
 			Softness = 1.0f;
 			ShowCone = true;
-			CastShadow = false;
  		}
  
  		/// <summary>Clones the light source</summary>
@@ -92,8 +89,7 @@ namespace OpenBveApi.Objects
 				SoftFalloff = this.SoftFalloff,
 				Angle = this.Angle,
 				Softness = this.Softness,
-				ShowCone = this.ShowCone,
-				CastShadow = this.CastShadow
+				ShowCone = this.ShowCone
  			};
  		}
 	}
