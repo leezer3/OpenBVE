@@ -124,7 +124,6 @@ namespace Route.Bve5
 			RouteData = new RouteData(ParseData.TrackKeys);
 			RouteData.TryAddBlock(0);
 			RouteData.Blocks[0].Fog = new Fog(0, 1, Color24.Grey, 0, false);
-			RouteData.TryAddBlock(ParseData.Statements[0].Distance);
 			
 			if (ParseData.StationListPaths.Count == 0)
 			{
