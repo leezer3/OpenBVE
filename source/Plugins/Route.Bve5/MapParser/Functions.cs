@@ -245,7 +245,7 @@ namespace Route.Bve5
 		}
 
 		/// <summary>Gets the transformation for an object on the primary rail</summary>
-		private static void GetRailTransformation(string RailKey, Vector3 StartingPosition, IList<Block> Blocks, int StartingBlock, AbstractStructure Structure, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
+		private static bool GetRailTransformation(string RailKey, Vector3 StartingPosition, IList<Block> Blocks, int StartingBlock, AbstractStructure Structure, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
 		{
 			ObjectPosition = StartingPosition;
 			Transformation = new Transformation();
@@ -291,7 +291,7 @@ namespace Route.Bve5
 						Transformation = new Transformation(TrackYaw, 0.0, 0.0);
 						break;
 					default:
-						throw new NotSupportedException("Unknown transform type.");
+						return false;
 				}
 			}
 			else
@@ -300,7 +300,7 @@ namespace Route.Bve5
 				GetTransformation(StartingPosition, Blocks[StartingBlock], Blocks[nextBlock], RailKey, Blocks[StartingBlock].Pitch, Structure.TrackPosition, Structure.Type, Structure.Span, Direction, out ObjectPosition, out Transformation);
 			}
 			
-			
+			return true;
 		}
 
 		/// <summary>Gets the transformation between two blocks</summary>
