@@ -503,6 +503,22 @@ namespace Plugin
 						material.DaytimeTexture = null;
 					}
 
+
+					if (Plugin.EnabledHacks.BveTsHacks && !File.Exists(material.DaytimeTexture))
+					{
+						// XOF doesn't have a way to specify text encoding, and some (more common with BVE5) stuff is using shift_jis
+						try
+						{
+							byte[] stringBytes = Encoding.GetEncoding(0).GetBytes(texturePath);
+							string shift_jis_string = Encoding.GetEncoding("shift_jis").GetString(stringBytes);
+							material.DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, shift_jis_string);
+						}
+						catch
+						{
+							// ignore
+						}
+					}
+
 					if (!File.Exists(material.DaytimeTexture) && material.DaytimeTexture != null)
 					{
 						if (currentMaterialUsed)
