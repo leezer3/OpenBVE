@@ -424,14 +424,31 @@ namespace Plugin
 					Material newMaterial = new Material();
 					newMaterial.Color = new Color32(block.ReadColor128);
 					double mPower = block.ReadSingle(); //TODO: Unsure what this does...
-					newMaterial.SpecularColor = new Color24(block.ReadColor96);
+					try
+					{
+						newMaterial.SpecularColor = new Color24(block.ReadColor96);
+					}
+					catch
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"Specular color is invalid for material {material.Key}");
+						newMaterial.SpecularColor = Color24.Black;
+					}
+					
 					if (newMaterial.SpecularColor != Color24.Black)
 					{
-						Color24 c = (Color24)newMaterial.Color;
 						newMaterial.Flags |= MaterialFlags.Specular;
 					}
 					// Convert Color96 → Color24 → Color32; alpha defaults to 255 (opaque)
-					newMaterial.EmissiveColor = new Color32(new Color24(block.ReadColor96));
+					try
+					{
+						newMaterial.EmissiveColor = new Color32(new Color24(block.ReadColor96));
+					}
+					catch
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"Emissive color is invalid for material {material.Key}");
+						newMaterial.EmissiveColor = Color32.Black;
+					}
+					
 					if (newMaterial.EmissiveColor != Color32.Black)
 					{
 						newMaterial.Flags |= MaterialFlags.Emissive;

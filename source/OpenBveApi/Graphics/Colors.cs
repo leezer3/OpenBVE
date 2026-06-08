@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.IO;
 using System.Runtime.InteropServices;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MergeCastWithTypeCheck
@@ -720,6 +721,10 @@ namespace OpenBveApi.Colors {
 		/// <param name="g">The green component.</param>
 		/// <param name="b">The blue component.</param>
 		public Color96(float r, float g, float b) {
+			if (r > 1 || r < 0 || g > 1 || g < 0 || b > 1 || b < 0)
+			{
+				throw new InvalidDataException();
+			}
 			this.R = r;
 			this.G = g;
 			this.B = b;
