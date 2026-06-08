@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi;
@@ -14,7 +14,7 @@ namespace CsvRwRouteParser
 	{
 		internal Dictionary<string, RoutefilePatch> availableRoutefilePatches = new Dictionary<string, RoutefilePatch>();
 
-		private void CheckForAvailablePatch(string FileName, ref RouteData Data, ref Expression[] Expressions, bool PreviewOnly)
+		private void CheckForAvailablePatch(string FileName, ref RouteData Data, ref IList<Expression> Expressions, bool PreviewOnly)
 		{
 			if (Plugin.CurrentOptions.EnableBveTsHacks == false)
 			{
@@ -37,6 +37,7 @@ namespace CsvRwRouteParser
 
 				EnabledHacks.CylinderHack = patch.CylinderHack;
 				EnabledHacks.DisableSemiTransparentFaces = patch.DisableSemiTransparentFaces;
+				EnabledHacks.InsufficientWallDikeArguments = patch.InsufficientWallDikeArguments;
 				Plugin.CurrentOptions.ObjectDisposalMode = patch.AccurateObjectDisposal ? ObjectDisposalMode.Accurate : ObjectDisposalMode.Legacy;
 
 				for (int i = 0; i < patch.ExpressionFixes.Count; i++)
@@ -97,7 +98,7 @@ namespace CsvRwRouteParser
 
 				if (patch.ColonFix)
 				{
-					for (int i = 0; i < Expressions.Length; i++)
+					for (int i = 0; i < Expressions.Count; i++)
 					{
 						Expressions[i].Text = Expressions[i].Text.Replace(':', ';');
 					}
@@ -163,5 +164,7 @@ namespace CsvRwRouteParser
 		internal bool DelayedAnimatedUpdates = false;
 		/// <summary>Whether adhesion is infinite (no wheelslip)</summary>
 		internal bool AdhesionHack = false;
+		/// <summary>Whether walls / dikes with insufficient arguments are allowed</summary>
+		internal bool InsufficientWallDikeArguments;
 	}
 }

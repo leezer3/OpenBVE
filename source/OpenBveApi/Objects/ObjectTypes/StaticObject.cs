@@ -230,7 +230,7 @@ namespace OpenBveApi.Objects
 				return transformResult;
 			}
 
-
+			HashSet<int> tempHashSet = new HashSet<int>();
 			for (int i = 0; i < Mesh.Vertices.Length; i += 4)
 			{
 				List<VertexTemplate> tempList = Mesh.Vertices.Skip(i).Take(4).ToList();
@@ -240,9 +240,28 @@ namespace OpenBveApi.Objects
 				int topRight = tempList.IndexOf(tempList.OrderBy(c => c.Coordinates.Z).ThenByDescending(c => c.Coordinates.X).First());
 				int topLeft = tempList.IndexOf(tempList.OrderBy(c => c.Coordinates.Z).ThenBy(c => c.Coordinates.X).First());
 
-				// for a left-handed transform, we need to transform the right-side coords
-				transformResult.Mesh.Vertices[i + bottomRight].Coordinates.X = farDistance - transformResult.Mesh.Vertices[i + bottomLeft].Coordinates.X;
-				transformResult.Mesh.Vertices[i + topRight].Coordinates.X = nearDistance - transformResult.Mesh.Vertices[i + topLeft].Coordinates.X;
+				tempHashSet.Add(bottomLeft);
+				tempHashSet.Add(bottomRight);
+				tempHashSet.Add(topLeft);
+				tempHashSet.Add(topRight);
+
+				if (tempHashSet.Count != 4)
+				{
+					// one or more of our verticies is equal in X and Z so fall back to scale
+					double width = maxX - minX;
+					double scaleFactor = width > 0.0 ? System.Math.Abs(nearDistance) / width : 1.0;
+					transformResult.Mesh.Vertices[i].Coordinates.X *= scaleFactor;
+					transformResult.Mesh.Vertices[i + 1].Coordinates.X *= scaleFactor;
+					transformResult.Mesh.Vertices[i + 2].Coordinates.X *= scaleFactor;
+					transformResult.Mesh.Vertices[i + 3].Coordinates.X *= scaleFactor;
+				}
+				else
+				{
+					// for a left-handed transform, we need to transform the right-side coords
+					transformResult.Mesh.Vertices[i + bottomRight].Coordinates.X = farDistance - transformResult.Mesh.Vertices[i + bottomLeft].Coordinates.X;
+					transformResult.Mesh.Vertices[i + topRight].Coordinates.X = nearDistance - transformResult.Mesh.Vertices[i + topLeft].Coordinates.X;
+				}
+				tempHashSet.Clear();
 			}
 
 			return transformResult;
@@ -282,6 +301,7 @@ namespace OpenBveApi.Objects
 				return transformResult;
 			}
 
+			HashSet<int> tempHashSet = new HashSet<int>();
 			for (int i = 0; i < Mesh.Vertices.Length; i += 4)
 			{
 				List<VertexTemplate> tempList = Mesh.Vertices.Skip(i).Take(4).ToList();
@@ -291,9 +311,29 @@ namespace OpenBveApi.Objects
 				int topRight = tempList.IndexOf(tempList.OrderBy(c => c.Coordinates.Z).ThenByDescending(c => c.Coordinates.X).First());
 				int topLeft = tempList.IndexOf(tempList.OrderBy(c => c.Coordinates.Z).ThenBy(c => c.Coordinates.X).First());
 
-				// for a right-handed transform, we need to transform the left-side coords
-				transformResult.Mesh.Vertices[i + bottomLeft].Coordinates.X = farDistance - transformResult.Mesh.Vertices[i + bottomRight].Coordinates.X;
-				transformResult.Mesh.Vertices[i + topLeft].Coordinates.X = nearDistance - transformResult.Mesh.Vertices[i + topRight].Coordinates.X;
+				tempHashSet.Add(bottomLeft);
+				tempHashSet.Add(bottomRight);
+				tempHashSet.Add(topLeft);
+				tempHashSet.Add(topRight);
+
+
+				if (tempHashSet.Count != 4)
+				{
+					// one or more of our verticies is equal in X and Z so fall back to scale
+					double width = maxX - minX;
+					double scaleFactor = width > 0.0 ? System.Math.Abs(nearDistance) / width : 1.0;
+					transformResult.Mesh.Vertices[i].Coordinates.X *= scaleFactor;
+					transformResult.Mesh.Vertices[i + 1].Coordinates.X *= scaleFactor;
+					transformResult.Mesh.Vertices[i + 2].Coordinates.X *= scaleFactor;
+					transformResult.Mesh.Vertices[i + 3].Coordinates.X *= scaleFactor;
+				}
+				else
+				{
+					// for a right-handed transform, we need to transform the left-side coords
+					transformResult.Mesh.Vertices[i + bottomLeft].Coordinates.X = farDistance - transformResult.Mesh.Vertices[i + bottomRight].Coordinates.X;
+					transformResult.Mesh.Vertices[i + topLeft].Coordinates.X = nearDistance - transformResult.Mesh.Vertices[i + topRight].Coordinates.X;
+				}
+				tempHashSet.Clear();
 			}
 
 			return transformResult;

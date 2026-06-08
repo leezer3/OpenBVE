@@ -1181,7 +1181,7 @@ namespace Object.CsvB3d
 										if (!System.IO.File.Exists(tday))
 										{
 											bool hackFound = false;
-											if (enabledHacks.BveTsHacks)
+											if (enabledHacks.BveTsHacks && tday != null)
 											{
 												//Original BVE2 signal graphics
 												Match m = Regex.Match(tday, @"(signal\d{1,2}\.bmp)", RegexOptions.IgnoreCase);

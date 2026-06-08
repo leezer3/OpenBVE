@@ -208,5 +208,17 @@
 		<FileName>l-ﾃｴSlJoﾃｩﾃ嘘.csv</FileName>
 		<Expression Number="38">Texture.Background(1) gaku2\Back_Mt1.bmp</Expression>
 	</Patch>
+	<!-- Minobu -->
+	<Patch>
+		<Hash>EE1F5FED84EE4EBD0469883BAEB7C8991486DE29557D93AE76530D0EAE2D84B6</Hash>
+		<FileName>115.csv</FileName>
+		<InsufficientWallDikeArguments>true</InsufficientWallDikeArguments>
+	</Patch>
+	<Patch>
+		<Hash>E9DBF9DB29E5D6D5DF7ED3CCDE425EDA9DFC725FF723501C8AAA5D1B4516D78E</Hash>
+		<FileName>165.csv</FileName>
+		<InsufficientWallDikeArguments>true</InsufficientWallDikeArguments>
+	</Patch>
+	
   </RoutePatches>
 </openBVE>

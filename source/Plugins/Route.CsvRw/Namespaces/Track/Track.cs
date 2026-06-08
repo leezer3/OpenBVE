@@ -2069,6 +2069,17 @@ namespace CsvRwRouteParser
 						{
 							dir = FindDirection(Arguments[1], "Track.Wall", true, Expression.Line, Expression.File);
 						}
+						else
+						{
+							if (EnabledHacks.InsufficientWallDikeArguments)
+							{
+								dir = Direction.Both;
+							}
+							else
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Track.Wall is expected to have at least 3 arguments at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							}
+						}
 
 						if (dir == Direction.Invalid || dir == Direction.None)
 						{
@@ -2189,6 +2200,17 @@ namespace CsvRwRouteParser
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0)
 						{
 							dir = FindDirection(Arguments[1], "Track.Dike", true, Expression.Line, Expression.File);
+						}
+						else
+						{
+							if (EnabledHacks.InsufficientWallDikeArguments)
+							{
+								dir = Direction.Both;
+							}
+							else
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Track.Dike is expected to have at least 3 arguments at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							}
 						}
 
 						if (dir == Direction.Invalid || dir == Direction.None)

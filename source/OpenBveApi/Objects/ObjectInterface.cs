@@ -81,5 +81,7 @@ namespace OpenBveApi.Objects
 		public bool DisableSemiTransparentFaces;
 		/// <summary>Whether aggressive RW bracket fixing is performed</summary>
 		public bool AggressiveRwBrackets;
+		/// <summary> Whether a wall / dike with insufficient arguments is accepted</summary>
+		public bool InsufficientWallDikeArguments;
 	}
 }
