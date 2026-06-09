@@ -316,7 +316,11 @@ namespace Route.Bve5
 								string key = Data.Blocks[i].FreeObjects[railKey][k].Key;
 								Vector3 wpos;
 								Transformation Transformation;
-								GetRailTransformation(railKey, Position, Data.Blocks, i, Data.Blocks[i].FreeObjects[railKey][k], Direction, out wpos, out Transformation);
+								if (!GetRailTransformation(railKey, Position, Data.Blocks, i, Data.Blocks[i].FreeObjects[railKey][k], Direction, out wpos, out Transformation))
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unknown transform type encountered for object " + Data.Blocks[i].FreeObjects[railKey][k].Key + " at track position " + StartingDistance);
+									continue;
+								}
 
 								wpos += Data.Blocks[i].FreeObjects[railKey][k].Position * Transformation;
 								Data.Objects.TryGetValue(key, out UnifiedObject obj);
@@ -341,7 +345,12 @@ namespace Route.Bve5
 
 								Vector3 wpos;
 								Transformation railTransformation;
-								GetRailTransformation(railKey, Position, Data.Blocks, i, Data.Blocks[i].Cracks[k], Direction, out wpos, out railTransformation);
+								if (!GetRailTransformation(railKey, Position, Data.Blocks, i, Data.Blocks[i].Cracks[k], Direction, out wpos, out railTransformation))
+								{
+
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unknown transform type encountered for crack " + Data.Blocks[i].Cracks[k].Key + " at track position " + StartingDistance);
+									continue;
+								}
 
 								double pInterpolateX0 = GetTrackCoordinate(StartingDistance, px0, nextStartingDistance, px1, pRadiusH, Data.Blocks[i].Cracks[k].TrackPosition);
 								double pInterpolateX1 = GetTrackCoordinate(StartingDistance, px0, nextStartingDistance, px1, pRadiusH, Data.Blocks[i].Cracks[k].TrackPosition + InterpolateInterval);
@@ -365,7 +374,11 @@ namespace Route.Bve5
 							{
 								Vector3 wpos;
 								Transformation railTransformation;
-								GetRailTransformation(railKey, Position, Data.Blocks, i, Data.Blocks[i].Signals[j][k], Direction, out wpos, out railTransformation);
+								if (!GetRailTransformation(railKey, Position, Data.Blocks, i, Data.Blocks[i].Signals[j][k], Direction, out wpos, out railTransformation))
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unknown transform type encountered for signal " + Data.Blocks[i].Signals[j][k].Key + " at track position " + StartingDistance);
+									continue;
+								}
 								wpos += Data.Blocks[i].Signals[j][k].Position * railTransformation;
 
 								SignalData sd = Data.SignalObjects.Find(data => data.Key.Equals(Data.Blocks[i].Signals[j][k].Key, StringComparison.InvariantCultureIgnoreCase));

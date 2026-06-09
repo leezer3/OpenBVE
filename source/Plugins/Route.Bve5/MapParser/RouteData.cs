@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -67,7 +68,7 @@ namespace Route.Bve5
 				{
 					StartingTrackPosition = Distance
 				},
-				FreeObjects = new Dictionary<string, List<FreeObj>>(),
+				FreeObjects = new Dictionary<string, List<FreeObj>>(StringComparer.InvariantCultureIgnoreCase),
 				Cracks = new List<Crack>(),
 				Sections = new List<Section>(),
 				Signals = new List<Signal>[TrackKeyList.Count],
@@ -100,7 +101,7 @@ namespace Route.Bve5
 				{
 					StartingTrackPosition = Distance
 				},
-				FreeObjects = new Dictionary<string, List<FreeObj>>(),
+				FreeObjects = new Dictionary<string, List<FreeObj>>(StringComparer.InvariantCultureIgnoreCase),
 				Cracks = new List<Crack>(),
 				Sections = new List<Section>(),
 				Signals = new List<Signal>[TrackKeyList.Count],

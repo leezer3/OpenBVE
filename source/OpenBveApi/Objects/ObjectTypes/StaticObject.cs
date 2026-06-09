@@ -234,6 +234,10 @@ namespace OpenBveApi.Objects
 			for (int i = 0; i < Mesh.Vertices.Length; i += 4)
 			{
 				List<VertexTemplate> tempList = Mesh.Vertices.Skip(i).Take(4).ToList();
+				if (tempList.Count != 4)
+				{
+					break;
+				}
 				// find vertices to base transform on
 				int bottomLeft = tempList.IndexOf(tempList.OrderByDescending(c => c.Coordinates.Z).ThenBy(c => c.Coordinates.X).First());
 				int bottomRight = tempList.IndexOf(tempList.OrderByDescending(c => c.Coordinates.Z).ThenByDescending(c => c.Coordinates.X).First());
@@ -305,6 +309,10 @@ namespace OpenBveApi.Objects
 			for (int i = 0; i < Mesh.Vertices.Length; i += 4)
 			{
 				List<VertexTemplate> tempList = Mesh.Vertices.Skip(i).Take(4).ToList();
+				if (tempList.Count != 4)
+				{
+					break;
+				}
 				// find vertices to base transform on
 				int bottomLeft = tempList.IndexOf(tempList.OrderByDescending(c => c.Coordinates.Z).ThenBy(c => c.Coordinates.X).First());
 				int bottomRight = tempList.IndexOf(tempList.OrderByDescending(c => c.Coordinates.Z).ThenByDescending(c => c.Coordinates.X).First());

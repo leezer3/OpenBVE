@@ -441,12 +441,11 @@ namespace CsvRwRouteParser
 										}
 										List<string> lines = System.IO.File.ReadAllLines(files[chosenIndex], includeEncoding).ToList();
 										PreprocessSplitIntoExpressions(files[chosenIndex], lines, out IList<Expression> expr, false, offsets[chosenIndex] + Expressions[i].TrackPositionOffset);
+										Expressions[i].Skip = true; // always want to skip!
 										if (expr.Count != 0) {
-											Expressions[i].Skip = true;
 											// at this point, Expressions will always be List<T>
 											((List<Expression>)Expressions).InsertRange(i, expr);
 										}
-										i--;
 										continueWithNextExpression = true;
 									}
 									break;
