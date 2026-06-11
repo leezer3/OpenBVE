@@ -80,6 +80,7 @@ struct DynamicLight {
 	float radius;
 	int softFalloff;
 	float softness;
+	vec2 areaSize;
 };
 uniform int uDynamicLightCount;
 uniform DynamicLight uDynamicLights[16];
@@ -230,17 +231,7 @@ void main(void)
 	// Multiply material alpha by it's opacity
 	finalColor.a *= uOpacity;
 
-	/*
-	 * NOTES:
-	 * Unused alpha functions must not be added to the shader
-	 * This has a nasty affect on framerates
-	 *
-	 * A switch case block is also ~30% slower than the else-if
-	 *
-	 * Numbers used are those from the GL.AlphaFunction enum to allow
-	 * for direct casts
-	 */
-	if(uAlphaTest.x == 513) // Less
+	if(uAlphaTest.x == float(ALPHA_LESS)) // Less
 	{
 		if(finalColor.a >= uAlphaTest.y)
 		{
@@ -276,6 +267,7 @@ void main(void)
 		// Precalculated constants for faster lighting calculations
 		const float ONE_OVER_FOUR_PI = 0.0795774715; // 1.0 / (4.0 * PI)
 		const float TWO_PI = 6.283185307;           // 2.0 * PI
+		const float FOUR_PI = 12.566370614;         // 4.0 * PI
 		vec3 N = normalize(vNormal);
 		for (int i = 0; i < uDynamicLightCount; i++)
 		{
@@ -284,14 +276,9 @@ void main(void)
 			if (d2 <= uDynamicLights[i].rangeSquared)
 			{
 				float d = sqrt(d2);
-				vec3 L = toLight / d;
 				
-				// 1. Calculate Intensity: Power in Watts, Exposure, Normalize
+				// 1. Calculate Intensity: Power in Watts, Exposure
 				float intensity = uDynamicLights[i].power * exp2(uDynamicLights[i].exposure);
-				float solidAngle = TWO_PI * (1.0 - uDynamicLights[i].spotCutoff);
-				bool normalizeSpot = (uDynamicLights[i].type == 1 && uDynamicLights[i].isNormalize != 0);
-				intensity /= normalizeSpot ? max(solidAngle, 0.0001) : 12.566370614;
-				
 				vec3 lightColor = uDynamicLights[i].color.rgb * intensity;
 
 				// 2. Attenuation: SoftFalloff, Radius
@@ -302,21 +289,81 @@ void main(void)
 					att *= clamp((uDynamicLights[i].range - d) / max(0.001, uDynamicLights[i].range * 0.2), 0.0, 1.0);
 				}
 
-				// 3. Spot Cone Attenuation (Branchless)
-				vec3 lightToFrag = -L;
-				float spotDot = dot(lightToFrag, uDynamicLights[i].direction);
-				float outerCutoff = uDynamicLights[i].spotCutoff;
-				
-				float softnessFactor = clamp(uDynamicLights[i].softness, 0.0, 1.0);
-				float innerCutoff = mix(1.0, outerCutoff, 1.0 - softnessFactor);
-				
-				float intensityFactor = clamp((spotDot - outerCutoff) / max(innerCutoff - outerCutoff, 0.0001), 0.0, 1.0);
-				float spotAtt = smoothstep(0.0, 1.0, intensityFactor) * step(outerCutoff, spotDot);
-				
-				att *= mix(1.0, spotAtt, float(uDynamicLights[i].type == 1));
+				if (uDynamicLights[i].type == 2)
+				{
+					// AREA LIGHT
+					// Construct orthonormal coordinate basis from the light normal (direction)
+					vec3 normal = normalize(uDynamicLights[i].direction);
+					vec3 right = normalize(cross(normal, abs(normal.y) < 0.999 ? vec3(0.0, 1.0, 0.0) : vec3(0.0, 0.0, 1.0)));
+					vec3 up = cross(right, normal);
+					
+					vec2 halfSize = uDynamicLights[i].areaSize * 0.5;
+					
+					// Calculate the four vertices of the rectangular light in view space
+					vec3 P[4];
+					P[0] = uDynamicLights[i].position - right * halfSize.x - up * halfSize.y;
+					P[1] = uDynamicLights[i].position + right * halfSize.x - up * halfSize.y;
+					P[2] = uDynamicLights[i].position + right * halfSize.x + up * halfSize.y;
+					P[3] = uDynamicLights[i].position - right * halfSize.x + up * halfSize.y;
+					
+					// Integrate cosine-weighted illumination analytically using projected solid angle (boundary integration)
+					float irradiance = 0.0;
+					vec3 p[4];
+					for (int j = 0; j < 4; j++)
+					{
+						p[j] = normalize(P[j] - oViewPos.xyz);
+					}
+					
+					for (int j = 0; j < 4; j++)
+					{
+						int next = (j + 1) % 4;
+						vec3 p1 = p[j];
+						vec3 p2 = p[next];
+						
+						float cosTheta = clamp(dot(p1, p2), -1.0, 1.0);
+						float theta = acos(cosTheta);
+						
+						vec3 crossP = cross(p1, p2);
+						float len = length(crossP);
+						if (len > 0.0001)
+						{
+							vec3 g = crossP / len;
+							irradiance += theta * dot(g, N);
+						}
+					}
+					irradiance = max(irradiance / TWO_PI, 0.0);
+					
+					// Double-sided / backface check (light only emits forward)
+					float frontFacing = clamp(dot(N, normalize(toLight)), 0.0, 1.0);
+					irradiance *= frontFacing;
+					
+					dynamicLightSum += lightColor * irradiance * att;
+				}
+				else
+				{
+					// POINT/SPOT LIGHT
+					vec3 L = toLight / d;
+					float solidAngle = TWO_PI * (1.0 - uDynamicLights[i].spotCutoff);
+					bool normalizeSpot = (uDynamicLights[i].type == 1 && uDynamicLights[i].isNormalize != 0);
+					float normalizedIntensity = intensity / (normalizeSpot ? max(solidAngle, 0.0001) : FOUR_PI);
+					vec3 normalizedLightColor = uDynamicLights[i].color.rgb * normalizedIntensity;
 
-				float nDotL = abs(dot(N, L));
-				dynamicLightSum += lightColor * nDotL * att;
+					// Spot Cone Attenuation (Branchless)
+					vec3 lightToFrag = -L;
+					float spotDot = dot(lightToFrag, uDynamicLights[i].direction);
+					float outerCutoff = uDynamicLights[i].spotCutoff;
+					
+					float softnessFactor = clamp(uDynamicLights[i].softness, 0.0, 1.0);
+					float innerCutoff = mix(1.0, outerCutoff, 1.0 - softnessFactor);
+					
+					float intensityFactor = clamp((spotDot - outerCutoff) / max(innerCutoff - outerCutoff, 0.0001), 0.0, 1.0);
+					float spotAtt = smoothstep(0.0, 1.0, intensityFactor) * step(outerCutoff, spotDot);
+					
+					att *= mix(1.0, spotAtt, float(uDynamicLights[i].type == 1));
+
+					float nDotL = abs(dot(N, L));
+					dynamicLightSum += normalizedLightColor * nDotL * att;
+				}
 			}
 		}
 	}

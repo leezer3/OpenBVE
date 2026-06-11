@@ -9,7 +9,9 @@ namespace OpenBveApi.Objects
 		/// <summary>Point light source emitting light in all directions</summary>
 		Point = 0,
 		/// <summary>Spot light source emitting a cone of light in a specific direction</summary>
-		Spot = 1
+		Spot = 1,
+		/// <summary>Area light source emitting light from a 2D surface</summary>
+		Area = 2
 	}
 
 	/// <summary>Represents a dynamic light source in the rendering scene</summary>
@@ -47,6 +49,8 @@ namespace OpenBveApi.Objects
 		public float Softness;
 		/// <summary>Whether to show the cone helper</summary>
 		public bool ShowCone;
+		/// <summary>Width and Height of the area light source</summary>
+		public Vector2 AreaSize;
  
  		/// <summary>Creates a default scene light</summary>
  		public SceneLight()
@@ -67,6 +71,7 @@ namespace OpenBveApi.Objects
 			Angle = 45.0f;
 			Softness = 1.0f;
 			ShowCone = true;
+			AreaSize = new Vector2(1.0f, 1.0f);
  		}
  
  		/// <summary>Clones the light source</summary>
@@ -89,7 +94,8 @@ namespace OpenBveApi.Objects
 				SoftFalloff = this.SoftFalloff,
 				Angle = this.Angle,
 				Softness = this.Softness,
-				ShowCone = this.ShowCone
+				ShowCone = this.ShowCone,
+				AreaSize = this.AreaSize
  			};
  		}
 	}

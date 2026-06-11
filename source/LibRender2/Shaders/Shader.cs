@@ -82,6 +82,7 @@ namespace LibRender2.Shaders
 		private readonly int[] uDynamicLightRadiusLocation = new int[16];
 		private readonly int[] uDynamicLightSoftFalloffLocation = new int[16];
 		private readonly int[] uDynamicLightSoftnessLocation = new int[16];
+		private readonly int[] uDynamicLightAreaSizeLocation = new int[16];
 
 
 		/// <summary>
@@ -134,6 +135,7 @@ namespace LibRender2.Shaders
 				uDynamicLightRadiusLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].radius");
 				uDynamicLightSoftFalloffLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].softFalloff");
 				uDynamicLightSoftnessLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].softness");
+				uDynamicLightAreaSizeLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].areaSize");
 			}
 
 			VertexLayout = GetVertexLayout();
@@ -627,6 +629,7 @@ namespace LibRender2.Shaders
 				GL.ProgramUniform1(Handle, uDynamicLightRadiusLocation[i], light.Radius);
 				GL.ProgramUniform1(Handle, uDynamicLightSoftFalloffLocation[i], light.SoftFalloff ? 1 : 0);
 				GL.ProgramUniform1(Handle, uDynamicLightSoftnessLocation[i], light.Softness);
+				GL.ProgramUniform2(Handle, uDynamicLightAreaSizeLocation[i], (float)light.AreaSize.X, (float)light.AreaSize.Y);
 			}
 		}
 
