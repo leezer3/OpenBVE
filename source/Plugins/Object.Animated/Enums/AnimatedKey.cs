@@ -76,6 +76,7 @@ namespace Plugin
 		Angle,
 		Softness,
 		ShowCone,
-		Shadow
+		Shadow,
+		Size
 	}
 }

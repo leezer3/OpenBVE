@@ -480,6 +480,8 @@ namespace Plugin
 								light.Visual = light.ShowCone;
 							}
 
+							Block.TryGetVector2(AnimatedKey.Size, ',', ref light.AreaSize);
+
 							animatedObj.Lights.Add(light);
 							animatedObj.Light = light;
 
