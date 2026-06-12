@@ -281,6 +281,30 @@ namespace CsvRwRouteParser
 									}
 								}
 									break;
+								case "options.startingdirection":
+									if (Arguments.Length != 2)
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										break;
+									}
+
+									if (!NumberFormats.TryParseDoubleVb6(Arguments[0], out Data.StartingDirection.X))
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										Data.StartingDirection.X = 0;
+									}
+									if (!NumberFormats.TryParseDoubleVb6(Arguments[1], out Data.StartingDirection.Y))
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										Data.StartingDirection.Y = 0;
+									}
+
+									if (Data.StartingDirection == Vector2.Null)
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Direction must not be zero in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										Data.StartingDirection = Vector2.Down;
+									}
+									break;
 							}
 						}
 					}
