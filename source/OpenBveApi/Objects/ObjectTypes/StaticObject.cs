@@ -194,11 +194,28 @@ namespace OpenBveApi.Objects
 			{
 				return (StaticObject)Clone();
 			}
-			var firstFour = Mesh.Vertices.Take(4).ToList();
-			int bottomLeftIdx = firstFour.IndexOf(firstFour.OrderByDescending(c => c.Coordinates.Z).ThenBy(c => c.Coordinates.X).First());
-			int bottomRightIdx = firstFour.IndexOf(firstFour.OrderByDescending(c => c.Coordinates.Z).ThenByDescending(c => c.Coordinates.X).First());
-			int topRightIdx = firstFour.IndexOf(firstFour.OrderBy(c => c.Coordinates.Z).ThenByDescending(c => c.Coordinates.X).First());
-			int topLeftIdx = firstFour.IndexOf(firstFour.OrderBy(c => c.Coordinates.Z).ThenBy(c => c.Coordinates.X).First());
+			// Find reference vertices by manually checking the first 4 vertices
+			// bottomLeft: highest Z, lowest X (Z Descending, X Ascending)
+			// bottomRight: highest Z, highest X (Z Descending, X Descending)
+			// topRight: lowest Z, highest X (Z Ascending, X Descending)
+			// topLeft: lowest Z, lowest X (Z Ascending, X Ascending)
+			int bottomLeftIdx = 0, bottomRightIdx = 0, topRightIdx = 0, topLeftIdx = 0;
+			for (int i = 1; i < 4; i++)
+			{
+				Vector3 c = Mesh.Vertices[i].Coordinates;
+				
+				Vector3 cbl = Mesh.Vertices[bottomLeftIdx].Coordinates;
+				if (c.Z > cbl.Z || (c.Z == cbl.Z && c.X < cbl.X)) bottomLeftIdx = i;
+
+				Vector3 cbr = Mesh.Vertices[bottomRightIdx].Coordinates;
+				if (c.Z > cbr.Z || (c.Z == cbr.Z && c.X > cbr.X)) bottomRightIdx = i;
+
+				Vector3 ctr = Mesh.Vertices[topRightIdx].Coordinates;
+				if (c.Z < ctr.Z || (c.Z == ctr.Z && c.X > ctr.X)) topRightIdx = i;
+
+				Vector3 ctl = Mesh.Vertices[topLeftIdx].Coordinates;
+				if (c.Z < ctl.Z || (c.Z == ctl.Z && c.X < ctl.X)) topLeftIdx = i;
+			}
 
 			if (bottomLeftIdx == bottomRightIdx || bottomLeftIdx == topRightIdx || bottomLeftIdx == topLeftIdx ||
 			    bottomRightIdx == topRightIdx || bottomRightIdx == topLeftIdx || topRightIdx == topLeftIdx)
@@ -248,11 +265,28 @@ namespace OpenBveApi.Objects
 			{
 				return (StaticObject)Clone();
 			}
-			var firstFour = Mesh.Vertices.Take(4).ToList();
-			int bottomLeftIdx = firstFour.IndexOf(firstFour.OrderByDescending(c => c.Coordinates.Z).ThenBy(c => c.Coordinates.X).First());
-			int bottomRightIdx = firstFour.IndexOf(firstFour.OrderByDescending(c => c.Coordinates.Z).ThenByDescending(c => c.Coordinates.X).First());
-			int topRightIdx = firstFour.IndexOf(firstFour.OrderBy(c => c.Coordinates.Z).ThenByDescending(c => c.Coordinates.X).First());
-			int topLeftIdx = firstFour.IndexOf(firstFour.OrderBy(c => c.Coordinates.Z).ThenBy(c => c.Coordinates.X).First());
+			// Find reference vertices by manually checking the first 4 vertices
+			// bottomLeft: highest Z, lowest X (Z Descending, X Ascending)
+			// bottomRight: highest Z, highest X (Z Descending, X Descending)
+			// topRight: lowest Z, highest X (Z Ascending, X Descending)
+			// topLeft: lowest Z, lowest X (Z Ascending, X Ascending)
+			int bottomLeftIdx = 0, bottomRightIdx = 0, topRightIdx = 0, topLeftIdx = 0;
+			for (int i = 1; i < 4; i++)
+			{
+				Vector3 c = Mesh.Vertices[i].Coordinates;
+				
+				Vector3 cbl = Mesh.Vertices[bottomLeftIdx].Coordinates;
+				if (c.Z > cbl.Z || (c.Z == cbl.Z && c.X < cbl.X)) bottomLeftIdx = i;
+
+				Vector3 cbr = Mesh.Vertices[bottomRightIdx].Coordinates;
+				if (c.Z > cbr.Z || (c.Z == cbr.Z && c.X > cbr.X)) bottomRightIdx = i;
+
+				Vector3 ctr = Mesh.Vertices[topRightIdx].Coordinates;
+				if (c.Z < ctr.Z || (c.Z == ctr.Z && c.X > ctr.X)) topRightIdx = i;
+
+				Vector3 ctl = Mesh.Vertices[topLeftIdx].Coordinates;
+				if (c.Z < ctl.Z || (c.Z == ctl.Z && c.X < ctl.X)) topLeftIdx = i;
+			}
 
 			if (bottomLeftIdx == bottomRightIdx || bottomLeftIdx == topRightIdx || bottomLeftIdx == topLeftIdx ||
 			    bottomRightIdx == topRightIdx || bottomRightIdx == topLeftIdx || topRightIdx == topLeftIdx)
