@@ -74,7 +74,6 @@ namespace Plugin
 				{
 					return null;
 				}
-
 			}
 			else
 			{
@@ -332,7 +331,6 @@ namespace Plugin
 															//Calculate openBVE co-ords
 															currentCoords.X = (OpenBVEWidth / TextureWidth);
 															currentCoords.Y = (OpenBVEHeight / TextureHeight);
-
 														}
 														else
 														{
@@ -341,8 +339,6 @@ namespace Plugin
 															currentCoords.Y = 0;
 														}
 														Builder.Vertices[Builder.Vertices.Count - 1].TextureCoordinates = currentCoords;
-
-
 													}
 												}
 												if (Face2)

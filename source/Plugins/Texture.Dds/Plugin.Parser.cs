@@ -66,7 +66,7 @@ namespace Texture.Dds
                 data = reader.ReadBytes((int)header.sizeOrPitch);
                 return data;
             }
-            data = reader.ReadBytes((header.pixelFormat.rgbbitcount / 8) * header.width * header.height);
+            data = reader.ReadBytes((header.pixelFormat.rgbBitCount / 8) * header.width * header.height);
             return data;
 
         }
@@ -168,7 +168,7 @@ namespace Texture.Dds
                 {
 	                format = (header.pixelFormat.flags & DDPF_ALPHAPIXELS) == DDPF_ALPHAPIXELS ? PixelFormat.RGBA : PixelFormat.RGB;
                 }
-                blocksize = (header.width * header.height * header.depth * (header.pixelFormat.rgbbitcount >> 3));
+                blocksize = (header.width * header.height * header.depth * (header.pixelFormat.rgbBitCount >> 3));
             }
 
             return format;
@@ -504,7 +504,7 @@ namespace Texture.Dds
 
         private unsafe byte[] DecompressDXT1(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
-            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbBitCount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
             byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
@@ -587,7 +587,7 @@ namespace Texture.Dds
 
         private unsafe byte[] DecompressDXT3(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
-            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbBitCount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
             byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
@@ -665,7 +665,7 @@ namespace Texture.Dds
         private unsafe byte[] DecompressDXT5(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
             // allocate bitmap
-            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbBitCount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
 
@@ -786,7 +786,7 @@ namespace Texture.Dds
         private unsafe byte[] DecompressRGB(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
             // allocate bitmap
-            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbBitCount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
 
@@ -794,15 +794,15 @@ namespace Texture.Dds
 	        uint valMask;
 	        unchecked
 	        {
-		        valMask = (uint)((header.pixelFormat.rgbbitcount == 32) ? ~0 : (1 << header.pixelFormat.rgbbitcount) - 1);
+		        valMask = (uint)((header.pixelFormat.rgbBitCount == 32) ? ~0 : (1 << header.pixelFormat.rgbBitCount) - 1);
 	        }
-            uint pixSize = (uint)((header.pixelFormat.rgbbitcount + 7) / 8);
+            uint pixSize = (uint)((header.pixelFormat.rgbBitCount + 7) / 8);
             int rShift1; int rMul; int rShift2;
-            ComputeMaskParams(header.pixelFormat.rbitmask, out rShift1, out rMul, out rShift2);
+            ComputeMaskParams(header.pixelFormat.rBitmask, out rShift1, out rMul, out rShift2);
             int gShift1; int gMul; int gShift2;
-            ComputeMaskParams(header.pixelFormat.gbitmask, out gShift1, out gMul, out gShift2);
+            ComputeMaskParams(header.pixelFormat.gBitmask, out gShift1, out gMul, out gShift2);
             int bShift1; int bMul; int bShift2;
-            ComputeMaskParams(header.pixelFormat.bbitmask, out bShift1, out bMul, out bShift2);
+            ComputeMaskParams(header.pixelFormat.bBitmask, out bShift1, out bMul, out bShift2);
 
             int offset = 0;
             int pixnum = header.width * header.height * header.depth;
@@ -813,11 +813,11 @@ namespace Texture.Dds
                 {
                     uint px = *((uint*)temp) & valMask;
                     temp += pixSize;
-                    uint pxc = px & header.pixelFormat.rbitmask;
+                    uint pxc = px & header.pixelFormat.rBitmask;
                     rawData[offset + 0] = (byte)(((pxc >> rShift1) * rMul) >> rShift2);
-                    pxc = px & header.pixelFormat.gbitmask;
+                    pxc = px & header.pixelFormat.gBitmask;
                     rawData[offset + 1] = (byte)(((pxc >> gShift1) * gMul) >> gShift2);
-                    pxc = px & header.pixelFormat.bbitmask;
+                    pxc = px & header.pixelFormat.bBitmask;
                     rawData[offset + 2] = (byte)(((pxc >> bShift1) * bMul) >> bShift2);
                     rawData[offset + 3] = 0xff;
                     offset += 4;
@@ -829,7 +829,7 @@ namespace Texture.Dds
         private unsafe byte[] DecompressRGBA(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
             // allocate bitmap
-            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbBitCount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
             
@@ -837,17 +837,17 @@ namespace Texture.Dds
 	        uint valMask;
 	        unchecked
 	        {
-		        valMask = (uint)((header.pixelFormat.rgbbitcount == 32) ? ~0 : (1 << header.pixelFormat.rgbbitcount) - 1);
+		        valMask = (uint)((header.pixelFormat.rgbBitCount == 32) ? ~0 : (1 << header.pixelFormat.rgbBitCount) - 1);
 	        }
-            int pixSize = (header.pixelFormat.rgbbitcount + 7) / 8;
+            int pixSize = (header.pixelFormat.rgbBitCount + 7) / 8;
             int rShift1; int rMul; int rShift2;
-            ComputeMaskParams(header.pixelFormat.rbitmask, out rShift1, out rMul, out rShift2);
+            ComputeMaskParams(header.pixelFormat.rBitmask, out rShift1, out rMul, out rShift2);
             int gShift1; int gMul; int gShift2;
-            ComputeMaskParams(header.pixelFormat.gbitmask, out gShift1, out gMul, out gShift2);
+            ComputeMaskParams(header.pixelFormat.gBitmask, out gShift1, out gMul, out gShift2);
             int bShift1; int bMul; int bShift2;
-            ComputeMaskParams(header.pixelFormat.bbitmask, out bShift1, out bMul, out bShift2);
+            ComputeMaskParams(header.pixelFormat.bBitmask, out bShift1, out bMul, out bShift2);
             int aShift1; int aMul; int aShift2;
-            ComputeMaskParams(header.pixelFormat.alphabitmask, out aShift1, out aMul, out aShift2);
+            ComputeMaskParams(header.pixelFormat.alphaBitmask, out aShift1, out aMul, out aShift2);
 
             int offset = 0;
             int pixnum = header.width * header.height * header.depth;
@@ -859,13 +859,13 @@ namespace Texture.Dds
                 {
                     uint px = *((uint*)temp) & valMask;
                     temp += pixSize;
-                    uint pxc = px & header.pixelFormat.rbitmask;
+                    uint pxc = px & header.pixelFormat.rBitmask;
                     rawData[offset + 0] = (byte)(((pxc >> rShift1) * rMul) >> rShift2);
-                    pxc = px & header.pixelFormat.gbitmask;
+                    pxc = px & header.pixelFormat.gBitmask;
                     rawData[offset + 1] = (byte)(((pxc >> gShift1) * gMul) >> gShift2);
-                    pxc = px & header.pixelFormat.bbitmask;
+                    pxc = px & header.pixelFormat.bBitmask;
                     rawData[offset + 2] = (byte)(((pxc >> bShift1) * bMul) >> bShift2);
-                    pxc = px & header.pixelFormat.alphabitmask;
+                    pxc = px & header.pixelFormat.alphaBitmask;
                     rawData[offset + 3] = (byte)(((pxc >> aShift1) * aMul) >> aShift2);
                     offset += 4;
                 }
@@ -876,7 +876,7 @@ namespace Texture.Dds
         private unsafe byte[] Decompress3Dc(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
             // allocate bitmap
-            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbBitCount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
             
@@ -980,7 +980,7 @@ namespace Texture.Dds
         private unsafe byte[] DecompressAti1n(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
             // allocate bitmap
-            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbBitCount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
 
@@ -1049,14 +1049,14 @@ namespace Texture.Dds
         private unsafe byte[] DecompressLum(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
             // allocate bitmap
-            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbBitCount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
 
             byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
 
             int lShift1; int lMul; int lShift2;
-            ComputeMaskParams(header.pixelFormat.rbitmask, out lShift1, out lMul, out lShift2);
+            ComputeMaskParams(header.pixelFormat.rBitmask, out lShift1, out lMul, out lShift2);
 
             int offset = 0;
             int pixnum = header.width * header.height * header.depth;
@@ -1079,7 +1079,7 @@ namespace Texture.Dds
         private unsafe byte[] DecompressRXGB(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
             // allocate bitmap
-            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbBitCount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
 
@@ -1222,7 +1222,7 @@ namespace Texture.Dds
         private unsafe byte[] DecompressFloat(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
             // allocate bitmap
-            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbBitCount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
 
@@ -1285,17 +1285,17 @@ namespace Texture.Dds
         private unsafe byte[] DecompressARGB(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
             // allocate bitmap
-            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbBitCount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
 
             if (header.Check16BitComponents())
                 return DecompressARGB16(header, data, pixelFormat);
 
-            int sizeOfData = (header.width * header.pixelFormat.rgbbitcount / 8) * header.height * header.depth;
+            int sizeOfData = (header.width * header.pixelFormat.rgbBitCount / 8) * header.height * header.depth;
             byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
 
-            if ((pixelFormat == PixelFormat.LUMINANCE) && (header.pixelFormat.rgbbitcount == 16) && (header.pixelFormat.rbitmask == 0xFFFF))
+            if ((pixelFormat == PixelFormat.LUMINANCE) && (header.pixelFormat.rgbBitCount == 16) && (header.pixelFormat.rBitmask == 0xFFFF))
             {
                 Array.Copy(data, rawData, data.Length);
                 return rawData;
@@ -1307,11 +1307,11 @@ namespace Texture.Dds
             uint blueL, blueR;
             uint alphaL, alphaR;
 
-            GetBitsFromMask(header.pixelFormat.rbitmask, out redL, out redR);
-            GetBitsFromMask(header.pixelFormat.gbitmask, out greenL, out greenR);
-            GetBitsFromMask(header.pixelFormat.bbitmask, out blueL, out blueR);
-            GetBitsFromMask(header.pixelFormat.alphabitmask, out alphaL, out alphaR);
-            uint tempBpp = (uint)(header.pixelFormat.rgbbitcount / 8);
+            GetBitsFromMask(header.pixelFormat.rBitmask, out redL, out redR);
+            GetBitsFromMask(header.pixelFormat.gBitmask, out greenL, out greenR);
+            GetBitsFromMask(header.pixelFormat.bBitmask, out blueL, out blueR);
+            GetBitsFromMask(header.pixelFormat.alphaBitmask, out alphaL, out alphaR);
+            uint tempBpp = (uint)(header.pixelFormat.rgbBitCount / 8);
 
             fixed (byte* bytePtr = data)
             {
@@ -1339,16 +1339,16 @@ namespace Texture.Dds
                         readI = (uint)(temp[0] | (temp[1] << 8) | (temp[2] << 16) | (temp[3] << 24));
                     temp += tempBpp;
 
-                    rawData[i] = (byte)((((int)readI & (int)header.pixelFormat.rbitmask) >> (int)redR) << (int)redL);
+                    rawData[i] = (byte)((((int)readI & (int)header.pixelFormat.rBitmask) >> (int)redR) << (int)redL);
 
                     if (bpp >= 3)
                     {
-                        rawData[i + 1] = (byte)((((int)readI & (int)header.pixelFormat.gbitmask) >> (int)greenR) << (int)greenL);
-                        rawData[i + 2] = (byte)((((int)readI & header.pixelFormat.bbitmask) >> (int)blueR) << (int)blueL);
+                        rawData[i + 1] = (byte)((((int)readI & (int)header.pixelFormat.gBitmask) >> (int)greenR) << (int)greenL);
+                        rawData[i + 2] = (byte)((((int)readI & header.pixelFormat.bBitmask) >> (int)blueR) << (int)blueL);
 
                         if (bpp == 4)
                         {
-                            rawData[i + 3] = (byte)((((int)readI & (int)header.pixelFormat.alphabitmask) >> (int)alphaR) << (int)alphaL);
+                            rawData[i + 3] = (byte)((((int)readI & (int)header.pixelFormat.alphaBitmask) >> (int)alphaR) << (int)alphaL);
                             if (alphaL >= 7)
                             {
                                 rawData[i + 3] = (byte)(rawData[i + 3] != 0 ? 0xFF : 0x00);
@@ -1361,7 +1361,7 @@ namespace Texture.Dds
                     }
                     else if (bpp == 2)
                     {
-                        rawData[i + 1] = (byte)((((int)readI & (int)header.pixelFormat.alphabitmask) >> (int)alphaR) << (int)alphaL);
+                        rawData[i + 1] = (byte)((((int)readI & (int)header.pixelFormat.alphaBitmask) >> (int)alphaR) << (int)alphaL);
                         if (alphaL >= 7)
                         {
                             rawData[i + 1] = (byte)(rawData[i + 1] != 0 ? 0xFF : 0x00);
@@ -1379,11 +1379,11 @@ namespace Texture.Dds
         private unsafe byte[] DecompressARGB16(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
             // allocate bitmap
-            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbbitcount);
+            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbBitCount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
 
-            int sizeOfData = (header.width * header.pixelFormat.rgbbitcount / 8) * header.height * header.depth;
+            int sizeOfData = (header.width * header.pixelFormat.rgbBitCount / 8) * header.height * header.depth;
             byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
 
             uint readI = 0;
@@ -1392,17 +1392,17 @@ namespace Texture.Dds
             uint blueL, blueR;
             uint alphaL, alphaR;
             
-            GetBitsFromMask(header.pixelFormat.rbitmask, out redL, out redR);
-            GetBitsFromMask(header.pixelFormat.gbitmask, out greenL, out greenR);
-            GetBitsFromMask(header.pixelFormat.bbitmask, out blueL, out blueR);
-            GetBitsFromMask(header.pixelFormat.alphabitmask, out alphaL, out alphaR);
+            GetBitsFromMask(header.pixelFormat.rBitmask, out redL, out redR);
+            GetBitsFromMask(header.pixelFormat.gBitmask, out greenL, out greenR);
+            GetBitsFromMask(header.pixelFormat.bBitmask, out blueL, out blueR);
+            GetBitsFromMask(header.pixelFormat.alphaBitmask, out alphaL, out alphaR);
             // padding
-            redL += 16 - CountBitsFromMask(header.pixelFormat.rbitmask);
-            greenL += 16 - CountBitsFromMask(header.pixelFormat.gbitmask);
-            blueL += 16 - CountBitsFromMask(header.pixelFormat.bbitmask);
-            alphaL += 16 - CountBitsFromMask(header.pixelFormat.alphabitmask);
+            redL += 16 - CountBitsFromMask(header.pixelFormat.rBitmask);
+            greenL += 16 - CountBitsFromMask(header.pixelFormat.gBitmask);
+            blueL += 16 - CountBitsFromMask(header.pixelFormat.bBitmask);
+            alphaL += 16 - CountBitsFromMask(header.pixelFormat.alphaBitmask);
 
-            uint tempBpp = (uint)(header.pixelFormat.rgbbitcount / 8);
+            uint tempBpp = (uint)(header.pixelFormat.rgbBitCount / 8);
             fixed (byte* bytePtr = data)
             {
                 byte* temp = bytePtr;
@@ -1432,16 +1432,16 @@ namespace Texture.Dds
                             readI = (uint)(temp[0] | (temp[1] << 8) | (temp[2] << 16) | (temp[3] << 24));
                         temp += tempBpp;
 
-                        ((ushort*)destData)[i + 2] = (ushort)((((int)readI & (int)header.pixelFormat.rbitmask) >> (int)redR) << (int)redL);
+                        ((ushort*)destData)[i + 2] = (ushort)((((int)readI & (int)header.pixelFormat.rBitmask) >> (int)redR) << (int)redL);
 
                         if (bpp >= 3)
                         {
-                            ((ushort*)destData)[i + 1] = (ushort)((((int)readI & (int)header.pixelFormat.gbitmask) >> (int)greenR) << (int)greenL);
-                            ((ushort*)destData)[i] = (ushort)((((int)readI & (int)header.pixelFormat.bbitmask) >> (int)blueR) << (int)blueL);
+                            ((ushort*)destData)[i + 1] = (ushort)((((int)readI & (int)header.pixelFormat.gBitmask) >> (int)greenR) << (int)greenL);
+                            ((ushort*)destData)[i] = (ushort)((((int)readI & (int)header.pixelFormat.bBitmask) >> (int)blueR) << (int)blueL);
 
                             if (bpp == 4)
                             {
-                                ((ushort*)destData)[i + 3] = (ushort)((((int)readI & (int)header.pixelFormat.alphabitmask) >> (int)alphaR) << (int)alphaL);
+                                ((ushort*)destData)[i + 3] = (ushort)((((int)readI & (int)header.pixelFormat.alphaBitmask) >> (int)alphaR) << (int)alphaL);
                                 if (alphaL >= 7)
                                 {
                                     ((ushort*)destData)[i + 3] = (ushort)(((ushort*)destData)[i + 3] != 0 ? 0xFF : 0x00);
@@ -1454,7 +1454,7 @@ namespace Texture.Dds
                         }
                         else if (bpp == 2)
                         {
-                            ((ushort*)destData)[i + 1] = (ushort)((((int)readI & (int)header.pixelFormat.alphabitmask) >> (int)alphaR) << (int)alphaL);
+                            ((ushort*)destData)[i + 1] = (ushort)((((int)readI & (int)header.pixelFormat.alphaBitmask) >> (int)alphaR) << (int)alphaL);
                             if (alphaL >= 7)
                             {
                                 ((ushort*)destData)[i + 1] = (ushort)(((ushort*)destData)[i + 1] != 0 ? 0xFF : 0x00);
