@@ -63,7 +63,7 @@ namespace Texture.Dds
 
             if ((header.flags & DDSD_LINEARSIZE) > 1)
             {
-                data = reader.ReadBytes((int)header.sizeorpitch);
+                data = reader.ReadBytes((int)header.sizeOrPitch);
                 return data;
             }
             data = reader.ReadBytes((header.pixelFormat.rgbbitcount / 8) * header.width * header.height);

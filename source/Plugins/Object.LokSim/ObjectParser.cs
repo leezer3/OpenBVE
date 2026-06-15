@@ -40,6 +40,7 @@ namespace Plugin
 		/// <summary>Loads a Loksim3D object from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Rotation">The rotation to be applied</param>
+		/// <param name="autoRotate">Whether auto-rotation (billboarding) is to be applied</param>
 		/// <returns>The object loaded.</returns>
 		internal static StaticObject ReadObject(string FileName, Vector3 Rotation, ref bool autoRotate)
 		{
@@ -215,7 +216,6 @@ namespace Plugin
 													break;
 												/*
 												 * MISSING PROPERTIES:
-												 * AutoRotate - Rotate with tracks?? LS3D presumably uses a 3D world system.
 												 * Beleuchtet- Translates as illuminated. Presume something to do with lighting? - What emissive color?
 												 * FileAuthor
 												 * FileInfo

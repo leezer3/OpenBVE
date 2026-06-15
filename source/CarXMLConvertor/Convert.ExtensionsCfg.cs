@@ -1,6 +1,5 @@
 ﻿using Formats.OpenBve;
 using OpenBveApi;
-using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using System;
 using System.Diagnostics;

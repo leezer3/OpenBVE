@@ -22,7 +22,6 @@
 
 using System;
 using OpenBveApi.Runtime;
-using OpenBveApi.Interface;
 
 namespace ZuikiInput
 {
