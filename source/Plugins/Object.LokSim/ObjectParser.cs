@@ -49,7 +49,6 @@ namespace Plugin
 			//Initialise the object
 			StaticObject Object = new StaticObject(Plugin.currentHost);
 			MeshBuilder Builder = new MeshBuilder(Plugin.currentHost);
-			List<Vector3> Normals = new List<Vector3>();
 			bool PropertiesFound = false;
 
 			List<VertexTemplate> tempVertices = new List<VertexTemplate>();
@@ -269,7 +268,6 @@ namespace Plugin
 											tempNormals.Add(new Vector3(n));
 											tempNormals[tempNormals.Count - 1].Normalize();
 											Builder.Vertices.Add(new Vertex(new Vector3(v)));
-											Normals.Add(new Vector3(n));
 										}
 									}
 								}
