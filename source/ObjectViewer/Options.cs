@@ -87,6 +87,8 @@ namespace ObjectViewer
 				Builder.AppendLine("anisotropicfilteringlevel = " + AnisotropicFilteringLevel.ToString(Culture));
 				Builder.AppendLine("antialiasinglevel = " + AntiAliasingLevel.ToString(Culture));
 				Builder.AppendLine("transparencyMode = " + ((int)TransparencyMode).ToString(Culture));
+				Builder.AppendLine("compresstextures = " + (CompressTextures ? "true" : "false"));
+				Builder.AppendLine("maxtexturesize = " + MaxTextureSize.ToString(Culture));
 				Builder.AppendLine("shadowresolution = " + (int)ShadowResolution);
 				Builder.AppendLine("shadowdrawdistance = " + ShadowDrawDistance);
 				Builder.AppendLine("shadowcascades = " + (int)ShadowCascades);
@@ -180,6 +182,8 @@ namespace ObjectViewer
 							block.TryGetValue(OptionsKey.AnisotropicFilteringLevel, ref Interface.CurrentOptions.AnisotropicFilteringLevel);
 							block.TryGetValue(OptionsKey.AntiAliasingLevel, ref Interface.CurrentOptions.AntiAliasingLevel);
 							block.GetEnumValue(OptionsKey.TransparencyMode, out Interface.CurrentOptions.TransparencyMode);
+							block.GetValue(OptionsKey.CompressTextures, out Interface.CurrentOptions.CompressTextures);
+							block.TryGetValue(OptionsKey.MaxTextureSize, ref Interface.CurrentOptions.MaxTextureSize, NumberRange.NonNegative);
 							block.TryGetEnumValue(OptionsKey.ShadowResolution, ref Interface.CurrentOptions.ShadowResolution);
 							block.TryGetEnumValue(OptionsKey.ShadowDrawDistance, ref Interface.CurrentOptions.ShadowDrawDistance);
 							block.TryGetEnumValue(OptionsKey.ShadowCascades, ref Interface.CurrentOptions.ShadowCascades);

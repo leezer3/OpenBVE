@@ -137,6 +137,10 @@ namespace OpenBveApi
 		public int UserInterfaceScaleFactor;
 		/// <summary>Whether loaded objects are automatically reloaded on change</summary>
 		public bool AutoReloadObjects;
+		/// <summary>Whether to use texture compression to save VRAM</summary>
+		public bool CompressTextures;
+		/// <summary>The maximum texture size allowed, or 0 for unlimited</summary>
+		public int MaxTextureSize;
 		
 		/// <summary>The near clipping plane for scenery</summary>
 		public double NearClipScenery = 0.5;

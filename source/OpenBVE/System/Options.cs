@@ -311,8 +311,9 @@ namespace OpenBve
 				Builder.AppendLine("anisotropicFilteringLevel = " + AnisotropicFilteringLevel.ToString(Culture));
 				Builder.AppendLine("anisotropicFilteringMaximum = " + AnisotropicFilteringMaximum.ToString(Culture));
 				Builder.AppendLine("antiAliasingLevel = " + AntiAliasingLevel.ToString(Culture));
-				Builder.AppendLine("transparencyMode = " + ((int)TransparencyMode).ToString(Culture));
 				Builder.AppendLine("oldtransparencymode = " + (OldTransparencyMode ? "true" : "false"));
+				Builder.AppendLine("compresstextures = " + (CompressTextures ? "true" : "false"));
+				Builder.AppendLine("maxtexturesize = " + MaxTextureSize.ToString(Culture));
 				Builder.AppendLine("viewingDistance = " + ViewingDistance.ToString(Culture));
 				Builder.AppendLine("nearclipscenery = " + NearClipScenery.ToString(Culture));
 				Builder.AppendLine("nearclipcab = " + NearClipCab.ToString(Culture));
@@ -517,6 +518,8 @@ namespace OpenBve
 							block.TryGetValue(OptionsKey.AntiAliasingLevel, ref Interface.CurrentOptions.AntiAliasingLevel);
 							block.GetEnumValue(OptionsKey.TransparencyMode, out Interface.CurrentOptions.TransparencyMode);
 							block.GetValue(OptionsKey.OldTransparencyMode, out CurrentOptions.OldTransparencyMode);
+							block.GetValue(OptionsKey.CompressTextures, out CurrentOptions.CompressTextures);
+							block.TryGetValue(OptionsKey.MaxTextureSize, ref CurrentOptions.MaxTextureSize, NumberRange.NonNegative);
 							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.QuadLeafSize, ref Interface.CurrentOptions.QuadTreeLeafSize, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.NearClipScenery, ref Interface.CurrentOptions.NearClipScenery, NumberRange.Positive);

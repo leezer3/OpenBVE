@@ -68,6 +68,8 @@ namespace OpenBve {
 			// members
 			Cancel = false;
 			Complete = false;
+			OpenBveApi.Textures.Texture.TotalRamSavedBytes = 0;
+			OpenBveApi.Textures.Texture.TotalVramSavedBytes = 0;
 			CurrentRouteFile = routeFile;
 			CurrentRouteEncoding = routeEncoding;
 			CurrentTrainFolder = trainFolder;
@@ -239,6 +241,11 @@ namespace OpenBve {
 				Thread.Sleep(10);
 			}
 			Complete = true;
+			if (OpenBveApi.Textures.Texture.TotalRamSavedBytes > 0 || OpenBveApi.Textures.Texture.TotalVramSavedBytes > 0)
+			{
+				Console.WriteLine($"[Memory Optimization] RAM Saved from resizing: {OpenBveApi.Textures.Texture.TotalRamSavedBytes / 1024.0 / 1024.0:F2} MB");
+				Console.WriteLine($"[Memory Optimization] Estimated VRAM Saved from compression: {OpenBveApi.Textures.Texture.TotalVramSavedBytes / 1024.0 / 1024.0:F2} MB");
+			}
 		}
 		private static void LoadEverythingThreaded() {
 			
