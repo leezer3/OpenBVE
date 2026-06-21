@@ -110,11 +110,13 @@ namespace OpenBve
 			menuControls.Add(nextImageButton);
 			menuControls.Add(previousImageButton);
 			menuControls.Add(nextStepButton);
+			InitializeOptionsTabContainer(HostApplication.OpenBve);
 		}
 
 		public override void RepositionSidebarControls()
 		{
 			if (!IsInitialized) return;
+			base.RepositionSidebarControls();
 			double startX = menuMin.X;
 			double size = SidebarWidth - 32;
 			routePictureBox.Location = new Vector2(startX + 16, Renderer.Screen.Height - size - 150);
@@ -329,6 +331,14 @@ namespace OpenBve
 			if (CurrMenu < 0)
 			{
 				return false;
+			}
+			if (Menus[CurrMenu].Type == MenuType.Options)
+			{
+				if (OptionsTabContainer != null && OptionsTabContainer.IsVisible)
+				{
+					OptionsTabContainer.MouseMove(x, y);
+					return true;
+				}
 			}
 			if (isScrubbing && scrubbingOption != null)
 			{
@@ -808,6 +818,19 @@ namespace OpenBve
 			MenuBase menu = Menus[CurrMenu];
 			// overlay background
 			Program.Renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height), overlayColor);
+
+			if (menu.Type == MenuType.Options)
+			{
+				Program.Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(menuMax.X - menuMin.X + 2.0f * Border.X, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
+				if (OptionsTabContainer != null)
+				{
+					OptionsTabContainer.Draw();
+				}
+				DrawSidebarToggleButton(RealTimeElapsed);
+				Renderer.PopMatrix(MatrixMode.Modelview);
+				Renderer.PopMatrix(MatrixMode.Projection);
+				return;
+			}
 
 			
 			double itemLeft, itemX;

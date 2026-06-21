@@ -33,6 +33,8 @@ using OpenBveApi;
 using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Hosts;
+using LibRender2.Viewports;
+using OpenBveApi.Objects;
 
 namespace LibRender2.Menu
 {
@@ -107,6 +109,254 @@ namespace LibRender2.Menu
 
 		/// <summary>The controls within the menu</summary>
 		public List<GLControl> menuControls = new List<GLControl>();
+
+		/// <summary>The tab container for the options panel</summary>
+		public GLTabContainer OptionsTabContainer;
+
+		public void InitializeOptionsTabContainer(HostApplication host)
+		{
+			if (OptionsTabContainer != null) return;
+
+			OptionsTabContainer = new GLTabContainer(Renderer);
+			OptionsTabContainer.IsVisible = false;
+
+			menuControls.Add(OptionsTabContainer);
+
+			var displayTab = new GLVBoxContainer(Renderer) { Spacing = 8f };
+			var qualityTab = new GLVBoxContainer(Renderer) { Spacing = 8f };
+			var otherTab = new GLVBoxContainer(Renderer) { Spacing = 8f };
+
+			OptionsTabContainer.AddTab("Display", displayTab);
+			OptionsTabContainer.AddTab("Quality", qualityTab);
+			OptionsTabContainer.AddTab("Other", otherTab);
+
+			// Populate Display Tab
+			var resRow = CreateRow("Resolution");
+			var resDropdown = new GLDropdown(Renderer);
+			foreach (var r in Renderer.Screen.AvailableResolutions)
+			{
+				resDropdown.Items.Add(r.ToString());
+			}
+			for (int i = 0; i < Renderer.Screen.AvailableResolutions.Count; i++)
+			{
+				var r = Renderer.Screen.AvailableResolutions[i];
+				if (System.Math.Abs(r.Width - Renderer.Screen.Width) < 5 && System.Math.Abs(r.Height - Renderer.Screen.Height) < 5)
+				{
+					resDropdown.SelectedIndex = i;
+					break;
+				}
+			}
+			resDropdown.SelectionChanged += (s, e) =>
+			{
+				if (resDropdown.SelectedIndex >= 0 && resDropdown.SelectedIndex < Renderer.Screen.AvailableResolutions.Count)
+				{
+					var res = Renderer.Screen.AvailableResolutions[resDropdown.SelectedIndex];
+					Renderer.SetWindowSize((int)(res.Width * Renderer.ScaleFactor.X), (int)(res.Height * Renderer.ScaleFactor.Y));
+					if (!CurrentOptions.FullscreenMode)
+					{
+						CurrentOptions.WindowWidth = res.Width;
+						CurrentOptions.WindowHeight = res.Height;
+					}
+					ComputePosition();
+				}
+			};
+			resRow.Children.Add(resDropdown);
+			displayTab.Children.Add(resRow);
+
+			var fsRow = CreateRow("Fullscreen");
+			var fsToggle = new GLToggle(Renderer) { Checked = CurrentOptions.FullscreenMode, Text = "" };
+			fsToggle.ValueChanged += (s, e) =>
+			{
+				CurrentOptions.FullscreenMode = fsToggle.Checked;
+				if (!CurrentOptions.FullscreenMode)
+				{
+					Renderer.SetWindowState(OpenTK.WindowState.Normal);
+					OpenTK.DisplayDevice.Default.RestoreResolution();
+				}
+				else
+				{
+					var resolutions = OpenTK.DisplayDevice.Default.AvailableResolutions;
+					foreach (var res in resolutions)
+					{
+						if (res.Width == Renderer.Screen.Width / Renderer.ScaleFactor.X && res.Height == Renderer.Screen.Height / Renderer.ScaleFactor.Y)
+						{
+							try
+							{
+								OpenTK.DisplayDevice.Default.RestoreResolution();
+								OpenTK.DisplayDevice.Default.ChangeResolution(res);
+								Renderer.SetWindowState(OpenTK.WindowState.Fullscreen);
+								Renderer.SetWindowSize((int)(res.Width * Renderer.ScaleFactor.X), (int)(res.Height * Renderer.ScaleFactor.Y));
+								break;
+							}
+							catch { }
+						}
+					}
+				}
+				ComputePosition();
+			};
+			fsRow.Children.Add(fsToggle);
+			displayTab.Children.Add(fsRow);
+
+			if (host == HostApplication.OpenBve)
+			{
+				var scaleRow = CreateRow("UI Scale");
+				var scaleDropdown = new GLDropdown(Renderer);
+				scaleDropdown.Items.AddRange(new[] { "1x", "2x", "3x", "4x", "5x", "6x" });
+				scaleDropdown.SelectedIndex = CurrentOptions.UserInterfaceScaleFactor - 1;
+				scaleDropdown.SelectionChanged += (s, e) =>
+				{
+					CurrentOptions.UserInterfaceScaleFactor = scaleDropdown.SelectedIndex + 1;
+				};
+				scaleRow.Children.Add(scaleDropdown);
+				displayTab.Children.Add(scaleRow);
+			}
+
+			// Populate Quality Tab
+			var interpRow = CreateRow("Interpolation");
+			var interpDropdown = new GLDropdown(Renderer);
+			interpDropdown.Items.AddRange(new[] { "Nearest", "Bilinear", "NearestMipmap", "BilinearMipmap", "TrilinearMipmap", "Anisotropic" });
+			interpDropdown.SelectedIndex = (int)CurrentOptions.Interpolation;
+			interpDropdown.SelectionChanged += (s, e) =>
+			{
+				CurrentOptions.Interpolation = (InterpolationMode)interpDropdown.SelectedIndex;
+				Renderer.TextureManager.UnloadAllTextures(true);
+				Renderer.TextureManager.LoadAllTextures();
+			};
+			interpRow.Children.Add(interpDropdown);
+			qualityTab.Children.Add(interpRow);
+
+			var anisoRow = CreateRow("Anisotropic Level");
+			var anisoDropdown = new GLDropdown(Renderer);
+			anisoDropdown.Items.AddRange(new[] { "0", "2", "4", "8", "16" });
+			int currentAniso = CurrentOptions.AnisotropicFilteringLevel;
+			int selectAnisoIdx = anisoDropdown.Items.IndexOf(currentAniso.ToString());
+			if (selectAnisoIdx >= 0) anisoDropdown.SelectedIndex = selectAnisoIdx;
+			anisoDropdown.SelectionChanged += (s, e) =>
+			{
+				CurrentOptions.AnisotropicFilteringLevel = int.Parse(anisoDropdown.Items[anisoDropdown.SelectedIndex]);
+				Renderer.TextureManager.UnloadAllTextures(true);
+				Renderer.TextureManager.LoadAllTextures();
+			};
+			anisoRow.Children.Add(anisoDropdown);
+			qualityTab.Children.Add(anisoRow);
+
+			var aaRow = CreateRow("Antialiasing Level");
+			var aaDropdown = new GLDropdown(Renderer);
+			aaDropdown.Items.AddRange(new[] { "0", "2", "4", "8", "16" });
+			int currentAA = CurrentOptions.AntiAliasingLevel;
+			int selectAAIdx = aaDropdown.Items.IndexOf(currentAA.ToString());
+			if (selectAAIdx >= 0) aaDropdown.SelectedIndex = selectAAIdx;
+			aaDropdown.SelectionChanged += (s, e) =>
+			{
+				CurrentOptions.AntiAliasingLevel = int.Parse(aaDropdown.Items[aaDropdown.SelectedIndex]);
+			};
+			aaRow.Children.Add(aaDropdown);
+			qualityTab.Children.Add(aaRow);
+
+			var transRow = CreateRow("Transparency Quality");
+			var transDropdown = new GLDropdown(Renderer);
+			transDropdown.Items.AddRange(new[] { "Sharp", "Intermediate", "Smooth" });
+			transDropdown.SelectedIndex = (int)CurrentOptions.TransparencyMode;
+			transDropdown.SelectionChanged += (s, e) =>
+			{
+				CurrentOptions.TransparencyMode = (TransparencyMode)transDropdown.SelectedIndex;
+			};
+			transRow.Children.Add(transDropdown);
+			qualityTab.Children.Add(transRow);
+
+			var distRow = CreateRow("Viewing Distance");
+			var distUpDown = new GLNumericUpDown(Renderer) { Minimum = 10f, Maximum = 9999f, Increment = 50f, Value = CurrentOptions.ViewingDistance };
+			distUpDown.ValueChanged += (s, e) =>
+			{
+				CurrentOptions.ViewingDistance = (int)distUpDown.Value;
+				Renderer.UpdateViewport(ViewportChangeMode.ChangeToScenery);
+				if (Renderer.CameraTrackFollower != null)
+				{
+					Renderer.UpdateViewingDistances(CurrentOptions.ViewingDistance);
+				}
+				OnOptionChanged(OptionType.ViewingDistance);
+			};
+			distRow.Children.Add(distUpDown);
+			qualityTab.Children.Add(distRow);
+
+			var clipRow = CreateRow("Near Clip");
+			var clipUpDown = new GLNumericUpDown(Renderer) { Minimum = 0.001f, Maximum = 1f, Increment = 0.01f, Value = (float)CurrentOptions.NearClipBase };
+			clipUpDown.ValueChanged += (s, e) =>
+			{
+				CurrentOptions.NearClipBase = clipUpDown.Value;
+				Renderer.UpdateViewport(ViewportChangeMode.ChangeToScenery);
+				OnOptionChanged(OptionType.NearClip);
+			};
+			clipRow.Children.Add(clipUpDown);
+			qualityTab.Children.Add(clipRow);
+
+			// Populate Other Tab
+			var xParserRow = CreateRow("X Parser");
+			var xParserDropdown = new GLDropdown(Renderer);
+			xParserDropdown.Items.AddRange(new[] { "Original", "NewXParser", "Assimp" });
+			xParserDropdown.SelectedIndex = (int)CurrentOptions.CurrentXParser;
+			xParserDropdown.SelectionChanged += (s, e) =>
+			{
+				CurrentOptions.CurrentXParser = (XParsers)xParserDropdown.SelectedIndex;
+			};
+			xParserRow.Children.Add(xParserDropdown);
+			otherTab.Children.Add(xParserRow);
+
+			var objParserRow = CreateRow("Obj Parser");
+			var objParserDropdown = new GLDropdown(Renderer);
+			objParserDropdown.Items.AddRange(new[] { "Original", "Assimp" });
+			objParserDropdown.SelectedIndex = (int)CurrentOptions.CurrentObjParser;
+			objParserDropdown.SelectionChanged += (s, e) =>
+			{
+				CurrentOptions.CurrentObjParser = (ObjParsers)objParserDropdown.SelectedIndex;
+			};
+			objParserRow.Children.Add(objParserDropdown);
+			otherTab.Children.Add(objParserRow);
+
+			if (host == HostApplication.ObjectViewer)
+			{
+				var reloadRow = CreateRow("Auto Reload Obj");
+				var reloadToggle = new GLToggle(Renderer) { Checked = CurrentOptions.AutoReloadObjects, Text = "" };
+				reloadToggle.ValueChanged += (s, e) =>
+				{
+					CurrentOptions.AutoReloadObjects = reloadToggle.Checked;
+				};
+				reloadRow.Children.Add(reloadToggle);
+				otherTab.Children.Add(reloadRow);
+			}
+
+			if (host == HostApplication.RouteViewer)
+			{
+				var logoRow = CreateRow("Show Logo");
+				var logoToggle = new GLToggle(Renderer) { Checked = CurrentOptions.LoadingLogo, Text = "" };
+				logoToggle.ValueChanged += (s, e) => { CurrentOptions.LoadingLogo = logoToggle.Checked; };
+				logoRow.Children.Add(logoToggle);
+				otherTab.Children.Add(logoRow);
+
+				var bgRow = CreateRow("Show Backgrounds");
+				var bgToggle = new GLToggle(Renderer) { Checked = CurrentOptions.LoadingBackground, Text = "" };
+				bgToggle.ValueChanged += (s, e) => { CurrentOptions.LoadingBackground = bgToggle.Checked; };
+				bgRow.Children.Add(bgToggle);
+				otherTab.Children.Add(bgRow);
+
+				var barRow = CreateRow("Show Progress Bar");
+				var barToggle = new GLToggle(Renderer) { Checked = CurrentOptions.LoadingProgressBar, Text = "" };
+				barToggle.ValueChanged += (s, e) => { CurrentOptions.LoadingProgressBar = barToggle.Checked; };
+				barRow.Children.Add(barToggle);
+				otherTab.Children.Add(barRow);
+			}
+		}
+
+		private GLHBoxContainer CreateRow(string name)
+		{
+			var row = new GLHBoxContainer(Renderer) { Spacing = 16f };
+			row.Size = new Vector2(300f, 24f);
+			var label = new Label(Renderer, name);
+			label.BackgroundColor = new Color128(0, 0, 0, 0);
+			label.Size = new Vector2(140f, 24f);
+			row.Children.Add(label);
+			return row;
+		}
 
 		/// <summary>Whether the menu system is initialized</summary>
 		public bool IsInitialized = false;
@@ -249,6 +499,11 @@ namespace LibRender2.Menu
 
 		public virtual void RepositionSidebarControls()
 		{
+			if (OptionsTabContainer != null)
+			{
+				OptionsTabContainer.Location = new Vector2((float)menuMin.X + 16f, 50f);
+				OptionsTabContainer.Size = new Vector2((float)SidebarWidth - 32f, (float)Renderer.Screen.Height - 100f);
+			}
 		}
 
 		/// <summary>Processes a mouse move event</summary>
@@ -289,6 +544,14 @@ namespace LibRender2.Menu
 						Renderer.CurrentInterface = InterfaceType.Normal;
 					}
 					ComputePosition();
+					return;
+				}
+			}
+			if (CurrMenu >= 0 && Menus.Length > 0 && Menus[CurrMenu].Type == MenuType.Options)
+			{
+				if (OptionsTabContainer != null && OptionsTabContainer.IsVisible)
+				{
+					OptionsTabContainer.MouseDown(x, y);
 					return;
 				}
 			}
@@ -363,6 +626,10 @@ namespace LibRender2.Menu
 				return;
 
 			MenuBase menu = Menus[CurrMenu];
+			if (OptionsTabContainer != null)
+			{
+				OptionsTabContainer.IsVisible = (menu.Type == MenuType.Options);
+			}
 			for (int i = 0; i < menu.Items.Length; i++)
 			{
 				/*

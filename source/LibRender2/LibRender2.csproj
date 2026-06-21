@@ -111,6 +111,7 @@
     <Compile Include="Primitives\GLDropdown.cs" />
     <Compile Include="Primitives\GLSlider.cs" />
     <Compile Include="Primitives\GLNumericUpDown.cs" />
+    <Compile Include="Primitives\GLTabContainer.cs" />
     <Compile Include="Primitives\Label.cs" />
     <Compile Include="Primitives\Particle.cs" />
     <Compile Include="Primitives\Picturebox.cs" />
