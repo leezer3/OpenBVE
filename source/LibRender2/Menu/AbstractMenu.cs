@@ -502,7 +502,30 @@ namespace LibRender2.Menu
 			if (OptionsTabContainer != null)
 			{
 				OptionsTabContainer.Location = new Vector2((float)menuMin.X + 16f, 50f);
-				OptionsTabContainer.Size = new Vector2((float)SidebarWidth - 32f, (float)Renderer.Screen.Height - 100f);
+				float containerWidth = (float)SidebarWidth - 32f;
+				OptionsTabContainer.Size = new Vector2(containerWidth, (float)Renderer.Screen.Height - 100f);
+
+				foreach (var tab in OptionsTabContainer.TabContents)
+				{
+					if (tab is GLContainer container)
+					{
+						container.Size = new Vector2(containerWidth, container.Size.Y);
+						foreach (var child in container.Children)
+						{
+							if (child is GLHBoxContainer row)
+							{
+								row.Size = new Vector2(containerWidth, row.Size.Y);
+								if (row.Children.Count >= 2)
+								{
+									var label = row.Children[0];
+									var control = row.Children[1];
+									label.Size = new Vector2(containerWidth * 0.45f, row.Size.Y);
+									control.Size = new Vector2(containerWidth * 0.5f, row.Size.Y);
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 

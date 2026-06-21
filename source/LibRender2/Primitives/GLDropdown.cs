@@ -24,7 +24,16 @@ namespace LibRender2.Primitives
 		{
 			if (!IsVisible) return;
 			Renderer.Rectangle.Draw(null, Location, Size, BackgroundColor);
-			Renderer.OpenGlString.Draw(Renderer.Fonts.NormalFont, "v", new Vector2(Location.X + Size.X - 20, Location.Y + 2), TextAlignment.TopLeft, Color128.White);
+			
+			// Draw dropdown arrow
+			float arrowX = (float)(Location.X + Size.X - 18);
+			float arrowY = (float)(Location.Y + (Size.Y - 5) / 2);
+			Renderer.Rectangle.Draw(null, new Vector2(arrowX, arrowY), new Vector2(9, 1), Color128.White);
+			Renderer.Rectangle.Draw(null, new Vector2(arrowX + 1, arrowY + 1), new Vector2(7, 1), Color128.White);
+			Renderer.Rectangle.Draw(null, new Vector2(arrowX + 2, arrowY + 2), new Vector2(5, 1), Color128.White);
+			Renderer.Rectangle.Draw(null, new Vector2(arrowX + 3, arrowY + 3), new Vector2(3, 1), Color128.White);
+			Renderer.Rectangle.Draw(null, new Vector2(arrowX + 4, arrowY + 4), new Vector2(1, 1), Color128.White);
+
 			if (SelectedIndex >= 0 && SelectedIndex < Items.Count)
 			{
 				Renderer.OpenGlString.Draw(Renderer.Fonts.NormalFont, Items[SelectedIndex], new Vector2(Location.X + 8, Location.Y + 2), TextAlignment.TopLeft, Color128.White);

@@ -23,32 +23,39 @@ namespace LibRender2.Primitives
 		public override void Draw()
 		{
 			if (!IsVisible) return;
-			Renderer.Rectangle.Draw(null, Location, new Vector2(Size.X - 30, Size.Y), BackgroundColor);
+			Renderer.Rectangle.Draw(null, Location, new Vector2(Size.X - 34, Size.Y), BackgroundColor);
 			Renderer.OpenGlString.Draw(Renderer.Fonts.NormalFont, Value.ToString("0.##"), new Vector2(Location.X + 8, Location.Y + 2), TextAlignment.TopLeft, Color128.White);
 
-			Vector2 upLoc = new Vector2(Location.X + Size.X - 28, Location.Y);
-			Vector2 downLoc = new Vector2(Location.X + Size.X - 14, Location.Y);
+			Vector2 upLoc = new Vector2(Location.X + Size.X - 32, Location.Y);
+			Vector2 downLoc = new Vector2(Location.X + Size.X - 16, Location.Y);
 
-			Renderer.Rectangle.Draw(null, upLoc, new Vector2(12, Size.Y), new Color128(0.25f, 0.25f, 0.25f, 1f));
-			Renderer.OpenGlString.Draw(Renderer.Fonts.NormalFont, "+", new Vector2(upLoc.X + 2, upLoc.Y + 2), TextAlignment.TopLeft, Color128.White);
+			// Draw Up (+) button
+			Renderer.Rectangle.Draw(null, upLoc, new Vector2(15, Size.Y), new Color128(0.25f, 0.25f, 0.25f, 1f));
+			float plusX = (float)(upLoc.X + (15 - 7) / 2);
+			float plusY = (float)(upLoc.Y + (Size.Y - 7) / 2);
+			Renderer.Rectangle.Draw(null, new Vector2(plusX, plusY + 3), new Vector2(7, 1), Color128.White);
+			Renderer.Rectangle.Draw(null, new Vector2(plusX + 3, plusY), new Vector2(1, 7), Color128.White);
 
-			Renderer.Rectangle.Draw(null, downLoc, new Vector2(12, Size.Y), new Color128(0.25f, 0.25f, 0.25f, 1f));
-			Renderer.OpenGlString.Draw(Renderer.Fonts.NormalFont, "-", new Vector2(downLoc.X + 2, downLoc.Y + 2), TextAlignment.TopLeft, Color128.White);
+			// Draw Down (-) button
+			Renderer.Rectangle.Draw(null, downLoc, new Vector2(15, Size.Y), new Color128(0.25f, 0.25f, 0.25f, 1f));
+			float minusX = (float)(downLoc.X + (15 - 7) / 2);
+			float minusY = (float)(downLoc.Y + (Size.Y - 1) / 2);
+			Renderer.Rectangle.Draw(null, new Vector2(minusX, minusY), new Vector2(7, 1), Color128.White);
 		}
 
 		public override void MouseDown(int x, int y)
 		{
 			if (!IsVisible) return;
-			Vector2 upLoc = new Vector2(Location.X + Size.X - 28, Location.Y);
-			Vector2 downLoc = new Vector2(Location.X + Size.X - 14, Location.Y);
+			Vector2 upLoc = new Vector2(Location.X + Size.X - 32, Location.Y);
+			Vector2 downLoc = new Vector2(Location.X + Size.X - 16, Location.Y);
 
-			if (x >= upLoc.X && x <= upLoc.X + 12 && y >= upLoc.Y && y <= upLoc.Y + Size.Y)
+			if (x >= upLoc.X && x <= upLoc.X + 15 && y >= upLoc.Y && y <= upLoc.Y + Size.Y)
 			{
 				Value = System.Math.Min(Maximum, Value + Increment);
 				ValueChanged?.Invoke(this, EventArgs.Empty);
 				OnClick?.Invoke(this, EventArgs.Empty);
 			}
-			else if (x >= downLoc.X && x <= downLoc.X + 12 && y >= downLoc.Y && y <= downLoc.Y + Size.Y)
+			else if (x >= downLoc.X && x <= downLoc.X + 15 && y >= downLoc.Y && y <= downLoc.Y + Size.Y)
 			{
 				Value = System.Math.Max(Minimum, Value - Increment);
 				ValueChanged?.Invoke(this, EventArgs.Empty);
