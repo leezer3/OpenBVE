@@ -187,6 +187,10 @@ namespace OpenBve
 				{
 					Program.Renderer.Touch.LeaveCheck(new Vector2(e.X, e.Y));
 				}
+				else if (Program.Renderer.CurrentInterface == InterfaceType.Menu || Program.Renderer.CurrentInterface == InterfaceType.GLMainMenu)
+				{
+					Game.Menu.ProcessMouseUp(e.X, e.Y);
+				}
 			}
 		}
 

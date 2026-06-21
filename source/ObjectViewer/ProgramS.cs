@@ -240,6 +240,10 @@ namespace ObjectViewer {
 						// viewer hooks up and down to same event
 						Game.Menu.ProcessMouseDown(e.X, e.Y);
 					}
+					else
+					{
+						Game.Menu.ProcessMouseUp(e.X, e.Y);
+					}
 					break;
 				default:
 					MouseCameraPosition = Renderer.Camera.AbsolutePosition;

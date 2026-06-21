@@ -36,7 +36,7 @@ namespace LibRender2.Menu
 {
 	public class MenuOption : MenuEntry
 	{
-		private readonly OptionType Type;
+		internal readonly OptionType Type;
 
 		/// <summary>Holds the entries for all options</summary>
 		private readonly object[] Entries;
@@ -495,6 +495,35 @@ namespace LibRender2.Menu
 					BaseMenu.CurrentOptions.NearClipBase = val;
 					BaseMenu.Renderer.UpdateViewport(ViewportChangeMode.ChangeToScenery);
 					BaseMenu.OnOptionChanged(Type);
+				}
+			}
+		}
+
+		public void ApplyScrubDelta(int deltaX)
+		{
+			if (customValue == null)
+			{
+				customValue = Entries[CurrentlySelectedOption].ToString();
+			}
+
+			if (Type == OptionType.ViewingDistance)
+			{
+				if (double.TryParse(customValue, NumberStyles.Float, CultureInfo.InvariantCulture, out double val))
+				{
+					val += deltaX * 2;
+					if (val < 10) val = 10;
+					customValue = ((int)val).ToString();
+					ApplyCustomValue();
+				}
+			}
+			else if (Type == OptionType.NearClip)
+			{
+				if (double.TryParse(customValue, NumberStyles.Float, CultureInfo.InvariantCulture, out double val))
+				{
+					val += deltaX * 0.002;
+					if (val < 0.001) val = 0.001;
+					customValue = val.ToString("0.000", CultureInfo.InvariantCulture);
+					ApplyCustomValue();
 				}
 			}
 		}

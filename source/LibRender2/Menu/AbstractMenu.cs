@@ -196,6 +196,10 @@ namespace LibRender2.Menu
 		public double startOffset = 0.0;
 		public bool isAnimating = false;
 
+		public bool isScrubbing = false;
+		public MenuOption scrubbingOption = null;
+		public int lastMouseX = 0;
+
 		public Vector4 GetToggleButtonRect()
 		{
 			double buttonX = IsSidebarMode ? (currentOffset < -90000.0 ? (SidebarVisible ? SidebarWidth : 0) : (currentOffset + SidebarWidth)) : 0;
@@ -288,6 +292,20 @@ namespace LibRender2.Menu
 					return;
 				}
 			}
+			if (CurrMenu >= 0 && Menus.Length > 0)
+			{
+				var menu = Menus[CurrMenu];
+				if (menu.Selection >= 0 && menu.Selection < menu.Items.Length)
+				{
+					var entry = menu.Items[menu.Selection];
+					if (entry is MenuOption opt && (opt.Type == OptionType.ViewingDistance || opt.Type == OptionType.NearClip))
+					{
+						isScrubbing = true;
+						scrubbingOption = opt;
+						lastMouseX = x;
+					}
+				}
+			}
 
 			for (int i = 0; i < menuControls.Count; i++)
 			{
@@ -308,8 +326,19 @@ namespace LibRender2.Menu
 					ProcessCommand(Translations.Command.MenuUp, 0);
 					return;
 				}
-				ProcessCommand(Translations.Command.MenuEnter, 0);
+				// If scrubbing, do not trigger entry actions
+				if (!isScrubbing)
+				{
+					ProcessCommand(Translations.Command.MenuEnter, 0);
+				}
 			}
+		}
+
+		/// <summary>Processes a mouse up event</summary>
+		public void ProcessMouseUp(int x, int y)
+		{
+			isScrubbing = false;
+			scrubbingOption = null;
 		}
 
 		/// <summary>Processes a user command for the current menu</summary>

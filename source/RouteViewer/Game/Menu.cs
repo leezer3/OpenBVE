@@ -280,6 +280,16 @@ namespace RouteViewer
 			{
 				return false;
 			}
+			if (isScrubbing && scrubbingOption != null)
+			{
+				int deltaX = x - lastMouseX;
+				if (deltaX != 0)
+				{
+					scrubbingOption.ApplyScrubDelta(deltaX);
+					lastMouseX = x;
+				}
+				return true;
+			}
 			// if not in menu or during control customisation or down outside menu area, do nothing
 			if (Renderer.CurrentInterface < InterfaceType.Menu)
 				return false;
