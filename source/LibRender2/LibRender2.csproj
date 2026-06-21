@@ -103,6 +103,8 @@
     <Compile Include="Primitives\GLContainer.cs" />
     <Compile Include="Primitives\GLPanel.cs" />
     <Compile Include="Primitives\GLBoxContainer.cs" />
+    <Compile Include="Primitives\GLButton.cs" />
+    <Compile Include="Primitives\GLLabel.cs" />
     <Compile Include="Primitives\GLScrollContainer.cs" />
     <Compile Include="Primitives\GLTextureRect.cs" />
     <Compile Include="Primitives\GLProgressBar.cs" />
@@ -154,7 +156,7 @@
     <EmbeddedResource Include="..\..\assets\Shaders\rectangle.frag" />
     <EmbeddedResource Include="..\..\assets\Shaders\rectangle.vert" />
     <EmbeddedResource Include="..\..\assets\Shaders\text.vert" />
-	<EmbeddedResource Include="..\..\assets\Shaders\shadow_depth.vert" />
+        <EmbeddedResource Include="..\..\assets\Shaders\shadow_depth.vert" />
     <EmbeddedResource Include="..\..\assets\Shaders\shadow_depth.frag" />
   </ItemGroup>
   <ItemGroup>

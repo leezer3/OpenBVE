@@ -825,6 +825,7 @@ namespace OpenBve
 				if (OptionsTabContainer != null)
 				{
 					OptionsTabContainer.Draw();
+					LibRender2.Primitives.GLDropdown.ActiveDropdown?.DrawOverlay();
 				}
 				DrawSidebarToggleButton(RealTimeElapsed);
 				Renderer.PopMatrix(MatrixMode.Modelview);

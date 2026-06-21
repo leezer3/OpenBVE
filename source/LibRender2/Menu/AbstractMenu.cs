@@ -424,6 +424,11 @@ namespace LibRender2.Menu
 			{
 				return;
 			}
+			if (CurrMenu >= 0 && Menus[CurrMenu].Type == MenuType.Options && OptionsTabContainer != null && OptionsTabContainer.IsVisible)
+			{
+				OptionsTabContainer.MouseWheel(Scroll);
+				return;
+			}
 			// Load the current menu
 			Menus[CurrMenu].ProcessScroll(Scroll, visibleItems);
 		}
@@ -625,6 +630,21 @@ namespace LibRender2.Menu
 		{
 			isScrubbing = false;
 			scrubbingOption = null;
+			if (CurrMenu >= 0 && Menus.Length > 0 && Menus[CurrMenu].Type == MenuType.Options)
+			{
+				if (OptionsTabContainer != null && OptionsTabContainer.IsVisible)
+				{
+					OptionsTabContainer.MouseUp(x, y);
+					return;
+				}
+			}
+			for (int i = 0; i < menuControls.Count; i++)
+			{
+				if (menuControls[i].IsVisible)
+				{
+					menuControls[i].MouseUp(x, y);
+				}
+			}
 		}
 
 		/// <summary>Processes a user command for the current menu</summary>
@@ -807,6 +827,11 @@ namespace LibRender2.Menu
 		/// <param name="key">The keyboard key pressed</param>
 		public virtual void ProcessKeyDown(OpenTK.Input.Key key)
 		{
+			if (GLControl.FocusedControl != null && GLControl.FocusedControl.IsVisible)
+			{
+				GLControl.FocusedControl.KeyDown(key);
+				return;
+			}
 			if (CurrMenu < 0 || Menus.Length == 0) return;
 			var menu = Menus[CurrMenu];
 			if (menu.Selection >= 0 && menu.Selection < menu.Items.Length)
