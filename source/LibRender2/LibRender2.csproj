@@ -100,6 +100,17 @@
     <Compile Include="Primitives\Button.cs" />
     <Compile Include="Primitives\Cube.cs" />
     <Compile Include="Primitives\GLControl.cs" />
+    <Compile Include="Primitives\GLContainer.cs" />
+    <Compile Include="Primitives\GLPanel.cs" />
+    <Compile Include="Primitives\GLBoxContainer.cs" />
+    <Compile Include="Primitives\GLScrollContainer.cs" />
+    <Compile Include="Primitives\GLTextureRect.cs" />
+    <Compile Include="Primitives\GLProgressBar.cs" />
+    <Compile Include="Primitives\GLToggle.cs" />
+    <Compile Include="Primitives\GLLinkButton.cs" />
+    <Compile Include="Primitives\GLDropdown.cs" />
+    <Compile Include="Primitives\GLSlider.cs" />
+    <Compile Include="Primitives\GLNumericUpDown.cs" />
     <Compile Include="Primitives\Label.cs" />
     <Compile Include="Primitives\Particle.cs" />
     <Compile Include="Primitives\Picturebox.cs" />

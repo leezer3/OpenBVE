@@ -64,6 +64,18 @@ namespace OpenBve
 		{
 		}
 
+		public override void OnOptionChanged(OptionType type)
+		{
+			if (type == OptionType.ViewingDistance)
+			{
+				if (Program.CurrentRoute != null && Program.CurrentRoute.CurrentBackground != null)
+				{
+					Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = Interface.CurrentOptions.ViewingDistance;
+				}
+				Program.Renderer.UpdateViewingDistances(Interface.CurrentOptions.ViewingDistance);
+			}
+		}
+
 		/// <summary>Returns the current menu instance (If applicable)</summary>
 		public static readonly GameMenu Instance = new GameMenu();
 
@@ -98,6 +110,19 @@ namespace OpenBve
 			menuControls.Add(nextImageButton);
 			menuControls.Add(previousImageButton);
 			menuControls.Add(nextStepButton);
+		}
+
+		public override void RepositionSidebarControls()
+		{
+			if (!IsInitialized) return;
+			double startX = menuMin.X;
+			double size = SidebarWidth - 32;
+			routePictureBox.Location = new Vector2(startX + 16, Renderer.Screen.Height - size - 150);
+			routePictureBox.Size = new Vector2(size, size);
+			routeDescriptionBox.Location = new Vector2(startX + 16, Renderer.Screen.Height - 140);
+			routeDescriptionBox.Size = new Vector2(size, 120);
+			LogoPictureBox.Location = new Vector2(startX + 16, 20);
+			LogoPictureBox.Size = new Vector2(size, size / 2);
 		}
 
 		/// <summary>Should be called when the screen resolution changes to re-position all items on the menu appropriately</summary>
@@ -207,6 +232,13 @@ namespace OpenBve
 				Menus[CurrMenu].Selection = 1;
 			}
 			ComputePosition();
+			if (IsSidebarMode)
+			{
+				SidebarVisible = true;
+				startOffset = currentOffset;
+				animationElapsed = 0.0;
+				isAnimating = true;
+			}
 			Program.Renderer.CurrentInterface = TrainManagerBase.PlayerTrain == null ? InterfaceType.GLMainMenu : InterfaceType.Menu;
 			
 		}
@@ -750,12 +782,18 @@ namespace OpenBve
 				TrainManagerBase.PlayerTrain.Plugin.KeepAlive();
 				pluginKeepAliveTimer = 0;
 			}
-			double TimeElapsed = RealTimeElapsed - lastTimeElapsed;
-			lastTimeElapsed = RealTimeElapsed;
+			double TimeElapsed = RealTimeElapsed;
 			int i;
 
+			UpdateTransition(TimeElapsed);
+
 			if (CurrMenu < 0 || CurrMenu >= Menus.Length)
+			{
+				DrawSidebarToggleButton(RealTimeElapsed);
+				Renderer.PopMatrix(MatrixMode.Modelview);
+				Renderer.PopMatrix(MatrixMode.Projection);
 				return;
+			}
 
 			MenuBase menu = Menus[CurrMenu];
 			// overlay background
@@ -765,9 +803,9 @@ namespace OpenBve
 			double itemLeft, itemX;
 			if (menu.Align == TextAlignment.TopLeft)
 			{
-				itemLeft = 0;
-				itemX = 16;
-				Program.Renderer.Rectangle.Draw(null, new Vector2(0, menuMin.Y - Border.Y), new Vector2(menuMax.X - menuMin.X + 2.0f * Border.X, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
+				itemLeft = menuMin.X;
+				itemX = menuMin.X + 16;
+				Program.Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(menuMax.X - menuMin.X + 2.0f * Border.X, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
 			}
 			else
 			{
@@ -851,8 +889,10 @@ namespace OpenBve
 						menu.Align, ColourNormal, false);
 				if (menu.Items[i] is MenuOption opt)
 				{
-					Program.Renderer.OpenGlString.Draw(MenuFont, opt.CurrentOption.ToString(), new Vector2((menuMax.X - menuMin.X + 2.0f * Border.X) + 4.0f, itemY),
-						menu.Align, backgroundColor, false);
+					Color128 optColor = (i == menu.Selection) ? ColourHighlight : ColourNormal;
+					double optX = IsSidebarMode ? (menuMax.X - 120.0f) : ((menuMax.X - menuMin.X + 2.0f * Border.X) + 4.0f);
+					Program.Renderer.OpenGlString.Draw(MenuFont, opt.DisplayValue, new Vector2(optX, itemY),
+						IsSidebarMode ? TextAlignment.TopLeft : menu.Align, optColor, false);
 				}
 				itemY += LineHeight;
 				if (menu.Items[i].Icon != null)
@@ -999,6 +1039,7 @@ namespace OpenBve
 					switchMapPictureBox.Draw();
 					break;
 			}
+			DrawSidebarToggleButton(RealTimeElapsed);
 			Renderer.PopMatrix(MatrixMode.Modelview);
 			Renderer.PopMatrix(MatrixMode.Projection);
 		}

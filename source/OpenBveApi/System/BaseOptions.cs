@@ -96,6 +96,12 @@ namespace OpenBveApi
 		public double ShadowNormalBias = 2.0;
 		/// <summary>Whether to filter shadow casters per cascade to improve performance.</summary>
 		public bool ShadowFilterCascades = true;
+		/// <summary>Whether to show the loading progress bar</summary>
+		public bool LoadingProgressBar = true;
+		/// <summary>Whether to show the loading logo</summary>
+		public bool LoadingLogo = true;
+		/// <summary>Whether to show the loading background</summary>
+		public bool LoadingBackground = true;
 
 
 		/// <summary>The sun azimuth in degrees</summary>

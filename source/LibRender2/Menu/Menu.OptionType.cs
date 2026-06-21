@@ -48,6 +48,20 @@ namespace LibRender2.Menu
 		/// <summary>Sets the shadow quality</summary>
 		ShadowQuality,
 		/// <summary>Sets whether shadow casters are filtered per cascade</summary>
-		ShadowFilterCascades
+		ShadowFilterCascades,
+		/// <summary>Sets the transparency quality</summary>
+		TransparencyQuality,
+		/// <summary>Sets the X object parser</summary>
+		NewXParser,
+		/// <summary>Sets the OBJ object parser</summary>
+		NewObjParser,
+		/// <summary>Sets the near clipping plane distance</summary>
+		NearClip,
+		/// <summary>Sets whether to show the logo during loading</summary>
+		ShowLogo,
+		/// <summary>Sets whether to show the background during loading</summary>
+		ShowBackgrounds,
+		/// <summary>Sets whether to show the progress bar during loading</summary>
+		ShowProgressBar
 	}
 }
