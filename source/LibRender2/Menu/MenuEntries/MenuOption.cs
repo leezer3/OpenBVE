@@ -319,6 +319,8 @@ namespace LibRender2.Menu
 					break;
 				case OptionType.Interpolation:
 					BaseMenu.CurrentOptions.Interpolation = (InterpolationMode)CurrentlySelectedOption;
+					BaseMenu.Renderer.TextureManager.UnloadAllTextures(true);
+					BaseMenu.Renderer.TextureManager.LoadAllTextures();
 					break;
 				case OptionType.AutoReloadObjects:
 					BaseMenu.CurrentOptions.AutoReloadObjects = !BaseMenu.CurrentOptions.AutoReloadObjects;
@@ -326,6 +328,8 @@ namespace LibRender2.Menu
 				//HACK: We can't store plain ints due to to boxing, so store strings and parse instead
 				case OptionType.AnisotropicLevel:
 					BaseMenu.CurrentOptions.AnisotropicFilteringLevel = int.Parse((string)CurrentOption, NumberStyles.Integer);
+					BaseMenu.Renderer.TextureManager.UnloadAllTextures(true);
+					BaseMenu.Renderer.TextureManager.LoadAllTextures();
 					break;
 				case OptionType.AntialiasingLevel:
 					BaseMenu.CurrentOptions.AntiAliasingLevel = int.Parse((string)CurrentOption, NumberStyles.Integer);
