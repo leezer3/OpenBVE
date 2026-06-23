@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
@@ -36,9 +37,14 @@ namespace Plugin
 	internal static class Ls3DGrpParser
 	{
 
+		/*
+		 * Each .l3dgrp file contains a list of GruppenObject
+		 *
+		 * A GruppenObject is a self-contained mesh, defined by a .l3dobj file.
+		 * Basic animation support is provided by the ShowOn and HideOn functions
+		 */
 		private class GruppenObject
 		{
-			//A gruppenobject holds a list of ls3dobjs, which appear to be roughly equivilant to meshbuilders
 			internal string Name;
 			internal Vector3 Position;
 			internal Vector3 Rotation;
@@ -132,11 +138,10 @@ namespace Plugin
 
 			string BaseDir = Path.GetDirectoryName(FileName);
 
-			GruppenObject[] CurrentObjects = new GruppenObject[0];
+			List<GruppenObject> CurrentObjects = new List<GruppenObject>();
 			//Check for null
 			if (currentXML.DocumentElement != null)
 			{
-				UnifiedObject[] obj = new UnifiedObject[0];
 				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/GRUPPENOBJECT");
 				if (DocumentNodes != null)
 				{
@@ -218,11 +223,7 @@ namespace Plugin
 														break;
 												}
 											}
-											if (Object.Name != null)
-											{
-												Array.Resize(ref CurrentObjects, CurrentObjects.Length + 1);
-												CurrentObjects[CurrentObjects.Length - 1] = Object;
-											}
+											CurrentObjects.Add(Object);
 										}
 									}
 								}
@@ -237,7 +238,7 @@ namespace Plugin
 					{
 						Mesh = new Mesh()
 					};
-					for (int i = 0; i < CurrentObjects.Length; i++)
+					for (int i = 0; i < CurrentObjects.Count; i++)
 					{
 						if (CurrentObjects[i] == null || string.IsNullOrEmpty(CurrentObjects[i].Name))
 						{
@@ -282,8 +283,6 @@ namespace Plugin
 							if (!string.IsNullOrEmpty(CurrentObjects[i].FunctionScript))
 							{
 								//If the function script is not empty, this is a new animated object bit
-								Array.Resize(ref obj, obj.Length + 1);
-								obj[obj.Length - 1] = Object;
 								int aL = Result.Objects.Length;
 								Array.Resize(ref Result.Objects, aL + 1);
 								AnimatedObject a = new AnimatedObject(Plugin.currentHost, FileName);

@@ -40,6 +40,7 @@ namespace Plugin
 		/// <summary>Loads a Loksim3D object from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Rotation">The rotation to be applied</param>
+		/// <param name="autoRotate">Whether auto-rotation (billboarding) is to be applied</param>
 		/// <returns>The object loaded.</returns>
 		internal static StaticObject ReadObject(string FileName, Vector3 Rotation, ref bool autoRotate)
 		{
@@ -48,7 +49,6 @@ namespace Plugin
 			//Initialise the object
 			StaticObject Object = new StaticObject(Plugin.currentHost);
 			MeshBuilder Builder = new MeshBuilder(Plugin.currentHost);
-			List<Vector3> Normals = new List<Vector3>();
 			bool PropertiesFound = false;
 
 			List<VertexTemplate> tempVertices = new List<VertexTemplate>();
@@ -74,7 +74,6 @@ namespace Plugin
 				{
 					return null;
 				}
-
 			}
 			else
 			{
@@ -215,7 +214,6 @@ namespace Plugin
 													break;
 												/*
 												 * MISSING PROPERTIES:
-												 * AutoRotate - Rotate with tracks?? LS3D presumably uses a 3D world system.
 												 * Beleuchtet- Translates as illuminated. Presume something to do with lighting? - What emissive color?
 												 * FileAuthor
 												 * FileInfo
@@ -269,7 +267,6 @@ namespace Plugin
 											tempNormals.Add(new Vector3(n));
 											tempNormals[tempNormals.Count - 1].Normalize();
 											Builder.Vertices.Add(new Vertex(new Vector3(v)));
-											Normals.Add(new Vector3(n));
 										}
 									}
 								}
@@ -334,7 +331,6 @@ namespace Plugin
 															//Calculate openBVE co-ords
 															currentCoords.X = (OpenBVEWidth / TextureWidth);
 															currentCoords.Y = (OpenBVEHeight / TextureHeight);
-
 														}
 														else
 														{
@@ -343,8 +339,6 @@ namespace Plugin
 															currentCoords.Y = 0;
 														}
 														Builder.Vertices[Builder.Vertices.Count - 1].TextureCoordinates = currentCoords;
-
-
 													}
 												}
 												if (Face2)

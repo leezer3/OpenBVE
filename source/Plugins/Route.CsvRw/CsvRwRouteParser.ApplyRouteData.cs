@@ -158,7 +158,7 @@ namespace CsvRwRouteParser
 			// create objects and track
 			CurrentRoute.Switches = new Dictionary<Guid, RouteManager2.Tracks.Switch>();
 			Vector3 Position = Vector3.Zero;
-			Vector2 Direction = Vector2.Down;
+			Vector2 Direction = Data.StartingDirection;
 			double CurrentSpeedLimit = double.PositiveInfinity;
 			int CurrentRunIndex = 0;
 			int CurrentFlangeIndex = 0;

@@ -35,6 +35,7 @@ namespace CsvRwRouteParser
 			internal bool ValueBasedSections = false;
 			internal bool TurnUsed = false;
 			internal bool SwitchUsed = false;
+			internal Vector2 StartingDirection = Vector2.Down;
 
 			internal readonly List<string> ScriptedTrainFiles;
 			/*

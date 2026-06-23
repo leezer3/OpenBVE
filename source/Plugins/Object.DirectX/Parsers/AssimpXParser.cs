@@ -247,7 +247,7 @@ namespace Plugin
 					{
 						texturePath = texturePath.Split('/', '\\').Last();
 					}
-
+					
 					try
 					{
 						builder.Materials[m].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, texturePath);
@@ -256,6 +256,21 @@ namespace Plugin
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"Texture file path {texturePath} in file {currentFile} for material {mesh.Materials[i].Name} has the problem: {e.Message}");
 						builder.Materials[m].DaytimeTexture = null;
+					}
+
+					if (Plugin.EnabledHacks.BveTsHacks && !File.Exists(builder.Materials[m].DaytimeTexture))
+					{
+						// XOF doesn't have a way to specify text encoding, and some (more common with BVE5) stuff is using shift_jis
+						try
+						{
+							byte[] stringBytes = System.Text.Encoding.GetEncoding(0).GetBytes(texturePath);
+							string shift_jis_string = System.Text.Encoding.GetEncoding("shift_jis").GetString(stringBytes);
+							builder.Materials[m].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, shift_jis_string);
+						}
+						catch
+						{
+							// ignore
+						}
 					}
 
 					if (builder.Materials[m].DaytimeTexture != null && !File.Exists(builder.Materials[m].DaytimeTexture))

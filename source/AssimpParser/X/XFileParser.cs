@@ -1664,10 +1664,10 @@ namespace AssimpNET.X
 		protected Color128 ReadRGBA()
 		{
 			Color128 color;
-			color.R = ReadFloat();
-			color.G = ReadFloat();
-			color.B = ReadFloat();
-			color.A = ReadFloat();
+			color.R = Math.Max(0, Math.Min(1, ReadFloat()));
+			color.G = Math.Max(0, Math.Min(1, ReadFloat()));
+			color.B = Math.Max(0, Math.Min(1, ReadFloat()));
+			color.A = Math.Max(0, Math.Min(1, ReadFloat()));
 			TestForSeparator();
 
 			return color;
@@ -1676,9 +1676,9 @@ namespace AssimpNET.X
 		protected Color96 ReadRGB()
 		{
 			Color96 color;
-			color.R = ReadFloat();
-			color.G = ReadFloat();
-			color.B = ReadFloat();
+			color.R = Math.Max(0, Math.Min(1, ReadFloat()));
+			color.G = Math.Max(0, Math.Min(1, ReadFloat()));
+			color.B = Math.Max(0, Math.Min(1, ReadFloat()));
 			TestForSeparator();
 
 			return color;

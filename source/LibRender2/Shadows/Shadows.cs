@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using LibRender2.Objects;
 using LibRender2.Shaders;
-using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
