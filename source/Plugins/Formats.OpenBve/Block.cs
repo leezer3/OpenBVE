@@ -43,7 +43,7 @@ namespace Formats.OpenBve
 	{
 		internal readonly List<Block<T1, T2>> subBlocks;
 
-		internal readonly ConcurrentDictionary<T2, KeyValuePair<int, string>> keyValuePairs;
+		internal readonly ConcurrentDictionary<T2, List<KeyValuePair<int, string>>> keyValuePairs;
 
 		internal readonly ConcurrentDictionary<int, KeyValuePair<int, string>> indexedValues;
 
@@ -124,11 +124,33 @@ namespace Formats.OpenBve
 	    public readonly string FileName;
 		
 	    internal readonly HostInterface currentHost;
+		
+		protected bool TryPopValue(T2 key, out KeyValuePair<int, string> value)
+		{
+			if (keyValuePairs.TryGetValue(key, out List<KeyValuePair<int, string>> values))
+			{
+				lock (values)
+				{
+					if (values.Count > 0)
+					{
+						value = values[0];
+						values.RemoveAt(0);
+						if (values.Count == 0)
+						{
+							keyValuePairs.TryRemove(key, out _);
+						}
+						return true;
+					}
+				}
+			}
+			value = default;
+			return false;
+		}
 
         /// <summary>Unconditionally reads the specified string from the block</summary>
 	    public bool GetValue(T2 key, out string stringValue)
 	    {
-			if (keyValuePairs.TryRemove(key, out KeyValuePair<int, string> value))
+			if (TryPopValue(key, out var value))
 			{
 				stringValue = value.Value;
 				return true;
@@ -138,9 +160,9 @@ namespace Formats.OpenBve
 		}
 
         /// <summary>Unconditionally reads the specified boolean from the block</summary>
-        public bool GetValue(T2 key, out bool value)
+	    public bool GetValue(T2 key, out bool value)
 	    {
-			if (keyValuePairs.TryRemove(key, out KeyValuePair<int, string> s))
+			if (TryPopValue(key, out var s))
 			{
 				string ss = s.Value.ToLowerInvariant().Trim();
 				if (ss == "1" || ss == "true")
@@ -163,7 +185,7 @@ namespace Formats.OpenBve
         /// <summary>Reads the specified double from the block if it exists, preserving the prior value if not present</summary>
 	    public bool TryGetValue(T2 key, ref double value, NumberRange range = NumberRange.Any)
 	    {
-			if (keyValuePairs.TryRemove(key, out var s))
+			if (TryPopValue(key, out var s))
 			{
 				if (NumberFormats.TryParseDoubleVb6(s.Value, out double newValue))
 				{
@@ -213,7 +235,7 @@ namespace Formats.OpenBve
 	    /// <summary>Reads the specified integer from the block if it exists, preserving the prior value if not present</summary>
 	    public virtual bool TryGetValue(T2 key, ref int value, NumberRange range = NumberRange.Any)
 	    {
-			if (keyValuePairs.TryRemove(key, out var s))
+			if (TryPopValue(key, out var s))
 			{
 				if (NumberFormats.TryParseIntVb6(s.Value, out int newValue))
 				{
@@ -335,9 +357,9 @@ namespace Formats.OpenBve
 		/// <summary>Reads the specified string from the block, preserving the prior value if not present</summary>
 		public virtual bool TryGetValue(T2 key, ref string stringValue)
 	    {
-		    if (GetValue(key, out string value))
+		    if (TryPopValue(key, out var value))
 		    {
-				stringValue = value;
+				stringValue = value.Value;
 				return true;
 		    }
 			return false;
@@ -358,7 +380,7 @@ namespace Formats.OpenBve
 		public bool GetVector2(T2 key, char separator, out Vector2 value)
 	    {
 		    value = Vector2.Null;
-		    if (keyValuePairs.TryRemove(key, out var rawValue))
+		    if (TryPopValue(key, out var rawValue))
 		    {
 			    string[] splitStrings = rawValue.Value.ConsistantSplit(separator, 2);
 
@@ -378,7 +400,7 @@ namespace Formats.OpenBve
 	    /// <summary>Reads the specified Vector2 from the block, preserving the prior value if not present</summary>
 	    public bool TryGetVector2(T2 key, char separator, ref Vector2 value)
 	    {
-			if (keyValuePairs.TryRemove(key, out var rawValue))
+			if (TryPopValue(key, out var rawValue))
 			{
 				string[] splitStrings = rawValue.Value.ConsistantSplit(separator, 2);
 				bool error = false;
@@ -410,7 +432,31 @@ namespace Formats.OpenBve
 		public virtual bool GetVector3(T2 key, char separator, out Vector3 value)
 	    {
 			value = Vector3.Zero;
-			if (keyValuePairs.TryRemove(key, out var rawValue))
+			if (TryPopValue(key, out var rawValue))
+			{
+				string[] splitStrings = rawValue.Value.ConsistantSplit(separator, 3);
+
+						if (!NumberFormats.TryParseDoubleVb6(splitStrings[0], out value.X))
+						{
+							currentHost.AddMessage(MessageType.Warning, false, "X was invalid in " + key + " in Section " + Key + " at line " + rawValue.Key);
+						}
+						if (!NumberFormats.TryParseDoubleVb6(splitStrings[1], out value.Y))
+						{
+							currentHost.AddMessage(MessageType.Warning, false, "Y was invalid in " + key + " in Section " + Key + " at line " + rawValue.Key);
+						}
+						if (!NumberFormats.TryParseDoubleVb6(splitStrings[2], out value.Z))
+						{
+							currentHost.AddMessage(MessageType.Warning, false, "Z was invalid in " + key + " in Section " + Key + " at line " + rawValue.Key);
+						}
+						return true;
+					}
+				return false;
+			}
+
+	    /// <summary>Reads the specified Vector3 from the block, preserving the prior value if not present</summary>
+	    public virtual bool TryGetVector3(T2 key, char separator, ref Vector3 value)
+	    {
+			if (TryPopValue(key, out var rawValue))
 			{
 				string[] splitStrings = rawValue.Value.ConsistantSplit(separator, 3);
 
@@ -431,34 +477,60 @@ namespace Formats.OpenBve
 			return false;
 		}
 
-	    /// <summary>Reads the specified Vector3 from the block, preserving the prior value if not present</summary>
-	    public virtual bool TryGetVector3(T2 key, char separator, ref Vector3 value)
-	    {
-			if (keyValuePairs.TryRemove(key, out var rawValue))
+		/// <summary>Reads all Vector3s from the block for the specified key</summary>
+		public virtual bool GetAllVector3s(T2 key, char separator, out Vector3[] values)
+		{
+			List<Vector3> returnedValues = new List<Vector3>();
+			while (keyValuePairs.TryGetValue(key, out List<KeyValuePair<int, string>> kvpList))
 			{
-				string[] splitStrings = rawValue.Value.ConsistantSplit(separator, 3);
+				if (TryPopValue(key, out var rawValue))
+				{
+					string[] entries = rawValue.Value.Split('&');
+					foreach (string entry in entries)
+					{
+						string[] splitStrings = entry.ConsistantSplit(separator, 3);
+						Vector3 v = Vector3.Zero;
+						bool error = false;
+						if (!NumberFormats.TryParseDoubleVb6(splitStrings[0], out v.X))
+						{
+							currentHost.AddMessage(MessageType.Warning, false, "X was invalid in " + key + " in Section " + Key + " at line " + rawValue.Key);
+							error = true;
+						}
+						if (!NumberFormats.TryParseDoubleVb6(splitStrings[1], out v.Y))
+						{
+							currentHost.AddMessage(MessageType.Warning, false, "Y was invalid in " + key + " in Section " + Key + " at line " + rawValue.Key);
+							error = true;
+						}
+						if (!NumberFormats.TryParseDoubleVb6(splitStrings[2], out v.Z))
+						{
+							currentHost.AddMessage(MessageType.Warning, false, "Z was invalid in " + key + " in Section " + Key + " at line " + rawValue.Key);
+							error = true;
+						}
+						if (!error)
+						{
+							returnedValues.Add(v);
+						}
+					}
+				}
+				else
+				{
+					break;
+				}
+			}
 
-				if (!NumberFormats.TryParseDoubleVb6(splitStrings[0], out value.X))
-				{
-					currentHost.AddMessage(MessageType.Warning, false, "X was invalid in " + key + " in Section " + Key + " at line " + rawValue.Key);
-				}
-				if (!NumberFormats.TryParseDoubleVb6(splitStrings[1], out value.Y))
-				{
-					currentHost.AddMessage(MessageType.Warning, false, "Y was invalid in " + key + " in Section " + Key + " at line " + rawValue.Key);
-				}
-				if (!NumberFormats.TryParseDoubleVb6(splitStrings[2], out value.Z))
-				{
-					currentHost.AddMessage(MessageType.Warning, false, "Z was invalid in " + key + " in Section " + Key + " at line " + rawValue.Key);
-				}
+			if (returnedValues.Count > 0)
+			{
+				values = returnedValues.ToArray();
 				return true;
 			}
+			values = new Vector3[0];
 			return false;
 		}
 
 		/// <summary>Unconditionally reads the specified Color24 from the block</summary>
 		public virtual bool GetColor24(T2 key, out Color24 value)
 	    {
-		    if (keyValuePairs.TryRemove(key, out var color))
+		    if (TryPopValue(key, out var color))
 		    {
 			    if (Color24.TryParseHexColor(color.Value, out value))
 			    {
@@ -479,7 +551,7 @@ namespace Formats.OpenBve
 	    /// <summary>Reads the specified Color24 from the block, preserving the prior value if not present</summary>
 	    public virtual bool TryGetColor24(T2 key, ref Color24 value)
 	    {
-			if (keyValuePairs.TryRemove(key, out var color))
+			if (TryPopValue(key, out var color))
 			{
 				if (Color24.TryParseHexColor(color.Value, out Color24 newValue))
 				{
@@ -500,7 +572,7 @@ namespace Formats.OpenBve
 		/// <summary>Reads the specified Color24 from the block, preserving the prior value if not present</summary>
 		public virtual bool TryGetColor32(T2 key, ref Color32 value)
 		{
-			if (keyValuePairs.TryRemove(key, out var color))
+			if (TryPopValue(key, out var color))
 			{
 				if (Color32.TryParseHexColor(color.Value, out Color32 newValue))
 				{
@@ -527,7 +599,7 @@ namespace Formats.OpenBve
 		/// <summary>Reads the specified string array from the block, preserving the prior value if not present</summary>
 		public virtual bool TryGetStringArray(T2 key, char[] separators, ref string[] values)
 		{
-			if (keyValuePairs.TryRemove(key, out var value))
+			if (TryPopValue(key, out var value))
 			{
 				values = value.Value.Split(separators);
 				return true;
@@ -539,7 +611,7 @@ namespace Formats.OpenBve
 		/// <summary>Reads the specified path array from the block</summary>
 		public virtual bool TryGetPathArray(T2 key, char separator, string absolutePath, ref string[] values)
 		{
-			if (keyValuePairs.TryRemove(key, out var value))
+			if (TryPopValue(key, out var value))
 			{
 				string[] splitValues = value.Value.Split(separator);
 				if (splitValues.Length > 0)
@@ -581,7 +653,7 @@ namespace Formats.OpenBve
 		/// <summary>Reads the specified double array from the block</summary>
 		public virtual bool TryGetDoubleArray(T2 key, char separator, ref double[] values)
 		{
-			if (keyValuePairs.TryRemove(key, out var value))
+			if (TryPopValue(key, out var value))
 			{
 				string[] strings = value.Value.Split(separator);
 				values = new double[strings.Length];
@@ -600,7 +672,7 @@ namespace Formats.OpenBve
 		/// <summary>Reads the specified integer array from the block</summary>
 		public virtual bool TryGetIntArray(T2 key, char separator, ref int[] values)
 		{
-			if (keyValuePairs.TryRemove(key, out var value))
+			if (TryPopValue(key, out var value))
 			{
 				string[] strings = value.Value.Split(separator);
 				values = new int[strings.Length];
@@ -633,7 +705,7 @@ namespace Formats.OpenBve
 		/// <summary>Reads the specified Enum value from the block</summary>
 		public virtual bool GetEnumValue<T3>(T2 key, out T3 enumValue) where T3 : struct, Enum
 	    {
-			if (keyValuePairs.TryRemove(key, out var value))
+			if (TryPopValue(key, out var value))
 			{
 				if (Enum.TryParse(value.Value, true, out enumValue))
 				{
@@ -650,7 +722,7 @@ namespace Formats.OpenBve
 		/// <summary>Reads the specified Enum value from the block</summary>
 		public virtual bool TryGetEnumValue<T3>(T2 key, ref T3 enumValue) where T3 : struct, Enum
 		{
-			if (keyValuePairs.TryRemove(key, out var value))
+			if (TryPopValue(key, out var value))
 			{
 				if (Enum.TryParse(value.Value, true, out enumValue))
 				{
@@ -666,7 +738,7 @@ namespace Formats.OpenBve
 		{
 			index = -1;
 			suffix = string.Empty;
-			if (keyValuePairs.TryRemove(key, out var value))
+			if (TryPopValue(key, out var value))
 			{
 				string s = value.Value.ToLowerInvariant();
 
@@ -732,7 +804,7 @@ namespace Formats.OpenBve
 		public virtual bool GetEnumValue<T3>(T2 key, out T3 enumValue, out Color32 color) where T3 : struct, Enum
 		{
 			color = Color32.Black;
-			if (keyValuePairs.TryRemove(key, out var value))
+			if (TryPopValue(key, out var value))
 			{
 				int colonIndex = value.Value.IndexOf(':');
 				string colorValue = value.Value.Substring(colonIndex + 1);
@@ -791,12 +863,12 @@ namespace Formats.OpenBve
 						return true;
 					}
 
-					currentHost.AddMessage(MessageType.Warning, false, "File " + fileName + " was not found at line " + fileName.Key + " in Section " + Key + " in file " + FileName);
+					currentHost.AddMessage(MessageType.Warning, false, "File " + fileName.Value + " was not found at line " + fileName.Key + " in Section " + Key + " in file " + FileName);
 					finalPath = string.Empty;
 					return false;
 				}
 
-				currentHost.AddMessage(MessageType.Warning, false, "Path contains invalid characters for " + fileName + " at line " + fileName.Key + " in Section " + Key + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Warning, false, "Path contains invalid characters for " + fileName.Value + " at line " + fileName.Key + " in Section " + Key + " in file " + FileName);
 			}
 			finalPath = string.Empty;
 			return false;
@@ -805,7 +877,7 @@ namespace Formats.OpenBve
 		public virtual bool GetDamping(T2 key, char separator, out Damping damping)
 		{
 			damping = null;
-			if (keyValuePairs.TryRemove(key, out var value))
+			if (TryPopValue(key, out var value))
 			{
 				string[] s = value.Value.Split(separator);
 				if (s.Length == 2)
@@ -852,7 +924,7 @@ namespace Formats.OpenBve
 
 		public virtual bool GetTime(T2 key, out double Value)
 		{
-			if (keyValuePairs.TryRemove(key, out var value))
+			if (TryPopValue(key, out var value))
 			{
 				string Expression = value.Value.TrimInside();
 				if (Expression.Length != 0)
@@ -930,7 +1002,7 @@ namespace Formats.OpenBve
 			FileName = myFile;
 		    this.currentHost = currentHost;
 		    subBlocks = new List<Block<T1, T2>>();
-		    keyValuePairs = new ConcurrentDictionary<T2, KeyValuePair<int, string>>();
+		    keyValuePairs = new ConcurrentDictionary<T2, List<KeyValuePair<int, string>>>();
 		    indexedValues = new ConcurrentDictionary<int, KeyValuePair<int, string>>();
 		    rawValues = new Queue<KeyValuePair<int, string>>();
 		}
@@ -940,7 +1012,7 @@ namespace Formats.OpenBve
 			for (int i = 0; i < keyValuePairs.Count; i++)
 			{
 				T2 key = keyValuePairs.ElementAt(i).Key;
-				currentHost.AddMessage(MessageType.Error, false, key + " is not valid in an " + Key + " section at line " + keyValuePairs[key].Key + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, key + " is not valid in an " + Key + " section at line " + keyValuePairs[key][0].Key + " in file " + FileName);
 			}
 
 			for (int i = 0; i < rawValues.Count; i++)

@@ -221,11 +221,15 @@ namespace Formats.OpenBve
 					}
 					else if (Enum.TryParse(a.Replace(" ", ""), true, out T2 key))
 					{
-						keyValuePairs.TryAdd(key, new KeyValuePair<int, string>(i + startingLine, b));
+						if (!keyValuePairs.ContainsKey(key))
+						{
+							keyValuePairs.TryAdd(key, new List<KeyValuePair<int, string>>());
+						}
+						keyValuePairs[key].Add(new KeyValuePair<int, string>(i + startingLine, b));
 					}
 					else
 					{
-						currentHost.AddMessage(MessageType.Error, false, "Unknown Key " + a + " encountered in Section " + myKey + " at line " + i + startingLine);
+						currentHost.AddMessage(MessageType.Error, false, "Unknown Key " + a + " encountered in Section " + myKey + " at line " + (i + startingLine));
 					}
 				}
 				else
@@ -240,7 +244,7 @@ namespace Formats.OpenBve
 
 		public override bool GetFunctionScript(T2 key, out AnimationScript function)
 		{
-			if (keyValuePairs.TryRemove(key, out var script))
+			if (TryPopValue(key, out var script))
 			{
 				try
 				{
@@ -250,7 +254,7 @@ namespace Formats.OpenBve
 				}
 				catch
 				{
-					currentHost.AddMessage(MessageType.Warning, false, "Function Script " + script + " was invalid in Key " + key + " in Section " + Key + " at line " + script.Key);
+					currentHost.AddMessage(MessageType.Warning, false, "Function Script " + script.Value + " was invalid in Key " + key + " in Section " + Key + " at line " + script.Key);
 					function = null;
 					return false;
 				}
@@ -265,7 +269,7 @@ namespace Formats.OpenBve
 
 			foreach (T2 key in keys)
 			{
-				if (keyValuePairs.TryRemove(key, out var script))
+				if (TryPopValue(key, out var script))
 				{
 					if (key.ToString().IndexOf("script", StringComparison.InvariantCultureIgnoreCase) != -1)
 					{
@@ -277,13 +281,13 @@ namespace Formats.OpenBve
 								function = new CSAnimationScript(currentHost, Path.CombineDirectory(absolutePath, script.Value, true));
 								return true;
 							}
-							currentHost.AddMessage(MessageType.Warning, false, "Function Script " + script + " was not found in Key " + key + " in Section " + Key + " at line " + script.Key);
+							currentHost.AddMessage(MessageType.Warning, false, "Function Script " + script.Value + " was not found in Key " + key + " in Section " + Key + " at line " + script.Key);
 							function = null;
 							return false;
 						}
 						catch
 						{
-							currentHost.AddMessage(MessageType.Warning, false, "An error occured whilst attempting to load Function Script " + script + " in Key " + key + " in Section " + Key + " at line " + script.Key);
+							currentHost.AddMessage(MessageType.Warning, false, "An error occured whilst attempting to load Function Script " + script.Value + " in Key " + key + " in Section " + Key + " at line " + script.Key);
 						}
 					}
 					else
@@ -296,7 +300,7 @@ namespace Formats.OpenBve
 						}
 						catch
 						{
-							currentHost.AddMessage(MessageType.Warning, false, "Function Script " + script + " was invalid in Key " + key + " in Section " + Key + " at line " + script.Key);
+							currentHost.AddMessage(MessageType.Warning, false, "Function Script " + script.Value + " was invalid in Key " + key + " in Section " + Key + " at line " + script.Key);
 							function = null;
 							return false;
 						}
@@ -309,7 +313,7 @@ namespace Formats.OpenBve
 
 		public override bool GetPath(T2 key, string absolutePath, out string finalPath)
 		{
-			if (keyValuePairs.TryRemove(key, out var value))
+			if (TryPopValue(key, out var value))
 			{
 				if (!Path.ContainsInvalidChars(value.Value))
 				{
