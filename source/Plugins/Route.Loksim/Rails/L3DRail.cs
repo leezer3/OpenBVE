@@ -26,8 +26,10 @@ using OpenBveApi.Interface;
 using System;
 using System.Collections.Generic;
 using System.Xml;
+using OpenBveApi;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 
 namespace LokSimRouteParser
 {
@@ -46,6 +48,14 @@ namespace LokSimRouteParser
 		internal List<Vector3> BallastPoints = new List<Vector3>();
 
 		internal StaticObject Object;
+
+		internal Vector2[] railTopTextureCoordinates  = new Vector2[2];
+
+		internal Vector2[] railSideTextureCoordinates = new Vector2[2];
+
+		internal Vector2 textureSize;
+
+		internal string textureFile;
 
 		internal L3DRail(string fileName)
 		{
@@ -114,6 +124,12 @@ namespace LokSimRouteParser
 										case "Bettungsbreite":
 											NumberFormats.TryParseDoubleVb6(DocumentNodes[0].ChildNodes[i].Attributes[j].InnerText, out BallastWidth);
 											break;
+										case "Texture":
+											textureFile = Path.Loksim3D.CombineFile(Path.GetDirectoryName(fileName), DocumentNodes[0].ChildNodes[i].Attributes[j].InnerText, string.Empty);
+											Plugin.CurrentHost.QueryTextureDimensions(textureFile, out int tx, out int ty);
+											textureSize.X = tx;
+											textureSize.Y = ty;
+											break;
 									}
 								}
 							}
@@ -137,9 +153,67 @@ namespace LokSimRouteParser
 							break;
 						case LoksimNode.TexSchieneOben:
 							// texture co-ordinates for each segment of the rail top
+							if (DocumentNodes[0].ChildNodes[i].HasChildNodes)
+							{
+								for (int j = 0; j < DocumentNodes[0].ChildNodes[i].ChildNodes.Count; j++)
+								{
+									switch (DocumentNodes[0].ChildNodes[i].ChildNodes[j].Name)
+									{
+										case "Props":
+											for (int k = 0; k < DocumentNodes[0].ChildNodes[i].ChildNodes[j].Attributes.Count; k++)
+											{
+												switch (DocumentNodes[0].ChildNodes[i].ChildNodes[j].Attributes[k].Name)
+												{
+													case "x1":
+														NumberFormats.TryParseDoubleVb6(DocumentNodes[0].ChildNodes[i].ChildNodes[j].Attributes[k].InnerText, out railTopTextureCoordinates[0].X);
+														break;
+													case "x2":
+														NumberFormats.TryParseDoubleVb6(DocumentNodes[0].ChildNodes[i].ChildNodes[j].Attributes[k].InnerText, out railTopTextureCoordinates[1].X);
+														break;
+													case "y1":
+														NumberFormats.TryParseDoubleVb6(DocumentNodes[0].ChildNodes[i].ChildNodes[j].Attributes[k].InnerText, out railTopTextureCoordinates[0].Y);
+														break;
+													case "y2":
+														NumberFormats.TryParseDoubleVb6(DocumentNodes[0].ChildNodes[i].ChildNodes[j].Attributes[k].InnerText, out railTopTextureCoordinates[1].Y);
+														break;
+												}
+											}
+											break;
+									}
+								}
+							}
 							break;
 						case LoksimNode.TexSchieneSeite:
 							// texture co-ordinates for each segment of the rail side
+							if (DocumentNodes[0].ChildNodes[i].HasChildNodes)
+							{
+								for (int j = 0; j < DocumentNodes[0].ChildNodes[i].ChildNodes.Count; j++)
+								{
+									switch (DocumentNodes[0].ChildNodes[i].ChildNodes[j].Name)
+									{
+										case "Props":
+											for (int k = 0; k < DocumentNodes[0].ChildNodes[i].ChildNodes[j].Attributes.Count; k++)
+											{
+												switch (DocumentNodes[0].ChildNodes[i].ChildNodes[j].Attributes[k].Name)
+												{
+													case "x1":
+														NumberFormats.TryParseDoubleVb6(DocumentNodes[0].ChildNodes[i].ChildNodes[j].Attributes[k].InnerText, out railSideTextureCoordinates[0].X);
+														break;
+													case "x2":
+														NumberFormats.TryParseDoubleVb6(DocumentNodes[0].ChildNodes[i].ChildNodes[j].Attributes[k].InnerText, out railSideTextureCoordinates[1].X);
+														break;
+													case "y1":
+														NumberFormats.TryParseDoubleVb6(DocumentNodes[0].ChildNodes[i].ChildNodes[j].Attributes[k].InnerText, out railSideTextureCoordinates[0].Y);
+														break;
+													case "y2":
+														NumberFormats.TryParseDoubleVb6(DocumentNodes[0].ChildNodes[i].ChildNodes[j].Attributes[k].InnerText, out railSideTextureCoordinates[1].Y);
+														break;
+												}
+											}
+											break;
+									}
+								}
+							}
 							break;
 						case LoksimNode.TexBettung:
 							// texture co-ordinates for each segment of the ballast
@@ -150,36 +224,130 @@ namespace LokSimRouteParser
 			}
 
 			Object = new StaticObject(Plugin.CurrentHost);
-
+			
 			MeshBuilder builder = new MeshBuilder(Plugin.CurrentHost);
-			// rail L
-			builder.Vertices.Add(new Vertex(new Vector3(-Gauge, 0.2, 0), Vector2.Null));
-			builder.Vertices.Add(new Vertex(new Vector3(-Gauge, 0.2, 10), Vector2.Null));
-			builder.Vertices.Add(new Vertex(new Vector3(-Gauge, 0.2 + RailTopHeight, 10), Vector2.Null));
-			builder.Vertices.Add(new Vertex(new Vector3(-Gauge, 0.2 + RailTopHeight, 0), Vector2.Null));
-			builder.Vertices.Add(new Vertex(new Vector3(-Gauge - RailTopWidth, 0.2 + RailTopHeight, 0), Vector2.Null));
-			builder.Vertices.Add(new Vertex(new Vector3(-Gauge - RailTopWidth, 0.2 + RailTopHeight, 10), Vector2.Null));
+			// create material to be used
+			Material material = new Material(textureFile);
+			builder.Materials[0] = material;
+
+			// build rail models
+			// NOTE: This can definitely be optimised, but not doing that at the minute
+
+			// rail side L
+			builder.Vertices.Add(new Vertex(new Vector3(-Gauge, 0.2 + RailTopHeight, 0), new Vector2(railSideTextureCoordinates[0].X / textureSize.X, railSideTextureCoordinates[1].Y / textureSize.Y)));
+			builder.Vertices.Add(new Vertex(new Vector3(-Gauge, 0.2, 0), new Vector2(railSideTextureCoordinates[0].X / textureSize.X, railSideTextureCoordinates[0].Y / textureSize.Y)));
+			builder.Vertices.Add(new Vertex(new Vector3(-Gauge, 0.2, 10), new Vector2(railSideTextureCoordinates[1].X / textureSize.X, railSideTextureCoordinates[0].Y / textureSize.Y)));
+			builder.Vertices.Add(new Vertex(new Vector3(-Gauge, 0.2 + RailTopHeight, 10), new Vector2(railSideTextureCoordinates[1].X / textureSize.X, railSideTextureCoordinates[1].Y / textureSize.Y)));
+			
+			// rail top L
+			builder.Vertices.Add(new Vertex(new Vector3(-Gauge, 0.2 + RailTopHeight, 0), new Vector2(railTopTextureCoordinates[0].X / textureSize.X, railTopTextureCoordinates[1].Y / textureSize.Y)));
+			builder.Vertices.Add(new Vertex(new Vector3(-Gauge - RailTopWidth, 0.2 + RailTopHeight, 0), new Vector2(railTopTextureCoordinates[0].X / textureSize.X, railTopTextureCoordinates[0].Y / textureSize.Y)));
+			builder.Vertices.Add(new Vertex(new Vector3(-Gauge - RailTopWidth, 0.2 + RailTopHeight, 10), new Vector2(railTopTextureCoordinates[1].X / textureSize.X, railTopTextureCoordinates[0].Y / textureSize.Y)));
+			builder.Vertices.Add(new Vertex(new Vector3(-Gauge, 0.2 + RailTopHeight, 10), new Vector2(railTopTextureCoordinates[1].X / textureSize.X, railTopTextureCoordinates[1].Y / textureSize.Y)));
 			MeshFace face = new MeshFace(new[] { 0, 1, 2, 3 });
 			face.Flags |= FaceFlags.Face2Mask;
 			builder.Faces.Add(face);
-			face = new MeshFace(new[] { 2, 3, 4, 5 });
+			face = new MeshFace(new[] { 4, 5, 6, 7 });
 			face.Flags |= FaceFlags.Face2Mask;
 			builder.Faces.Add(face);
 			builder.Apply(ref Object);
 			builder = new MeshBuilder(Plugin.CurrentHost);
-			// rail R
-			builder.Vertices.Add(new Vertex(new Vector3(Gauge, 0.2, 0), Vector2.Null));
-			builder.Vertices.Add(new Vertex(new Vector3(Gauge, 0.2, 10), Vector2.Null));
-			builder.Vertices.Add(new Vertex(new Vector3(Gauge, 0.2 + RailTopHeight, 10), Vector2.Null));
-			builder.Vertices.Add(new Vertex(new Vector3(Gauge, 0.2 + RailTopHeight, 0), Vector2.Null));
-			builder.Vertices.Add(new Vertex(new Vector3(Gauge + RailTopWidth, 0.2 + RailTopHeight, 0), Vector2.Null));
-			builder.Vertices.Add(new Vertex(new Vector3(Gauge + RailTopWidth, 0.2 + RailTopHeight, 10), Vector2.Null));
+			builder.Materials[0] = material;
+			// rail side R
+			builder.Vertices.Add(new Vertex(new Vector3(Gauge, 0.2 + RailTopHeight, 0), new Vector2(railSideTextureCoordinates[0].X / textureSize.X, railSideTextureCoordinates[1].Y / textureSize.Y)));
+			builder.Vertices.Add(new Vertex(new Vector3(Gauge, 0.2, 0), new Vector2(railSideTextureCoordinates[0].X / textureSize.X, railSideTextureCoordinates[0].Y / textureSize.Y)));
+			builder.Vertices.Add(new Vertex(new Vector3(Gauge, 0.2, 10), new Vector2(railSideTextureCoordinates[1].X / textureSize.X, railSideTextureCoordinates[0].Y / textureSize.Y)));
+			builder.Vertices.Add(new Vertex(new Vector3(Gauge, 0.2 + RailTopHeight, 10), new Vector2(railSideTextureCoordinates[1].X / textureSize.X, railSideTextureCoordinates[1].Y / textureSize.Y)));
+			// rail top R
+			builder.Vertices.Add(new Vertex(new Vector3(Gauge, 0.2 + RailTopHeight, 0), new Vector2(railTopTextureCoordinates[0].X / textureSize.X, railTopTextureCoordinates[1].Y / textureSize.Y)));
+			builder.Vertices.Add(new Vertex(new Vector3(Gauge + RailTopWidth, 0.2 + RailTopHeight, 0), new Vector2(railTopTextureCoordinates[0].X / textureSize.X, railTopTextureCoordinates[0].Y / textureSize.Y)));
+			builder.Vertices.Add(new Vertex(new Vector3(Gauge + RailTopWidth, 0.2 + RailTopHeight, 10), new Vector2(railTopTextureCoordinates[1].X / textureSize.X, railTopTextureCoordinates[0].Y / textureSize.Y)));
+			builder.Vertices.Add(new Vertex(new Vector3(Gauge, 0.2 + RailTopHeight, 10), new Vector2(railTopTextureCoordinates[1].X / textureSize.X, railTopTextureCoordinates[1].Y / textureSize.Y)));
 			face = new MeshFace(new[] { 0, 1, 2, 3 });
 			face.Flags |= FaceFlags.Face2Mask;
 			builder.Faces.Add(face);
-			face = new MeshFace(new[] { 2, 3, 4, 5 });
+			face = new MeshFace(new[] { 4, 5, 6, 7 });
 			face.Flags |= FaceFlags.Face2Mask;
 			builder.Faces.Add(face);
+
+			builder.Apply(ref Object);
+			builder = new MeshBuilder(Plugin.CurrentHost);
+			builder.Materials[0] = material;
+
+			// build ballast model:
+			// points are those of *half* an end profile in clockwise direction
+			// e.g. 
+			//			*-----*
+			//				   \
+			//					\
+			//					 *
+			//					 |
+			//					 |
+			//					 *
+			// we then negate the X co-ordinate to build the other side
+			// TexBettung appears to be the rectangle across the whole cross-section
+			// current assumption is that our X-coords are proportional to the distance in X axis
+
+			List<int> ballast = new List<int>();
+			int[] sleeperBase = { 0,1,0,0 };
+			for (int i = 0; i < BallastPoints.Count; i++)
+			{
+				Vector3 point = BallastPoints[i];
+				if (i % 2 != 0)
+				{
+					point.Z += 10;
+					builder.Vertices.Add(new Vertex(point, Vector2.Null));
+					ballast.Add(builder.Vertices.Count - 1);
+					point.Z -= 10;
+				}
+				else
+				{
+					builder.Vertices.Add(new Vertex(point, Vector2.Null));
+					ballast.Add(builder.Vertices.Count - 1);
+					point.Z += 10;
+				}
+
+				builder.Vertices.Add(new Vertex(new Vector3(point), Vector2.Null));
+				ballast.Add(builder.Vertices.Count - 1);
+			}
+			face = new MeshFace(ballast.ToArray());
+			face.Flags |= FaceFlags.Face2Mask;
+			builder.Faces.Add(face);
+
+			sleeperBase[2] = builder.Vertices.Count + 1;
+			sleeperBase[3] = builder.Vertices.Count;
+			
+			ballast = new List<int>();
+			for (int i = 0; i < BallastPoints.Count; i++)
+			{
+				Vector3 point = BallastPoints[i];
+				point.X = -point.X;
+				if (i % 2 != 0)
+				{
+					
+					point.Z += 10;
+					builder.Vertices.Add(new Vertex(point, Vector2.Null));
+					ballast.Add(builder.Vertices.Count - 1);
+					point.Z -= 10;
+				}
+				else
+				{
+					builder.Vertices.Add(new Vertex(point, Vector2.Null));
+					ballast.Add(builder.Vertices.Count - 1);
+					point.Z += 10;
+				}
+
+				builder.Vertices.Add(new Vertex(new Vector3(point), Vector2.Null));
+				ballast.Add(builder.Vertices.Count - 1);
+			}
+			face = new MeshFace(ballast.ToArray());
+			face.Flags |= FaceFlags.Face2Mask;
+			builder.Faces.Add(face);
+
+			face = new MeshFace(sleeperBase);
+			face.Flags |= FaceFlags.Face2Mask;
+			builder.Faces.Add(face);
+
 			builder.Apply(ref Object);
 		}
 	}
