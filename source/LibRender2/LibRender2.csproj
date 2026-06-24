@@ -100,6 +100,7 @@
     <Compile Include="Primitives\Button.cs" />
     <Compile Include="Primitives\Cube.cs" />
     <Compile Include="Primitives\GLControl.cs" />
+    <Compile Include="Primitives\VerticalLayoutGroup.cs" />
     <Compile Include="Primitives\Label.cs" />
     <Compile Include="Primitives\Particle.cs" />
     <Compile Include="Primitives\Picturebox.cs" />

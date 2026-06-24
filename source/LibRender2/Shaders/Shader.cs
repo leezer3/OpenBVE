@@ -67,6 +67,7 @@ namespace LibRender2.Shaders
 		private readonly int uLightSpaceMatrix3Location;
 		private readonly int uModelMatrixLocation;
 		private readonly int uCurrentViewMatrixLocation;
+		private readonly int uCornerRadiusLocation;
 
 
 		/// <summary>
@@ -103,6 +104,7 @@ namespace LibRender2.Shaders
 			uLightSpaceMatrix3Location = GL.GetUniformLocation(Handle, "uLightSpaceMatrix3");
 			uModelMatrixLocation = GL.GetUniformLocation(Handle, "uModelMatrix");
 			uCurrentViewMatrixLocation = GL.GetUniformLocation(Handle, "uCurrentViewMatrix");
+			uCornerRadiusLocation = GL.GetUniformLocation(Handle, "uCornerRadius");
 
 			VertexLayout = GetVertexLayout();
 			UniformLayout = GetUniformLayout();
@@ -397,6 +399,11 @@ namespace LibRender2.Shaders
 		public void SetSize(Vector2 size)
 		{
 			GL.ProgramUniform2(Handle, UniformLayout.Size, (float)size.X, (float) size.Y);
+		}
+
+		public void SetCornerRadius(float radius)
+		{
+			GL.ProgramUniform1(Handle, uCornerRadiusLocation, radius);
 		}
 
 		public void SetColor(Color128 color)

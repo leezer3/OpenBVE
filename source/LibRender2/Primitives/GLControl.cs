@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2023, Christopher Lees, The OpenBVE Project
 //
@@ -24,6 +24,7 @@
 
 using System;
 using OpenBveApi.Colors;
+using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
 
@@ -32,8 +33,8 @@ namespace LibRender2.Primitives
 	/// <summary>An abstract OpenGL based control</summary>
 	public abstract class GLControl
 	{
-		/// <summary>Holds a reference to the base renderer</summary>
-		internal readonly BaseRenderer Renderer;
+		/// <summary>Holds a reference to the base renderer interface</summary>
+		public readonly IGLRenderer Renderer;
 		/// <summary>The background color for the control</summary>
 		public Color128 BackgroundColor;
 		/// <summary>The texture for the control</summary>
@@ -42,6 +43,8 @@ namespace LibRender2.Primitives
 		public Vector2 Location;
 		/// <summary>The stored size for the control</summary>
 		public Vector2 Size;
+		/// <summary>The corner radius for rounded corners (in pixels)</summary>
+		public float CornerRadius;
 		/// <summary>Whether the control is currently selected by the mouse</summary>
 		public bool CurrentlySelected;
 		/// <summary>The event handler for the OnClick event</summary>
@@ -49,7 +52,7 @@ namespace LibRender2.Primitives
 		/// <summary>Whether the control is currently visible</summary>
 		public bool IsVisible;
 
-		protected GLControl(BaseRenderer renderer)
+		protected GLControl(IGLRenderer renderer)
 		{
 			Renderer = renderer;
 		}

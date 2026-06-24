@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2022, Christopher Lees, The OpenBVE Project
 //
@@ -37,10 +37,12 @@ namespace LibRender2.Primitives
 		/// <summary>The font for the label</summary>
 		public OpenGlFont Font;
 
-		public Label(BaseRenderer renderer, string text) : base(renderer)
+		private BaseRenderer baseRenderer => Renderer as BaseRenderer;
+
+		public Label(IGLRenderer renderer, string text) : base(renderer)
 		{
 			Text = text;
-			Font = Renderer.Fonts.LargeFont;
+			Font = baseRenderer.Fonts.LargeFont;
 			Size = Font.MeasureString(Text) * 1.5;
 			// default colors to match GLMenu
 			BackgroundColor = Color128.Black;
@@ -49,8 +51,8 @@ namespace LibRender2.Primitives
 
 		public override void Draw()
 		{
-			Renderer.Rectangle.Draw(Texture, Location, Size, BackgroundColor);
-			Renderer.OpenGlString.Draw(Font, Text, Location + (Size * 0.15), TextAlignment.TopLeft, TextColor);
+			baseRenderer.Rectangle.Draw(Texture, Location, Size, BackgroundColor, null, null, CornerRadius);
+			baseRenderer.OpenGlString.Draw(Font, Text, Location + (Size * 0.15), TextAlignment.TopLeft, TextColor);
 		}
 	}
 }
