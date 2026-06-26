@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -799,6 +799,8 @@ namespace CsvRwRouteParser
 						IsHmmsim = true;
 						Plugin.CurrentOptions.ObjectDisposalMode = ObjectDisposalMode.Accurate;
 						Plugin.CurrentOptions.ObjectOptimizationBasicThreshold = 2000;
+						// From observation
+						Data.BlockInterval = 20;
 					}
 					if (commandIndices[0] < 0)
 					{

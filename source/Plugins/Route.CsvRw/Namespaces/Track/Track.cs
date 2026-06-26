@@ -3297,6 +3297,7 @@ namespace CsvRwRouteParser
 				case TrackCommand.PatternObj:
 					/*
 					 * PatternIndex
+					 * RailIndex
 					 * PlacementInterval
 					 * BlockInterval
 					 * X
@@ -3317,6 +3318,17 @@ namespace CsvRwRouteParser
 							break;
 						}
 
+						
+
+						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out RailIndex))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+
+						if (RailIndex == -1)
+						{
+							break;
+						}
 						PatternObj patternObj = new PatternObj(RailIndex);
 
 						if (Data.Blocks[BlockIndex].PatternObjs.ContainsKey(idx))
@@ -3324,29 +3336,25 @@ namespace CsvRwRouteParser
 							patternObj = Data.Blocks[BlockIndex].PatternObjs[idx];
 						}
 
-						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out patternObj.Interval))
+						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out patternObj.Interval))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Repetition interval is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							patternObj.Interval = 25; // try the default BVE block-length
 						}
 
-						if (patternObj.Interval <= 0)
+						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out patternObj.Span))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Repetition interval must be non-zero in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out patternObj.Interval))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Repetition interval is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								patternObj.Interval = 25; // try the default BVE block-length
-							}
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Repetition interval is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							patternObj.Interval = 25; // try the default BVE block-length
 						}
 
 
-						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out patternObj.Position.X))
+						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out patternObj.Position.X))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X position is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
 
-						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out patternObj.Position.Y))
+						if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out patternObj.Position.Y))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y position is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}

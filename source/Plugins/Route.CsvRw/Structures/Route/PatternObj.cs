@@ -12,6 +12,8 @@ namespace CsvRwRouteParser
 		internal readonly int RailIndex;
 		/// <summary>The placement interval</summary>
 		internal double Interval;
+		/// <summary>The span</summary>
+		internal double Span;
 		/// <summary>The last type of object placed</summary>
 		internal int LastType;
 		/// <summary>The routefile indices of the objects to be repeated</summary>

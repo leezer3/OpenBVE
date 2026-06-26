@@ -35,6 +35,8 @@ namespace CsvRwRouteParser
 						IsHmmsim = true;
 						Plugin.CurrentOptions.ObjectDisposalMode = ObjectDisposalMode.Accurate;
 						Plugin.CurrentOptions.ObjectOptimizationBasicThreshold = 2000;
+						// from observation
+						Data.BlockInterval = 20;
 					}
 					break;
 				case RouteCommand.Image:
