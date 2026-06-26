@@ -110,6 +110,10 @@ namespace CsvRwRouteParser
 						if (Data.Blocks[BlockIndex].RailType.Length <= idx)
 						{
 							Array.Resize(ref Data.Blocks[BlockIndex].RailType, idx + 1);
+							if (IsHmmsim)
+							{
+								Data.Blocks[BlockIndex].RailType[idx] = -1;
+							}
 						}
 
 						// Ignore the RailStructureIndex in preview mode, obviously not visible!
@@ -125,7 +129,7 @@ namespace CsvRwRouteParser
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
-							else if (!Data.Structure.RailObjects.ContainsKey(sttype))
+							else if ((!IsHmmsim && !Data.Structure.RailObjects.ContainsKey(sttype)) || (IsHmmsim && !Data.Structure.FreeObjects.ContainsKey(sttype)))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex " + sttype + " references an object not loaded in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
