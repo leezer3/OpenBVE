@@ -798,6 +798,7 @@ namespace CsvRwRouteParser
 					{
 						IsHmmsim = true;
 						Plugin.CurrentOptions.ObjectDisposalMode = ObjectDisposalMode.Accurate;
+						Plugin.CurrentOptions.ObjectOptimizationBasicThreshold = 2000;
 					}
 					if (commandIndices[0] < 0)
 					{
