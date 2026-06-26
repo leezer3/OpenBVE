@@ -99,6 +99,10 @@ namespace CsvRwRouteParser
 					// East Linconshire Railway bridges
 					Text = ".freeobj(9" + Text.Substring(11);
 				}
+				else if (Text.StartsWith("Track.Sta (", StringComparison.InvariantCultureIgnoreCase))
+				{
+					Text = "Track.Sta(" + Text.Substring(11);
+				}
 
 				if (IsRw && CurrentSection.ToLowerInvariant() == "track")
 				{
@@ -200,10 +204,30 @@ namespace CsvRwRouteParser
 										openingError = true;
 										break;
 									case 5: //arrival sound
+									case 7: // HMMSIM arrival sound
 									case 10: //departure sound
-										if (Text.StartsWith("sta", StringComparison.InvariantCultureIgnoreCase))
+										//break;
+										if (Text.StartsWith("sta", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("Track.Sta", StringComparison.InvariantCultureIgnoreCase))
 										{
-											Text = Text.Remove(i, 1).Insert(i, "<");
+											int j = i;
+											while (j < Text.Length -1)
+											{
+												switch (Text[j])
+												{
+													case ';':
+														// argument separator
+														break;
+													case '(':
+														Text = Text.Remove(j, 1).Insert(j, "<");
+														break;
+													case ')':
+														Text = Text.Remove(j, 1).Insert(j, ">");
+														break;
+												}
+
+												j++;
+											}
+											
 											break;
 										}
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid opening parenthesis encountered at line " + Line.ToString(Culture) + ", column " +
@@ -457,7 +481,7 @@ namespace CsvRwRouteParser
 					{
 						Command = Text.Substring(0, i).TrimEnd();
 						ArgumentSequence = Text.Substring(i + 1, Text.Length - i - 2).Trim();
-						if (Text.StartsWith("sta", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith(".marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith(".announce", StringComparison.InvariantCultureIgnoreCase) || Text.IndexOf(".Load", StringComparison.InvariantCultureIgnoreCase) != -1)
+						if (Text.StartsWith("sta", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("Track.Sta", StringComparison.InvariantCultureIgnoreCase)|| Text.StartsWith(".marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith(".announce", StringComparison.InvariantCultureIgnoreCase) || Text.IndexOf(".Load", StringComparison.InvariantCultureIgnoreCase) != -1)
 						{
 							// put back any temp removed brackets
 							ArgumentSequence = ArgumentSequence.Replace('<', '(');
