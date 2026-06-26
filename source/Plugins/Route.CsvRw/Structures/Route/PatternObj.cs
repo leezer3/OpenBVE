@@ -1,4 +1,4 @@
-﻿using OpenBveApi.Math;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.World;
 
@@ -8,6 +8,8 @@ namespace CsvRwRouteParser
 	{
 		/// <summary>The *last* placement position of the object</summary>
 		internal double LastPlacement;
+		/// <summary>The key</summary>
+		internal readonly int Key;
 		/// <summary>The rail</summary>
 		internal readonly int RailIndex;
 		/// <summary>The placement interval</summary>
@@ -23,14 +25,15 @@ namespace CsvRwRouteParser
 		/// <summary>Whether the pattern ends this block</summary>
 		internal bool Ends;
 
-		internal PatternObj(int rail)
+		internal PatternObj(int key, int rail)
 		{
+			Key = key;
 			RailIndex = rail;
 		}
 
 		internal PatternObj Clone()
 		{
-			PatternObj p = new PatternObj(RailIndex)
+			PatternObj p = new PatternObj(Key, RailIndex)
 			{
 				Interval = Interval,
 				Types = Types,

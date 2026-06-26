@@ -3329,13 +3329,9 @@ namespace CsvRwRouteParser
 						{
 							break;
 						}
-						PatternObj patternObj = new PatternObj(RailIndex);
 
-						if (Data.Blocks[BlockIndex].PatternObjs.ContainsKey(idx))
-						{
-							patternObj = Data.Blocks[BlockIndex].PatternObjs[idx];
-						}
-
+						PatternObj patternObj = Data.Blocks[BlockIndex].PatternObjs.ContainsKey(idx) ? Data.Blocks[BlockIndex].PatternObjs[idx].Clone() : new PatternObj(idx, RailIndex);
+							
 						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out patternObj.Interval))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Repetition interval is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -3358,8 +3354,10 @@ namespace CsvRwRouteParser
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y position is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
-
-						Array.Resize(ref patternObj.Types, Arguments.Length - 6);
+						
+						// types array needs to be flushed
+						patternObj.Types = new int[Arguments.Length - 6];
+						
 						for (int i = 6; i < Arguments.Length; i++)
 						{
 							if (!NumberFormats.TryParseIntVb6(Arguments[i], out patternObj.Types[i - 6]))
