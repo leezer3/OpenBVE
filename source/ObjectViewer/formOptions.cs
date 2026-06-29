@@ -87,6 +87,26 @@ namespace ObjectViewer
 			comboBoxBackwards.SelectedItem = Interface.CurrentOptions.CameraMoveBackward;
 			checkBoxAutoReload.Checked = Interface.CurrentOptions.AutoReloadObjects;
 			checkBoxShadowFilterCascades.Checked = Interface.CurrentOptions.ShadowFilterCascades;
+
+			// Dynamically add LowResFarShadows checkbox
+			CheckBox checkBoxLowResFarShadows = new CheckBox();
+			checkBoxLowResFarShadows.AutoSize = true;
+			checkBoxLowResFarShadows.Location = new System.Drawing.Point(160, 215);
+			checkBoxLowResFarShadows.Name = "checkBoxLowResFarShadows";
+			checkBoxLowResFarShadows.Size = new System.Drawing.Size(15, 14);
+			checkBoxLowResFarShadows.Text = "";
+			checkBoxLowResFarShadows.Checked = Interface.CurrentOptions.LowResFarShadows;
+			checkBoxLowResFarShadows.Enabled = (Interface.CurrentOptions.ShadowResolution != ShadowMapResolution.Off);
+			checkBoxLowResFarShadows.UseVisualStyleBackColor = true;
+			this.tabPageShadows.Controls.Add(checkBoxLowResFarShadows);
+
+			Label labelLowResFarShadows = new Label();
+			labelLowResFarShadows.AutoSize = true;
+			labelLowResFarShadows.Location = new System.Drawing.Point(6, 215);
+			labelLowResFarShadows.Name = "labelLowResFarShadows";
+			labelLowResFarShadows.Size = new System.Drawing.Size(126, 13);
+			labelLowResFarShadows.Text = "Low-res Far Shadows:";
+			this.tabPageShadows.Controls.Add(labelLowResFarShadows);
 		}
 
 		private void InitializeSunSliders()
@@ -111,6 +131,12 @@ namespace ObjectViewer
 
 			trackBarSunElevation.Enabled = enabled;
 			checkBoxShadowFilterCascades.Enabled = enabled;
+
+			CheckBox checkBoxLowResFarShadows = this.tabPageShadows.Controls["checkBoxLowResFarShadows"] as CheckBox;
+			if (checkBoxLowResFarShadows != null)
+			{
+				checkBoxLowResFarShadows.Enabled = enabled;
+			}
 		}
 
 		private void comboBoxShadowResolution_SelectedIndexChanged(object sender, EventArgs e)
@@ -281,6 +307,11 @@ namespace ObjectViewer
 			Interface.CurrentOptions.ShadowBias = (double)numericUpDownShadowBias.Value;
 			Interface.CurrentOptions.ShadowNormalBias = (double)numericUpDownShadowNormalBias.Value;
 			Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
+			CheckBox checkBoxLowResFarShadows = this.tabPageShadows.Controls["checkBoxLowResFarShadows"] as CheckBox;
+			if (checkBoxLowResFarShadows != null)
+			{
+				Interface.CurrentOptions.LowResFarShadows = checkBoxLowResFarShadows.Checked;
+			}
 			
 			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));
 			Program.RefreshObjects();

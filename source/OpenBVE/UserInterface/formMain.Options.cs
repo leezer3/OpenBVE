@@ -55,6 +55,12 @@ namespace OpenBve {
 			updownShadowNormalBias.Enabled = shadowEnabled;
 			checkboxShadowFilterCascades.Enabled = shadowEnabled;
 
+			CheckBox checkboxLowResFarShadows = this.groupboxShadows.Controls["checkboxLowResFarShadows"] as CheckBox;
+			if (checkboxLowResFarShadows != null)
+			{
+				checkboxLowResFarShadows.Enabled = shadowEnabled;
+			}
+
 			if (!shadowEnabled)
 			{
 				// Visual hint: grey out the strength label
