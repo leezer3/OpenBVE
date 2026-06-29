@@ -796,11 +796,7 @@ namespace CsvRwRouteParser
 				{
 					if (Command == StructureCommand.Object)
 					{
-						IsHmmsim = true;
-						Plugin.CurrentOptions.ObjectDisposalMode = ObjectDisposalMode.Accurate;
-						Plugin.CurrentOptions.ObjectOptimizationBasicThreshold = 2000;
-						// From observation
-						Data.BlockInterval = 20;
+						Data.SetHmmsimProperties();
 					}
 					if (commandIndices[0] < 0)
 					{

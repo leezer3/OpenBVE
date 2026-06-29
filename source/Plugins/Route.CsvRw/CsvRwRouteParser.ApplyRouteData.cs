@@ -788,7 +788,7 @@ namespace CsvRwRouteParser
 							{
 								Data.Structure.RailObjects[Data.Blocks[i].RailType[railKey]]?.CreateObject(pos, RailTransformation, railParameters);
 							}
-							else if (IsHmmsim && Data.Structure.FreeObjects.ContainsKey(Data.Blocks[i].RailType[railKey]))
+							else if (Data.IsHmmsim && Data.Structure.FreeObjects.ContainsKey(Data.Blocks[i].RailType[railKey]))
 							{
 								// Hmmsim uses a single unified object list
 								Data.Structure.FreeObjects[Data.Blocks[i].RailType[railKey]]?.CreateObject(pos, RailTransformation, railParameters);

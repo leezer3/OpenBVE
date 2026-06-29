@@ -110,7 +110,7 @@ namespace CsvRwRouteParser
 						if (Data.Blocks[BlockIndex].RailType.Length <= idx)
 						{
 							Array.Resize(ref Data.Blocks[BlockIndex].RailType, idx + 1);
-							if (IsHmmsim)
+							if (Data.IsHmmsim)
 							{
 								Data.Blocks[BlockIndex].RailType[idx] = -1;
 							}
@@ -129,7 +129,7 @@ namespace CsvRwRouteParser
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
-							else if ((!IsHmmsim && !Data.Structure.RailObjects.ContainsKey(sttype)) || (IsHmmsim && !Data.Structure.FreeObjects.ContainsKey(sttype)))
+							else if ((!Data.IsHmmsim && !Data.Structure.RailObjects.ContainsKey(sttype)) || (Data.IsHmmsim && !Data.Structure.FreeObjects.ContainsKey(sttype)))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex " + sttype + " references an object not loaded in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
@@ -3310,9 +3310,9 @@ namespace CsvRwRouteParser
 					 */
 					if (!PreviewOnly)
 					{
-						if (!IsHmmsim)
+						if (!Data.IsHmmsim)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "PatternObj command detected, but this does not appear to be a Hmmsim route");
+							Data.SetHmmsimProperties();
 						}
 
 						int idx = -1;
@@ -3379,9 +3379,9 @@ namespace CsvRwRouteParser
 				case TrackCommand.PatternEnd:
 					if (!PreviewOnly)
 					{
-						if (!IsHmmsim)
+						if (!Data.IsHmmsim)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "PatternEnd command detected, but this does not appear to be a Hmmsim route");
+							Data.SetHmmsimProperties();
 						}
 
 						int idx = -1;
@@ -3884,6 +3884,12 @@ namespace CsvRwRouteParser
 							}
 						}
 					}
+					break;
+				case TrackCommand.RailSound:
+				case TrackCommand.CurveTransition:
+				case TrackCommand.PitchTransition:
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Hmmsim: Command " + Command + " is not currently implemented at Line "+ Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+					Data.SetHmmsimProperties();
 					break;
 			}
 		}

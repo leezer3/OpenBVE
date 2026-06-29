@@ -37,7 +37,25 @@ namespace CsvRwRouteParser
 			internal bool SwitchUsed = false;
 			internal Vector2 StartingDirection = Vector2.Down;
 
+			internal bool IsHmmsim = false;
+
 			internal readonly List<string> ScriptedTrainFiles;
+
+			internal void SetHmmsimProperties()
+			{
+				IsHmmsim = true;
+				Plugin.CurrentOptions.ObjectDisposalMode = ObjectDisposalMode.Accurate;
+				Plugin.CurrentOptions.ObjectOptimizationBasicThreshold = 2000;
+				// from observation
+				if (BlockInterval == 25)
+				{
+					// only set block interval if it's the default- I'm sure someone has probably
+					// mixed the BlockInterval command and Hmmsim properties....
+					// Note that Hmmsim doesn't really use the BlockInterval (only for railtypes)
+					BlockInterval = 20;
+				}
+				
+			}
 			/*
 			 * HMMSIM
 			 */
@@ -53,7 +71,7 @@ namespace CsvRwRouteParser
 				ScriptedTrainFiles = new List<string>();
 				Signals = new SignalDictionary();
 				Structure = new StructureData();
-				
+				IsHmmsim = false;
 				Blocks.Add(new Block(previewOnly));
 				Blocks[0].Rails.Add(0, new Rail(2.0, 1.0) { RailStarted = true });
 				Blocks[0].RailType = new[] { 0 };
