@@ -1363,28 +1363,10 @@ namespace CsvRwRouteParser
 						stop = 0;
 					}
 
-					int device = 0;
+					SafetySystem device = Data.IsHmmsim ? SafetySystem.Any : SafetySystem.Ats;
 					if (Arguments.Length >= 7 && Arguments[6].Length > 0)
 					{
-						if (string.Compare(Arguments[6], "ats", StringComparison.OrdinalIgnoreCase) == 0)
-						{
-							device = 0;
-						}
-						else if (string.Compare(Arguments[6], "atc", StringComparison.OrdinalIgnoreCase) == 0)
-						{
-							device = 1;
-						}
-						else if (!NumberFormats.TryParseIntVb6(Arguments[6], out device))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "System is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							device = 0;
-						}
-
-						if (device != 0 & device != 1)
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "System is not supported in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							device = 0;
-						}
+						ParseSafetySystem(Arguments[6], Command, Expression, Data, out device);
 					}
 
 					OpenBveApi.Sounds.SoundHandle arrsnd = null;
@@ -1591,7 +1573,7 @@ namespace CsvRwRouteParser
 					CurrentRoute.Stations[CurrentStation].ForceStopSignal = stop == 1;
 					CurrentRoute.Stations[CurrentStation].OpenLeftDoors = door == Direction.Left | door == Direction.Both;
 					CurrentRoute.Stations[CurrentStation].OpenRightDoors = door == Direction.Right | door == Direction.Both;
-					CurrentRoute.Stations[CurrentStation].SafetySystem = device == 1 ? SafetySystem.Atc : SafetySystem.Ats;
+					CurrentRoute.Stations[CurrentStation].SafetySystem = device;
 					CurrentRoute.Stations[CurrentStation].Stops = new StationStop[] { };
 					CurrentRoute.Stations[CurrentStation].PassengerRatio = 0.01 * jam;
 					CurrentRoute.Stations[CurrentStation].TimetableDaytimeTexture = tdt;
@@ -1712,27 +1694,10 @@ namespace CsvRwRouteParser
 						stop = 0;
 					}
 
-					int device = 0;
+					SafetySystem device = Data.IsHmmsim ? SafetySystem.Any : SafetySystem.Atc;
 					if (Arguments.Length >= 5 && Arguments[4].Length > 0)
 					{
-						if (string.Compare(Arguments[4], "ats", StringComparison.OrdinalIgnoreCase) == 0 || (Plugin.CurrentOptions.EnableBveTsHacks && Arguments[4].StartsWith("ats", StringComparison.OrdinalIgnoreCase)))
-						{
-							device = 0;
-						}
-						else if (string.Compare(Arguments[4], "atc", StringComparison.OrdinalIgnoreCase) == 0 || (Plugin.CurrentOptions.EnableBveTsHacks && Arguments[4].StartsWith("atc", StringComparison.OrdinalIgnoreCase)))
-						{
-							device = 1;
-						}
-						else if (!NumberFormats.TryParseIntVb6(Arguments[4], out device))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "System is invalid in Track.Station at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							device = 0;
-						}
-						else if (device != 0 & device != 1)
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "System is not supported in Track.Station at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							device = 0;
-						}
+							ParseSafetySystem(Arguments[4], Command, Expression, Data, out device);
 					}
 
 					if (!PreviewOnly)
@@ -1765,7 +1730,7 @@ namespace CsvRwRouteParser
 					CurrentRoute.Stations[CurrentStation].ForceStopSignal = stop == 1;
 					CurrentRoute.Stations[CurrentStation].OpenLeftDoors = true;
 					CurrentRoute.Stations[CurrentStation].OpenRightDoors = true;
-					CurrentRoute.Stations[CurrentStation].SafetySystem = device == 1 ? SafetySystem.Atc : SafetySystem.Ats;
+					CurrentRoute.Stations[CurrentStation].SafetySystem = device;
 					CurrentRoute.Stations[CurrentStation].Stops = new StationStop[] { };
 					CurrentRoute.Stations[CurrentStation].PassengerRatio = 1.0;
 					CurrentRoute.Stations[CurrentStation].DefaultTrackPosition = Data.TrackPosition;
