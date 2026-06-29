@@ -74,6 +74,7 @@ namespace CsvRwRouteParser
 				IsHmmsim = false;
 				Blocks.Add(new Block(previewOnly));
 				Blocks[0].Rails.Add(0, new Rail(2.0, 1.0) { RailStarted = true });
+				Blocks[0].Rails.Add(-1, new Rail(0, 0) { RailStarted = true });
 				Blocks[0].RailType = new[] { 0 };
 				Blocks[0].CurrentTrackState = new TrackElement(0.0);
 				Blocks[0].RailCycles = new RailCycle[1];

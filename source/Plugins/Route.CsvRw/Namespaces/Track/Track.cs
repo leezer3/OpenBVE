@@ -2415,7 +2415,20 @@ namespace CsvRwRouteParser
 							h = 0.0;
 						}
 
-						Data.Blocks[BlockIndex].Height = IsRW ? h + 0.3 : h;
+						if (!Data.IsHmmsim)
+						{
+							Data.Blocks[BlockIndex].Height = IsRW ? h + 0.3 : h;
+						}
+						else
+						{
+							if (BlockIndex > 0)
+							{
+								Data.Blocks[BlockIndex - 1].Rails[-1].RailEnd.Y = -h;
+							}
+
+							Data.Blocks[BlockIndex].Rails[-1].RailStart.Y = -h;
+							Data.Blocks[BlockIndex].Rails[-1].RailEnd.Y = -h;
+						}
 					}
 				}
 					break;
@@ -2596,9 +2609,8 @@ namespace CsvRwRouteParser
 									roll = 0.0;
 								}
 
-								if (idx == -1)
+								if (idx == -1 && !Data.IsHmmsim)
 								{
-
 									if (!Data.IgnorePitchRoll)
 									{
 										Data.Blocks[BlockIndex].GroundFreeObj.Add(new FreeObj(Data.TrackPosition, sttype, objectPosition, yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians()));
@@ -3292,11 +3304,6 @@ namespace CsvRwRouteParser
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out RailIndex))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-						}
-
-						if (RailIndex == -1)
-						{
-							break;
 						}
 
 						PatternObj patternObj = Data.Blocks[BlockIndex].PatternObjs.ContainsKey(idx) ? Data.Blocks[BlockIndex].PatternObjs[idx].Clone() : new PatternObj(idx, RailIndex);

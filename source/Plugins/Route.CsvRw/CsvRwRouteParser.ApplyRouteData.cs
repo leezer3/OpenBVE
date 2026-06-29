@@ -784,11 +784,11 @@ namespace CsvRwRouteParser
 								continue;
 							}
 
-							if (Data.Structure.RailObjects.ContainsKey(Data.Blocks[i].RailType[railKey]))
+							if (railKey >= 0 && Data.Structure.RailObjects.ContainsKey(Data.Blocks[i].RailType[railKey]))
 							{
 								Data.Structure.RailObjects[Data.Blocks[i].RailType[railKey]]?.CreateObject(pos, RailTransformation, railParameters);
 							}
-							else if (Data.IsHmmsim && Data.Structure.FreeObjects.ContainsKey(Data.Blocks[i].RailType[railKey]))
+							else if (railKey >= 0 && Data.IsHmmsim && Data.Structure.FreeObjects.ContainsKey(Data.Blocks[i].RailType[railKey]))
 							{
 								// Hmmsim uses a single unified object list
 								Data.Structure.FreeObjects[Data.Blocks[i].RailType[railKey]]?.CreateObject(pos, RailTransformation, railParameters);
@@ -829,7 +829,7 @@ namespace CsvRwRouteParser
 							
 
 							// poles
-							if (Data.Blocks[i].RailPole.Length > railKey)
+							if (railKey >= 0 && Data.Blocks[i].RailPole.Length > railKey)
 							{
 								Data.Blocks[i].RailPole[railKey].Create(Data.Structure.Poles, pos, RailTransformation, Direction, planar, updown, railParameters);
 							}
