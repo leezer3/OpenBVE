@@ -52,7 +52,7 @@ namespace CsvRwRouteParser
 			{
 				LastType = 0;
 			}
-			LastPlacement += Interval;
+			
 			double dz = LastPlacement - StartingDistance;
 			WorldPosition += Position.X * RailTransformation.X + Position.Y * RailTransformation.Y + dz * RailTransformation.Z;
 			FreeObjects.TryGetValue(Types[LastType], out UnifiedObject obj);
@@ -62,7 +62,7 @@ namespace CsvRwRouteParser
 			{
 				LastType++;
 			}
-
+			LastPlacement += Interval;
 			return true;
 		}
 	}
