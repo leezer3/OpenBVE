@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2022, Christopher Lees, The OpenBVE Project
 //
@@ -45,6 +45,7 @@ namespace LibRender2.Primitives
 			// default colors to match GLMenu
 			BackgroundColor = Color128.Black;
 			TextColor = Color128.White;
+			IsVisible = true;
 		}
 
 		public override void Draw()

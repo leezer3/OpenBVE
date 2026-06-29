@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using LibRender2.Menu;
 using LibRender2.Primitives;
@@ -19,7 +19,6 @@ namespace ObjectViewer
 
 		internal Picturebox filePictureBox;
 		internal Textbox fileTextBox;
-		private double lastTimeElapsed;
 		private static string SearchDirectory;
 		private static string currentFile;
 
@@ -62,7 +61,23 @@ namespace ObjectViewer
 			filePictureBox.Size = new Vector2(quarterWidth, quarterWidth);
 			filePictureBox.BackgroundColor = Color128.White;
 			SearchDirectory = Interface.CurrentOptions.ObjectSearchDirectory;
+			
+			menuControls.Add(filePictureBox);
+			menuControls.Add(fileTextBox);
+			InitializeOptionsTabContainer(HostApplication.ObjectViewer);
 			IsInitialized = true;
+		}
+
+		public override void RepositionSidebarControls()
+		{
+			if (!IsInitialized) return;
+			base.RepositionSidebarControls();
+			double startX = menuMin.X;
+			double size = SidebarWidth - 32;
+			filePictureBox.Location = new Vector2(startX + 16, Renderer.Screen.Height - size - 150);
+			filePictureBox.Size = new Vector2(size, size);
+			fileTextBox.Location = new Vector2(startX + 16, Renderer.Screen.Height - 140);
+			fileTextBox.Size = new Vector2(size, 120);
 		}
 
 		public override void PushMenu(MenuType type, int data = 0, bool replace = false)
@@ -92,6 +107,13 @@ namespace ObjectViewer
 				Menus[CurrMenu].Selection = 1;
 			}
 			ComputePosition();
+			if (IsSidebarMode)
+			{
+				SidebarVisible = true;
+				startOffset = currentOffset;
+				animationElapsed = 0.0;
+				isAnimating = true;
+			}
 			Renderer.CurrentInterface = InterfaceType.Menu;
 		}
 
@@ -225,6 +247,24 @@ namespace ObjectViewer
 			{
 				return false;
 			}
+			if (Menus[CurrMenu].Type == MenuType.Options)
+			{
+				if (OptionsTabContainer != null && OptionsTabContainer.IsVisible)
+				{
+					OptionsTabContainer.MouseMove(x, y);
+					return true;
+				}
+			}
+			if (isScrubbing && scrubbingOption != null)
+			{
+				int deltaX = x - lastMouseX;
+				if (deltaX != 0)
+				{
+					scrubbingOption.ApplyScrubDelta(deltaX);
+					lastMouseX = x;
+				}
+				return true;
+			}
 			// if not in menu or during control customisation or down outside menu area, do nothing
 			if (Renderer.CurrentInterface < InterfaceType.Menu)
 				return false;
@@ -268,24 +308,40 @@ namespace ObjectViewer
 
 		public override void Draw(double RealTimeElapsed)
 		{
-			double TimeElapsed = RealTimeElapsed - lastTimeElapsed;
-			lastTimeElapsed = RealTimeElapsed;
+			double TimeElapsed = RealTimeElapsed;
 			int i;
 
+			UpdateTransition(TimeElapsed);
+
 			if (CurrMenu < 0 || CurrMenu >= Menus.Length)
+			{
+				DrawSidebarToggleButton(RealTimeElapsed);
 				return;
+			}
 
 			MenuBase menu = Menus[CurrMenu];
 			// overlay background
 			Renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(Renderer.Screen.Width, Renderer.Screen.Height), overlayColor);
 
+			if (menu.Type == MenuType.Options)
+			{
+				Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(menuMax.X - menuMin.X + 2.0f * Border.X, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
+				if (OptionsTabContainer != null)
+				{
+					OptionsTabContainer.Draw();
+					LibRender2.Primitives.GLDropdown.ActiveDropdown?.DrawOverlay();
+				}
+				DrawSidebarToggleButton(RealTimeElapsed);
+				return;
+			}
+
 
 			double itemLeft, itemX;
 			if (menu.Align == TextAlignment.TopLeft)
 			{
-				itemLeft = 0;
-				itemX = 16;
-				Renderer.Rectangle.Draw(null, new Vector2(0, menuMin.Y - Border.Y), new Vector2(menuMax.X - menuMin.X + 2.0f * Border.X, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
+				itemLeft = menuMin.X;
+				itemX = menuMin.X + 16;
+				Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(menuMax.X - menuMin.X + 2.0f * Border.X, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
 			}
 			else
 			{
@@ -369,8 +425,10 @@ namespace ObjectViewer
 						menu.Align, ColourNormal, false);
 				if (menu.Items[i] is MenuOption opt)
 				{
-					Renderer.OpenGlString.Draw(MenuFont, opt.CurrentOption.ToString(), new Vector2((menuMax.X - menuMin.X + 2.0f * Border.X) + 4.0f, itemY),
-						menu.Align, backgroundColor, false);
+					Color128 optColor = (i == menu.Selection) ? ColourHighlight : ColourNormal;
+					double optX = IsSidebarMode ? (menuMax.X - 120.0f) : ((menuMax.X - menuMin.X + 2.0f * Border.X) + 4.0f);
+					Renderer.OpenGlString.Draw(MenuFont, opt.DisplayValue, new Vector2(optX, itemY),
+						IsSidebarMode ? TextAlignment.TopLeft : menu.Align, optColor, false);
 				}
 				itemY += LineHeight;
 				if (menu.Items[i].Icon != null)
@@ -390,6 +448,8 @@ namespace ObjectViewer
 			if (i < menu.Items.Length - 1)
 				Renderer.OpenGlString.Draw(MenuFont, @"...", new Vector2(itemX, itemY),
 					menu.Align, ColourDimmed, false);
+
+			DrawSidebarToggleButton(RealTimeElapsed);
 		}
 	}
 }
