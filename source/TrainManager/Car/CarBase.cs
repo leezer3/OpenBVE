@@ -42,6 +42,9 @@ namespace TrainManager.Car
 		public Door[] Doors;
 		/// <summary>The horns attached to this car</summary>
 		public Horn[] Horns;
+		/// <summary>The cab handles</summary>
+		/// <remarks>This property will be null if the vehicle does not posses a cab</remarks>
+		public CabHandles Handles;
 		/// <summary>Contains the physics properties for the car</summary>
 		public readonly CarPhysics Specs;
 		/// <summary>The car brake for this car</summary>
@@ -443,9 +446,8 @@ namespace TrainManager.Car
 				// Create new train
 				TrainBase newTrain = new TrainBase(TrainState.Available, TrainType.StaticCars);
 				UncouplingBehaviour uncouplingBehaviour = UncouplingBehaviour.Emergency;
-				newTrain.Handles.Power = new PowerHandle(0, newTrain);
-				newTrain.Handles.Brake = new BrakeHandle(0, newTrain.Handles.EmergencyBrake, newTrain);
-				newTrain.Handles.HoldBrake = new HoldBrakeHandle(newTrain);
+				newTrain.Cars[0].Handles = new CabHandles(newTrain);
+				
 				if (Front)
 				{
 					int totalPreceedingCars = trainCarIndex;
