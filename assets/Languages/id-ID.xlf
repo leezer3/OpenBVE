@@ -1156,6 +1156,38 @@
 						<source>positive direction</source>
 						<target>arah positif</target>
 					</trans-unit>
+					<trans-unit id="selection_mouse">
+						<source>Mouse:</source>
+						<target>Mouse:</target>
+					</trans-unit>
+					<trans-unit id="selection_mouse_button">
+						<source>Button:</source>
+						<target>Tombol:</target>
+					</trans-unit>
+					<trans-unit id="assignment_mouse">
+						<source>Mouse</source>
+						<target>Mouse</target>
+					</trans-unit>
+					<trans-unit id="assignment_mouse_left">
+						<source>Left Click</source>
+						<target>Klik Kiri</target>
+					</trans-unit>
+					<trans-unit id="assignment_mouse_middle">
+						<source>Middle Click</source>
+						<target>Klik Tengah</target>
+					</trans-unit>
+					<trans-unit id="assignment_mouse_right">
+						<source>Right Click</source>
+						<target>Klik Kanan</target>
+					</trans-unit>
+					<trans-unit id="assignment_mouse_scrollup">
+						<source>Scroll Up</source>
+						<target>Scroll Atas</target>
+					</trans-unit>
+					<trans-unit id="assignment_mouse_scrolldown">
+						<source>Scroll Down</source>
+						<target>Scroll Bawah</target>
+					</trans-unit>
 					<trans-unit id="assignment_joystick_axis_invalid">
 						<source>invalid direction</source>
 						<target>arah tidak valid</target>
@@ -1483,6 +1515,26 @@
 						<source>Miscellaneous</source>
 						<target>Lainnya</target>
 					</trans-unit>
+					<trans-unit id="camera">
+						<source>Camera options</source>
+						<target>Pengaturan kamera</target>
+					</trans-unit>
+					<trans-unit id="camera_interior_transition">
+						<source>Smooth interior transition</source>
+						<target>Transisi interior halus</target>
+					</trans-unit>
+					<trans-unit id="camera_exterior_transition">
+						<source>Smooth exterior transition</source>
+						<target>Transisi eksterior halus</target>
+					</trans-unit>
+					<trans-unit id="camera_transition_duration">
+						<source>Transition duration (sec):</source>
+						<target>Durasi transisi (detik):</target>
+					</trans-unit>
+					<trans-unit id="camera_zoom_scroll_speed">
+						<source>Zoom Scroll Speed:</source>
+						<target>Kecepatan Scroll Zoom:</target>
+					</trans-unit>
 					<trans-unit id="misc_simulation">
 						<source>Detail of simulation</source>
 						<target>Detail simulasi</target>
@@ -1609,6 +1661,7 @@
 						<source>Prefer custom timetable</source>
 						<target>Buat sendiri</target>
 					</trans-unit>
+
 					<trans-unit id="package_choose">
 						<source>Choose...</source>
 						<target>Pilih....</target>
@@ -2801,6 +2854,10 @@
 					<trans-unit id="camera_reset">
 						<source>Resets the camera view to default values</source>
 						<target>Reset kamera</target>
+					</trans-unit>
+					<trans-unit id="camera_grab_toggle">
+						<source>Toggles camera grab (Mouse look)</source>
+						<target>Aktifkan/nonaktifkan kontrol kamera dengan mouse</target>
 					</trans-unit>
 					<trans-unit id="camera_restriction">
 						<source>Activates or deactivates interior view camera restriction</source>

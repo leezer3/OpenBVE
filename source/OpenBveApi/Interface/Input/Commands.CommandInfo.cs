@@ -238,6 +238,7 @@ namespace OpenBveApi.Interface
 			{ Command.CameraPOIPrevious, new CommandInfo(Command.CameraPOIPrevious, CommandType.Digital, "CAMERA_POI_PREVIOUS") },
 			{ Command.CameraPOINext, new CommandInfo(Command.CameraPOINext, CommandType.Digital, "CAMERA_POI_NEXT") },
 			{ Command.CameraReset, new CommandInfo(Command.CameraReset, CommandType.Digital, "CAMERA_RESET") },
+			{ Command.CameraGrabToggle, new CommandInfo(Command.CameraGrabToggle, CommandType.Digital, "CAMERA_GRAB_TOGGLE") },
 			{ Command.CameraRestriction, new CommandInfo(Command.CameraRestriction, CommandType.Digital, "CAMERA_RESTRICTION") },
 			{ Command.TimetableToggle, new CommandInfo(Command.TimetableToggle, CommandType.Digital, "TIMETABLE_TOGGLE") },
 			{ Command.TimetableUp, new CommandInfo(Command.TimetableUp, CommandType.AnalogHalf, "TIMETABLE_UP") },
