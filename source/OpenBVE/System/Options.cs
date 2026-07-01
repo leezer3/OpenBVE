@@ -326,6 +326,7 @@ namespace OpenBve
 				Builder.AppendLine("shadowbias = " + ShadowBias.ToString(Culture));
 				Builder.AppendLine("shadownormalbias = " + ShadowNormalBias.ToString(Culture));
 				Builder.AppendLine("shadowfiltercascades = " + (ShadowFilterCascades ? "true" : "false"));
+				Builder.AppendLine("dynamiclightlimit = " + DynamicLightLimit.ToString(Culture));
 				Builder.AppendLine("fpslimit = " + FPSLimit.ToString(Culture));
 				Builder.AppendLine();
 				Builder.AppendLine("[objectOptimization]");
@@ -540,6 +541,9 @@ namespace OpenBve
 							block.TryGetValue(OptionsKey.ShadowNormalBias, ref CurrentOptions.ShadowNormalBias);
 							if (CurrentOptions.ShadowNormalBias < 0.0) CurrentOptions.ShadowNormalBias = 0.0;
 							block.GetValue(OptionsKey.ShadowFilterCascades, out Interface.CurrentOptions.ShadowFilterCascades);
+							block.TryGetValue(OptionsKey.DynamicLightLimit, ref CurrentOptions.DynamicLightLimit);
+							if (CurrentOptions.DynamicLightLimit < 0) CurrentOptions.DynamicLightLimit = 0;
+							if (CurrentOptions.DynamicLightLimit > 16) CurrentOptions.DynamicLightLimit = 16;
 							block.GetValue(OptionsKey.FPSLimit, out CurrentOptions.FPSLimit);
 							if (CurrentOptions.FPSLimit < 0)
 							{

@@ -232,6 +232,11 @@ namespace OpenBve.Graphics
 					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
 					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
 					DefaultShader.SetLightModel(Lighting.LightModel);
+					UpdateActiveLights(DefaultShader);
+				}
+				else
+				{
+					DefaultShader.SetDynamicLights(new List<SceneLight>(), CurrentViewMatrix, 0);
 				}
 				Fog.Set();
 				DefaultShader.SetTexture(0);
@@ -502,6 +507,7 @@ namespace OpenBve.Graphics
 			OptionLighting = false;
 			Touch.RenderScene();
 			
+			DrawLightVisuals();
 			// render overlays
 			ResetOpenGlState();
 			UnsetAlphaFunc();

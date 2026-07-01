@@ -1,4 +1,5 @@
 using Formats.OpenBve;
+using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -367,6 +368,137 @@ namespace Plugin
 							}
 						}
 
+						break;
+					case AnimatedSection.Light:
+						{
+							if (Result.Objects.Length == ObjectCount)
+							{
+								Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
+							}
+							AnimatedObject animatedObj = new AnimatedObject(currentHost, FileName)
+							{
+								CurrentState = 0,
+								States = new ObjectState[] { new ObjectState() },
+								TranslateXDirection = Vector3.Right,
+								TranslateYDirection = Vector3.Down,
+								TranslateZDirection = Vector3.Forward,
+								RotateXDirection = Vector3.Right,
+								RotateYDirection = Vector3.Down,
+								RotateZDirection = Vector3.Forward,
+								TextureShiftXDirection = Vector2.Right,
+								TextureShiftYDirection = Vector2.Down,
+								RefreshRate = 0.0,
+							};
+							animatedObj.States[0].Prototype = new StaticObject(currentHost);
+							animatedObj.States[0].Prototype.Dynamic = true;
+							animatedObj.States[0].Translation = Matrix4D.Identity;
+
+							SceneLight light = new SceneLight();
+
+							if (Block.GetEnumValue(AnimatedKey.Type, out SceneLightType type))
+							{
+								light.Type = type;
+							}
+
+							Block.TryGetVector3(AnimatedKey.Position, ',', ref light.Position);
+							Block.TryGetVector3(AnimatedKey.Direction, ',', ref light.Direction);
+							light.Direction.Normalize();
+
+							Color32 color32 = Color32.White;
+							if (Block.TryGetColor32(AnimatedKey.Color, ref color32))
+							{
+								light.Color = new Color128(color32.R / 255.0f, color32.G / 255.0f, color32.B / 255.0f, color32.A / 255.0f);
+							}
+
+							double range = 10.0;
+							if (Block.TryGetValue(AnimatedKey.Range, ref range, NumberRange.Positive))
+							{
+								light.Range = (float)range;
+								light.RangeSquared = light.Range * light.Range;
+							}
+
+							bool visual = false;
+							if (Block.TryGetValue(AnimatedKey.Visual, ref visual))
+							{
+								light.Visual = visual;
+								light.ShowCone = visual;
+							}
+
+							double power = 12.5663706;
+							if (Block.TryGetValue(AnimatedKey.Power, ref power, NumberRange.Positive))
+							{
+								light.Power = (float)power;
+							}
+
+							double exposure = 0.0;
+							if (Block.TryGetValue(AnimatedKey.Exposure, ref exposure))
+							{
+								light.Exposure = (float)exposure;
+							}
+
+							if (Block.GetValue(AnimatedKey.Normalize, out string normStr))
+							{
+								string s = normStr.ToLowerInvariant().Trim();
+								light.NormalizeCone = (s == "1" || s == "true");
+							}
+
+							double radius = 0.0;
+							if (Block.TryGetValue(AnimatedKey.Radius, ref radius, NumberRange.NonNegative))
+							{
+								light.Radius = (float)radius;
+							}
+
+							if (Block.GetValue(AnimatedKey.SoftFalloff, out string sfStr))
+							{
+								string s = sfStr.ToLowerInvariant().Trim();
+								light.SoftFalloff = (s == "1" || s == "true");
+							}
+
+							double angle = 45.0;
+							if (Block.TryGetValue(AnimatedKey.Angle, ref angle, NumberRange.Positive))
+							{
+								light.Angle = (float)angle;
+								light.SpotCutoff = (float)System.Math.Cos((angle / 2.0) * System.Math.PI / 180.0);
+							}
+
+							double softness = 1.0;
+							if (Block.TryGetValue(AnimatedKey.Softness, ref softness, NumberRange.NonNegative))
+							{
+								light.Softness = (float)softness;
+							}
+
+							if (Block.GetValue(AnimatedKey.ShowCone, out string scStr))
+							{
+								string s = scStr.ToLowerInvariant().Trim();
+								light.ShowCone = (s == "1" || s == "true");
+								light.Visual = light.ShowCone;
+							}
+
+							Block.TryGetVector2(AnimatedKey.Size, ',', ref light.AreaSize);
+
+							animatedObj.Lights.Add(light);
+							animatedObj.Light = light;
+
+							// Parse animation functions for the light object itself
+							Block.GetFunctionScript(new[] { AnimatedKey.RotateXFunction, AnimatedKey.RotateXFunctionRPN, AnimatedKey.RotateXScript }, Folder, out animatedObj.RotateXFunction);
+							Block.GetFunctionScript(new[] { AnimatedKey.RotateYFunction, AnimatedKey.RotateYFunctionRPN, AnimatedKey.RotateYScript }, Folder, out animatedObj.RotateYFunction);
+							Block.GetFunctionScript(new[] { AnimatedKey.RotateZFunction, AnimatedKey.RotateZFunctionRPN, AnimatedKey.RotateZScript }, Folder, out animatedObj.RotateZFunction);
+							Block.GetFunctionScript(new[] { AnimatedKey.TranslateXFunction, AnimatedKey.TranslateXFunctionRPN, AnimatedKey.TranslateXScript }, Folder, out animatedObj.TranslateXFunction);
+							Block.GetFunctionScript(new[] { AnimatedKey.TranslateYFunction, AnimatedKey.TranslateYFunctionRPN, AnimatedKey.TranslateYScript }, Folder, out animatedObj.TranslateYFunction);
+							Block.GetFunctionScript(new[] { AnimatedKey.TranslateZFunction, AnimatedKey.TranslateZFunctionRPN, AnimatedKey.TranslateZScript }, Folder, out animatedObj.TranslateZFunction);
+							Block.TryGetVector3(AnimatedKey.TranslateXDirection, ',', ref animatedObj.TranslateXDirection);
+							Block.TryGetVector3(AnimatedKey.TranslateYDirection, ',', ref animatedObj.TranslateYDirection);
+							Block.TryGetVector3(AnimatedKey.TranslateZDirection, ',', ref animatedObj.TranslateZDirection);
+							Block.TryGetVector3(AnimatedKey.RotateXDirection, ',', ref animatedObj.RotateXDirection);
+							Block.TryGetVector3(AnimatedKey.RotateYDirection, ',', ref animatedObj.RotateYDirection);
+							Block.TryGetVector3(AnimatedKey.RotateZDirection, ',', ref animatedObj.RotateZDirection);
+							Block.GetDamping(AnimatedKey.RotateXDamping, ',', out animatedObj.RotateXDamping);
+							Block.GetDamping(AnimatedKey.RotateYDamping, ',', out animatedObj.RotateYDamping);
+							Block.GetDamping(AnimatedKey.RotateZDamping, ',', out animatedObj.RotateZDamping);
+
+							Result.Objects[ObjectCount] = animatedObj;
+							ObjectCount++;
+						}
 						break;
 				}
 				Block.ReportErrors();
