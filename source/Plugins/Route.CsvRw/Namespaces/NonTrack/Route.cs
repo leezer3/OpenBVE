@@ -5,7 +5,6 @@ using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
-using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 

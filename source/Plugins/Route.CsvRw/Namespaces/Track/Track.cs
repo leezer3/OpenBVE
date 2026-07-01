@@ -1834,17 +1834,17 @@ namespace CsvRwRouteParser
 
 						if (IsRW)
 						{
-							if (idx2 == int.MaxValue)
+							switch (idx2)
 							{
-								idx2 = 9;
-							}
-							else if (idx2 == -9)
-							{
-								idx2 = Form.SecondaryRailL;
-							}
-							else if (idx2 == 9)
-							{
-								idx2 = Form.SecondaryRailR;
+								case int.MaxValue:
+									idx2 = 9;
+									break;
+								case -9:
+									idx2 = Form.SecondaryRailL;
+									break;
+								case 9:
+									idx2 = Form.SecondaryRailR;
+									break;
 							}
 						}
 
