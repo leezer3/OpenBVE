@@ -122,6 +122,7 @@
     <Compile Include="Shadows\FrustumUtils.cs" />
     <Compile Include="Shadows\Shadows.cs" />
     <Compile Include="Textures\TextureManager.cs" />
+    <Compile Include="Textures\VideoTexture.cs" />
     <Compile Include="Text\Fonts.BlockedFonts.cs" />
     <Compile Include="Text\Fonts.cs" />
     <Compile Include="Text\OpenGlFont.cs" />

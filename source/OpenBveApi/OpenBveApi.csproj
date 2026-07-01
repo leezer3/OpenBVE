@@ -302,6 +302,7 @@
     <Compile Include="Textures\Textures.TextOverlay.cs" />
     <Compile Include="Sounds\Sounds.cs" />
     <Compile Include="Textures\Textures.cs" />
+    <Compile Include="Textures\VideoApi.cs" />
     <Compile Include="Textures\Textures.Functions.cs">
       <DependentUpon>Textures.cs</DependentUpon>
     </Compile>
