@@ -66,36 +66,6 @@ namespace CsvRwRouteParser
 					}
 				}
 				{
-					// count expressions
-					int n = 0; int Level = 0;
-					for (int j = 0; j < Lines[i].Length; j++) {
-						switch (Lines[i][j]) {
-							case '(':
-								Level++;
-								break;
-							case ')':
-								Level--;
-								break;
-							case ',':
-								if (!IsRW && Level == 0) n++;
-								break;
-							case '@':
-								if (IsRW)
-								{
-									if (Level == 0)
-									{
-										n++;
-									}
-									else if (Plugin.CurrentOptions.EnableBveTsHacks)
-									{
-										n++;
-										Level = 0;
-									}
-								}
-								break;
-						}
-					}
-
 					if (SplitLineHack)
 					{
 						MatchCollection matches = Regex.Matches(Lines[i], ".Load", RegexOptions.IgnoreCase);
@@ -114,7 +84,7 @@ namespace CsvRwRouteParser
 						}
 					}
 					// create expressions
-					Level = 0;
+					int Level = 0;
 					int a = 0, c = 0;
 					for (int j = 0; j < Lines[i].Length; j++) {
 						switch (Lines[i][j]) {
