@@ -445,6 +445,7 @@ namespace CsvRwRouteParser
 										if (expr.Count != 0) {
 											// at this point, Expressions will always be List<T>
 											((List<Expression>)Expressions).InsertRange(i, expr);
+											i--;
 										}
 										continueWithNextExpression = true;
 									}
