@@ -59,6 +59,7 @@
     <Compile Include="CsvRwRouteParser.CompatibilityObjects.cs" />
     <Compile Include="CsvRwRouteParser.cs" />
     <Compile Include="DuplicateKeyComparer.cs" />
+    <Compile Include="Namespaces\NonTrack\Control.Commands.cs" />
     <Compile Include="Namespaces\NonTrack\Cycle.Commands.cs" />
     <Compile Include="Namespaces\NonTrack\Options.Commands.cs" />
     <Compile Include="Namespaces\NonTrack\Route.Commands.cs" />
