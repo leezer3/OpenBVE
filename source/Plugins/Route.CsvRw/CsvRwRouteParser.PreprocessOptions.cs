@@ -22,6 +22,10 @@ namespace CsvRwRouteParser
 			// process expressions
 			for (int j = 0; j < Expressions.Count; j++)
 			{
+				if (Expressions[j].Skip)
+				{
+					continue;
+				}
 				if (IsRW && Expressions[j].Text.StartsWith("[") && Expressions[j].Text.EndsWith("]"))
 				{
 					Section = Expressions[j].Text.Substring(1, Expressions[j].Text.Length - 2).Trim();
