@@ -2068,7 +2068,7 @@ namespace CsvRwRouteParser
 							sttype = 0;
 						}
 
-						if (dir < 0 && !Data.Structure.WallL.ContainsKey(sttype) || dir > 0 && !Data.Structure.WallR.ContainsKey(sttype) || dir == 0 && (!Data.Structure.WallL.ContainsKey(sttype) && !Data.Structure.WallR.ContainsKey(sttype)))
+						if (dir == Direction.Left && !Data.Structure.WallL.ContainsKey(sttype) || dir == Direction.Right && !Data.Structure.WallR.ContainsKey(sttype) || dir == Direction.Both && (!Data.Structure.WallL.ContainsKey(sttype) && !Data.Structure.WallR.ContainsKey(sttype)))
 						{
 							if (dir < 0)
 							{
@@ -2200,7 +2200,7 @@ namespace CsvRwRouteParser
 							sttype = 0;
 						}
 
-						if (dir < 0 && !Data.Structure.DikeL.ContainsKey(sttype) || dir > 0 && !Data.Structure.DikeR.ContainsKey(sttype) || dir == 0 && (!Data.Structure.DikeL.ContainsKey(sttype) && !Data.Structure.DikeR.ContainsKey(sttype)))
+						if (dir == Direction.Left && !Data.Structure.DikeL.ContainsKey(sttype) || dir == Direction.Right && !Data.Structure.DikeR.ContainsKey(sttype) || dir == Direction.Both && (!Data.Structure.DikeL.ContainsKey(sttype) && !Data.Structure.DikeR.ContainsKey(sttype)))
 						{
 							if (dir > 0)
 							{

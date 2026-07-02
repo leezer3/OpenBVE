@@ -186,7 +186,7 @@ namespace CsvRwRouteParser
 						if (k <= Expressions[i].Text.Length)
 						{
 							string t = Expressions[i].Text.Substring(j, k - j).TrimEnd();
-							if (t[0] != '$' || !Enum.TryParse(t.Substring(1), out ControlCommands cmd))
+							if (t[0] != '$' || !Enum.TryParse(t.Substring(1), true, out ControlCommands cmd))
 							{
 								break;
 							}
