@@ -130,9 +130,9 @@ namespace CsvRwRouteParser
 							}
 						}
 						// process command
-						if (Command != null)
+						if (!string.IsNullOrEmpty(Command) && Command.Length > 8)
 						{
-							if(!Enum.TryParse(Command.Substring(8), true, out OptionsCommand cmd))
+							if(Enum.TryParse(Command.Substring(8), true, out OptionsCommand cmd))
 								switch (cmd)
 								{
 									// options
