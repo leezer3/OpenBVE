@@ -788,12 +788,7 @@ namespace CsvRwRouteParser
 							{
 								Data.Structure.RailObjects[Data.Blocks[i].RailType[railKey]]?.CreateObject(pos, RailTransformation, railParameters);
 							}
-							else if (railKey >= 0 && Data.IsHmmsim && Data.Structure.FreeObjects.ContainsKey(Data.Blocks[i].RailType[railKey]))
-							{
-								// Hmmsim uses a single unified object list
-								Data.Structure.FreeObjects[Data.Blocks[i].RailType[railKey]]?.CreateObject(pos, RailTransformation, railParameters);
-							}
-
+							
 							// points of interest
 							for (int k = 0; k < Data.Blocks[i].PointsOfInterest.Length; k++)
 							{
@@ -885,32 +880,7 @@ namespace CsvRwRouteParser
 									Data.Blocks[i].RailFreeObj[railKey][k].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance);
 								}
 							}
-
-							// pattern objects
-							for (int k = 0; k < Data.Blocks[i].PatternObjs.Count; k++)
-							{
-								int key = Data.Blocks[i].PatternObjs.ElementAt(k).Key;
-								if (railKey != Data.Blocks[i].PatternObjs[key].RailIndex || Data.Blocks[i].PatternObjs[key].Interval <= 0 || Data.Blocks[i].Rails[railKey].RailEnded)
-								{
-									continue;
-								}
-								
-								while (Data.Blocks[i].PatternObjs[key].LastPlacement + Data.Blocks[i].PatternObjs[key].Interval < (i + 1) * Data.BlockInterval)
-								{
-									if (!Data.Blocks[i].PatternObjs[key].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance))
-									{
-										break;
-									}
-								}
-
-								if (i < Data.Blocks.Count - 1 && Data.Blocks[i + 1].PatternObjs.ContainsKey(key))
-								{
-									Data.Blocks[i + 1].PatternObjs[key].LastPlacement = Data.Blocks[i].PatternObjs[key].LastPlacement;
-									Data.Blocks[i + 1].PatternObjs[key].LastType = Data.Blocks[i].PatternObjs[key].LastType;
-								}
-							}
 							
-
 							// transponder objects
 							if (railKey == 0)
 							{
@@ -1274,6 +1244,17 @@ namespace CsvRwRouteParser
 					}
 					ComputeCantTangents();
 				}
+			}
+
+			// insert PatternObj (using a TrackFollower)
+			for (int patternObj = 0; patternObj < Data.PatternObjects.Count; patternObj++)
+			{
+				int key = Data.PatternObjects.ElementAt(patternObj).Key;
+				if (key == 0)
+				{
+					int b = 0;
+				}
+				Data.PatternObjects[key].Create(Data.Structure.FreeObjects, CurrentRoute.Tracks[0].Elements[CurrentRoute.Tracks[0].Elements.Length - 1].StartingTrackPosition);
 			}
 
 			if (!PreviewOnly)

@@ -3306,45 +3306,55 @@ namespace CsvRwRouteParser
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
 
-						PatternObj patternObj = Data.Blocks[BlockIndex].PatternObjs.ContainsKey(idx) ? Data.Blocks[BlockIndex].PatternObjs[idx].Clone() : new PatternObj(idx, RailIndex);
-							
-						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out patternObj.Interval))
+						double Interval = 0;	
+						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out Interval))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Repetition interval is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							patternObj.Interval = 25; // try the default BVE block-length
+							// CHECK: What does Hmmsim actually do?
+							break;
 						}
 
-						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out patternObj.Span))
+						double Span = 0;
+						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out Span))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Repetition interval is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							patternObj.Interval = 25; // try the default BVE block-length
+							Span = 0;
 						}
 
+						Vector2 Position = Vector2.Null;
 
-						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out patternObj.Position.X))
+						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out Position.X))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X position is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
 
-						if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out patternObj.Position.Y))
+						if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out Position.Y))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y position is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
 						
-						// types array needs to be flushed
-						patternObj.Types = new int[Arguments.Length - 6];
+						int[] Types = new int[Arguments.Length - 6];
 						
 						for (int i = 6; i < Arguments.Length; i++)
 						{
-							if (!NumberFormats.TryParseIntVb6(Arguments[i], out patternObj.Types[i - 6]))
+							if (!NumberFormats.TryParseIntVb6(Arguments[i], out Types[i - 6]))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ObjectIndex is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 								break;
 							}
 						}
 
-						patternObj.LastPlacement = Data.TrackPosition;
-						Data.Blocks[BlockIndex].PatternObjs[idx] = patternObj;
+						if (!Data.PatternObjects.ContainsKey(idx))
+						{
+							Data.PatternObjects.Add(idx, new NewPatternObj());
+						}
+
+						if (!Data.PatternObjects[idx].Entries.ContainsKey(Data.TrackPosition))
+						{
+							Data.PatternObjects[idx].Entries.Add(Data.TrackPosition, new List<Pattern>());
+						}
+						Data.PatternObjects[idx].Entries[Data.TrackPosition].Add(new PatternStart(RailIndex, Interval, Span, Position, Types));
+
 					}
 
 					break;
@@ -3363,14 +3373,15 @@ namespace CsvRwRouteParser
 							break;
 						}
 
-						if (!Data.Blocks[BlockIndex].PatternObjs.ContainsKey(idx))
+						if (!Data.PatternObjects.ContainsKey(idx))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Attempted to stop the non-existant pattern with index " + idx + " in command " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Data.PatternObjects.Add(idx, new NewPatternObj());
 						}
-						else
+						if (!Data.PatternObjects[idx].Entries.ContainsKey(Data.TrackPosition))
 						{
-							Data.Blocks[BlockIndex].PatternObjs[idx].Ends = true;
+							Data.PatternObjects[idx].Entries.Add(Data.TrackPosition, new List<Pattern>());
 						}
+						Data.PatternObjects[idx].Entries[Data.TrackPosition].Add(new PatternEnd());
 					}
 
 					break;

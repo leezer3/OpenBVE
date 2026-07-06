@@ -37,6 +37,8 @@ namespace CsvRwRouteParser
 			internal bool SwitchUsed = false;
 			internal Vector2 StartingDirection = Vector2.Down;
 
+			internal Dictionary<int, NewPatternObj> PatternObjects;
+
 			internal bool IsHmmsim = false;
 
 			internal readonly List<string> ScriptedTrainFiles;
@@ -52,7 +54,7 @@ namespace CsvRwRouteParser
 					// only set block interval if it's the default- I'm sure someone has probably
 					// mixed the BlockInterval command and Hmmsim properties....
 					// Note that Hmmsim doesn't really use the BlockInterval (only for railtypes)
-					BlockInterval = 20;
+					BlockInterval = 5;
 				}
 				
 			}
@@ -79,6 +81,7 @@ namespace CsvRwRouteParser
 				Blocks[0].CurrentTrackState = new TrackElement(0.0);
 				Blocks[0].RailCycles = new RailCycle[1];
 				Blocks[0].RailCycles[0].RailCycleIndex = -1;
+				PatternObjects = new Dictionary<int, NewPatternObj>();
 			}
 
 			/// <summary>Creates any missing blocks</summary>
@@ -179,16 +182,6 @@ namespace CsvRwRouteParser
 							for (int j = 0; j < Blocks[i].RailPole.Length; j++)
 							{
 								Blocks[i].RailPole[j] = Blocks[i - 1].RailPole[j];
-							}
-
-							for (int j = 0; j < Blocks[i - 1].PatternObjs.Count; j++)
-							{
-								int key = Blocks[i - 1].PatternObjs.ElementAt(j).Key;
-								if (Blocks[i - 1].PatternObjs[key] == null || Blocks[i - 1].PatternObjs[key].Ends)
-								{
-									continue;
-								}
-								Blocks[i].PatternObjs.Add(key, Blocks[i - 1].PatternObjs[key].Clone());
 							}
 						}
 						Blocks[i].Pitch = Blocks[i - 1].Pitch;
