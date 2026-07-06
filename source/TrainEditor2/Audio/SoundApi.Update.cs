@@ -21,7 +21,7 @@ namespace TrainEditor2.Audio
 			Vector3 listenerVelocity = Vector3.Zero;
 			AL.Listener(ALListener3f.Position, 0.0f, 0.0f, 0.0f);
 			AL.Listener(ALListener3f.Velocity, (float)listenerVelocity.X, (float)listenerVelocity.Y, (float)listenerVelocity.Z);
-			float[] Orientation = new float[] { (float)listenerOrientation.Z.X, (float)listenerOrientation.Z.Y, (float)listenerOrientation.Z.Z, -(float)listenerOrientation.Y.X, -(float)listenerOrientation.Y.Y, -(float)listenerOrientation.Y.Z };
+			float[] Orientation = { (float)listenerOrientation.Z.X, (float)listenerOrientation.Z.Y, (float)listenerOrientation.Z.Z, -(float)listenerOrientation.Y.X, -(float)listenerOrientation.Y.Y, -(float)listenerOrientation.Y.Z };
 			AL.Listener(ALListenerfv.Orientation, ref Orientation);
 
 			/*

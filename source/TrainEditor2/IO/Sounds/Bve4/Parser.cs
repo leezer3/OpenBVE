@@ -23,26 +23,26 @@ namespace TrainEditor2.IO.Sounds.Bve4
 					case SoundCfgSection.Run:
 						while (block.RemainingDataValues > 0 && block.GetIndexedPath(trainFolder, out var runIndex, out var fileName))
 						{
-							sound.SoundElements.Add(new RunElement { Key = runIndex, FilePath = Path.CombineFile(trainFolder, fileName) });
+							sound.SoundElements.Add(new RunElement { Key = runIndex, FilePath = fileName });
 						}
 						break;
 					case SoundCfgSection.Flange:
 						while (block.RemainingDataValues > 0 && block.GetIndexedPath(trainFolder, out var runIndex, out var fileName))
 						{
-							sound.SoundElements.Add(new FlangeElement { Key = runIndex, FilePath = Path.CombineFile(trainFolder, fileName) });
+							sound.SoundElements.Add(new FlangeElement { Key = runIndex, FilePath = fileName });
 						}
 						break;
 					case SoundCfgSection.Motor:
 						while (block.RemainingDataValues > 0 && block.GetIndexedPath(trainFolder, out var runIndex, out var fileName))
 						{
-							sound.SoundElements.Add(new MotorElement { Key = runIndex, FilePath = Path.CombineFile(trainFolder, fileName) });
+							sound.SoundElements.Add(new MotorElement { Key = runIndex, FilePath = fileName });
 						}
 						break;
 					case SoundCfgSection.Switch:
 						while (block.RemainingDataValues > 0 && block.GetIndexedPath(trainFolder, out var runIndex, out var fileName))
 						{
-							sound.SoundElements.Add(new FrontSwitchElement { Key = runIndex, FilePath = Path.CombineFile(trainFolder, fileName) });
-							sound.SoundElements.Add(new RearSwitchElement { Key = runIndex, FilePath = Path.CombineFile(trainFolder, fileName) });
+							sound.SoundElements.Add(new FrontSwitchElement { Key = runIndex, FilePath = fileName });
+							sound.SoundElements.Add(new RearSwitchElement { Key = runIndex, FilePath = fileName });
 						}
 						break;
 					case SoundCfgSection.Brake:

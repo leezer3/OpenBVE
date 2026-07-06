@@ -57,6 +57,13 @@ namespace TrainEditor2
 				// The OpenTK X11 backend is broken on FreeBSD, so force SDL2
 				options.Backend = PlatformBackend.Default;
 			}
+			else if (CurrentHost.Platform == HostPlatform.GNULinux)
+			{
+				// Otherwise, prefer native where possible
+				// (timing seems to work a little better- https://github.com/leezer3/OpenBVE/issues/1335 )
+				options.Backend = PlatformBackend.PreferNative;
+			}
+			
 			Toolkit.Init(options);
 
 			Interface.LoadOptions();

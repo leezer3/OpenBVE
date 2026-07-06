@@ -35,8 +35,29 @@ namespace CsvRwRouteParser
 			internal bool ValueBasedSections = false;
 			internal bool TurnUsed = false;
 			internal bool SwitchUsed = false;
+			internal Vector2 StartingDirection = Vector2.Down;
+
+			internal Dictionary<int, NewPatternObj> PatternObjects;
+
+			internal bool IsHmmsim = false;
 
 			internal readonly List<string> ScriptedTrainFiles;
+
+			internal void SetHmmsimProperties()
+			{
+				IsHmmsim = true;
+				Plugin.CurrentOptions.ObjectDisposalMode = ObjectDisposalMode.Accurate;
+				Plugin.CurrentOptions.ObjectOptimizationBasicThreshold = 2000;
+				// from observation
+				if (BlockInterval == 25)
+				{
+					// only set block interval if it's the default- I'm sure someone has probably
+					// mixed the BlockInterval command and Hmmsim properties....
+					// Note that Hmmsim doesn't really use the BlockInterval (only for railtypes)
+					BlockInterval = 5;
+				}
+				
+			}
 			/*
 			 * HMMSIM
 			 */
@@ -52,13 +73,15 @@ namespace CsvRwRouteParser
 				ScriptedTrainFiles = new List<string>();
 				Signals = new SignalDictionary();
 				Structure = new StructureData();
-				
+				IsHmmsim = false;
 				Blocks.Add(new Block(previewOnly));
 				Blocks[0].Rails.Add(0, new Rail(2.0, 1.0) { RailStarted = true });
+				Blocks[0].Rails.Add(-1, new Rail(0, 0) { RailStarted = true });
 				Blocks[0].RailType = new[] { 0 };
 				Blocks[0].CurrentTrackState = new TrackElement(0.0);
 				Blocks[0].RailCycles = new RailCycle[1];
 				Blocks[0].RailCycles[0].RailCycleIndex = -1;
+				PatternObjects = new Dictionary<int, NewPatternObj>();
 			}
 
 			/// <summary>Creates any missing blocks</summary>
@@ -159,16 +182,6 @@ namespace CsvRwRouteParser
 							for (int j = 0; j < Blocks[i].RailPole.Length; j++)
 							{
 								Blocks[i].RailPole[j] = Blocks[i - 1].RailPole[j];
-							}
-
-							for (int j = 0; j < Blocks[i - 1].PatternObjs.Count; j++)
-							{
-								int key = Blocks[i - 1].PatternObjs.ElementAt(j).Key;
-								if (Blocks[i - 1].PatternObjs[key] == null || Blocks[i - 1].PatternObjs[key].Ends)
-								{
-									continue;
-								}
-								Blocks[i].PatternObjs.Add(key, Blocks[i - 1].PatternObjs[key].Clone());
 							}
 						}
 						Blocks[i].Pitch = Blocks[i - 1].Pitch;

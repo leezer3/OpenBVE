@@ -23,7 +23,6 @@ namespace CsvRwRouteParser {
 		internal bool AllowTrackPositionArguments = false;
 		internal readonly bool IsRW;
 		internal readonly Plugin Plugin;
-		internal bool IsHmmsim;
 
 		internal Parser(Plugin plugin, bool isRW)
 		{
@@ -490,7 +489,7 @@ namespace CsvRwRouteParser {
 									}
 									else
 									{
-										if (IsHmmsim)
+										if (Data.IsHmmsim)
 										{
 											period = Command.IndexOf('.');
 											string railKey = Command.Substring(0, period);
