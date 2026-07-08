@@ -851,20 +851,26 @@ namespace CsvRwRouteParser
 							}
 
 							// forms
-							for (int k = 0; k < Data.Blocks[i].Forms.Length; k++)
+							if (railKey >= 0)
 							{
-								// primary rail
-								if (Data.Blocks[i].Forms[k].PrimaryRail == railKey)
+								// Note that negative numbers are used by BVE4 as 'magic' constants for left / right....
+								// Hmmsim uses a 'rail' with the index of -1 to allow for it's ground objects
+								for (int k = 0; k < Data.Blocks[i].Forms.Length; k++)
 								{
-									Data.Blocks[i].Forms[k].CreatePrimaryRail(Data.Blocks[i], Data.Blocks[i + 1], pos, RailTransformation, railParameters);
-								}
+									// primary rail
+									if (Data.Blocks[i].Forms[k].PrimaryRail == railKey)
+									{
+										Data.Blocks[i].Forms[k].CreatePrimaryRail(Data.Blocks[i], Data.Blocks[i + 1], pos, RailTransformation, railParameters);
+									}
 
-								// secondary rail
-								if (Data.Blocks[i].Forms[k].SecondaryRail == railKey)
-								{
-									Data.Blocks[i].Forms[k].CreateSecondaryRail(Data.Blocks[i], pos, RailTransformation, railParameters);
+									// secondary rail
+									if (Data.Blocks[i].Forms[k].SecondaryRail == railKey)
+									{
+										Data.Blocks[i].Forms[k].CreateSecondaryRail(Data.Blocks[i], pos, RailTransformation, railParameters);
+									}
 								}
 							}
+							
 
 							// cracks
 							for (int k = 0; k < Data.Blocks[i].Cracks.Length; k++)
