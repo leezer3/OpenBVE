@@ -5,7 +5,6 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.World;
-using RouteManager2.Events;
 
 namespace CsvRwRouteParser
 {
@@ -13,11 +12,10 @@ namespace CsvRwRouteParser
 	{
 		internal NewPatternObj()
 		{
-			Entries = new SortedDictionary<double, List<Pattern>>();
+			Entries = new SortedDictionary<double, Pattern>();
 		}
 
-		internal SortedDictionary<double, List<Pattern>> Entries;
-
+		internal SortedDictionary<double, Pattern> Entries;
 		internal void Create(ObjectDictionary objects, double lastBlock)
 		{
 			TrackFollower tf = new TrackFollower(Plugin.CurrentHost);
@@ -25,12 +23,9 @@ namespace CsvRwRouteParser
 			{
 				double tPos = Entries.ElementAt(i).Key;
 				double nextPos = i < Entries.Count - 1 ? Entries.ElementAt(i + 1).Key : lastBlock;
-				if (Entries.TryGetValue(tPos, out List<Pattern> p))
+				if (Entries.TryGetValue(tPos, out Pattern p))
 				{
-					for (int j = 0; j < p.Count; j++)
-					{
-						p[j].Create(objects, tf, tPos, nextPos);
-					}
+					p.Create(objects, tf, tPos, nextPos);
 				}
 			}
 		}
@@ -69,13 +64,7 @@ namespace CsvRwRouteParser
 
 		internal override void Create(ObjectDictionary objects, TrackFollower tf, double tPos, double nextPos)
 		{
-
 			tf.TrackIndex = RailIndex;
-			if (RailIndex == 4)
-			{
-				int b = 0;
-			}
-			//tPos -= Interval;
 			while (true)
 			{
 				tf.UpdateAbsolute(tPos, true, false);

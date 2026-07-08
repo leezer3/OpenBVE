@@ -3349,11 +3349,13 @@ namespace CsvRwRouteParser
 							Data.PatternObjects.Add(idx, new NewPatternObj());
 						}
 
-						if (!Data.PatternObjects[idx].Entries.ContainsKey(Data.TrackPosition))
+						if (Data.PatternObjects[idx].Entries.ContainsKey(Data.TrackPosition) && Data.PatternObjects[idx].Entries[Data.TrackPosition] is PatternStart)
 						{
-							Data.PatternObjects[idx].Entries.Add(Data.TrackPosition, new List<Pattern>());
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Duplicate PatternStart command at Track Position " + Data.TrackPosition + " - The most recent will be used at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
-						Data.PatternObjects[idx].Entries[Data.TrackPosition].Add(new PatternStart(RailIndex, Interval, Span, Position, Types));
+
+						Data.PatternObjects[idx].Entries[Data.TrackPosition] = new PatternStart(RailIndex, Interval, Span, Position, Types);
+
 
 					}
 
@@ -3377,11 +3379,13 @@ namespace CsvRwRouteParser
 						{
 							Data.PatternObjects.Add(idx, new NewPatternObj());
 						}
-						if (!Data.PatternObjects[idx].Entries.ContainsKey(Data.TrackPosition))
+
+						if (Data.PatternObjects[idx].Entries.ContainsKey(Data.TrackPosition) && Data.PatternObjects[idx].Entries[Data.TrackPosition] is PatternStart)
 						{
-							Data.PatternObjects[idx].Entries.Add(Data.TrackPosition, new List<Pattern>());
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A PatternStart command has also been issued at Track Position " + Data.TrackPosition + ", but this will be overriden by the more recent PatternEnd command at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
-						Data.PatternObjects[idx].Entries[Data.TrackPosition].Add(new PatternEnd());
+
+						Data.PatternObjects[idx].Entries[Data.TrackPosition] = new PatternEnd();
 					}
 
 					break;
