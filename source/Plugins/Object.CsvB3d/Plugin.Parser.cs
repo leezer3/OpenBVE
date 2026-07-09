@@ -430,6 +430,11 @@ namespace Object.CsvB3d
 											a = new[] { 0, 2, 3, 1 };
 										}
 
+										if (FileName.IndexOf("shr\\nature\\tree\\treeset", StringComparison.OrdinalIgnoreCase) != -1 || ((FileName.EndsWith("shr\\form\\accessory\\set2l.csv", StringComparison.InvariantCultureIgnoreCase) || FileName.EndsWith("shr\\form\\accessory\\set2r.csv", StringComparison.InvariantCultureIgnoreCase)) && Object.Mesh.Faces.Length < 2))
+										{
+											a = new[] { 0, 3, 1, 2 };
+										}
+
 										if (FileName.IndexOf("sanaro", StringComparison.OrdinalIgnoreCase) != -1)
 										{
 											/*
