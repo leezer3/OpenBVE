@@ -219,6 +219,32 @@
 		<FileName>165.csv</FileName>
 		<InsufficientWallDikeArguments>true</InsufficientWallDikeArguments>
 	</Patch>
+	<Patch>
+		<Hash>9ADFE0AE6AF1B0B525FA6C818D8865DEBC77AB8BD8FF8EAFC4D01B18B478D938</Hash>
+		<FileName>窶敖青～ﾂ新ﾅ邃｢ﾂ・凪價.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<!-- Nemuro -->
+	<Patch>
+		<Hash>0E9A0595DA71B35B8794338F57CCADF1D264B3A8F9769323972E9825ACE05A89</Hash>
+		<FileName>JRnemuro2544D.csv</FileName>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+	</Patch>
+	<Patch>
+		<Hash>40171CC36CF66F5C36629A7A11536AEB9EEEA426563A16908FAE1F39D2D00AB7</Hash>
+		<FileName>JRnemuro2576D.csv</FileName>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+	</Patch>
+	<Patch>
+		<Hash>AA138FBD8D1526F4F653853FD1F3BC3557ECE204984C01EEFBCD357D61DCB601</Hash>
+		<FileName>JRnemuro4002D.csv</FileName>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+	</Patch>
+	<Patch>
+		<Hash>31488B129B240BB21971872F09BFA42C7395DBAB5D075B42189D67000D6A9349</Hash>
+		<FileName>JRnemuro9324.csv</FileName>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+	</Patch>
 	
   </RoutePatches>
 </openBVE>
