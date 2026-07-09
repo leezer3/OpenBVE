@@ -620,6 +620,12 @@ namespace Object.CsvB3d
 								}
 								if (n < 2) {
 									currentHost.AddMessage(MessageType.Error, false, "n is expected to be at least 2 in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									if (enabledHacks.BveTsHacks)
+									{
+										// A cylinder with zero (or an empty) face count crashes BVE2 / BVE4
+										// With one face, it's just not shown
+										break;
+									}
 									n = 8;
 								}
 								double r1 = 0.0, r2 = 0.0, h = 1.0;
