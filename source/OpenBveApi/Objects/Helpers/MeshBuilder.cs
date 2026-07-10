@@ -158,13 +158,11 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Translates the MeshBuilder by the given values</summary>
-		public void ApplyTranslation(double x, double y, double z)
+		public void ApplyTranslation(Vector3 translationVector)
 		{
 			for (int i = 0; i < Vertices.Count; i++)
 			{
-				Vertices[i].Coordinates.X += x;
-				Vertices[i].Coordinates.Y += y;
-				Vertices[i].Coordinates.Z += z;
+				Vertices[i].Coordinates += translationVector;
 			}
 		}
 

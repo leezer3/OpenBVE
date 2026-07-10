@@ -54,8 +54,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CFG\ConfigFile.cs" />
+    <Compile Include="CSVB3D\CSVB3DFile.cs" />
     <Compile Include="Enums\CompatibilityObject\CompatibilityObjectKey.cs" />
     <Compile Include="Enums\CompatibilityObject\CompatibilityObjectSection.cs" />
+    <Compile Include="Enums\CSVB3D\CSVB3DKey.cs" />
+    <Compile Include="Enums\CSVB3D\CSVB3DSection.cs" />
     <Compile Include="Enums\DynamicBackground\DynamicBackgroundKey.cs" />
     <Compile Include="Enums\DynamicBackground\DynamicBackgroundSection.cs" />
     <Compile Include="Enums\DynamicLight\DynamicLightKey.cs" />
@@ -98,5 +101,6 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

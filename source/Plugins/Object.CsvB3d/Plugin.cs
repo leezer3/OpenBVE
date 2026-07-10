@@ -10,9 +10,9 @@ namespace Object.CsvB3d
 {
     public partial class Plugin : ObjectInterface
     {
-		private static HostInterface currentHost;
-		private static CompatabilityHacks enabledHacks;
-	    private static string CompatibilityFolder;
+	    internal static HostInterface currentHost;
+	    internal static CompatabilityHacks enabledHacks;
+	    internal static string CompatibilityFolder;
 
 	    public override string[] SupportedStaticObjectExtensions => new[] { ".b3d", ".csv" };
 
@@ -115,7 +115,7 @@ namespace Object.CsvB3d
 	    {
 		    try
 		    {
-			    unifiedObject = ReadObject(path, textEncoding);
+			    unifiedObject = NewParser.ReadObject(path, textEncoding);
 			    return true;
 		    }
 		    catch
