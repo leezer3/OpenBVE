@@ -6,36 +6,22 @@ uniform vec2 uPoint;
 uniform vec2 uSize;
 uniform vec4 uAtlasLocation;
 out vec2 textureCoord;
-vec4 viewPos = vec4(0,0,0,0);
+
+// Offset lookup table to map gl_VertexID to quad corners without branching
+const vec2 offsets[6] = vec2[](
+	vec2(0.0, 0.0), // Top-left
+	vec2(1.0, 0.0), // Top-right
+	vec2(1.0, 1.0), // Bottom-right
+	vec2(0.0, 0.0), // Top-left (second triangle)
+	vec2(0.0, 1.0), // Bottom-left
+	vec2(1.0, 1.0)  // Bottom-right
+);
 
 void main()
 {
-	switch(gl_VertexID)
-	{
-		case 0:
-			viewPos = uCurrentModelViewMatrix * vec4(vec3(uPoint.x, uPoint.y, 0), 1.0);
-			textureCoord = vec2(uAtlasLocation.x, uAtlasLocation.y);
-		break;
-		case 1:
-			viewPos = uCurrentModelViewMatrix * vec4(vec3(uPoint.x + uSize.x, uPoint.y, 0), 1.0);
-			textureCoord = vec2(uAtlasLocation.x + uAtlasLocation.z, uAtlasLocation.y);
-		break;
-		case 2:
-			viewPos = uCurrentModelViewMatrix * vec4(vec3(uPoint.x + uSize.x, uPoint.y + uSize.y, 0), 1.0);
-			textureCoord = vec2(uAtlasLocation.x + uAtlasLocation.z, uAtlasLocation.y + uAtlasLocation.w);
-		break;
-		case 3:
-			viewPos = uCurrentModelViewMatrix * vec4(vec3(uPoint.x, uPoint.y, 0), 1.0);
-			textureCoord = vec2(uAtlasLocation.x, uAtlasLocation.y);
-		break;
-		case 4:
-			viewPos = uCurrentModelViewMatrix * vec4(vec3(uPoint.x, uPoint.y + uSize.y, 0), 1.0);
-			textureCoord = vec2(uAtlasLocation.x, uAtlasLocation.y + uAtlasLocation.w);
-		break;
-		case 5:
-			viewPos = uCurrentModelViewMatrix * vec4(vec3(uPoint.x + uSize.x, uPoint.y + uSize.y, 0), 1.0);
-			textureCoord = vec2(uAtlasLocation.x + uAtlasLocation.z, uAtlasLocation.y + uAtlasLocation.w);
-		break;
-	}
+	// Calculate vertex position and UVs from atlas location using lookup offsets
+	vec2 offset = offsets[gl_VertexID];
+	vec4 viewPos = uCurrentModelViewMatrix * vec4(uPoint + offset * uSize, 0.0, 1.0);
+	textureCoord = uAtlasLocation.xy + offset * uAtlasLocation.zw;
 	gl_Position = uCurrentProjectionMatrix * viewPos;
 }
