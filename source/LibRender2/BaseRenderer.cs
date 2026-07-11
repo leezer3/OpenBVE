@@ -27,6 +27,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
+using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
@@ -42,7 +43,7 @@ using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace LibRender2
 {
-	public abstract class BaseRenderer
+	public abstract class BaseRenderer : OpenBveApi.Graphics.IGLRenderer
 	{
 		// constants
 		protected const float inv255 = 1.0f / 255.0f;
@@ -1872,6 +1873,30 @@ namespace LibRender2
 			{
 				Monitor.Wait(job, timeout);
 			}
+		}
+
+		/// <inheritdoc />
+		public bool LoadTexture(ref Texture texture, OpenGlTextureWrapMode wrapMode)
+		{
+			return currentHost.LoadTexture(ref texture, wrapMode);
+		}
+
+		/// <inheritdoc />
+		public void DrawRectangle(Texture texture, Vector2 location, Vector2 size, Color128 color, OpenGlTextureWrapMode? wrapMode = null, float cornerRadius = 0f)
+		{
+			Rectangle.Draw(texture, location, size, color, null, wrapMode, cornerRadius);
+		}
+
+		/// <inheritdoc />
+		public void DrawRectangleAlpha(Texture texture, Vector2 location, Vector2 size, Color128 color, Vector2 scale, OpenGlTextureWrapMode? wrapMode = null, float cornerRadius = 0f)
+		{
+			Rectangle.DrawAlpha(texture, location, size, color, scale, wrapMode, cornerRadius);
+		}
+
+		/// <inheritdoc />
+		public void DrawText(string text, Vector2 location, Color128 color)
+		{
+			OpenGlString.Draw(Fonts.NormalFont, text, location, TextAlignment.TopLeft, color);
 		}
 	}
 }

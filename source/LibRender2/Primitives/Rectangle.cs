@@ -60,16 +60,17 @@ namespace LibRender2.Primitives
 		/// <param name="color">The color, or a null reference.</param>
 		/// <param name="textureCoordinates">The texture coordinates to be applied</param>
 		/// <param name="wrapMode">A wrap mode if overriding that of the texture</param>
-		public void DrawAlpha(Texture texture, Vector2 point, Vector2 size, Color128? color = null, Vector2? textureCoordinates = null, OpenGlTextureWrapMode? wrapMode = null)
+		/// <param name="cornerRadius">Corner radius in pixels for rounded corners</param>
+		public void DrawAlpha(Texture texture, Vector2 point, Vector2 size, Color128? color = null, Vector2? textureCoordinates = null, OpenGlTextureWrapMode? wrapMode = null, float cornerRadius = 0f)
 		{
 			renderer.UnsetBlendFunc();
 			renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 			GL.DepthMask(true);
-			Draw(texture, point, size, color, textureCoordinates, wrapMode);
+			Draw(texture, point, size, color, textureCoordinates, wrapMode, cornerRadius);
 			renderer.SetBlendFunc();
 			renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
 			GL.DepthMask(false);
-			Draw(texture, point, size, color, textureCoordinates, wrapMode);
+			Draw(texture, point, size, color, textureCoordinates, wrapMode, cornerRadius);
 			renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 		}
 
@@ -102,17 +103,18 @@ namespace LibRender2.Primitives
 		/// <param name="color">The color, or a null reference.</param>
 		/// <param name="textureCoordinates">The texture coordinates to be applied</param>
 		/// <param name="wrapMode">A wrap mode if overriding that of the texture</param>
-		public void Draw(Texture texture, Vector2 point, Vector2 size, Color128? color = null, Vector2? textureCoordinates = null, OpenGlTextureWrapMode? wrapMode = null)
+		/// <param name="cornerRadius">Corner radius in pixels for rounded corners</param>
+		public void Draw(Texture texture, Vector2 point, Vector2 size, Color128? color = null, Vector2? textureCoordinates = null, OpenGlTextureWrapMode? wrapMode = null, float cornerRadius = 0f)
 		{
 			if (renderer.AvailableNewRenderer && Shader != null)
 			{
 				if (textureCoordinates == null)
 				{
-					DrawWithShader(texture, point, size, color, Vector2.One, wrapMode);
+					DrawWithShader(texture, point, size, color, Vector2.One, wrapMode, cornerRadius);
 				}
 				else
 				{
-					DrawWithShader(texture, point, size, color, (Vector2)textureCoordinates, wrapMode);
+					DrawWithShader(texture, point, size, color, (Vector2)textureCoordinates, wrapMode, cornerRadius);
 				}
 			}
 			else
@@ -234,7 +236,7 @@ namespace LibRender2.Primitives
 			GL.PopMatrix();
 		}
 
-		private void DrawWithShader(Texture texture, Vector2 point, Vector2 size, Color128? color, Vector2 coordinates, OpenGlTextureWrapMode? wrapMode = null)
+		private void DrawWithShader(Texture texture, Vector2 point, Vector2 size, Color128? color, Vector2 coordinates, OpenGlTextureWrapMode? wrapMode = null, float cornerRadius = 0f)
 		{
 			Shader.Activate();
 			if (wrapMode == null)
@@ -258,6 +260,7 @@ namespace LibRender2.Primitives
 			Shader.SetPoint(point);
 			Shader.SetSize(size);
 			Shader.SetCoordinates(coordinates);
+			Shader.SetCornerRadius(cornerRadius);
 			/*
 			 * In order to call GL.DrawArrays with procedural data within the shader,
 			 * we first need to bind a dummy VAO
