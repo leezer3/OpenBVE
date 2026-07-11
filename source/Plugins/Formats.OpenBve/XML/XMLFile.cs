@@ -98,7 +98,11 @@ namespace Formats.OpenBve.XML
 
 						if (Enum.TryParse(element.Name.LocalName, true, out T2 valueKey))
 						{
-							keyValuePairs.TryAdd(valueKey, new KeyValuePair<int, string>(((IXmlLineInfo)element).LineNumber, element.Value));
+							if (!keyValuePairs.ContainsKey(valueKey))
+							{
+								keyValuePairs.TryAdd(valueKey, new List<KeyValuePair<int, string>>());
+							}
+							keyValuePairs[valueKey].Add(new KeyValuePair<int, string>(((IXmlLineInfo)element).LineNumber, element.Value));
 						}
 						else
 						{
@@ -247,7 +251,11 @@ namespace Formats.OpenBve.XML
 						}
 						else
 						{
-							keyValuePairs.TryAdd(valueKey, new KeyValuePair<int, string>(((IXmlLineInfo)childElement).LineNumber, childElement.Value));
+							if (!keyValuePairs.ContainsKey(valueKey))
+							{
+								keyValuePairs.TryAdd(valueKey, new List<KeyValuePair<int, string>>());
+							}
+							keyValuePairs[valueKey].Add(new KeyValuePair<int, string>(((IXmlLineInfo)childElement).LineNumber, childElement.Value));
 						}
 					}
 					else
@@ -270,7 +278,7 @@ namespace Formats.OpenBve.XML
 
 		public override bool GetPath(T2 key, string absolutePath, out string finalPath)
 		{
-			if (keyValuePairs.TryRemove(key, out var value))
+			if (TryPopValue(key, out var value))
 			{
 				if (!Path.ContainsInvalidChars(value.Value))
 				{
