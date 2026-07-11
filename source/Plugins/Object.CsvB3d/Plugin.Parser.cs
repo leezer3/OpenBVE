@@ -430,6 +430,11 @@ namespace Object.CsvB3d
 											a = new[] { 0, 2, 3, 1 };
 										}
 
+										if (FileName.IndexOf("shr\\nature\\tree\\treeset", StringComparison.OrdinalIgnoreCase) != -1 || ((FileName.EndsWith("shr\\form\\accessory\\set2l.csv", StringComparison.InvariantCultureIgnoreCase) || FileName.EndsWith("shr\\form\\accessory\\set2r.csv", StringComparison.InvariantCultureIgnoreCase)) && Object.Mesh.Faces.Length < 2))
+										{
+											a = new[] { 0, 3, 1, 2 };
+										}
+
 										if (FileName.IndexOf("sanaro", StringComparison.OrdinalIgnoreCase) != -1)
 										{
 											/*
@@ -615,6 +620,12 @@ namespace Object.CsvB3d
 								}
 								if (n < 2) {
 									currentHost.AddMessage(MessageType.Error, false, "n is expected to be at least 2 in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									if (enabledHacks.BveTsHacks)
+									{
+										// A cylinder with zero (or an empty) face count crashes BVE2 / BVE4
+										// With one face, it's just not shown
+										break;
+									}
 									n = 8;
 								}
 								double r1 = 0.0, r2 = 0.0, h = 1.0;

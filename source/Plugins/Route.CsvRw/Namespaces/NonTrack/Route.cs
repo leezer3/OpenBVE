@@ -5,7 +5,6 @@ using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
-using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 
@@ -32,11 +31,7 @@ namespace CsvRwRouteParser
 
 					if (CurrentRoute.Comment.IndexOf("Hmmsim", StringComparison.InvariantCultureIgnoreCase) != -1)
 					{
-						IsHmmsim = true;
-						Plugin.CurrentOptions.ObjectDisposalMode = ObjectDisposalMode.Accurate;
-						Plugin.CurrentOptions.ObjectOptimizationBasicThreshold = 2000;
-						// from observation
-						Data.BlockInterval = 20;
+						Data.SetHmmsimProperties();
 					}
 					break;
 				case RouteCommand.Image:

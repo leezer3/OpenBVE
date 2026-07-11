@@ -66,36 +66,6 @@ namespace CsvRwRouteParser
 					}
 				}
 				{
-					// count expressions
-					int n = 0; int Level = 0;
-					for (int j = 0; j < Lines[i].Length; j++) {
-						switch (Lines[i][j]) {
-							case '(':
-								Level++;
-								break;
-							case ')':
-								Level--;
-								break;
-							case ',':
-								if (!IsRW && Level == 0) n++;
-								break;
-							case '@':
-								if (IsRW)
-								{
-									if (Level == 0)
-									{
-										n++;
-									}
-									else if (Plugin.CurrentOptions.EnableBveTsHacks)
-									{
-										n++;
-										Level = 0;
-									}
-								}
-								break;
-						}
-					}
-
 					if (SplitLineHack)
 					{
 						MatchCollection matches = Regex.Matches(Lines[i], ".Load", RegexOptions.IgnoreCase);
@@ -114,7 +84,7 @@ namespace CsvRwRouteParser
 						}
 					}
 					// create expressions
-					Level = 0;
+					int Level = 0;
 					int a = 0, c = 0;
 					for (int j = 0; j < Lines[i].Length; j++) {
 						switch (Lines[i][j]) {
@@ -216,6 +186,11 @@ namespace CsvRwRouteParser
 						if (k <= Expressions[i].Text.Length)
 						{
 							string t = Expressions[i].Text.Substring(j, k - j).TrimEnd();
+							if (t[0] != '$' || !Enum.TryParse(t.Substring(1), true, out ControlCommands cmd))
+							{
+								break;
+							}
+							
 							int l = 1, h;
 							for (h = k + 1; h < Expressions[i].Text.Length; h++) {
 								switch (Expressions[i].Text[h]) {
@@ -242,11 +217,12 @@ namespace CsvRwRouteParser
 								break;
 							}
 							string s = Expressions[i].Text.Substring(k + 1, h - k - 1).Trim();
-							switch (t.ToLowerInvariant()) {
-								case "$if":
-								case "$elseif":
+
+							switch (cmd) {
+								case ControlCommands.If:
+								case ControlCommands.ElseIf:
 									if (j != 0) {
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The $If and $ElseIf directives must not appear within another statement" + Epilog);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The $"+ cmd +" directive must not appear within another statement" + Epilog);
 									} else
 									{
 										if (double.TryParse(s, NumberStyles.Float, Culture, out double num)) {
@@ -300,7 +276,7 @@ namespace CsvRwRouteParser
 									}
 									continueWithNextExpression = true;
 									break;
-								case "$else":
+								case ControlCommands.Else:
 									/*
 									 * Blank every expression until the matching $EndIf
 									 * */
@@ -337,7 +313,7 @@ namespace CsvRwRouteParser
 									}
 									continueWithNextExpression = true;
 									break;
-								case "$endif":
+								case ControlCommands.EndIf:
 									Expressions[i].Skip = true;
 									if (openIfs != 0) {
 										openIfs--;
@@ -346,7 +322,7 @@ namespace CsvRwRouteParser
 									}
 									continueWithNextExpression = true;
 									break;
-								case "$include":
+								case ControlCommands.Include:
 									if (j != 0) {
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The $Include directive must not appear within another statement" + Epilog);
 										continueWithNextExpression = true;
@@ -445,12 +421,12 @@ namespace CsvRwRouteParser
 										if (expr.Count != 0) {
 											// at this point, Expressions will always be List<T>
 											((List<Expression>)Expressions).InsertRange(i, expr);
+											i--;
 										}
 										continueWithNextExpression = true;
 									}
 									break;
-								case "$chr":
-								case "$chruni":
+								case ControlCommands.Chr:
 									{
 										if (NumberFormats.TryParseIntVb6(s, out int x)) {
 											if (x < 0)
@@ -469,7 +445,7 @@ namespace CsvRwRouteParser
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is invalid in " + t + Epilog);
 										}
 									} break;
-								case "$chrascii":
+								case ControlCommands.ChrAscii:
 								{
 									if (NumberFormats.TryParseIntVb6(s, out int x))
 									{
@@ -491,7 +467,7 @@ namespace CsvRwRouteParser
 									}
 								}
 									break;
-								case "$rnd":
+								case ControlCommands.Rnd:
 									{
 										int m = s.IndexOf(";", StringComparison.Ordinal);
 										if (m >= 0)
@@ -521,7 +497,7 @@ namespace CsvRwRouteParser
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + t + Epilog);
 										}
 									} break;
-								case "$sub":
+								case ControlCommands.Sub:
 									{
 										l = 0;
 										bool f = false;

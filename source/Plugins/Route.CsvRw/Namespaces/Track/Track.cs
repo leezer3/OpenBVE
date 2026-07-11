@@ -110,7 +110,7 @@ namespace CsvRwRouteParser
 						if (Data.Blocks[BlockIndex].RailType.Length <= idx)
 						{
 							Array.Resize(ref Data.Blocks[BlockIndex].RailType, idx + 1);
-							if (IsHmmsim)
+							if (Data.IsHmmsim)
 							{
 								Data.Blocks[BlockIndex].RailType[idx] = -1;
 							}
@@ -129,7 +129,7 @@ namespace CsvRwRouteParser
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
-							else if ((!IsHmmsim && !Data.Structure.RailObjects.ContainsKey(sttype)) || (IsHmmsim && !Data.Structure.FreeObjects.ContainsKey(sttype)))
+							else if ((!Data.IsHmmsim && !Data.Structure.RailObjects.ContainsKey(sttype)) || (Data.IsHmmsim && !Data.Structure.FreeObjects.ContainsKey(sttype)))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex " + sttype + " references an object not loaded in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
@@ -1363,28 +1363,10 @@ namespace CsvRwRouteParser
 						stop = 0;
 					}
 
-					int device = 0;
+					SafetySystem device = Data.IsHmmsim ? SafetySystem.Any : SafetySystem.Ats;
 					if (Arguments.Length >= 7 && Arguments[6].Length > 0)
 					{
-						if (string.Compare(Arguments[6], "ats", StringComparison.OrdinalIgnoreCase) == 0)
-						{
-							device = 0;
-						}
-						else if (string.Compare(Arguments[6], "atc", StringComparison.OrdinalIgnoreCase) == 0)
-						{
-							device = 1;
-						}
-						else if (!NumberFormats.TryParseIntVb6(Arguments[6], out device))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "System is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							device = 0;
-						}
-
-						if (device != 0 & device != 1)
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "System is not supported in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							device = 0;
-						}
+						ParseSafetySystem(Arguments[6], Command, Expression, Data, out device);
 					}
 
 					OpenBveApi.Sounds.SoundHandle arrsnd = null;
@@ -1591,7 +1573,7 @@ namespace CsvRwRouteParser
 					CurrentRoute.Stations[CurrentStation].ForceStopSignal = stop == 1;
 					CurrentRoute.Stations[CurrentStation].OpenLeftDoors = door == Direction.Left | door == Direction.Both;
 					CurrentRoute.Stations[CurrentStation].OpenRightDoors = door == Direction.Right | door == Direction.Both;
-					CurrentRoute.Stations[CurrentStation].SafetySystem = device == 1 ? SafetySystem.Atc : SafetySystem.Ats;
+					CurrentRoute.Stations[CurrentStation].SafetySystem = device;
 					CurrentRoute.Stations[CurrentStation].Stops = new StationStop[] { };
 					CurrentRoute.Stations[CurrentStation].PassengerRatio = 0.01 * jam;
 					CurrentRoute.Stations[CurrentStation].TimetableDaytimeTexture = tdt;
@@ -1712,27 +1694,10 @@ namespace CsvRwRouteParser
 						stop = 0;
 					}
 
-					int device = 0;
+					SafetySystem device = Data.IsHmmsim ? SafetySystem.Any : SafetySystem.Atc;
 					if (Arguments.Length >= 5 && Arguments[4].Length > 0)
 					{
-						if (string.Compare(Arguments[4], "ats", StringComparison.OrdinalIgnoreCase) == 0 || (Plugin.CurrentOptions.EnableBveTsHacks && Arguments[4].StartsWith("ats", StringComparison.OrdinalIgnoreCase)))
-						{
-							device = 0;
-						}
-						else if (string.Compare(Arguments[4], "atc", StringComparison.OrdinalIgnoreCase) == 0 || (Plugin.CurrentOptions.EnableBveTsHacks && Arguments[4].StartsWith("atc", StringComparison.OrdinalIgnoreCase)))
-						{
-							device = 1;
-						}
-						else if (!NumberFormats.TryParseIntVb6(Arguments[4], out device))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "System is invalid in Track.Station at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							device = 0;
-						}
-						else if (device != 0 & device != 1)
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "System is not supported in Track.Station at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							device = 0;
-						}
+							ParseSafetySystem(Arguments[4], Command, Expression, Data, out device);
 					}
 
 					if (!PreviewOnly)
@@ -1765,7 +1730,7 @@ namespace CsvRwRouteParser
 					CurrentRoute.Stations[CurrentStation].ForceStopSignal = stop == 1;
 					CurrentRoute.Stations[CurrentStation].OpenLeftDoors = true;
 					CurrentRoute.Stations[CurrentStation].OpenRightDoors = true;
-					CurrentRoute.Stations[CurrentStation].SafetySystem = device == 1 ? SafetySystem.Atc : SafetySystem.Ats;
+					CurrentRoute.Stations[CurrentStation].SafetySystem = device;
 					CurrentRoute.Stations[CurrentStation].Stops = new StationStop[] { };
 					CurrentRoute.Stations[CurrentStation].PassengerRatio = 1.0;
 					CurrentRoute.Stations[CurrentStation].DefaultTrackPosition = Data.TrackPosition;
@@ -1869,17 +1834,17 @@ namespace CsvRwRouteParser
 
 						if (IsRW)
 						{
-							if (idx2 == int.MaxValue)
+							switch (idx2)
 							{
-								idx2 = 9;
-							}
-							else if (idx2 == -9)
-							{
-								idx2 = Form.SecondaryRailL;
-							}
-							else if (idx2 == 9)
-							{
-								idx2 = Form.SecondaryRailR;
+								case int.MaxValue:
+									idx2 = 9;
+									break;
+								case -9:
+									idx2 = Form.SecondaryRailL;
+									break;
+								case 9:
+									idx2 = Form.SecondaryRailR;
+									break;
 							}
 						}
 
@@ -2103,7 +2068,7 @@ namespace CsvRwRouteParser
 							sttype = 0;
 						}
 
-						if (dir < 0 && !Data.Structure.WallL.ContainsKey(sttype) || dir > 0 && !Data.Structure.WallR.ContainsKey(sttype) || dir == 0 && (!Data.Structure.WallL.ContainsKey(sttype) && !Data.Structure.WallR.ContainsKey(sttype)))
+						if (dir == Direction.Left && !Data.Structure.WallL.ContainsKey(sttype) || dir == Direction.Right && !Data.Structure.WallR.ContainsKey(sttype) || dir == Direction.Both && (!Data.Structure.WallL.ContainsKey(sttype) && !Data.Structure.WallR.ContainsKey(sttype)))
 						{
 							if (dir < 0)
 							{
@@ -2235,7 +2200,7 @@ namespace CsvRwRouteParser
 							sttype = 0;
 						}
 
-						if (dir < 0 && !Data.Structure.DikeL.ContainsKey(sttype) || dir > 0 && !Data.Structure.DikeR.ContainsKey(sttype) || dir == 0 && (!Data.Structure.DikeL.ContainsKey(sttype) && !Data.Structure.DikeR.ContainsKey(sttype)))
+						if (dir == Direction.Left && !Data.Structure.DikeL.ContainsKey(sttype) || dir == Direction.Right && !Data.Structure.DikeR.ContainsKey(sttype) || dir == Direction.Both && (!Data.Structure.DikeL.ContainsKey(sttype) && !Data.Structure.DikeR.ContainsKey(sttype)))
 						{
 							if (dir > 0)
 							{
@@ -2450,7 +2415,20 @@ namespace CsvRwRouteParser
 							h = 0.0;
 						}
 
-						Data.Blocks[BlockIndex].Height = IsRW ? h + 0.3 : h;
+						if (!Data.IsHmmsim)
+						{
+							Data.Blocks[BlockIndex].Height = IsRW ? h + 0.3 : h;
+						}
+						else
+						{
+							if (BlockIndex > 0)
+							{
+								Data.Blocks[BlockIndex - 1].Rails[-1].RailEnd.Y = -h;
+							}
+
+							Data.Blocks[BlockIndex].Rails[-1].RailStart.Y = -h;
+							Data.Blocks[BlockIndex].Rails[-1].RailEnd.Y = -h;
+						}
 					}
 				}
 					break;
@@ -2631,9 +2609,8 @@ namespace CsvRwRouteParser
 									roll = 0.0;
 								}
 
-								if (idx == -1)
+								if (idx == -1 && !Data.IsHmmsim)
 								{
-
 									if (!Data.IgnorePitchRoll)
 									{
 										Data.Blocks[BlockIndex].GroundFreeObj.Add(new FreeObj(Data.TrackPosition, sttype, objectPosition, yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians()));
@@ -3310,9 +3287,9 @@ namespace CsvRwRouteParser
 					 */
 					if (!PreviewOnly)
 					{
-						if (!IsHmmsim)
+						if (!Data.IsHmmsim)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "PatternObj command detected, but this does not appear to be a Hmmsim route");
+							Data.SetHmmsimProperties();
 						}
 
 						int idx = -1;
@@ -3329,59 +3306,66 @@ namespace CsvRwRouteParser
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
 
-						if (RailIndex == -1)
+						double Interval = 0;	
+						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out Interval))
 						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Repetition interval is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							// CHECK: What does Hmmsim actually do?
 							break;
 						}
 
-						PatternObj patternObj = Data.Blocks[BlockIndex].PatternObjs.ContainsKey(idx) ? Data.Blocks[BlockIndex].PatternObjs[idx].Clone() : new PatternObj(idx, RailIndex);
-							
-						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out patternObj.Interval))
+						double Span = 0;
+						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out Span))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Repetition interval is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							patternObj.Interval = 25; // try the default BVE block-length
+							Span = 0;
 						}
 
-						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out patternObj.Span))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Repetition interval is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							patternObj.Interval = 25; // try the default BVE block-length
-						}
+						Vector2 Position = Vector2.Null;
 
-
-						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out patternObj.Position.X))
+						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out Position.X))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X position is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
 
-						if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out patternObj.Position.Y))
+						if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out Position.Y))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y position is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
 						
-						// types array needs to be flushed
-						patternObj.Types = new int[Arguments.Length - 6];
+						int[] Types = new int[Arguments.Length - 6];
 						
 						for (int i = 6; i < Arguments.Length; i++)
 						{
-							if (!NumberFormats.TryParseIntVb6(Arguments[i], out patternObj.Types[i - 6]))
+							if (!NumberFormats.TryParseIntVb6(Arguments[i], out Types[i - 6]))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ObjectIndex is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 								break;
 							}
 						}
 
-						patternObj.LastPlacement = Data.TrackPosition;
-						Data.Blocks[BlockIndex].PatternObjs[idx] = patternObj;
+						if (!Data.PatternObjects.ContainsKey(idx))
+						{
+							Data.PatternObjects.Add(idx, new NewPatternObj());
+						}
+
+						if (Data.PatternObjects[idx].Entries.ContainsKey(Data.TrackPosition) && Data.PatternObjects[idx].Entries[Data.TrackPosition] is PatternStart)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Duplicate PatternStart command at Track Position " + Data.TrackPosition + " - The most recent will be used at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+
+						Data.PatternObjects[idx].Entries[Data.TrackPosition] = new PatternStart(RailIndex, Interval, Span, Position, Types);
+
+
 					}
 
 					break;
 				case TrackCommand.PatternEnd:
 					if (!PreviewOnly)
 					{
-						if (!IsHmmsim)
+						if (!Data.IsHmmsim)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "PatternEnd command detected, but this does not appear to be a Hmmsim route");
+							Data.SetHmmsimProperties();
 						}
 
 						int idx = -1;
@@ -3391,14 +3375,17 @@ namespace CsvRwRouteParser
 							break;
 						}
 
-						if (!Data.Blocks[BlockIndex].PatternObjs.ContainsKey(idx))
+						if (!Data.PatternObjects.ContainsKey(idx))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Attempted to stop the non-existant pattern with index " + idx + " in command " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Data.PatternObjects.Add(idx, new NewPatternObj());
 						}
-						else
+
+						if (Data.PatternObjects[idx].Entries.ContainsKey(Data.TrackPosition) && Data.PatternObjects[idx].Entries[Data.TrackPosition] is PatternStart)
 						{
-							Data.Blocks[BlockIndex].PatternObjs[idx].Ends = true;
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A PatternStart command has also been issued at Track Position " + Data.TrackPosition + ", but this will be overriden by the more recent PatternEnd command at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
+
+						Data.PatternObjects[idx].Entries[Data.TrackPosition] = new PatternEnd();
 					}
 
 					break;
@@ -3884,6 +3871,12 @@ namespace CsvRwRouteParser
 							}
 						}
 					}
+					break;
+				case TrackCommand.RailSound:
+				case TrackCommand.CurveTransition:
+				case TrackCommand.PitchTransition:
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Hmmsim: Command " + Command + " is not currently implemented at Line "+ Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+					Data.SetHmmsimProperties();
 					break;
 			}
 		}
