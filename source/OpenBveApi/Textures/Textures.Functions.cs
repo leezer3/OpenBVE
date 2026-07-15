@@ -27,6 +27,9 @@ namespace OpenBveApi.Textures {
 				{
 					result = new Texture(texture.Width, texture.Height, PixelFormat.RGBAlpha, ApplyTransparentTexture(texture.Bytes, texture.PixelFormat, texture.Width, texture.Height, parameters.TransparencyTexture), texture.Palette);
 				}
+				else if (parameters.FirstColorTransparent) {
+					result = ApplyTransparentColor(result, result.Palette[0]);
+				}
 				else if (parameters.TransparentColor != null) {
 					result = ApplyTransparentColor(result, parameters.TransparentColor);
 				}

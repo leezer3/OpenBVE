@@ -38,6 +38,7 @@ using Route.Mechanik;
 using RouteManager2.Events;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
+using CompatabilityHacks = OpenBveApi.Textures.CompatabilityHacks;
 using Path = OpenBveApi.Path;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
@@ -868,6 +869,7 @@ namespace MechanikRouteParser
 			{
 				return -1;
 			}
+			
 			MechanikTexture t = AvailableTextures[textureIndex];
 			MechanikObject o = new MechanikObject(MechnikObjectType.Horizontal, Vector3.Zero, scaleFactor, textureIndex);
 
@@ -885,8 +887,8 @@ namespace MechanikRouteParser
 			Builder.Materials = new [] { new Material(t.Path) };
 			if (transparent)
 			{
-				Builder.Materials[0].TransparentColor = Color24.Black;
-				Builder.Materials[0].Flags = MaterialFlags.TransparentColor;
+				Builder.Materials[0].Flags |= MaterialFlags.TransparentColor;
+				Builder.Materials[0].FirstColorTransparent = true;
 			}
 			StaticObject obj = new StaticObject(Plugin.CurrentHost);
 			Builder.Apply(ref obj);
@@ -934,7 +936,7 @@ namespace MechanikRouteParser
 				new Vertex(new Vector3(topLeft.X + scaledWidth, topLeft.Y - scaledHeight, topLeft.Z)), //bottom right
 				new Vertex(new Vector3(topLeft.X, topLeft.Y - scaledHeight, topLeft.Z)) //bottom left
 			};
-			//Possibly change to Face, check this though (Remember that Mechanik was restricted to the cab, wheras we are not)
+			//Possibly change to Face, check this though (Remember that Mechanik was restricted to the cab, whereas we are not)
 			Builder.Faces = new List<MeshFace>();
 			Builder.Faces.Add(new MeshFace { Vertices = new MeshFaceVertex[4], Flags = FaceFlags.Face2Mask });
 			Builder.Faces[0].Vertices[0].Index = 0;
@@ -950,8 +952,8 @@ namespace MechanikRouteParser
 			Builder.Materials = new [] { new Material(t.Path) };
 			if (transparent)
 			{
-				Builder.Materials[0].TransparentColor = Color24.Black;
-				Builder.Materials[0].Flags = MaterialFlags.TransparentColor;
+				Builder.Materials[0].Flags |= MaterialFlags.TransparentColor;
+				Builder.Materials[0].FirstColorTransparent = true;
 			}
 			StaticObject obj = new StaticObject(Plugin.CurrentHost);
 			Builder.Apply(ref obj);
@@ -1057,7 +1059,7 @@ namespace MechanikRouteParser
 		/// <summary>Parses a distance string formatted in Pixels per meter</summary>
 		/// <param name="val">The distance string</param>
 		/// <param name="position">The parsed distance</param>
-		/// <returns>Whether parsing succeded</returns>
+		/// <returns>Whether parsing succeeded</returns>
 		private static bool TryParseDistance(string val, out double position)
 		{
 			if (double.TryParse(val, out position))
@@ -1071,7 +1073,7 @@ namespace MechanikRouteParser
 		/// <summary>Parses an integer into a boolean</summary>
 		/// <param name="val">The integer to parse</param>
 		/// <param name="boolean">The parsed boolean</param>
-		/// <returns>Whether parsing succeded</returns>
+		/// <returns>Whether parsing succeeded</returns>
 		private static bool TryParseBool(string val, out bool boolean)
 		{
 			int.TryParse(val, out var value);

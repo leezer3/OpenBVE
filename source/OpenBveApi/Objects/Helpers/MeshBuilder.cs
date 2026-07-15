@@ -107,6 +107,8 @@ namespace OpenBveApi.Objects
 					{
 						parameters = new TextureParameters(null, null, transparency);
 					}
+
+					parameters.FirstColorTransparent = Materials[i].FirstColorTransparent;
 					if (Materials[i].DaytimeTexture != null || Materials[i].Text != null)
 					{
 						Texture tday;
