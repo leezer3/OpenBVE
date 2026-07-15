@@ -24,6 +24,7 @@
 
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
+using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -295,6 +296,10 @@ namespace Formats.OpenBve
 						if (splitLine.Length >= 2)
 						{
 							splitLine = splitLine[1].Split(',');
+						}
+						else
+						{
+							splitLine = Array.Empty<string>();
 						}
 					}
 					else
@@ -608,6 +613,12 @@ namespace Formats.OpenBve
 		public override bool GetNextVector3(out Vector3 vector)
 		{
 			KeyValuePair<T2, string[]> value = Dequeue();
+			if (value.Value.Length == 0)
+			{
+				currentHost.AddMessage(MessageType.Warning, false, "No arguments were supplied for " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+				vector = Vector3.Zero;
+				return false;
+			}
 			vector = GetVector3(value.Value, 0, value.Key, CurrentLine);
 			return true;
 		}
