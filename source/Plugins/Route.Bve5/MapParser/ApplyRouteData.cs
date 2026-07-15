@@ -22,11 +22,9 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -37,6 +35,9 @@ using RouteManager2;
 using RouteManager2.Climate;
 using RouteManager2.Events;
 using RouteManager2.SignalManager;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Route.Bve5
 {
@@ -562,14 +563,20 @@ namespace Route.Bve5
 							Plugin.CurrentRoute.PointsOfInterest[n].Text = Plugin.CurrentRoute.Stations[i].Name;
 							Plugin.CurrentRoute.PointsOfInterest[n].TrackPosition = Plugin.CurrentRoute.Stations[i].Stops[0].TrackPosition;
 							Plugin.CurrentRoute.PointsOfInterest[n].TrackOffset = new Vector3(0.0, 2.8, 0.0);
-							if (Plugin.CurrentRoute.Stations[i].OpenLeftDoors & !Plugin.CurrentRoute.Stations[i].OpenRightDoors)
+							if (Plugin.CurrentHost.Application != HostApplication.RouteViewer)
 							{
-								Plugin.CurrentRoute.PointsOfInterest[n].TrackOffset.X = -2.5;
+								// this is intended to place default POI on platform when using exterior view
+								// leave track centered in Route Viewer
+								if (Plugin.CurrentRoute.Stations[i].OpenLeftDoors & !Plugin.CurrentRoute.Stations[i].OpenRightDoors)
+								{
+									Plugin.CurrentRoute.PointsOfInterest[n].TrackOffset.X = -2.5;
+								}
+								else if (!Plugin.CurrentRoute.Stations[i].OpenLeftDoors & Plugin.CurrentRoute.Stations[i].OpenRightDoors)
+								{
+									Plugin.CurrentRoute.PointsOfInterest[n].TrackOffset.X = 2.5;
+								}
 							}
-							else if (!Plugin.CurrentRoute.Stations[i].OpenLeftDoors & Plugin.CurrentRoute.Stations[i].OpenRightDoors)
-							{
-								Plugin.CurrentRoute.PointsOfInterest[n].TrackOffset.X = 2.5;
-							}
+
 							n++;
 						}
 					}
