@@ -96,6 +96,8 @@ namespace OpenBveApi
 		public double ShadowNormalBias = 2.0;
 		/// <summary>Whether to filter shadow casters per cascade to improve performance.</summary>
 		public bool ShadowFilterCascades = true;
+		/// <summary>The maximum number of active dynamic lights</summary>
+		public int DynamicLightLimit = 8;
 
 
 		/// <summary>The sun azimuth in degrees</summary>
