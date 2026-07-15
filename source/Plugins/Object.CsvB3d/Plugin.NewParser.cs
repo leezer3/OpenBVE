@@ -136,24 +136,6 @@ namespace Object.CsvB3d
 						case CSVB3DKey.Cube:
 							if (subBlock.GetNextVector3(out Vector3 cubeSize))
 							{
-								if (cubeSize.X == 0)
-								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid argument HalfWidth in " + key + " at line " + subBlock.CurrentLine + " in file " + fileName);
-									cubeSize.X = 1;
-								}
-
-								if (cubeSize.Y == 0)
-								{
-									cubeSize.Y = 1;
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid argument HalfHeight in " + key + " at line " + subBlock.CurrentLine + " in file " + fileName);
-								}
-
-								if (cubeSize.Z == 0)
-								{
-									cubeSize.Z = 1;
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid argument HalfDepth in " + key + " at line " + subBlock.CurrentLine + " in file " + fileName);
-								}
-
 								CreateCube(ref currentMeshBuilder, cubeSize);
 							}
 							break;
