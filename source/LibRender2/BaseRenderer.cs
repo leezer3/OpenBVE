@@ -232,12 +232,6 @@ namespace LibRender2
 		/// <summary>Holds the handle of the last VAO bound by openGL</summary>
 		public int lastVAO;
 
-		public bool ForceLegacyOpenGL
-		{
-			get;
-			set;
-		}
-
 		protected internal Texture _programLogo;
 
 		protected internal Texture whitePixel;
@@ -309,9 +303,7 @@ namespace LibRender2
 		internal static readonly List<int> iboToDelete = new List<int>();
 
 		public Dictionary<Texture, HashSet<Vector3>> CubesToDraw = new Dictionary<Texture, HashSet<Vector3>>();
-
-		public bool AvailableNewRenderer => currentOptions != null && currentOptions.IsUseNewRenderer && !ForceLegacyOpenGL;
-
+		
 		protected BaseRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem)
 		{
 			currentHost = CurrentHost;
@@ -345,59 +337,48 @@ namespace LibRender2
 		[HandleProcessCorruptedStateExceptions] //As some graphics cards crash really nastily if we request unsupported features
 		public virtual void Initialize()
 		{
-			if (!ForceLegacyOpenGL && (currentOptions.IsUseNewRenderer || currentHost.Application != HostApplication.OpenBve)) // GL3 has already failed. Don't trigger unnecessary exceptions
+			try
 			{
+				if (DefaultShader == null)
+				{
+					DefaultShader = new Shader(this, "default", "default", true);
+				}
+				DefaultShader.Activate();
+				DefaultShader.SetMaterialAmbient(Color32.White);
+				DefaultShader.SetMaterialDiffuse(Color32.White);
+				DefaultShader.SetMaterialSpecular(Color32.White);
+				lastColor = Color32.White;
+				DefaultShader.Deactivate();
+				dummyVao = new VertexArrayObject();
+			}
+			catch
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed.");
+				GL.GetError();
 				try
 				{
-					if (DefaultShader == null)
-					{
-						DefaultShader = new Shader(this, "default", "default", true);
-					}
-					DefaultShader.Activate();
-					DefaultShader.SetMaterialAmbient(Color32.White);
-					DefaultShader.SetMaterialDiffuse(Color32.White);
-					DefaultShader.SetMaterialSpecular(Color32.White);
-					lastColor = Color32.White;
-					DefaultShader.Deactivate();
-					dummyVao = new VertexArrayObject();
+					/*
+					 * Nasty little edge case with some Intel graphics- They create the shader OK
+					 * but it crashes on use, but remains active
+					 * Deactivate it, otherwise we get a grey screen
+					 */
+					DefaultShader?.Deactivate();
 				}
 				catch
 				{
-					currentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed- Falling back to legacy openGL.");
-					currentOptions.IsUseNewRenderer = false;
-					ForceLegacyOpenGL = true;
+					// ignored
 					GL.GetError();
-					try
-					{
-						/*
-						 * Nasty little edge case with some Intel graphics- They create the shader OK
-						 * but it crashes on use, but remains active
-						 * Deactivate it, otherwise we get a grey screen
-						 */
-						DefaultShader?.Deactivate();
-					}
-					catch 
-					{ 
-						// ignored
-						GL.GetError();
-					}
-					
 				}
 
-				if (DefaultShader == null)
-				{
-					// Shader failed to load, but no exception
-					currentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed- Falling back to legacy openGL.");
-					currentOptions.IsUseNewRenderer = false;
-					ForceLegacyOpenGL = true;
-				}
 			}
-			else
+
+			if (DefaultShader == null)
 			{
-				ForceLegacyOpenGL = true;
+				// Shader failed to load, but no exception
+				currentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed.");
 			}
 
-			Background = new Background(this);
+            Background = new Background(this);
 			Fog = new Fog(this);
 			OpenGlString = new OpenGlString(this); //text shader shares the rectangle fragment shader
 			TextureManager = new TextureManager(currentHost, this);
@@ -412,16 +393,13 @@ namespace LibRender2
 			DynamicObjectStates = new List<ObjectState>();
 			VisibleObjects = new VisibleObjectLibrary(this);
 			whitePixel = new Texture(new Texture(1, 1, PixelFormat.RGBAlpha, new byte[] {255, 255, 255, 255}, null));
-			if (AvailableNewRenderer)
-			{
-				nullDepthMap = GL.GenTexture();
-				GL.BindTexture(TextureTarget.Texture2D, nullDepthMap);
-				GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent16, 1, 1, 0, OpenTK.Graphics.OpenGL.PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureCompareMode, (int)TextureCompareMode.CompareRefToTexture);
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
-				GL.BindTexture(TextureTarget.Texture2D, 0);
-			}
+			nullDepthMap = GL.GenTexture();
+			GL.BindTexture(TextureTarget.Texture2D, nullDepthMap);
+			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent16, 1, 1, 0, OpenTK.Graphics.OpenGL.PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureCompareMode, (int)TextureCompareMode.CompareRefToTexture);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+			GL.BindTexture(TextureTarget.Texture2D, 0);
 			GL.ClearColor(currentOptions.ClearColor.R * inv255, currentOptions.ClearColor.G * inv255, currentOptions.ClearColor.B * inv255, 1.0f);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			GL.Enable(EnableCap.DepthTest);
@@ -444,12 +422,6 @@ namespace LibRender2
 			GL.CullFace(CullFaceMode.Front);
 			GL.Disable(EnableCap.Dither);
 			
-			if (!AvailableNewRenderer)
-			{
-				GL.Disable(EnableCap.Texture2D);
-				GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
-			}
-			
 			// ReSharper disable once PossibleNullReferenceException
 			string openGLdll = Path.CombineFile(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "opengl32.dll");
 
@@ -470,12 +442,8 @@ namespace LibRender2
 			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "raildriver.png"), TextureParameters.NoChange, out RailDriverTexture);
 
 			Lighting.Initialize();
-
-			if (AvailableNewRenderer)
-			{
-				Shadows.Initialize();
-			}
-		}
+			Shadows.Initialize();
+        }
 
 		/// <summary>Initializes (or reinitializes) shadow mapping from current options.</summary>
 		public void InitializeShadows() => Shadows.Initialize();
@@ -506,23 +474,7 @@ namespace LibRender2
 			// terminate spinning thread
 			VisibilityThreadShouldRun = false;
 		}
-
-		/// <summary>Should be called when the OpenGL version is switched mid-game</summary>
-		/// <remarks>We need to purge the current shader state and update lighting to avoid glitches</remarks>
-		public void SwitchOpenGLVersion()
-		{
-			GL.UseProgram(0);
-			currentOptions.IsUseNewRenderer = !currentOptions.IsUseNewRenderer;
-			ResetOpenGlState();
-			Lighting.Initialize();
-			if (currentOptions.IsUseNewRenderer && AvailableNewRenderer)
-			{
-				ReloadShadowSettings();
-			}
-			// Drain errors to ensure the shader reset in the next frame doesn't pick up legacy errors
-			while (GL.GetError() != ErrorCode.NoError) { }
-		}
-
+		
 		/// <summary>Performs the CSM shadow depth rendering pass for all geometry.</summary>
 		protected void PerformCSMShadowPass() => Shadows.RenderPass();
 
@@ -580,13 +532,6 @@ namespace LibRender2
 		{
 			GL.Enable(EnableCap.CullFace);
 			GL.CullFace(CullFaceMode.Front);
-			if (!AvailableNewRenderer)
-			{
-				GL.Disable(EnableCap.Lighting);
-				GL.Disable(EnableCap.Fog);
-				GL.Disable(EnableCap.Texture2D);
-			}
-			
 			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			UnsetBlendFunc();
 			GL.Enable(EnableCap.DepthTest);
@@ -772,26 +717,23 @@ namespace LibRender2
 		/// the required VAO objects</remarks>
 		public void InitializeVisibility()
 		{
-			if (!ForceLegacyOpenGL) // as we might want to switch renderer types
+			for (int i = 0; i < StaticObjectStates.Count; i++)
 			{
-				for (int i = 0; i < StaticObjectStates.Count; i++)
-				{
-					VAOExtensions.CreateVAO(StaticObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
-					/*
-					 * n.b.
-					 * Only create the actual matrix buffer at first frame render time
-					 * I can't find why at the minute, but Object Viewer otherwise doesn't show them, and attempting
-					 * to retrieve previously set matricies from the shader shows all zeros
-					 *
-					 * Probably a timing issue, but it works doing it that way :/
-					 */
-				}
-				for (int i = 0; i < DynamicObjectStates.Count; i++)
-				{
-					VAOExtensions.CreateVAO(DynamicObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
-				}
+				VAOExtensions.CreateVAO(StaticObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
+				/*
+				 * n.b.
+				 * Only create the actual matrix buffer at first frame render time
+				 * I can't find why at the minute, but Object Viewer otherwise doesn't show them, and attempting
+				 * to retrieve previously set matricies from the shader shows all zeros
+				 *
+				 * Probably a timing issue, but it works doing it that way :/
+				 */
 			}
-			ObjectsSortedByStart = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.StartingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
+			for (int i = 0; i < DynamicObjectStates.Count; i++)
+			{
+				VAOExtensions.CreateVAO(DynamicObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
+			}
+            ObjectsSortedByStart = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.StartingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
 			ObjectsSortedByEnd = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.EndingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
 			ObjectsSortedByStartPointer = 0;
 			ObjectsSortedByEndPointer = 0;
@@ -1219,62 +1161,29 @@ namespace LibRender2
 			alphaTestEnabled = true;
 			alphaFuncComparison = comparison;
 			alphaFuncValue = value;
-			if (AvailableNewRenderer)
-			{
-				CurrentShader.SetAlphaTest(true);
-				CurrentShader.SetAlphaFunction(comparison, value);
-			}
-			else
-			{
-				GL.Enable(EnableCap.AlphaTest);
-				GL.AlphaFunc(comparison, value);	
-			}
-			
-		}
+			CurrentShader.SetAlphaTest(true);
+			CurrentShader.SetAlphaFunction(comparison, value);
+        }
 
 		/// <summary>Disables OpenGL alpha testing</summary>
 		public void UnsetAlphaFunc()
 		{
 			alphaTestEnabled = false;
-			if (AvailableNewRenderer)
-			{
-				CurrentShader.SetAlphaTest(false);
-			}
-			else
-			{
-				GL.Disable(EnableCap.AlphaTest);	
-			}
-			
-		}
+			CurrentShader.SetAlphaTest(false);
+        }
 
 		/// <summary>Restores the OpenGL alpha function to it's previous state</summary>
 		public void RestoreAlphaFunc()
 		{
 			if (alphaTestEnabled)
 			{
-				if (AvailableNewRenderer)
-				{
-					CurrentShader.SetAlphaTest(true);
-					CurrentShader.SetAlphaFunction(alphaFuncComparison, alphaFuncValue);
-				}
-				else
-				{
-					GL.Enable(EnableCap.AlphaTest);
-					GL.AlphaFunc(alphaFuncComparison, alphaFuncValue);
-				}
-				
-			}
+				CurrentShader.SetAlphaTest(true);
+				CurrentShader.SetAlphaFunction(alphaFuncComparison, alphaFuncValue);
+            }
 			else
 			{
-				if (AvailableNewRenderer)
-				{
-					CurrentShader.SetAlphaTest(false);
-				}
-				else
-				{
-					GL.Disable(EnableCap.AlphaTest);
-				}
-			}
+				CurrentShader.SetAlphaTest(false);
+            }
 		}
 
 
@@ -1537,287 +1446,6 @@ namespace LibRender2
 				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 			}
 			lastObjectState = state;
-		}
-
-		public void RenderFaceImmediateMode(FaceState state, bool debugTouchMode = false)
-		{
-			RenderFaceImmediateMode(state.Object, state.Face, debugTouchMode);
-		}
-
-		public void RenderFaceImmediateMode(ObjectState state, MeshFace face, bool debugTouchMode = false)
-		{
-			Matrix4D modelMatrix = state.ModelMatrix * Camera.TranslationMatrix;
-			Matrix4D modelViewMatrix = modelMatrix * CurrentViewMatrix;
-			RenderFaceImmediateMode(state, face, modelMatrix, modelViewMatrix, debugTouchMode);
-		}
-
-		public void RenderFaceImmediateMode(ObjectState state, MeshFace face, Matrix4D modelMatrix, Matrix4D modelViewMatrix, bool debugTouchMode = false)
-		{
-			if (state.Prototype.Mesh.Vertices.Length < 1)
-			{
-				return;
-			}
-
-			VertexTemplate[] vertices = state.Prototype.Mesh.Vertices;
-			MeshMaterial material = state.Prototype.Mesh.Materials[face.Material];
-
-			if (!OptionBackFaceCulling || (face.Flags & FaceFlags.Face2Mask) != 0)
-			{
-				GL.Disable(EnableCap.CullFace);
-			}
-			else if (OptionBackFaceCulling)
-			{
-				if ((face.Flags & FaceFlags.Face2Mask) == 0)
-				{
-					GL.Enable(EnableCap.CullFace);
-				}
-			}
-
-			// matrix
-			unsafe
-			{
-				GL.MatrixMode(MatrixMode.Projection);
-				GL.PushMatrix();
-				fixed (double* matrixPointer = &CurrentProjectionMatrix.Row0.X)
-				{
-					GL.LoadMatrix(matrixPointer);
-				}
-				GL.MatrixMode(MatrixMode.Modelview);
-				GL.PushMatrix();
-				fixed (double* matrixPointer = &CurrentViewMatrix.Row0.X)
-				{
-					GL.LoadMatrix(matrixPointer);
-				}
-
-				double* matrixPointer2 = &modelMatrix.Row0.X;
-				{
-					GL.MultMatrix(matrixPointer2);
-				}
-
-				GL.MatrixMode(MatrixMode.Texture);
-				GL.PushMatrix();
-				fixed (double* matrixPointer = &state.TextureTranslation.Row0.X)
-				{
-					GL.LoadMatrix(matrixPointer);
-				}
-
-			}
-
-			if (OptionWireFrame || debugTouchMode)
-			{
-				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
-			}
-
-			// lighting
-			if (material.NighttimeTexture == null)
-			{
-				if (OptionLighting)
-				{
-					GL.Enable(EnableCap.Lighting);
-				}
-			}
-
-			GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, (material.Flags & MaterialFlags.Emissive) != 0 ? new Color4(material.EmissiveColor.R, material.EmissiveColor.G, material.EmissiveColor.B, material.EmissiveColor.A) : Color4.Black);
-
-			// fog
-			if (Fog.Enabled)
-			{
-				GL.Enable(EnableCap.Fog);
-			}
-
-			PrimitiveType drawMode;
-
-			switch (face.Flags & FaceFlags.FaceTypeMask)
-			{
-				case FaceFlags.Triangles:
-					drawMode = PrimitiveType.Triangles;
-					break;
-				case FaceFlags.TriangleStrip:
-					drawMode = PrimitiveType.TriangleStrip;
-					break;
-				case FaceFlags.Quads:
-					drawMode = PrimitiveType.Quads;
-					break;
-				case FaceFlags.QuadStrip:
-					drawMode = PrimitiveType.QuadStrip;
-					break;
-				default:
-					drawMode = PrimitiveType.Polygon;
-					break;
-			}
-
-			// blend factor
-			float distanceFactor;
-			if (material.GlowAttenuationData != 0)
-			{
-				distanceFactor = (float)Glow.GetDistanceFactor(modelMatrix, vertices, ref face, material.GlowAttenuationData);
-			}
-			else
-			{
-				distanceFactor = 1.0f;
-			}
-
-			float blendFactor = inv255 * state.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
-			if (blendFactor > 1.0)
-			{
-				blendFactor = 1.0f;
-			}
-
-			// daytime polygon
-			{
-				// texture
-				if (material.DaytimeTexture != null)
-				{
-					// ReSharper disable once PossibleInvalidOperationException
-					if (currentHost.LoadTexture(ref material.DaytimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
-					{
-						GL.Enable(EnableCap.Texture2D);
-						if (LastBoundTexture != material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode])
-						{
-							GL.BindTexture(TextureTarget.Texture2D, material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
-							LastBoundTexture = material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode];
-						}
-					}
-				}
-
-				// blend mode
-				float factor;
-				if (material.BlendMode == MeshMaterialBlendMode.Additive)
-				{
-					factor = 1.0f;
-					GL.Enable(EnableCap.Blend);
-					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
-					GL.Disable(EnableCap.Fog);
-				}
-				else if (material.NighttimeTexture == null)
-				{
-					factor = 1.0f - 0.7f * blendFactor;
-				}
-				else
-				{
-					factor = 1.0f;
-				}
-
-				if ((material.Flags & MaterialFlags.DisableLighting) != 0)
-				{
-					GL.Disable(EnableCap.Lighting);
-				}
-
-				float alphaFactor = distanceFactor;
-				if (material.NighttimeTexture != null && (material.Flags & MaterialFlags.CrossFadeTexture) != 0)
-				{
-					alphaFactor *= 1.0f - blendFactor;
-				}
-
-				GL.Begin(drawMode);
-
-				if (OptionWireFrame)
-				{
-					GL.Color4(inv255 * material.Color.R * factor, inv255 * material.Color.G * factor, inv255 * material.Color.B * factor, 1.0f);
-				}
-				else
-				{
-					GL.Color4(inv255 * material.Color.R * factor, inv255 * material.Color.G * factor, inv255 * material.Color.B * factor, inv255 * material.Color.A * alphaFactor);
-				}
-
-				for (int i = 0; i < face.Vertices.Length; i++)
-				{
-					GL.Normal3(face.Vertices[i].Normal.X, face.Vertices[i].Normal.Y, -face.Vertices[i].Normal.Z);
-					GL.TexCoord2(vertices[face.Vertices[i].Index].TextureCoordinates.X, vertices[face.Vertices[i].Index].TextureCoordinates.Y);
-
-					if (vertices[face.Vertices[i].Index] is ColoredVertex v)
-					{
-						GL.Color4(v.Color.R, v.Color.G, v.Color.B, v.Color.A);
-					}
-
-					GL.Vertex3(vertices[face.Vertices[i].Index].Coordinates.X, vertices[face.Vertices[i].Index].Coordinates.Y, -vertices[face.Vertices[i].Index].Coordinates.Z);
-				}
-
-				GL.End();
-			}
-
-			// nighttime polygon
-			if (blendFactor != 0 && material.NighttimeTexture != null && currentHost.LoadTexture(ref material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
-			{
-				// texture
-				GL.Enable(EnableCap.Texture2D);
-				if (LastBoundTexture != material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode])
-				{
-					GL.BindTexture(TextureTarget.Texture2D, material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
-					LastBoundTexture = material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode];
-				}
-
-				GL.Enable(EnableCap.Blend);
-
-				// alpha test
-				GL.Enable(EnableCap.AlphaTest);
-				GL.AlphaFunc(AlphaFunction.Greater, 0.0f);
-
-				// blend mode
-				float alphaFactor = distanceFactor * blendFactor;
-
-				GL.Begin(drawMode);
-
-				if (OptionWireFrame)
-				{
-					GL.Color4(inv255 * material.Color.R, inv255 * material.Color.G, inv255 * material.Color.B, 1.0f);
-				}
-				else
-				{
-					GL.Color4(inv255 * material.Color.R, inv255 * material.Color.G, inv255 * material.Color.B, inv255 * material.Color.A * alphaFactor);
-				}
-
-				for (int i = 0; i < face.Vertices.Length; i++)
-				{
-					GL.Normal3(face.Vertices[i].Normal.X, face.Vertices[i].Normal.Y, -face.Vertices[i].Normal.Z);
-					GL.TexCoord2(vertices[face.Vertices[i].Index].TextureCoordinates.X, vertices[face.Vertices[i].Index].TextureCoordinates.Y);
-
-					if (vertices[face.Vertices[i].Index] is ColoredVertex v)
-					{
-						GL.Color3(v.Color.R, v.Color.G, v.Color.B);
-					}
-
-					GL.Vertex3(vertices[face.Vertices[i].Index].Coordinates.X, vertices[face.Vertices[i].Index].Coordinates.Y, -vertices[face.Vertices[i].Index].Coordinates.Z);
-				}
-
-				GL.End();
-				RestoreBlendFunc();
-				RestoreAlphaFunc();
-			}
-
-			GL.Disable(EnableCap.Texture2D);
-
-			// normals
-			if (OptionNormals)
-			{
-				for (int i = 0; i < face.Vertices.Length; i++)
-				{
-					GL.Begin(PrimitiveType.Lines);
-					GL.Color4(new Color4(material.Color.R, material.Color.G, material.Color.B, 255));
-					GL.Vertex3(vertices[face.Vertices[i].Index].Coordinates.X, vertices[face.Vertices[i].Index].Coordinates.Y, -vertices[face.Vertices[i].Index].Coordinates.Z);
-					GL.Vertex3(vertices[face.Vertices[i].Index].Coordinates.X + face.Vertices[i].Normal.X, vertices[face.Vertices[i].Index].Coordinates.Y + +face.Vertices[i].Normal.Y, -(vertices[face.Vertices[i].Index].Coordinates.Z + face.Vertices[i].Normal.Z));
-					GL.End();
-				}
-			}
-
-			// finalize
-			if (OptionWireFrame || debugTouchMode)
-			{
-				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-			}
-
-			if (material.BlendMode == MeshMaterialBlendMode.Additive)
-			{
-				RestoreBlendFunc();
-			}
-
-			GL.PopMatrix();
-
-			GL.MatrixMode(MatrixMode.Modelview);
-			GL.PopMatrix();
-
-			GL.MatrixMode(MatrixMode.Projection);
-			GL.PopMatrix();
 		}
 
 		/// <summary>Sets the current MouseCursor</summary>
