@@ -673,6 +673,8 @@ namespace MechanikRouteParser
 				Plugin.CurrentRoute.TargetBackground = Plugin.CurrentRoute.CurrentBackground;
 			}
 
+			Plugin.CurrentRoute.Tracks[0].Direction = TrackDirection.Forwards;
+
 			Vector3 worldPosition = new Vector3();
 			Vector2 worldDirection = Vector2.Down;
 			Vector3 trackPosition = Vector3.Zero;
