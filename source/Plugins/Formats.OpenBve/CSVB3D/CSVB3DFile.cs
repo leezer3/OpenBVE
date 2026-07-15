@@ -395,7 +395,7 @@ namespace Formats.OpenBve
 				{
 					if (!string.IsNullOrEmpty(value.Value[i]))
 					{
-						currentHost.AddMessage(MessageType.Error, false, "The vertex index " + i + " is not a valid integer in " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+						currentHost.AddMessage(MessageType.Error, false, "The vertex referenced at index " + i + " is not a valid integer in " + value.Key + " at line " + CurrentLine + " in file " + FileName);
 					}
 					Array.Resize(ref parsedValues, i);
 					break;
