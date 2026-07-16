@@ -75,8 +75,7 @@ namespace Object.CsvB3d
 							break;
 						case CSVB3DKey.Face:
 						case CSVB3DKey.Face2:
-							if (subBlock.TryGetNextVertexIndexArray(out int[] faceVertices,
-								    Plugin.enabledHacks.BveTsHacks))
+							if (subBlock.TryGetNextVertexIndexArray(out int[] faceVertices, Plugin.enabledHacks.BveTsHacks))
 							{
 								CheckForFaceHacks(fileName, currentMeshBuilder, staticObject, key == CSVB3DKey.Face2, ref faceVertices);
 								MeshFace f = new MeshFace(faceVertices.Length);
@@ -144,7 +143,7 @@ namespace Object.CsvB3d
 								int numFaces = (int)cylinderProps[0];
 								if (numFaces < 2)
 								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "NumberOfFaces is expected to be at least 2 in " + key + " at line " + subBlock.CurrentLine + " in file " + fileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "NumberOfFaces is expected to be at least 2 in " + subBlock.CurrentCommand + " at line " + subBlock.CurrentLine + " in file " + fileName);
 									if (Plugin.enabledHacks.BveTsHacks)
 									{
 										// A cylinder with zero (or an empty) face count crashes BVE2 / BVE4
@@ -175,7 +174,7 @@ namespace Object.CsvB3d
 
 								if (Math.Abs(rotationVector.X) > 1 || Math.Abs(rotationVector.Y) > 1 || Math.Abs(rotationVector.Z) > 1)
 								{
-									Plugin.currentHost.AddMessage(MessageType.Warning, false, "Potentially incorrect rotational direction vector in " + key + "- Angle should be the *last* argument at line " + subBlock.CurrentLine + " in file " + fileName);
+									Plugin.currentHost.AddMessage(MessageType.Warning, false, "Potentially incorrect rotational direction vector in " + subBlock.CurrentCommand + "- Angle should be the *last* argument at line " + subBlock.CurrentLine + " in file " + fileName);
 								}
 
 								if (rotateProps[3] != 0.0)
@@ -198,19 +197,19 @@ namespace Object.CsvB3d
 								if (scaleVector.X == 0)
 								{
 									scaleVector.X = 1.0;
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "X is required to be different to zero in " + key + " at line " + subBlock.CurrentLine + " in file " + fileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "X is required to be different to zero in " + subBlock.CurrentCommand + " at line " + subBlock.CurrentLine + " in file " + fileName);
 								}
 
 								if (scaleVector.Y == 0)
 								{
 									scaleVector.Y = 1.0;
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is required to be different to zero in " + key + " at line " + subBlock.CurrentLine + " in file " + fileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is required to be different to zero in " + subBlock.CurrentCommand + " at line " + subBlock.CurrentLine + " in file " + fileName);
 								}
 
 								if (scaleVector.Z == 0)
 								{
 									scaleVector.Z = 1.0;
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Z is required to be different to zero in " + key + " at line " + subBlock.CurrentLine + " in file " + fileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Z is required to be different to zero in " + subBlock.CurrentCommand + " at line " + subBlock.CurrentLine + " in file " + fileName);
 								}
 
 								currentMeshBuilder.ApplyScale(scaleVector);
@@ -269,7 +268,7 @@ namespace Object.CsvB3d
 							{
 								if (idx >= currentMeshBuilder.Vertices.Count)
 								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid vertex index in command " + key + " at line " + subBlock.CurrentLine + " in file " + fileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid vertex index in command " + subBlock.CurrentCommand + " at line " + subBlock.CurrentLine + " in file " + fileName);
 									break;
 								}
 

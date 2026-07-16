@@ -24,7 +24,6 @@
 
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
-using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -38,14 +37,14 @@ namespace Formats.OpenBve
 {
 	public abstract class CSVB3DBlock<T1, T2> where T1 : struct, Enum where T2 : struct, Enum
 	{
-		public CSVB3DBlock(string myFile, HostInterface host)
+		protected CSVB3DBlock(string myFile, HostInterface host)
 		{
 			Key = default;
 			FileName = myFile;
 			currentHost = host;
 		}
 
-		public CSVB3DBlock(T1 myKey, string myFile, HostInterface host)
+		protected CSVB3DBlock(T1 myKey, string myFile, HostInterface host)
 		{
 			Key = myKey;
 			FileName = myFile;
@@ -56,7 +55,13 @@ namespace Formats.OpenBve
 
 		public readonly string FileName;
 
+		/// <summary>The current command's line</summary>
 		public int CurrentLine;
+
+		/// <summary>The textual representation of the current command</summary>
+		/// <remarks>CSV and B3D equivalent commands are mapped to the same enum value, so this property
+		/// returns the actual command used in the object</remarks>
+		public string CurrentCommand;
 
 		internal readonly HostInterface currentHost;
 
@@ -219,8 +224,7 @@ namespace Formats.OpenBve
 				}
 				Lines[i] = Lines[i].Trim();
 
-				string[] splitLine;
-				splitLine = IsB3D ? Lines[i].Split(Array.Empty<char>(), 2) : Lines[i].Split(',');
+				string[] splitLine = IsB3D ? Lines[i].Split(Array.Empty<char>(), 2) : Lines[i].Split(',');
 				
 				if (!IsB3D)
 				{
@@ -246,7 +250,7 @@ namespace Formats.OpenBve
 
 								continue;
 							}
-							if (Enum.TryParse(splitLine[j], true, out CSVB3DSection _) || Enum.TryParse(splitLine[j], out CSVB3DKey _))
+							if (Enum.TryParse(splitLine[j], true, out CSVB3DSection _) || Enum.TryParse(splitLine[j], true, out CSVB3DKey _))
 							{
 								// add multi-columns to the end of our line list (to be parsed)
 								Lines.Add(string.Join(",", splitLine.Skip(j)));
@@ -259,14 +263,15 @@ namespace Formats.OpenBve
 					
 				}
 
-				splitLine[0] = splitLine[0].Trim();
+				string command = splitLine[0].Trim();
+
 				if (IsB3D)
 				{
 					// B3D bracket enclosed section names
-					splitLine[0] = splitLine[0].TrimStart('[').TrimEnd(']').Trim();
+					command = command.TrimStart('[').TrimEnd(']').Trim();
 				}
 
-				if(Enum.TryParse(splitLine[0], true, out T1 section))
+				if(Enum.TryParse(command, true, out T1 section))
 				{
 					if (currentSection != null)
 					{
@@ -276,7 +281,7 @@ namespace Formats.OpenBve
 					currentSection = new CSVB3DFileSection<T1, T2>(section, myFile, currentHost);
 				}
 
-				if (Enum.TryParse(splitLine[0], true, out T2 key))
+				if (Enum.TryParse(command, true, out T2 key))
 				{
 					// Unfortunately, can't cast to generic directly- we've got to go via object
 					if (currentSection == null)
@@ -300,21 +305,14 @@ namespace Formats.OpenBve
 
 					if (IsB3D)
 					{
-						if (splitLine.Length >= 2)
-						{
-							splitLine = splitLine[1].Split(',');
-						}
-						else
-						{
-							splitLine = Array.Empty<string>();
-						}
+						splitLine = splitLine.Length >= 2 ? splitLine[1].Split(',') : Array.Empty<string>();
 					}
 					else
 					{
 						splitLine = splitLine.Skip(1).ToArray();
 					}
-
-					currentSection.Values.Enqueue(new KeyValuePair<int, KeyValuePair<T2, string[]>>(i, new KeyValuePair<T2, string[]>(key, splitLine)));
+					
+					currentSection.Values.Enqueue(new ValueTuple<int, string, T2, string[]>(i, command, key, splitLine));
 				}
 			}
 
@@ -327,13 +325,14 @@ namespace Formats.OpenBve
 	
 	public class CSVB3DFileSection<T1, T2> : CSVB3DBlock<T1, T2> where T1 : struct, Enum where T2 : struct, Enum
 	{
-		internal Queue<KeyValuePair<int, KeyValuePair<T2, string[]>>> Values = new Queue<KeyValuePair<int, KeyValuePair<T2, string[]>>>();
+		internal Queue<ValueTuple<int, string, T2, string[]>> Values = new Queue<ValueTuple<int, string, T2, string[]>>();
 
-		private KeyValuePair<T2, string[]> Dequeue()
+		private string[] Dequeue()
 		{
-			KeyValuePair<int, KeyValuePair<T2, string[]>> value = Values.Dequeue();
-			CurrentLine = value.Key;
-			return value.Value;
+			ValueTuple<int, string, T2, string[]> tuple = Values.Dequeue();
+			CurrentLine = tuple.Item1 + 1;
+			CurrentCommand = tuple.Item2;
+			return tuple.Item4;
 		}
 
 		public CSVB3DFileSection(T1 myKey, string myFile, HostInterface currentHost) : base(myKey, myFile, currentHost)
@@ -344,42 +343,42 @@ namespace Formats.OpenBve
 
 		public override T2 NextValue
 		{
-			get => Values.Peek().Value.Key;
+			get => Values.Peek().Item3;
 		}
 
 		public override Vertex GetNextVertex(out Vector3 currentNormal)
 		{
-			KeyValuePair<T2, string[]> value = Dequeue();
+			string[] value = Dequeue();
 			Vertex currentVertex = new Vertex();
-			if (value.Value.Length >= 1 && value.Value[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(value.Value[0], out currentVertex.Coordinates.X))
+			if (value.Length >= 1 && value[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(value[0], out currentVertex.Coordinates.X))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Invalid argument vX in " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Invalid argument vX in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				currentVertex.Coordinates.X = 0.0;
 			}
-			if (value.Value.Length >= 2 && value.Value[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(value.Value[1], out currentVertex.Coordinates.Y))
+			if (value.Length >= 2 && value[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(value[1], out currentVertex.Coordinates.Y))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Invalid argument vY in " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Invalid argument vY in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				currentVertex.Coordinates.Y = 0.0;
 			}
-			if (value.Value.Length >= 3 && value.Value[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(value.Value[2], out currentVertex.Coordinates.Z))
+			if (value.Length >= 3 && value[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(value[2], out currentVertex.Coordinates.Z))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Invalid argument vZ in " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Invalid argument vZ in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				currentVertex.Coordinates.Z = 0.0;
 			}
 			currentNormal = new Vector3();
-			if (value.Value.Length >= 4 && value.Value[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(value.Value[3], out currentNormal.X))
+			if (value.Length >= 4 && value[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(value[3], out currentNormal.X))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Invalid argument nX in " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Invalid argument nX in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				currentNormal.X = 0.0;
 			}
-			if (value.Value.Length >= 5 && value.Value[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(value.Value[4], out currentNormal.Y))
+			if (value.Length >= 5 && value[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(value[4], out currentNormal.Y))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Invalid argument nY in " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Invalid argument nY in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				currentNormal.Y = 0.0;
 			}
-			if (value.Value.Length >= 6 && value.Value[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(value.Value[5], out currentNormal.Z))
+			if (value.Length >= 6 && value[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(value[5], out currentNormal.Z))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Invalid argument nZ in " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Invalid argument nZ in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				currentNormal.Z = 0.0;
 			}
 			currentNormal.Normalize();
@@ -388,21 +387,21 @@ namespace Formats.OpenBve
 
 		public override bool TryGetNextVertexIndexArray(out int[] parsedValues, bool enableHacks)
 		{
-			KeyValuePair<T2, string[]> value = Dequeue();
+			string[] value = Dequeue();
 
-			parsedValues = new int[value.Value.Length];
-			for (int i = 0; i < value.Value.Length; i++)
+			parsedValues = new int[value.Length];
+			for (int i = 0; i < value.Length; i++)
 			{
 				/*
 				 * NOTE: Face ,1,2,3
 				 * is interpreted by BVE as Face 0,1,2,3
 				 * Applies to both CSV and B3D files
 				 */
-				if (!NumberFormats.TryParseIntVb6(value.Value[i], out parsedValues[i]) && (i != 0 || enableHacks == false))
+				if (!NumberFormats.TryParseIntVb6(value[i], out parsedValues[i]) && (i != 0 || enableHacks == false))
 				{
-					if (!string.IsNullOrEmpty(value.Value[i]))
+					if (!string.IsNullOrEmpty(value[i]))
 					{
-						currentHost.AddMessage(MessageType.Error, false, "The vertex referenced at index " + i + " is not a valid integer in " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+						currentHost.AddMessage(MessageType.Error, false, "The vertex referenced at index " + i + " is not a valid integer in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 					}
 					Array.Resize(ref parsedValues, i);
 					break;
@@ -410,7 +409,7 @@ namespace Formats.OpenBve
 
 				if (parsedValues[i] > 65535)
 				{
-					currentHost.AddMessage(MessageType.Error, false, "A vertex with an index above 65535 is not currently supported in " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+					currentHost.AddMessage(MessageType.Error, false, "A vertex with an index above 65535 is not currently supported in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 					return false;
 				}
 			}
@@ -418,7 +417,7 @@ namespace Formats.OpenBve
 			if (parsedValues.Length < 3)
 			{
 				// insufficient vertices to make a face
-				currentHost.AddMessage(MessageType.Error, false, value.Key + " contains an insufficient number of arguments at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, CurrentCommand + " contains an insufficient number of arguments at line " + CurrentLine + " in file " + FileName);
 				return false;
 			}
 
@@ -427,14 +426,14 @@ namespace Formats.OpenBve
 
 		public override bool TryGetNextDoubleArray(out double[] parsedValues, int neededValues = int.MaxValue)
 		{
-			KeyValuePair<T2, string[]> value = Dequeue();
+			string[] value = Dequeue();
 
-			parsedValues = new double[value.Value.Length];
-			for (int i = 0; i < Math.Min(value.Value.Length, neededValues); i++)
+			parsedValues = new double[value.Length];
+			for (int i = 0; i < Math.Min(value.Length, neededValues); i++)
 			{
-				if (!NumberFormats.TryParseDoubleVb6(value.Value[i], out parsedValues[i]) && !string.IsNullOrEmpty(value.Value[i]))
+				if (!NumberFormats.TryParseDoubleVb6(value[i], out parsedValues[i]) && !string.IsNullOrEmpty(value[i]))
 				{
-					currentHost.AddMessage(MessageType.Error, false, "The value at array index " + i + " is not a valid double in " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+					currentHost.AddMessage(MessageType.Error, false, "The value at array index " + i + " is not a valid double in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 					Array.Resize(ref parsedValues, i);
 					break;
 				}
@@ -444,31 +443,31 @@ namespace Formats.OpenBve
 
 		public override bool GetNextColor32(out Color32 c)
 		{
-			KeyValuePair<T2, string[]> value = Dequeue();
-
+			string[] value = Dequeue();
+				
 			// Supports 3 args (RGB, alpha=255) or 4 args (RGBA) for backward compatibility
 			int r = 0, g = 0, b = 0, a = 255;
-			if (value.Value.Length == 0)
+			if (value.Length == 0)
 			{
 				c = Color32.White;
 				return false;
 			}
 
-			if (value.Value.Length >= 1 && value.Value[0].Length > 0 && !NumberFormats.TryParseByteVb6(value.Value[0], out r))
+			if (value.Length >= 1 && value[0].Length > 0 && !NumberFormats.TryParseByteVb6(value[0], out r))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Invalid value for Red in " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Invalid value for Red in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 			}
-			if (value.Value.Length >= 2 && value.Value[1].Length > 0 && !NumberFormats.TryParseByteVb6(value.Value[1], out g))
+			if (value.Length >= 2 && value[1].Length > 0 && !NumberFormats.TryParseByteVb6(value[1], out g))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Invalid value for Green in " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Invalid value for Green in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 			}
-			if (value.Value.Length >= 3 && value.Value[2].Length > 0 && !NumberFormats.TryParseByteVb6(value.Value[2], out b))
+			if (value.Length >= 3 && value[2].Length > 0 && !NumberFormats.TryParseByteVb6(value[2], out b))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Invalid value for Blue in " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Invalid value for Blue in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 			}
-			if (value.Value.Length >= 4 && value.Value[3].Length > 0 && !NumberFormats.TryParseByteVb6(value.Value[3], out a))
+			if (value.Length >= 4 && value[3].Length > 0 && !NumberFormats.TryParseByteVb6(value[3], out a))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Invalid value for Alpha in " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Invalid value for Alpha in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				a = 255; // special-case
 			}
 			c = new Color32((byte)r, (byte)g, (byte)b, (byte)a);
@@ -477,10 +476,10 @@ namespace Formats.OpenBve
 
 		public override bool GetNextTexturePath(string absolutePath, out string tDay, out string tNight)
 		{
-			KeyValuePair<T2, string[]> value = Dequeue();
+			string[] value = Dequeue();
 
-			tDay = value.Value.Length >= 1 && !string.IsNullOrEmpty(value.Value[0]) ? OpenBveApi.Path.CombineFile(absolutePath, value.Value[0].Trim()) : null;
-			tNight = value.Value.Length >= 2 && !string.IsNullOrEmpty(value.Value[1]) ? OpenBveApi.Path.CombineFile(absolutePath, value.Value[1].Trim()) : null;
+			tDay = value.Length >= 1 && !string.IsNullOrEmpty(value[0]) ? OpenBveApi.Path.CombineFile(absolutePath, value[0].Trim()) : null;
+			tNight = value.Length >= 2 && !string.IsNullOrEmpty(value[1]) ? OpenBveApi.Path.CombineFile(absolutePath, value[1].Trim()) : null;
 
 			bool textureFound = false;
 			
@@ -491,43 +490,42 @@ namespace Formats.OpenBve
 			}
 			else
 			{
-				tDay = value.Value.Length >= 1 ? value.Value[0] : string.Empty;
-				currentHost.AddMessage(MessageType.Error, false, "DaytimeTexture File + " + tDay + " was not found for " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+				tDay = value.Length >= 1 ? value[0] : string.Empty;
+				currentHost.AddMessage(MessageType.Error, false, "DaytimeTexture File + " + tDay + " was not found for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 			}
 
 			if (!string.IsNullOrEmpty(tNight) && !File.Exists(tNight))
 			{
-				tNight = value.Value.Length >= 2 ? value.Value[1] : string.Empty;
-				currentHost.AddMessage(MessageType.Error, false, "NighttimeTexture File " + tNight + " was not found for " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+				tNight = value.Length >= 2 ? value[1] : string.Empty;
+				currentHost.AddMessage(MessageType.Error, false, "NightTimeTexture File " + tNight + " was not found for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 			}
 
-			// TODO: Add the BVE2 signal hacks stuff back in
 			return textureFound;
 		}
 
 		public override bool GetNextPath(string absolutePath, out string finalPath)
 		{
-			KeyValuePair<T2, string[]> value = Dequeue();
-			finalPath = value.Value.Length >= 1 && !string.IsNullOrEmpty(value.Value[0]) ? OpenBveApi.Path.CombineFile(absolutePath, value.Value[0]) : string.Empty;
+			string[] value = Dequeue();
+			finalPath = value.Length >= 1 && !string.IsNullOrEmpty(value[0]) ? OpenBveApi.Path.CombineFile(absolutePath, value[0]) : string.Empty;
 			if (File.Exists(finalPath))
 			{
 				return true;
 			}
 
-			currentHost.AddMessage(MessageType.Error, false, "Texture File was not found for " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+			currentHost.AddMessage(MessageType.Error, false, "Texture File was not found for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 			return false;
 		}
 
 		public override bool GetNextTextureCoordinates(out int index, out Vector2 coordinates, out bool hasLightMap, out Vector2 lightMapCoordinates)
 		{
-			KeyValuePair<T2, string[]> value = Dequeue();
+			string[] value = Dequeue();
 			index = -1;
 			hasLightMap = false;
 			coordinates = Vector2.Null;
 			lightMapCoordinates = Vector2.Null;
-			if (value.Value.Length >= 1 && value.Value[0].Length > 0 && !NumberFormats.TryParseIntVb6(value.Value[0], out index))
+			if (value.Length >= 1 && value[0].Length > 0 && !NumberFormats.TryParseIntVb6(value[0], out index))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Vertex index was invalid for " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Vertex index was invalid for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				return false;
 			}
 
@@ -536,50 +534,50 @@ namespace Formats.OpenBve
 				return false;
 			}
 
-			coordinates = GetVector2(value.Value, 1, (T2)(object)CSVB3DKey.Coordinates, CurrentLine);
-			if (value.Value.Length >= 4)
+			coordinates = GetVector2(value, 1, (T2)(object)CSVB3DKey.Coordinates, CurrentLine);
+			if (value.Length >= 4)
 			{
 				hasLightMap = true;
-				lightMapCoordinates = GetVector2(value.Value, 3, (T2)(object)CSVB3DKey.LightMapCoordinates, CurrentLine);
+				lightMapCoordinates = GetVector2(value, 3, (T2)(object)CSVB3DKey.LightMapCoordinates, CurrentLine);
 			}
 			return true;
 		}
 
 		public override bool GetBlendMode<T3, T4>(out T3 enumValue, out double glowHalfDistance, out T4 glowAttenuationMode)
 		{
-			KeyValuePair<T2, string[]> value = Dequeue();
+			string[] value = Dequeue();
 			enumValue = (T3)(object)MeshMaterialBlendMode.Normal;
 			glowHalfDistance = 0;
 			glowAttenuationMode = (T4)(object)GlowAttenuationMode.DivisionExponent4;
 			
-			if (value.Value.Length >= 2)
+			if (value.Length >= 2)
 			{
-				if (Enum.TryParse(value.Value[0], out MeshMaterialBlendMode mode))
+				if (Enum.TryParse(value[0], true, out MeshMaterialBlendMode mode))
 				{
 					enumValue = (T3)(object)mode;
 				}
 				else
 				{
-					currentHost.AddMessage(MessageType.Error, false, "BlendMode was invalid for " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+					currentHost.AddMessage(MessageType.Error, false, "BlendMode was invalid for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 					return false;
 				}
 			}
 			
 			
-			if(value.Value.Length >= 2)
+			if(value.Length >= 2)
 			{
-				double.TryParse(value.Value[1], out glowHalfDistance);
+				double.TryParse(value[1], out glowHalfDistance);
 			}
 
-			if (value.Value.Length >= 3)
+			if (value.Length >= 3)
 			{
-				if (Enum.TryParse(value.Value[2], out GlowAttenuationMode glowMode))
+				if (Enum.TryParse(value[2], true, out GlowAttenuationMode glowMode))
 				{
 					glowAttenuationMode = (T4)(object)glowMode;
 				}
 				else
 				{
-					currentHost.AddMessage(MessageType.Error, false, "GlowAttenuationMode was invalid for " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+					currentHost.AddMessage(MessageType.Error, false, "GlowAttenuationMode was invalid for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				}
 			}
 			return true;
@@ -587,12 +585,12 @@ namespace Formats.OpenBve
 
 		public override bool GetNextEnumValue<T3>(out T3 enumValue)
 		{
-			KeyValuePair<T2, string[]> value = Dequeue();
+			string[] value = Dequeue();
 			enumValue = default;
 
-			if (value.Value.Length >= 1 && !Enum.TryParse(value.Value[0], out enumValue))
+			if (value.Length >= 1 && !Enum.TryParse(value[0], true, out enumValue))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Value was invalid for " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Value was invalid for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				return false;
 			}
 
@@ -601,8 +599,9 @@ namespace Formats.OpenBve
 
 		public override bool GetNextVector2(out Vector2 vector)
 		{
-			KeyValuePair<T2, string[]> value = Dequeue();
-			vector = GetVector2(value.Value, 1, value.Key, CurrentLine);
+			T2 key = Values.Peek().Item3;
+			string[] value = Dequeue();
+			vector = GetVector2(value, 1, key, CurrentLine);
 			return true;
 		}
 
@@ -624,14 +623,15 @@ namespace Formats.OpenBve
 
 		public override bool GetNextVector3(out Vector3 vector)
 		{
-			KeyValuePair<T2, string[]> value = Dequeue();
-			if (value.Value.Length == 0)
+			T2 key = Values.Peek().Item3;
+			string[] value = Dequeue();
+			if (value.Length == 0)
 			{
-				currentHost.AddMessage(MessageType.Warning, false, "No arguments were supplied for " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Warning, false, "No arguments were supplied for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				vector = Vector3.Zero;
 				return false;
 			}
-			vector = GetVector3(value.Value, 0, value.Key, CurrentLine);
+			vector = GetVector3(value, 0, key, CurrentLine);
 			return true;
 		}
 
@@ -658,15 +658,15 @@ namespace Formats.OpenBve
 
 		public override bool GetNextShear(out Vector3 shearDirection, out Vector3 shearStress, out double shearRatio)
 		{
-			KeyValuePair<T2, string[]> value = Dequeue();
+			string[] value = Dequeue();
 
 			shearRatio = 0;
-			shearDirection = GetVector3(value.Value, 0, (T2)(object)CSVB3DKey.ShearDirection, CurrentLine);
-			shearStress = GetVector3(value.Value, 3, (T2)(object)CSVB3DKey.ShearStress, CurrentLine);
+			shearDirection = GetVector3(value, 0, (T2)(object)CSVB3DKey.ShearDirection, CurrentLine);
+			shearStress = GetVector3(value, 3, (T2)(object)CSVB3DKey.ShearStress, CurrentLine);
 
-			if (value.Value.Length >= 7 && !NumberFormats.TryParseDoubleVb6(value.Value[6], out shearRatio))
+			if (value.Length >= 7 && !NumberFormats.TryParseDoubleVb6(value[6], out shearRatio))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "ShearRatio was invalid for " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "ShearRatio was invalid for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				shearRatio = 0;
 			}
 			
@@ -675,26 +675,26 @@ namespace Formats.OpenBve
 
 		public override bool GetNextMirror(out Vector3 mirrorVertices, out Vector3 mirrorNormals)
 		{
-			KeyValuePair<T2, string[]> value = Dequeue();
-			mirrorVertices = GetVector3(value.Value, 0, (T2)(object)CSVB3DKey.MirrorVertices, CurrentLine);
-			mirrorNormals = value.Value.Length >= 4 ? GetVector3(value.Value, 3, (T2)(object)CSVB3DKey.MirrorNormals, CurrentLine) : mirrorVertices;
+			string[] value = Dequeue();
+			mirrorVertices = GetVector3(value, 0, (T2)(object)CSVB3DKey.MirrorVertices, CurrentLine);
+			mirrorNormals = value.Length >= 4 ? GetVector3(value, 3, (T2)(object)CSVB3DKey.MirrorNormals, CurrentLine) : mirrorVertices;
 
 			return mirrorVertices != Vector3.Zero || mirrorNormals != Vector3.Zero;
 		}
 		
 		public override bool GetNextRawValue(out string text)
 		{
-			KeyValuePair<T2, string[]> value = Dequeue();
-			text = string.Join(",", value.Value); 
+			string[] value = Dequeue();
+			text = string.Join(",", value); 
 			return true;
 		}
 
 		public override bool GetNextBool(out bool booleanValue)
 		{
-			KeyValuePair<T2, string[]> value = Dequeue();
-			if (value.Value.Length >= 1 ||  !NumberFormats.TryParseIntVb6(value.Value[0], out int i))
+			string[] value = Dequeue();
+			if (value.Length >= 1 ||  !NumberFormats.TryParseIntVb6(value[0], out int i))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Invalid value for " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Invalid value for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				booleanValue = false;
 				return false;
 			}
