@@ -133,10 +133,11 @@ namespace Formats.OpenBve
 		}
 
 		/// <summary>Gets the next set of texture coordinates from the block</summary>
-		public virtual bool GetNextTextureCoordinates(out int index, out Vector2 coordinates, out Vector2 lightMapCoordinates)
+		public virtual bool GetNextTextureCoordinates(out int index, out Vector2 coordinates, out bool hasLightMap, out Vector2 lightMapCoordinates)
 		{
 			index = -1;
 			coordinates = Vector2.Null;
+			hasLightMap = false;
 			lightMapCoordinates = Vector2.Null;
 			return false;
 		}
@@ -183,6 +184,12 @@ namespace Formats.OpenBve
 		public virtual bool GetNextRawValue(out string text)
 		{
 			text = string.Empty;
+			return false;
+		}
+
+		public virtual bool GetNextBool(out bool booleanValue)
+		{
+			booleanValue = false;
 			return false;
 		}
 
@@ -317,7 +324,7 @@ namespace Formats.OpenBve
 			}
 		}
 	}
-
+	
 	public class CSVB3DFileSection<T1, T2> : CSVB3DBlock<T1, T2> where T1 : struct, Enum where T2 : struct, Enum
 	{
 		internal Queue<KeyValuePair<int, KeyValuePair<T2, string[]>>> Values = new Queue<KeyValuePair<int, KeyValuePair<T2, string[]>>>();
@@ -511,10 +518,11 @@ namespace Formats.OpenBve
 			return false;
 		}
 
-		public override bool GetNextTextureCoordinates(out int index, out Vector2 coordinates, out Vector2 lightMapCoordinates)
+		public override bool GetNextTextureCoordinates(out int index, out Vector2 coordinates, out bool hasLightMap, out Vector2 lightMapCoordinates)
 		{
 			KeyValuePair<T2, string[]> value = Dequeue();
 			index = -1;
+			hasLightMap = false;
 			coordinates = Vector2.Null;
 			lightMapCoordinates = Vector2.Null;
 			if (value.Value.Length >= 1 && value.Value[0].Length > 0 && !NumberFormats.TryParseIntVb6(value.Value[0], out index))
@@ -529,7 +537,11 @@ namespace Formats.OpenBve
 			}
 
 			coordinates = GetVector2(value.Value, 1, (T2)(object)CSVB3DKey.Coordinates, CurrentLine);
-			lightMapCoordinates = GetVector2(value.Value, 3, (T2)(object)CSVB3DKey.LightMapCoordinates, CurrentLine);
+			if (value.Value.Length >= 4)
+			{
+				hasLightMap = true;
+				lightMapCoordinates = GetVector2(value.Value, 3, (T2)(object)CSVB3DKey.LightMapCoordinates, CurrentLine);
+			}
 			return true;
 		}
 
@@ -664,17 +676,30 @@ namespace Formats.OpenBve
 		public override bool GetNextMirror(out Vector3 mirrorVertices, out Vector3 mirrorNormals)
 		{
 			KeyValuePair<T2, string[]> value = Dequeue();
-
 			mirrorVertices = GetVector3(value.Value, 0, (T2)(object)CSVB3DKey.MirrorVertices, CurrentLine);
 			mirrorNormals = value.Value.Length >= 4 ? GetVector3(value.Value, 3, (T2)(object)CSVB3DKey.MirrorNormals, CurrentLine) : mirrorVertices;
 
 			return mirrorVertices != Vector3.Zero || mirrorNormals != Vector3.Zero;
 		}
-
+		
 		public override bool GetNextRawValue(out string text)
 		{
 			KeyValuePair<T2, string[]> value = Dequeue();
 			text = string.Join(",", value.Value); 
+			return true;
+		}
+
+		public override bool GetNextBool(out bool booleanValue)
+		{
+			KeyValuePair<T2, string[]> value = Dequeue();
+			if (value.Value.Length >= 1 ||  !NumberFormats.TryParseIntVb6(value.Value[0], out int i))
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Invalid value for " + value.Key + " at line " + CurrentLine + " in file " + FileName);
+				booleanValue = false;
+				return false;
+			}
+
+			booleanValue = i != 0;
 			return true;
 		}
 

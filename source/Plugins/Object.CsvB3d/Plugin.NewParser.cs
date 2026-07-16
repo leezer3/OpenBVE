@@ -114,8 +114,7 @@ namespace Object.CsvB3d
 									CheckForColorHacks(fileName, currentMeshBuilder, staticObject, ref c);
 								}
 
-								currentMeshBuilder.ApplyColor(c,
-									key == CSVB3DKey.EmissiveColor || key == CSVB3DKey.EmissiveColorAll);
+								currentMeshBuilder.ApplyColor(c, key == CSVB3DKey.EmissiveColor || key == CSVB3DKey.EmissiveColorAll);
 								if (key == CSVB3DKey.ColorAll || key == CSVB3DKey.EmissiveColorAll)
 								{
 									staticObject.ApplyColor(c, key == CSVB3DKey.EmissiveColorAll);
@@ -266,14 +265,22 @@ namespace Object.CsvB3d
 							}
 							break;
 						case CSVB3DKey.Coordinates:
-							if (subBlock.GetNextTextureCoordinates(out int idx, out Vector2 textureCoordinates, out Vector2 lightMapCoordinates))
+							if (subBlock.GetNextTextureCoordinates(out int idx, out Vector2 textureCoordinates, out bool hasLightMap, out Vector2 lightMapCoordinates))
 							{
 								if (idx >= currentMeshBuilder.Vertices.Count)
 								{
 									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid vertex index in command " + key + " at line " + subBlock.CurrentLine + " in file " + fileName);
 									break;
 								}
-								currentMeshBuilder.Vertices[idx].TextureCoordinates = textureCoordinates;
+
+								if (hasLightMap)
+								{
+									currentMeshBuilder.Vertices[idx] = new LightMappedVertex(currentMeshBuilder.Vertices[idx].Coordinates, textureCoordinates, lightMapCoordinates);
+								}
+								else
+								{
+									currentMeshBuilder.Vertices[idx].TextureCoordinates = textureCoordinates;
+								}
 							}
 							break;
 						case CSVB3DKey.Transparent:
@@ -323,6 +330,12 @@ namespace Object.CsvB3d
 							if (subBlock.GetNextVector2(out Vector2 textPadding))
 							{
 								currentMeshBuilder.Materials[0].TextPadding = textPadding;
+							}
+							break;
+						case CSVB3DKey.DisableShadowCasting:
+							if (subBlock.GetNextBool(out bool disableShadowCasting) && disableShadowCasting)
+							{
+								currentMeshBuilder.Materials[0].Flags |= MaterialFlags.NoShadow;
 							}
 							break;
 						default:
