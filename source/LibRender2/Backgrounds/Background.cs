@@ -182,6 +182,48 @@ namespace LibRender2.Backgrounds
 			renderer.DefaultShader.Activate();
 			renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
 
+			if (data.AnimatedObject != null)
+			{
+				foreach (AnimatedObject obj in data.AnimatedObject.Objects)
+				{
+					if (obj.States.Length == 0 || obj.internalObject == null)
+					{
+						continue;
+					}
+					ObjectState state = obj.internalObject;
+					if (state.Prototype.Mesh.VAO == null)
+					{
+						VAOExtensions.CreateVAO(state.Prototype.Mesh, false, renderer.DefaultShader.VertexLayout, renderer);
+					}
+					foreach (MeshFace face in state.Prototype.Mesh.Faces)
+					{
+						OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
+						if (state.Prototype.Mesh.Materials[face.Material].DaytimeTexture != null)
+						{
+							if (state.Prototype.Mesh.Materials[face.Material].WrapMode == null)
+							{
+								foreach (VertexTemplate vertex in state.Prototype.Mesh.Vertices)
+								{
+									if (vertex.TextureCoordinates.X < 0.0f || vertex.TextureCoordinates.X > 1.0f)
+									{
+										wrap |= OpenGlTextureWrapMode.RepeatClamp;
+									}
+									if (vertex.TextureCoordinates.Y < 0.0f || vertex.TextureCoordinates.Y > 1.0f)
+									{
+										wrap |= OpenGlTextureWrapMode.ClampRepeat;
+									}
+								}
+								state.Prototype.Mesh.Materials[face.Material].WrapMode = wrap;
+							}
+						}
+						GL.Enable(EnableCap.DepthClamp);
+						renderer.RenderFace(renderer.DefaultShader, state, face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
+						GL.Disable(EnableCap.DepthClamp);
+					}
+				}
+				return;
+			}
+
 			if (data.Object.Mesh.VAO == null)
 			{
 				VAOExtensions.CreateVAO(data.Object.Mesh, false, renderer.DefaultShader.VertexLayout, renderer);
