@@ -32,7 +32,6 @@ using OpenBveApi.Textures;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Object.CsvB3d
 {
@@ -82,7 +81,7 @@ namespace Object.CsvB3d
 								for (int j = 0; j < faceVertices.Length; j++)
 								{
 									f.Vertices[j].Index = faceVertices[j];
-									if (j < currentNormals.Count)
+									if (faceVertices[j] < currentNormals.Count)
 									{
 										f.Vertices[j].Normal = currentNormals[faceVertices[j]];
 									}

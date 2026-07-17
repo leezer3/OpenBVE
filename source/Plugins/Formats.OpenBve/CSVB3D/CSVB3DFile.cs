@@ -431,7 +431,7 @@ namespace Formats.OpenBve
 			parsedValues = new double[value.Length];
 			for (int i = 0; i < Math.Min(value.Length, neededValues); i++)
 			{
-				if (!NumberFormats.TryParseDoubleVb6(value[i], out parsedValues[i]) && !string.IsNullOrEmpty(value[i]))
+				if (!NumberFormats.TryParseDoubleVb6(value[i], out parsedValues[i]) && !string.IsNullOrEmpty(value[i]) && i != 0) // n.b. empty first value is accepted (maps to zero), e.g. Neustadt tram routes
 				{
 					currentHost.AddMessage(MessageType.Error, false, "The value at array index " + i + " is not a valid double in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 					Array.Resize(ref parsedValues, i);

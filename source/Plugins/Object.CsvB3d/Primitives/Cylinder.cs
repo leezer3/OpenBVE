@@ -33,6 +33,7 @@ namespace Object.CsvB3d
 	{
 		internal static void CreateCylinder(ref MeshBuilder Builder, int numFaces, double upperRadius, double lowerRadius, double height)
 		{
+			Builder.isCylinder = true;
 			// parameters
 			bool upperCap = upperRadius > 0.0;
 			bool lowerCap = lowerRadius > 0.0;
