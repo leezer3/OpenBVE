@@ -350,33 +350,33 @@ namespace Formats.OpenBve
 		{
 			string[] value = Dequeue();
 			Vertex currentVertex = new Vertex();
-			if (value.Length >= 1 && value[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(value[0], out currentVertex.Coordinates.X))
+			if (value.Length >= 1 && !string.IsNullOrWhiteSpace(value[0]) && !NumberFormats.TryParseDoubleVb6(value[0], out currentVertex.Coordinates.X))
 			{
 				currentHost.AddMessage(MessageType.Error, false, "Invalid argument vX in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				currentVertex.Coordinates.X = 0.0;
 			}
-			if (value.Length >= 2 && value[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(value[1], out currentVertex.Coordinates.Y))
+			if (value.Length >= 2 && !string.IsNullOrWhiteSpace(value[1]) && !NumberFormats.TryParseDoubleVb6(value[1], out currentVertex.Coordinates.Y))
 			{
 				currentHost.AddMessage(MessageType.Error, false, "Invalid argument vY in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				currentVertex.Coordinates.Y = 0.0;
 			}
-			if (value.Length >= 3 && value[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(value[2], out currentVertex.Coordinates.Z))
+			if (value.Length >= 3 && !string.IsNullOrWhiteSpace(value[2]) && !NumberFormats.TryParseDoubleVb6(value[2], out currentVertex.Coordinates.Z))
 			{
 				currentHost.AddMessage(MessageType.Error, false, "Invalid argument vZ in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				currentVertex.Coordinates.Z = 0.0;
 			}
 			currentNormal = new Vector3();
-			if (value.Length >= 4 && value[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(value[3], out currentNormal.X))
+			if (value.Length >= 4 && !string.IsNullOrWhiteSpace(value[3]) && !NumberFormats.TryParseDoubleVb6(value[3], out currentNormal.X))
 			{
 				currentHost.AddMessage(MessageType.Error, false, "Invalid argument nX in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				currentNormal.X = 0.0;
 			}
-			if (value.Length >= 5 && value[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(value[4], out currentNormal.Y))
+			if (value.Length >= 5 && !string.IsNullOrWhiteSpace(value[4]) && !NumberFormats.TryParseDoubleVb6(value[4], out currentNormal.Y))
 			{
 				currentHost.AddMessage(MessageType.Error, false, "Invalid argument nY in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				currentNormal.Y = 0.0;
 			}
-			if (value.Length >= 6 && value[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(value[5], out currentNormal.Z))
+			if (value.Length >= 6 && !string.IsNullOrWhiteSpace(value[5]) && !NumberFormats.TryParseDoubleVb6(value[5], out currentNormal.Z))
 			{
 				currentHost.AddMessage(MessageType.Error, false, "Invalid argument nZ in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				currentNormal.Z = 0.0;
@@ -399,7 +399,7 @@ namespace Formats.OpenBve
 				 */
 				if (!NumberFormats.TryParseIntVb6(value[i], out parsedValues[i]) && (i != 0 || enableHacks == false))
 				{
-					if (!string.IsNullOrEmpty(value[i]))
+					if (!string.IsNullOrWhiteSpace(value[i]))
 					{
 						currentHost.AddMessage(MessageType.Error, false, "The vertex referenced at index " + i + " is not a valid integer in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 					}
@@ -431,7 +431,7 @@ namespace Formats.OpenBve
 			parsedValues = new double[value.Length];
 			for (int i = 0; i < Math.Min(value.Length, neededValues); i++)
 			{
-				if (!NumberFormats.TryParseDoubleVb6(value[i], out parsedValues[i]) && !string.IsNullOrEmpty(value[i]) && i != 0) // n.b. empty first value is accepted (maps to zero), e.g. Neustadt tram routes
+				if (!NumberFormats.TryParseDoubleVb6(value[i], out parsedValues[i]) && !string.IsNullOrWhiteSpace(value[i])) // n.b. empty value is accepted (maps to zero), e.g. Neustadt tram routes
 				{
 					currentHost.AddMessage(MessageType.Error, false, "The value at array index " + i + " is not a valid double in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 					Array.Resize(ref parsedValues, i);
@@ -453,19 +453,19 @@ namespace Formats.OpenBve
 				return false;
 			}
 
-			if (value.Length >= 1 && value[0].Length > 0 && !NumberFormats.TryParseByteVb6(value[0], out r))
+			if (value.Length >= 1 && !string.IsNullOrWhiteSpace(value[0]) && !NumberFormats.TryParseByteVb6(value[0], out r))
 			{
 				currentHost.AddMessage(MessageType.Error, false, "Invalid value for Red in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 			}
-			if (value.Length >= 2 && value[1].Length > 0 && !NumberFormats.TryParseByteVb6(value[1], out g))
+			if (value.Length >= 2 && !string.IsNullOrWhiteSpace(value[1]) && !NumberFormats.TryParseByteVb6(value[1], out g))
 			{
 				currentHost.AddMessage(MessageType.Error, false, "Invalid value for Green in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 			}
-			if (value.Length >= 3 && value[2].Length > 0 && !NumberFormats.TryParseByteVb6(value[2], out b))
+			if (value.Length >= 3 && !string.IsNullOrWhiteSpace(value[2]) && !NumberFormats.TryParseByteVb6(value[2], out b))
 			{
 				currentHost.AddMessage(MessageType.Error, false, "Invalid value for Blue in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 			}
-			if (value.Length >= 4 && value[3].Length > 0 && !NumberFormats.TryParseByteVb6(value[3], out a))
+			if (value.Length >= 4 && !string.IsNullOrWhiteSpace(value[3]) && !NumberFormats.TryParseByteVb6(value[3], out a))
 			{
 				currentHost.AddMessage(MessageType.Error, false, "Invalid value for Alpha in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				a = 255; // special-case
@@ -478,8 +478,8 @@ namespace Formats.OpenBve
 		{
 			string[] value = Dequeue();
 
-			tDay = value.Length >= 1 && !string.IsNullOrEmpty(value[0]) ? OpenBveApi.Path.CombineFile(absolutePath, value[0].Trim()) : null;
-			tNight = value.Length >= 2 && !string.IsNullOrEmpty(value[1]) ? OpenBveApi.Path.CombineFile(absolutePath, value[1].Trim()) : null;
+			tDay = value.Length >= 1 && !string.IsNullOrWhiteSpace(value[0]) ? OpenBveApi.Path.CombineFile(absolutePath, value[0].Trim()) : null;
+			tNight = value.Length >= 2 && !string.IsNullOrWhiteSpace(value[1]) ? OpenBveApi.Path.CombineFile(absolutePath, value[1].Trim()) : null;
 
 			bool textureFound = false;
 			
@@ -506,7 +506,7 @@ namespace Formats.OpenBve
 		public override bool GetNextPath(string absolutePath, out string finalPath)
 		{
 			string[] value = Dequeue();
-			finalPath = value.Length >= 1 && !string.IsNullOrEmpty(value[0]) ? OpenBveApi.Path.CombineFile(absolutePath, value[0]) : string.Empty;
+			finalPath = value.Length >= 1 && !string.IsNullOrWhiteSpace(value[0]) ? OpenBveApi.Path.CombineFile(absolutePath, value[0]) : string.Empty;
 			if (File.Exists(finalPath))
 			{
 				return true;
@@ -523,7 +523,7 @@ namespace Formats.OpenBve
 			hasLightMap = false;
 			coordinates = Vector2.Null;
 			lightMapCoordinates = Vector2.Null;
-			if (value.Length >= 1 && value[0].Length > 0 && !NumberFormats.TryParseIntVb6(value[0], out index))
+			if (value.Length >= 1 && !string.IsNullOrWhiteSpace(value[0]) && !NumberFormats.TryParseIntVb6(value[0], out index))
 			{
 				currentHost.AddMessage(MessageType.Error, false, "Vertex index was invalid for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				return false;
@@ -638,17 +638,17 @@ namespace Formats.OpenBve
 		private Vector3 GetVector3(string[] values, int startingIndex, T2 key, int line)
 		{
 			Vector3 v = Vector3.Zero;
-			if (values.Length >= startingIndex + 1 && values[startingIndex].Length > 0 && !NumberFormats.TryParseDoubleVb6(values[startingIndex], out v.X))
+			if (values.Length >= startingIndex + 1 && !string.IsNullOrWhiteSpace(values[startingIndex]) && !NumberFormats.TryParseDoubleVb6(values[startingIndex], out v.X))
 			{
 				currentHost.AddMessage(MessageType.Error, false, "X was invalid for " + key + " at line " + line + " in file " + FileName);
 			}
 
-			if (values.Length >= startingIndex + 2 && values[startingIndex + 1].Length > 0 && !NumberFormats.TryParseDoubleVb6(values[startingIndex + 1], out v.Y))
+			if (values.Length >= startingIndex + 2 && !string.IsNullOrWhiteSpace(values[startingIndex + 1]) && !NumberFormats.TryParseDoubleVb6(values[startingIndex + 1], out v.Y))
 			{
 				currentHost.AddMessage(MessageType.Error, false, "Y was invalid for " + key + " at line " + line + " in file " + FileName);
 			}
 
-			if (values.Length >= startingIndex + 3 && values[startingIndex + 2].Length > 0 && !NumberFormats.TryParseDoubleVb6(values[startingIndex + 2], out v.Z))
+			if (values.Length >= startingIndex + 3 && !string.IsNullOrWhiteSpace(values[startingIndex + 2]) && !NumberFormats.TryParseDoubleVb6(values[startingIndex + 2], out v.Z))
 			{
 				currentHost.AddMessage(MessageType.Error, false, "Y was invalid for " + key + " at line " + line + " in file " + FileName);
 			}
