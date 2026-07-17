@@ -182,38 +182,83 @@ namespace LibRender2.Backgrounds
 			renderer.DefaultShader.Activate();
 			renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
 
-			if (data.Object.Mesh.VAO == null)
+			if (data.Object is AnimatedObjectCollection animatedObjectCollection)
 			{
-				VAOExtensions.CreateVAO(data.Object.Mesh, false, renderer.DefaultShader.VertexLayout, renderer);
-			}
-
-            foreach (MeshFace face in data.Object.Mesh.Faces)
-			{
-				OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
-
-				if (data.Object.Mesh.Materials[face.Material].DaytimeTexture != null)
+				foreach (AnimatedObject obj in animatedObjectCollection.Objects)
 				{
-					if (data.Object.Mesh.Materials[face.Material].WrapMode == null)
+					if (obj.States.Length == 0 || obj.internalObject == null)
 					{
-						foreach (VertexTemplate vertex in data.Object.Mesh.Vertices)
+						continue;
+					}
+					ObjectState state = obj.internalObject;
+					if (state.Prototype.Mesh.VAO == null)
+					{
+						VAOExtensions.CreateVAO(state.Prototype.Mesh, false, renderer.DefaultShader.VertexLayout, renderer);
+					}
+					foreach (MeshFace face in state.Prototype.Mesh.Faces)
+					{
+						OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
+						if (state.Prototype.Mesh.Materials[face.Material].DaytimeTexture != null)
 						{
-							if (vertex.TextureCoordinates.X < 0.0f || vertex.TextureCoordinates.X > 1.0f)
+							if (state.Prototype.Mesh.Materials[face.Material].WrapMode == null)
 							{
-								wrap |= OpenGlTextureWrapMode.RepeatClamp;
-							}
-
-							if (vertex.TextureCoordinates.Y < 0.0f || vertex.TextureCoordinates.Y > 1.0f)
-							{
-								wrap |= OpenGlTextureWrapMode.ClampRepeat;
+								foreach (VertexTemplate vertex in state.Prototype.Mesh.Vertices)
+								{
+									if (vertex.TextureCoordinates.X < 0.0f || vertex.TextureCoordinates.X > 1.0f)
+									{
+										wrap |= OpenGlTextureWrapMode.RepeatClamp;
+									}
+									if (vertex.TextureCoordinates.Y < 0.0f || vertex.TextureCoordinates.Y > 1.0f)
+									{
+										wrap |= OpenGlTextureWrapMode.ClampRepeat;
+									}
+								}
+								state.Prototype.Mesh.Materials[face.Material].WrapMode = wrap;
 							}
 						}
-
-						data.Object.Mesh.Materials[face.Material].WrapMode = wrap;
+						GL.Enable(EnableCap.DepthClamp);
+						renderer.RenderFace(renderer.DefaultShader, state, face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
+						GL.Disable(EnableCap.DepthClamp);
 					}
 				}
-				GL.Enable(EnableCap.DepthClamp);
-				renderer.RenderFace(renderer.DefaultShader, data.ObjectState, face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
-                GL.Disable(EnableCap.DepthClamp);
+				return;
+			}
+
+			if(data.Object is StaticObject staticObject)
+			{
+				
+				if (staticObject.Mesh.VAO == null)
+				{
+					VAOExtensions.CreateVAO(staticObject.Mesh, false, renderer.DefaultShader.VertexLayout, renderer);
+				}
+				foreach (MeshFace face in staticObject.Mesh.Faces)
+				{
+					OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
+
+					if (staticObject.Mesh.Materials[face.Material].DaytimeTexture != null)
+					{
+						if (staticObject.Mesh.Materials[face.Material].WrapMode == null)
+						{
+							foreach (VertexTemplate vertex in staticObject.Mesh.Vertices)
+							{
+								if (vertex.TextureCoordinates.X < 0.0f || vertex.TextureCoordinates.X > 1.0f)
+								{
+									wrap |= OpenGlTextureWrapMode.RepeatClamp;
+								}
+
+								if (vertex.TextureCoordinates.Y < 0.0f || vertex.TextureCoordinates.Y > 1.0f)
+								{
+									wrap |= OpenGlTextureWrapMode.ClampRepeat;
+								}
+							}
+
+							staticObject.Mesh.Materials[face.Material].WrapMode = wrap;
+						}
+					}
+					GL.Enable(EnableCap.DepthClamp);
+					renderer.RenderFace(renderer.DefaultShader, data.ObjectState, face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
+					GL.Disable(EnableCap.DepthClamp);
+				}
 			}
 		}
 	}
