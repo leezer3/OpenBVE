@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2026, Christopher Lees, The OpenBVE Project
 //
@@ -170,6 +170,14 @@ namespace Object.CsvB3d
 					case 0:
 						indicies = new[] { 0, 2, 3, 1 };
 						break;
+				}
+			}
+
+			if (fileName.FileNameEndsWith(new[] { "hanzomon\\enshin\\sumi\\sumiendForm.csv" }))
+			{
+				if (staticObject.Mesh.Faces.Length == 8 && indicies.SequenceEqual(new[] { 3, 2, 4, 5 }))
+				{
+					indicies = new[] { 2, 3, 4, 5 };
 				}
 			}
 
