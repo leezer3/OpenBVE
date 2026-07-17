@@ -650,7 +650,7 @@ namespace Formats.OpenBve
 
 			if (values.Length >= startingIndex + 3 && !string.IsNullOrWhiteSpace(values[startingIndex + 2]) && !NumberFormats.TryParseDoubleVb6(values[startingIndex + 2], out v.Z))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Y was invalid for " + key + " at line " + line + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Z was invalid for " + key + " at line " + line + " in file " + FileName);
 			}
 
 			return v;
