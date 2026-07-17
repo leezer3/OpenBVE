@@ -182,9 +182,9 @@ namespace LibRender2.Backgrounds
 			renderer.DefaultShader.Activate();
 			renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
 
-			if (data.AnimatedObject != null)
+			if (data.Object is AnimatedObjectCollection animatedObjectCollection)
 			{
-				foreach (AnimatedObject obj in data.AnimatedObject.Objects)
+				foreach (AnimatedObject obj in animatedObjectCollection.Objects)
 				{
 					if (obj.States.Length == 0 || obj.internalObject == null)
 					{
@@ -224,38 +224,41 @@ namespace LibRender2.Backgrounds
 				return;
 			}
 
-			if (data.Object.Mesh.VAO == null)
+			if(data.Object is StaticObject staticObject)
 			{
-				VAOExtensions.CreateVAO(data.Object.Mesh, false, renderer.DefaultShader.VertexLayout, renderer);
-			}
-
-            foreach (MeshFace face in data.Object.Mesh.Faces)
-			{
-				OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
-
-				if (data.Object.Mesh.Materials[face.Material].DaytimeTexture != null)
+				
+				if (staticObject.Mesh.VAO == null)
 				{
-					if (data.Object.Mesh.Materials[face.Material].WrapMode == null)
-					{
-						foreach (VertexTemplate vertex in data.Object.Mesh.Vertices)
-						{
-							if (vertex.TextureCoordinates.X < 0.0f || vertex.TextureCoordinates.X > 1.0f)
-							{
-								wrap |= OpenGlTextureWrapMode.RepeatClamp;
-							}
-
-							if (vertex.TextureCoordinates.Y < 0.0f || vertex.TextureCoordinates.Y > 1.0f)
-							{
-								wrap |= OpenGlTextureWrapMode.ClampRepeat;
-							}
-						}
-
-						data.Object.Mesh.Materials[face.Material].WrapMode = wrap;
-					}
+					VAOExtensions.CreateVAO(staticObject.Mesh, false, renderer.DefaultShader.VertexLayout, renderer);
 				}
-				GL.Enable(EnableCap.DepthClamp);
-				renderer.RenderFace(renderer.DefaultShader, data.ObjectState, face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
-                GL.Disable(EnableCap.DepthClamp);
+				foreach (MeshFace face in staticObject.Mesh.Faces)
+				{
+					OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
+
+					if (staticObject.Mesh.Materials[face.Material].DaytimeTexture != null)
+					{
+						if (staticObject.Mesh.Materials[face.Material].WrapMode == null)
+						{
+							foreach (VertexTemplate vertex in staticObject.Mesh.Vertices)
+							{
+								if (vertex.TextureCoordinates.X < 0.0f || vertex.TextureCoordinates.X > 1.0f)
+								{
+									wrap |= OpenGlTextureWrapMode.RepeatClamp;
+								}
+
+								if (vertex.TextureCoordinates.Y < 0.0f || vertex.TextureCoordinates.Y > 1.0f)
+								{
+									wrap |= OpenGlTextureWrapMode.ClampRepeat;
+								}
+							}
+
+							staticObject.Mesh.Materials[face.Material].WrapMode = wrap;
+						}
+					}
+					GL.Enable(EnableCap.DepthClamp);
+					renderer.RenderFace(renderer.DefaultShader, data.ObjectState, face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
+					GL.Disable(EnableCap.DepthClamp);
+				}
 			}
 		}
 	}

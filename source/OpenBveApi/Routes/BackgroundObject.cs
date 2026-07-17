@@ -9,10 +9,8 @@ namespace OpenBveApi.Routes
 	/// <summary>Represents a background object</summary>
 	public sealed class BackgroundObject : BackgroundHandle
 	{
-		/// <summary>The object used for this background (NOTE: Static objects only)</summary>
-		public readonly StaticObject Object;
-		/// <summary>The animated object collection used for this background (if an animated file is used)</summary>
-		public readonly AnimatedObjectCollection AnimatedObject;
+		/// <summary>The object used for this background</summary>
+		public readonly UnifiedObject Object;
 		/// <summary>The clipping distance required to fully render the object</summary>
 		public readonly double ClipDistance = 0;
 		/// <summary>The object state</summary>
@@ -104,7 +102,7 @@ namespace OpenBveApi.Routes
 				}
 			}
 
-			ObjectState = new ObjectState(Object);
+			ObjectState = new ObjectState(Object as StaticObject);
 		}
 
 		/// <summary>Creates a new background object from an animated object collection</summary>
@@ -114,9 +112,9 @@ namespace OpenBveApi.Routes
 		public BackgroundObject(AnimatedObjectCollection animatedObject, double backgroundImageDistance, HostInterface host)
 		{
 			BackgroundImageDistance = backgroundImageDistance;
-			AnimatedObject = (AnimatedObjectCollection)animatedObject.Clone();
+			AnimatedObjectCollection animatedObjectCollection = (AnimatedObjectCollection)animatedObject.Clone();
 			//Register the internal dynamic object states so their VAOs are created
-			foreach (AnimatedObject obj in AnimatedObject.Objects)
+			foreach (AnimatedObject obj in animatedObjectCollection.Objects)
 			{
 				if (obj.States.Length == 0)
 				{
@@ -131,21 +129,23 @@ namespace OpenBveApi.Routes
 					{
 						continue;
 					}
-					foreach (Vertex v in state.Prototype.Mesh.Vertices)
+					foreach (VertexTemplate v in state.Prototype.Mesh.Vertices)
 					{
 						ClipDistance = System.Math.Max(ClipDistance, System.Math.Abs(v.Coordinates.X));
 						ClipDistance = System.Math.Max(ClipDistance, System.Math.Abs(v.Coordinates.Z));
 					}
 				}
 			}
+
+			Object = animatedObjectCollection;
 		}
 
 		/// <inheritdoc/>
 		public override void UpdateBackground(double secondsSinceMidnight, double timeElapsed, bool target)
 		{
-			if (AnimatedObject != null)
+			if (Object is AnimatedObjectCollection animatedObjectCollection)
 			{
-				foreach (AnimatedObject obj in AnimatedObject.Objects)
+				foreach (AnimatedObject obj in animatedObjectCollection.Objects)
 				{
 					if (obj.States.Length == 0)
 					{
