@@ -14,6 +14,9 @@ namespace OpenBveApi.Textures
 		public readonly Color24? TransparentColor;
 		/// <summary>The alpha channel texture</summary>
 		public Texture TransparencyTexture;
+		/// <summary>Whether the first color in the texture palette is transparent</summary>
+		/// <remarks>Used by Mechanik routes</remarks>
+		public bool FirstColorTransparent;
 
 		/// <summary>Texture parameters, which apply no changes.</summary>
 		public static TextureParameters NoChange = new TextureParameters(null, null);

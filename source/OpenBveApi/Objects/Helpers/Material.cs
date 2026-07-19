@@ -42,6 +42,9 @@ namespace OpenBveApi.Objects
 		public string Font;
 		/// <summary>The text padding to apply</summary>
 		public Vector2 TextPadding;
+		/// <summary>Whether the first color in the texture palette is transparent</summary>
+		/// <remarks>Used by Mechanik routes</remarks>
+		public bool FirstColorTransparent;
 
 		/// <summary>Creates a new Material with default properties</summary>
 		public Material() {

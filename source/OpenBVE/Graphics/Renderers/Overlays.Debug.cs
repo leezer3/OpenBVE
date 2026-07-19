@@ -196,7 +196,7 @@ namespace OpenBve.Graphics.Renderers
 				"total animated objects: " + ObjectManager.AnimatedWorldObjectsUsed.ToString(Culture),
 				"",
 				"=renderer",
-				"renderer type: " + (Program.Renderer.AvailableNewRenderer ? "openGL 4 (new)" : "openGL 1.2 (old)"),
+				"renderer type: openGL 4 (new)",
 				"opaque faces: " + Program.Renderer.VisibleObjects.OpaqueFaces.Count.ToString(Culture),
 				"alpha faces: " + Program.Renderer.VisibleObjects.AlphaFaces.Count.ToString(Culture),
 				"overlay opaque faces: " + Program.Renderer.VisibleObjects.OverlayOpaqueFaces.Count.ToString(Culture),

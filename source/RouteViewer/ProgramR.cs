@@ -650,11 +650,8 @@ namespace RouteViewer
 						    Math.Abs(prevShadowBias - Interface.CurrentOptions.ShadowBias) > 0.000001f ||
 						    Math.Abs(prevShadowNormalBias - Interface.CurrentOptions.ShadowNormalBias) > 0.01f)
 						{
-							if (Program.Renderer.AvailableNewRenderer)
-							{
-								Program.Renderer.ReloadShadowSettings();
-							}
-						}
+							Program.Renderer.ReloadShadowSettings();
+                        }
 					}
 					Application.DoEvents();
 					Renderer.Camera.AlignmentDirection.TrackPosition = 0;
@@ -882,13 +879,6 @@ namespace RouteViewer
 							Renderer.CurrentInterface = InterfaceType.Menu;
 							Game.Menu.PushMenu(MenuType.GameStart);
 						}
-					}
-					break;
-				case Key.R:
-					if (!RPressed)
-					{
-						RPressed = true;
-						Renderer.SwitchOpenGLVersion();
 					}
 					break;
 				case Key.P:
