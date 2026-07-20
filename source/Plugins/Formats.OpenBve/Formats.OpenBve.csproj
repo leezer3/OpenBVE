@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="CFG\ConfigFile.cs" />
     <Compile Include="CSVB3D\CSVB3DFile.cs" />
+    <Compile Include="DAT\TrainDat.cs" />
     <Compile Include="Enums\CompatibilityObject\CompatibilityObjectKey.cs" />
     <Compile Include="Enums\CompatibilityObject\CompatibilityObjectSection.cs" />
     <Compile Include="Enums\CSVB3D\CSVB3DKey.cs" />
@@ -82,6 +83,9 @@
     <Compile Include="Enums\StationXML\StationXMLSection.cs" />
     <Compile Include="Enums\TrackFollowingObjectXML\TrackFollowingObjectKey.cs" />
     <Compile Include="Enums\TrackFollowingObjectXML\TrackFollowingObjectSection.cs" />
+    <Compile Include="Enums\TrainDat\TrainDatFormats.cs" />
+    <Compile Include="Enums\TrainDat\TrainDatKey.cs" />
+    <Compile Include="Enums\TrainDat\TrainDatSection.cs" />
     <Compile Include="Enums\TrainXML\CargoType.cs" />
     <Compile Include="Enums\TrainXML\Handle.cs" />
     <Compile Include="Enums\TrainXML\TrainXMLKey.cs" />

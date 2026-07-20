@@ -775,6 +775,148 @@ namespace Formats.OpenBve
 			return false;
 		}
 
+		/// <summary>Gets the next double from the block</summary>
+		public virtual bool GetNextDouble(T2 key, NumberRange range, out double d)
+		{
+			d = -1;
+			if (rawValues.Count > 0)
+			{
+				KeyValuePair<int, string> value = rawValues.Dequeue();
+				if(NumberFormats.TryParseDoubleVb6(value.Value, out double newValue))
+				{
+					switch (range)
+					{
+						case NumberRange.Any:
+							d = newValue;
+							return true;
+						case NumberRange.Positive:
+							if (newValue > 0)
+							{
+								d = newValue;
+								return true;
+							}
+							currentHost.AddMessage(MessageType.Warning, false, "Value " + newValue + " is not a positive double in Key " + key + " in Section " + Key + " at line " + value.Key);
+							return false;
+						case NumberRange.NonNegative:
+							if (newValue >= 0)
+							{
+								d = newValue;
+								return true;
+							}
+							currentHost.AddMessage(MessageType.Warning, false, "Value " + newValue + " is not a non-negative double in Key " + key + " in Section " + Key + " at line " + value.Key);
+							return false;
+						case NumberRange.NonZero:
+							if (newValue != 0)
+							{
+								d = newValue;
+								return true;
+							}
+							currentHost.AddMessage(MessageType.Warning, false, "Value " + newValue + " is not a non-zero double in Key " + key + " in Section " + Key + " at line " + value.Key);
+							return false;
+					}
+				}
+				
+				currentHost.AddMessage("Value is invalid in " + key + " in " + Key + " at line " + value.Key + " in file " + FileName);
+			}
+			return false;
+		}
+
+		public virtual bool GetNextInt(T2 key, NumberRange range, out int d)
+		{
+			d = -1;
+			if (rawValues.Count > 0)
+			{
+				KeyValuePair<int, string> value = rawValues.Dequeue();
+				if (NumberFormats.TryParseIntVb6(value.Value, out int newValue))
+				{
+					switch (range)
+					{
+						case NumberRange.Any:
+							d = newValue;
+							return true;
+						case NumberRange.Positive:
+							if (newValue > 0)
+							{
+								d = newValue;
+								return true;
+							}
+							currentHost.AddMessage(MessageType.Warning, false, "Value " + newValue + " is not a positive double in Key " + key + " in Section " + Key + " at line " + value.Key);
+							return false;
+						case NumberRange.NonNegative:
+							if (newValue >= 0)
+							{
+								d = newValue;
+								return true;
+							}
+							currentHost.AddMessage(MessageType.Warning, false, "Value " + newValue + " is not a non-negative double in Key " + key + " in Section " + Key + " at line " + value.Key);
+							return false;
+						case NumberRange.NonZero:
+							if (newValue != 0)
+							{
+								d = newValue;
+								return true;
+							}
+							currentHost.AddMessage(MessageType.Warning, false, "Value " + newValue + " is not a non-zero double in Key " + key + " in Section " + Key + " at line " + value.Key);
+							return false;
+					}
+				}
+
+				currentHost.AddMessage("Value is invalid in " + key + " in " + Key + " at line " + value.Key + " in file " + FileName);
+			}
+			return false;
+		}
+
+		public virtual bool GetNextBool(T2 key, out bool b)
+		{
+			if (rawValues.Count > 0)
+			{
+				KeyValuePair<int, string> value = rawValues.Dequeue();
+				int i = int.Parse(value.Value);
+				b = i == 1;
+				return true;
+			}
+
+			b = false;
+			return false;
+		}
+
+		public virtual bool GetNextDoubleArray(char separator, out double[] array)
+		{
+			if (rawValues.Count > 0)
+			{
+				string s = rawValues.Dequeue().Value;
+				string[] splitString = s.Split(separator);
+				array = new double[splitString.Length];
+				for (int i = 0; i < array.Length; i++)
+				{
+					if (!NumberFormats.TryParseDoubleVb6(splitString[i], out array[i]))
+					{
+						Array.Resize(ref array, i);
+						break;
+					}
+				}
+
+				return true;
+			}
+
+			array = Array.Empty<double>();
+			return false;
+		}
+
+		public virtual bool GetNextEnumValue<T3>(T2 key, out T3 enumValue) where T3 : struct, Enum
+		{
+			if (rawValues.Count > 0)
+			{
+				string s = rawValues.Dequeue().Value;
+				if (Enum.TryParse(s, out enumValue) && Enum.IsDefined(typeof(T3), enumValue))
+				{
+					return true;
+				}
+			}
+			enumValue = default(T3);
+			return false;
+		}
+
 		public virtual bool GetNextPath(string absolutePath, out string finalPath)
 		{
 			if (rawValues.Count > 0)
