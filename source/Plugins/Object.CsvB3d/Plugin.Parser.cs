@@ -395,10 +395,6 @@ namespace Object.CsvB3d
 											currentHost.AddMessage(MessageType.Error, false, "v" + j.ToString(Culture) + " references a non-existing vertex in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											q = false;
 											break;
-										} else if (a[j] > 65535) {
-											currentHost.AddMessage(MessageType.Error, false, "v" + j.ToString(Culture) + " indexes a vertex above 65535 which is not currently supported in " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-											q = false;
-											break;
 										}
 									}
 
