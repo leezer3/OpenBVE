@@ -116,6 +116,7 @@ namespace ObjectViewer.Graphics
 			if (OptionCoordinateSystem)
 			{
 				UnsetAlphaFunc();
+				DefaultShader.SetShadowEnabled(false);
 				redAxisVAO.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), Camera.AbsolutePosition, null);
 				greenAxisVAO.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), Camera.AbsolutePosition, null);
 				blueAxisVAO.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
