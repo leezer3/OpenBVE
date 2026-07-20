@@ -277,6 +277,10 @@ namespace RouteViewer
 
 		public override bool ProcessMouseMove(int x, int y)
 		{
+			if (HandleSidebarResizeMove(x, y))
+			{
+				return true;
+			}
 			Program.Renderer.GameWindow.CursorVisible = true;
 			if (CurrMenu < 0)
 			{
@@ -356,12 +360,12 @@ namespace RouteViewer
 			}
 
 			MenuBase menu = Menus[CurrMenu];
-			// overlay background
-			Renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(Renderer.Screen.Width, Renderer.Screen.Height), overlayColor);
+			// overlay background (fades in/out with the sidebar)
+			Renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(Renderer.Screen.Width, Renderer.Screen.Height), new Color128(overlayColor.R, overlayColor.G, overlayColor.B, (float)(overlayColor.A * SidebarFade)));
 
 			if (menu.Type == MenuType.Options)
 			{
-				Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(menuMax.X - menuMin.X + 2.0f * Border.X, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
+				Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(menuMax.X - menuMin.X + 2.0f * Border.X, menuMax.Y - menuMin.Y + 2.0f * Border.Y), new Color128(backgroundColor.R, backgroundColor.G, backgroundColor.B, (float)(backgroundColor.A * SidebarFade)));
 				if (OptionsTabContainer != null)
 				{
 					OptionsTabContainer.Draw();
@@ -505,6 +509,7 @@ namespace RouteViewer
 			}
 
 			DrawSidebarToggleButton(RealTimeElapsed);
+			DrawSidebarResizeGrip();
 		}
 
 		private static void routeWorkerThread_doWork(object sender, DoWorkEventArgs e)

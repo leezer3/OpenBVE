@@ -436,6 +436,15 @@ namespace RouteViewer
 
 		internal static void KeyDownEvent(object sender, KeyboardKeyEventArgs e)
 		{
+			// Sidebar toggle must work whether the menu is open or not
+			if (e.Key == Key.O)
+			{
+				if (Game.Menu != null && Game.Menu.IsSidebarMode)
+				{
+					Game.Menu.ToggleSidebar();
+				}
+				return;
+			}
 			if (Renderer.CurrentInterface != InterfaceType.Normal)
 			{
 				Game.Menu.ProcessKeyDown(e.Key);

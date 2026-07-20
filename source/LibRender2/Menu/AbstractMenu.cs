@@ -349,11 +349,12 @@ namespace LibRender2.Menu
 
 		private GLHBoxContainer CreateRow(string name)
 		{
-			var row = new GLHBoxContainer(Renderer) { Spacing = 16f };
+			var row = new GLHBoxContainer(Renderer) { Spacing = 12f };
 			row.Size = new Vector2(300f, 24f);
 			var label = new Label(Renderer, name);
 			label.BackgroundColor = new Color128(0, 0, 0, 0);
-			label.Size = new Vector2(140f, 24f);
+			// Let the label keep its natural measured width so long text never overflows
+			label.Size = new Vector2(System.Math.Max(label.Size.X, 24f), 24f);
 			row.Children.Add(label);
 			return row;
 		}
@@ -462,6 +463,32 @@ namespace LibRender2.Menu
 			return new Vector4((float)buttonX, (float)buttonY, 24f, 40f);
 		}
 
+		/// <summary>The width (in px) of the grab/hover zone on the sidebar's right edge</summary>
+		private const float SidebarResizeZone = 8f;
+
+		/// <summary>Whether the user is currently dragging the sidebar edge to resize it</summary>
+		public bool isResizingSidebar = false;
+
+		/// <summary>Whether the mouse is currently hovering the sidebar resize edge (0..1 for highlight fade)</summary>
+		public float sidebarResizeHover = 0f;
+
+		/// <summary>The screen X co-ordinate of the sidebar's right edge, or -1 if not currently shown</summary>
+		public double SidebarEdgeX => IsSidebarMode && SidebarVisible ? (currentOffset < -90000.0 ? (SidebarVisible ? SidebarWidth : 0) : (currentOffset + SidebarWidth)) : -1;
+
+		/// <summary>Tests whether the given point is within the sidebar resize grip</summary>
+		private bool IsOnResizeEdge(int x, int y)
+		{
+			if (!IsSidebarMode || !SidebarVisible) return false;
+			double edge = SidebarEdgeX;
+			if (edge < 0) return false;
+			return x >= edge - SidebarResizeZone && x <= edge + SidebarResizeZone && y >= 0 && y <= Renderer.Screen.Height;
+		}
+
+		/// <summary>Processes a mouse up event</summary>
+
+		/// <summary>The current fade amount of the sidebar (0 = fully hidden, 1 = fully shown)</summary>
+		public double SidebarFade = 0.0;
+
 		public void UpdateTransition(double TimeElapsed)
 		{
 			if (!IsSidebarMode) return;
@@ -480,10 +507,13 @@ namespace LibRender2.Menu
 				double x = System.Math.Min(animationElapsed / animationDuration, 1.0);
 				double progress = 1.0 - System.Math.Pow(1.0 - x, 3.0); // easeOutCubic
 				currentOffset = startOffset + (target - startOffset) * progress;
+				// Fade follows the same eased progress so the colour transition is smooth
+				SidebarFade = SidebarVisible ? progress : 1.0 - progress;
 
 				if (x >= 1.0)
 				{
 					currentOffset = target;
+					SidebarFade = SidebarVisible ? 1.0 : 0.0;
 					isAnimating = false;
 					if (!SidebarVisible)
 					{
@@ -494,6 +524,7 @@ namespace LibRender2.Menu
 			else
 			{
 				currentOffset = target;
+				SidebarFade = SidebarVisible ? 1.0 : 0.0;
 			}
 
 			menuMin.X = currentOffset;
@@ -519,13 +550,26 @@ namespace LibRender2.Menu
 						{
 							if (child is GLHBoxContainer row)
 							{
-								row.Size = new Vector2(containerWidth, row.Size.Y);
+								// Row height follows the current UI font so labels/controls never clip
+								float rowHeight = Renderer.Fonts.NormalFont.FontSize + 10f;
+								row.Size = new Vector2(containerWidth, rowHeight);
 								if (row.Children.Count >= 2)
 								{
-									var label = row.Children[0];
+									var label = row.Children[0] as Label;
 									var control = row.Children[1];
-									label.Size = new Vector2(containerWidth * 0.45f, row.Size.Y);
-									control.Size = new Vector2(containerWidth * 0.5f, row.Size.Y);
+									if (label != null) label.Size = new Vector2(label.Size.X, rowHeight);
+									control.Size = new Vector2(control.Size.X, rowHeight);
+									// Use the label's cached natural width so we don't re-measure every frame
+									float labelWidth = label != null ? (float)label.Size.X : (float)row.Children[0].Size.X;
+									float controlWidth = (float)(containerWidth - labelWidth - row.Spacing);
+									if (controlWidth < 60f)
+									{
+										// Not enough room: shrink the label so the control stays usable
+										labelWidth = containerWidth - 60f - row.Spacing;
+										controlWidth = 60f;
+									}
+									label.Size = new Vector2(labelWidth, row.Size.Y);
+									control.Size = new Vector2(controlWidth, row.Size.Y);
 								}
 							}
 						}
@@ -542,6 +586,32 @@ namespace LibRender2.Menu
 			return true;
 		}
 
+		/// <summary>Toggles the sidebar open/closed, mirroring the on-screen toggle button</summary>
+		public void ToggleSidebar()
+		{
+			if (!IsSidebarMode) return;
+			SidebarVisible = !SidebarVisible;
+			startOffset = currentOffset;
+			animationElapsed = 0.0;
+			isAnimating = true;
+			if (SidebarVisible)
+			{
+				if (CurrMenu == -1)
+				{
+					PushMenu(MenuType.Options);
+				}
+				else
+				{
+					Renderer.CurrentInterface = InterfaceType.Menu;
+				}
+			}
+			else
+			{
+				Renderer.CurrentInterface = InterfaceType.Normal;
+			}
+			ComputePosition();
+		}
+
 		/// <summary>Processes a mouse down event</summary>
 		/// <param name="x">The screen-relative x coordinate of the down event</param>
 		/// <param name="y">The screen-relative y coordinate of the down event</param>
@@ -549,29 +619,15 @@ namespace LibRender2.Menu
 		{
 			if (IsSidebarMode)
 			{
+				if (IsOnResizeEdge(x, y))
+				{
+					isResizingSidebar = true;
+					return;
+				}
 				Vector4 rect = GetToggleButtonRect();
 				if (x >= rect.X && x <= rect.X + rect.Z && y >= rect.Y && y <= rect.Y + rect.W)
 				{
-					SidebarVisible = !SidebarVisible;
-					startOffset = currentOffset;
-					animationElapsed = 0.0;
-					isAnimating = true;
-					if (SidebarVisible)
-					{
-						if (CurrMenu == -1)
-						{
-							PushMenu(MenuType.Options);
-						}
-						else
-						{
-							Renderer.CurrentInterface = InterfaceType.Menu;
-						}
-					}
-					else
-					{
-						Renderer.CurrentInterface = InterfaceType.Normal;
-					}
-					ComputePosition();
+					ToggleSidebar();
 					return;
 				}
 			}
@@ -626,10 +682,50 @@ namespace LibRender2.Menu
 		}
 
 		/// <summary>Processes a mouse up event</summary>
+		/// <summary>Handles hover highlighting and edge-drag resizing of the sidebar. Returns true if the event was consumed.</summary>
+		/// <param name="x">The screen-relative x coordinate</param>
+		/// <param name="y">The screen-relative y coordinate</param>
+		public bool HandleSidebarResizeMove(int x, int y)
+		{
+			if (!IsSidebarMode || !SidebarVisible)
+			{
+				sidebarResizeHover = 0f;
+				return false;
+			}
+			if (isResizingSidebar)
+			{
+				double ratio = (double)x / Renderer.Screen.Width;
+				SidebarWidthRatio = System.Math.Max(0.15, System.Math.Min(ratio, 0.5));
+				ComputePosition();
+				return true;
+			}
+			bool onEdge = IsOnResizeEdge(x, y);
+			sidebarResizeHover = onEdge ? 1f : 0f;
+			return false;
+		}
+
+		/// <summary>Draws the sidebar resize grip / highlight on the right edge</summary>
+		public void DrawSidebarResizeGrip()
+		{
+			if (!IsSidebarMode || !SidebarVisible) return;
+			double edge = Renderer.Screen.Width * SidebarWidthRatio;
+			float fade = (float)System.Math.Max(SidebarFade, 0.001);
+			float baseAlpha = 0.5f * fade;
+			float alpha = (0.5f + 0.5f * sidebarResizeHover) * fade;
+			// Always-visible grip line so the user knows the edge is draggable
+			Renderer.Rectangle.Draw(null, new Vector2((float)(edge - 1), 0f), new Vector2(2f, (float)Renderer.Screen.Height), new Color128(0.0f, 0.47f, 0.83f, baseAlpha));
+			if (sidebarResizeHover > 0f)
+			{
+				Renderer.Rectangle.Draw(null, new Vector2((float)(edge - 3), 0f), new Vector2(6f, (float)Renderer.Screen.Height), new Color128(0.0f, 0.47f, 0.83f, 0.4f * alpha));
+				Renderer.Rectangle.Draw(null, new Vector2((float)edge - 0.5f, 0f), new Vector2(1.5f, (float)Renderer.Screen.Height), new Color128(0.0f, 0.47f, 0.83f, alpha));
+			}
+		}
+
 		public void ProcessMouseUp(int x, int y)
 		{
 			isScrubbing = false;
 			scrubbingOption = null;
+			isResizingSidebar = false;
 			if (CurrMenu >= 0 && Menus.Length > 0 && Menus[CurrMenu].Type == MenuType.Options)
 			{
 				if (OptionsTabContainer != null && OptionsTabContainer.IsVisible)
