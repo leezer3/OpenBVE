@@ -197,6 +197,7 @@ namespace LibRender2
 			else
 			{
 				createVAO(mesh, isDynamic, vertexLayout, renderer);
+				renderer.lastVAO = -1;
 			}
 		}
 
@@ -291,6 +292,7 @@ namespace LibRender2
 			else
 			{
 				createNormalsVAO(mesh, isDynamic, vertexLayout, renderer);
+				renderer.lastVAO = -1;
 			}
 		}
 
