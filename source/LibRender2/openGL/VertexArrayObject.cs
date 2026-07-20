@@ -119,6 +119,20 @@ namespace LibRender2
 		}
 
 		/// <summary>
+		/// Draws the VAO using non-indexed rendering (no IBO required).</summary>
+		/// <param name="DrawMode">Specifies the primitive or primitives that will be created from vertices.</param>
+		/// <param name="Start">Start position of the first vertex.</param>
+		/// <param name="Count">Number of vertices to render.</param>
+		/// <remarks>
+		/// Used by the debug normals overlay, where the vertex buffer is already laid out as contiguous line pairs.
+		/// Avoids holding a duplicate index buffer in RAM.
+		/// </remarks>
+		public void DrawArrays(PrimitiveType DrawMode, int Start, int Count)
+		{
+			GL.DrawArrays(DrawMode, Start, Count);
+		}
+
+		/// <summary>
 		/// Unbinds the VAO deactivating the VAO from use
 		/// </summary>
 		public void UnBind()
@@ -201,48 +215,147 @@ namespace LibRender2
 				 *      This marginally helps loading very large objects (as default C# list starts at a capacity of 4 then doubles exponentially)     
 				 */
 
-				var vertexData = new List<LibRenderVertex>(mesh.Vertices.Length);
-				var indexData = new List<uint>();
+			int totalFaceVertices = 0;
+			for (int i = 0; i < mesh.Faces.Length; i++)
+			{
+				totalFaceVertices += mesh.Faces[i].Vertices.Length;
+			}
 
-				var normalsVertexData = new List<LibRenderVertex>(mesh.Vertices.Length * 2);
-				var normalsIndexData = new List<uint>();
+			var vertexData = new List<LibRenderVertex>(totalFaceVertices);
+			var indexData = new List<uint>(totalFaceVertices);
+
+			for (int i = 0; i < mesh.Faces.Length; i++)
+			{
+				mesh.Faces[i].IboStartIndex = indexData.Count;
+
+				foreach (var vertex in mesh.Faces[i].Vertices)
+				{
+					vertexData.Add(new LibRenderVertex(mesh.Vertices[vertex.Index], vertex.Normal));
+				}
+
+				indexData.AddRange(Enumerable.Range(mesh.Faces[i].IboStartIndex, mesh.Faces[i].Vertices.Length).Select(x => (uint)x));
+			}
+
+			VertexArrayObject VAO = (VertexArrayObject)mesh.VAO;
+			VAO?.UnBind();
+			VAO?.Dispose();
+
+			VAO = new VertexArrayObject();
+			VAO.Bind();
+			VAO.SetVBO(new VertexBufferObject(vertexData.ToArray(), hint));
+			if (indexData.Count > 65530)
+			{
+				//Marginal headroom, although it probably doesn't matter
+				VAO.SetIBO(new IndexBufferObjectUI(indexData.ToArray(), hint));
+			}
+			else
+			{
+				VAO.SetIBO(new IndexBufferObjectUS(indexData.Select(x => (ushort)x).ToArray(), hint));
+			}
+
+			VAO.SetAttributes(vertexLayout);
+			VAO.UnBind();
+			mesh.VAO = VAO;
+
+			/*
+			 * The normals VAO is only used for the debug normals overlay (OptionNormals).
+			 * It is built lazily via CreateNormalsVAO to avoid holding a second large
+			 * vertex buffer in RAM for every loaded mesh.
+			 */
+			VertexArrayObject NormalsVAO = (VertexArrayObject)mesh.NormalsVAO;
+			NormalsVAO?.UnBind();
+			NormalsVAO?.Dispose();
+			mesh.NormalsVAO = null;
+			}
+			catch (Exception e)
+			{
+				renderer.currentHost.AddMessage(MessageType.Error, false, $"Creating VAO failed with the following error: {e}");
+			}
+		}
+
+		/// <summary>Creates the OpenGL/OpenTK VAO for the normals overlay of a mesh.</summary>
+		/// <remarks>This is built lazily on first use of the normals debug view, as it duplicates the vertex data.</remarks>
+		public static void CreateNormalsVAO(Mesh mesh, bool isDynamic, VertexLayout vertexLayout, BaseRenderer renderer)
+		{
+			if (mesh == null || mesh.NormalsVAO is VertexArrayObject)
+			{
+				return;
+			}
+			if (!renderer.GameWindow.Context.IsCurrent)
+			{
+				renderer.RunInRenderThread(() =>
+				{
+					createNormalsVAO(mesh, isDynamic, vertexLayout, renderer);
+				}, 2000);
+			}
+			else
+			{
+				createNormalsVAO(mesh, isDynamic, vertexLayout, renderer);
+			}
+		}
+
+		private static void createNormalsVAO(Mesh mesh, bool isDynamic, VertexLayout vertexLayout, BaseRenderer renderer)
+		{
+			if (mesh == null)
+			{
+				return;
+			}
+
+			try
+			{
+				var hint = isDynamic ? BufferUsageHint.DynamicDraw : BufferUsageHint.StaticDraw;
+
+				int totalFaceVertices = 0;
+				for (int i = 0; i < mesh.Faces.Length; i++)
+				{
+					totalFaceVertices += mesh.Faces[i].Vertices.Length;
+				}
+
+				// Debug normals overlay: a contiguous list of line pairs (vertex -> vertex + normal).
+				// Rendered with DrawArrays (no IBO), so we do not hold a duplicate index buffer in RAM.
+				// Colour is baked per-vertex (purple) because the shader multiplies the uniform colour by the
+				// (zeroed) vertex colour attribute when colour is disabled, which would otherwise render black.
+				var normalsVertexData = new List<LibRenderVertex>(totalFaceVertices * 2);
+				var normalColor = new Color128(0.6f, 0.2f, 1.0f, 1.0f); // purple
+
+				// Scale normal lines relative to the mesh bounding box so they stay a sensible on-screen size.
+				// A fixed 1-unit length blows up into huge overdraw when the camera is close to a small mesh.
+				double scale = 0.01;
+				if (mesh.Vertices.Length > 0)
+				{
+					Vector3 min = mesh.Vertices[0].Coordinates;
+					Vector3 max = mesh.Vertices[0].Coordinates;
+					for (int v = 1; v < mesh.Vertices.Length; v++)
+					{
+						Vector3 c = mesh.Vertices[v].Coordinates;
+						min.X = Math.Min(min.X, c.X);
+						min.Y = Math.Min(min.Y, c.Y);
+						min.Z = Math.Min(min.Z, c.Z);
+						max.X = Math.Max(max.X, c.X);
+						max.Y = Math.Max(max.Y, c.Y);
+						max.Z = Math.Max(max.Z, c.Z);
+					}
+
+					double size = Math.Max(max.X - min.X, Math.Max(max.Y - min.Y, max.Z - min.Z));
+					if (size > 0.0)
+					{
+						scale = size * 0.01;
+					}
+				}
 
 				for (int i = 0; i < mesh.Faces.Length; i++)
 				{
-					mesh.Faces[i].IboStartIndex = indexData.Count;
-					mesh.Faces[i].NormalsIboStartIndex = normalsIndexData.Count;
-
 					foreach (var vertex in mesh.Faces[i].Vertices)
 					{
-						vertexData.Add(new LibRenderVertex(mesh.Vertices[vertex.Index], vertex.Normal));
-						normalsVertexData.Add(new LibRenderVertex(mesh.Vertices[vertex.Index].Coordinates));
-						normalsVertexData.Add(new LibRenderVertex(mesh.Vertices[vertex.Index].Coordinates + vertex.Normal));
+						Vector3 coordinates = mesh.Vertices[vertex.Index].Coordinates;
+						Vector3 tip = coordinates + vertex.Normal * scale;
+						// Pass the normal so the shader's lighting produces a visible (non-black) colour.
+						// UV/MatrixChain are omitted so the shader cannot sample any texture.
+						normalsVertexData.Add(new LibRenderVertex(coordinates, vertex.Normal, normalColor));
+						normalsVertexData.Add(new LibRenderVertex(tip, vertex.Normal, normalColor));
 					}
-
-					indexData.AddRange(Enumerable.Range(mesh.Faces[i].IboStartIndex, mesh.Faces[i].Vertices.Length).Select(x => (uint)x));
-					normalsIndexData.AddRange(Enumerable.Range(mesh.Faces[i].NormalsIboStartIndex, mesh.Faces[i].Vertices.Length * 2).Select(x => (uint)x));
 				}
 
-				VertexArrayObject VAO = (VertexArrayObject)mesh.VAO;
-				VAO?.UnBind();
-				VAO?.Dispose();
-
-				VAO = new VertexArrayObject();
-				VAO.Bind();
-				VAO.SetVBO(new VertexBufferObject(vertexData.ToArray(), hint));
-				if (indexData.Count > 65530)
-				{
-					//Marginal headroom, although it probably doesn't matter
-					VAO.SetIBO(new IndexBufferObjectUI(indexData.ToArray(), hint));
-				}
-				else
-				{
-					VAO.SetIBO(new IndexBufferObjectUS(indexData.Select(x => (ushort)x).ToArray(), hint));
-				}
-
-				VAO.SetAttributes(vertexLayout);
-				VAO.UnBind();
-				mesh.VAO = VAO;
 				VertexArrayObject NormalsVAO = (VertexArrayObject)mesh.NormalsVAO;
 				NormalsVAO?.UnBind();
 				NormalsVAO?.Dispose();
@@ -250,23 +363,22 @@ namespace LibRender2
 				NormalsVAO = new VertexArrayObject();
 				NormalsVAO.Bind();
 				NormalsVAO.SetVBO(new VertexBufferObject(normalsVertexData.ToArray(), hint));
-				if (normalsIndexData.Count > 65530)
+				// Position + Normal + Colour: UV/matrix omitted so the shader cannot sample any texture,
+				// but the normal is supplied so lighting yields a visible (non-black) colour.
+				var normalsLayout = new VertexLayout
 				{
-					//Marginal headroom, although it probably doesn't matter
-					NormalsVAO.SetIBO(new IndexBufferObjectUI(normalsIndexData.ToArray(), hint));
-				}
-				else
-				{
-					NormalsVAO.SetIBO(new IndexBufferObjectUS(normalsIndexData.Select(x => (ushort)x).ToArray(), hint));
-				}
-
-				NormalsVAO.SetAttributes(vertexLayout);
+					Position = vertexLayout.Position,
+					Normal = vertexLayout.Normal,
+					Color = vertexLayout.Color
+				};
+				NormalsVAO.SetAttributes(normalsLayout);
 				NormalsVAO.UnBind();
 				mesh.NormalsVAO = NormalsVAO;
 			}
 			catch (Exception e)
 			{
-				renderer.currentHost.AddMessage(MessageType.Error, false, $"Creating VAO failed with the following error: {e}");
+				renderer.currentHost.AddMessage(MessageType.Error, false,
+					$"Creating normals VAO failed with the following error: {e}");
 			}
 		}
 
