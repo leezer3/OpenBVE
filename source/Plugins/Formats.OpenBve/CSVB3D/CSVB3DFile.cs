@@ -406,12 +406,6 @@ namespace Formats.OpenBve
 					Array.Resize(ref parsedValues, i);
 					break;
 				}
-
-				if (parsedValues[i] > 65535)
-				{
-					currentHost.AddMessage(MessageType.Error, false, "A vertex with an index above 65535 is not currently supported in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
-					return false;
-				}
 			}
 
 			if (parsedValues.Length < 3)
