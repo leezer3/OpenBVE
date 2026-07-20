@@ -550,6 +550,11 @@ namespace Formats.OpenBve
 						try
 						{
 							values[i] = Path.CombineFile(absolutePath, splitValues[i].Trim());
+							if (!File.Exists(values[i]))
+							{
+								currentHost.AddMessage(MessageType.Warning, false, "The path for state " + i + " was not found in " + key + " in Section " + Key + " at line " + value.Key + " in file " + FileName);
+								values[i] = null;
+							}
 						}
 						catch
 						{

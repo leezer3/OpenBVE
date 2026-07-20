@@ -16,6 +16,10 @@ namespace LibRender2.Text
 		/// <summary>The 4352 tables containing 256 character each to make up 1114112 code points (U+0000...U+10FFFF).</summary>
 		private readonly OpenGlFontTable[] Tables;
 
+		private readonly StringFormat Default;
+
+		private readonly StringFormat Typographic;
+
 		private bool disposed;
 
 		// --- constructors ---
@@ -27,6 +31,8 @@ namespace LibRender2.Text
 			Font = new Font(family, size, FontStyle.Regular, GraphicsUnit.Pixel);
 			FontSize = size;
 			Tables = new OpenGlFontTable[4352];
+			Default = StringFormat.GenericDefault;
+			Typographic = StringFormat.GenericTypographic;
 		}
 
 		// --- functions ---
@@ -46,7 +52,7 @@ namespace LibRender2.Text
 			{
 				lock (BaseRenderer.GdiPlusLock)
 				{
-					Tables[hi] = new OpenGlFontTable(Font, hi << 8);
+					Tables[hi] = new OpenGlFontTable(Font, hi << 8, Default, Typographic);
 				}
 			}
 
