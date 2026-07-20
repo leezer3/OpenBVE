@@ -170,7 +170,59 @@ namespace LibRender2
 		public bool OptionLighting = true;
 
 		/// <summary>Whether normals rendering is enabled in the debug options</summary>
-		public bool OptionNormals = false;
+		private bool optionNormals = false;
+
+		/// <summary>Whether normals rendering is enabled in the debug options</summary>
+		/// <remarks>Disposing the normals VAO when disabled frees the duplicate vertex buffer held in RAM.</remarks>
+		public bool OptionNormals
+		{
+			get => optionNormals;
+			set
+			{
+				if (value == optionNormals)
+				{
+					return;
+				}
+
+				optionNormals = value;
+				if (!value)
+				{
+					DisposeNormalsVAOs();
+					// Force the GC so the freed normals buffers are gone from RAM immediately.
+					GC.Collect();
+					GC.WaitForPendingFinalizers();
+				}
+			}
+		}
+
+		private void DisposeNormalsVAOs()
+		{
+			if (StaticObjectStates != null)
+			{
+				foreach (var state in StaticObjectStates)
+				{
+					DisposeNormalsVAO(state);
+				}
+			}
+
+			if (DynamicObjectStates != null)
+			{
+				foreach (var state in DynamicObjectStates)
+				{
+					DisposeNormalsVAO(state);
+				}
+			}
+		}
+
+		private static void DisposeNormalsVAO(ObjectState state)
+		{
+			if (state?.Prototype?.Mesh?.NormalsVAO is VertexArrayObject normalsVao)
+			{
+				normalsVao.UnBind();
+				normalsVao.Dispose();
+				state.Prototype.Mesh.NormalsVAO = null;
+			}
+		}
 
 		/// <summary>Whether back face culling is enabled</summary>
 		public bool OptionBackFaceCulling = true;
@@ -1429,10 +1481,28 @@ namespace LibRender2
 				shader.DisableTexturing();
 				shader.SetBrightness(1.0f);
 				shader.SetOpacity(1.0f);
-				VertexArrayObject normalsVao = (VertexArrayObject)state.Prototype.Mesh.NormalsVAO;
-				normalsVao.Bind();
-				lastVAO = normalsVao.handle;
-				normalsVao.Draw(PrimitiveType.Lines, face.NormalsIboStartIndex, face.Vertices.Length * 2);
+				Mesh normalsMesh = state.Prototype.Mesh;
+				if (normalsMesh.NormalsVAO == null)
+				{
+					// Build the normals VAO lazily on first use to avoid holding a duplicate vertex buffer in RAM
+					VAOExtensions.CreateNormalsVAO(normalsMesh, state.Prototype.Dynamic, DefaultShader.VertexLayout, this);
+				}
+				VertexArrayObject normalsVao = (VertexArrayObject)normalsMesh.NormalsVAO;
+				if (normalsVao != null && face.IboStartIndex == 0)
+				{
+					// Draw all normals for this mesh in a single call (the normals VAO is a contiguous list of line pairs).
+					// Solid purple overlay: disable lighting and force a white, emissive material so the shader
+					// outputs the baked per-vertex purple colour unchanged (finalColor *= oLightResult == white).
+					shader.SetIsLight(false);
+					shader.SetMaterialAmbient(Color32.White);
+					shader.SetMaterialFlags(MaterialFlags.Emissive);
+					normalsVao.Bind();
+					lastVAO = normalsVao.handle;
+					normalsVao.DrawArrays(PrimitiveType.Lines, 0, normalsMesh.Vertices.Length > 0 ? normalsMesh.Faces.Sum(f => f.Vertices.Length) * 2 : 0);
+					shader.SetIsLight(OptionLighting);
+					shader.SetMaterialFlags(material.Flags);
+					shader.SetMaterialAmbient(material.Color);
+				}
 			}
 
 			// finalize
