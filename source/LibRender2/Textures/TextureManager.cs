@@ -231,6 +231,8 @@ namespace LibRender2.Textures
 			}
 			//Set last access time
 
+			bool compress = renderer.currentOptions.CompressTextures;
+
 			if (texture != null)
 			{
 				handle = texture;
@@ -256,6 +258,38 @@ namespace LibRender2.Textures
 				}
 				//if (texture.BitsPerPixel == 32)
 				{
+					if (compress)
+					{
+						double savedFactor = 0;
+						switch (texture.PixelFormat)
+						{
+							case PixelFormat.Grayscale:
+								savedFactor = 0.5;
+								break;
+							case PixelFormat.GrayscaleAlpha:
+								savedFactor = 1.0;
+								break;
+							case PixelFormat.RGB:
+								savedFactor = 2.5;
+								break;
+							case PixelFormat.RGBAlpha:
+								savedFactor = 3.0;
+								break;
+						}
+						bool alreadyTracked = false;
+						for (int w = 0; w < 4; w++)
+						{
+							if (handle.OpenGlTextures[w].Valid)
+							{
+								alreadyTracked = true;
+								break;
+							}
+						}
+						if (!alreadyTracked)
+						{
+							Texture.TotalVramSavedBytes += (long)(texture.Width * texture.Height * savedFactor * (texture.MultipleFrames ? texture.TotalFrames : 1));
+						}
+					}
 					int[] names = new int[1];
 					GL.GenTextures(1, names);
 					GL.BindTexture(TextureTarget.Texture2D, names[0]);
@@ -330,7 +364,7 @@ namespace LibRender2.Textures
 								// n.b. Make sure to set the unpack alignment as otherwise we corrupt textures where stride > width
 								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
 								GL.TexImage2D(TextureTarget.Texture2D, 0,
-									noLuminanceChannel ? PixelInternalFormat.R8 : PixelInternalFormat.Luminance,
+									noLuminanceChannel ? (compress ? PixelInternalFormat.CompressedRed : PixelInternalFormat.R8) : (compress ? PixelInternalFormat.CompressedLuminance : PixelInternalFormat.Luminance),
 									texture.Width, texture.Height, 0,
 									noLuminanceChannel ? OpenTK.Graphics.OpenGL.PixelFormat.Red : OpenTK.Graphics.OpenGL.PixelFormat.Luminance,
 									PixelType.UnsignedByte, texture.Bytes);
@@ -346,7 +380,7 @@ namespace LibRender2.Textures
 								// n.b. Make sure to set the unpack alignment as otherwise we corrupt textures where stride > width
 								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
 								GL.TexImage2D(TextureTarget.Texture2D, 0,
-									PixelInternalFormat.Rgb8,
+									compress ? PixelInternalFormat.CompressedRgb : PixelInternalFormat.Rgb8,
 									texture.Width, texture.Height, 0,
 									OpenTK.Graphics.OpenGL.PixelFormat.Rgb,
 									PixelType.UnsignedByte, texture.Bytes);
@@ -374,7 +408,7 @@ namespace LibRender2.Textures
 								// n.b. Must reset the unpack alignment in case of changes
 								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
 								GL.TexImage2D(TextureTarget.Texture2D, 0,
-									PixelInternalFormat.Rgb8,
+									compress ? PixelInternalFormat.CompressedRgb : PixelInternalFormat.Rgb8,
 									texture.Width, texture.Height, 0,
 									OpenTK.Graphics.OpenGL.PixelFormat.Rgb,
 									PixelType.UnsignedByte, newBytes);
@@ -408,7 +442,7 @@ namespace LibRender2.Textures
 										j += stride - 3 * texture.Width;
 										GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
 										GL.TexImage2D(TextureTarget.Texture2D, 0,
-											PixelInternalFormat.Rgba8,
+											compress ? PixelInternalFormat.CompressedRgba : PixelInternalFormat.Rgba8,
 											texture.Width, texture.Height, 0,
 											OpenTK.Graphics.OpenGL.PixelFormat.Rgba,
 											PixelType.UnsignedByte, newBytes);
@@ -418,7 +452,7 @@ namespace LibRender2.Textures
 								{
 									GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
 									GL.TexImage2D(TextureTarget.Texture2D, 0,
-										PixelInternalFormat.LuminanceAlpha,
+										compress ? PixelInternalFormat.CompressedLuminanceAlpha : PixelInternalFormat.LuminanceAlpha,
 										texture.Width, texture.Height, 0,
 										OpenTK.Graphics.OpenGL.PixelFormat.LuminanceAlpha,
 										PixelType.UnsignedByte, texture.Bytes);
@@ -432,7 +466,7 @@ namespace LibRender2.Textures
 								// n.b. Must reset the unpack alignment in case of changes
 								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
 								GL.TexImage2D(TextureTarget.Texture2D, 0,
-									PixelInternalFormat.Rgba8,
+									compress ? PixelInternalFormat.CompressedRgba : PixelInternalFormat.Rgba8,
 									texture.Width, texture.Height, 0,
 									OpenTK.Graphics.OpenGL.PixelFormat.Rgba,
 									PixelType.UnsignedByte, texture.Bytes);

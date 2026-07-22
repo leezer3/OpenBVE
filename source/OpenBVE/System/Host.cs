@@ -160,6 +160,10 @@ namespace OpenBve {
 										
 										texture.CompatibleTransparencyMode = oldTransparencyMode;
 										texture = texture.ApplyParameters(parameters);
+										if (Interface.CurrentOptions.MaxTextureSize > 0 && !path.StartsWith(Program.FileSystem.DataFolder, StringComparison.OrdinalIgnoreCase))
+										{
+											texture.Downscale(Interface.CurrentOptions.MaxTextureSize);
+										}
 										return true;
 									}
 									if (!FailedTextures.Contains(path))
