@@ -306,7 +306,7 @@ namespace MechanikRouteParser
 						}
 						break;
 					case "'o":
-						//Rotation marker for the player track, roughly equivilant to .turn
+						//Rotation marker for the player track, roughly equivalent to .turn
 						Vector2 turnPoint = new Vector2();
 						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out turnPoint.X))
 						{
@@ -351,8 +351,11 @@ namespace MechanikRouteParser
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid SecondCorrectionPoint Y encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
-						double firstCorrectionDist = trackPosition + Math.Sqrt(correctionPoint1.X*correctionPoint1.X+correctionPoint1.Y*correctionPoint1.Y);
-						double correctionDist = firstCorrectionDist + Math.Sqrt(correctionPoint2.X*correctionPoint2.X+correctionPoint2.Y*correctionPoint2.Y);
+
+						double firstCorrectionDist = trackPosition + Math.Sqrt(correctionPoint1.X * correctionPoint1.X + correctionPoint1.Y * correctionPoint1.Y);
+						double correctionDist = firstCorrectionDist + Math.Sqrt(correctionPoint2.X * correctionPoint2.X + correctionPoint2.Y * correctionPoint2.Y);
+						// correction only appears to work correctly on 100m boundaries (see Hel route)
+						correctionDist = RoundTo100((int)correctionDist);
 						blockIndex = currentRouteData.FindBlock(correctionDist);
 						currentRouteData.Blocks[blockIndex].Correction = new Correction(correctionPoint1, correctionPoint2);
 						break;
@@ -640,11 +643,9 @@ namespace MechanikRouteParser
 					currentRouteData.Blocks[blockIndex].Correction = new Correction(Vector2.Null, Vector2.Null);
 				}
 			}
+
 			currentRouteData.Blocks.Sort((x, y) => x.StartingTrackPosition.CompareTo(y.StartingTrackPosition));
 			currentRouteData.CreateMissingBlocks();
-
-			
-
 			ProcessRoute(PreviewOnly);
 		}
 
@@ -839,7 +840,7 @@ namespace MechanikRouteParser
 				{
 					if (!AvailableSounds.ContainsKey(currentRouteData.Blocks[i].Sounds[j].SoundIndex))
 					{
-						// -1 does somethig a little funny
+						// -1 does something a little funny
 						// Stops playing sounds (all??)
 						// For the minute, let's ignore and see how much further we get
 						continue;
@@ -1040,6 +1041,15 @@ namespace MechanikRouteParser
 				}
 
 			}
+		}
+
+		/// <summary>Rounds a number to the nearest multiple of 100</summary>
+		private int RoundTo100(int value)
+		{
+			int a = (value / 100) * 100;
+			int b = a + 100;
+			value = (value - a > b - value) ? b : a;
+			return value;
 		}
 
 		/// <summary>Normalises 2 components of a 3D vector</summary>

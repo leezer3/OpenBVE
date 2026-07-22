@@ -63,6 +63,36 @@
 		<Doors>Both,None,Left,None,None,Right,None,Right,None,Left,Right</Doors>
 		<Train>Cl323 refurb_LM_openbve</Train>
 	</Route>
+	<Route>
+		<Hash>FBD7A3B3487101E4E9493929A417188664FD1891EFADFCEA8C1015F095FA481A</Hash>
+		<Description>Free Lands</Description>
+		<StationNames>Wąchok, Pipidówek, Szczere Pole, Grajdolek, Wygwizdowo, Wygwizdowo Piaskownia, Kozie Bobki, Smutna Wólka, Pcim Dolny</StationNames>
+		<Doors>Right,Right,Left,Right,Right,Left,Left,Right,Left</Doors>
+	</Route>
+	<Route>
+		<Hash>D0A2181AC8CBBA30807448D6501F79D76EA7C071074E13BD20DF26E024AE4EBA</Hash>
+		<Description>Free Lands- 13.55 departure</Description>
+		<StationNames>Wąchok, Pipidówek, Szczere Pole, Grajdolek, Wygwizdowo, Wygwizdowo Piaskownia, Kozie Bobki, Smutna Wólka, Pcim Dolny</StationNames>
+		<Doors>Right,Right,Left,Right,Right,Left,Left,Right,Left</Doors>
+	</Route>
+	<Route>
+		<Hash>572E2E965D1A231B0AF9A5173537014EDFA74344F99728926A5CCB6268D15A94</Hash>
+		<Description>Free Lands- Reverse</Description>
+		<StationNames>Pcim Dolny, Smutna Wólka, Kozie Bobki, Wygwizdowo Piaskownia, Wygwizdowo, Grajdolek, Szczere Pole, Pipidówek, Wąchok</StationNames>
+		<Doors>Right,Left,Right,Right,Left,Right,Right,Left,Left</Doors>
+	</Route>
+	<Route>
+		<Hash>4434703070FB2CA8C87171CD9B0351348933835C7FF0E75FFD39E5D80B9D25DA</Hash>
+		<Description>Hel- Jastarnia route</Description>
+		<StationNames>Hel, Jurata, Jastarnia</StationNames>
+		<Doors>Both,Left,Both</Doors>
+	</Route>
+	<Route>
+		<Hash>52E635AFA02BEEAB7BF252992DFB151DD366A9A3189155834189CF5F983D4FD7</Hash>
+		<Description>Warszawka- Odludzie route</Description>
+		<StationNames>Warszawka, Okolica, Odludzie</StationNames>
+		<Doors>Right,Left,Right</Doors>
+	</Route>
   </MechanikRoute>
   <MechanikModule>
 		<ModuleList>Modules.xml</ModuleList>
