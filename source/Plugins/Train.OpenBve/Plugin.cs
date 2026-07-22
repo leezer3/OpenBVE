@@ -478,6 +478,16 @@ namespace Train.OpenBve
 				    // another variant on readme
 				    descriptionFile = Path.CombineFile(trainPath, "read me.txt");
 			    }
+
+			    if (!File.Exists(descriptionFile))
+			    {
+					// common pattern for UK BVE4 trains
+				    string[] files = Directory.GetFiles(trainPath, "readme.bve4*.txt", SearchOption.TopDirectoryOnly);
+				    if (files.Length > 0)
+				    {
+					    descriptionFile = files[0];
+				    }
+			    }
 			    if (File.Exists(descriptionFile))
 			    {
 				    if (encoding == null)
