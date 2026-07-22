@@ -205,12 +205,12 @@ namespace MechanikRouteParser
 						 */
 						if (!int.TryParse(Arguments[2], out int numPoints))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid NumberOfPoints encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid NumberOfPoints encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (numPoints < 3 || numPoints > 5)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "NumberOfPoints must be between 3 and 5 in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: NumberOfPoints must be between 3 and 5 in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						List<Vector3> points = new List<Vector3>();
@@ -223,23 +223,23 @@ namespace MechanikRouteParser
 							}
 							if (!TryParseDistance(Arguments[p], out currentPoint.X))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid X encountered in Point " + p + " in " + Arguments[0] + " at line " + i);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid X encountered in Point " + p + " in " + Arguments[0] + " at line " + i);
 							}
 							if (!TryParseDistance(Arguments[p + 1], out currentPoint.Y))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Y encountered in Point " + p + " in " + Arguments[0] + " at line " + i);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid Y encountered in Point " + p + " in " + Arguments[0] + " at line " + i);
 							}
 							currentPoint.Y = -currentPoint.Y;
 							currentPoint.Y += yOffset; //Mechanik stacks textures in order. Use this as a hack to stop Z-fighting
 							if (Arguments.Length > p + 2 && !TryParseDistance(Arguments[p + 2], out currentPoint.Z))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Z encountered in Point " + p + " in " + Arguments[0] + " at line " + i);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid Z encountered in Point " + p + " in " + Arguments[0] + " at line " + i);
 							}
 							points.Add(currentPoint);
 						}
 						if (Arguments.Length < 25 || !int.TryParse(Arguments[24], out int firstPoint))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FirstPoint encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid FirstPoint encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (firstPoint != 0)
@@ -249,28 +249,28 @@ namespace MechanikRouteParser
 						Vector2 textureScale = Vector2.One;
 						if (!double.TryParse(Arguments[25], out textureScale.X))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Scale X encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid Scale X encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (!double.TryParse(Arguments[26], out textureScale.Y))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Scale Y encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid Scale Y encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (!double.TryParse(Arguments[27], out scaleFactor))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid ScaleFactor encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid ScaleFactor encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (!int.TryParse(Arguments[28], out textureIndex))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid TextureIndex encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid TextureIndex encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 
 						if(numPoints > points.Count)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, numPoints + " points were declared, but the actual number of loaded points was " + points.Count + " in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: " + numPoints + " points were declared, but the actual number of loaded points was " + points.Count + " in " + Arguments[0] + " at line " + i);
 							break;
 						}
 						
@@ -310,17 +310,17 @@ namespace MechanikRouteParser
 						Vector2 turnPoint = new Vector2();
 						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out turnPoint.X))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid TurnPoint X encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid TurnPoint X encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (Arguments.Length < 4 || !TryParseDistance(Arguments[3], out turnPoint.Y))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid TurnPoint Y encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid TurnPoint Y encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (Arguments.Length < 5 || !double.TryParse(Arguments[4], out double radians))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid TurnRaidus encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid TurnRadius encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						double dist = trackPosition + Math.Sqrt(turnPoint.X*turnPoint.X+turnPoint.Y*turnPoint.Y);
@@ -333,22 +333,22 @@ namespace MechanikRouteParser
 						Vector2 correctionPoint1 = new Vector2(), correctionPoint2 = new Vector2();
 						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out correctionPoint1.X))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FirstCorrectionPoint X encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid FirstCorrectionPoint X encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (Arguments.Length < 4 || !TryParseDistance(Arguments[3], out correctionPoint1.Y))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FirstCorrectionPoint Y encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid FirstCorrectionPoint Y encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (Arguments.Length < 5 || !TryParseDistance(Arguments[4], out correctionPoint2.X))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid SecondCorrectionPoint X encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid SecondCorrectionPoint X encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (Arguments.Length < 6 || !TryParseDistance(Arguments[5], out correctionPoint2.Y))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid SecondCorrectionPoint Y encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid SecondCorrectionPoint Y encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						double firstCorrectionDist = trackPosition + Math.Sqrt(correctionPoint1.X*correctionPoint1.X+correctionPoint1.Y*correctionPoint1.Y);
@@ -371,19 +371,19 @@ namespace MechanikRouteParser
 						Vector3 soundPosition = new Vector3();
 						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out soundPosition.X))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position X encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid Position X encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (Arguments.Length < 4 || !TryParseDistance(Arguments[3], out soundPosition.Z))
 						{
 							//CHECK: Should this actually be the Y position of the sound?
 							//This seems far more logical to me.....
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position Z encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid Position Z encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (Arguments.Length < 5 || !int.TryParse(Arguments[4], out int soundNumber))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid SoundNumber encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid SoundNumber encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						//Documentation states this value must be 5, unclear as to purpose
@@ -394,17 +394,17 @@ namespace MechanikRouteParser
 						}
 						if (Arguments.Length < 7 || !TryParseBool(Arguments[6], out bool looped))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Looped encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid Looped encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (Arguments.Length < 8 || !TryParseBool(Arguments[7], out bool speedDependant))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid SpeedDependant encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid SpeedDependant encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (Arguments.Length < 9 || !int.TryParse(Arguments[8], out int volume))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Volume encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid Volume encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (looped)
@@ -428,17 +428,17 @@ namespace MechanikRouteParser
 						Vector2 limitPos = new Vector2();
 						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out limitPos.X))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position X encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid Position X encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (Arguments.Length < 4 || !TryParseDistance(Arguments[3], out limitPos.Y))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position Y encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid Position Y encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (Arguments.Length < 5 || !double.TryParse(Arguments[4], out double kph))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Speed encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid Speed encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 
@@ -455,18 +455,18 @@ namespace MechanikRouteParser
 						 */
 						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out double stopPosX))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position X encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid Position X encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (Arguments.Length < 4 || !TryParseDistance(Arguments[3], out double stopPosZ))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position Z encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid Position Z encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						trackPosition += stopPosZ;
 						if (Arguments.Length < 5 || !TryParseBool(Arguments[4], out bool isStart))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid IsStart encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid IsStart encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						blockIndex = currentRouteData.FindBlock(trackPosition);
@@ -501,34 +501,34 @@ namespace MechanikRouteParser
 						Vector3 signalPosition = new Vector3();
 						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out signalPosition.X))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position X encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid Position X encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (Arguments.Length < 4 || !TryParseDistance(Arguments[3], out signalPosition.Y))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position Y encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid Position Y encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (Arguments.Length < 5 || !TryParseDistance(Arguments[4], out signalPosition.Z))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position Z encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid Position Z encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (Arguments.Length < 6 || !int.TryParse(Arguments[5], out int firstAspect))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid CurrentAspect encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid CurrentAspect encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (Arguments.Length < 7 || !int.TryParse(Arguments[6], out int secondAspect))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid NextAspect encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid NextAspect encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 
 						bool heldAtRed;
 						if (Arguments.Length < 8 || !int.TryParse(Arguments[7], out int signalType))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid HeldAtRed encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid HeldAtRed encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 
@@ -542,7 +542,7 @@ namespace MechanikRouteParser
 								break;
 							default:
 								heldAtRed = false;
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid HeldAtRed encountered in " + Arguments[0] + " at line " + i);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid HeldAtRed encountered in " + Arguments[0] + " at line " + i);
 								break;
 						}
 						blockIndex = currentRouteData.FindBlock(trackPosition + signalPosition.Z);
@@ -563,7 +563,7 @@ namespace MechanikRouteParser
 						 */
 						if (Arguments.Length < 6 || !TryParseBool(Arguments[5], out bool shouldBlow))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid HornControl variable encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid HornControl variable encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						if (shouldBlow)
@@ -586,7 +586,7 @@ namespace MechanikRouteParser
 						 */
 						if (Arguments.Length < 6 || !int.TryParse(Arguments[5], out int control) || control != 1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid AutoBrake Control variable encountered in " + Arguments[0] + " at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mechanik: Invalid AutoBrake Control variable encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						blockIndex = currentRouteData.FindBlock(trackPosition);
@@ -608,7 +608,7 @@ namespace MechanikRouteParser
 						//This means we can't do anything further than checking if this is a recognised command start character
 						if (Arguments[0].StartsWith("'") || Arguments[0].StartsWith("#"))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unimplemented command " + Arguments[0] + " encountered at line " + i);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Mechanik: Unimplemented command " + Arguments[0] + " encountered at line " + i);
 						}
 						break;
 				}
