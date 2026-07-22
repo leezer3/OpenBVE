@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing.Imaging;
-using System.Linq;
+using System.IO;
 using System.Text;
 using Formats.OpenBve;
 using LibRender2.Trains;
@@ -9,7 +7,6 @@ using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
-using OpenBveApi.Trains;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
@@ -30,63 +27,6 @@ namespace Train.OpenBve
 		}
 
 		/// <summary>
-		/// Read the file of the specified train.dat
-		/// </summary>
-		/// <param name="fileName">The file path of the specified train.dat</param>
-		/// <param name="encoding">The text encoding to use</param>
-		/// <returns>The array read from the specified train.dat</returns>
-		private static string[] ReadFile(string fileName, Encoding encoding)
-		{
-			//Create the array using the default compatibility train.dat
-			string[] lines = { "BVE2000000", "#CAR", "1", "1", "1", "0", "1", "1" };
-
-			// load file
-			try
-			{
-				lines = System.IO.File.ReadAllLines(fileName, encoding);
-			}
-			catch
-			{
-				//ignore and load default
-			}
-			if (lines.Length == 1 && encoding.Equals(Encoding.Unicode))
-			{
-				/*
-				 * Probably not unicode after all
-				 * Stuff edited with BVE2 / BVE4 tools should either be ASCII or SHIFT_JIS
-				 * both of which should read OK with ASCII for our purposes
-				 */
-				encoding = Encoding.ASCII;
-				lines = System.IO.File.ReadAllLines(fileName, encoding);
-			}
-			else if (lines.Length == 0)
-			{
-				//Catch zero-length train.dat files
-				throw new Exception("The train.dat file " + fileName + " is of zero length.");
-			}
-
-			for (int i = 0; i < lines.Length; i++)
-			{
-				int j = lines[i].IndexOf(';');
-				if (j >= 0)
-				{
-					lines[i] = lines[i].Substring(0, j).Trim();
-				}
-				else
-				{
-					lines[i] = lines[i].Trim();
-				}
-				if (lines[i].EndsWith(","))
-				{
-					//File edited with MSExcel may have additional commas at the end of a line
-					lines[i] = lines[i].TrimEnd(',');
-				}
-			}
-
-			return lines;
-		}
-
-		/// <summary>
 		/// Checks whether the parser can load the specified file.
 		/// </summary>
 		/// <param name="fileName">The file path of the specified train.dat</param>
@@ -94,25 +34,29 @@ namespace Train.OpenBve
 		internal bool CanLoad(string fileName)
 		{
 			Encoding encoding = TextEncoding.GetSystemEncodingFromFile(fileName);
-			
-			string[] lines;
 			try
 			{
-				lines = ReadFile(fileName, encoding);
+				string[] lines = File.ReadAllLines(fileName, encoding);
+				for (int i = 0; i < lines.Length; i++)
+				{
+					if (!string.IsNullOrEmpty(lines[i]) && !lines[i].StartsWith(";"))
+					{
+						TrainDatFormats format = TrainDatFile<TrainDatSection, TrainDatKey>.ParseFormat(lines[i], out _);
+						if (format == TrainDatFormats.MissingHeader)
+						{
+							// Some NYCTA stuff seems to be missing the version header from their train.dat files
+							// absolute mess....
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The train.dat file " + fileName + " has a missing version header.");
+						}
+						return format != TrainDatFormats.Unsupported;
+					}
+				}
 			}
 			catch
 			{
 				return false;
 			}
-
-			TrainDatFormats format = TrainDatFile<TrainDatSection, TrainDatKey>.ParseFormat(lines[0], out _);
-			if (format == TrainDatFormats.MissingHeader)
-			{
-				// Some NYCTA stuff seems to be missing the version header from their train.dat files
-				// absolute mess....
-				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The train.dat file " + fileName + " has a missing version header.");
-			}
-			return format != TrainDatFormats.Unsupported;
+			return false;
 		}
 
 		/// <summary>Parses a BVE2 / BVE4 / openBVE train.dat file</summary>
@@ -568,6 +512,11 @@ namespace Train.OpenBve
 					case TrainDatSection.Motor_P2:
 					case TrainDatSection.Motor_B1:
 					case TrainDatSection.Motor_B2:
+						if (subBlock.RemainingDataValues == 0)
+						{
+							// duplicated section header
+							break;
+						}
 						int msi = 0;
 						switch (subBlock.Key)
 						{
