@@ -3,6 +3,7 @@ using OpenBveApi.Math;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OpenBveApi.Interface;
 
 namespace Formats.OpenBve
 {
@@ -36,7 +37,32 @@ namespace Formats.OpenBve
 					Format = ParseFormat(lines[i], out Version);
 				}
 
-				
+				const int currentVersion = 18230;
+
+				switch (Format)
+				{
+					case TrainDatFormats.openBVE when Version == -1:
+						currentHost.AddMessage(MessageType.Error, false, "The train.dat version is invalid in " + FileName);
+						break;
+					case TrainDatFormats.openBVE:
+					{
+						if (Version > currentVersion)
+						{
+							currentHost.AddMessage(MessageType.Warning, false, "The train.dat " + FileName + " with version " + Version + " was created with a newer version of openBVE. Please check for an update.");
+						}
+						break;
+					}
+					case TrainDatFormats.Unsupported:
+						currentHost.AddMessage(MessageType.Error, false, "The train.dat format " + Version + " is not supported in " + FileName);
+						break;
+					case TrainDatFormats.UnknownBVE:
+						currentHost.AddMessage(MessageType.Error, false, "The train.dat appears to have been created by an unknown BVE version in " + FileName + " - Please report this.");
+						break;
+					case TrainDatFormats.MissingHeader:
+						currentHost.AddMessage(MessageType.Error, false, "The train.dat appears be missing the required header in " + FileName + " - Please report this.");
+						break;
+				}
+
 				if (lines[i].Length > 0 && lines[i][0] == '#')
 				{
 					if (!Enum.TryParse(lines[i].Substring(1), true, out T1 currentSection))
@@ -72,21 +98,12 @@ namespace Formats.OpenBve
 			}
 		}
 
-		public class TrainDatSection<T1, T2> : Block<T1, T2> where T1 : struct, Enum where T2 : struct, Enum
-		{
-			public TrainDatSection(List<string> blockLines, T1 myKey, int startingLine, string myFile, HostInterface currentHost) : base(-1, myKey, myFile, currentHost)
-			{
-				for (int i = 0; i < blockLines.Count; i++)
-				{
-					rawValues.Enqueue(new KeyValuePair<int, string>(startingLine + i, blockLines[i]));
-				}
-			}
-		}
+		
 
 		/// <summary>Parse the format of the specified train.dat</summary>
-			/// <param name="line">The version line of the train.dat</param>
-			/// <param name="version">The version of the specified OpenBVE train.dat</param>
-			private static TrainDatFormats ParseFormat(string line, out int version)
+		/// <param name="line">The version line of the train.dat</param>
+		/// <param name="version">The version of the specified OpenBVE train.dat</param>
+		public static TrainDatFormats ParseFormat(string line, out int version)
 		{
 			version = -1;
 				switch (line.ToLowerInvariant())
@@ -133,6 +150,16 @@ namespace Formats.OpenBve
 
 						return line.ToLowerInvariant().StartsWith("bve") ? TrainDatFormats.UnknownBVE : TrainDatFormats.Unsupported;
 				}
+		}
+	}
+	public class TrainDatSection<T1, T2> : Block<T1, T2> where T1 : struct, Enum where T2 : struct, Enum
+	{
+		public TrainDatSection(List<string> blockLines, T1 myKey, int startingLine, string myFile, HostInterface currentHost) : base(-1, myKey, myFile, currentHost)
+		{
+			for (int i = 0; i < blockLines.Count; i++)
+			{
+				rawValues.Enqueue(new KeyValuePair<int, string>(startingLine + i, blockLines[i]));
+			}
 		}
 	}
 }
