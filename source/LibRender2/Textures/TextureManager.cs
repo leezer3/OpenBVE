@@ -58,11 +58,63 @@ namespace LibRender2.Textures
 		/// <returns>Whether registering the texture was successful.</returns>
 		public bool RegisterTexture(string path, TextureParameters parameters, out Texture handle)
 		{
-			if (!File.Exists(path))
+			if (string.IsNullOrEmpty(path))
+			{
+				handle = null;
+				return false;
+			}
+
+			string cleanPath = path;
+			string queryString = "";
+			int qIndex = path.IndexOf('?');
+			if (qIndex >= 0)
+			{
+				cleanPath = path.Substring(0, qIndex);
+				queryString = path.Substring(qIndex + 1);
+			}
+
+			// Block internet URLs and network shares to prevent security flaws
+			if (cleanPath.Contains("://") || cleanPath.StartsWith("\\\\") || cleanPath.StartsWith("//"))
+			{
+				handle = null;
+				return false;
+			}
+
+			if (!File.Exists(cleanPath))
 			{
 				// shouldn't happen, but handle gracefully
 				handle = null;
 				return false;
+			}
+
+			string ext = System.IO.Path.GetExtension(cleanPath).ToLowerInvariant();
+			if (ext == ".mp4" || ext == ".mkv" || ext == ".webm" || ext == ".avi")
+			{
+				for (int i = 0; i < RegisteredTexturesCount; i++)
+				{
+					if (RegisteredTextures[i] != null && RegisteredTextures[i].VideoContext != null)
+					{
+						VideoTexture videoTex = RegisteredTextures[i].VideoContext as VideoTexture;
+						if (videoTex != null && videoTex.VideoPath.Equals(cleanPath, StringComparison.InvariantCultureIgnoreCase))
+						{
+							handle = RegisteredTextures[i];
+							return true;
+						}
+					}
+				}
+
+				int width = 512;
+				int height = 512;
+				byte[] dummyBytes = new byte[width * height * 4];
+				Texture dummyTexture = new Texture(width, height, PixelFormat.RGBAlpha, dummyBytes, null);
+				dummyTexture.VideoContext = new VideoTexture(cleanPath, width, height, queryString);
+				dummyTexture.AvailableToUnload = true;
+
+				int videoIdx = GetNextFreeTexture();
+				RegisteredTextures[videoIdx] = dummyTexture;
+				RegisteredTexturesCount++;
+				handle = RegisteredTextures[videoIdx];
+				return true;
 			}
 			/* BUG:
 			 * Attempt to delete null texture handles from the end of the array
@@ -202,6 +254,45 @@ namespace LibRender2.Textures
 			if (handle == null || handle.OpenGlTextures == null)
 			{
 				return false;
+			}
+
+			if (handle.VideoContext != null)
+			{
+				VideoTexture video = handle.VideoContext as VideoTexture;
+				if (video != null)
+				{
+					if (!handle.OpenGlTextures[(int)wrap].Valid)
+					{
+						int[] names = new int[1];
+						GL.GenTextures(1, names);
+						GL.BindTexture(TextureTarget.Texture2D, names[0]);
+						GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.Linear);
+						GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
+						if ((wrap & OpenGlTextureWrapMode.RepeatClamp) != 0)
+						{
+							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (float)TextureWrapMode.Repeat);
+						}
+						else
+						{
+							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (float)TextureWrapMode.ClampToEdge);
+						}
+
+						if ((wrap & OpenGlTextureWrapMode.ClampRepeat) != 0)
+						{
+							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (float)TextureWrapMode.Repeat);
+						}
+						else
+						{
+							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (float)TextureWrapMode.ClampToEdge);
+						}
+						GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, video.Width, video.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, IntPtr.Zero);
+						handle.OpenGlTextures[(int)wrap].Name = names[0];
+						handle.OpenGlTextures[(int)wrap].Valid = true;
+						video.Initialize();
+					}
+					video.Render(handle.OpenGlTextures[(int)wrap].Name, currentTicks);
+					return true;
+				}
 			}
 			
 			if (handle.MultipleFrames)
@@ -464,6 +555,13 @@ namespace LibRender2.Textures
 				return;
 			}
 
+			if (handle.VideoContext != null)
+			{
+				IDisposable video = handle.VideoContext as IDisposable;
+				video?.Dispose();
+				handle.VideoContext = null;
+			}
+
 			if (handle.MultipleFrames)
 			{
 				for (int i = 0; i < handle.TotalFrames; i++)
@@ -572,9 +670,20 @@ namespace LibRender2.Textures
 			{
 				for (int i = 0; i < RegisteredTextures.Length; i++)
 				{
-					if (RegisteredTextures[i] != null && RegisteredTextures[i].AvailableToUnload && (CPreciseTimer.GetClockTicks() - RegisteredTextures[i].LastAccess) > 20000)
+					if (RegisteredTextures[i] != null)
 					{
-						UnloadTexture(ref RegisteredTextures[i]);
+						if (RegisteredTextures[i].VideoContext != null)
+						{
+							VideoTexture video = RegisteredTextures[i].VideoContext as VideoTexture;
+							if (video != null && (CPreciseTimer.GetClockTicks() - RegisteredTextures[i].LastAccess) > 100)
+							{
+								video.Pause();
+							}
+						}
+						if (RegisteredTextures[i].AvailableToUnload && (CPreciseTimer.GetClockTicks() - RegisteredTextures[i].LastAccess) > 20000)
+						{
+							UnloadTexture(ref RegisteredTextures[i]);
+						}
 					}
 				}
 			}
