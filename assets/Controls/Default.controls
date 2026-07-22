@@ -1,4 +1,4 @@
-﻿; Current control configuration
+; Current control configuration
 ; =============================
 ; This file was automatically generated. Please modify only if you know what you're doing.
 ; Last updated 2026.01.16
@@ -79,6 +79,7 @@ CAMERA_ZOOM_OUT, keyboard, Keypad0, 0
 CAMERA_POI_PREVIOUS, keyboard, Keypad1, 0
 CAMERA_POI_NEXT, keyboard, Keypad7, 0
 CAMERA_RESET, keyboard, Keypad5, 0
+CAMERA_GRAB_TOGGLE, mouse, 2, 0
 CAMERA_RESTRICTION, keyboard, R, 2
 TIMETABLE_TOGGLE, keyboard, T, 2
 TIMETABLE_UP, keyboard, Up, 2

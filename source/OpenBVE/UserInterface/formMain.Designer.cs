@@ -137,6 +137,8 @@ namespace OpenBve {
             this.trackbarTransparency = new System.Windows.Forms.TrackBar();
             this.panelOptionsRight = new System.Windows.Forms.Panel();
             this.groupBoxOther = new System.Windows.Forms.GroupBox();
+            this.labelZoomScrollSpeed = new System.Windows.Forms.Label();
+            this.updownZoomScrollSpeed = new System.Windows.Forms.NumericUpDown();
             this.comboBoxTimeTableDisplayMode = new System.Windows.Forms.ComboBox();
             this.labelTimeTableDisplayMode = new System.Windows.Forms.Label();
             this.groupBoxRailDriver = new System.Windows.Forms.GroupBox();
@@ -337,6 +339,10 @@ namespace OpenBve {
             this.labelJoystickAssignmentValue = new System.Windows.Forms.Label();
             this.radiobuttonJoystick = new System.Windows.Forms.RadioButton();
             this.radiobuttonKeyboard = new System.Windows.Forms.RadioButton();
+            this.radiobuttonMouse = new System.Windows.Forms.RadioButton();
+            this.panelMouse = new System.Windows.Forms.Panel();
+            this.labelMouseButton = new System.Windows.Forms.Label();
+            this.comboboxMouseButton = new System.Windows.Forms.ComboBox();
             this.panelInfo = new System.Windows.Forms.Panel();
             this.linkLabelReportBug = new System.Windows.Forms.LinkLabel();
             this.linkLabelCheckUpdates = new System.Windows.Forms.LinkLabel();
@@ -2089,10 +2095,42 @@ namespace OpenBve {
             this.groupBoxOther.ForeColor = System.Drawing.Color.Black;
             this.groupBoxOther.Location = new System.Drawing.Point(0, 365);
             this.groupBoxOther.Name = "groupBoxOther";
-            this.groupBoxOther.Size = new System.Drawing.Size(316, 48);
+            this.groupBoxOther.Size = new System.Drawing.Size(316, 50);
             this.groupBoxOther.TabIndex = 19;
             this.groupBoxOther.TabStop = false;
             this.groupBoxOther.Text = "Other";
+            // 
+            // labelZoomScrollSpeed
+            // 
+            this.labelZoomScrollSpeed.Location = new System.Drawing.Point(8, 98);
+            this.labelZoomScrollSpeed.Name = "labelZoomScrollSpeed";
+            this.labelZoomScrollSpeed.Size = new System.Drawing.Size(130, 18);
+            this.labelZoomScrollSpeed.TabIndex = 4;
+            this.labelZoomScrollSpeed.Text = "Zoom Scroll Speed:";
+            this.labelZoomScrollSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // updownZoomScrollSpeed
+            // 
+            this.updownZoomScrollSpeed.Location = new System.Drawing.Point(200, 96);
+            this.updownZoomScrollSpeed.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.updownZoomScrollSpeed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.updownZoomScrollSpeed.Name = "updownZoomScrollSpeed";
+            this.updownZoomScrollSpeed.Size = new System.Drawing.Size(152, 20);
+            this.updownZoomScrollSpeed.TabIndex = 3;
+            this.updownZoomScrollSpeed.Value = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+            this.updownZoomScrollSpeed.ValueChanged += new System.EventHandler(this.updownZoomScrollSpeed_ValueChanged);
             // 
             // comboBoxTimeTableDisplayMode
             // 
@@ -2659,10 +2697,12 @@ namespace OpenBve {
             this.groupboxCamera.Controls.Add(this.checkboxCameraExteriorTransition);
             this.groupboxCamera.Controls.Add(this.labelCameraTransitionSpeed);
             this.groupboxCamera.Controls.Add(this.updownCameraTransitionSpeed);
+            this.groupboxCamera.Controls.Add(this.labelZoomScrollSpeed);
+            this.groupboxCamera.Controls.Add(this.updownZoomScrollSpeed);
             this.groupboxCamera.ForeColor = System.Drawing.Color.Black;
             this.groupboxCamera.Location = new System.Drawing.Point(330, 245);
             this.groupboxCamera.Name = "groupboxCamera";
-            this.groupboxCamera.Size = new System.Drawing.Size(321, 120);
+            this.groupboxCamera.Size = new System.Drawing.Size(321, 150);
             this.groupboxCamera.TabIndex = 22;
             this.groupboxCamera.TabStop = false;
             this.groupboxCamera.Text = "Camera options";
@@ -4325,6 +4365,8 @@ namespace OpenBve {
             this.groupboxControl.Controls.Add(this.panelJoystick);
             this.groupboxControl.Controls.Add(this.radiobuttonJoystick);
             this.groupboxControl.Controls.Add(this.radiobuttonKeyboard);
+            this.groupboxControl.Controls.Add(this.radiobuttonMouse);
+            this.groupboxControl.Controls.Add(this.panelMouse);
             this.groupboxControl.Enabled = false;
             this.groupboxControl.ForeColor = System.Drawing.Color.Black;
             this.groupboxControl.Location = new System.Drawing.Point(8, 349);
@@ -4421,22 +4463,22 @@ namespace OpenBve {
             this.comboboxCommand.FormattingEnabled = true;
             this.comboboxCommand.Location = new System.Drawing.Point(88, 21);
             this.comboboxCommand.Name = "comboboxCommand";
-            this.comboboxCommand.Size = new System.Drawing.Size(587, 21);
+            this.comboboxCommand.Size = new System.Drawing.Size(400, 21);
             this.comboboxCommand.TabIndex = 1;
             this.comboboxCommand.SelectedIndexChanged += new System.EventHandler(this.comboboxCommand_SelectedIndexChanged);
             // 
             // updownCommandOption
             // 
-            this.updownCommandOption.Location = new System.Drawing.Point(583, 48);
+            this.updownCommandOption.Location = new System.Drawing.Point(615, 21);
             this.updownCommandOption.Name = "updownCommandOption";
-            this.updownCommandOption.Size = new System.Drawing.Size(52, 20);
+            this.updownCommandOption.Size = new System.Drawing.Size(60, 20);
             this.updownCommandOption.TabIndex = 6;
             this.updownCommandOption.ValueChanged += new System.EventHandler(this.updownCommandOption_ValueChanged);
             // 
             // labelCommandOption
             // 
             this.labelCommandOption.AutoEllipsis = true;
-            this.labelCommandOption.Location = new System.Drawing.Point(463, 51);
+            this.labelCommandOption.Location = new System.Drawing.Point(490, 24);
             this.labelCommandOption.Name = "labelCommandOption";
             this.labelCommandOption.Size = new System.Drawing.Size(120, 18);
             this.labelCommandOption.TabIndex = 7;
@@ -4478,7 +4520,7 @@ namespace OpenBve {
             this.panelJoystick.Controls.Add(this.labelJoystickAssignmentCaption);
             this.panelJoystick.Controls.Add(this.labelJoystickAssignmentValue);
             this.panelJoystick.Enabled = false;
-            this.panelJoystick.Location = new System.Drawing.Point(264, 72);
+            this.panelJoystick.Location = new System.Drawing.Point(232, 72);
             this.panelJoystick.Name = "panelJoystick";
             this.panelJoystick.Size = new System.Drawing.Size(235, 48);
             this.panelJoystick.TabIndex = 4;
@@ -4504,7 +4546,7 @@ namespace OpenBve {
             // radiobuttonJoystick
             // 
             this.radiobuttonJoystick.AutoSize = true;
-            this.radiobuttonJoystick.Location = new System.Drawing.Point(272, 48);
+            this.radiobuttonJoystick.Location = new System.Drawing.Point(232, 48);
             this.radiobuttonJoystick.Name = "radiobuttonJoystick";
             this.radiobuttonJoystick.Size = new System.Drawing.Size(66, 17);
             this.radiobuttonJoystick.TabIndex = 3;
@@ -4524,6 +4566,51 @@ namespace OpenBve {
             this.radiobuttonKeyboard.Text = "Keyboard:";
             this.radiobuttonKeyboard.UseVisualStyleBackColor = true;
             this.radiobuttonKeyboard.CheckedChanged += new System.EventHandler(this.radiobuttonKeyboard_CheckedChanged);
+            // 
+            // radiobuttonMouse
+            // 
+            this.radiobuttonMouse.AutoSize = true;
+            this.radiobuttonMouse.Location = new System.Drawing.Point(456, 48);
+            this.radiobuttonMouse.Name = "radiobuttonMouse";
+            this.radiobuttonMouse.Size = new System.Drawing.Size(60, 17);
+            this.radiobuttonMouse.TabIndex = 11;
+            this.radiobuttonMouse.TabStop = true;
+            this.radiobuttonMouse.Text = "Mouse:";
+            this.radiobuttonMouse.UseVisualStyleBackColor = true;
+            this.radiobuttonMouse.CheckedChanged += new System.EventHandler(this.radiobuttonMouse_CheckedChanged);
+            // 
+            // panelMouse
+            // 
+            this.panelMouse.Controls.Add(this.comboboxMouseButton);
+            this.panelMouse.Controls.Add(this.labelMouseButton);
+            this.panelMouse.Enabled = false;
+            this.panelMouse.Location = new System.Drawing.Point(8, 72);
+            this.panelMouse.Name = "panelMouse";
+            this.panelMouse.Size = new System.Drawing.Size(192, 48);
+            this.panelMouse.TabIndex = 12;
+            this.panelMouse.Visible = false;
+            // 
+            // labelMouseButton
+            // 
+            this.labelMouseButton.AutoEllipsis = true;
+            this.labelMouseButton.Location = new System.Drawing.Point(0, 3);
+            this.labelMouseButton.Name = "labelMouseButton";
+            this.labelMouseButton.Size = new System.Drawing.Size(60, 18);
+            this.labelMouseButton.TabIndex = 0;
+            this.labelMouseButton.Text = "Button:";
+            this.labelMouseButton.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // comboboxMouseButton
+            // 
+            this.comboboxMouseButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboboxMouseButton.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboboxMouseButton.FormattingEnabled = true;
+            this.comboboxMouseButton.Location = new System.Drawing.Point(64, 0);
+            this.comboboxMouseButton.Name = "comboboxMouseButton";
+            this.comboboxMouseButton.Size = new System.Drawing.Size(104, 21);
+            this.comboboxMouseButton.TabIndex = 1;
+            this.comboboxMouseButton.SelectedIndexChanged += new System.EventHandler(this.comboboxMouseButton_SelectedIndexChanged);
             // 
             // panelInfo
             // 
@@ -6709,6 +6796,10 @@ namespace OpenBve {
         private System.Windows.Forms.GroupBox groupboxControl;
         private System.Windows.Forms.RadioButton radiobuttonJoystick;
         private System.Windows.Forms.RadioButton radiobuttonKeyboard;
+        private System.Windows.Forms.RadioButton radiobuttonMouse;
+        private System.Windows.Forms.Panel panelMouse;
+        private System.Windows.Forms.Label labelMouseButton;
+        private System.Windows.Forms.ComboBox comboboxMouseButton;
         private System.Windows.Forms.Panel panelKeyboard;
         private System.Windows.Forms.ComboBox comboboxKeyboardKey;
         private System.Windows.Forms.Label labelKeyboardKey;
@@ -6903,6 +6994,8 @@ namespace OpenBve {
 		private System.Windows.Forms.Button SaveFileNameButton;
 		private System.Windows.Forms.TextBox textBoxPackageFileName;
 		private System.Windows.Forms.GroupBox groupBoxOther;
+		private System.Windows.Forms.Label labelZoomScrollSpeed;
+		private System.Windows.Forms.NumericUpDown updownZoomScrollSpeed;
 		private System.Windows.Forms.ComboBox comboBoxTimeTableDisplayMode;
 		private System.Windows.Forms.Label labelTimeTableDisplayMode;
 		private System.Windows.Forms.Label labelSaveAs;

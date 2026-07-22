@@ -22,6 +22,8 @@ namespace OpenBve
 		{
 			/// <summary>The on disk folder in which user interface components are stored</summary>
 			internal string UserInterfaceFolder;
+			/// <summary>The speed at which the mouse scroll zooms the camera</summary>
+			internal double ZoomScrollSpeed;
 			/// <summary>The accelerated time factor (1x to 5x)</summary>
 			internal int TimeAccelerationFactor;
 			///// <summary>The current type of motion blur</summary>
@@ -129,6 +131,7 @@ namespace OpenBve
 				TransparencyMode = TransparencyMode.Quality;
 				AnisotropicFilteringLevel = 0;
 				AnisotropicFilteringMaximum = 0;
+				ZoomScrollSpeed = 30.0;
 				AntiAliasingLevel = 0;
 				ViewingDistance = 600;
 				QuadTreeLeafSize = 60;
@@ -354,6 +357,7 @@ namespace OpenBve
 				Builder.AppendLine("keyRepeatDelay = " + (1000.0 * KeyRepeatDelay).ToString("0", Culture));
 				Builder.AppendLine("keyRepeatInterval = " + (1000.0 * KeyRepeatInterval).ToString("0", Culture));
 				Builder.AppendLine("raildrivermph = " + (RailDriverMPH ? "true" : "false"));
+				Builder.AppendLine("zoomScrollSpeed = " + ZoomScrollSpeed.ToString(Culture));
 				Builder.AppendLine();
 				Builder.AppendLine("[sound]");
 				Builder.AppendLine("model = " + SoundModel);
@@ -580,6 +584,11 @@ namespace OpenBve
 							CurrentOptions.KeyRepeatInterval = interval * 0.001;
 							block.GetValue(OptionsKey.RailDriverMPH, out CurrentOptions.RailDriverMPH);
 							block.GetValue(OptionsKey.CursorHideDelay, out CurrentOptions.CursorHideDelay);
+							block.TryGetValue(OptionsKey.ZoomScrollSpeed, ref CurrentOptions.ZoomScrollSpeed);
+							if (CurrentOptions.ZoomScrollSpeed <= 0.0 || CurrentOptions.ZoomScrollSpeed > 100.0)
+							{
+								CurrentOptions.ZoomScrollSpeed = 30.0;
+							}
 							break;
 						case OptionsSection.Sound:
 							block.GetEnumValue(OptionsKey.Model, out CurrentOptions.SoundModel);
