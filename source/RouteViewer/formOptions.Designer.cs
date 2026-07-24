@@ -34,7 +34,7 @@ namespace RouteViewer
             this.label1 = new System.Windows.Forms.Label();
             this.InterpolationMode = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.AnsiotropicLevel = new System.Windows.Forms.NumericUpDown();
+            this.AnisotropicLevel = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.AntialiasingLevel = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
@@ -85,7 +85,7 @@ namespace RouteViewer
             this.button1 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPageOptions.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.AnsiotropicLevel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.AnisotropicLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.AntialiasingLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.width)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.height)).BeginInit();
@@ -115,36 +115,55 @@ namespace RouteViewer
             // tabPageOptions
             // 
             this.tabPageOptions.AutoScroll = true;
-            this.tabPageOptions.Controls.Add(this.numericUpDownNearClip);
-            this.tabPageOptions.Controls.Add(this.labelNearClip);
-            this.tabPageOptions.Controls.Add(this.InterpolationLabel);
-            this.tabPageOptions.Controls.Add(this.label1);
-            this.tabPageOptions.Controls.Add(this.InterpolationMode);
-            this.tabPageOptions.Controls.Add(this.label2);
-            this.tabPageOptions.Controls.Add(this.AnsiotropicLevel);
-            this.tabPageOptions.Controls.Add(this.label3);
-            this.tabPageOptions.Controls.Add(this.AntialiasingLevel);
-            this.tabPageOptions.Controls.Add(this.label4);
-            this.tabPageOptions.Controls.Add(this.TransparencyQuality);
-            this.tabPageOptions.Controls.Add(this.label5);
-            this.tabPageOptions.Controls.Add(this.label6);
-            this.tabPageOptions.Controls.Add(this.width);
-            this.tabPageOptions.Controls.Add(this.label7);
-            this.tabPageOptions.Controls.Add(this.height);
-            this.tabPageOptions.Controls.Add(this.label8);
-            this.tabPageOptions.Controls.Add(this.label9);
-            this.tabPageOptions.Controls.Add(this.checkBoxLogo);
-            this.tabPageOptions.Controls.Add(this.label10);
-            this.tabPageOptions.Controls.Add(this.checkBoxBackgrounds);
-            this.tabPageOptions.Controls.Add(this.label11);
-            this.tabPageOptions.Controls.Add(this.checkBoxProgressBar);
-            this.tabPageOptions.Controls.Add(this.label13);
-            this.tabPageOptions.Controls.Add(this.label12);
-            this.tabPageOptions.Controls.Add(this.comboBoxNewXParser);
-            this.tabPageOptions.Controls.Add(this.label14);
-            this.tabPageOptions.Controls.Add(this.comboBoxNewObjParser);
-            this.tabPageOptions.Controls.Add(this.label15);
-            this.tabPageOptions.Controls.Add(this.numericUpDownViewingDistance);
+            var tlpOptions = new System.Windows.Forms.TableLayoutPanel
+            {
+                Dock = System.Windows.Forms.DockStyle.Fill,
+                Padding = new System.Windows.Forms.Padding(10),
+                ColumnCount = 2,
+                ColumnStyles =
+                {
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize),
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F)
+                },
+                Controls =
+                {
+                    { this.InterpolationLabel, 0, 0 },
+                    { this.label1, 0, 1 },
+                    { this.InterpolationMode, 1, 1 },
+                    { this.label2, 0, 2 },
+                    { this.AnisotropicLevel, 1, 2 },
+                    { this.label3, 0, 3 },
+                    { this.AntialiasingLevel, 1, 3 },
+                    { this.label4, 0, 4 },
+                    { this.TransparencyQuality, 1, 4 },
+                    { this.label5, 0, 5 },
+                    { this.label6, 0, 6 },
+                    { this.width, 1, 6 },
+                    { this.label7, 0, 7 },
+                    { this.height, 1, 7 },
+                    { this.label8, 0, 8 },
+                    { this.label9, 0, 9 },
+                    { this.checkBoxLogo, 1, 9 },
+                    { this.label10, 0, 10 },
+                    { this.checkBoxBackgrounds, 1, 10 },
+                    { this.label11, 0, 11 },
+                    { this.checkBoxProgressBar, 1, 11 },
+                    { this.label13, 0, 12 },
+                    { this.label12, 0, 13 },
+                    { this.comboBoxNewXParser, 1, 13 },
+                    { this.label14, 0, 14 },
+                    { this.comboBoxNewObjParser, 1, 14 },
+                    { this.label15, 0, 15 },
+                    { this.numericUpDownViewingDistance, 1, 15 },
+                    { this.labelNearClip, 0, 16 },
+                    { this.numericUpDownNearClip, 1, 16 }
+                }
+            };
+            tlpOptions.SetColumnSpan(this.InterpolationLabel, 2);
+            tlpOptions.SetColumnSpan(this.label5, 2);
+            tlpOptions.SetColumnSpan(this.label8, 2);
+            tlpOptions.SetColumnSpan(this.label13, 2);
+            this.tabPageOptions.Controls.Add(tlpOptions);
             this.tabPageOptions.Location = new System.Drawing.Point(4, 22);
             this.tabPageOptions.Name = "tabPageOptions";
             this.tabPageOptions.Padding = new System.Windows.Forms.Padding(3);
@@ -194,19 +213,19 @@ namespace RouteViewer
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(130, 13);
             this.label2.TabIndex = 3;
-            this.label2.Text = "Ansiotropic Filtering Level:";
+            this.label2.Text = "Anisotropic Filtering Level:";
             // 
-            // AnsiotropicLevel
+            // AnisotropicLevel
             // 
-            this.AnsiotropicLevel.Location = new System.Drawing.Point(160, 52);
-            this.AnsiotropicLevel.Maximum = new decimal(new int[] {
+            this.AnisotropicLevel.Location = new System.Drawing.Point(160, 52);
+            this.AnisotropicLevel.Maximum = new decimal(new int[] {
             16,
             0,
             0,
             0});
-            this.AnsiotropicLevel.Name = "AnsiotropicLevel";
-            this.AnsiotropicLevel.Size = new System.Drawing.Size(120, 20);
-            this.AnsiotropicLevel.TabIndex = 15;
+            this.AnisotropicLevel.Name = "AnisotropicLevel";
+            this.AnisotropicLevel.Size = new System.Drawing.Size(120, 20);
+            this.AnisotropicLevel.TabIndex = 15;
             // 
             // label3
             // 
@@ -471,27 +490,79 @@ namespace RouteViewer
             // tabPageShadows
             // 
             this.tabPageShadows.AutoScroll = true;
-            this.tabPageShadows.Controls.Add(this.comboBoxShadowResolution);
-            this.tabPageShadows.Controls.Add(this.labelShadowResolution);
-            this.tabPageShadows.Controls.Add(this.comboBoxShadowDistance);
-            this.tabPageShadows.Controls.Add(this.labelShadowDistance);
-            this.tabPageShadows.Controls.Add(this.comboBoxShadowCascades);
-            this.tabPageShadows.Controls.Add(this.labelShadowCascades);
-            this.tabPageShadows.Controls.Add(this.numericUpDownShadowStrength);
-            this.tabPageShadows.Controls.Add(this.labelShadowStrength);
-            this.tabPageShadows.Controls.Add(this.labelSunDirection);
-            this.tabPageShadows.Controls.Add(this.labelSunAzimuth);
-            this.tabPageShadows.Controls.Add(this.trackBarSunAzimuth);
-            this.tabPageShadows.Controls.Add(this.labelSunAzimuthValue);
-            this.tabPageShadows.Controls.Add(this.labelSunElevation);
-            this.tabPageShadows.Controls.Add(this.trackBarSunElevation);
-            this.tabPageShadows.Controls.Add(this.labelSunElevationValue);
-            this.tabPageShadows.Controls.Add(this.labelShadowBias);
-            this.tabPageShadows.Controls.Add(this.numericUpDownShadowBias);
-            this.tabPageShadows.Controls.Add(this.labelShadowNormalBias);
-            this.tabPageShadows.Controls.Add(this.numericUpDownShadowNormalBias);
-            this.tabPageShadows.Controls.Add(this.checkBoxShadowFilterCascades);
-            this.tabPageShadows.Controls.Add(this.labelShadowFilterCascades);
+            var tlpShadows = new System.Windows.Forms.TableLayoutPanel
+            {
+                Dock = System.Windows.Forms.DockStyle.Fill,
+                Padding = new System.Windows.Forms.Padding(10),
+                ColumnCount = 2,
+                ColumnStyles =
+                {
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize),
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F)
+                },
+                Controls =
+                {
+                    { this.labelShadowResolution, 0, 0 },
+                    { this.comboBoxShadowResolution, 1, 0 },
+                    { this.labelShadowDistance, 0, 1 },
+                    { this.comboBoxShadowDistance, 1, 1 },
+                    { this.labelShadowCascades, 0, 2 },
+                    { this.comboBoxShadowCascades, 1, 2 },
+                    { this.labelShadowStrength, 0, 3 },
+                    { this.numericUpDownShadowStrength, 1, 3 },
+                    { this.labelShadowBias, 0, 4 },
+                    { this.numericUpDownShadowBias, 1, 4 },
+                    { this.labelShadowNormalBias, 0, 5 },
+                    { this.numericUpDownShadowNormalBias, 1, 5 },
+                    { this.labelShadowFilterCascades, 0, 6 },
+                    { this.checkBoxShadowFilterCascades, 1, 6 },
+                    { this.labelSunDirection, 0, 7 },
+                    { this.labelSunAzimuth, 0, 8 },
+                    { this.labelSunElevation, 0, 10 }
+                }
+            };
+            tlpShadows.SetColumnSpan(this.labelSunDirection, 2);
+            tlpShadows.SetColumnSpan(this.labelSunAzimuth, 2);
+            tlpShadows.SetColumnSpan(this.labelSunElevation, 2);
+            var panelAzimuth = new System.Windows.Forms.TableLayoutPanel
+            {
+                Dock = System.Windows.Forms.DockStyle.Fill,
+                AutoSize = true,
+                ColumnCount = 2,
+                ColumnStyles =
+                {
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F),
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize)
+                },
+                Controls =
+                {
+                    { this.trackBarSunAzimuth, 0, 0 },
+                    { this.labelSunAzimuthValue, 1, 0 }
+                }
+            };
+            this.trackBarSunAzimuth.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            tlpShadows.Controls.Add(panelAzimuth, 0, 9);
+            tlpShadows.SetColumnSpan(panelAzimuth, 2);
+            var panelElevation = new System.Windows.Forms.TableLayoutPanel
+            {
+                Dock = System.Windows.Forms.DockStyle.Fill,
+                AutoSize = true,
+                ColumnCount = 2,
+                ColumnStyles =
+                {
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F),
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize)
+                },
+                Controls =
+                {
+                    { this.trackBarSunElevation, 0, 0 },
+                    { this.labelSunElevationValue, 1, 0 }
+                }
+            };
+            this.trackBarSunElevation.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            tlpShadows.Controls.Add(panelElevation, 0, 11);
+            tlpShadows.SetColumnSpan(panelElevation, 2);
+            this.tabPageShadows.Controls.Add(tlpShadows);
             this.tabPageShadows.Location = new System.Drawing.Point(4, 22);
             this.tabPageShadows.Name = "tabPageShadows";
             this.tabPageShadows.Padding = new System.Windows.Forms.Padding(3);
@@ -619,10 +690,10 @@ namespace RouteViewer
             // 
             // labelSunAzimuthValue
             // 
-            this.labelSunAzimuthValue.AutoSize = true;
+            this.labelSunAzimuthValue.AutoSize = false;
             this.labelSunAzimuthValue.Location = new System.Drawing.Point(247, 262);
             this.labelSunAzimuthValue.Name = "labelSunAzimuthValue";
-            this.labelSunAzimuthValue.Size = new System.Drawing.Size(29, 13);
+            this.labelSunAzimuthValue.Size = new System.Drawing.Size(40, 13);
             this.labelSunAzimuthValue.TabIndex = 39;
             this.labelSunAzimuthValue.Text = "-26°";
             // 
@@ -649,10 +720,10 @@ namespace RouteViewer
             // 
             // labelSunElevationValue
             // 
-            this.labelSunElevationValue.AutoSize = true;
+            this.labelSunElevationValue.AutoSize = false;
             this.labelSunElevationValue.Location = new System.Drawing.Point(247, 326);
             this.labelSunElevationValue.Name = "labelSunElevationValue";
-            this.labelSunElevationValue.Size = new System.Drawing.Size(23, 13);
+            this.labelSunElevationValue.Size = new System.Drawing.Size(35, 13);
             this.labelSunElevationValue.TabIndex = 42;
             this.labelSunElevationValue.Text = "60°";
             // 
@@ -797,7 +868,7 @@ namespace RouteViewer
             this.tabControl1.ResumeLayout(false);
             this.tabPageOptions.ResumeLayout(false);
             this.tabPageOptions.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.AnsiotropicLevel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.AnisotropicLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.AntialiasingLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.width)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.height)).EndInit();
@@ -832,7 +903,7 @@ namespace RouteViewer
         private System.Windows.Forms.NumericUpDown height;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.NumericUpDown AnsiotropicLevel;
+        private System.Windows.Forms.NumericUpDown AnisotropicLevel;
         private System.Windows.Forms.NumericUpDown AntialiasingLevel;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
