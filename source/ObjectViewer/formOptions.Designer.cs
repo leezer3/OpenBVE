@@ -134,6 +134,7 @@ namespace ObjectViewer
                 },
                 Controls =
                 {
+                    // Interpolation Settings
                     { this.labelInterpolationSettings, 0, 0 },
                     { this.labelInterpolationMode, 0, 1 },
                     { this.InterpolationMode, 1, 1 },
@@ -143,11 +144,14 @@ namespace ObjectViewer
                     { this.AntialiasingLevel, 1, 3 },
                     { this.labelTransparencyQuality, 0, 4 },
                     { this.TransparencyQuality, 1, 4 },
+                    // Resolution Settings
                     { this.labelResolutionSettings, 0, 5 },
                     { this.labelWidth, 0, 6 },
                     { this.width, 1, 6 },
                     { this.labelHeight, 0, 7 },
                     { this.height, 1, 7 },
+                    // Other Settings
+                    { this.labelOtherSettings, 0, 8 },
                     { this.labelUseNewXParser, 0, 9 },
                     { this.comboBoxNewXParser, 1, 9 },
                     { this.labelUseNewObjParser, 0, 10 },
@@ -465,6 +469,7 @@ namespace ObjectViewer
                 },
                 Controls =
                 {
+                    // Shadow Settings
                     { this.labelShadowResolution, 0, 0 },
                     { this.comboBoxShadowResolution, 1, 0 },
                     { this.labelShadowDistance, 0, 1 },
@@ -479,6 +484,7 @@ namespace ObjectViewer
                     { this.numericUpDownShadowNormalBias, 1, 5 },
                     { this.labelShadowFilterCascades, 0, 6 },
                     { this.checkBoxShadowFilterCascades, 1, 6 },
+                    // Sun Direction
                     { this.labelSunDirection, 0, 7 },
                     { this.labelSunAzimuth, 0, 8 },
                     { this.labelSunElevation, 0, 10 }
@@ -750,6 +756,7 @@ namespace ObjectViewer
                 },
                 Controls =
                 {
+                    // Camera Controls
                     { this.labelControls, 0, 0 },
                     { this.comboBoxLeft, 0, 1 },
                     { this.labelLeft, 1, 1 },

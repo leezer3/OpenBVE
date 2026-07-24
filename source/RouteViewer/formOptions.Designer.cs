@@ -127,6 +127,7 @@ namespace RouteViewer
                 },
                 Controls =
                 {
+                    // Interpolation Settings
                     { this.InterpolationLabel, 0, 0 },
                     { this.label1, 0, 1 },
                     { this.InterpolationMode, 1, 1 },
@@ -136,11 +137,13 @@ namespace RouteViewer
                     { this.AntialiasingLevel, 1, 3 },
                     { this.label4, 0, 4 },
                     { this.TransparencyQuality, 1, 4 },
+                    // Resolution Settings
                     { this.label5, 0, 5 },
                     { this.label6, 0, 6 },
                     { this.width, 1, 6 },
                     { this.label7, 0, 7 },
                     { this.height, 1, 7 },
+                    // Display Settings
                     { this.label8, 0, 8 },
                     { this.label9, 0, 9 },
                     { this.checkBoxLogo, 1, 9 },
@@ -148,11 +151,13 @@ namespace RouteViewer
                     { this.checkBoxBackgrounds, 1, 10 },
                     { this.label11, 0, 11 },
                     { this.checkBoxProgressBar, 1, 11 },
+                    // Parser Settings
                     { this.label13, 0, 12 },
                     { this.label12, 0, 13 },
                     { this.comboBoxNewXParser, 1, 13 },
                     { this.label14, 0, 14 },
                     { this.comboBoxNewObjParser, 1, 14 },
+                    // Viewing Settings
                     { this.label15, 0, 15 },
                     { this.numericUpDownViewingDistance, 1, 15 },
                     { this.labelNearClip, 0, 16 },
@@ -502,6 +507,7 @@ namespace RouteViewer
                 },
                 Controls =
                 {
+                    // Shadow Settings
                     { this.labelShadowResolution, 0, 0 },
                     { this.comboBoxShadowResolution, 1, 0 },
                     { this.labelShadowDistance, 0, 1 },
@@ -516,6 +522,7 @@ namespace RouteViewer
                     { this.numericUpDownShadowNormalBias, 1, 5 },
                     { this.labelShadowFilterCascades, 0, 6 },
                     { this.checkBoxShadowFilterCascades, 1, 6 },
+                    // Sun Direction
                     { this.labelSunDirection, 0, 7 },
                     { this.labelSunAzimuth, 0, 8 },
                     { this.labelSunElevation, 0, 10 }
