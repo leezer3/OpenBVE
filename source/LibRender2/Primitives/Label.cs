@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2022, Christopher Lees, The OpenBVE Project
 //
@@ -25,6 +25,7 @@
 using LibRender2.Text;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Math;
 
 namespace LibRender2.Primitives
 {
@@ -40,17 +41,19 @@ namespace LibRender2.Primitives
 		public Label(BaseRenderer renderer, string text) : base(renderer)
 		{
 			Text = text;
-			Font = Renderer.Fonts.LargeFont;
-			Size = Font.MeasureString(Text) * 1.5;
+			Font = Renderer.Fonts.NormalFont;
+			Size = Font.MeasureString(Text);
 			// default colors to match GLMenu
 			BackgroundColor = Color128.Black;
 			TextColor = Color128.White;
+			IsVisible = true;
 		}
 
 		public override void Draw()
 		{
 			Renderer.Rectangle.Draw(Texture, Location, Size, BackgroundColor);
-			Renderer.OpenGlString.Draw(Font, Text, Location + (Size * 0.15), TextAlignment.TopLeft, TextColor);
+			float textY = (float)(Location.Y + (Size.Y - Font.MeasureString(Text).Y) / 2.0f);
+			Renderer.OpenGlString.Draw(Font, Text, new Vector2(Location.X, textY), TextAlignment.TopLeft, TextColor);
 		}
 	}
 }

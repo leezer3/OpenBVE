@@ -297,6 +297,7 @@ namespace ObjectViewer
 	        Program.Renderer.Screen.Width = Width;
 	        Program.Renderer.Screen.Height = Height;
             Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
+			Game.Menu.ComputePosition();
         }
 
         protected override void OnLoad(EventArgs e)
