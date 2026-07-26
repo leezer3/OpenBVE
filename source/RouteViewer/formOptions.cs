@@ -17,7 +17,7 @@ namespace RouteViewer
         {
             InitializeComponent();
             InterpolationMode.SelectedIndex = (int) Interface.CurrentOptions.Interpolation;
-            AnsiotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
+            AnisotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
             AntialiasingLevel.Value = Interface.CurrentOptions.AntiAliasingLevel;
             TransparencyQuality.SelectedIndex = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance ? 0 : 2;
             width.Value = Program.Renderer.Screen.Width;
@@ -206,8 +206,8 @@ namespace RouteViewer
 	            Program.Renderer.TextureManager.UnloadAllTextures(false);
             }
 
-			//Ansiotropic filtering level
-			Interface.CurrentOptions.AnisotropicFilteringLevel = (int) AnsiotropicLevel.Value;
+			//Anisotropic filtering level
+			Interface.CurrentOptions.AnisotropicFilteringLevel = (int) AnisotropicLevel.Value;
             //Antialiasing level
             Interface.CurrentOptions.AntiAliasingLevel = (int)AntialiasingLevel.Value;
             if (Interface.CurrentOptions.AntiAliasingLevel != previousAntialiasingLevel)
