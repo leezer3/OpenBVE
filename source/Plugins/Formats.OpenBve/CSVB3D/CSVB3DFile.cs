@@ -544,7 +544,7 @@ namespace Formats.OpenBve
 			glowHalfDistance = 0;
 			glowAttenuationMode = (T4)(object)GlowAttenuationMode.DivisionExponent4;
 			
-			if (value.Length >= 2)
+			if (value.Length >= 1)
 			{
 				if (Enum.TryParse(value[0], true, out MeshMaterialBlendMode mode))
 				{
