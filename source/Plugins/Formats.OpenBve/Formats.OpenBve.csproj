@@ -45,6 +45,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,8 +57,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CFG\ConfigFile.cs" />
+    <Compile Include="CSVB3D\CSVB3DFile.cs" />
     <Compile Include="Enums\CompatibilityObject\CompatibilityObjectKey.cs" />
     <Compile Include="Enums\CompatibilityObject\CompatibilityObjectSection.cs" />
+    <Compile Include="Enums\CSVB3D\CSVB3DKey.cs" />
+    <Compile Include="Enums\CSVB3D\CSVB3DSection.cs" />
     <Compile Include="Enums\DynamicBackground\DynamicBackgroundKey.cs" />
     <Compile Include="Enums\DynamicBackground\DynamicBackgroundSection.cs" />
     <Compile Include="Enums\DynamicLight\DynamicLightKey.cs" />
@@ -97,6 +103,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

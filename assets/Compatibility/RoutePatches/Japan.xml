@@ -93,41 +93,49 @@
 		<Hash>C15805011CDB796A82490177DB2C27B9B283B5D233F526193C56D98CC31CFAC3</Hash>
 		<FileName>3828M.csv</FileName>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
 	<Patch>
 		<Hash>5AECCC4F118C85EE087F1A13817CBC9CDACD1113084AAF610CDEDA5CC77DAA4C</Hash>
 		<FileName>4005M繝ｻSol・ｦ5Zc繝ｻ.csv</FileName>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
 	<Patch>
 		<Hash>AAC52B524BF32173968009AEAE5A7431842BDCA3CAEE8172F07C7BAC4C0EE3F2</Hash>
 		<FileName>501M・S榮R1Zc・.csv</FileName>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
 	<Patch>
 		<Hash>0B1F524C8F04F057824D365B8611861F5C14BF396EAD785AB480F19B57AC3937</Hash>
 		<FileName>3828M(琮) - Copy.csv</FileName>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
 	<Patch>
 		<Hash>1AEBA61D24D9A4A1FAEF463D41363C5EDE524D1EEE27B259190B31011D1579FE</Hash>
 		<FileName>3828M(琮).csv</FileName>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
 	<Patch>
 		<Hash>0353DB5FB20E74B282D832F54A2B6CE7BE57046E60A7C34580332BCD77EF827A</Hash>
 		<FileName>3828M(琮鮻菇).csv</FileName>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
 	<Patch>
 		<Hash>612046D34367B302FC911A870FC679723A78BD9DF50A13E99072F39378985613</Hash>
 		<FileName>3828M(LO).csv</FileName>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
 	<Patch>
 		<Hash>0FC0A2681F480D842E69F10D119E427593D55BF5F3A3A0B6BC64FBE3C0BFBF36</Hash>
 		<FileName>3828M(LO).csv</FileName>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
 	<!-- BVE4 routefiles -->
 		<Patch>
@@ -184,16 +192,22 @@
 		<Hash>96E3396698FFFBAE517A7A7C01B8FF6F719B7A3B2BD1E4E2315ABF486E132A2F</Hash>
 		<FileName>1131K（押上→渋谷）.csv</FileName>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<Expression Number="249">.FormCR(1) hanzomon\sta\sui\suiFormCR.csv</Expression>
+		<Expression Number="251">.FormCL(1) hanzomon\sta\sui\suiFormCL.csv</Expression>
 	</Patch>
 	<Patch>
 		<Hash>991EBB29F9474E0B14D7B2B12771DBBA624A01CE42504EFEF313EB9935B8218F</Hash>
 		<FileName>1367S（曳舟→渋谷）.csv</FileName>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<Expression Number="290">.FormCR(1) hanzomon\sta\sui\suiFormCR.csv</Expression>
+		<Expression Number="292">.FormCL(1) hanzomon\sta\sui\suiFormCL.csv</Expression>
 	</Patch>
 	<Patch>
 		<Hash>677F13A00476BC959E1694548816ACFD405E90310C59F4CF7C7E48D4D84C9642</Hash>
 		<FileName>1765S（押上→渋谷）.csv</FileName>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<Expression Number="249">.FormCR(1) hanzomon\sta\sui\suiFormCR.csv</Expression>
+		<Expression Number="251">.FormCL(1) hanzomon\sta\sui\suiFormCL.csv</Expression>
 	</Patch>
 	<!-- BVE4 routefiles -->
 	<Patch>

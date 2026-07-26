@@ -452,13 +452,11 @@ namespace OpenBveApi.Objects
 		}
 		
 		/// <summary>Applies translation</summary>
-		public override void ApplyTranslation(double x, double y, double z, bool absoluteTranslation = false)
+		public override void ApplyTranslation(Vector3 translationVector, bool absoluteTranslation = false)
 		{
 			for (int i = 0; i < Mesh.Vertices.Length; i++)
 			{
-				Mesh.Vertices[i].Coordinates.X += x;
-				Mesh.Vertices[i].Coordinates.Y += y;
-				Mesh.Vertices[i].Coordinates.Z += z;
+				Mesh.Vertices[i].Coordinates += translationVector;
 			}
 		}
 

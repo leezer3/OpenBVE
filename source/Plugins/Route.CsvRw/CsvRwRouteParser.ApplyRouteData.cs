@@ -1033,13 +1033,18 @@ namespace CsvRwRouteParser
 						CurrentRoute.PointsOfInterest[n].Text = CurrentRoute.Stations[i].Name;
 						CurrentRoute.PointsOfInterest[n].TrackPosition = CurrentRoute.Stations[i].Stops[0].TrackPosition;
 						CurrentRoute.PointsOfInterest[n].TrackOffset = new Vector3(0.0, 2.8, 0.0);
-						if (CurrentRoute.Stations[i].OpenLeftDoors && !CurrentRoute.Stations[i].OpenRightDoors)
+						if (Plugin.CurrentHost.Application != HostApplication.RouteViewer)
 						{
-							CurrentRoute.PointsOfInterest[n].TrackOffset.X = -2.5;
-						}
-						else if (!CurrentRoute.Stations[i].OpenLeftDoors && CurrentRoute.Stations[i].OpenRightDoors)
-						{
-							CurrentRoute.PointsOfInterest[n].TrackOffset.X = 2.5;
+							// this is intended to place default POI on platform when using exterior view
+							// leave track centered in Route Viewer
+							if (CurrentRoute.Stations[i].OpenLeftDoors && !CurrentRoute.Stations[i].OpenRightDoors)
+							{
+								CurrentRoute.PointsOfInterest[n].TrackOffset.X = -2.5;
+							}
+							else if (!CurrentRoute.Stations[i].OpenLeftDoors && CurrentRoute.Stations[i].OpenRightDoors)
+							{
+								CurrentRoute.PointsOfInterest[n].TrackOffset.X = 2.5;
+							}
 						}
 						n++;
 					}
