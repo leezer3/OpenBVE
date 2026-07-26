@@ -60,6 +60,7 @@ namespace Object.CsvB3d
 					 * See also https://github.com/leezer3/OpenBVE/issues/448
 					 */
 					currentMeshBuilder.Apply(ref staticObject, Plugin.enabledHacks.BveTsHacks);
+					currentNormals.Clear();
 					currentMeshBuilder = new MeshBuilder(Plugin.currentHost);
 				}
 
