@@ -109,7 +109,7 @@ namespace OpenBveApi.Objects
 					}
 
 					parameters.FirstColorTransparent = Materials[i].FirstColorTransparent;
-					if (Materials[i].DaytimeTexture != null || Materials[i].Text != null)
+					if (!string.IsNullOrWhiteSpace(Materials[i].DaytimeTexture) || Materials[i].Text != null)
 					{
 						Texture tday;
 						if (Materials[i].Text != null)
@@ -136,7 +136,7 @@ namespace OpenBveApi.Objects
 					}
 
 					Object.Mesh.Materials[mm + i].EmissiveColor = Materials[i].EmissiveColor;
-					if (Materials[i].NighttimeTexture != null)
+					if (!string.IsNullOrWhiteSpace(Materials[i].NighttimeTexture))
 					{
 						currentHost.RegisterTexture(Materials[i].NighttimeTexture, parameters, out Texture tnight);
 						Object.Mesh.Materials[mm + i].NighttimeTexture = tnight;
