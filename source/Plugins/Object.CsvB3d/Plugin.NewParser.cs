@@ -247,6 +247,11 @@ namespace Object.CsvB3d
 							{
 								currentMeshBuilder.Materials[0].DaytimeTexture = tDay;
 								currentMeshBuilder.Materials[0].NighttimeTexture = tNight;
+								if (!string.IsNullOrWhiteSpace(tDay) && !string.IsNullOrWhiteSpace(tNight) && Plugin.enabledHacks.BveTsHacks)
+								{
+									// https://github.com/leezer3/OpenBVE/wiki/Errata#lighting-behaviour-with-a-defined-daytime-and-nighttime-texture
+									currentMeshBuilder.Materials[0].Flags |= MaterialFlags.DisableLighting;
+								}
 							}
 							else
 							{
