@@ -393,12 +393,24 @@ namespace Formats.OpenBve
 			for (int i = 0; i < value.Length; i++)
 			{
 				/*
-				 * NOTE: Face ,1,2,3
-				 * is interpreted by BVE as Face 0,1,2,3
+				 * NOTES:
+				 * BVE interprets any 'unknown' value as 0
+				 * -------------------------------------------------
+				 * Face ,1,2,3 is interpreted by BVE as Face 0,1,2,3
 				 * Applies to both CSV and B3D files
+				 *--------------------------------------------------
+				 * Similarly, using the letter O in place of a zero
+				 * e.g. Face O,1,2,3 works.
+				 * Limit it to just these two for the minute to try
+				 * and keep things clean.
 				 */
-				if (!NumberFormats.TryParseIntVb6(value[i], out parsedValues[i]) && (i != 0 || enableHacks == false))
+				if (!NumberFormats.TryParseIntVb6(value[i], out parsedValues[i]))
 				{
+					if (enableHacks && (i == 0 || value[i].ToLowerInvariant() == "o"))
+					{
+						parsedValues[i] = 0;
+						continue;
+					}
 					if (!string.IsNullOrWhiteSpace(value[i]))
 					{
 						currentHost.AddMessage(MessageType.Error, false, "The vertex referenced at index " + i + " is not a valid integer in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
