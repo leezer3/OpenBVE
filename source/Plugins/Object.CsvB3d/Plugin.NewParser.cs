@@ -79,8 +79,14 @@ namespace Object.CsvB3d
 							{
 								CheckForFaceHacks(fileName, currentMeshBuilder, staticObject, key == CSVB3DKey.Face2, ref faceVertices);
 								MeshFace f = new MeshFace(faceVertices.Length);
+								bool valid = true;
 								for (int j = 0; j < faceVertices.Length; j++)
 								{
+									if (faceVertices[j] >= currentMeshBuilder.Vertices.Count)
+									{
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "VertexIndex " + faceVertices[j] + " does not reference an existing vertex at Line " + subBlock.CurrentLine + " in file " + fileName);
+										valid = false;
+									}
 									f.Vertices[j].Index = faceVertices[j];
 									if (faceVertices[j] < currentNormals.Count)
 									{
@@ -99,7 +105,10 @@ namespace Object.CsvB3d
 									f.Flags |= FaceFlags.Face2Mask;
 								}
 
-								currentMeshBuilder.Faces.Add(f);
+								if (valid)
+								{
+									currentMeshBuilder.Faces.Add(f);
+								}
 							}
 							break;
 						case CSVB3DKey.Color:
@@ -273,7 +282,7 @@ namespace Object.CsvB3d
 							{
 								if (idx >= currentMeshBuilder.Vertices.Count)
 								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid vertex index in command " + subBlock.CurrentCommand + " at line " + subBlock.CurrentLine + " in file " + fileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "VertexIndex " + idx + " does not reference an existing vertex in command " + subBlock.CurrentCommand + " at line " + subBlock.CurrentLine + " in file " + fileName);
 									break;
 								}
 
