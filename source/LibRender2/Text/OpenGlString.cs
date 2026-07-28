@@ -1,6 +1,7 @@
 using LibRender2.Shaders;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
@@ -101,7 +102,7 @@ namespace LibRender2.Text
 				top = location.Y;
 			}
 
-			if (Shader != null)
+			if (Shader != null && renderer.currentHost.Application != HostApplication.TrainEditor2)
 			{
 				DrawWithShader(text, font, left, top, color);
 			}
