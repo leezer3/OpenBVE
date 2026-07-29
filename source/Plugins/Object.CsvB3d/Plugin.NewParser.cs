@@ -60,6 +60,7 @@ namespace Object.CsvB3d
 					 * See also https://github.com/leezer3/OpenBVE/issues/448
 					 */
 					currentMeshBuilder.Apply(ref staticObject, Plugin.enabledHacks.BveTsHacks);
+					currentNormals.Clear();
 					currentMeshBuilder = new MeshBuilder(Plugin.currentHost);
 				}
 
@@ -78,8 +79,14 @@ namespace Object.CsvB3d
 							{
 								CheckForFaceHacks(fileName, currentMeshBuilder, staticObject, key == CSVB3DKey.Face2, ref faceVertices);
 								MeshFace f = new MeshFace(faceVertices.Length);
+								bool valid = true;
 								for (int j = 0; j < faceVertices.Length; j++)
 								{
+									if (faceVertices[j] >= currentMeshBuilder.Vertices.Count)
+									{
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "VertexIndex " + faceVertices[j] + " does not reference an existing vertex at Line " + subBlock.CurrentLine + " in file " + fileName);
+										valid = false;
+									}
 									f.Vertices[j].Index = faceVertices[j];
 									if (faceVertices[j] < currentNormals.Count)
 									{
@@ -98,7 +105,10 @@ namespace Object.CsvB3d
 									f.Flags |= FaceFlags.Face2Mask;
 								}
 
-								currentMeshBuilder.Faces.Add(f);
+								if (valid)
+								{
+									currentMeshBuilder.Faces.Add(f);
+								}
 							}
 							break;
 						case CSVB3DKey.Color:
@@ -246,6 +256,11 @@ namespace Object.CsvB3d
 							{
 								currentMeshBuilder.Materials[0].DaytimeTexture = tDay;
 								currentMeshBuilder.Materials[0].NighttimeTexture = tNight;
+								if (!string.IsNullOrWhiteSpace(tDay) && !string.IsNullOrWhiteSpace(tNight) && Plugin.enabledHacks.BveTsHacks)
+								{
+									// https://github.com/leezer3/OpenBVE/wiki/Errata#lighting-behaviour-with-a-defined-daytime-and-nighttime-texture
+									currentMeshBuilder.Materials[0].Flags |= MaterialFlags.DisableLighting;
+								}
 							}
 							else
 							{
@@ -267,7 +282,7 @@ namespace Object.CsvB3d
 							{
 								if (idx >= currentMeshBuilder.Vertices.Count)
 								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid vertex index in command " + subBlock.CurrentCommand + " at line " + subBlock.CurrentLine + " in file " + fileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "VertexIndex " + idx + " does not reference an existing vertex in command " + subBlock.CurrentCommand + " at line " + subBlock.CurrentLine + " in file " + fileName);
 									break;
 								}
 

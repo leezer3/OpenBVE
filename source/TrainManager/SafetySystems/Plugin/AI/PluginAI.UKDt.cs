@@ -116,10 +116,10 @@ namespace TrainManager.SafetySystems
 				currentStep = 5;
 			}
 
-			if (Plugin.Panel[51] == 1)
+			if (Plugin.Panel[51] == 1 || Plugin.Panel[55] == 1)
 			{
 				/*
-				 * Over current has tripped
+				 * Over current has tripped, or wheelslip light is lit
 				 * Let's back off to N and drop the max notch by 1
 				 *
 				 * Repeat until we move off properly
@@ -133,6 +133,7 @@ namespace TrainManager.SafetySystems
 					data.Handles.PowerNotch = 0;
 					data.Response = AIResponse.Long;
 					overCurrentTrip = true;
+					nextPluginAction = TrainManagerBase.currentHost.InGameTime + 20;
 					return;
 				}
 				data.Response = AIResponse.Long;
@@ -142,9 +143,10 @@ namespace TrainManager.SafetySystems
 			overCurrentTrip = false;
 			if (overCurrentSpeed != double.MaxValue)
 			{
-				if (Plugin.Train.CurrentSpeed < overCurrentSpeed + 10)
+				if (Plugin.Train.CurrentSpeed > 5 && Plugin.Train.CurrentSpeed < overCurrentSpeed + 10)
 				{
 					data.Handles.PowerNotch = overCurrentNotch;
+					data.Response = AIResponse.Short;
 				}
 				else
 				{

@@ -422,6 +422,14 @@ namespace CsvRwRouteParser {
 					}
 					// separate command and arguments
 					Expressions[j].SeparateCommandsAndArguments(out string Command, out string ArgumentSequence, Culture, false, IsRW, Section);
+
+					if (Command == "." && string.IsNullOrWhiteSpace(ArgumentSequence))
+					{
+						// e.g. extra period at the end of a line- otherwise this produces pointless empty error
+						Expressions[j].Skip = true;
+						continue;
+					}
+
 					// process command
 					bool NumberCheck = !IsRW || string.Compare(Section, "track", StringComparison.OrdinalIgnoreCase) == 0;
 					if (NumberCheck && NumberFormats.TryParseDouble(Command, UnitOfLength, out double currentTrackPosition)) {

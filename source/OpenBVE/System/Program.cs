@@ -104,9 +104,26 @@ namespace OpenBve {
 			//Determine the current CPU architecture-
 			//ARM will generally only support OpenGL-ES
 			typeof(object).Module.GetPEKind(out PortableExecutableKinds _, out CurrentCPUArchitecture);
+
+			// --- check the command-line arguments for route and train ---
+			LaunchParameters result = CommandLine.ParseArguments(args);
 			
-			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault(false);
+			try
+			{
+				Application.EnableVisualStyles();
+				Application.SetCompatibleTextRenderingDefault(false);
+			}
+			catch(Exception ex)
+			{
+				if (ex is TypeInitializationException)
+				{
+					// WinForms library is broken or not available
+					// so try the GL menu instead (Debian Forky)
+					result.ExperimentalGLMenu = true;	
+				}
+			}
+			
+			
 			
 			if (IntPtr.Size == 4)
 			{
@@ -161,11 +178,9 @@ namespace OpenBve {
 			string file = Path.CombineFile(folder, "Default keyboard assignment.controls");
 			Interface.LoadControls(file, out Control[] controls);
 			Interface.AddControls(ref Interface.CurrentControls, controls);
-			
 			InputDevicePlugin.LoadPlugins(Program.FileSystem);
 			
-			// --- check the command-line arguments for route and train ---
-			LaunchParameters result = CommandLine.ParseArguments(args);
+			
 			// --- check whether route and train exist ---
 			if (result.RouteFile != null) {
 				if (!System.IO.File.Exists(result.RouteFile))

@@ -393,12 +393,24 @@ namespace Formats.OpenBve
 			for (int i = 0; i < value.Length; i++)
 			{
 				/*
-				 * NOTE: Face ,1,2,3
-				 * is interpreted by BVE as Face 0,1,2,3
+				 * NOTES:
+				 * BVE interprets any 'unknown' value as 0
+				 * -------------------------------------------------
+				 * Face ,1,2,3 is interpreted by BVE as Face 0,1,2,3
 				 * Applies to both CSV and B3D files
+				 *--------------------------------------------------
+				 * Similarly, using the letter O in place of a zero
+				 * e.g. Face O,1,2,3 works.
+				 * Limit it to just these two for the minute to try
+				 * and keep things clean.
 				 */
-				if (!NumberFormats.TryParseIntVb6(value[i], out parsedValues[i]) && (i != 0 || enableHacks == false))
+				if (!NumberFormats.TryParseIntVb6(value[i], out parsedValues[i]))
 				{
+					if (enableHacks && (i == 0 || value[i].ToLowerInvariant() == "o"))
+					{
+						parsedValues[i] = 0;
+						continue;
+					}
 					if (!string.IsNullOrWhiteSpace(value[i]))
 					{
 						currentHost.AddMessage(MessageType.Error, false, "The vertex referenced at index " + i + " is not a valid integer in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
@@ -485,13 +497,29 @@ namespace Formats.OpenBve
 			else
 			{
 				tDay = value.Length >= 1 ? value[0] : string.Empty;
-				currentHost.AddMessage(MessageType.Error, false, "DaytimeTexture File + " + tDay + " was not found for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+				if (string.IsNullOrWhiteSpace(tDay))
+				{
+					currentHost.AddMessage(MessageType.Warning, false, "No DaytimeTexture File was specified for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+				}
+				else
+				{
+					currentHost.AddMessage(MessageType.Error, false, "DaytimeTexture File " + tDay + " was not found for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+				}
+				tDay = string.Empty;
 			}
 
 			if (!string.IsNullOrEmpty(tNight) && !File.Exists(tNight))
 			{
 				tNight = value.Length >= 2 ? value[1] : string.Empty;
-				currentHost.AddMessage(MessageType.Error, false, "NightTimeTexture File " + tNight + " was not found for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+				if(string.IsNullOrWhiteSpace(tNight))
+				{
+					currentHost.AddMessage(MessageType.Warning, false, "No NightTimeTexture File was specified for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+				}
+				else
+				{
+					currentHost.AddMessage(MessageType.Error, false, "NightTimeTexture File " + tNight + " was not found for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+				}
+				tNight = string.Empty;
 			}
 
 			return textureFound;
@@ -563,7 +591,7 @@ namespace Formats.OpenBve
 				double.TryParse(value[1], out glowHalfDistance);
 			}
 
-			if (value.Length >= 3)
+			if (value.Length >= 3 && !string.IsNullOrWhiteSpace(value[2])) // mode is optional, but string may consist of whitespace :(
 			{
 				if (Enum.TryParse(value[2], true, out GlowAttenuationMode glowMode))
 				{
