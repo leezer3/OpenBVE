@@ -55,7 +55,7 @@ namespace Plugin
 		{
 			internal uint flags; //Describes specular and some other stuff, unlikely to be supported
 			/// <summary>The hierarchy ID of the top-level transform matrix</summary>
-			/// <remarks>Remember that matricies transform down a chain</remarks>
+			/// <remarks>Remember that matrices transform down a chain</remarks>
 			internal readonly int hierarchyID;
 			internal int lightingMatrixID;
 			internal int lightingConfigIdx;
