@@ -59,11 +59,11 @@ namespace LibRender2.ShadowMapping
 			{
 				if (Map == null)
 				{
-					Map = new CascadedShadowMap(cascadeCount, resolution);
+					Map = new CascadedShadowMap(cascadeCount, resolution, opts.LowResFarShadows);
 				}
 				else
 				{
-					Map.Resize(cascadeCount, resolution);
+					Map.Resize(cascadeCount, resolution, opts.LowResFarShadows);
 				}
 
 				if (Caster == null || cascadeCount != Caster.CascadeCount)
@@ -72,7 +72,7 @@ namespace LibRender2.ShadowMapping
 				}
 
 				Caster.ShadowDistance = shadowDistance;
-				Caster.Resolution = resolution;
+				Caster.Resolutions = Map.Resolutions;
 				Caster.SplitLambda = 0.75;
 				Caster.DepthMargin = 150.0;
 
@@ -119,7 +119,7 @@ namespace LibRender2.ShadowMapping
 			// 2. Update cascade matrices
 			// NOTE: We pass renderer.CurrentViewMatrix here which reflects the camera's rotation.
 			// The Caster will use this to align the shadow frustums with the view direction.
-			Caster.Resolution = Map.Resolution;
+			Caster.Resolutions = Map.Resolutions;
 			if (renderer.currentOptions.ShadowDrawDistance == ShadowDistance.ViewingDistance)
 			{
 				Caster.ShadowDistance = renderer.currentOptions.ViewingDistance;
@@ -194,6 +194,9 @@ namespace LibRender2.ShadowMapping
 		private void RenderFacesFiltered(IEnumerable<FaceState> faces, ref int lastVAO, double maxDistanceSquared)
 		{
 			Vector3 cameraPos = renderer.Camera.AbsolutePosition;
+			ObjectState lastObject = null;
+			MeshMaterial? lastMaterial = null;
+			int lastTextureId = -1;
 
 			foreach (var face in faces)
 			{
@@ -217,33 +220,50 @@ namespace LibRender2.ShadowMapping
 					}
 				}
 
-				DepthShader.SetModelMatrix(state.ModelMatrix * renderer.Camera.TranslationMatrix);
-				DepthShader.SetTextureMatrix(state.TextureTranslation);
-
 				var material = face.Object.Prototype.Mesh.Materials[face.Face.Material];
 				if ((material.Flags & MaterialFlags.NoShadow) != 0 || material.BlendMode == MeshMaterialBlendMode.Additive)
 				{
 					continue;
 				}
-				if (material.DaytimeTexture != null && renderer.currentHost.LoadTexture(ref material.DaytimeTexture, (OpenGlTextureWrapMode)(material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp)))
+
+				// Cache and skip redundant object matrix/animation uniform updates
+				if (state != lastObject)
 				{
-					GL.ActiveTexture(TextureUnit.Texture0);
-					GL.BindTexture(TextureTarget.Texture2D, material.DaytimeTexture.OpenGlTextures[(int)(material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp)].Name);
-					DepthShader.SetHasTexture(true);
-				}
-				else
-				{
-					DepthShader.SetHasTexture(false);
+					DepthShader.SetModelMatrix(state.ModelMatrix * renderer.Camera.TranslationMatrix);
+					DepthShader.SetTextureMatrix(state.TextureTranslation);
+
+					if (state.Matricies != null && state.Matricies.Length > 0)
+					{
+						DepthShader.SetCurrentAnimationMatricies(state);
+						GL.BindBufferBase(BufferTarget.UniformBuffer, 0, state.MatrixBufferIndex);
+					}
+					lastObject = state;
 				}
 
-				DepthShader.SetAlphaCutoff(0.5f);
-				DepthShader.SetMaterialAlpha(material.Color.A / 255.0f);
-				DepthShader.SetMaterialFlags(material.Flags);
-				
-				if (state.Matricies != null && state.Matricies.Length > 0)
+				// Cache and skip redundant material and texture state binds
+				if (!lastMaterial.HasValue || material != lastMaterial.Value)
 				{
-					DepthShader.SetCurrentAnimationMatricies(state);
-					GL.BindBufferBase(BufferTarget.UniformBuffer, 0, state.MatrixBufferIndex);
+					int textureId = -1;
+					if (material.DaytimeTexture != null && renderer.currentHost.LoadTexture(ref material.DaytimeTexture, (OpenGlTextureWrapMode)(material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp)))
+					{
+						textureId = material.DaytimeTexture.OpenGlTextures[(int)(material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp)].Name;
+					}
+
+					if (textureId != lastTextureId)
+					{
+						if (textureId != -1)
+						{
+							GL.ActiveTexture(TextureUnit.Texture0);
+							GL.BindTexture(TextureTarget.Texture2D, textureId);
+						}
+						DepthShader.SetHasTexture(textureId != -1);
+						lastTextureId = textureId;
+					}
+
+					DepthShader.SetAlphaCutoff(0.5f);
+					DepthShader.SetMaterialAlpha(material.Color.A / 255.0f);
+					DepthShader.SetMaterialFlags(material.Flags);
+					lastMaterial = material;
 				}
 
 				VertexArrayObject vao = (VertexArrayObject)face.Object.Prototype.Mesh.VAO;

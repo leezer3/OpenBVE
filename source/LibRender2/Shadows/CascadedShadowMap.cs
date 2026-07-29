@@ -12,8 +12,11 @@ namespace LibRender2.ShadowMapping
         /// <summary>Number of cascades (shadow splits).</summary>
         public int CascadeCount { get; private set; }
 
-        /// <summary>Shadow map resolution per cascade.</summary>
-        public int Resolution { get; private set; }
+        /// <summary>Base shadow map resolution.</summary>
+        public int BaseResolution { get; private set; }
+
+        /// <summary>Resolutions per cascade.</summary>
+        public int[] Resolutions { get; private set; }
 
         /// <summary>Per-cascade FBO handles.</summary>
         public int[] FBOs { get; private set; }
@@ -26,15 +29,18 @@ namespace LibRender2.ShadowMapping
         /// </summary>
         /// <param name="cascadeCount">Number of cascades (typically 3 or 4).</param>
         /// <param name="resolution">Resolution of each cascade's depth texture.</param>
-        public CascadedShadowMap(int cascadeCount = 3, int resolution = 2048)
+        /// <param name="lowResFarShadows">Whether to downscale resolutions for far cascades.</param>
+        public CascadedShadowMap(int cascadeCount = 3, int resolution = 2048, bool lowResFarShadows = true)
         {
             CascadeCount = cascadeCount;
-            Resolution = resolution;
+            BaseResolution = resolution;
             FBOs = new int[cascadeCount];
             DepthTextures = new int[cascadeCount];
+            Resolutions = new int[cascadeCount];
 
             for (int i = 0; i < cascadeCount; i++)
             {
+                Resolutions[i] = (lowResFarShadows && i > 0) ? Math.Max(128, resolution >> i) : resolution;
                 CreateCascade(i);
             }
         }
@@ -45,24 +51,27 @@ namespace LibRender2.ShadowMapping
         /// </summary>
         /// <param name="newCascadeCount">New number of cascades.</param>
         /// <param name="newResolution">New resolution per cascade.</param>
-        public void Resize(int newCascadeCount, int newResolution)
+        /// <param name="lowResFarShadows">Whether to downscale resolutions for far cascades.</param>
+        public void Resize(int newCascadeCount, int newResolution, bool lowResFarShadows = true)
         {
             // Dispose old resources
             Dispose();
 
             // Reallocate
             CascadeCount = newCascadeCount;
-            Resolution = newResolution;
+            BaseResolution = newResolution;
             FBOs = new int[newCascadeCount];
             DepthTextures = new int[newCascadeCount];
+            Resolutions = new int[newCascadeCount];
 
             for (int i = 0; i < newCascadeCount; i++)
             {
+                Resolutions[i] = (lowResFarShadows && i > 0) ? Math.Max(128, newResolution >> i) : newResolution;
                 CreateCascade(i);
             }
 
             Console.WriteLine(
-                $"[CSM] Resized to {newCascadeCount} cascades at {newResolution}×{newResolution}");
+                $"[CSM] Resized to {newCascadeCount} cascades with downscaling={lowResFarShadows}");
         }
 
         private void CreateCascade(int index)
@@ -72,7 +81,7 @@ namespace LibRender2.ShadowMapping
             GL.BindTexture(TextureTarget.Texture2D, DepthTextures[index]);
             GL.TexImage2D(TextureTarget.Texture2D, 0,
                 PixelInternalFormat.DepthComponent24,
-                Resolution, Resolution, 0,
+                Resolutions[index], Resolutions[index], 0,
                 PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
             GL.TexParameter(TextureTarget.Texture2D,
                 TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
@@ -118,7 +127,7 @@ namespace LibRender2.ShadowMapping
         public void BindCascadeForWriting(int cascadeIndex)
         {
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, FBOs[cascadeIndex]);
-            GL.Viewport(0, 0, Resolution, Resolution);
+            GL.Viewport(0, 0, Resolutions[cascadeIndex], Resolutions[cascadeIndex]);
         }
 
         /// <summary>Unbinds shadow FBO.</summary>

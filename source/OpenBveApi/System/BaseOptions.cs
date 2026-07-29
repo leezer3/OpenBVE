@@ -96,6 +96,8 @@ namespace OpenBveApi
 		public double ShadowNormalBias = 2.0;
 		/// <summary>Whether to filter shadow casters per cascade to improve performance.</summary>
 		public bool ShadowFilterCascades = true;
+		/// <summary>Whether to downscale far cascade shadow map resolutions to improve performance.</summary>
+		public bool LowResFarShadows = true;
 
 
 		/// <summary>The sun azimuth in degrees</summary>

@@ -499,6 +499,20 @@ namespace OpenBve {
 			checkboxShadowFilterCascades.Checked = Interface.CurrentOptions.ShadowFilterCascades;
 			// Enable/disable shadow sub-controls based on resolution setting
 			bool shadowEnabled = Interface.CurrentOptions.ShadowResolution != ShadowMapResolution.Off;
+
+			// Dynamically add LowResFarShadows checkbox
+			this.groupboxShadows.Height = 265;
+			CheckBox checkboxLowResFarShadows = new CheckBox();
+			checkboxLowResFarShadows.AutoSize = true;
+			checkboxLowResFarShadows.Location = new System.Drawing.Point(8, 238);
+			checkboxLowResFarShadows.Name = "checkboxLowResFarShadows";
+			checkboxLowResFarShadows.Size = new System.Drawing.Size(150, 17);
+			checkboxLowResFarShadows.Text = "Low-res Far Shadows";
+			checkboxLowResFarShadows.Checked = Interface.CurrentOptions.LowResFarShadows;
+			checkboxLowResFarShadows.Enabled = shadowEnabled;
+			checkboxLowResFarShadows.UseVisualStyleBackColor = true;
+			this.groupboxShadows.Controls.Add(checkboxLowResFarShadows);
+
 			comboboxShadowDistance.Enabled = shadowEnabled;
 			comboboxShadowCascades.Enabled = shadowEnabled;
 			checkboxShadowFilterCascades.Enabled = shadowEnabled;
@@ -1264,6 +1278,11 @@ namespace OpenBve {
 			Interface.CurrentOptions.ShadowBias = (double)updownShadowBias.Value;
 			Interface.CurrentOptions.ShadowNormalBias = (double)updownShadowNormalBias.Value;
 			Interface.CurrentOptions.ShadowFilterCascades = checkboxShadowFilterCascades.Checked;
+			CheckBox checkboxLowResFarShadows = this.groupboxShadows.Controls["checkboxLowResFarShadows"] as CheckBox;
+			if (checkboxLowResFarShadows != null)
+			{
+				Interface.CurrentOptions.LowResFarShadows = checkboxLowResFarShadows.Checked;
+			}
 			Interface.CurrentOptions.GameMode = (GameMode)comboboxMode.SelectedIndex;
 			Interface.CurrentOptions.BlackBox = checkboxBlackBox.Checked;
 			Interface.CurrentOptions.LoadingSway = checkBoxLoadingSway.Checked;
