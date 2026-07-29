@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using LibRender2;
 using LibRender2.Trains;
 using OpenBveApi.Interface;
-using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
 using OpenTK.Graphics.OpenGL;
@@ -15,14 +13,6 @@ namespace OpenBve.Graphics.Renderers
 {
     internal class Touch
     {
-        private struct PickedObject
-        {
-            internal int NameDepth;
-            internal int[] Names;
-            internal double MinDepth;
-            internal double MaxDepth;
-        }
-
         private readonly NewRenderer renderer;
         private readonly List<ObjectState> touchableObject;
         private readonly FrameBufferObject fbo;
@@ -165,64 +155,7 @@ namespace OpenBve.Graphics.Renderers
             return null;
         }
 
-        /// <summary>Make a projection matrix that can be used to limit drawing to small areas of the viewport.</summary>
-        /// <param name="point">Center of picking area at window coordinates</param>
-        /// <param name="delta">Width and height of picking area in window coordinates</param>
-        private Matrix4D CreatePickMatrix(Vector2 point, Vector2 delta)
-        {
-            if (delta.X <= 0 || delta.Y <= 0)
-            {
-                return Matrix4D.Identity;
-            }
 
-            Matrix4D translateMatrix = Matrix4D.CreateTranslation((renderer.Screen.Width - 2 * point.X) / delta.X, (2 * point.Y - renderer.Screen.Height) / delta.Y, 0);
-            Matrix4D scaleMatrix = Matrix4D.Scale(renderer.Screen.Width / delta.X, renderer.Screen.Height / delta.Y, 1.0);
-
-            return renderer.CurrentProjectionMatrix * scaleMatrix * translateMatrix;
-        }
-
-        private static List<PickedObject> ParseSelectBuffer(int[] selectBuffer)
-        {
-            List<PickedObject> pickedObjects = new List<PickedObject>();
-            int position = 0;
-
-            try
-            {
-                while (position < selectBuffer.Length)
-                {
-                    if (selectBuffer[position] == 0)
-                    {
-                        break;
-                    }
-
-                    PickedObject pickedObject = new PickedObject
-                    {
-                        NameDepth = selectBuffer[position++],
-                        MinDepth = (double)selectBuffer[position++] / int.MaxValue,
-                        MaxDepth = (double)selectBuffer[position++] / int.MaxValue
-                    };
-                    pickedObject.Names = new int[pickedObject.NameDepth];
-
-                    for (int i = 0; i < pickedObject.NameDepth; i++)
-                    {
-                        pickedObject.Names[i] = selectBuffer[position++];
-                    }
-
-                    pickedObjects.Add(pickedObject);
-                }
-
-                return pickedObjects;
-            }
-            catch (IndexOutOfRangeException)
-            {
-                if (position >= selectBuffer.Length)
-                {
-                    return pickedObjects;
-                }
-
-                throw;
-            }
-        }
 
         internal bool MoveCheck(Vector2 Point, out MouseCursor.Status Status, out MouseCursor NewCursor)
         {
@@ -300,9 +233,9 @@ namespace OpenBve.Graphics.Renderers
             }
 
             CarBase Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
-            int add = Car.CarSections[0].CurrentAdditionalGroup + 1;
+            int add = Car.CarSections[CarSectionType.Interior].CurrentAdditionalGroup + 1;
 
-            if (add >= Car.CarSections[0].Groups.Length)
+            if (add >= Car.CarSections[CarSectionType.Interior].Groups.Length)
             {
                 return;
             }
@@ -346,8 +279,8 @@ namespace OpenBve.Graphics.Renderers
             }
 
             CarBase Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
-            int add = Car.CarSections[0].CurrentAdditionalGroup + 1;
-            if (add >= Car.CarSections[0].Groups.Length)
+            int add = Car.CarSections[CarSectionType.Interior].CurrentAdditionalGroup + 1;
+            if (add >= Car.CarSections[CarSectionType.Interior].Groups.Length)
             {
                 return;
             }
@@ -365,7 +298,7 @@ namespace OpenBve.Graphics.Renderers
             {
                 if (TouchElement.Element.internalObject == pickedObject)
                 {
-                    Car.CarSections[0].CurrentAdditionalGroup = TouchElement.JumpScreenIndex;
+                    Car.CarSections[CarSectionType.Interior].CurrentAdditionalGroup = TouchElement.JumpScreenIndex;
                     // Force a show / hide of the car sections to ensure that the touch stack is correctly updated
                     Car.ChangeCarSection(CarSectionType.Interior, false, true);
 
