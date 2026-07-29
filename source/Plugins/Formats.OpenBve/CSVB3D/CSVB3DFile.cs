@@ -630,14 +630,28 @@ namespace Formats.OpenBve
 		private Vector2 GetVector2(string[] values, int startingIndex, T2 key, int line)
 		{
 			Vector2 v = Vector2.Null;
-			if (values.Length >= startingIndex + 1 && values[startingIndex].Length > 0 && !NumberFormats.TryParseDoubleVb6(values[startingIndex], out v.X))
+			if (values.Length >= startingIndex + 1 && !NumberFormats.TryParseDoubleVb6(values[startingIndex], out v.X))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "X was invalid for " + key + " at line " + line + " in file " + FileName);
+				if (string.IsNullOrWhiteSpace(values[startingIndex]))
+				{
+					currentHost.AddMessage(MessageType.Warning, false, "X was empty for " + key + " at line " + line + " in file " + FileName);
+				}
+				else
+				{
+					currentHost.AddMessage(MessageType.Error, false, "X was invalid for " + key + " at line " + line + " in file " + FileName);
+				}
 			}
 
-			if (values.Length >= startingIndex + 2 && values[startingIndex + 1].Length > 0 && !NumberFormats.TryParseDoubleVb6(values[startingIndex + 1], out v.Y))
+			if (values.Length >= startingIndex + 2 && !NumberFormats.TryParseDoubleVb6(values[startingIndex + 1], out v.Y))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Y was invalid for " + key + " at line " + line + " in file " + FileName);
+				if (string.IsNullOrWhiteSpace(values[startingIndex + 1]))
+				{
+					currentHost.AddMessage(MessageType.Warning, false, "Y was empty for " + key + " at line " + line + " in file " + FileName);
+				}
+				else
+				{
+					currentHost.AddMessage(MessageType.Error, false, "Y was invalid for " + key + " at line " + line + " in file " + FileName);
+				}	
 			}
 
 			return v;
