@@ -468,15 +468,13 @@ namespace OpenBve.Graphics
 			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
 			GL.Disable(EnableCap.DepthTest);
 			overlays.Render(RealTimeElapsed);
-			switch (CurrentInterface)
+			if (CurrentInterface == InterfaceType.Menu || CurrentInterface == InterfaceType.GLMainMenu || Game.Menu.IsSidebarMode)
 			{
-				case InterfaceType.Menu:
-				case InterfaceType.GLMainMenu:
-					Game.Menu.Draw(TimeElapsed);
-					break;
-				case InterfaceType.SwitchChangeMap:
-					Game.SwitchChangeDialog.Draw();
-					break;
+				Game.Menu.Draw(TimeElapsed);
+			}
+			else if (CurrentInterface == InterfaceType.SwitchChangeMap)
+			{
+				Game.SwitchChangeDialog.Draw();
 			}
 			OptionLighting = true;
 		}

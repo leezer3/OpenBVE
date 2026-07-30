@@ -388,7 +388,7 @@ namespace ObjectViewer.Graphics
 					}
 				}
 			}
-			if (CurrentInterface == InterfaceType.Menu)
+			if (CurrentInterface == InterfaceType.Menu || Game.Menu.IsSidebarMode)
 			{
 				Game.Menu.Draw(timeElapsed);
 			}

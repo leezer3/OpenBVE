@@ -145,8 +145,8 @@ namespace LibRender2.Text
 				{
 					GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
 
-					double x = left - (data.PhysicalSize.X - data.TypographicSize.X) / 2;
-					double y = top - (data.PhysicalSize.Y - data.TypographicSize.Y) / 2;
+					double x = System.Math.Round(left - (data.PhysicalSize.X - data.TypographicSize.X) / 2);
+					double y = System.Math.Round(top - (data.PhysicalSize.Y - data.TypographicSize.Y) / 2);
 
 					/*
 					 * In the first pass, mask off the background with pure black.
@@ -207,8 +207,8 @@ namespace LibRender2.Text
 				{
 					GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
 					Shader.SetAtlasLocation(data.TextureCoordinates);
-					double x = left - (data.PhysicalSize.X - data.TypographicSize.X) / 2;
-					double y = top - (data.PhysicalSize.Y - data.TypographicSize.Y) / 2;
+					double x = System.Math.Round(left - (data.PhysicalSize.X - data.TypographicSize.X) / 2);
+					double y = System.Math.Round(top - (data.PhysicalSize.Y - data.TypographicSize.Y) / 2);
 
 					/*
 					 * In the first pass, mask off the background with pure black.
