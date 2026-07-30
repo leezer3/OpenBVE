@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>OpenBveAts</RootNamespace>
     <AssemblyName>OpenBveAts</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
