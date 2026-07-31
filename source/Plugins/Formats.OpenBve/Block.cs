@@ -547,6 +547,11 @@ namespace Formats.OpenBve
 					values = new string[splitValues.Length];
 					for (int i = 0; i < splitValues.Length; i++)
 					{
+						if (string.IsNullOrWhiteSpace(splitValues[i]) || splitValues[i].Equals("null", StringComparison.InvariantCultureIgnoreCase))
+						{
+							// allow empty states etc.
+							continue;
+						}
 						try
 						{
 							values[i] = Path.CombineFile(absolutePath, splitValues[i].Trim());
@@ -558,11 +563,7 @@ namespace Formats.OpenBve
 						}
 						catch
 						{
-							if (!string.IsNullOrEmpty(splitValues[i]) && !splitValues[i].Equals("null", StringComparison.InvariantCultureIgnoreCase))
-							{
-								// allow empty states etc.
-								currentHost.AddMessage(MessageType.Warning, false, "The path for state " + i + " was invalid in " + key + " in Section " + Key + " at line " + value.Key + " in file " + FileName);
-							}
+							currentHost.AddMessage(MessageType.Warning, false, "The path for state " + i + " was invalid in " + key + " in Section " + Key + " at line " + value.Key + " in file " + FileName);
 						}
 					}
 					return true;
