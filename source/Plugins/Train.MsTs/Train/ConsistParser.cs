@@ -208,7 +208,7 @@ namespace Train.MsTs
 
 				if (train.Cars[i].TractionModel is TenderEngine)
 				{
-					bool hasTender = i > 0 && train.Cars[i - 1].TractionModel is Tender || i < train.Cars.Length - 2 && train.Cars[i + 1].TractionModel is Tender;
+					bool hasTender = (i > 0 && train.Cars[i - 1].TractionModel is Tender) || (i < train.Cars.Length - 2 && train.Cars[i + 1].TractionModel is Tender);
 
 					if (hasTender == false)
 					{

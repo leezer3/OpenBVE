@@ -48,7 +48,6 @@ namespace RouteViewer
 		private static bool ShiftPressed = false;
 		private static bool ControlPressed = false;
 		private static bool AltPressed = false;
-		private static bool RPressed = false;
 
 		// mouse
 		private static int MouseButton;
@@ -941,9 +940,6 @@ namespace RouteViewer
 				case Key.Keypad0:
 				case Key.KeypadPeriod:
 					Renderer.Camera.AlignmentDirection.Zoom = 0.0;
-					break;
-				case Key.R:
-					RPressed = false;
 					break;
 			}
 		}
