@@ -336,6 +336,14 @@ namespace OpenBve {
 									case "libopenal.so.1":
 										Program.ShowMessageBox(@"openAL was not found on this system. \n Please install libopenal1 via your distribution's package management system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "program", "title" }));
 										break;
+									case "openal32.dll assembly:<unknown assembly> type:<unknown type> member:(null)":
+										if (CurrentHost.Platform != HostPlatform.MicrosoftWindows)
+										{
+											// if building from scratch, the compilation process has failed to copy this file correctly-
+											// place in the application root directory (JetBrains Rider)
+											Program.ShowMessageBox(@"This installation of OpenBVE is corrupt (OpenTk.dll.config could not be found). \n Please reinstall OpenBVE.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "program", "title" }));
+										}
+										break;
 									default:
 										Program.ShowMessageBox(@"The required system library " + ex.Message + @" was not found on this system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "program", "title" }));
 										break;
