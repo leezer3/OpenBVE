@@ -165,7 +165,7 @@ namespace Object.CsvB3d
 
 								double upperRadius = cylinderProps.Length >= 2 ? cylinderProps[1] : 1.0;
 								double lowerRadius = cylinderProps.Length >= 3 ? cylinderProps[2] : 1.0;
-								double height = cylinderProps.Length >= 3 ? cylinderProps[3] : 1.0;
+								double height = cylinderProps.Length >= 4 ? cylinderProps[3] : 1.0;
 								CreateCylinder(ref currentMeshBuilder, numFaces, upperRadius, lowerRadius, height);
 							}
 							break;

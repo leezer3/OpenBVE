@@ -311,6 +311,17 @@ namespace Formats.OpenBve
 					{
 						splitLine = splitLine.Skip(1).ToArray();
 					}
+
+					for (int idx = splitLine.Length - 1; idx >= 0; idx--)
+					{
+						if (!string.IsNullOrWhiteSpace(splitLine[idx]))
+						{
+							// remove empty entries at end
+							idx++;
+							Array.Resize(ref splitLine, idx);
+							break;
+						}
+					}
 					
 					currentSection.Values.Enqueue(new ValueTuple<int, string, T2, string[]>(i, command, key, splitLine));
 				}
