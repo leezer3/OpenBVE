@@ -476,8 +476,29 @@ namespace Formats.OpenBve
 		    return false;
 		}
 
-	    /// <summary>Reads the specified Color24 from the block, preserving the prior value if not present</summary>
-	    public virtual bool TryGetColor24(T2 key, ref Color24 value)
+		/// <summary>Unconditionally reads the specified Color32 from the block</summary>
+		public virtual bool GetColor32(T2 key, out Color32 value)
+		{
+			if (keyValuePairs.TryRemove(key, out var color))
+			{
+				if (Color32.TryParseHexColor(color.Value, out value))
+				{
+					return true;
+				}
+
+				if (Color32.TryParseColor(color.Value, ',', out value))
+				{
+					return true;
+				}
+				currentHost.AddMessage(MessageType.Error, false, "Color is invalid in " + key + " in " + Key + " at line " + color.Key);
+			}
+
+			value = Color24.White;
+			return false;
+		}
+
+		/// <summary>Reads the specified Color24 from the block, preserving the prior value if not present</summary>
+		public virtual bool TryGetColor24(T2 key, ref Color24 value)
 	    {
 			if (keyValuePairs.TryRemove(key, out var color))
 			{
