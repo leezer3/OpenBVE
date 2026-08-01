@@ -336,19 +336,31 @@ namespace Train.MsTs
 						// build color arrays and mappings
 						currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].Colors = new Color24[NegativeColors.Length + PositiveColors.Length];
 						FrameMappings = new FrameMapping[PositiveColors.Length + NegativeColors.Length];
+						int mappingIndex = 0;
+
 						for (int i = 0; i < NegativeColors.Length; i++)
 						{
-							FrameMappings[i].MappingValue = NegativeColors[i].Item1;
-							FrameMappings[i].FrameKey = i;
-							currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].Colors[i] = NegativeColors[i].Item2;
+							if (NegativeColors[i] != null)
+							{
+								FrameMappings[mappingIndex].MappingValue = NegativeColors[i].Item1;
+								FrameMappings[mappingIndex].FrameKey = i;
+								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].Colors[i] = NegativeColors[i].Item2;
+								mappingIndex++;
+							}
 						}
 
+						
 						for (int i = 0; i < PositiveColors.Length; i++)
 						{
-							FrameMappings[i + NegativeColors.Length].MappingValue = PositiveColors[i].Item1;
-							FrameMappings[i + NegativeColors.Length].FrameKey = i + NegativeColors.Length;
-							currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].Colors[i + NegativeColors.Length] = PositiveColors[i].Item2;
+							if (PositiveColors[i] != null)
+							{
+								FrameMappings[i + NegativeColors.Length].MappingValue = PositiveColors[i].Item1;
+								FrameMappings[i + NegativeColors.Length].FrameKey = i + NegativeColors.Length;
+								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].Colors[i + NegativeColors.Length] = PositiveColors[i].Item2;
+							}
 						}
+
+						Array.Resize(ref FrameMappings, mappingIndex + 1);
 
 						// create color and digit functions
 						currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, Units, currentDigit);
@@ -697,13 +709,20 @@ namespace Train.MsTs
 						double value = 0;
 						for (int i = 0; i < numColors; i++)
 						{
-							Block subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
-							Color24 color = new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16());
-							PositiveColors[i] = new Tuple<double, Color24>(value, color);
-							if (i < numColors - 1)
+							if (block.Length() - block.Position() > 3)
 							{
-								subBlock = block.ReadSubBlock(KujuTokenID.SwitchVal);
-								value = subBlock.ReadSingle();
+								Block subBlock = block.ReadSubBlock(new[] { KujuTokenID.ControlColour, KujuTokenID.SwitchVal });
+								if (subBlock.Token == KujuTokenID.ControlColour)
+								{
+									Color24 color = new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(),
+										(byte)subBlock.ReadInt16());
+									PositiveColors[i] = new Tuple<double, Color24>(value, color);
+								}
+								else
+								{
+									i--;
+									value = subBlock.ReadSingle();
+								}
 							}
 						}
 					}
@@ -730,13 +749,20 @@ namespace Train.MsTs
 						double value = double.NegativeInfinity;
 						for (int i = 0; i < numColors; i++)
 						{
-							Block subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
-							Color24 color = new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16());
-							NegativeColors[i] = new Tuple<double, Color24>(value, color);
-							if (i < numColors - 1)
+							if (block.Length() - block.Position() > 3)
 							{
-								subBlock = block.ReadSubBlock(KujuTokenID.SwitchVal);
-								value = subBlock.ReadSingle();
+								Block subBlock = block.ReadSubBlock(new[] { KujuTokenID.ControlColour, KujuTokenID.SwitchVal });
+								if (subBlock.Token == KujuTokenID.ControlColour)
+								{
+									Color24 color = new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(),
+										(byte)subBlock.ReadInt16());
+									NegativeColors[i] = new Tuple<double, Color24>(value, color);
+								}
+								else
+								{
+									i--;
+									value = subBlock.ReadSingle();
+								}
 							}
 						}
 					}
