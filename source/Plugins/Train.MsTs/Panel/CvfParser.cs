@@ -610,10 +610,9 @@ namespace Train.MsTs
 				int n = Group.Elements.Length - 1;
 				int j = Group.Elements[n].States.Length;
 				Array.Resize(ref Group.Elements[n].States, j + 1);
-				Group.Elements[n].States[j] = new ObjectState
+				Group.Elements[n].States[j] = new ObjectState(staticObject)
 				{
 					Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z),
-					Prototype = staticObject
 				};
 				return n;
 			}
@@ -622,11 +621,8 @@ namespace Train.MsTs
 				int n = Group.Elements.Length;
 				Array.Resize(ref Group.Elements, n + 1);
 				Group.Elements[n] = new AnimatedObject(Plugin.CurrentHost);
-				Group.Elements[n].States = new[] {new ObjectState()};
+				Group.Elements[n].States = new[] { new ObjectState(staticObject) };
 				Group.Elements[n].States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
-				Group.Elements[n].States[0].Prototype = staticObject;
-				Group.Elements[n].CurrentState = 0;
-				Group.Elements[n].internalObject = new ObjectState {Prototype = staticObject};
 				Plugin.CurrentHost.CreateDynamicObject(ref Group.Elements[n].internalObject);
 				return n;
 			}
