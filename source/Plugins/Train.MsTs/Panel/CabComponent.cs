@@ -370,13 +370,28 @@ namespace Train.MsTs
 						int row = 0;
 						int column = 0;
 						int frameWidth = DaytimeTexture.Width / HorizontalFrames;
-						int frameHeight = DaytimeTexture.Width / VerticalFrames;
+						int frameHeight = DaytimeTexture.Height / VerticalFrames;
 						for (int k = 0; k < TotalFrames; k++)
 						{
-							Plugin.CurrentHost.RegisterTexture(DaytimeTexture, new TextureParameters(new TextureClipRegion(column * frameWidth, row * frameHeight, frameWidth, frameHeight), null), out dayTextures[k]);
+							if (column * frameWidth + frameWidth <= DaytimeTexture.Width && row * frameHeight + frameHeight <= DaytimeTexture.Height)
+							{
+								Plugin.CurrentHost.RegisterTexture(DaytimeTexture, new TextureParameters(new TextureClipRegion(column * frameWidth, row * frameHeight, frameWidth, frameHeight), null), out dayTextures[k]);
+							}
+							else
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS CVF Parser: Frame was outside the bounds of the DaytimeTexture for CabSignalDisplay.");
+							}
+
 							if (NightTimeTexture != null)
 							{
-								Plugin.CurrentHost.RegisterTexture(NightTimeTexture, new TextureParameters(new TextureClipRegion(column * frameWidth, row * frameHeight, frameWidth, frameHeight), null), out nightTextures[k]);
+								if (column * frameWidth + frameWidth <= NightTimeTexture.Width && row * frameHeight + frameHeight <= NightTimeTexture.Height)
+								{
+									Plugin.CurrentHost.RegisterTexture(NightTimeTexture, new TextureParameters(new TextureClipRegion(column * frameWidth, row * frameHeight, frameWidth, frameHeight), null), out nightTextures[k]);
+								}
+								else
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS CVF Parser: Frame was outside the bounds of the NightTimeTexture for CabSignalDisplay.");
+								}
 							}
 							if (column < HorizontalFrames - 1)
 							{
