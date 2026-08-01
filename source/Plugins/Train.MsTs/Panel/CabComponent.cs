@@ -127,7 +127,6 @@ namespace Train.MsTs
 			//Create element
 			const double rW = 1024.0 / 640.0;
 			const double rH = 768.0 / 480.0;
-			int wday, hday;
 			int elementIndex;
 			string f;
 			CultureInfo culture = CultureInfo.InvariantCulture;
@@ -426,7 +425,6 @@ namespace Train.MsTs
 
 					frameTextures = new Texture[12];
 					texturePath = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility"), "numbers.png"); // arial 9.5pt
-					Plugin.CurrentHost.QueryTextureDimensions(texturePath, out wday, out hday);
 
 					for (int i = 0; i < 10; i++)
 					{
@@ -487,7 +485,6 @@ namespace Train.MsTs
 						double translationTotal = (y1 - y0) * 0.2; // FIXME: why do we need this??
 						double minSizeMultiplier = 1.0;
 						double maxSizeMultiplier = (Size.Y / AreaSize.Y) * 0.9;
-						double areaSize = AreaSize.Y / 240;
 						
 						switch(Style)
 						{
