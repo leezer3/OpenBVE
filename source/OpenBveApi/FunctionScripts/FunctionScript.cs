@@ -321,6 +321,166 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.MathPi;
 							n++; s++; if (s >= m) m = s; break;
+						case "lerp":
+							if (s < 3) throw new InvalidOperationException(Arguments[i] + " requires at least 3 arguments on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathLerp;
+							n++; s -= 2; break;
+						case "smoothstep":
+							if (s < 3) throw new InvalidOperationException(Arguments[i] + " requires at least 3 arguments on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathSmoothstep;
+							n++; s -= 2; break;
+						case "easeinsine":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseInSine;
+							n++; break;
+						case "easeoutsine":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseOutSine;
+							n++; break;
+						case "easeinoutsine":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseInOutSine;
+							n++; break;
+						case "easeinquad":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseInQuad;
+							n++; break;
+						case "easeoutquad":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseOutQuad;
+							n++; break;
+						case "easeinoutquad":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseInOutQuad;
+							n++; break;
+						case "easeincubic":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseInCubic;
+							n++; break;
+						case "easeoutcubic":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseOutCubic;
+							n++; break;
+						case "easeinoutcubic":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseInOutCubic;
+							n++; break;
+						case "easeinquart":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseInQuart;
+							n++; break;
+						case "easeoutquart":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseOutQuart;
+							n++; break;
+						case "easeinoutquart":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseInOutQuart;
+							n++; break;
+						case "easeinquint":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseInQuint;
+							n++; break;
+						case "easeoutquint":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseOutQuint;
+							n++; break;
+						case "easeinoutquint":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseInOutQuint;
+							n++; break;
+						case "easeinexpo":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseInExpo;
+							n++; break;
+						case "easeoutexpo":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseOutExpo;
+							n++; break;
+						case "easeinoutexpo":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseInOutExpo;
+							n++; break;
+						case "easeincirc":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseInCirc;
+							n++; break;
+						case "easeoutcirc":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseOutCirc;
+							n++; break;
+						case "easeinoutcirc":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseInOutCirc;
+							n++; break;
+						case "easeinback":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseInBack;
+							n++; break;
+						case "easeoutback":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseOutBack;
+							n++; break;
+						case "easeinoutback":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseInOutBack;
+							n++; break;
+						case "easeinelastic":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseInElastic;
+							n++; break;
+						case "easeoutelastic":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseOutElastic;
+							n++; break;
+						case "easeinoutelastic":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseInOutElastic;
+							n++; break;
+						case "easeinbounce":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseInBounce;
+							n++; break;
+						case "easeoutbounce":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseOutBounce;
+							n++; break;
+						case "easeinoutbounce":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.MathEaseInOutBounce;
+							n++; break;
 						case "==":
 							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);

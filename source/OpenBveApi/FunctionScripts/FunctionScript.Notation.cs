@@ -203,6 +203,12 @@ namespace OpenBveApi.FunctionScripting
 						return a[0] + " " + a[1] + " " + f;
 					} 
 					throw new System.IO.InvalidDataException(f + " is expected to have 2 arguments in " + Expression);
+				case "lerp":
+				case "smoothstep":
+					if (n == 3) {
+						return a[0] + " " + a[1] + " " + a[2] + " " + f;
+					}
+					throw new System.IO.InvalidDataException(f + " is expected to have 3 arguments in " + Expression);
 				case "minus":
 				case "reciprocal":
 				case "floor":
@@ -217,6 +223,36 @@ namespace OpenBveApi.FunctionScripting
 				case "cos":
 				case "tan":
 				case "arctan":
+				case "easeinsine":
+				case "easeoutsine":
+				case "easeinoutsine":
+				case "easeinquad":
+				case "easeoutquad":
+				case "easeinoutquad":
+				case "easeincubic":
+				case "easeoutcubic":
+				case "easeinoutcubic":
+				case "easeinquart":
+				case "easeoutquart":
+				case "easeinoutquart":
+				case "easeinquint":
+				case "easeoutquint":
+				case "easeinoutquint":
+				case "easeinexpo":
+				case "easeoutexpo":
+				case "easeinoutexpo":
+				case "easeincirc":
+				case "easeoutcirc":
+				case "easeinoutcirc":
+				case "easeinback":
+				case "easeoutback":
+				case "easeinoutback":
+				case "easeinelastic":
+				case "easeoutelastic":
+				case "easeinoutelastic":
+				case "easeinbounce":
+				case "easeoutbounce":
+				case "easeinoutbounce":
 					if (n == 1) {
 						return a[0] + " " + f;
 					} 
