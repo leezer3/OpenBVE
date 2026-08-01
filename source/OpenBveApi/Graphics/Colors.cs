@@ -127,7 +127,7 @@ namespace OpenBveApi.Colors {
 		/// <summary>Represents a black color.</summary>
 		public static readonly Color24 Black = new Color24(0, 0, 0);
 		/// <summary>Represents a dark grey color</summary>
-		public static readonly Color24 DarkGrey = new Color24(85, 75, 85);
+		public static readonly Color24 DarkGrey = new Color24(85, 85, 85);
 		/// <summary>Represents a grey color.</summary>
 		public static readonly Color24 LightGrey = new Color24(178, 178, 178);
 		/// <summary>Represents a grey color.</summary>
