@@ -467,6 +467,7 @@ namespace Train.MsTs
 				case PanelSubject.Throttle:
 					Code = "brakeNotchLinear 0 powerNotch ?";
 					break;
+				case PanelSubject.Dynamic_Brake:
 				case PanelSubject.Train_Brake:
 					Code = "brakeNotchLinear";
 					break;
