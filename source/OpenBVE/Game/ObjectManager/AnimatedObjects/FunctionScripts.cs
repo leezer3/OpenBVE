@@ -169,6 +169,9 @@ namespace OpenBve {
 					case Instructions.MathSmoothstep:
 						Function.Stack[s - 3] = Easing.Smoothstep(Function.Stack[s - 3], Function.Stack[s - 2], Function.Stack[s - 1]);
 						s -= 2; break;
+					case Instructions.MathSlerp:
+						Function.Stack[s - 3] = Easing.Slerp(Function.Stack[s - 3], Function.Stack[s - 2], Function.Stack[s - 1]);
+						s -= 2; break;
 					case Instructions.MathEaseInSine:
 						Function.Stack[s - 1] = Easing.EaseInSine(Function.Stack[s - 1]);
 						break;

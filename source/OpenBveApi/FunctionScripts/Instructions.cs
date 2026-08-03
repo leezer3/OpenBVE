@@ -9,7 +9,7 @@ namespace OpenBveApi.FunctionScripting
 		MathIncrement, MathDecrement, MathFusedMultiplyAdd,
 		MathQuotient, MathMod, MathFloor, MathCeiling, MathRound, MathMin, MathMax, MathAbs, MathSign,
 		MathExp, MathLog, MathSqrt, MathSin, MathCos, MathTan, MathArcTan, MathPi,
-		MathLerp, MathSmoothstep,
+		MathLerp, MathSmoothstep, MathSlerp,
 		MathEaseInSine, MathEaseOutSine, MathEaseInOutSine,
 		MathEaseInQuad, MathEaseOutQuad, MathEaseInOutQuad,
 		MathEaseInCubic, MathEaseOutCubic, MathEaseInOutCubic,

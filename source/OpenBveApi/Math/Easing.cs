@@ -27,6 +27,19 @@ namespace OpenBveApi.Math
 			return t * t * (3.0 - 2.0 * t);
 		}
 
+		/// <summary>Spherically (shortest-arc) interpolates between two angles</summary>
+		/// <param name="a">The first angle</param>
+		/// <param name="b">The second angle</param>
+		/// <param name="t">The interpolation factor</param>
+		public static double Slerp(double a, double b, double t)
+		{
+			double delta = b - a;
+			delta = (delta + System.Math.PI) % (2.0 * System.Math.PI);
+			if (delta < 0.0) delta += 2.0 * System.Math.PI;
+			delta -= System.Math.PI;
+			return a + delta * t;
+		}
+
 		/// <summary>Eases the input using a sine curve</summary>
 		/// <param name="t">The input, in the range 0..1</param>
 		public static double EaseInSine(double t)

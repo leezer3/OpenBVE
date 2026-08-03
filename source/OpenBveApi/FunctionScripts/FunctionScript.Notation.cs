@@ -205,6 +205,7 @@ namespace OpenBveApi.FunctionScripting
 					throw new System.IO.InvalidDataException(f + " is expected to have 2 arguments in " + Expression);
 				case "lerp":
 				case "smoothstep":
+				case "slerp":
 					if (n == 3) {
 						return a[0] + " " + a[1] + " " + a[2] + " " + f;
 					}
