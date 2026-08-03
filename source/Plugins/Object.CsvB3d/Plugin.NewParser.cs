@@ -171,7 +171,8 @@ namespace Object.CsvB3d
 							break;
 						case CSVB3DKey.Rotate:
 						case CSVB3DKey.RotateAll:
-							if (subBlock.TryGetNextDoubleArray(out double[] rotateProps, 4) && rotateProps.Length == 4)
+							// n.b. impossible to perform rotation with less than 4 values, but we might have useless extra
+							if (subBlock.TryGetNextDoubleArray(out double[] rotateProps, 4) && rotateProps.Length >= 4)
 							{
 								Vector3 rotationVector = new Vector3(rotateProps[0], rotateProps[1], rotateProps[2]);
 								double t = rotationVector.NormSquared();
