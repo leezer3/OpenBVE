@@ -126,7 +126,7 @@ namespace ObjectViewer
 
 			// Convert spherical to direction vector (matching DirectionalLight docs)
 			float x = (float)(-Math.Cos(elevationRad) * Math.Sin(azimuthRad));
-			float y = (float)(Math.Sin(elevationRad));
+			float y = (float)Math.Sin(elevationRad);
 			float z = (float)(-Math.Cos(elevationRad) * Math.Cos(azimuthRad));
 
 			Program.Renderer.Lighting.OptionLightPosition = new Vector3(x, y, z);
