@@ -1,7 +1,9 @@
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace OpenBveApi.Interface {
@@ -28,17 +30,47 @@ namespace OpenBveApi.Interface {
 					LoadEmbeddedLanguage();
 		            return;
 	            }
-                foreach (string language in languageFiles) {
+                //Load the fallback language first, as the language constructors may reference it for missing translations
+                string[] fallbackLanguage = languageFiles.Where(f => string.Equals(System.IO.Path.GetFileNameWithoutExtension(f), "en-US", StringComparison.InvariantCultureIgnoreCase)).ToArray();
+                if (fallbackLanguage.Length > 0)
+                {
 	                try
 	                {
-		                using (FileStream stream = new FileStream(language, FileMode.Open, FileAccess.Read))
+		                using (FileStream stream = new FileStream(fallbackLanguage[0], FileMode.Open, FileAccess.Read))
 		                {
-			                AvailableNewLanguages.Add(System.IO.Path.GetFileNameWithoutExtension(language), new NewLanguage(stream, language));
+			                AvailableNewLanguages.Add("en-US", new NewLanguage(stream, fallbackLanguage[0]));
 		                }
 	                }
 	                catch
 	                {
 						//Corrupt language file? Just ignore
+	                }
+                }
+                //Parse the remaining language files in parallel, then add them to the dictionary once all parsing is complete
+                //(the language constructors may read the available languages dictionary as a fallback, so it must not be modified whilst they are running)
+                List<KeyValuePair<string, NewLanguage>> loadedLanguages = new List<KeyValuePair<string, NewLanguage>>();
+                Parallel.ForEach(languageFiles, language => {
+	                try
+	                {
+		                using (FileStream stream = new FileStream(language, FileMode.Open, FileAccess.Read))
+		                {
+			                NewLanguage newLanguage = new NewLanguage(stream, language);
+			                lock (loadedLanguages)
+			                {
+				                loadedLanguages.Add(new KeyValuePair<string, NewLanguage>(System.IO.Path.GetFileNameWithoutExtension(language), newLanguage));
+			                }
+		                }
+	                }
+	                catch
+	                {
+						//Corrupt language file? Just ignore
+	                }
+                });
+                foreach (KeyValuePair<string, NewLanguage> language in loadedLanguages)
+                {
+	                if (!AvailableNewLanguages.ContainsKey(language.Key))
+	                {
+		                AvailableNewLanguages.Add(language.Key, language.Value);
 	                }
                 }
             } catch {

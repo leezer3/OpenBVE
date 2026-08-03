@@ -13,6 +13,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using RouteManager2;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Control = OpenBveApi.Interface.Control;
 
 namespace OpenBve {
@@ -63,6 +64,9 @@ namespace OpenBve {
 		/// <summary>Stopwatch used to measure the startup time of the program.</summary>
 		internal static readonly Stopwatch StartupTimer = Stopwatch.StartNew();
 
+		/// <summary>The task used to load the input device plugins in the background, or a null reference if loading has not yet been started.</summary>
+		internal static Task InputDevicePluginsTask;
+
 		private static readonly List<string> startupTimings = new List<string>();
 
 		/// <summary>Records the elapsed startup time since the start of the program for the named phase.</summary>
@@ -93,6 +97,20 @@ namespace OpenBve {
 					FileSystem.AppendToLogFile("  " + timing);
 				}
 				FileSystem.AppendToLogFile(new string('=', 60));
+			}
+		}
+
+		/// <summary>Starts loading the input device plugins in the background, if this has not already been done.</summary>
+		/// <remarks>The plugins are not required until the game starts or the controls options page is opened, so they are loaded asynchronously after the main menu has been shown.</remarks>
+		internal static void StartInputDevicePluginLoading()
+		{
+			if (InputDevicePluginsTask == null)
+			{
+				InputDevicePluginsTask = Task.Run(() =>
+				{
+					InputDevicePlugin.LoadPlugins(FileSystem);
+					LogStartupPhase("Input device plugins loaded");
+				});
 			}
 		}
 
@@ -182,7 +200,10 @@ namespace OpenBve {
 			}
 			
 			try {
-				FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
+				if (FileSystem == null)
+				{
+					FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
+				}
 				FileSystem.CreateFileSystem();
 			} catch (Exception ex) {
 				Program.ShowMessageBox(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","filesystem_invalid"}) + Environment.NewLine + Environment.NewLine + ex.Message, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}));
@@ -222,7 +243,6 @@ namespace OpenBve {
 			string file = Path.CombineFile(folder, "Default keyboard assignment.controls");
 			Interface.LoadControls(file, out Control[] controls);
 			Interface.AddControls(ref Interface.CurrentControls, controls);
-			InputDevicePlugin.LoadPlugins(Program.FileSystem);
 			Program.LogStartupPhase("Controls loaded");
 			
 			
