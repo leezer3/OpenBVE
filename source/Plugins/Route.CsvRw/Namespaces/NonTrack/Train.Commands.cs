@@ -4,6 +4,7 @@
 	{
 		/// <summary>Sets the interval between preceding AI trains</summary>
 		Interval,
+		RunInterval = Interval,
 		/// <summary>Sets the max speed of an AI train</summary>
 		Velocity,
 		/// <summary>Sets the folder used for the player train</summary>

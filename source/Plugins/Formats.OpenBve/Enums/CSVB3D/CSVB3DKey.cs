@@ -5,6 +5,10 @@
 		/// <summary>Adds a new vertex</summary>
 		Vertex = int.MinValue,
 		AddVertex = Vertex,
+		/// <summary>The coordinates of the vertex</summary>
+		VertexCoordinates,
+		/// <summary>The normal of the vertex</summary>
+		VertexNormal,
 		/// <summary>Adds a new 1-sided face</summary>
 		Face,
 		AddFace = Face,

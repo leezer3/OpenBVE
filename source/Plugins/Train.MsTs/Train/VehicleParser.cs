@@ -234,7 +234,7 @@ namespace Train.MsTs
 							currentCar.TractionModel = new TankEngine(currentCar, new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) }, MaxFuelLevel, MaxWaterLevel);
 						}
 
-						currentCar.TractionModel.Components.Add(EngineComponent.CylinderCocks, new CylinderCocks(currentCar.TractionModel));
+						currentCar.TractionModel.Components.Add(EngineComponent.CylinderCocks, new CylinderCocks(currentCar.TractionModel, cylinderCocksAutomatic, CylinderCocksPowerModifier));
 						currentCar.TractionModel.Components.Add(EngineComponent.Blowers, new Blowers(currentCar.TractionModel));
 						currentCar.TractionModel.Components.Add(EngineComponent.Boiler, new Boiler(currentCar.TractionModel, BoilerLength, MaxBoilerOutput, StartingBoilerWater, StartingBoilerPressure));
 						currentCar.TractionModel.Components.Add(EngineComponent.SteamInjector1, injectorType1 == 0 ? (AbstractComponent)new LiveSteamInjector(currentCar.TractionModel, injectorDiameter1) : new ExhaustSteamInjector(currentCar.TractionModel, injectorDiameter1));
@@ -298,7 +298,11 @@ namespace Train.MsTs
 							particleSource.Controller = new FunctionScript(Plugin.CurrentHost, currentCar.Index + " enginepowerindex " + currentCar.Index + " cylindercocksstateindex *", false);
 							particleSource.EmitsAtIdle = false;
 							break;
-
+						case KujuTokenID.SafetyValvesFX:
+						case KujuTokenID.DrainpipeFX:
+							// steam locomotive blowoff and cylinder drains not yet implemented
+							// note that DrainpipeFX broken / not implemented in vanilla MSTS, despite being in docs
+							break;
 					}
 
 					if (particleSource != null)
@@ -371,7 +375,8 @@ namespace Train.MsTs
 						}
 
 						airBrake.MainReservoir = new MainReservoir(mainReservoirMinimumPressure, mainReservoirMaximumPressure, 0.01, 0.075 / train.Cars.Length);
-						airBrake.Compressor = new Compressor(5000.0, airBrake.MainReservoir, currentCar);
+						airBrake.MainReservoir.Volume = mainReservoirVolume;
+						airBrake.Compressor = new Compressor(compressionRate, airCompressorRestartPressure, airBrake.MainReservoir, currentCar);
 						airBrake.BrakeCylinder = new BrakeCylinder(brakeCylinderMaximumPressure, brakeCylinderMaximumPressure * 1.1, 90000.0, emergencyRate, releaseRate);
 						double r = 200000.0 / airBrake.BrakeCylinder.EmergencyMaximumPressure - 1.0;
 						if (r < 0.1) r = 0.1;
@@ -557,7 +562,9 @@ namespace Train.MsTs
 		private double maxBrakeAmps;
 		private double mainReservoirMinimumPressure = 690000.0;
 		private double mainReservoirMaximumPressure = 780000.0;
+		private double mainReservoirVolume = 0.5;
 		private double brakeCylinderMaximumPressure = 440000.0;
+		private double airCompressorRestartPressure = 620528; // 90psi
 		private double emergencyRate;
 		private double releaseRate;
 		private double compressionRate = 3500;
@@ -586,6 +593,7 @@ namespace Train.MsTs
 		private double StartingFireMass;
 		private double StartingBoilerWater;
 		private double StartingBoilerPressure;
+		private double CylinderCocksPowerModifier = 0.9;
 		/// <summary>The maximum expanded size of a particle</summary>
 		internal double ExhaustMaxMagnitude;
 		/// <summary>The rate of particle emissions at idle</summary>
@@ -593,6 +601,7 @@ namespace Train.MsTs
 		/// <summary>The rate of particle emissions at maximum power</summary>SmokeMaxMagnitude`
 		internal double ExhaustMaxRate;
 
+		private bool cylinderCocksAutomatic = false;
 
 		private double GetMaxDieselCapacity(int carIndex)
 		{
@@ -1031,6 +1040,9 @@ namespace Train.MsTs
 						compressionRate = 3500;
 					}
 					break;
+				case KujuTokenID.AirBrakesCompressorRestartPressure:
+					airCompressorRestartPressure = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
+					break;
 				case KujuTokenID.TrainBrakesControllerMaxReleaseRate:
 					releaseRate = block.ReadSingle(UnitOfPressure.Pascal, brakeSystemDefaultUnits);
 					break;
@@ -1154,6 +1166,8 @@ namespace Train.MsTs
 				case KujuTokenID.Exhaust3:
 				case KujuTokenID.WhistleFX:
 				case KujuTokenID.CylindersFX:
+				case KujuTokenID.SafetyValvesFX:
+				case KujuTokenID.DrainpipeFX:
 					ParticleSource particleSource = new ParticleSource(block.Token);
 					particleSource.Offset = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
 					particleSource.Direction = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
@@ -1359,6 +1373,31 @@ namespace Train.MsTs
 							new Door(1, 1000, 0)
 						};
 						car.DetermineDoorClosingSpeed();
+					}
+					break;
+				case KujuTokenID.HeadOut:
+					// head out view is triggered when pressing UP / DOWN in cabview
+					// view to exterior of train at specified position, looking F / R
+					Vector3 headOutPos = Vector3.Zero;
+					headOutPos.X = block.ReadSingle();
+					headOutPos.Y = block.ReadSingle();
+					headOutPos.Z = block.ReadSingle();
+					break;
+				case KujuTokenID.AirBrakesMainResVolume:
+					mainReservoirVolume = block.ReadSingle(UnitOfVolume.Litres, UnitOfVolume.MetersCubed);
+					break;
+				case KujuTokenID.SteamCylinderCocksOperation:
+					if (block.ReadString().ToLowerInvariant() == "automatic")
+					{
+						cylinderCocksAutomatic = true;
+					}
+					break;
+				case KujuTokenID.CylinderCocksPowerEfficiency:
+					CylinderCocksPowerModifier = block.ReadSingle();
+					if (CylinderCocksPowerModifier < 0 || CylinderCocksPowerModifier > 1)
+					{
+						CylinderCocksPowerModifier = 1;
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Vehicle Parser: CylinderCocksPowerModifier must be between 0 and 1");
 					}
 					break;
 			}

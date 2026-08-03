@@ -1025,7 +1025,7 @@ namespace RouteViewer {
 						}
 						s++; break;
 						case Instructions.Panel2Timetable:
-						throw new InvalidOperationException("The instruction " + Function.InstructionSet[i].ToString() + " is for internal use only, and should not be added to objects.");
+						throw new InvalidOperationException("The instruction " + Function.InstructionSet[i] + " is for internal use only, and should not be added to objects.");
 					case Instructions.TrainCarNumber:
 						if (!IsPartOfTrain)
 						{
@@ -1226,7 +1226,7 @@ namespace RouteViewer {
 					case Instructions.AmpsCar:
 						throw new NotImplementedException(Function.InstructionSet[i] + " is not currently supported in Route Viewer. Please test using the main game.");
 					default:
-						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
+						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i] + " was encountered in ExecuteFunctionScript.");
 				}
 			}
 			Function.LastResult = Function.Stack[s - 1];

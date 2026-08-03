@@ -9,6 +9,7 @@ using LibRender2.Trains;
 using ObjectViewer.Graphics;
 using ObjectViewer.Trains;
 using OpenBveApi;
+using OpenBveApi.Colors;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -736,19 +737,34 @@ namespace ObjectViewer {
 			                dialog.FullOpen = true;
 			                if (dialog.ShowDialog() == DialogResult.OK)
 			                {
-				                Renderer.BackgroundColor = -1;
+				                Interface.CurrentOptions.BackgroundColor = new Color24(dialog.Color.R, dialog.Color.G, dialog.Color.B);
 				                Renderer.ApplyBackgroundColor(dialog.Color.R, dialog.Color.G, dialog.Color.B);
 			                }
 		                }
 	                }
 	                else
 	                {
-	                    Renderer.BackgroundColor++;
-	                    if (Renderer.BackgroundColor >= NewRenderer.MaxBackgroundColor)
+		                if (Interface.CurrentOptions.BackgroundColor == Color24.LightGrey)
+		                {
+			                Interface.CurrentOptions.BackgroundColor = Color24.White;
+			                Interface.CurrentOptions.TextColor = Color32.Black;
+		                }
+	                    else if (Interface.CurrentOptions.BackgroundColor == Color24.White)
 	                    {
-	                        Renderer.BackgroundColor = 0;
+		                    Interface.CurrentOptions.BackgroundColor = Color24.Black;
+		                    Interface.CurrentOptions.TextColor = Color32.White;
 	                    }
-	                    Renderer.ApplyBackgroundColor();
+						else if (Interface.CurrentOptions.BackgroundColor == Color24.Black)
+						{
+							Interface.CurrentOptions.BackgroundColor = Color24.DarkGrey;
+							Interface.CurrentOptions.TextColor = Color32.White;
+						}
+						else
+						{
+							Interface.CurrentOptions.BackgroundColor = Color24.LightGrey;
+							Interface.CurrentOptions.TextColor = Color32.White;
+						}
+		                Renderer.ApplyBackgroundColor();
 	                }
 	                break;
 				case Key.F11:
