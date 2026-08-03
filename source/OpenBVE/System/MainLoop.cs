@@ -33,6 +33,7 @@ namespace OpenBve
 
 		internal static void StartLoopEx(LaunchParameters result)
 		{
+			Program.WriteStartupTimings();
 			Program.Sounds.Initialize(Interface.CurrentOptions.SoundRange);
 
 			Program.FileSystem.AppendToLogFile(@"Attached Joysticks:", false);

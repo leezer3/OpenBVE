@@ -563,6 +563,8 @@ namespace OpenBve {
 			}
 			
 			radiobuttonStart_CheckedChanged(this, EventArgs.Empty); // Mono mucks up the button colors and selections if non-default color and we don't reset them
+			//The main menu dialog is now visible, so log the point at which it appeared
+			Program.LogStartupPhase("Main menu shown");
 			string defaultFont = comboBoxFont.Font.Name;
 			
 			List<FontFamily> fonts = FontFamily.Families.ToList();

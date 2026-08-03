@@ -61,6 +61,41 @@ namespace ObjectViewer {
 
 		internal static TrainManager TrainManager;
 
+		/// <summary>Stopwatch used to measure the startup time of the program.</summary>
+		internal static readonly System.Diagnostics.Stopwatch StartupTimer = System.Diagnostics.Stopwatch.StartNew();
+
+		private static readonly List<string> startupTimings = new List<string>();
+
+		/// <summary>Records the elapsed startup time since the start of the program for the named phase.</summary>
+		/// <param name="phaseName">The name of the startup phase which has just completed.</param>
+		internal static void LogStartupPhase(string phaseName)
+		{
+			lock (startupTimings)
+			{
+				startupTimings.Add(phaseName + ": " + StartupTimer.Elapsed.TotalSeconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture) + " s");
+			}
+		}
+
+		/// <summary>Writes all recorded startup phase timings to the log file, separated from the other programs' entries.</summary>
+		internal static void WriteStartupTimings()
+		{
+			lock (startupTimings)
+			{
+				if (startupTimings.Count == 0)
+				{
+					return;
+				}
+				FileSystem.AppendToLogFile(new string('=', 60));
+				FileSystem.AppendToLogFile("Object Viewer startup timings");
+				FileSystem.AppendToLogFile(new string('=', 60));
+				foreach (string timing in startupTimings)
+				{
+					FileSystem.AppendToLogFile("  " + timing);
+				}
+				FileSystem.AppendToLogFile(new string('=', 60));
+			}
+		}
+
 		[System.Runtime.InteropServices.DllImport("user32.dll")]
 		private static extern bool SetProcessDPIAware();
 
@@ -75,6 +110,7 @@ namespace ObjectViewer {
 	        
 	        CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 	        Options.LoadOptions();
+	        Program.LogStartupPhase("Options and filesystem loaded");
 			// n.b. Init the toolkit before the renderer
 	        var options = new ToolkitOptions
 	        {
@@ -89,6 +125,7 @@ namespace ObjectViewer {
 	        }
 
 	        Toolkit.Init(options);
+	        Program.LogStartupPhase("Toolkit initialised");
 
 			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
 			// Apply persistent sun direction
@@ -101,6 +138,7 @@ namespace ObjectViewer {
 	        
 	        
 	        TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
+	        Program.LogStartupPhase("Core objects created");
 	        if (Renderer.Screen.Width == 0 || Renderer.Screen.Height == 0)
 	        {
 		        Renderer.Screen.Width = 960;
@@ -111,6 +149,7 @@ namespace ObjectViewer {
 		        MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		        return;
 	        }
+	        Program.LogStartupPhase("Plugins loaded");
 	        // command line arguments
 	        List<string> filesToLoad = new List<string>();
 	        
@@ -172,6 +211,7 @@ namespace ObjectViewer {
 	        // --- load language ---
 	        string folder = Program.FileSystem.GetDataFolder("Languages");
 	        Translations.LoadLanguageFiles(folder);
+	        Program.LogStartupPhase("Languages loaded");
 			GameMenu.Instance = new GameMenu();
 			// initialize camera
 			Renderer.GraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);
@@ -182,7 +222,9 @@ namespace ObjectViewer {
 		        TargetRenderFrequency = 0,
 		        Title = "Object Viewer"
 	        };
+	        Program.LogStartupPhase("Main window shown");
 	        Renderer.GameWindow.Run();
+	        Program.WriteStartupTimings();
 			// quit
 			Renderer.TextureManager.UnloadAllTextures(false);
 

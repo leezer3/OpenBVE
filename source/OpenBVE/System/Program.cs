@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -59,6 +60,42 @@ namespace OpenBve {
 
 		internal static TrainManager TrainManager;
 
+		/// <summary>Stopwatch used to measure the startup time of the program.</summary>
+		internal static readonly Stopwatch StartupTimer = Stopwatch.StartNew();
+
+		private static readonly List<string> startupTimings = new List<string>();
+
+		/// <summary>Records the elapsed startup time since the start of the program for the named phase.</summary>
+		/// <param name="phaseName">The name of the startup phase which has just completed.</param>
+		internal static void LogStartupPhase(string phaseName)
+		{
+			lock (startupTimings)
+			{
+				startupTimings.Add(phaseName + ": " + StartupTimer.Elapsed.TotalSeconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture) + " s");
+			}
+		}
+
+		/// <summary>Writes all recorded startup phase timings to the log file.</summary>
+		/// <remarks>This method does not clear the recorded timings, so that they can be written again after the log file has been cleared.</remarks>
+		internal static void WriteStartupTimings()
+		{
+			lock (startupTimings)
+			{
+				if (startupTimings.Count == 0)
+				{
+					return;
+				}
+				FileSystem.AppendToLogFile(new string('=', 60));
+				FileSystem.AppendToLogFile("OpenBVE startup timings");
+				FileSystem.AppendToLogFile(new string('=', 60));
+				foreach (string timing in startupTimings)
+				{
+					FileSystem.AppendToLogFile("  " + timing);
+				}
+				FileSystem.AppendToLogFile(new string('=', 60));
+			}
+		}
+
 		// --- functions ---
 		
 		/// <summary>Is executed when the program starts.</summary>
@@ -77,6 +114,7 @@ namespace OpenBve {
 			{
 				// ignored
 			}
+			Program.LogStartupPhase("Options and filesystem loaded");
 			//Switch between SDL2 and native backends; use native backend by default
 			var options = new ToolkitOptions();
 			
@@ -90,6 +128,7 @@ namespace OpenBve {
 				options.Backend = PlatformBackend.PreferNative;
 			}
 			Toolkit.Init(options);
+			Program.LogStartupPhase("Toolkit initialised");
 			
 			// Add handler for UI thread exceptions
 			Application.ThreadException += (CrashHandler.UIThreadException);
@@ -133,6 +172,7 @@ namespace OpenBve {
 			{
 				Joysticks = new JoystickManager64();	
 			}
+			Program.LogStartupPhase("Joystick manager created");
 
 			if (CurrentHost.Platform == HostPlatform.FreeBSD)
 			{
@@ -148,6 +188,7 @@ namespace OpenBve {
 				Program.ShowMessageBox(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","filesystem_invalid"}) + Environment.NewLine + Environment.NewLine + ex.Message, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}));
 				return;
 			}
+			Program.LogStartupPhase("Filesystem initialised");
 
 			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
 			Sounds = new Sounds(CurrentHost);
@@ -165,13 +206,16 @@ namespace OpenBve {
 
 			
 			TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
+			Program.LogStartupPhase("Core objects created");
 			
 			// --- load language ---
 			string folder = Program.FileSystem.GetDataFolder("Languages");
 			Translations.LoadLanguageFiles(folder);
+			Program.LogStartupPhase("Languages loaded");
 			
 			folder = Program.FileSystem.GetDataFolder("Cursors");
 			LibRender2.AvailableCursors.LoadCursorImages(Program.Renderer, folder);
+			Program.LogStartupPhase("Cursors loaded");
 			
 			Interface.LoadControls(null, out Interface.CurrentControls);
 			folder = Program.FileSystem.GetDataFolder("Controls");
@@ -179,6 +223,7 @@ namespace OpenBve {
 			Interface.LoadControls(file, out Control[] controls);
 			Interface.AddControls(ref Interface.CurrentControls, controls);
 			InputDevicePlugin.LoadPlugins(Program.FileSystem);
+			Program.LogStartupPhase("Controls loaded");
 			
 			
 			// --- check whether route and train exist ---
@@ -271,6 +316,7 @@ namespace OpenBve {
 				}
 				Game.Reset(false);
 			}
+			Program.LogStartupPhase("Command-line route loaded");
 			
 			// --- show the main WinForms menu if necessary ---
 			if (result.RouteFile == null | result.TrainFolder == null) {
@@ -293,6 +339,8 @@ namespace OpenBve {
 				//Apply translations
 				Translations.SetInGameLanguage(Translations.CurrentLanguageCode);
 			}
+			//Write the timings now, so that they are not lost if the program exits without starting a game
+			Program.WriteStartupTimings();
 
 			if (CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 			{
@@ -311,6 +359,7 @@ namespace OpenBve {
 			// --- start the actual program ---
 			if (result.Start) {
 				if (Initialize()) {
+					Program.LogStartupPhase("Program initialised");
 					try {
 						MainLoop.StartLoopEx(result);
 					} catch (Exception ex) {

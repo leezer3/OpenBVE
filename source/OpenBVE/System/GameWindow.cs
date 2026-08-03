@@ -514,6 +514,7 @@ namespace OpenBve
 					InputDevicePlugin.AvailablePlugins[i].KeyUp += MainLoop.InputDevicePluginKeyUp;
 				}
 			}
+			Program.FileSystem.AppendToLogFile("Game window loaded: " + Program.StartupTimer.Elapsed.TotalSeconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture) + " s after program start");
 		}
 		protected override void OnClosing(CancelEventArgs e)
 		{
