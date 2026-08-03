@@ -1535,13 +1535,13 @@ namespace CsvRwRouteParser
 						}
 					}
 
-					double interferenceInDoor = Plugin.RandomNumberGenerator.NextDouble() * 30.0;
+					double interferenceInDoor = Plugin.CurrentHost.Random.NextDouble() * 30.0;
 					if (!PreviewOnly)
 					{
 						if (Arguments.Length >= 15 && Arguments[14].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[14], out interferenceInDoor))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "InterferenceInDoor is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							interferenceInDoor = Plugin.RandomNumberGenerator.NextDouble() * 30.0;
+							interferenceInDoor = Plugin.CurrentHost.Random.NextDouble() * 30.0;
 						}
 						else if (interferenceInDoor < 0.0)
 						{
@@ -1550,18 +1550,18 @@ namespace CsvRwRouteParser
 						}
 					}
 
-					int maxInterferingObjectRate = Plugin.RandomNumberGenerator.Next(1, 99);
+					int maxInterferingObjectRate = Plugin.CurrentHost.Random.Next(1, 99);
 					if (!PreviewOnly)
 					{
 						if (Arguments.Length >= 16 && Arguments[15].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[15], out maxInterferingObjectRate))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MaxInterferingObjectRate is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							maxInterferingObjectRate = Plugin.RandomNumberGenerator.Next(1, 99);
+							maxInterferingObjectRate = Plugin.CurrentHost.Random.Next(1, 99);
 						}
 						else if (maxInterferingObjectRate <= 0 || maxInterferingObjectRate >= 100)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MaxInterferingObjectRate is expected to be positive, less than 100 in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							maxInterferingObjectRate = Plugin.RandomNumberGenerator.Next(1, 99);
+							maxInterferingObjectRate = Plugin.CurrentHost.Random.Next(1, 99);
 						}
 					}
 

@@ -723,6 +723,9 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Complete address of the named pipe endpoint.</summary>
 		public static Uri Win32PluginHostEndpointAddress => new Uri(pipeBaseAddress + '/' + pipeName);
 
+		/// <summary>Provides the shared random number generator</summary>
+		public Random Random = new Random();
+
 		/// <summary>Contains the list of commonly used 'empty' files</summary>
 		/// <remarks>These generally aren't a valid object, and should be ignored for errors</remarks>
 		public static readonly string[] NullFiles =
