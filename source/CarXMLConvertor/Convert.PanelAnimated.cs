@@ -39,7 +39,6 @@ namespace CarXmlConvertor
 			{
 				mainForm.updateLogBoxText += "Error writing file " + fileOut + Environment.NewLine;
 				MessageBox.Show("An error occured whilst writing the new XML file. \r\n Please check for write permissions.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-				return;
 			}
 		}
 	}

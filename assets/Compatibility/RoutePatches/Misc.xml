@@ -5,11 +5,13 @@
 		<Hash>FBF4399E04B769BDD416CEB6CC3D3C5EC4803E158997D5D75A76C423B6DA45ED</Hash>
 		<FileName>Arrive Night.csv</FileName>
 		<Derailments>false</Derailments>
+		<CylinderHack>true</CylinderHack>
 	</Patch>
 	<Patch>
 		<Hash>49630A77BE1AB513BD58962795DC38846451A3E44C4E6770DF78EE71C5EF226E</Hash>
 		<FileName>Arrive.csv</FileName>
 		<Derailments>false</Derailments>
+		<CylinderHack>true</CylinderHack>
 	</Patch>
 	<!-- Iiyama 2060 -->
 	<Patch>

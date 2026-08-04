@@ -30,12 +30,11 @@ namespace CsvRwRouteParser
 				double dx = 1.8 * Direction;
 				double dz = TrackPosition - StartingDistance;
 				wpos += dx * RailTransformation.X + dz * RailTransformation.Z;
-				double tpos = TrackPosition;
 				if (CompatibilityObjects.StopPost == null)
 				{
 					return;
 				}
-				CompatibilityObjects.StopPost.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, new ObjectCreationParameters(tpos, 0, StartingDistance, EndingDistance, b));
+				CompatibilityObjects.StopPost.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, new ObjectCreationParameters(TrackPosition, 0, StartingDistance, EndingDistance, b));
 			}
 		}
 

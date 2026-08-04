@@ -41,82 +41,70 @@ namespace LibRender2.Primitives
 		public Particle(BaseRenderer renderer)
 		{
 			this.renderer = renderer;
-			if (!renderer.ForceLegacyOpenGL)
+			try
 			{
-				try
+				particlesVAO = new VertexArrayObject[12];
+				for (int i = 0; i < 3; i++)
 				{
-					particlesVAO = new VertexArrayObject[12];
-					for (int i = 0; i < 3; i++)
+					for (int j = 0; j < 4; j++)
 					{
-						for (int j = 0; j < 4; j++)
+						LibRenderVertex[] vertexData =
 						{
-							LibRenderVertex[] vertexData =
+							new LibRenderVertex
 							{
-								new LibRenderVertex
-								{
-									Position = new Vector3f(-1.0f, 1.0f, 0.0f),
-									UV = new Vector2f(i * 0.25, j * 0.25),
-									Color = Color128.White
-								},
-								new LibRenderVertex
-								{
-									Position = new Vector3f(1.0f, 1.0f, 0.0f),
-									UV = new Vector2f(0.25 + i * 0.25, j * 0.25),
-									Color = Color128.White
-								},
-								new LibRenderVertex
-								{
-									Position = new Vector3f(1.0f, -1.0f, 0.0f),
-									UV = new Vector2f(0.25 + i * 0.25, 0.25 + j * 0.25),
-									Color = Color128.White
-								},
-								new LibRenderVertex
-								{
-									Position = new Vector3f(-1.0f, -1.0f, 0.0f),
-									UV = new Vector2f(i * 0.25, 0.25 + j * 0.25),
-									Color = Color128.White
-								}
-							};
+								Position = new Vector3f(-1.0f, 1.0f, 0.0f),
+								UV = new Vector2f(i * 0.25, j * 0.25),
+								Color = Color128.White
+							},
+							new LibRenderVertex
+							{
+								Position = new Vector3f(1.0f, 1.0f, 0.0f),
+								UV = new Vector2f(0.25 + i * 0.25, j * 0.25),
+								Color = Color128.White
+							},
+							new LibRenderVertex
+							{
+								Position = new Vector3f(1.0f, -1.0f, 0.0f),
+								UV = new Vector2f(0.25 + i * 0.25, 0.25 + j * 0.25),
+								Color = Color128.White
+							},
+							new LibRenderVertex
+							{
+								Position = new Vector3f(-1.0f, -1.0f, 0.0f),
+								UV = new Vector2f(i * 0.25, 0.25 + j * 0.25),
+								Color = Color128.White
+							}
+						};
 
-							particlesVAO[i * 4 + j] = new VertexArrayObject();
-							particlesVAO[i * 4 + j].Bind();
-							particlesVAO[i * 4 + j].SetVBO(new VertexBufferObject(vertexData, BufferUsageHint.StaticDraw));
-							particlesVAO[i * 4 + j].SetIBO(new IndexBufferObjectUS(Enumerable.Range(0, vertexData.Length).Select(x => (ushort)x).ToArray(), BufferUsageHint.StaticDraw));
-							particlesVAO[i * 4 + j].SetAttributes(renderer.DefaultShader.VertexLayout);
-							particlesVAO[i * 4 + j].UnBind();
-						}
-
-
-
+						particlesVAO[i * 4 + j] = new VertexArrayObject();
+						particlesVAO[i * 4 + j].Bind();
+						particlesVAO[i * 4 + j].SetVBO(new VertexBufferObject(vertexData, BufferUsageHint.StaticDraw));
+						particlesVAO[i * 4 + j].SetIBO(new IndexBufferObjectUS(Enumerable.Range(0, vertexData.Length).Select(x => (ushort)x).ToArray(), BufferUsageHint.StaticDraw));
+						particlesVAO[i * 4 + j].SetAttributes(renderer.DefaultShader.VertexLayout);
+						particlesVAO[i * 4 + j].UnBind();
 					}
 
-				}
-				catch
-				{
-					renderer.ForceLegacyOpenGL = true;
+
+
 				}
 
 			}
-		}
+			catch
+			{
+			}
+        }
 
 		public void Draw(int particleIndex, Vector3 worldPosition, Vector3 worldDirection, Vector3 worldUp, Vector3 worldSide, Vector2 size, Texture texture, float opacity)
 		{
-			if (renderer.ForceLegacyOpenGL)
-			{
-				DrawImmediate(worldPosition, worldDirection, worldUp, worldSide, size, texture, opacity);
-			}
-			else
-			{
-				renderer.UnsetBlendFunc();
-				renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
-				GL.DepthMask(true);
-				DrawRetained(particleIndex, worldPosition, worldDirection, worldUp, worldSide, size, texture, opacity);
-				renderer.SetBlendFunc();
-				renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
-				GL.DepthMask(false);
-				DrawRetained(particleIndex, worldPosition, worldDirection, worldUp, worldSide, size, texture, opacity);
-			}
-		}
+			renderer.UnsetBlendFunc();
+			renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
+			GL.DepthMask(true);
+			DrawRetained(particleIndex, worldPosition, worldDirection, worldUp, worldSide, size, texture, opacity);
+			renderer.SetBlendFunc();
+			renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
+			GL.DepthMask(false);
+			DrawRetained(particleIndex, worldPosition, worldDirection, worldUp, worldSide, size, texture, opacity);
+        }
 
 		private void DrawRetained(int particleIndex, Vector3 worldPosition, Vector3 worldDirection, Vector3 worldUp, Vector3 worldSide, Vector2 size, Texture texture, float opacity)
 		{
@@ -146,10 +134,6 @@ namespace LibRender2.Primitives
 			particlesVAO[particleIndex].Draw(PrimitiveType.Quads);
 			GL.Disable(EnableCap.Texture2D);
 
-		}
-
-		private void DrawImmediate(Vector3 worldPosition, Vector3 worldDirection, Vector3 worldUp, Vector3 worldSide, Vector2 size, Texture texture, float opacity)
-		{
 		}
 	}
 }

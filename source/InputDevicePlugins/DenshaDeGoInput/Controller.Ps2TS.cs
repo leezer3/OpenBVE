@@ -185,7 +185,7 @@ namespace DenshaDeGoInput
 					// SOTP-031201 (MTC P4/B7)
 					if (id.Type == ControllerType.PS2MTCP4B7)
 					{
-						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.DPad | ControllerButtons.ATS | ControllerButtons.A2;
+						const ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.DPad | ControllerButtons.ATS | ControllerButtons.A2;
 						ushort[] buttonMask = { 0x200, 0x100, 0x4, 0x10, 0x20, 0x2, 0x0, 0x0, 0x400, 0x800, 0x1000, 0x2000, 0x0, 0x1, 0x8 };
 						Ps2TSController newcontroller = new Ps2TSController(buttons, buttonMask, 7, 4, true)
 						{
@@ -202,7 +202,7 @@ namespace DenshaDeGoInput
 					// SOTP-031201 (MTC P4/B2-B7)
 					if (id.Type == ControllerType.PS2MTCP4B2B7)
 					{
-						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.DPad | ControllerButtons.ATS | ControllerButtons.A2;
+						const ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.DPad | ControllerButtons.ATS | ControllerButtons.A2;
 						ushort[] buttonMask = { 0x200, 0x100, 0x4, 0x10, 0x20, 0x2, 0x0, 0x0, 0x400, 0x800, 0x1000, 0x2000, 0x0, 0x1, 0x8 };
 						Ps2TSController newcontroller = new Ps2TSController(buttons, buttonMask, 6, 4, true)
 						{
@@ -219,7 +219,7 @@ namespace DenshaDeGoInput
 					// SOTP-031201 (MTC P5/B7)
 					if (id.Type == ControllerType.PS2MTCP5B7)
 					{
-						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.DPad | ControllerButtons.ATS | ControllerButtons.A2;
+						const ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.DPad | ControllerButtons.ATS | ControllerButtons.A2;
 						ushort[] buttonMask = { 0x200, 0x100, 0x4, 0x10, 0x20, 0x2, 0x0, 0x0, 0x400, 0x800, 0x1000, 0x2000, 0x0, 0x1, 0x8 };
 						Ps2TSController newcontroller = new Ps2TSController(buttons, buttonMask, 7, 5, true)
 						{
@@ -235,7 +235,7 @@ namespace DenshaDeGoInput
 					// SOTP-031201 (MTC P13/B7)
 					if (id.Type == ControllerType.PS2MTCP13B7)
 					{
-						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.DPad | ControllerButtons.ATS | ControllerButtons.A2;
+						const ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.DPad | ControllerButtons.ATS | ControllerButtons.A2;
 						ushort[] buttonMask = { 0x200, 0x100, 0x4, 0x10, 0x20, 0x2, 0x0, 0x0, 0x400, 0x800, 0x1000, 0x2000, 0x0, 0x1, 0x8 };
 						Ps2TSController newcontroller = new Ps2TSController(buttons, buttonMask, 13, 4, true)
 						{
@@ -251,7 +251,7 @@ namespace DenshaDeGoInput
 					// COTM-02001 (Train Mascon)
 					if (id.Type == ControllerType.PS2TrainMascon)
 					{
-						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.DPad | ControllerButtons.ATS | ControllerButtons.A2;
+						const ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.DPad | ControllerButtons.ATS | ControllerButtons.A2;
 						ushort[] buttonMask = { 0x200, 0x100, 0x4, 0x10, 0x20, 0x2, 0x0, 0x0, 0x400, 0x800, 0x1000, 0x2000, 0x0, 0x1, 0x8 };
 						Ps2TSController newcontroller = new Ps2TSController(buttons, buttonMask, 5, 5, true)
 						{

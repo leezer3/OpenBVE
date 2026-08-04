@@ -25,7 +25,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;

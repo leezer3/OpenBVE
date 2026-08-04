@@ -7,7 +7,7 @@ namespace RouteViewer
 {
 	public partial class formRailPaths : Form
 	{
-		private readonly int keyColumn = 5;
+		private const int keyColumn = 5;
 
 		public formRailPaths()
 		{

@@ -88,8 +88,7 @@ namespace OpenBve {
 							//Generates a random number between two given doubles
 							double min = Function.Stack[s - 2];
 							double max = Function.Stack[s - 1];
-							var randomGenerator = new Random();
-							Function.Stack[s - 2] =  min + randomGenerator.NextDouble() * (max - min);
+							Function.Stack[s - 2] =  min + Program.CurrentHost.Random.NextDouble() * (max - min);
 							s--;
 						}
 						break;
@@ -98,8 +97,7 @@ namespace OpenBve {
 							//Generates a random number between two given doubles
 							int min = (int)Function.Stack[s - 2];
 							int max = (int)Function.Stack[s - 1];
-							var randomGenerator = new Random();
-							Function.Stack[s - 2] = randomGenerator.Next(min,max);
+							Function.Stack[s - 2] = Program.CurrentHost.Random.Next(min,max);
 							s--;
 						}
 						break;

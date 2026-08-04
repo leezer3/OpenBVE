@@ -197,7 +197,7 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <inheritdoc/>
-		public override void ApplyTranslation(double x, double y, double z, bool absoluteTranslation = false)
+		public override void ApplyTranslation(Vector3 translationVector, bool absoluteTranslation = false)
 		{
 			throw new NotSupportedException();
 		}

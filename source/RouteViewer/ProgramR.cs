@@ -48,7 +48,6 @@ namespace RouteViewer
 		private static bool ShiftPressed = false;
 		private static bool ControlPressed = false;
 		private static bool AltPressed = false;
-		private static bool RPressed = false;
 
 		// mouse
 		private static int MouseButton;
@@ -240,11 +239,10 @@ namespace RouteViewer
 					}
 					else
 					{
-						Random randomGenerator = new Random();
 						int colorIdx = 5; // known value already in list to make our while loop easy
 						while (Renderer.usedTrackColors.Contains(colorIdx))
 						{
-							colorIdx = randomGenerator.Next(0, 255);
+							colorIdx = CurrentHost.Random.Next(0, 255);
 						}
 						Renderer.usedTrackColors.Add(colorIdx);
 						Renderer.trackColors.Add(key, new RailPath(CurrentHost, Renderer, key, CurrentRoute.BlockLength, ColorPalettes.Windows256ColorPalette[colorIdx])); //use the 256 color Windows palette for a decent set of contrasting colors	
@@ -629,11 +627,8 @@ namespace RouteViewer
 						    Math.Abs(prevShadowBias - Interface.CurrentOptions.ShadowBias) > 0.000001f ||
 						    Math.Abs(prevShadowNormalBias - Interface.CurrentOptions.ShadowNormalBias) > 0.01f)
 						{
-							if (Program.Renderer.AvailableNewRenderer)
-							{
-								Program.Renderer.ReloadShadowSettings();
-							}
-						}
+							Program.Renderer.ReloadShadowSettings();
+                        }
 					}
 					Application.DoEvents();
 					Renderer.Camera.AlignmentDirection.TrackPosition = 0;
@@ -863,13 +858,6 @@ namespace RouteViewer
 						}
 					}
 					break;
-				case Key.R:
-					if (!RPressed)
-					{
-						RPressed = true;
-						Renderer.SwitchOpenGLVersion();
-					}
-					break;
 				case Key.P:
 					if (CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 					{
@@ -951,9 +939,6 @@ namespace RouteViewer
 				case Key.Keypad0:
 				case Key.KeypadPeriod:
 					Renderer.Camera.AlignmentDirection.Zoom = 0.0;
-					break;
-				case Key.R:
-					RPressed = false;
 					break;
 			}
 		}

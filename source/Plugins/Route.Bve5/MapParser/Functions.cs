@@ -81,7 +81,7 @@ namespace Route.Bve5
 			return x0 == x1 ? y0 : y0 + (y1 - y0) * (x - x0) / (x1 - x0);
 		}
 
-		private static void SineHalfWavelengthDiminishingTangentCurve(double Length, double TargetRadius, double TargetCant, double CurrentPosition, out double CurrentRadius, out double CurrentCant)
+		private static void SineHalfWavelengthDiminishingTangentCurve(double Length, double StartRadius, double StartCant, double TargetRadius, double TargetCant, double CurrentPosition, out double CurrentRadius, out double CurrentCant)
 		{
 			// Sine Half-Wavelength Diminishing Tangent Curve
 			// https://knowledge.autodesk.com/support/autocad-civil-3d/learn-explore/caas/CloudHelp/cloudhelp/2018/ENU/Civil3D-UserGuide/files/GUID-DD7C0EA1-8465-45BA-9A39-FC05106FD822-htm.html
@@ -106,7 +106,12 @@ namespace Route.Bve5
 
 			// https://web.archive.org/web/20060222112024/http://www1.odn.ne.jp/~aaa81350/kaisetu/tenpuku/tenpuku.htm
 
-			if (TargetRadius != 0.0)
+			if (StartRadius == TargetRadius)
+			{
+				// Impossible to calculate a transition between two identical values (just returns nonsense values)
+				CurrentRadius = StartRadius;
+			}
+			else if (TargetRadius != 0.0)
 			{
 				double Curvature = 1.0 / (2.0 * TargetRadius) * (1.0 - Math.Cos(Math.PI / X * CurrentPosition));
 
@@ -124,29 +129,37 @@ namespace Route.Bve5
 				CurrentRadius = 0.0;
 			}
 
-			CurrentCant = (1.0 * TargetCant) / 2.0 * (1.0 - Math.Cos(Math.PI / X * CurrentPosition));
+			if (StartCant == TargetCant)
+			{
+				// Impossible to calculate a transition between two identical values (just returns nonsense values)
+				CurrentCant = StartCant;
+			}
+			else
+			{
+				CurrentCant = (1.0 * TargetCant) / 2.0 * (1.0 - Math.Cos(Math.PI / X * CurrentPosition));
+			}
 		}
 
 		private static void CalcCurveTransition(double StartDistance, double StartRadius, double StartCant, double EndDistance, double EndRadius, double EndCant, double CurrentDistance, out double CurrentRadius, out double CurrentCant)
 		{
 			if (StartRadius == 0.0 && StartCant == 0.0)
 			{
-				SineHalfWavelengthDiminishingTangentCurve(EndDistance - StartDistance, EndRadius, EndCant, CurrentDistance - StartDistance, out CurrentRadius, out CurrentCant);
+				SineHalfWavelengthDiminishingTangentCurve(EndDistance - StartDistance, StartRadius, StartCant, EndRadius, EndCant, CurrentDistance - StartDistance, out CurrentRadius, out CurrentCant);
 			}
 			else if (EndRadius == 0.0 && EndCant == 0.0)
 			{
-				SineHalfWavelengthDiminishingTangentCurve(EndDistance - StartDistance, StartRadius, StartCant, EndDistance - CurrentDistance, out CurrentRadius, out CurrentCant);
+				SineHalfWavelengthDiminishingTangentCurve(EndDistance - StartDistance, EndRadius, EndCant, StartRadius, StartCant, EndDistance - CurrentDistance, out CurrentRadius, out CurrentCant);
 			}
 			else
 			{
 				double Midpoint = (StartDistance + EndDistance) / 2.0;
 				if (CurrentDistance < Midpoint)
 				{
-					SineHalfWavelengthDiminishingTangentCurve(Midpoint - StartDistance, StartRadius, StartCant, Midpoint - CurrentDistance, out CurrentRadius, out CurrentCant);
+					SineHalfWavelengthDiminishingTangentCurve(Midpoint - StartDistance, EndRadius, EndCant, StartRadius, StartCant, Midpoint - CurrentDistance, out CurrentRadius, out CurrentCant);
 				}
 				else
 				{
-					SineHalfWavelengthDiminishingTangentCurve(EndDistance - Midpoint, EndRadius, EndCant, CurrentDistance - Midpoint, out CurrentRadius, out CurrentCant);
+					SineHalfWavelengthDiminishingTangentCurve(EndDistance - Midpoint, StartRadius, StartCant, EndRadius, EndCant, CurrentDistance - Midpoint, out CurrentRadius, out CurrentCant);
 				}
 			}
 		}

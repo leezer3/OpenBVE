@@ -9,6 +9,7 @@ using LibRender2.Trains;
 using ObjectViewer.Graphics;
 using ObjectViewer.Trains;
 using OpenBveApi;
+using OpenBveApi.Colors;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -50,7 +51,6 @@ namespace ObjectViewer {
         internal static int LightingTarget = 1;
         internal static double LightingRelative = 1.0;
         private static bool ShiftPressed = false;
-        private static bool RPRessed = false;
 
 		internal static HostInterface CurrentHost;
 
@@ -75,9 +75,9 @@ namespace ObjectViewer {
 	        CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 	        Options.LoadOptions();
 			// n.b. Init the toolkit before the renderer
-	        var options = new ToolkitOptions
+	        ToolkitOptions options = new ToolkitOptions
 	        {
-		        Backend = PlatformBackend.PreferX11,
+		        Backend = PlatformBackend.PreferX11
 	        };
 
 	        if (CurrentHost.Platform == HostPlatform.MicrosoftWindows)
@@ -94,7 +94,7 @@ namespace ObjectViewer {
 			double azimuthRad = Interface.CurrentOptions.LightAzimuth * Math.PI / 180.0;
 			double elevationRad = Interface.CurrentOptions.LightElevation * Math.PI / 180.0;
 			float lx = (float)(Math.Sin(azimuthRad) * Math.Cos(elevationRad));
-			float ly = (float)(Math.Sin(elevationRad));
+			float ly = (float)Math.Sin(elevationRad);
 			float lz = (float)(Math.Cos(azimuthRad) * Math.Cos(elevationRad));
 			Renderer.Lighting.OptionLightPosition = new Vector3(lx, ly, lz);
 	        
@@ -125,10 +125,10 @@ namespace ObjectViewer {
 					        {
 						        if (CurrentHost.Plugins[j].Route != null && CurrentHost.Plugins[j].Route.CanLoadRoute(args[i]))
 						        {
-							        string File = System.IO.Path.Combine(Application.StartupPath, "RouteViewer.exe");
-							        if (System.IO.File.Exists(File))
+							        string routeViewer = System.IO.Path.Combine(Application.StartupPath, "RouteViewer.exe");
+							        if (System.IO.File.Exists(routeViewer))
 							        {
-								        System.Diagnostics.Process.Start(File, args[i]);
+								        System.Diagnostics.Process.Start(routeViewer, args[i]);
 							        }
 							        continue;
 						        }
@@ -169,7 +169,7 @@ namespace ObjectViewer {
 
 	        
 	        // --- load language ---
-	        string folder = Program.FileSystem.GetDataFolder("Languages");
+	        string folder = FileSystem.GetDataFolder("Languages");
 	        Translations.LoadLanguageFiles(folder);
 			GameMenu.Instance = new GameMenu();
 			// initialize camera
@@ -193,7 +193,7 @@ namespace ObjectViewer {
 
 		internal static void MouseWheelEvent(object sender, MouseWheelEventArgs e)
 		{
-			switch (Program.Renderer.CurrentInterface)
+			switch (Renderer.CurrentInterface)
 			{
 				case InterfaceType.Menu:
 				case InterfaceType.GLMainMenu:
@@ -211,7 +211,7 @@ namespace ObjectViewer {
 
 		internal static void MouseMoveEvent(object sender, MouseMoveEventArgs e)
 		{
-			switch (Program.Renderer.CurrentInterface)
+			switch (Renderer.CurrentInterface)
 			{
 				case InterfaceType.Menu:
 				case InterfaceType.GLMainMenu:
@@ -222,7 +222,7 @@ namespace ObjectViewer {
 
 		internal static void MouseEvent(object sender, MouseButtonEventArgs e)
 	    {
-		    switch (Program.Renderer.CurrentInterface)
+		    switch (Renderer.CurrentInterface)
 		    {
 				case InterfaceType.Menu:
 				case InterfaceType.GLMainMenu:
@@ -249,7 +249,7 @@ namespace ObjectViewer {
 					{
 						MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 3 : 0;
 					}
-					previousMouseState = Mouse.GetState();
+					PreviousMouseState = Mouse.GetState();
 					break;
 		    }
             
@@ -272,14 +272,14 @@ namespace ObjectViewer {
 			Renderer.ApplyBackgroundColor();
 		}
 
-		internal static MouseState currentMouseState;
-	    internal static MouseState previousMouseState;
+		internal static MouseState CurrentMouseState;
+	    internal static MouseState PreviousMouseState;
 
 	    internal static void MouseMovement()
 	    {
 	        if (MouseButton == 0 || Program.Renderer.CurrentInterface != InterfaceType.Normal) return;
-	        currentMouseState = Mouse.GetState();
-	        if (currentMouseState != previousMouseState)
+	        CurrentMouseState = Mouse.GetState();
+	        if (CurrentMouseState != PreviousMouseState)
 	        {
 	            if (MouseButton == 1)
 	            {
@@ -287,13 +287,13 @@ namespace ObjectViewer {
 		            Renderer.Camera.AbsoluteUp = MouseCameraUp;
 		            Renderer.Camera.AbsoluteSide = MouseCameraSide;
                     {
-                        double dx = 0.0025 * (previousMouseState.X - currentMouseState.X);
+                        double dx = 0.0025 * (PreviousMouseState.X - CurrentMouseState.X);
                         Renderer.Camera.AbsoluteDirection.Rotate(Vector3.Down, dx);
                         Renderer.Camera.AbsoluteUp.Rotate(Vector3.Down, dx);
                         Renderer.Camera.AbsoluteSide.Rotate(Vector3.Down, dx);
                     }
                     {
-                        double dy = 0.0025 * (previousMouseState.Y - currentMouseState.Y);
+                        double dy = 0.0025 * (PreviousMouseState.Y - CurrentMouseState.Y);
                         Renderer.Camera.AbsoluteDirection.Rotate(Renderer.Camera.AbsoluteSide, dy);
                         Renderer.Camera.AbsoluteUp.Rotate(Renderer.Camera.AbsoluteSide, dy);
                     }
@@ -301,17 +301,17 @@ namespace ObjectViewer {
 	            else if(MouseButton == 2)
 	            {
 		            Renderer.Camera.AbsolutePosition = MouseCameraPosition;
-                    double dx = -0.025 * (currentMouseState.X - previousMouseState.X);
+                    double dx = -0.025 * (CurrentMouseState.X - PreviousMouseState.X);
                     Renderer.Camera.AbsolutePosition += dx * Renderer.Camera.AbsoluteSide;
-                    double dy = 0.025 * (currentMouseState.Y - previousMouseState.Y);
+                    double dy = 0.025 * (CurrentMouseState.Y - PreviousMouseState.Y);
                     Renderer.Camera.AbsolutePosition += dy * Renderer.Camera.AbsoluteUp;
 	            }
 	            else
 	            {
 		            Renderer.Camera.AbsolutePosition = MouseCameraPosition;
-                    double dx = -0.025 * (currentMouseState.X - previousMouseState.X);
+                    double dx = -0.025 * (CurrentMouseState.X - PreviousMouseState.X);
                     Renderer.Camera.AbsolutePosition += dx * Renderer.Camera.AbsoluteSide;
-                    double dz = -0.025 * (currentMouseState.Y - previousMouseState.Y);
+                    double dz = -0.025 * (CurrentMouseState.Y - PreviousMouseState.Y);
                     Renderer.Camera.AbsolutePosition += dz * Renderer.Camera.AbsoluteDirection;
 	            }
 	        }
@@ -361,7 +361,7 @@ namespace ObjectViewer {
 					    {
 						    if (Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(currentTrain))
 						    {
-							    Control[] dummyControls = new Control[0];
+							    Control[] dummyControls = Array.Empty<Control>();
 								TrainManager.Trains = new List<TrainBase> { new TrainBase(TrainState.Available, TrainType.LocalPlayerTrain) };
 								AbstractTrain playerTrain = TrainManager.Trains[0];
 								Program.CurrentHost.Plugins[j].Train.LoadTrain(Encoding.UTF8, currentTrain, ref playerTrain, ref dummyControls);
@@ -736,28 +736,36 @@ namespace ObjectViewer {
 			                dialog.FullOpen = true;
 			                if (dialog.ShowDialog() == DialogResult.OK)
 			                {
-				                Renderer.BackgroundColor = -1;
+				                Interface.CurrentOptions.BackgroundColor = new Color24(dialog.Color.R, dialog.Color.G, dialog.Color.B);
 				                Renderer.ApplyBackgroundColor(dialog.Color.R, dialog.Color.G, dialog.Color.B);
 			                }
 		                }
 	                }
 	                else
 	                {
-	                    Renderer.BackgroundColor++;
-	                    if (Renderer.BackgroundColor >= NewRenderer.MaxBackgroundColor)
+		                if (Interface.CurrentOptions.BackgroundColor == Color24.LightGrey)
+		                {
+			                Interface.CurrentOptions.BackgroundColor = Color24.White;
+			                Interface.CurrentOptions.TextColor = Color32.Black;
+		                }
+	                    else if (Interface.CurrentOptions.BackgroundColor == Color24.White)
 	                    {
-	                        Renderer.BackgroundColor = 0;
+		                    Interface.CurrentOptions.BackgroundColor = Color24.Black;
+		                    Interface.CurrentOptions.TextColor = Color32.White;
 	                    }
-	                    Renderer.ApplyBackgroundColor();
+						else if (Interface.CurrentOptions.BackgroundColor == Color24.Black)
+						{
+							Interface.CurrentOptions.BackgroundColor = Color24.DarkGrey;
+							Interface.CurrentOptions.TextColor = Color32.White;
+						}
+						else
+						{
+							Interface.CurrentOptions.BackgroundColor = Color24.LightGrey;
+							Interface.CurrentOptions.TextColor = Color32.White;
+						}
+		                Renderer.ApplyBackgroundColor();
 	                }
 	                break;
-				case Key.R:
-					if (!RPRessed)
-					{
-						RPRessed = true;
-						Renderer.SwitchOpenGLVersion();
-					}
-					break;
 				case Key.F11:
 					Renderer.RenderStatsOverlay = !Renderer.RenderStatsOverlay;
 					break;
@@ -816,9 +824,6 @@ namespace ObjectViewer {
 	            case Key.Keypad3:
 	                MoveZ = 0;
 	                break;
-				case Key.R:
-					RPRessed = false;
-					break;
 	        }
 	    }
 	}

@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, Christopher Lees, The OpenBVE Project
 //
@@ -44,8 +44,6 @@ namespace MechanikRouteParser
 	    internal static HostInterface CurrentHost;
 
 	    internal static CurrentRoute CurrentRoute;
-
-	    internal static Random RandomNumberGenerator = new Random();
 
 	    internal static FileSystem FileSystem;
 

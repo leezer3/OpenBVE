@@ -158,6 +158,8 @@ namespace Train.MsTs
 				case PanelSubject.Throttle:
 					MapResult((double)dynamicTrain.Handles.Power.Actual / dynamicTrain.Handles.Power.MaximumNotch);
 					break;
+				case PanelSubject.Dynamic_Brake_Display:
+				case PanelSubject.Dynamic_Brake:
 				case PanelSubject.Train_Brake:
 					MapResult((double)dynamicTrain.Handles.Brake.Actual / dynamicTrain.Handles.Brake.MaximumNotch);
 					break;

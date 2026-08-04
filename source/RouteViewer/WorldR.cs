@@ -37,11 +37,9 @@ namespace RouteViewer {
 			Vector3 uF = new Vector3(Program.Renderer.CameraTrackFollower.WorldUp);
 			Vector3 sF = new Vector3(Program.Renderer.CameraTrackFollower.WorldSide);
 			Vector3 pF = new Vector3(Program.Renderer.Camera.Alignment.Position);
-			Vector3 dx2 = new Vector3(dF);
-			Vector3 ux2 = new Vector3(uF);
-			double cx = Program.Renderer.CameraTrackFollower.WorldPosition.X + sF.X * pF.X + ux2.X * pF.Y + dx2.X * pF.Z;
-			double cy = Program.Renderer.CameraTrackFollower.WorldPosition.Y + sF.Y * pF.X + ux2.Y * pF.Y + dx2.Y * pF.Z;
-			double cz = Program.Renderer.CameraTrackFollower.WorldPosition.Z + sF.Z * pF.X + ux2.Z * pF.Y + dx2.Z * pF.Z;
+			
+			Program.Renderer.Camera.AbsolutePosition = new Vector3(Program.Renderer.CameraTrackFollower.WorldPosition) + sF * pF + uF * pF + dF * pF;
+
 			if (Program.Renderer.Camera.Alignment.Yaw != 0.0) {
 				dF.Rotate(uF, Program.Renderer.Camera.Alignment.Yaw);
 				sF.Rotate(uF, Program.Renderer.Camera.Alignment.Yaw);
@@ -56,7 +54,7 @@ namespace RouteViewer {
 				sF.Rotate(dF, -Program.Renderer.Camera.Alignment.Roll);
 			}
 
-			Program.Renderer.Camera.AbsolutePosition = new Vector3(cx, cy, cz);
+			
 			Program.Renderer.Camera.AbsoluteDirection = dF;
 			Program.Renderer.Camera.AbsoluteUp = uF;
 			Program.Renderer.Camera.AbsoluteSide = sF;

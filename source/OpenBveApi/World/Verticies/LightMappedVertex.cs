@@ -109,10 +109,11 @@ namespace OpenBveApi.Objects
 				return false;
 			}
 
-			Vertex v = obj as Vertex;
+			LightMappedVertex v = obj as LightMappedVertex;
 			if (v == null) return false;
-			if (v.Coordinates.X != Coordinates.X | v.Coordinates.Y != Coordinates.Y | v.Coordinates.Z != Coordinates.Z) return false;
-			if (v.TextureCoordinates.X != TextureCoordinates.X | v.TextureCoordinates.Y != TextureCoordinates.Y) return false;
+			if (v.Coordinates != Coordinates) return false;
+			if(v.TextureCoordinates != TextureCoordinates) return false;
+			if(v.LightMapCoordinates != LightMapCoordinates) return false;
 			return true;
 		}
 

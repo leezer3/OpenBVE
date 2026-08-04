@@ -23,7 +23,6 @@ namespace CsvRwRouteParser {
 		internal bool AllowTrackPositionArguments = false;
 		internal readonly bool IsRW;
 		internal readonly Plugin Plugin;
-		internal bool IsHmmsim;
 
 		internal Parser(Plugin plugin, bool isRW)
 		{
@@ -423,6 +422,14 @@ namespace CsvRwRouteParser {
 					}
 					// separate command and arguments
 					Expressions[j].SeparateCommandsAndArguments(out string Command, out string ArgumentSequence, Culture, false, IsRW, Section);
+
+					if (Command == "." && string.IsNullOrWhiteSpace(ArgumentSequence))
+					{
+						// e.g. extra period at the end of a line- otherwise this produces pointless empty error
+						Expressions[j].Skip = true;
+						continue;
+					}
+
 					// process command
 					bool NumberCheck = !IsRW || string.Compare(Section, "track", StringComparison.OrdinalIgnoreCase) == 0;
 					if (NumberCheck && NumberFormats.TryParseDouble(Command, UnitOfLength, out double currentTrackPosition)) {
@@ -490,7 +497,7 @@ namespace CsvRwRouteParser {
 									}
 									else
 									{
-										if (IsHmmsim)
+										if (Data.IsHmmsim)
 										{
 											period = Command.IndexOf('.');
 											string railKey = Command.Substring(0, period);

@@ -39,6 +39,16 @@ namespace LibRender2
 			MatrixChain = new Vector3i(-1, 0, 0);
 		}
 
+		/// <summary>Creates a LibRenderVertex from a position, normal and a solid color (used by the debug normals overlay)</summary>
+		public LibRenderVertex(Vector3 position, Vector3 normal, Color128 color)
+		{
+			Position = new Vector3f(position.X, position.Y, position.Z);
+			Normal = new Vector3f(normal.X, normal.Y, normal.Z);
+			UV = Vector2f.Null;
+			Color = color;
+			MatrixChain = new Vector3i(-1, 0, 0);
+		}
+
 		/// <summary>Creates a LibRenderVertex from a template vertex and a normal</summary>
 		public LibRenderVertex(VertexTemplate template, Vector3f normal)
 		{

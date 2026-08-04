@@ -362,10 +362,7 @@ namespace TrainManager.Car
 
 					for (int i = 0; i < sectionToReverse.Groups.Length; i++)
 					{
-						if (sectionToReverse.Groups[i].Keyframes != null)
-						{
-							sectionToReverse.Groups[i].Keyframes.Reverse();
-						}
+						sectionToReverse.Groups[i].Keyframes?.Reverse();
 					}
 				}	
 			}
@@ -859,7 +856,7 @@ namespace TrainManager.Car
 			}
 
 			CarSection.Groups[GroupIndex].Elements[ElementIndex].Update(baseTrain, Index, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, false, CarSection.Type == ObjectType.Overlay ? TrainManagerBase.Renderer.Camera : null);
-			if (!TrainManagerBase.Renderer.ForceLegacyOpenGL && CarSection.Groups[GroupIndex].Elements[ElementIndex].UpdateVAO)
+			if (CarSection.Groups[GroupIndex].Elements[ElementIndex].UpdateVAO)
 			{
 				VAOExtensions.CreateVAO(CarSection.Groups[GroupIndex].Elements[ElementIndex].internalObject.Prototype.Mesh, true, TrainManagerBase.Renderer.DefaultShader.VertexLayout, TrainManagerBase.Renderer);
 			}
@@ -907,7 +904,7 @@ namespace TrainManager.Car
 			}
 
 			CarSection.Groups[GroupIndex].TouchElements[ElementIndex].Element.Update(baseTrain, Index, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, true, CarSection.Type == ObjectType.Overlay ? TrainManagerBase.Renderer.Camera : null);
-			if (!TrainManagerBase.Renderer.ForceLegacyOpenGL && CarSection.Groups[GroupIndex].TouchElements[ElementIndex].Element.UpdateVAO)
+			if (CarSection.Groups[GroupIndex].TouchElements[ElementIndex].Element.UpdateVAO)
 			{
 				VAOExtensions.CreateVAO(CarSection.Groups[GroupIndex].TouchElements[ElementIndex].Element.internalObject.Prototype.Mesh, true, TrainManagerBase.Renderer.DefaultShader.VertexLayout, TrainManagerBase.Renderer);
 			}
@@ -1063,7 +1060,7 @@ namespace TrainManager.Car
 				if (Derailed)
 				{
 					double sab = Math.Sign(ab);
-					ta = 0.5 * Math.PI * (sab == 0.0 ? TrainManagerBase.RandomNumberGenerator.NextDouble() < 0.5 ? -1.0 : 1.0 : sab);
+					ta = 0.5 * Math.PI * (sab == 0.0 ? TrainManagerBase.currentHost.Random.NextDouble() < 0.5 ? -1.0 : 1.0 : sab);
 				}
 				else
 				{
@@ -1584,8 +1581,8 @@ namespace TrainManager.Car
 
 			const double f = 0.015;
 			const double g = 2.75;
-			Specs.DoorOpenPitch = Math.Exp(f * Math.Tan(g * (TrainManagerBase.RandomNumberGenerator.NextDouble() - 0.5)));
-			Specs.DoorClosePitch = Math.Exp(f * Math.Tan(g * (TrainManagerBase.RandomNumberGenerator.NextDouble() - 0.5)));
+			Specs.DoorOpenPitch = Math.Exp(f * Math.Tan(g * (TrainManagerBase.currentHost.Random.NextDouble() - 0.5)));
+			Specs.DoorClosePitch = Math.Exp(f * Math.Tan(g * (TrainManagerBase.currentHost.Random.NextDouble() - 0.5)));
 			Specs.DoorOpenFrequency /= Specs.DoorOpenPitch;
 			Specs.DoorCloseFrequency /= Specs.DoorClosePitch;
 			/* 

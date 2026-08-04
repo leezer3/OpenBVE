@@ -95,7 +95,7 @@ namespace OpenBve
 				}
 			}
 
-			Program.FileSystem.AppendToLogFile(Interface.CurrentOptions.IsUseNewRenderer ? "Using openGL 4 (new) renderer" : "Using openGL 1.2 (old) renderer");
+			Program.FileSystem.AppendToLogFile("Using openGL 4 (new) renderer");
 			if (Interface.CurrentOptions.FullscreenMode)
 			{
 				Program.FileSystem.AppendToLogFile("Initialising full-screen game window of size " + Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight);

@@ -49,7 +49,7 @@ namespace LibRender2.Loadings
 
 			if (TextureLoadingBkg == null)
 			{
-				int bkgNo = new Random().Next(numOfLoadingBkgs);
+				int bkgNo = renderer.currentHost.Random.Next(numOfLoadingBkgs);
 				string backgroundFile = string.Empty;
 				try
 				{

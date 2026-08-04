@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Route.CsvRw</RootNamespace>
     <AssemblyName>Route.CsvRw</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -48,9 +48,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -59,12 +56,14 @@
     <Compile Include="CsvRwRouteParser.CompatibilityObjects.cs" />
     <Compile Include="CsvRwRouteParser.cs" />
     <Compile Include="DuplicateKeyComparer.cs" />
+    <Compile Include="Namespaces\NonTrack\Control.Commands.cs" />
     <Compile Include="Namespaces\NonTrack\Cycle.Commands.cs" />
     <Compile Include="Namespaces\NonTrack\Options.Commands.cs" />
     <Compile Include="Namespaces\NonTrack\Route.Commands.cs" />
     <Compile Include="Namespaces\NonTrack\Structure.Commands.cs" />
     <Compile Include="Namespaces\NonTrack\Train.Commands.cs" />
     <Compile Include="Namespaces\Track\Track.Commands.cs" />
+    <Compile Include="Namespaces\Track\Track.Functions.cs" />
     <Compile Include="Structures\AbstractStructure.cs" />
     <Compile Include="Structures\Block.cs" />
     <Compile Include="Structures\Direction.cs" />
@@ -134,7 +133,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">

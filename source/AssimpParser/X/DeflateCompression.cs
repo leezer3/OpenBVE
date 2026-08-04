@@ -1,4 +1,4 @@
-// Copyright 2016-2018 EamonNerbonne, 2018 The openBVE Project
+// Copyright 2016-2018 Eamon Nerbonne, 2018 The openBVE Project
 // http://www.apache.org/licenses/LICENSE-2.0
 
 using System;

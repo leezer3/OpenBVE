@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -73,6 +74,19 @@ namespace OpenBveApi.Hosts {
 						cachedPlatform = HostPlatform.FreeBSD;
 						break;
 					default:
+						if (File.Exists("/etc/debian_version"))
+						{
+							using (StreamReader sr = new StreamReader("/etc/debian_version"))
+							{
+								if (sr.ReadLine() == "forky/sid")
+								{
+									// the 'usual' fix for this bug is to set TERM to xterm, but Forky
+									// seems to need TERM set to linux
+									// may need to remove or invert this workaround if fixed upstream
+									Environment.SetEnvironmentVariable("TERM", "linux", EnvironmentVariableTarget.Process);
+								}
+							}
+						}
 						cachedPlatform = HostPlatform.GNULinux;
 						break;
 				}
@@ -708,6 +722,9 @@ namespace OpenBveApi.Hosts {
 
 		/// <summary>Complete address of the named pipe endpoint.</summary>
 		public static Uri Win32PluginHostEndpointAddress => new Uri(pipeBaseAddress + '/' + pipeName);
+
+		/// <summary>Provides the shared random number generator</summary>
+		public Random Random = new Random();
 
 		/// <summary>Contains the list of commonly used 'empty' files</summary>
 		/// <remarks>These generally aren't a valid object, and should be ignored for errors</remarks>

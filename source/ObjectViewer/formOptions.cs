@@ -18,7 +18,7 @@ namespace ObjectViewer
 		{
 			InitializeComponent();
 			InterpolationMode.SelectedIndex = (int) Interface.CurrentOptions.Interpolation;
-			AnsiotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
+			AnisotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
 			AntialiasingLevel.Value = Interface.CurrentOptions.AntiAliasingLevel;
 			nearClip.Value = (decimal)Interface.CurrentOptions.NearClipBase;
 			if (Translations.CurrentLanguageCode != "en-US")
@@ -107,9 +107,7 @@ namespace ObjectViewer
 			numericUpDownShadowBias.ReadOnly = !enabled;
 			numericUpDownShadowNormalBias.Enabled = enabled;
 			numericUpDownShadowNormalBias.ReadOnly = !enabled;
-			trackBarSunAzimuth.Enabled = enabled;
-
-			trackBarSunElevation.Enabled = enabled;
+			
 			checkBoxShadowFilterCascades.Enabled = enabled;
 		}
 
@@ -128,7 +126,7 @@ namespace ObjectViewer
 
 			// Convert spherical to direction vector (matching DirectionalLight docs)
 			float x = (float)(-Math.Cos(elevationRad) * Math.Sin(azimuthRad));
-			float y = (float)(Math.Sin(elevationRad));
+			float y = (float)Math.Sin(elevationRad);
 			float z = (float)(-Math.Cos(elevationRad) * Math.Cos(azimuthRad));
 
 			Program.Renderer.Lighting.OptionLightPosition = new Vector3(x, y, z);
@@ -188,7 +186,7 @@ namespace ObjectViewer
 			}
 
 			//Anisotropic filtering level
-			Interface.CurrentOptions.AnisotropicFilteringLevel = (int) AnsiotropicLevel.Value;
+			Interface.CurrentOptions.AnisotropicFilteringLevel = (int) AnisotropicLevel.Value;
 			//Antialiasing level
 			Interface.CurrentOptions.AntiAliasingLevel = (int) AntialiasingLevel.Value;
 			if (Interface.CurrentOptions.AntiAliasingLevel != previousAntialiasingLevel)

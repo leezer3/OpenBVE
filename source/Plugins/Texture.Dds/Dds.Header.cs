@@ -20,21 +20,21 @@ namespace Texture.Dds
 		public uint flags;
 		public int height;
 		public int width;
-		public uint sizeorpitch;
+		public uint sizeOrPitch;
 		public int depth;
-		public uint mipmapcount;
-		public uint alphabitdepth;
+		public uint mipmapCount;
+		public uint alphaBitDepth;
 
 		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
 		public struct PixelFormat
 		{
 			public uint flags;
 			public FourCC fourcc;
-			public int rgbbitcount;
-			public uint rbitmask;
-			public uint gbitmask;
-			public uint bbitmask;
-			public uint alphabitmask;
+			public int rgbBitCount;
+			public uint rBitmask;
+			public uint gBitmask;
+			public uint bBitmask;
+			public uint alphaBitmask;
 		}
 
 		public PixelFormat pixelFormat;
@@ -53,20 +53,20 @@ namespace Texture.Dds
 
 		internal bool Check16BitComponents()
 		{
-			if (pixelFormat.rgbbitcount != 32)
+			if (pixelFormat.rgbBitCount != 32)
 			{
 				return false;
 			}
 
-			if (pixelFormat.rbitmask == 0x3FF00000 && pixelFormat.gbitmask == 0x000FFC00 && pixelFormat.bbitmask == 0x000003FF
-			    && pixelFormat.alphabitmask == 0xC0000000)
+			if (pixelFormat.rBitmask == 0x3FF00000 && pixelFormat.gBitmask == 0x000FFC00 && pixelFormat.bBitmask == 0x000003FF
+			    && pixelFormat.alphaBitmask == 0xC0000000)
 			{
 				// a2b10g10r10 format
 				return true;
 			}
 
-			if (pixelFormat.rbitmask == 0x000003FF && pixelFormat.gbitmask == 0x000FFC00 && pixelFormat.bbitmask == 0x3FF00000
-			    && pixelFormat.alphabitmask == 0xC0000000)
+			if (pixelFormat.rBitmask == 0x000003FF && pixelFormat.gBitmask == 0x000FFC00 && pixelFormat.bBitmask == 0x3FF00000
+			    && pixelFormat.alphaBitmask == 0xC0000000)
 			{
 				// a2r10g10b10 format
 				return true;
@@ -91,10 +91,10 @@ namespace Texture.Dds
 			flags = reader.ReadUInt32();
 			height = (int)reader.ReadUInt32();
 			width = (int)reader.ReadUInt32();
-			sizeorpitch = reader.ReadUInt32();
+			sizeOrPitch = reader.ReadUInt32();
 			depth = (int)reader.ReadUInt32();
-			mipmapcount = reader.ReadUInt32();
-			alphabitdepth = reader.ReadUInt32();
+			mipmapCount = reader.ReadUInt32();
+			alphaBitDepth = reader.ReadUInt32();
 
 			for (int i = 0; i < 10; i++)
 			{
@@ -119,11 +119,11 @@ namespace Texture.Dds
 				rgbbitcount = 16;
 			}
 
-			pixelFormat.rgbbitcount = rgbbitcount;
-			pixelFormat.rbitmask = reader.ReadUInt32();
-			pixelFormat.gbitmask = reader.ReadUInt32();
-			pixelFormat.bbitmask = reader.ReadUInt32();
-			pixelFormat.alphabitmask = reader.ReadUInt32();
+			pixelFormat.rgbBitCount = rgbbitcount;
+			pixelFormat.rBitmask = reader.ReadUInt32();
+			pixelFormat.gBitmask = reader.ReadUInt32();
+			pixelFormat.bBitmask = reader.ReadUInt32();
+			pixelFormat.alphaBitmask = reader.ReadUInt32();
 			ddscaps.caps1 = reader.ReadUInt32();
 			ddscaps.caps2 = reader.ReadUInt32();
 			ddscaps.caps3 = reader.ReadUInt32();

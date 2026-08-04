@@ -80,7 +80,7 @@ namespace TrainManager.Car
 				int nextDrop = PickDrop();
 				dropTimer += TimeElapsed * 1000;
 				int dev = (int)(0.4 * 2000 / Intensity);
-				int dropInterval =  2000 / Intensity + TrainManagerBase.RandomNumberGenerator.Next(dev, dev * 2);
+				int dropInterval =  2000 / Intensity + TrainManagerBase.currentHost.Random.Next(dev, dev * 2);
 				if (dropTimer > dropInterval)
 				{
 					if (nextDrop != -1)
@@ -92,13 +92,13 @@ namespace TrainManager.Car
 						RainDrops[nextDrop].Visible = true;
 						if (!legacyRainEvents)
 						{
-							if (TrainManagerBase.RandomNumberGenerator.Next(100) < Car.FrontAxle.Follower.SnowIntensity || Car.FrontAxle.Follower.RainIntensity == 0)
+							if (TrainManagerBase.currentHost.Random.Next(100) < Car.FrontAxle.Follower.SnowIntensity || Car.FrontAxle.Follower.RainIntensity == 0)
 							{
 								//Either we've met the snow probability roll (mixed snow and rain) or not raining
 								RainDrops[nextDrop].IsSnowFlake = true;
 							}
 						}
-						RainDrops[nextDrop].RemainingLife = TrainManagerBase.RandomNumberGenerator.NextDouble() * DropLife;
+						RainDrops[nextDrop].RemainingLife = TrainManagerBase.currentHost.Random.NextDouble() * DropLife;
 					}
 					//We want to play the drop sound even if all drops are currently visible (e.g. the wipers are off and it's still raining)
 					DropSound.Play(Car, false);
@@ -114,7 +114,7 @@ namespace TrainManager.Car
 					RainDrops[i].Visible = false;
 					RainDrops[i].IsSnowFlake = false;
 					currentDrops--;
-					RainDrops[i].RemainingLife = 0.5 * TrainManagerBase.RandomNumberGenerator.NextDouble() * DropLife;
+					RainDrops[i].RemainingLife = 0.5 * TrainManagerBase.currentHost.Random.NextDouble() * DropLife;
 				}
 			}
 		}
@@ -129,7 +129,7 @@ namespace TrainManager.Car
 					availableDrops.Add(i);
 				}
 			}
-			return availableDrops.Count != 0 ? availableDrops[TrainManagerBase.RandomNumberGenerator.Next(availableDrops.Count)] : -1;
+			return availableDrops.Count != 0 ? availableDrops[TrainManagerBase.currentHost.Random.Next(availableDrops.Count)] : -1;
 		}
 	}
 }

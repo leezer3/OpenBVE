@@ -23,7 +23,13 @@
 		FogBehavior,
 		/// <summary>Controls whether BVETS Hacks are forced on / off for this route</summary>
 		EnableBveTsHacks,
+		EnableHacks = EnableBveTsHacks,
 		/// <summary>Controls whether the route is driven in the reverse direction to construction</summary>
 		ReverseDirection,
+		/// <summary>Controls whether fuzzy color matching with a reduced palette is used</summary>
+		/// <remarks>This matches BVE2 / BVE4 behaviour, and should be disabled where possible</remarks>
+		CompatibleTransparencyMode,
+		/// <summary>Provides a 2D (X, Z) vector to set the starting direction of track element 0</summary>
+		StartingDirection
 	}
 }

@@ -26,7 +26,7 @@ namespace SoundManager
 		private ContextHandle OpenAlContext;
 
 		/// <summary>A list of all sound buffers.</summary>
-		private List<SoundBuffer> Buffers = new List<SoundBuffer>();
+		private readonly List<SoundBuffer> Buffers = new List<SoundBuffer>();
 
 		/// <summary>A list of all sound sources.</summary>
 		protected internal static SoundSource[] Sources = new SoundSource[16];

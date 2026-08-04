@@ -128,6 +128,12 @@ namespace Formats.OpenBve.XML
 				{
 
 					string relativePath = value.Value;
+
+					if (Path.IsAbsolutePath(relativePath))
+					{
+						relativePath = relativePath.TrimStart('/', '\\');
+					}
+
 					try
 					{
 						finalPath = Path.CombineFile(absolutePath, relativePath);
@@ -268,8 +274,13 @@ namespace Formats.OpenBve.XML
 			{
 				if (!Path.ContainsInvalidChars(value.Value))
 				{
-
 					string relativePath = value.Value;
+
+					if (Path.IsAbsolutePath(relativePath))
+					{
+						relativePath = relativePath.TrimStart('/', '\\');
+					}
+
 					try
 					{
 						finalPath = Path.CombineFile(absolutePath, relativePath);

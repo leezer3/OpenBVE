@@ -41,6 +41,8 @@ namespace OpenBveApi
 		CameraInteriorTransition,
 		CameraExteriorTransition,
 		CameraTransitionSpeed,
+		BackgroundColor,
+		TextColor,
 		// Quality
 		Interpolation,
 		AnisotropicFilteringLevel,

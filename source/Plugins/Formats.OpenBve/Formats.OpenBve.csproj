@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Formats.OpenBve</RootNamespace>
     <AssemblyName>Formats.OpenBve</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,16 +47,15 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CFG\ConfigFile.cs" />
+    <Compile Include="CSVB3D\CSVB3DFile.cs" />
     <Compile Include="Enums\CompatibilityObject\CompatibilityObjectKey.cs" />
     <Compile Include="Enums\CompatibilityObject\CompatibilityObjectSection.cs" />
+    <Compile Include="Enums\CSVB3D\CSVB3DKey.cs" />
+    <Compile Include="Enums\CSVB3D\CSVB3DSection.cs" />
     <Compile Include="Enums\DynamicBackground\DynamicBackgroundKey.cs" />
     <Compile Include="Enums\DynamicBackground\DynamicBackgroundSection.cs" />
     <Compile Include="Enums\DynamicLight\DynamicLightKey.cs" />
@@ -98,5 +98,6 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

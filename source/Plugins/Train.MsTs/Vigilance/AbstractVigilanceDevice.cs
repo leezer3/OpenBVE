@@ -89,7 +89,7 @@ namespace Train.MsTs
 					PenaltyTimeLimit = block.ReadSingle();
 					break;
 				case KujuTokenID.MonitoringDeviceCriticalLevel:
-					if (block.ParentBlock.Token == KujuTokenID.OverspeedMonitor)
+					if (block.ParentBlock.Token == KujuTokenID.OverspeedMonitor || block.ParentBlock.Token == KujuTokenID.EmergencyStopMonitor)
 					{
 						// Check exact behaviour
 						CriticalLevel = block.ReadSingle(UnitOfVelocity.MetersPerSecond, UnitOfVelocity.MilesPerHour);
