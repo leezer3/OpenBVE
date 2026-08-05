@@ -20,8 +20,10 @@ namespace OpenBveApi.Routes
 		/// <param name="staticObject">The object to use for the background</param>
 		/// <param name="backgroundImageDistance">The user-selected viewing distance</param>
 		/// <param name="createCylinderCaps">Whether to auto-generate cylinder caps</param>
-		public BackgroundObject(StaticObject staticObject, double backgroundImageDistance, bool createCylinderCaps = false)
+		/// <param name="fogDistance">The fog distance</param>
+		public BackgroundObject(StaticObject staticObject, double backgroundImageDistance, bool createCylinderCaps = false, double fogDistance = 600)
 		{
+			FogDistance = fogDistance;
 			BackgroundImageDistance = backgroundImageDistance;
 			if (createCylinderCaps)
 			{
@@ -108,9 +110,10 @@ namespace OpenBveApi.Routes
 		/// <summary>Creates a new background object from an animated object collection</summary>
 		/// <param name="animatedObject">The animated object collection to use for the background</param>
 		/// <param name="backgroundImageDistance">The user-selected viewing distance</param>
-		/// <param name="host">The host interface, used to register the dynamic object states</param>
-		public BackgroundObject(AnimatedObjectCollection animatedObject, double backgroundImageDistance, HostInterface host)
+		/// <param name="fogDistance">The fog distance</param>
+		public BackgroundObject(AnimatedObjectCollection animatedObject, double backgroundImageDistance, double fogDistance = 600)
 		{
+			FogDistance = fogDistance;
 			BackgroundImageDistance = backgroundImageDistance;
 			AnimatedObjectCollection animatedObjectCollection = (AnimatedObjectCollection)animatedObject.Clone();
 			//Register the internal dynamic object states so their VAOs are created
@@ -120,7 +123,7 @@ namespace OpenBveApi.Routes
 				{
 					continue;
 				}
-				host.CreateDynamicObject(ref obj.internalObject);
+				animatedObject.currentHost.CreateDynamicObject(ref obj.internalObject);
 				obj.internalObject.Prototype = obj.States[0].Prototype;
 				obj.CurrentState = 0;
 				foreach (ObjectState state in obj.States)

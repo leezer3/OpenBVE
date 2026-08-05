@@ -37,7 +37,7 @@ namespace CsvRwRouteParser
 			internal bool SwitchUsed = false;
 			internal Vector2 StartingDirection = Vector2.Down;
 
-			internal Dictionary<int, NewPatternObj> PatternObjects;
+			internal readonly Dictionary<int, NewPatternObj> PatternObjects;
 
 			internal bool IsHmmsim = false;
 
