@@ -153,14 +153,12 @@ namespace RouteViewer
 			DefaultShader.SetShadowEnabled(ShadowsEnabled);
 
 			// fog
-			float aa = Program.CurrentRoute.CurrentFog.Start;
-			float bb = Program.CurrentRoute.CurrentFog.End;
-
-			if (aa < bb & aa < Program.CurrentRoute.CurrentBackground.BackgroundImageDistance)
+			
+			if (Program.CurrentRoute.CurrentFog.Start < Program.CurrentRoute.CurrentFog.End && Program.CurrentRoute.CurrentFog.Start < Program.CurrentRoute.CurrentBackground.BackgroundImageDistance)
 			{
 				Fog.Enabled = true;
-				Fog.Start = aa;
-				Fog.End = bb;
+				Fog.Start = Program.CurrentRoute.CurrentFog.Start;
+				Fog.End = Program.CurrentRoute.CurrentFog.End;
 				Fog.Color = Program.CurrentRoute.CurrentFog.Color;
 				Fog.Density = Program.CurrentRoute.CurrentFog.Density;
 				Fog.IsLinear = Program.CurrentRoute.CurrentFog.IsLinear;

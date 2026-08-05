@@ -56,7 +56,7 @@ namespace OpenBveApi.Hosts {
 					return cachedPlatform;
 				}
 
-				if (System.IO.File.Exists(@"/System/Library/CoreServices/SystemVersion.plist"))
+				if (File.Exists(@"/System/Library/CoreServices/SystemVersion.plist"))
 				{
 					//Mono's platform detection doesn't reliably differentiate between OS-X and Unix
 					cachedPlatform = HostPlatform.AppleOSX;
@@ -354,7 +354,7 @@ namespace OpenBveApi.Hosts {
 		/// <returns>Whether loading the object was successful</returns>
 		public virtual bool LoadObject(string Path, System.Text.Encoding Encoding, out UnifiedObject Object)
 		{
-			ValueTuple<string, bool, DateTime> key = ValueTuple.Create(Path.ToLowerInvariant(), false, System.IO.File.GetLastWriteTime(Path));
+			ValueTuple<string, bool, DateTime> key = ValueTuple.Create(Path.ToLowerInvariant(), false, File.GetLastWriteTime(Path));
 
 			if (StaticObjectCache.TryGetValue(key, out var staticObject))
 			{
@@ -382,7 +382,7 @@ namespace OpenBveApi.Hosts {
 		/// Selecting to preserve vertices may be useful if using the object as a deformable.</remarks>
 		public virtual bool LoadStaticObject(string Path, System.Text.Encoding Encoding, bool PreserveVertices, out StaticObject Object)
 		{
-			ValueTuple<string, bool, DateTime> key = ValueTuple.Create(Path.ToLowerInvariant(), PreserveVertices, System.IO.File.GetLastWriteTime(Path));
+			ValueTuple<string, bool, DateTime> key = ValueTuple.Create(Path.ToLowerInvariant(), PreserveVertices, File.GetLastWriteTime(Path));
 
 			if (StaticObjectCache.TryGetValue(key, out var staticObject))
 			{
