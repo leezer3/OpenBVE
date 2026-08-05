@@ -195,6 +195,7 @@ namespace Plugin
 										break;
 									case "timetable":
 										currentHost.AddObjectForCustomTimeTable(Result.Objects[ObjectCount]);
+										Result.Objects[ObjectCount].isTimeTableObject = true;
 										Result.Objects[ObjectCount].StateFunction = new FunctionScript(currentHost, "timetable", true);
 										break;
 									default:
