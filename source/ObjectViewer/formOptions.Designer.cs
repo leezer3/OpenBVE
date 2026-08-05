@@ -117,20 +117,21 @@ namespace ObjectViewer
             this.tabControl1.Location = new System.Drawing.Point(1, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(312, 411);
+            this.tabControl1.Size = new System.Drawing.Size(348, 460);
             this.tabControl1.TabIndex = 26;
             // 
             // tabPageOptions
             // 
             var tlpOptions = new System.Windows.Forms.TableLayoutPanel
             {
-                Dock = System.Windows.Forms.DockStyle.Fill,
+                AutoSize = true,
+                Dock = System.Windows.Forms.DockStyle.Top,
                 Padding = new System.Windows.Forms.Padding(10),
                 ColumnCount = 2,
                 ColumnStyles =
                 {
-                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize),
-                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F)
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 45F),
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55F)
                 },
                 Controls =
                 {
@@ -179,6 +180,7 @@ namespace ObjectViewer
             // 
             // comboBoxOptimizeObjects
             // 
+            this.comboBoxOptimizeObjects.Dock = System.Windows.Forms.DockStyle.Fill;
             this.comboBoxOptimizeObjects.FormattingEnabled = true;
             this.comboBoxOptimizeObjects.Items.AddRange(new object[] {
             "None",
@@ -209,6 +211,7 @@ namespace ObjectViewer
             // 
             // nearClip
             // 
+            this.nearClip.Dock = System.Windows.Forms.DockStyle.Fill;
             this.nearClip.DecimalPlaces = 3;
             this.nearClip.Increment = new decimal(new int[] {
             1,
@@ -237,6 +240,7 @@ namespace ObjectViewer
             // 
             // comboBoxNewObjParser
             // 
+            this.comboBoxNewObjParser.Dock = System.Windows.Forms.DockStyle.Fill;
             this.comboBoxNewObjParser.FormattingEnabled = true;
             this.comboBoxNewObjParser.Items.AddRange(new object[] {
             "OriginalObjParser",
@@ -257,6 +261,7 @@ namespace ObjectViewer
             // 
             // comboBoxNewXParser
             // 
+            this.comboBoxNewXParser.Dock = System.Windows.Forms.DockStyle.Fill;
             this.comboBoxNewXParser.FormattingEnabled = true;
             this.comboBoxNewXParser.Items.AddRange(new object[] {
             "OriginalXParser",
@@ -297,6 +302,7 @@ namespace ObjectViewer
             // 
             // TransparencyQuality
             // 
+            this.TransparencyQuality.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TransparencyQuality.FormattingEnabled = true;
             this.TransparencyQuality.Items.AddRange(new object[] {
             "Sharp",
@@ -309,6 +315,7 @@ namespace ObjectViewer
             // 
             // AntialiasingLevel
             // 
+            this.AntialiasingLevel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.AntialiasingLevel.Location = new System.Drawing.Point(160, 77);
             this.AntialiasingLevel.Maximum = new decimal(new int[] {
             16,
@@ -321,6 +328,7 @@ namespace ObjectViewer
             // 
             // AnisotropicLevel
             // 
+            this.AnisotropicLevel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.AnisotropicLevel.Location = new System.Drawing.Point(160, 52);
             this.AnisotropicLevel.Maximum = new decimal(new int[] {
             16,
@@ -351,6 +359,7 @@ namespace ObjectViewer
             // 
             // height
             // 
+            this.height.Dock = System.Windows.Forms.DockStyle.Fill;
             this.height.Location = new System.Drawing.Point(161, 189);
             this.height.Maximum = new decimal(new int[] {
             4096,
@@ -373,6 +382,7 @@ namespace ObjectViewer
             // 
             // width
             // 
+            this.width.Dock = System.Windows.Forms.DockStyle.Fill;
             this.width.Location = new System.Drawing.Point(160, 163);
             this.width.Maximum = new decimal(new int[] {
             4096,
@@ -442,6 +452,7 @@ namespace ObjectViewer
             // 
             // InterpolationMode
             // 
+            this.InterpolationMode.Dock = System.Windows.Forms.DockStyle.Fill;
             this.InterpolationMode.FormattingEnabled = true;
             this.InterpolationMode.Items.AddRange(new object[] {
             "Nearest Neighbour",
@@ -459,13 +470,14 @@ namespace ObjectViewer
             // 
             var tlpShadows = new System.Windows.Forms.TableLayoutPanel
             {
-                Dock = System.Windows.Forms.DockStyle.Fill,
+                AutoSize = true,
+                Dock = System.Windows.Forms.DockStyle.Top,
                 Padding = new System.Windows.Forms.Padding(10),
                 ColumnCount = 2,
                 ColumnStyles =
                 {
-                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize),
-                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F)
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 45F),
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55F)
                 },
                 Controls =
                 {
@@ -746,7 +758,8 @@ namespace ObjectViewer
             // 
             var tlpKeys = new System.Windows.Forms.TableLayoutPanel
             {
-                Dock = System.Windows.Forms.DockStyle.Fill,
+                AutoSize = true,
+                Dock = System.Windows.Forms.DockStyle.Top,
                 Padding = new System.Windows.Forms.Padding(10),
                 ColumnCount = 2,
                 ColumnStyles =
@@ -898,7 +911,7 @@ namespace ObjectViewer
             // CloseButton
             // 
             this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CloseButton.Location = new System.Drawing.Point(234, 399);
+            this.CloseButton.Location = new System.Drawing.Point(268, 433);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(75, 23);
             this.CloseButton.TabIndex = 32;
@@ -917,6 +930,7 @@ namespace ObjectViewer
             // 
             // checkBoxAutoReload
             // 
+            this.checkBoxAutoReload.Dock = System.Windows.Forms.DockStyle.Fill;
             this.checkBoxAutoReload.AutoSize = true;
             this.checkBoxAutoReload.Location = new System.Drawing.Point(265, 353);
             this.checkBoxAutoReload.Name = "checkBoxAutoReload";
@@ -944,12 +958,12 @@ namespace ObjectViewer
             // 
             // formOptions
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(311, 464);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(350, 480);
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.tabControl1);
-            this.MinimumSize = new System.Drawing.Size(330, 500);
+            this.MinimumSize = new System.Drawing.Size(320, 420);
             this.Name = "formOptions";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
