@@ -1169,8 +1169,8 @@ namespace Train.MsTs
 				case KujuTokenID.SafetyValvesFX:
 				case KujuTokenID.DrainpipeFX:
 					ParticleSource particleSource = new ParticleSource(block.Token);
-					particleSource.Offset = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
-					particleSource.Direction = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
+					particleSource.Offset = block.ReadVector3();
+					particleSource.Direction = block.ReadVector3();
 					particleSource.Size = block.ReadSingle();
 					ParticleSources.Add(particleSource);
 					break;

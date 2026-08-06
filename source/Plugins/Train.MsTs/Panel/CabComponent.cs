@@ -295,6 +295,7 @@ namespace Train.MsTs
 							case PanelSubject.Dynamic_Brake:
 							case PanelSubject.Doors_Display:
 							case PanelSubject.Whistle:
+							case PanelSubject.Reset:
 								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, FrameMappings);
 								break;
 							default:
