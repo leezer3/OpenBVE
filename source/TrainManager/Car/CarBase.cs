@@ -70,8 +70,6 @@ namespace TrainManager.Car
 		public Windscreen Windscreen;
 		/// <summary>The hold brake for this car</summary>
 		public CarHoldBrake HoldBrake;
-		/// <summary>The constant speed device for this car</summary>
-		public CarConstSpeed ConstSpeed;
 		/// <summary>The readhesion device for this car</summary>
 		public AbstractReAdhesionDevice ReAdhesionDevice;
 		/// <summary>The position of the beacon receiver within the car</summary>
@@ -1286,9 +1284,11 @@ namespace TrainManager.Car
 						}
 
 						TractionModel.MaximumCurrentAcceleration = a;
-						// Update constant speed device
-						ConstSpeed?.Update(ref a);
-
+						if (SafetySystems.TryGetTypedValue(SafetySystem.ConstantSpeedDevice, out CarConstSpeed constantSpeed))
+						{
+							constantSpeed.Update(ref a);
+						}
+						
 						// finalize
 						if (wheelspin != 0.0) a = 0.0;
 					}
