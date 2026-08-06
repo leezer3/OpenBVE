@@ -1599,10 +1599,6 @@
 						<source>Load in advance</source>
 						<target>預先加載路線</target>
 					</trans-unit>
-					<trans-unit id="advanced_is_use_new_renderer">
-						<source>Enable the new renderer</source>
-						<target>啟用新渲染器</target>
-					</trans-unit>
 					<trans-unit id="advanced_timefactor">
 						<source>Accelerated Time Factor</source>
 						<target>加速倍數</target>

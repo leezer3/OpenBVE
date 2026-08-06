@@ -1576,10 +1576,6 @@
 						<source>Load in advance</source>
 						<target>Last in råd</target>
 					</trans-unit>
-					<trans-unit id="advanced_is_use_new_renderer">
-						<source>Enable the new renderer</source>
-						<target>Slå på den nye rendereren</target>
-					</trans-unit>
 					<trans-unit id="advanced_timefactor">
 						<source>Accelerated Time Factor</source>
 						<target>Akselerert tidsfaktor</target>

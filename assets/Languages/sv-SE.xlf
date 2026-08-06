@@ -1592,10 +1592,6 @@
 						<ns0:source>Load in advance</ns0:source>
 						<ns0:target state="translated">Läs in i förväg</ns0:target>
 					</ns0:trans-unit>
-					<ns0:trans-unit id="advanced_is_use_new_renderer">
-						<ns0:source>Enable the new renderer</ns0:source>
-						<ns0:target state="translated">Aktivera den nya renderaren</ns0:target>
-					</ns0:trans-unit>
 					<ns0:trans-unit id="advanced_timefactor">
 						<ns0:source>Accelerated Time Factor</ns0:source>
 						<ns0:target state="translated">Accelererad tidsfaktor</ns0:target>
