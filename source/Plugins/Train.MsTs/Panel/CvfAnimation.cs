@@ -500,6 +500,12 @@ namespace Train.MsTs
 						lastResult = dE.FuelTank.CurrentLevel;
 					}
 					break;
+				case PanelSubject.Firehole:
+					if (tractionModel.Components.TryGetTypedValue(EngineComponent.Firebox, out Firebox f))
+					{
+						MapResult(f.DoorState);
+					}
+					break;
 			}
 			return lastResult;
 		}

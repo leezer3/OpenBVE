@@ -219,6 +219,7 @@ namespace Train.MsTs
 							case PanelSubject.Blower:
 							case PanelSubject.Cutoff:
 							case PanelSubject.Regulator:
+							case PanelSubject.Firehole:
 								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, FrameMappings);
 								break;
 							default:
