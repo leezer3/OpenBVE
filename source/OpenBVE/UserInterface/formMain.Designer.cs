@@ -227,7 +227,6 @@ namespace OpenBve {
             this.checkBoxUnloadTextures = new System.Windows.Forms.CheckBox();
             this.labelTimeAcceleration = new System.Windows.Forms.Label();
             this.updownTimeAccelerationFactor = new System.Windows.Forms.NumericUpDown();
-            this.checkBoxIsUseNewRenderer = new System.Windows.Forms.CheckBox();
             this.checkBoxLoadInAdvance = new System.Windows.Forms.CheckBox();
             this.groupBoxPackageOptions = new System.Windows.Forms.GroupBox();
             this.buttonMSTSTrainsetDirectory = new System.Windows.Forms.Button();
@@ -3156,12 +3155,11 @@ namespace OpenBve {
             this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxUnloadTextures);
             this.groupBoxAdvancedOptions.Controls.Add(this.labelTimeAcceleration);
             this.groupBoxAdvancedOptions.Controls.Add(this.updownTimeAccelerationFactor);
-            this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxIsUseNewRenderer);
             this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxLoadInAdvance);
             this.groupBoxAdvancedOptions.ForeColor = System.Drawing.Color.Black;
             this.groupBoxAdvancedOptions.Location = new System.Drawing.Point(0, 323);
             this.groupBoxAdvancedOptions.Name = "groupBoxAdvancedOptions";
-            this.groupBoxAdvancedOptions.Size = new System.Drawing.Size(321, 208);
+            this.groupBoxAdvancedOptions.Size = new System.Drawing.Size(321, 189);
             this.groupBoxAdvancedOptions.TabIndex = 21;
             this.groupBoxAdvancedOptions.TabStop = false;
             this.groupBoxAdvancedOptions.Text = "Advanced Options";
@@ -3169,7 +3167,7 @@ namespace OpenBve {
             // checkBoxPanel2Extended
             // 
             this.checkBoxPanel2Extended.AutoSize = true;
-            this.checkBoxPanel2Extended.Location = new System.Drawing.Point(8, 183);
+            this.checkBoxPanel2Extended.Location = new System.Drawing.Point(8, 164);
             this.checkBoxPanel2Extended.Name = "checkBoxPanel2Extended";
             this.checkBoxPanel2Extended.Size = new System.Drawing.Size(159, 17);
             this.checkBoxPanel2Extended.TabIndex = 20;
@@ -3178,7 +3176,7 @@ namespace OpenBve {
             // 
             // pictureboxCursor
             // 
-            this.pictureboxCursor.Location = new System.Drawing.Point(8, 145);
+            this.pictureboxCursor.Location = new System.Drawing.Point(8, 126);
             this.pictureboxCursor.Name = "pictureboxCursor";
             this.pictureboxCursor.Size = new System.Drawing.Size(32, 32);
             this.pictureboxCursor.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -3188,7 +3186,7 @@ namespace OpenBve {
             // labelCursor
             // 
             this.labelCursor.AutoSize = true;
-            this.labelCursor.Location = new System.Drawing.Point(48, 140);
+            this.labelCursor.Location = new System.Drawing.Point(48, 121);
             this.labelCursor.Name = "labelCursor";
             this.labelCursor.Size = new System.Drawing.Size(37, 13);
             this.labelCursor.TabIndex = 17;
@@ -3198,7 +3196,7 @@ namespace OpenBve {
             // 
             this.comboboxCursor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboboxCursor.FormattingEnabled = true;
-            this.comboboxCursor.Location = new System.Drawing.Point(48, 158);
+            this.comboboxCursor.Location = new System.Drawing.Point(48, 139);
             this.comboboxCursor.Name = "comboboxCursor";
             this.comboboxCursor.Size = new System.Drawing.Size(108, 21);
             this.comboboxCursor.TabIndex = 19;
@@ -3207,7 +3205,7 @@ namespace OpenBve {
             // checkBoxHacks
             // 
             this.checkBoxHacks.AutoSize = true;
-            this.checkBoxHacks.Location = new System.Drawing.Point(8, 100);
+            this.checkBoxHacks.Location = new System.Drawing.Point(8, 81);
             this.checkBoxHacks.Name = "checkBoxHacks";
             this.checkBoxHacks.Size = new System.Drawing.Size(203, 17);
             this.checkBoxHacks.TabIndex = 15;
@@ -3217,7 +3215,7 @@ namespace OpenBve {
             // checkBoxTransparencyFix
             // 
             this.checkBoxTransparencyFix.AutoSize = true;
-            this.checkBoxTransparencyFix.Location = new System.Drawing.Point(8, 81);
+            this.checkBoxTransparencyFix.Location = new System.Drawing.Point(8, 62);
             this.checkBoxTransparencyFix.Name = "checkBoxTransparencyFix";
             this.checkBoxTransparencyFix.Size = new System.Drawing.Size(259, 17);
             this.checkBoxTransparencyFix.TabIndex = 14;
@@ -3227,7 +3225,7 @@ namespace OpenBve {
             // checkBoxUnloadTextures
             // 
             this.checkBoxUnloadTextures.AutoSize = true;
-            this.checkBoxUnloadTextures.Location = new System.Drawing.Point(8, 62);
+            this.checkBoxUnloadTextures.Location = new System.Drawing.Point(8, 43);
             this.checkBoxUnloadTextures.Name = "checkBoxUnloadTextures";
             this.checkBoxUnloadTextures.Size = new System.Drawing.Size(138, 17);
             this.checkBoxUnloadTextures.TabIndex = 13;
@@ -3238,7 +3236,7 @@ namespace OpenBve {
             // labelTimeAcceleration
             // 
             this.labelTimeAcceleration.AutoSize = true;
-            this.labelTimeAcceleration.Location = new System.Drawing.Point(8, 123);
+            this.labelTimeAcceleration.Location = new System.Drawing.Point(8, 104);
             this.labelTimeAcceleration.Name = "labelTimeAcceleration";
             this.labelTimeAcceleration.Size = new System.Drawing.Size(126, 13);
             this.labelTimeAcceleration.TabIndex = 10;
@@ -3246,7 +3244,7 @@ namespace OpenBve {
             // 
             // updownTimeAccelerationFactor
             // 
-            this.updownTimeAccelerationFactor.Location = new System.Drawing.Point(200, 122);
+            this.updownTimeAccelerationFactor.Location = new System.Drawing.Point(200, 103);
             this.updownTimeAccelerationFactor.Maximum = new decimal(new int[] {
             5,
             0,
@@ -3256,16 +3254,6 @@ namespace OpenBve {
             this.updownTimeAccelerationFactor.Size = new System.Drawing.Size(52, 20);
             this.updownTimeAccelerationFactor.TabIndex = 16;
             this.updownTimeAccelerationFactor.ValueChanged += new System.EventHandler(this.updownTimeAccelerationFactor_ValueChanged);
-            // 
-            // checkBoxIsUseNewRenderer
-            // 
-            this.checkBoxIsUseNewRenderer.AutoSize = true;
-            this.checkBoxIsUseNewRenderer.Location = new System.Drawing.Point(8, 43);
-            this.checkBoxIsUseNewRenderer.Name = "checkBoxIsUseNewRenderer";
-            this.checkBoxIsUseNewRenderer.Size = new System.Drawing.Size(159, 17);
-            this.checkBoxIsUseNewRenderer.TabIndex = 2;
-            this.checkBoxIsUseNewRenderer.Text = "Disable OpenGL display lists";
-            this.checkBoxIsUseNewRenderer.UseVisualStyleBackColor = true;
             // 
             // checkBoxLoadInAdvance
             // 
@@ -6983,7 +6971,6 @@ namespace OpenBve {
 		private System.Windows.Forms.Label labelCursor;
         private System.Windows.Forms.ComboBox comboboxCursor;
 		private System.Windows.Forms.CheckBox checkBoxPanel2Extended;
-		private System.Windows.Forms.CheckBox checkBoxIsUseNewRenderer;
 		private System.Windows.Forms.CheckBox checkBoxLoadInAdvance;
 		private System.Windows.Forms.GroupBox groupBoxRailDriver;
 		private System.Windows.Forms.Label labelRailDriverCalibration;
