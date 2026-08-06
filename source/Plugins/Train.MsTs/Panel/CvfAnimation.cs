@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
@@ -505,6 +505,20 @@ namespace Train.MsTs
 					{
 						MapResult(f.DoorState);
 					}
+					break;
+				case PanelSubject.Doors_Display:
+					double a = 0.0;
+					for (int j = 0; j < dynamicTrain.Cars.Length; j++)
+					{
+						for (int k = 0; k < dynamicTrain.Cars[j].Doors.Length; k++)
+						{
+							if (dynamicTrain.Cars[j].Doors[k].State > a)
+							{
+								a = dynamicTrain.Cars[j].Doors[k].State;
+							}
+						}
+					}
+					MapResult(1 - a);
 					break;
 			}
 			return lastResult;
