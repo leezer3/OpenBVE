@@ -1565,10 +1565,6 @@
 						<source>Load in advance</source>
 						<target>Muatkan terlebih dahulu</target>
 					</trans-unit>
-					<trans-unit id="advanced_is_use_new_renderer">
-						<source>Enable the new renderer</source>
-						<target>Dayakan pemapar baharu</target>
-					</trans-unit>
 					<trans-unit id="advanced_timefactor">
 						<source>Accelerated Time Factor</source>
 						<target>Faktor Masa Dipercepatkan</target>
