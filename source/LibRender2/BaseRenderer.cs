@@ -1683,10 +1683,7 @@ namespace LibRender2
 			if (!anyVisual) return;
 
 			ResetOpenGlState();
-			if (AvailableNewRenderer)
-			{
-				CurrentShader.Deactivate();
-			}
+			CurrentShader.Deactivate();
 
 			unsafe
 			{
