@@ -23,6 +23,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using RouteManager2;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime;
@@ -65,6 +66,41 @@ namespace RouteViewer
 
 		internal static formRailPaths pathForm;
 
+		/// <summary>Stopwatch used to measure the startup time of the program.</summary>
+		internal static readonly System.Diagnostics.Stopwatch StartupTimer = System.Diagnostics.Stopwatch.StartNew();
+
+		private static readonly List<string> startupTimings = new List<string>();
+
+		/// <summary>Records the elapsed startup time since the start of the program for the named phase.</summary>
+		/// <param name="phaseName">The name of the startup phase which has just completed.</param>
+		internal static void LogStartupPhase(string phaseName)
+		{
+			lock (startupTimings)
+			{
+				startupTimings.Add(phaseName + ": " + StartupTimer.Elapsed.TotalSeconds.ToString("F3", CultureInfo.InvariantCulture) + " s");
+			}
+		}
+
+		/// <summary>Writes all recorded startup phase timings to the log file, separated from the other programs' entries.</summary>
+		internal static void WriteStartupTimings()
+		{
+			lock (startupTimings)
+			{
+				if (startupTimings.Count == 0)
+				{
+					return;
+				}
+				FileSystem.AppendToLogFile(new string('=', 60));
+				FileSystem.AppendToLogFile("Route Viewer startup timings");
+				FileSystem.AppendToLogFile(new string('=', 60));
+				foreach (string timing in startupTimings)
+				{
+					FileSystem.AppendToLogFile("  " + timing);
+				}
+				FileSystem.AppendToLogFile(new string('=', 60));
+			}
+		}
+
 		[System.Runtime.InteropServices.DllImport("user32.dll")]
 		private static extern bool SetProcessDPIAware();
 
@@ -78,6 +114,7 @@ namespace RouteViewer
 			FileSystem.CreateFileSystem();
 			Sounds = new Sounds(CurrentHost);
 			Options.LoadOptions();
+			Program.LogStartupPhase("Options and filesystem loaded");
 			// n.b. Init the toolkit before the renderer
 			ToolkitOptions options = new ToolkitOptions
 			{
@@ -92,15 +129,18 @@ namespace RouteViewer
 			}
 
 			Toolkit.Init(options);
+			Program.LogStartupPhase("Toolkit initialised");
 
 			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
 			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
+			Program.LogStartupPhase("Core objects created");
 			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, TrainManager, Renderer))
 			{
 				MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
+			Program.LogStartupPhase("Plugins loaded");
 			GameMenu.Instance = new GameMenu();
 			// command line arguments
 			string objectsToLoad = string.Empty;
@@ -175,6 +215,7 @@ namespace RouteViewer
 
 			string folder = FileSystem.GetDataFolder("Languages");
 			Translations.LoadLanguageFiles(folder);
+			Program.LogStartupPhase("Languages loaded");
 			Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
 			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// application
@@ -192,9 +233,11 @@ namespace RouteViewer
 			Renderer.GameWindow.TargetRenderFrequency = 0;
 			Renderer.GameWindow.Title = "Route Viewer";
 			processCommandLineArgs = true;
+			Program.LogStartupPhase("Main window shown");
 			Renderer.GameWindow.Run();
 			//Unload
 			Sounds.DeInitialize();
+			Program.WriteStartupTimings();
 		}
 		
 		// load route

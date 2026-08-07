@@ -487,6 +487,10 @@ namespace OpenBve
 			MouseWheel  += MainLoop.mouseWheelEvent;
 			FileDrop += GameMenu.Instance.DragFile;
 
+			//Ensure that the input device plugins have finished loading in the background before they are used
+			Program.StartInputDevicePluginLoading();
+			Program.InputDevicePluginsTask.Wait();
+
 			for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
 			{
 				if (InputDevicePlugin.AvailablePluginInfos[i].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable)
@@ -510,10 +514,11 @@ namespace OpenBve
 							}
 						}
 					}
-					InputDevicePlugin.AvailablePlugins[i].KeyDown += MainLoop.InputDevicePluginKeyDown;
-					InputDevicePlugin.AvailablePlugins[i].KeyUp += MainLoop.InputDevicePluginKeyUp;
-				}
+				InputDevicePlugin.AvailablePlugins[i].KeyDown += MainLoop.InputDevicePluginKeyDown;
+				InputDevicePlugin.AvailablePlugins[i].KeyUp += MainLoop.InputDevicePluginKeyUp;
 			}
+			}
+			Program.FileSystem.AppendToLogFile("Game window loaded: " + Program.StartupTimer.Elapsed.TotalSeconds.ToString("F3", System.Globalization.CultureInfo.InvariantCulture) + " s after program start");
 		}
 		protected override void OnClosing(CancelEventArgs e)
 		{

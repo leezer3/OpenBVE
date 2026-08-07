@@ -36,6 +36,30 @@ namespace OpenBve
 
 		private readonly Dictionary<string, string> compatibilitySignals = new Dictionary<string, string>();
 
+		/// <summary>Generation counters used to invalidate stale background list population tasks.</summary>
+		private int routeListGeneration;
+		private int trainListGeneration;
+
+		/// <summary>A single entry to be displayed in a list view.</summary>
+		private class ListItemData
+		{
+			internal readonly string Name;
+			internal readonly string ImageKey;
+			internal readonly string Tag;
+			internal readonly bool IsParent;
+			/// <summary>Whether this entry belongs to the fixed (non-browsing) list view, e.g. the main route or train list.</summary>
+			internal readonly bool UseFixedList;
+
+			internal ListItemData(string name, string imageKey, string tag, bool isParent, bool useFixedList)
+			{
+				Name = name;
+				ImageKey = imageKey;
+				Tag = tag;
+				IsParent = isParent;
+				UseFixedList = useFixedList;
+			}
+		}
+
 		private void LoadCompatibilitySignalSets()
 		{
 			string[] possibleFiles = Directory.GetFiles(Path.CombineDirectory(Program.FileSystem.GetDataFolder("Compatibility"), "Signals"), "*.xml");
@@ -146,176 +170,132 @@ namespace OpenBve
 		/// <param name="packages">Whether this is a packaged content folder</param>
 		private void PopulateRouteList(string routeFolder, ListView listView, bool packages)
 		{
+			int generation = ++routeListGeneration;
+			try
+			{
+				//The directory scan and file sniffing can be slow on large installs,
+				//so run it on a background thread and only update the UI when it is complete
+				Task.Run(() =>
+				{
+					List<ListItemData> items = BuildRouteListItems(routeFolder, packages);
+					PopulateListView(listView, listviewRouteFiles, items, generation, true, routeFolder.Length == 0);
+				});
+			}
+			catch
+			{
+				//The background task could not be started
+			}
+		}
+
+		/// <summary>Builds the route display entries for the selected folder. Runs on a background thread.</summary>
+		/// <param name="routeFolder">The folder containing route files</param>
+		/// <param name="packages">Whether this is a packaged content folder</param>
+		/// <returns>The route entries to display</returns>
+		private List<ListItemData> BuildRouteListItems(string routeFolder, bool packages)
+		{
+			List<ListItemData> items = new List<ListItemData>();
 			try
 			{
 				if (routeFolder.Length == 0)
 				{
 					// drives
-					listView.Items.Clear();
-					try
+					DriveInfo[] driveInfos = DriveInfo.GetDrives();
+					for (int i = 0; i < driveInfos.Length; i++)
 					{
-						DriveInfo[] driveInfos = DriveInfo.GetDrives();
-						for (int i = 0; i < driveInfos.Length; i++)
-						{
-							ListViewItem Item = listView.Items.Add(driveInfos[i].Name);
-							Item.ImageKey = Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows ? @"disk" : @"folder";
-							Item.Tag = driveInfos[i].RootDirectory.FullName;
-							listView.Tag = null;
-						}
-					}
-					catch
-					{
-						//Unable to get list of drives
+						items.Add(new ListItemData(driveInfos[i].Name, Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows ? @"disk" : @"folder", driveInfos[i].RootDirectory.FullName, false, false));
 					}
 				}
 				else if (Directory.Exists(routeFolder))
 				{
-					listView.Items.Clear();
-					
 					if (!packages || routeFolder != Program.FileSystem.RouteInstallationDirectory)
 					{
 						// Show parent if applicable
-						try
-						{
-							DirectoryInfo Info = Directory.GetParent(routeFolder);
-							if (Info != null)
-							{
-								ListViewItem Item = listView.Items.Add("..");
-								Item.ImageKey = @"parent";
-								Item.Tag = Info.FullName;
-								listView.Tag = Info.FullName;
-							}
-							else
-							{
-								ListViewItem Item = listView.Items.Add("..");
-								Item.ImageKey = @"parent";
-								Item.Tag = "";
-								listView.Tag = "";
-							}
-						}
-						catch
-						{
-							//Another permissions issue??
-						}
+						DirectoryInfo info = Directory.GetParent(routeFolder);
+						items.Add(new ListItemData("..", @"parent", info != null ? info.FullName : "", true, false));
 					}
 					
 					// folders
-					try
+					string[] Folders = Directory.GetDirectories(routeFolder);
+					Array.Sort(Folders);
+					for (int i = 0; i < Folders.Length; i++)
 					{
-						string[] Folders = Directory.GetDirectories(routeFolder);
-						Array.Sort(Folders);
-						for (int i = 0; i < Folders.Length; i++)
+						DirectoryInfo info = new DirectoryInfo(Folders[i]);
+						if ((info.Attributes & FileAttributes.Hidden) == 0)
 						{
-							DirectoryInfo info = new DirectoryInfo(Folders[i]);
-							if ((info.Attributes & FileAttributes.Hidden) == 0)
+							string folderName = System.IO.Path.GetFileName(Folders[i]);
+							if (!string.IsNullOrEmpty(folderName) && folderName[0] != '.')
 							{
-								string folderName = System.IO.Path.GetFileName(Folders[i]);
-								if (!string.IsNullOrEmpty(folderName) && folderName[0] != '.')
-								{
-									ListViewItem Item = listView.Items.Add(folderName);
-									Item.ImageKey = @"folder";
-									Item.Tag = Folders[i];
-								}
+								items.Add(new ListItemData(folderName, @"folder", Folders[i], false, false));
 							}
 						}
-					}
-					catch
-					{
-						//Another permissions issue??
 					}
 					// files
-					try
+					string[] Files = Directory.GetFiles(routeFolder);
+					Array.Sort(Files);
+					for (int i = 0; i < Files.Length; i++)
 					{
-						string[] Files = Directory.GetFiles(routeFolder);
-						Array.Sort(Files);
-						for (int i = 0; i < Files.Length; i++)
+						string fileName;
+						if (string.IsNullOrEmpty(Files[i])) break;
+						string Extension = System.IO.Path.GetExtension(Files[i]).ToLowerInvariant();
+						switch (Extension)
 						{
-							string fileName;
-							ListViewItem Item;
-							if (string.IsNullOrEmpty(Files[i])) return;
-							string Extension = System.IO.Path.GetExtension(Files[i]).ToLowerInvariant();
-							switch (Extension)
-							{
-								case ".rw":
-								case ".csv":
-									fileName = System.IO.Path.GetFileName(Files[i]);
-									if (!string.IsNullOrEmpty(fileName) && fileName[0] != '.')
+							case ".rw":
+							case ".csv":
+								fileName = System.IO.Path.GetFileName(Files[i]);
+								if (!string.IsNullOrEmpty(fileName) && fileName[0] != '.')
+								{
+									string imageKey;
+									if (Extension == ".csv")
 									{
-										Item = listView.Items.Add(fileName);
-										if (Extension == ".csv")
-										{
-											try
-											{
-												using (StreamReader sr = new StreamReader(Files[i], Encoding.UTF8))
-												{
-													string text = sr.ReadToEnd();
-													if (text.IndexOf("With Track", StringComparison.OrdinalIgnoreCase) >= 0 |
-													text.IndexOf("Track.", StringComparison.OrdinalIgnoreCase) >= 0 |
-													text.IndexOf("$Include", StringComparison.OrdinalIgnoreCase) >= 0)
-													{
-														Item.ImageKey = @"csvroute";
-													}
-												}
-												
-											}
-											catch
-											{
-												//Most likely because the file is locked
-											}
-										}
-										else
-										{
-											Item.ImageKey = @"rwroute";
-										}
-										Item.Tag = Files[i];
+										//Only sniff the start of the file rather than reading it entirely,
+										//as the route keywords always appear at the top
+										imageKey = SniffCsvRouteType(Files[i]) ? @"csvroute" : null;
 									}
-									break;
-								case ".dat":
-									fileName = System.IO.Path.GetFileName(Files[i]);
-									if (fileName == null || Path.IsInvalidDatName(Files[i]))
+									else
 									{
-										continue;
+										imageKey = @"rwroute";
 									}
+									items.Add(new ListItemData(fileName, imageKey, Files[i], false, false));
+								}
+								break;
+							case ".dat":
+								fileName = System.IO.Path.GetFileName(Files[i]);
+								if (fileName == null || Path.IsInvalidDatName(Files[i]))
+								{
+									continue;
+								}
 
-									if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
+								if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
+								{
+									throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
+								}
+								for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
+								{
+									if (Program.CurrentHost.Plugins[j].Route != null && Program.CurrentHost.Plugins[j].Route.CanLoadRoute(Files[i]))
 									{
-										throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
+										items.Add(new ListItemData(fileName, @"mechanik", Files[i], false, false));
 									}
-									for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
+								}
+								break;
+							case ".txt":
+								if (Path.IsInvalidTxtName(Files[i]))
+								{
+									continue;
+								}
+								if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
+								{
+									throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
+								}
+								for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
+								{
+									if (Program.CurrentHost.Plugins[j].Route != null && Program.CurrentHost.Plugins[j].Route.CanLoadRoute(Files[i]))
 									{
-										if (Program.CurrentHost.Plugins[j].Route != null && Program.CurrentHost.Plugins[j].Route.CanLoadRoute(Files[i]))
-										{
-											Item = listView.Items.Add(fileName);
-											Item.ImageKey = @"mechanik";
-											Item.Tag = Files[i];
-										}
+										//BVE5 routes are always added to the main route list
+										items.Add(new ListItemData(System.IO.Path.GetFileName(Files[i]), @"bve5", Files[i], false, true));
 									}
-									break;
-								case ".txt":
-									if (Path.IsInvalidTxtName(Files[i]))
-									{
-										continue;
-									}
-									if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
-									{
-										throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
-									}
-									for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
-									{
-										if (Program.CurrentHost.Plugins[j].Route != null && Program.CurrentHost.Plugins[j].Route.CanLoadRoute(Files[i]))
-										{
-											Item = listviewRouteFiles.Items.Add(System.IO.Path.GetFileName(Files[i]));
-											Item.ImageKey = @"bve5";
-											Item.Tag = Files[i];
-										}
-									}
-									break;
-							}
+								}
+								break;
 						}
-					}
-					catch
-					{
-						//Ignore all errors
 					}
 				}
 			}
@@ -323,10 +303,117 @@ namespace OpenBve
 			{
 				//Ignore all errors
 			}
-			//If this method is triggered whilst the form is disposing, bad things happen...
-			if (listView.Columns.Count > 0)
+			return items;
+		}
+
+		/// <summary>Sniffs the start of a CSV file to determine whether it is a route rather than an object.</summary>
+		/// <param name="file">The file to sniff</param>
+		/// <returns>Whether the file appears to be a route</returns>
+		private static bool SniffCsvRouteType(string file)
+		{
+			try
 			{
-				listView.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+				using (StreamReader sr = new StreamReader(file, Encoding.UTF8))
+				{
+					char[] buffer = new char[65536];
+					int charsRead = sr.ReadBlock(buffer, 0, buffer.Length);
+					string text = new string(buffer, 0, charsRead);
+					return text.IndexOf("With Track", StringComparison.OrdinalIgnoreCase) >= 0 |
+						text.IndexOf("Track.", StringComparison.OrdinalIgnoreCase) >= 0 |
+						text.IndexOf("$Include", StringComparison.OrdinalIgnoreCase) >= 0;
+				}
+			}
+			catch
+			{
+				//Most likely because the file is locked
+				return false;
+			}
+		}
+
+		/// <summary>Applies the results of a background list population task to the user interface.</summary>
+		/// <param name="listView">The list view to populate</param>
+		/// <param name="fixedListView">The fixed (non-browsing) list view, if different</param>
+		/// <param name="items">The entries to display</param>
+		/// <param name="generation">The generation this task belongs to</param>
+		/// <param name="isRoute">Whether this task populated the route list rather than the train list</param>
+		/// <param name="clearTag">Whether the list view tag should be cleared (drives view)</param>
+		private void PopulateListView(ListView listView, ListView fixedListView, List<ListItemData> items, int generation, bool isRoute, bool clearTag)
+		{
+			try
+			{
+				listView.BeginInvoke((MethodInvoker)delegate
+				{
+					try
+					{
+						int currentGeneration = isRoute ? routeListGeneration : trainListGeneration;
+						if (generation != currentGeneration)
+						{
+							//A newer task has superseded this one
+							return;
+						}
+						bool sameList = fixedListView == listView;
+						listView.BeginUpdate();
+						try
+						{
+							listView.Items.Clear();
+							if (clearTag)
+							{
+								listView.Tag = null;
+							}
+							foreach (ListItemData item in items)
+							{
+								if (item.UseFixedList && !sameList)
+								{
+									continue;
+								}
+								ListViewItem listItem = listView.Items.Add(item.Name);
+								listItem.ImageKey = item.ImageKey;
+								listItem.Tag = item.Tag;
+								if (item.IsParent)
+								{
+									listView.Tag = item.Tag;
+								}
+							}
+						}
+						finally
+						{
+							listView.EndUpdate();
+						}
+						if (!sameList)
+						{
+							fixedListView.BeginUpdate();
+							try
+							{
+								foreach (ListItemData item in items)
+								{
+									if (!item.UseFixedList)
+									{
+										continue;
+									}
+									ListViewItem listItem = fixedListView.Items.Add(item.Name);
+									listItem.ImageKey = item.ImageKey;
+									listItem.Tag = item.Tag;
+								}
+							}
+							finally
+							{
+								fixedListView.EndUpdate();
+							}
+						}
+						if (listView.Columns.Count > 0)
+						{
+							listView.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+						}
+					}
+					catch
+					{
+						//The form is closing or has been disposed
+					}
+				});
+			}
+			catch
+			{
+				//The form is closing or has been disposed
 			}
 		}
 		
@@ -660,121 +747,94 @@ namespace OpenBve
 		/// <param name="packages">Whether this is a packaged content folder</param>
 		private void PopulateTrainList(string selectedFolder, ListView listView, bool packages)
 		{
-			// error ignored in this case, background thread
-			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
-			{
-				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
-			}
+			int generation = ++trainListGeneration;
 			try
 			{
+				//The directory scan can be slow on large installs,
+				//so run it on a background thread and only update the UI when it is complete
+				Task.Run(() =>
+				{
+					List<ListItemData> items = BuildTrainListItems(selectedFolder, packages);
+					PopulateListView(listView, listviewTrainFolders, items, generation, false, selectedFolder.Length == 0);
+				});
+			}
+			catch
+			{
+				//The background task could not be started
+			}
+		}
+
+		/// <summary>Builds the train display entries for the selected folder. Runs on a background thread.</summary>
+		/// <param name="selectedFolder">The folder containing train folders</param>
+		/// <param name="packages">Whether this is a packaged content folder</param>
+		/// <returns>The train entries to display</returns>
+		private List<ListItemData> BuildTrainListItems(string selectedFolder, bool packages)
+		{
+			List<ListItemData> items = new List<ListItemData>();
+			try
+			{
+				if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
+				{
+					return items;
+				}
 				if (selectedFolder.Length == 0)
 				{
 					// drives
-					listView.Items.Clear();
-					try
+					DriveInfo[] driveInfos = DriveInfo.GetDrives();
+					for (int i = 0; i < driveInfos.Length; i++)
 					{
-						DriveInfo[] driveInfos = DriveInfo.GetDrives();
-						for (int i = 0; i < driveInfos.Length; i++)
-						{
-							ListViewItem Item = listView.Items.Add(driveInfos[i].Name);
-							Item.ImageKey = Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows ? @"disk" : @"folder";
-							
-							Item.Tag = driveInfos[i].RootDirectory.FullName;
-							listView.Tag = null;
-						}
-					}
-					catch
-					{
-						//Unable to get list of drives
+						items.Add(new ListItemData(driveInfos[i].Name, Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows ? @"disk" : @"folder", driveInfos[i].RootDirectory.FullName, false, false));
 					}
 				}
 				else if (Directory.Exists(selectedFolder))
 				{
-					listView.Items.Clear();
 					if (!packages || selectedFolder != Program.FileSystem.TrainInstallationDirectory)
 					{
 						// parent
-						try
-						{
-							DirectoryInfo Info = Directory.GetParent(selectedFolder);
-							if (Info != null)
-							{
-								ListViewItem Item = listView.Items.Add("..");
-								Item.ImageKey = @"parent";
-								Item.Tag = Info.FullName;
-								listView.Tag = Info.FullName;
-							}
-							else
-							{
-								ListViewItem Item = listView.Items.Add("..");
-								Item.ImageKey = @"parent";
-								Item.Tag = "";
-								listView.Tag = "";
-							}
-						}
-						catch
-						{
-							//Another permissions issue?
-						}
+						DirectoryInfo info = Directory.GetParent(selectedFolder);
+						items.Add(new ListItemData("..", @"parent", info != null ? info.FullName : "", true, false));
 					}
 					
 					// folders
-					try
+					string[] Folders = Directory.GetDirectories(selectedFolder);
+					string[] Files = Directory.GetFiles(selectedFolder);
+					Array.Sort(Folders);
+					Array.Sort(Files);
+					for (int i = 0; i < Folders.Length; i++)
 					{
-						string[] Folders = Directory.GetDirectories(selectedFolder);
-						string[] Files = Directory.GetFiles(selectedFolder);
-						Array.Sort(Folders);
-						Array.Sort(Files);
-						for (int i = 0; i < Folders.Length; i++)
+						DirectoryInfo info = new DirectoryInfo(Folders[i]);
+						if ((info.Attributes & FileAttributes.Hidden) == 0)
 						{
-							try
+							string folderName = System.IO.Path.GetFileName(Folders[i]);
+							if (!string.IsNullOrEmpty(folderName) && folderName[0] != '.')
 							{
-								DirectoryInfo info = new DirectoryInfo(Folders[i]);
-								if ((info.Attributes & FileAttributes.Hidden) == 0)
+								string File = Path.CombineFile(Folders[i], "train.dat");
+								if (!System.IO.File.Exists(File))
 								{
-									string folderName = System.IO.Path.GetFileName(Folders[i]);
-									if (!string.IsNullOrEmpty(folderName) && folderName[0] != '.')
-									{
-										string File = Path.CombineFile(Folders[i], "train.dat");
-										ListViewItem Item = listView.Items.Add(folderName);
-										if (!System.IO.File.Exists(File))
-										{
-											File = Path.CombineFile(Folders[i], "train.xml");
-										}
-										Item.ImageKey = System.IO.File.Exists(File) ? "train" : "folder";
-										Item.Tag = Folders[i];
-									}
+									File = Path.CombineFile(Folders[i], "train.xml");
 								}
-							}
-							catch
-							{
-								//Most likely permissions
-							}
-						}
-
-						for (int i = 0; i < Files.Length; i++)
-						{
-							for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
-							{
-								string fileName = Path.GetFileName(Files[i]);
-								if (fileName[0] == '#' && fileName.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
-								{
-									// MSTS / ORTS use a hash at the start of the filename to deliminate AI consists
-									// These generally have missing cabviews etc- Hide from visibility in the main menu
-									continue;
-								}
-								if (Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(Files[i]))
-								{
-									ListViewItem Item = listviewTrainFolders.Items.Add(System.IO.Path.GetFileName(Files[i]));
-									Item.ImageKey = @"msts";
-									Item.Tag = Files[i];
-								}
+								items.Add(new ListItemData(folderName, System.IO.File.Exists(File) ? "train" : "folder", Folders[i], false, false));
 							}
 						}
 					}
-					catch
+
+					for (int i = 0; i < Files.Length; i++)
 					{
-						//Ignore all errors
+						for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
+						{
+							string fileName = Path.GetFileName(Files[i]);
+							if (fileName[0] == '#' && fileName.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
+							{
+								// MSTS / ORTS use a hash at the start of the filename to deliminate AI consists
+								// These generally have missing cabviews etc- Hide from visibility in the main menu
+								continue;
+							}
+							if (Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(Files[i]))
+							{
+								//Consists are always added to the main train list
+								items.Add(new ListItemData(System.IO.Path.GetFileName(Files[i]), @"msts", Files[i], false, true));
+							}
+						}
 					}
 				}
 			}
@@ -782,10 +842,7 @@ namespace OpenBve
 			{
 				//Ignore all errors
 			}
-			if (listView.Columns.Count > 0)
-			{
-				listView.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
-			}
+			return items;
 		}
 
 		// train folders

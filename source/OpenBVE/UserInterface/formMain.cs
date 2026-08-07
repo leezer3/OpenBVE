@@ -528,7 +528,6 @@ namespace OpenBve {
 			checkboxCameraInteriorTransition.Checked = Interface.CurrentOptions.CameraInteriorTransition;
 			checkboxCameraExteriorTransition.Checked = Interface.CurrentOptions.CameraExteriorTransition;
 			updownCameraTransitionSpeed.Value = (decimal)Interface.CurrentOptions.CameraTransitionSpeed;
-			ListInputDevicePlugins();
 			if (Program.CurrentHost.MonoRuntime)
 			{
 				//HACK: If we're running on Mono, manually select the tabpage at start. This avoids the 'grey tab' bug
@@ -562,6 +561,40 @@ namespace OpenBve {
 			}
 			
 			radiobuttonStart_CheckedChanged(this, EventArgs.Empty); // Mono mucks up the button colors and selections if non-default color and we don't reset them
+			panelOptionsPage2.Visible = false;
+			panelOptionsPage3.Visible = false; // Deliberately hide, as changing font can glitch this into visibility
+			//The main menu dialog is now visible, so log the point at which it appeared
+			Program.LogStartupPhase("Main menu shown");
+			//Load the input device plugins in the background, as they are not required until the game starts or the options page is opened
+			Program.StartInputDevicePluginLoading();
+			Program.InputDevicePluginsTask.ContinueWith(delegate
+			{
+				if (IsDisposed)
+				{
+					return;
+				}
+				try
+				{
+					BeginInvoke((Action)ListInputDevicePlugins);
+				}
+				catch
+				{
+					// ignored
+				}
+			});
+		}
+
+		private bool fontListLoaded;
+
+		/// <summary>Populates the font combobox on the options page.</summary>
+		/// <remarks>Enumerating all installed fonts is relatively slow, so this is deferred until the options page is opened.</remarks>
+		private void PopulateFontList()
+		{
+			if (fontListLoaded)
+			{
+				return;
+			}
+			fontListLoaded = true;
 			string defaultFont = comboBoxFont.Font.Name;
 			
 			List<FontFamily> fonts = FontFamily.Families.ToList();
@@ -617,8 +650,6 @@ namespace OpenBve {
 					break;
 				}
 			}
-			panelOptionsPage2.Visible = false;
-			panelOptionsPage3.Visible = false; // Deliberately hide, as changing font can glitch this into visibility
 			comboBoxFont.DrawItem += comboBoxFont_DrawItem;
 		}
 
@@ -1665,6 +1696,7 @@ namespace OpenBve {
 			UpdatePanelColor();
 			if (radiobuttonOptions.Checked)
 			{
+				PopulateFontList();
 				SetOptionsPage(0);
 			}
 		}
