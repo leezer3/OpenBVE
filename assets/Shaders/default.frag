@@ -231,7 +231,7 @@ void main(void)
 	// Multiply material alpha by it's opacity
 	finalColor.a *= uOpacity;
 
-	if(uAlphaTest.x == float(ALPHA_LESS)) // Less
+	if(uAlphaTest.x == 513) // Less
 	{
 		if(finalColor.a >= uAlphaTest.y)
 		{

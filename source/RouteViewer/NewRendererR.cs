@@ -331,10 +331,7 @@ namespace RouteViewer
 
 			// render overlays
 			DrawLightVisuals();
-			if (AvailableNewRenderer)
-			{
-				DefaultShader.Deactivate();
-			}
+			DefaultShader.Deactivate();
 			ResetOpenGlState();
 			OptionLighting = false;
 			Fog.Enabled = false;
