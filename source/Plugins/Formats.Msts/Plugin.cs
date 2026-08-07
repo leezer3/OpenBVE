@@ -23,15 +23,15 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using Microsoft.Win32;
+using OpenBveApi.Colors;
+using OpenBveApi.Math;
+using OpenBveApi.World;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using OpenBveApi.Colors;
-using OpenBveApi.Math;
-using OpenBveApi.World;
 
 // ReSharper disable UnusedMember.Global
 
@@ -70,6 +70,9 @@ namespace OpenBve.Formats.MsTs
 
 		/// <summary>Reads a Color32 from the block</summary>
 		public abstract Color32 ReadColorArgb();
+
+		/// <summary>Reads a Color32 from the block</summary>
+		public abstract Color32 ReadHexColorArgb();
 
 		/// <summary>Reads a Vector2 from the block</summary>
 		public Vector2 ReadVector2() => new Vector2(ReadSingle(), ReadSingle());
@@ -275,6 +278,11 @@ namespace OpenBve.Formats.MsTs
 			float g = myReader.ReadSingle();
 			float b = myReader.ReadSingle();
 			return new Color32((byte)(r * 255), (byte)(g * 255), (byte)(b * 255), (byte)(a * 255));
+		}
+
+		public override Color32 ReadHexColorArgb()
+		{
+			throw new NotImplementedException();
 		}
 
 		public override float ReadSingle<TUnitType>(TUnitType desiredUnit, TUnitType? defaultUnitType)
@@ -1008,6 +1016,35 @@ namespace OpenBve.Formats.MsTs
 				// ignored
 			}
 			return new Color32((byte)(r * 255), (byte)(g * 255), (byte)(b * 255), (byte)(a * 255));
+		}
+
+		public override Color32 ReadHexColorArgb()
+		{
+			string hex = ReadString();
+			// only valid in Vehicle lights, no idea why this color...
+			byte r = 0xff, g = 0x00, b = 0x00, a = 0x80;
+			if (hex.Length >= 2)
+			{
+				byte.TryParse(hex.Substring(0, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out a);
+			}
+
+			if (hex.Length >= 4)
+			{
+				byte.TryParse(hex.Substring(2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out r);
+			}
+
+			if (hex.Length >= 6)
+			{
+				byte.TryParse(hex.Substring(4, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out g);
+			}
+
+			if (hex.Length >= 8)
+			{
+				byte.TryParse(hex.Substring(6, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out b);
+			}
+			
+
+			return new Color32(r, g, b, a);
 		}
 
 		public override float ReadSingle<TUnitType>(TUnitType desiredUnit, TUnitType? defaultUnits)
