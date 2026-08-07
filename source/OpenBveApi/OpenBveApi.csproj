@@ -152,6 +152,8 @@
     <Compile Include="Objects\MeshMaterial.Flags.cs" />
     <Compile Include="Objects\ObjectInterface.cs" />
     <Compile Include="Objects\ObjectState.cs" />
+    <Compile Include="Objects\ObjectTypes\KeyframeAnimatedObject\LightDefinition.cs" />
+    <Compile Include="Objects\SceneLight.cs" />
     <Compile Include="Objects\ObjectTypes\AnimatedObject\AnimatedObject.cs" />
     <Compile Include="Objects\ObjectTypes\AnimatedObject\AnimatedObjectCollection.cs" />
     <Compile Include="Objects\ObjectTypes\AnimatedObject\AnimatedWorldObject.cs" />
