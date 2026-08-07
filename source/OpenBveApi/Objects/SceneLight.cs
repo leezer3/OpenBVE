@@ -51,6 +51,10 @@ namespace OpenBveApi.Objects
 		public bool ShowCone;
 		/// <summary>Width and Height of the area light source</summary>
 		public Vector2 AreaSize;
+		/// <summary>The duration this light remains lit when turned on</summary>
+		public double Duration;
+		/// <summary>The duration of the transition from one light to another</summary>
+		public double Transition;
  
  		/// <summary>Creates a default scene light</summary>
  		public SceneLight()
