@@ -58,7 +58,7 @@ namespace LibRender2.Objects
 		{
 			lock (LockObject)
 			{
-				if (Objects.TryRemove(state, out _))
+				if (state != null && Objects.TryRemove(state, out _))
 				{
 					myOpaqueFaces.RemoveAll(x => x.Object == state);
 					myAlphaFaces.RemoveAll(x => x.Object == state);
