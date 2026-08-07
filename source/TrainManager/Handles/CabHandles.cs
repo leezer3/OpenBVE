@@ -1,4 +1,7 @@
 ﻿using OpenBveApi.Interface;
+using OpenBveApi.Trains;
+using System;
+using TrainManager.BrakeSystems;
 
 namespace TrainManager.Handles
 {
@@ -26,6 +29,66 @@ namespace TrainManager.Handles
 		/// <summary>The loco brake type</summary>
 		public LocoBrakeType LocoBrakeType;
 
+		/// <summary>Called to setup the initial handle states</summary>
+		/// <param name="trainStart">The selected train start mode</param>
+		public void Setup(TrainStartMode trainStart)
+		{
+			switch (trainStart)
+			{
+				// starting mode
+				case TrainStartMode.ServiceBrakesAts:
+					if (Brake.baseTrain.Cars[Brake.baseTrain.DriverCar].CarBrake is AutomaticAirBrake)
+					{
+						Brake.Driver = (int)AirBrakeHandleState.Service;
+						Brake.Actual = (int)AirBrakeHandleState.Service;
+					}
+					else
+					{
+						int notch = (int)Math.Round(0.7 * Brake.MaximumNotch);
+						Brake.Driver = notch;
+						Brake.Actual = notch;
+					}
+					EmergencyBrake.Driver = false;
+					EmergencyBrake.Safety = false;
+					EmergencyBrake.Actual = false;
+					Reverser.Driver = ReverserPosition.Forwards;
+					Reverser.Actual = ReverserPosition.Forwards;
+					break;
+				case TrainStartMode.EmergencyBrakesAts:
+					if (Brake.baseTrain.Cars[Brake.baseTrain.DriverCar].CarBrake is AutomaticAirBrake)
+					{
+						Brake.Driver = (int)AirBrakeHandleState.Service;
+						Brake.Actual = (int)AirBrakeHandleState.Service;
+					}
+					else
+					{
+						Brake.Driver = Brake.MaximumNotch;
+						Brake.Actual = Brake.MaximumNotch;
+					}
+
+					EmergencyBrake.Driver = true;
+					EmergencyBrake.Safety = true;
+					EmergencyBrake.Actual = true;
+					break;
+				default:
+					if (Brake.baseTrain.Cars[Brake.baseTrain.DriverCar].CarBrake is AutomaticAirBrake)
+					{
+						Brake.Driver = (int)AirBrakeHandleState.Service;
+						Brake.Actual = (int)AirBrakeHandleState.Service;
+					}
+					else
+					{
+						Brake.Driver = Brake.MaximumNotch;
+						Brake.Actual = Brake.MaximumNotch;
+					}
+					EmergencyBrake.Driver = true;
+					EmergencyBrake.Safety = true;
+					EmergencyBrake.Actual = true;
+					break;
+			}
+		}
+
+		/// <summary>Called when a Control is pressed</summary>
 		public void ControlDown(Control Control)
 		{
 			switch (Control.Command)
@@ -369,6 +432,7 @@ namespace TrainManager.Handles
 			}
 		}
 
+		/// <summary>Called when a control is released</summary>
 		public void ControlUp(Control Control)
 		{
 			switch (Control.Command)
