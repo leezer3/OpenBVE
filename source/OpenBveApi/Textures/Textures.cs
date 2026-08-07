@@ -433,5 +433,83 @@ namespace OpenBveApi.Textures {
 				}
 			}
 		}
+
+		/// <summary>The total number of RAM bytes saved by downscaling textures.</summary>
+		public static long TotalRamSavedBytes = 0;
+		/// <summary>The total number of VRAM bytes saved by compressing textures.</summary>
+		public static long TotalVramSavedBytes = 0;
+
+		/// <summary>Downscales the texture to fit within the specified maximum size, keeping aspect ratio.</summary>
+		public void Downscale(int maxTextureSize)
+		{
+			if (Ignore || MyBytes == null || Size.X <= maxTextureSize && Size.Y <= maxTextureSize)
+			{
+				return;
+			}
+			int oldWidth = (int)Size.X;
+			int oldHeight = (int)Size.Y;
+			int newWidth = oldWidth;
+			int newHeight = oldHeight;
+			if (newWidth > newHeight)
+			{
+				newHeight = (int)System.Math.Round((double)newHeight * maxTextureSize / newWidth);
+				newWidth = maxTextureSize;
+			}
+			else
+			{
+				newWidth = (int)System.Math.Round((double)newWidth * maxTextureSize / newHeight);
+				newHeight = maxTextureSize;
+			}
+			if (newWidth < 1) newWidth = 1;
+			if (newHeight < 1) newHeight = 1;
+
+			int bpp = (int)PixelFormat;
+			for (int frame = 0; frame < MyBytes.Length; frame++)
+			{
+				byte[] oldBytes = MyBytes[frame];
+				if (oldBytes == null || oldBytes.Length != oldWidth * oldHeight * bpp)
+				{
+					continue;
+				}
+				byte[] newBytes = new byte[newWidth * newHeight * bpp];
+
+				for (int y = 0; y < newHeight; y++)
+				{
+					float tempY = (float)y * oldHeight / newHeight;
+					int yFloor = (int)System.Math.Floor(tempY);
+					int yCeil = System.Math.Min(oldHeight - 1, yFloor + 1);
+					float dy = tempY - yFloor;
+
+					for (int x = 0; x < newWidth; x++)
+					{
+						float tempX = (float)x * oldWidth / newWidth;
+						int yFloor2 = (int)System.Math.Floor(tempX);
+						int xCeil = System.Math.Min(oldWidth - 1, yFloor2 + 1);
+						float dx = tempX - yFloor2;
+
+						for (int c = 0; c < bpp; c++)
+						{
+							int idx00 = (yFloor * oldWidth + yFloor2) * bpp + c;
+							int idx10 = (yFloor * oldWidth + xCeil) * bpp + c;
+							int idx01 = (yCeil * oldWidth + yFloor2) * bpp + c;
+							int idx11 = (yCeil * oldWidth + xCeil) * bpp + c;
+
+							float val = oldBytes[idx00] * (1 - dx) * (1 - dy) +
+										oldBytes[idx10] * dx * (1 - dy) +
+										oldBytes[idx01] * (1 - dx) * dy +
+										oldBytes[idx11] * dx * dy;
+
+							newBytes[(y * newWidth + x) * bpp + c] = (byte)System.Math.Min(255, System.Math.Max(0, val));
+						}
+					}
+				}
+				MyBytes[frame] = newBytes;
+			}
+			long bytesBefore = (long)oldWidth * oldHeight * bpp * MyBytes.Length;
+			long bytesAfter = (long)newWidth * newHeight * bpp * MyBytes.Length;
+			TotalRamSavedBytes += (bytesBefore - bytesAfter);
+			Size.X = newWidth;
+			Size.Y = newHeight;
+		}
 	}
 }

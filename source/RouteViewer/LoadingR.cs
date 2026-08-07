@@ -55,6 +55,8 @@ namespace RouteViewer {
 			Program.Renderer.GameWindow.TargetRenderFrequency = 0;
 			// reset
 			Game.Reset();
+			OpenBveApi.Textures.Texture.TotalRamSavedBytes = 0;
+			OpenBveApi.Textures.Texture.TotalVramSavedBytes = 0;
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString(), Interface.CurrentOptions.LoadingLogo, Interface.CurrentOptions.LoadingProgressBar);
 			if (textureBytes != null && textureBytes.Length > 0)
 			{
@@ -167,6 +169,11 @@ namespace RouteViewer {
 			Program.Renderer.Camera.Alignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
 			World.UpdateAbsoluteCamera(0.0);
 			Complete = true;
+			if (Texture.TotalRamSavedBytes > 0 || Texture.TotalVramSavedBytes > 0)
+			{
+				Console.WriteLine($"[Memory Optimization] RAM Saved from resizing: {Texture.TotalRamSavedBytes / 1024.0 / 1024.0:F2} MB");
+				Console.WriteLine($"[Memory Optimization] Estimated VRAM Saved from compression: {Texture.TotalVramSavedBytes / 1024.0 / 1024.0:F2} MB");
+			}
 		}
 
 	}
