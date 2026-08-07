@@ -12,6 +12,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Motor;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
+using OpenTK.Input;
 using RouteManager2.MessageManager;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
@@ -574,6 +575,19 @@ namespace OpenBve
 						}
 
 						break;
+					case Translations.Command.CameraGrabToggle:
+						if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
+						{
+							MainLoop.MouseGrabEnabled = !MainLoop.MouseGrabEnabled;
+							if (MainLoop.MouseGrabEnabled)
+							{
+								Program.Renderer.GameWindow.CursorVisible = false;
+								System.Drawing.Point center = Program.Renderer.GameWindow.PointToScreen(new System.Drawing.Point(Program.Renderer.GameWindow.ClientRectangle.Width / 2, Program.Renderer.GameWindow.ClientRectangle.Height / 2));
+								Mouse.SetPosition(center.X, center.Y);
+							}
+							MainLoop.MouseGrabIgnoreOnce = true;
+						}
+						break;
 					case Translations.Command.DeviceConstSpeed:
 						// const speed
 						if (TrainManager.PlayerTrain.Specs.HasConstSpeed)
@@ -937,6 +951,8 @@ namespace OpenBve
 						break;
 					case Translations.Command.MenuActivate:
 						// menu
+						MainLoop.MouseGrabEnabled = false;
+						Program.Renderer.GameWindow.CursorVisible = true;
 						Game.Menu.PushMenu(MenuType.Top);
 						break;
 					case Translations.Command.MiscPause:

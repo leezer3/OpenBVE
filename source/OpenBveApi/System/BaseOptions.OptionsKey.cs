@@ -82,6 +82,7 @@ namespace OpenBveApi
 		KeyRepeatInterval,
 		RailDriverMPH,
 		CursorHideDelay,
+		ZoomScrollSpeed,
 		// Sound
 		Model,
 		Range,

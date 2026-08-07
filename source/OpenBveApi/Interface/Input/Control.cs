@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Input;
 
 namespace OpenBveApi.Interface
@@ -57,6 +57,9 @@ namespace OpenBveApi.Interface
 						s += ", " + Direction;
 					}
 					s += ", " + Option;
+					break;
+				case ControlMethod.Mouse:
+					s += Element + ", " + Option;
 					break;
 			}
 			return s;
