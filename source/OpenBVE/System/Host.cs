@@ -221,21 +221,17 @@ namespace OpenBve {
 		/// <param name="timeout">The timeout for loading the texture</param>
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false, int timeout = 1000) {
-			if (File.Exists(path) || Directory.Exists(path)) {
-				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out var data)) {
-					handle = data;
-					if (loadTexture)
+			if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out var data)) {
+				handle = data;
+				if (loadTexture)
+				{
+					Program.Renderer.RunInRenderThread(() =>
 					{
-						Program.Renderer.RunInRenderThread(() =>
-						{
-							LoadTexture(ref data, OpenGlTextureWrapMode.ClampClamp);
-						}, timeout);
+						LoadTexture(ref data, OpenGlTextureWrapMode.ClampClamp);
+					}, timeout);
 
-					}
-					return true;
 				}
-			} else {
-				ReportProblem(ProblemType.PathNotFound, path);
+				return true;
 			}
 			handle = null;
 			return false;
