@@ -17,9 +17,35 @@ namespace OpenBveApi.Textures
 
 		private readonly Hosts.HostInterface currentHost;
 		/// <summary>The last modification time (on load) of this texture</summary>
-		public DateTime LastModificationTime;
+		private DateTime? lastModificationTime;
 		/// <summary>The file size (on load) of this texture</summary>
-		public long FileSize;
+		private long? fileSize;
+
+		public DateTime LastModificationTime
+		{
+			get
+			{
+				if (!lastModificationTime.HasValue)
+				{
+					lastModificationTime = System.IO.File.GetLastWriteTime(Path);
+				}
+				return lastModificationTime.Value;
+			}
+			set => lastModificationTime = value;
+		}
+
+		public long FileSize
+		{
+			get
+			{
+				if (!fileSize.HasValue)
+				{
+					fileSize = new System.IO.FileInfo(Path).Length;
+				}
+				return fileSize.Value;
+			}
+			set => fileSize = value;
+		}
 
 		// --- constructors ---
 		/// <summary>Creates a new path origin.</summary>
@@ -31,8 +57,6 @@ namespace OpenBveApi.Textures
 			Path = path;
 			Parameters = parameters;
 			currentHost = Host;
-			LastModificationTime = System.IO.File.GetLastWriteTime(path);
-			FileSize = new System.IO.FileInfo(path).Length;
 		}
 
 		// --- functions ---
