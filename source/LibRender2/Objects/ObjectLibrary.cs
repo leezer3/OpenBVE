@@ -169,11 +169,7 @@ namespace LibRender2.Objects
 								daytimeOrigin.GetTexture(out daytimeTexture);
 								sw.Stop();
 								TextureManager.TextureDecodeTime += sw.ElapsedMilliseconds;
-								if (!TextureManager.textureCache.ContainsKey(daytimeOrigin))
-								{
-									TextureManager.textureCache.Add(daytimeOrigin, daytimeTexture);
-								}
-								
+								TextureManager.textureCache[daytimeOrigin] = daytimeTexture;
 							}
 
 							TextureTransparencyType transparencyType = TextureTransparencyType.Opaque;
@@ -203,7 +199,7 @@ namespace LibRender2.Objects
 								nighttimeOrigin.GetTexture(out nighttimeTexture);
 								sw.Stop();
 								TextureManager.TextureDecodeTime += sw.ElapsedMilliseconds;
-								TextureManager.textureCache.Add(nighttimeOrigin, nighttimeTexture);
+								TextureManager.textureCache[nighttimeOrigin] = nighttimeTexture;
 							}
 							TextureTransparencyType transparencyType = TextureTransparencyType.Opaque;
 							if (nighttimeTexture != null)

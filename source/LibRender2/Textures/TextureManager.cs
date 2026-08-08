@@ -67,41 +67,12 @@ namespace LibRender2.Textures
 		public bool RegisterTexture(string path, TextureParameters parameters, out Texture handle)
 		{
 			/* BUG:
-			 * Attempt to delete null texture handles from the end of the array
-			 * These sometimes seem to end up there
-			 * 
-			 * Have also seen a registered textures count of 72 and an array length of 64
-			 * Is it possible for a texture to fail to register, but still increment the registered textures count?
-			 * 
-			 * There appears to be a timing issue somewhere whilst loading, as this only happens intermittently
+			 * The registered textures count very occasional becomes greater than the array length (Texture loader crashes possibly?)
+			 * This then crashes when we attempt to itinerate the array, so reset it...
 			 */
 			if (RegisteredTexturesCount > RegisteredTextures.Length)
 			{
-				/* BUG:
-				 * The registered textures count very occasional becomes greater than the array length (Texture loader crashes possibly?)
-				 * This then crashes when we attempt to itinerate the array, so reset it...
-				 */
 				RegisteredTexturesCount = RegisteredTextures.Length;
-			}
-
-			if (RegisteredTexturesCount != 0)
-			{
-				try
-				{
-					for (int i = RegisteredTexturesCount - 1; i >= 0; i--)
-					{
-						if (RegisteredTextures[i] != null)
-						{
-							break;
-						}
-
-						Array.Resize(ref RegisteredTextures, RegisteredTextures.Length - 1);
-					}
-				}
-				catch
-				{
-					// ignored
-				}
 			}
 
 			/*
@@ -132,13 +103,6 @@ namespace LibRender2.Textures
 				}
 			}
 
-			if (!File.Exists(path))
-			{
-				// shouldn't happen, but handle gracefully
-				handle = null;
-				return false;
-			}
-
 			/*
 			 * Register the texture and return the newly created handle.
 			 * */
@@ -154,12 +118,9 @@ namespace LibRender2.Textures
 				 * The handle itself has no decoded bytes, so storing it would cause a null
 				 * reference when the transparency type is subsequently queried.
 				 * */
-				if (handle.PixelFormat != PixelFormat.Invalid && handle.DecodedTexture != null)
+				if (handle.PixelFormat != PixelFormat.Invalid && handle.DecodedTexture != null && !textureCache.ContainsKey(handle.Origin))
 				{
-					if (!textureCache.ContainsKey(handle.Origin))
-					{
-						textureCache.Add(handle.Origin, handle.DecodedTexture);
-					}
+					textureCache.Add(handle.Origin, handle.DecodedTexture);
 				}
 
 				/*
