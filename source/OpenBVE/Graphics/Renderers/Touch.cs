@@ -47,12 +47,12 @@ namespace OpenBve.Graphics.Renderers
         {
             touchableObject.Clear();
 
-            CarBase Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
-
-			if (!Loading.SimulationSetup)
+            if (!Loading.SimulationSetup || TrainManager.PlayerTrain == null)
             {
                 return;
             }
+
+            CarBase Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 
             if (renderer.Camera.CurrentMode != CameraViewMode.Interior && renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead || !Car.CarSections.ContainsKey(CarSectionType.Interior))
             {
