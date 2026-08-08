@@ -27,6 +27,11 @@ namespace LibRender2.Textures
 
 		private static Dictionary<TextureOrigin, Texture> animatedTextures;
 
+		/// <summary>Holds the registered path-based textures, indexed by path.</summary>
+		private static readonly Dictionary<string, List<Texture>> RegisteredTextureLookup = new Dictionary<string, List<Texture>>(StringComparer.OrdinalIgnoreCase);
+
+		private static readonly object TextureLookupLock = new object();
+
 		/// <summary>The number of currently registered textures.</summary>
 		public int RegisteredTexturesCount;
 
@@ -58,12 +63,6 @@ namespace LibRender2.Textures
 		/// <returns>Whether registering the texture was successful.</returns>
 		public bool RegisterTexture(string path, TextureParameters parameters, out Texture handle)
 		{
-			if (!File.Exists(path))
-			{
-				// shouldn't happen, but handle gracefully
-				handle = null;
-				return false;
-			}
 			/* BUG:
 			 * Attempt to delete null texture handles from the end of the array
 			 * These sometimes seem to end up there
@@ -106,27 +105,35 @@ namespace LibRender2.Textures
 			 * Check if the texture is already registered.
 			 * If so, return the existing handle.
 			 * */
-			for (int i = 0; i < RegisteredTexturesCount; i++)
+			lock (TextureLookupLock)
 			{
-				if (RegisteredTextures[i] != null)
+				if (RegisteredTextureLookup.TryGetValue(path, out List<Texture> candidates))
 				{
-					try
+					for (int i = 0; i < candidates.Count; i++)
 					{
-						//The only exceptions thrown were these when it barfed
-						PathOrigin source = RegisteredTextures[i].Origin as PathOrigin;
-
-						if (source != null && source.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase) && source.Parameters == parameters)
+						try
 						{
-							handle = RegisteredTextures[i];
-							return true;
+							PathOrigin source = candidates[i].Origin as PathOrigin;
+
+							if (source != null && source.Parameters == parameters)
+							{
+								handle = candidates[i];
+								return true;
+							}
+						}
+						catch
+						{
+							// ignored
 						}
 					}
-					catch
-					{
-						// ignored
-					}
 				}
+			}
 
+			if (!File.Exists(path))
+			{
+				// shouldn't happen, but handle gracefully
+				handle = null;
+				return false;
 			}
 
 			/*
@@ -136,6 +143,35 @@ namespace LibRender2.Textures
 			RegisteredTextures[idx] = new Texture(path, parameters, currentHost);
 			RegisteredTexturesCount++;
 			handle = RegisteredTextures[idx];
+
+			/*
+			 * Pre-seed the texture cache with the decoded texture (not the handle).
+			 * The handle itself has no decoded bytes, so storing it would cause a null
+			 * reference when the transparency type is subsequently queried.
+			 * */
+			if (handle.PixelFormat != PixelFormat.Invalid && handle.DecodedTexture != null)
+			{
+				lock (TextureLookupLock)
+				{
+					if (!textureCache.ContainsKey(handle.Origin))
+					{
+						textureCache.Add(handle.Origin, handle.DecodedTexture);
+					}
+				}
+			}
+
+			/*
+			 * Maintain the registration lookup table.
+			 * */
+			lock (TextureLookupLock)
+			{
+				if (!RegisteredTextureLookup.TryGetValue(path, out List<Texture> list))
+				{
+					list = new List<Texture>();
+					RegisteredTextureLookup[path] = list;
+				}
+				list.Add(handle);
+			}
 			return true;
 		}
 
@@ -526,18 +562,23 @@ namespace LibRender2.Textures
 		{
 			for (int i = 0; i < RegisteredTexturesCount; i++)
 			{
+				/*
+				 * On a route reload, preserve textures whose source file is unchanged,
+				 * so that the first frame after the reload does not re-upload every texture.
+				 */
+				if (currentlyReloading && RegisteredTextures[i] != null && !RegisteredTextures[i].MultipleFrames && TextureFileUnchanged(RegisteredTextures[i].Origin))
+				{
+					continue;
+				}
 				UnloadTexture(ref RegisteredTextures[i]);
 			}
 			if (currentlyReloading)
 			{
-				foreach(TextureOrigin origin in textureCache.Keys.ToList())
+				foreach (TextureOrigin origin in textureCache.Keys.ToList())
 				{
-					if (origin is PathOrigin pathOrigin)
+					if (origin is PathOrigin && !TextureFileUnchanged(origin))
 					{
-						if (!File.Exists(pathOrigin.Path) || pathOrigin.FileSize != new FileInfo(pathOrigin.Path).Length || pathOrigin.LastModificationTime != File.GetLastWriteTime(pathOrigin.Path))
-						{
-							textureCache.Remove(origin);
-						}
+						textureCache.Remove(origin);
 					}
 				}
 			}
@@ -545,9 +586,41 @@ namespace LibRender2.Textures
 			{
 				textureCache.Clear();
 			}
-			
+
+			/*
+			 * Rebuild the registration lookup table from the surviving textures,
+			 * so that it does not retain handles which have been unloaded.
+			 * */
+			lock (TextureLookupLock)
+			{
+				RegisteredTextureLookup.Clear();
+				for (int i = 0; i < RegisteredTexturesCount; i++)
+				{
+					Texture texture = RegisteredTextures[i];
+					if (texture != null && texture.Origin is PathOrigin pathOrigin)
+					{
+						if (!RegisteredTextureLookup.TryGetValue(pathOrigin.Path, out List<Texture> list))
+						{
+							list = new List<Texture>();
+							RegisteredTextureLookup[pathOrigin.Path] = list;
+						}
+						list.Add(texture);
+					}
+				}
+			}
+
 			GC.Collect(); //Speculative- https://bveworldwide.forumotion.com/t1873-object-routeviewer-out-of-memory#19423
 			
+		}
+
+		/// <summary>Checks whether the on-disk source file of the given texture origin is unchanged.</summary>
+		private static bool TextureFileUnchanged(TextureOrigin origin)
+		{
+			if (!(origin is PathOrigin pathOrigin))
+			{
+				return false;
+			}
+			return File.Exists(pathOrigin.Path) && pathOrigin.FileSize == new FileInfo(pathOrigin.Path).Length && pathOrigin.LastModificationTime == File.GetLastWriteTime(pathOrigin.Path);
 		}
 
 		/// <summary>Unloads any textures which have not been accessed</summary>

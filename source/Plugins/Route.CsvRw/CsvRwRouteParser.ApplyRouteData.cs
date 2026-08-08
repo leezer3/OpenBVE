@@ -187,7 +187,7 @@ namespace CsvRwRouteParser
 				Plugin.CurrentProgress = 0.6667 + (i - Data.FirstUsedBlock) * progressFactor;
 				if ((i & 15) == 0)
 				{
-					System.Threading.Thread.Sleep(1);
+					System.Threading.Thread.Yield();
 					if (Plugin.Cancel)
 					{
 						Plugin.IsLoading = false;

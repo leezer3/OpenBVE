@@ -191,7 +191,7 @@ namespace CsvRwRouteParser {
 			for (int j = 0; j < Expressions.Count; j++) {
 				Plugin.CurrentProgress = j * progressFactor;
 				if ((j & 255) == 0) {
-					System.Threading.Thread.Sleep(1);
+					System.Threading.Thread.Yield();
 					if (Plugin.Cancel)
 					{
 						Plugin.IsLoading = false;
@@ -393,7 +393,7 @@ namespace CsvRwRouteParser {
 			for (int j = 0; j < Expressions.Count; j++) {
 				Plugin.CurrentProgress = 0.3333 + j * progressFactor;
 				if ((j & 255) == 0) {
-					System.Threading.Thread.Sleep(1);
+					System.Threading.Thread.Yield();
 					if (Plugin.Cancel)
 					{
 						Plugin.IsLoading = false;

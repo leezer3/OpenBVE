@@ -43,6 +43,9 @@ namespace OpenBveApi.Textures {
 		public int TotalFrames;
 		/// <summary>Whether this texture uses the compatible transparency mode (Matches to the nearest color in a restricted palette)</summary>
 		public bool CompatibleTransparencyMode;
+		/// <summary>The decoded texture, or a null reference if this texture could not be decoded.</summary>
+		/// <remarks>Only set for textures registered from a path; allows the texture cache to be pre-seeded without re-reading and re-decoding the file.</remarks>
+		public readonly Texture DecodedTexture;
 
 		/// <summary>Gets the color of the given pixel</summary>
 		/// <param name="pix">The pixel index</param>
@@ -172,7 +175,7 @@ namespace OpenBveApi.Textures {
 			PixelFormat = Origin.GetTexture(out Texture t) ? t.PixelFormat : PixelFormat.Invalid;
 			MyOpenGlTextures = new OpenGlTexture[1][];
 			MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
-			
+			DecodedTexture = PixelFormat == PixelFormat.Invalid ? null : t;
 		}
 
 		/// <summary>Creates a new texture.</summary>
