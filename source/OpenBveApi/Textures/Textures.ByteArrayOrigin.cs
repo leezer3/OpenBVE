@@ -44,7 +44,7 @@ namespace OpenBveApi.Textures
 			{
 				bytes
 			};
-			NumberOfFrames = bytes.Length;
+			NumberOfFrames = 1;
 		}
 
 		/// <summary>Gets the texture from this origin.</summary>

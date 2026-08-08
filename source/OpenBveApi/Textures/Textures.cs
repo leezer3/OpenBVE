@@ -407,7 +407,7 @@ namespace OpenBveApi.Textures {
 		{
 			for (int frame = 0; frame < MyBytes.Length; frame++)
 			{
-				for (int i = 0; i < MyBytes.Length; i += 4)
+				for (int i = 0; i < MyBytes[frame].Length; i += 4)
 				{
 					if (MyBytes[frame][i] != 0 | MyBytes[frame][i + 1] != 0 | MyBytes[frame][i + 2] != 0)
 					{

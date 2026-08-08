@@ -91,5 +91,12 @@ namespace OpenBveApi.Textures
 		{
 			return Path;
 		}
+
+		/// <summary>Returns the hash code based on the path.</summary>
+		/// <returns>A 32-bit signed integer hash code.</returns>
+		public override int GetHashCode()
+		{
+			return Path?.GetHashCode() ?? 0;
+		}
 	}
 }
