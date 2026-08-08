@@ -139,9 +139,9 @@ namespace OpenBveApi.Hosts {
 			Application = host;
 			StaticObjectCache = new Dictionary<ValueTuple<string, bool, DateTime>, StaticObject>();
 			AnimatedObjectCollectionCache = new Dictionary<string, AnimatedObjectCollection>();
-			MissingFiles = new List<string>();
-			FailedObjects = new List<string>();
-			FailedTextures = new List<string>();
+			MissingFiles = new HashSet<string>();
+			FailedObjects = new HashSet<string>();
+			FailedTextures = new HashSet<string>();
 
 			if (Platform == HostPlatform.GNULinux)
             {
@@ -175,11 +175,11 @@ namespace OpenBveApi.Hosts {
 		}
 
 		/// <summary>Contains a list of missing files encountered</summary>
-		public readonly List<string> MissingFiles;
+		public readonly HashSet<string> MissingFiles;
 		/// <summary>Contains a list of objects which failed to load</summary>
-		public readonly List<string> FailedObjects;
+		public readonly HashSet<string> FailedObjects;
 		/// <summary>Contains a list of textures which failed to load</summary>
-		public readonly List<string> FailedTextures;
+		public readonly HashSet<string> FailedTextures;
 
 		/// <summary>Queries the dimensions of a texture.</summary>
 		/// <param name="path">The path to the file or folder that contains the texture.</param>
@@ -725,6 +725,12 @@ namespace OpenBveApi.Hosts {
 
 		/// <summary>Provides the shared random number generator</summary>
 		public Random Random = new Random();
+
+		/// <summary>Time spent parsing route data by the route plugin (ms)</summary>
+		public long PluginParseTime;
+
+		/// <summary>Time spent applying route data by the route plugin (ms)</summary>
+		public long PluginApplyTime;
 
 		/// <summary>Contains the list of commonly used 'empty' files</summary>
 		/// <remarks>These generally aren't a valid object, and should be ignored for errors</remarks>

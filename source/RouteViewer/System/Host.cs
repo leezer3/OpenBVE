@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -23,6 +24,9 @@ namespace RouteViewer
 	/// <summary>Represents the host application.</summary>
 	internal class Host : HostInterface
 	{
+		/// <summary>Total time spent registering textures, in milliseconds.</summary>
+		internal static long TextureRegistrationTime;
+
 		/// <summary>Reports a problem to the host application.</summary>
 		/// <param name="type">The type of problem that is reported.</param>
 		/// <param name="text">The textual message that describes the problem.</param>
@@ -194,17 +198,17 @@ namespace RouteViewer
 		}
 		
 		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false, int timeout = 1000) {
-			if (File.Exists(path) || Directory.Exists(path)) {
-				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out Texture data)) {
-					handle = data;
-					if (loadTexture)
-					{
-						LoadTexture(ref data, OpenGlTextureWrapMode.ClampClamp);
-					}
-					return true;
+			Stopwatch sw = Stopwatch.StartNew();
+			bool registered = Program.Renderer.TextureManager.RegisterTexture(path, parameters, out Texture data);
+			sw.Stop();
+			TextureRegistrationTime += sw.ElapsedMilliseconds;
+			if (registered) {
+				handle = data;
+				if (loadTexture)
+				{
+					LoadTexture(ref data, OpenGlTextureWrapMode.ClampClamp);
 				}
-			} else {
-				ReportProblem(ProblemType.PathNotFound, path);
+				return true;
 			}
 			handle = null;
 			return false;
@@ -216,8 +220,11 @@ namespace RouteViewer
 		/// <param name="handle">Receives the handle to the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool RegisterTexture(Texture texture, TextureParameters parameters, out Texture handle) {
+			Stopwatch sw = Stopwatch.StartNew();
 			texture = texture.ApplyParameters(parameters);
 			handle = Program.Renderer.TextureManager.RegisterTexture(texture);
+			sw.Stop();
+			TextureRegistrationTime += sw.ElapsedMilliseconds;
 			return true;
 		}
 
