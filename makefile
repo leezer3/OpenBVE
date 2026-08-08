@@ -201,6 +201,8 @@ $(MAC_BUILD_RESULT): all-release
 
 	@echo $(COLOR_RED)Copying build data into $(COLOR_CYAN)OpenBVE.app$(COLOR_END)
 	@cp -r $(RELEASE_DIR)/* mac/OpenBVE.app/Contents/Resources/
+	@cp source/OpenBVE/OpenTK.dll.config mac/OpenBVE.app/Contents/Resources/OpenTK.dll.config
+	@test -f mac/OpenBVE.app/Contents/Resources/OpenTK.dll.config || (echo "OpenTK.dll.config is missing from the macOS app bundle"; exit 1)
 
 # Because Azure is iffy on MacOS13, let's try a custom script
 	@echo $(COLOR_RED)Creating $(COLOR_CYAN)$(MAC_BUILD_RESULT)$(COLOR_END)
