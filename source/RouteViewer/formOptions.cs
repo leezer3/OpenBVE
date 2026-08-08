@@ -27,6 +27,7 @@ namespace RouteViewer
 			checkBoxProgressBar.Checked = Interface.CurrentOptions.LoadingProgressBar;
 			comboBoxNewXParser.SelectedIndex = (int) Interface.CurrentOptions.CurrentXParser;
 			comboBoxNewObjParser.SelectedIndex = (int) Interface.CurrentOptions.CurrentObjParser;
+			comboBoxOptimizeObjects.SelectedIndex = (int)Interface.CurrentOptions.ObjectOptimizationMode;
 			numericUpDownViewingDistance.Value = Math.Min(Interface.CurrentOptions.ViewingDistance, numericUpDownViewingDistance.Maximum);
 
             // Shadows
@@ -255,6 +256,7 @@ namespace RouteViewer
 				}
 			}
 			Interface.CurrentOptions.ViewingDistance = (int)numericUpDownViewingDistance.Value;
+			Interface.CurrentOptions.ObjectOptimizationMode = (ObjectOptimizationMode)comboBoxOptimizeObjects.SelectedIndex;
 			Interface.CurrentOptions.NearClipBase = (double)numericUpDownNearClip.Value;
 			// ensure viewing distance is greater than the near clipping plane to avoid rendering issues
 			if (Interface.CurrentOptions.ViewingDistance <= Interface.CurrentOptions.NearClipBase)

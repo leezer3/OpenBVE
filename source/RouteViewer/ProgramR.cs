@@ -175,8 +175,6 @@ namespace RouteViewer
 
 			string folder = FileSystem.GetDataFolder("Languages");
 			Translations.LoadLanguageFiles(folder);
-			Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
-			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// application
 			Renderer.GraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
 			if (Renderer.Screen.Width == 0 || Renderer.Screen.Height == 0)

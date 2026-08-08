@@ -12,13 +12,44 @@ namespace RouteViewer
 	/// <summary>Holds the program specific options</summary>
 	internal class Options : BaseOptions
 	{
+		private ObjectOptimizationMode objectOptimizationMode;
+
 		internal bool LoadingProgressBar;
 		internal bool LoadingLogo;
 		internal bool LoadingBackground;
 		internal string RouteSearchDirectory;
 
+		/// <summary>
+		/// The mode of optimization to be performed on an object
+		/// </summary>
+		internal ObjectOptimizationMode ObjectOptimizationMode
+		{
+			get => objectOptimizationMode;
+			set
+			{
+				objectOptimizationMode = value;
+
+				switch (value)
+				{
+					case ObjectOptimizationMode.None:
+						ObjectOptimizationBasicThreshold = 0;
+						ObjectOptimizationFullThreshold = 0;
+						break;
+					case ObjectOptimizationMode.Low:
+						ObjectOptimizationBasicThreshold = 1000;
+						ObjectOptimizationFullThreshold = 250;
+						break;
+					case ObjectOptimizationMode.High:
+						ObjectOptimizationBasicThreshold = 10000;
+						ObjectOptimizationFullThreshold = 1000;
+						break;
+				}
+			}
+		}
+
 		internal Options()
 		{
+			ObjectOptimizationMode = ObjectOptimizationMode.Low;
 			ViewingDistance = 600;
 			SoundNumber = 16;
 		}
@@ -63,11 +94,14 @@ namespace RouteViewer
 				Builder.AppendLine("showlogo = " + (LoadingLogo ? "true" : "false"));
 				Builder.AppendLine("showprogressbar = " + (LoadingProgressBar ? "true" : "false"));
 				Builder.AppendLine("showbackground = " + (LoadingBackground ? "true" : "false"));
-				Builder.AppendLine("[parsers]");
-				Builder.AppendLine("xObject = " + (int)CurrentXParser);
-				Builder.AppendLine("objObject = " + (int)CurrentObjParser);
-				Builder.AppendLine();
-				Builder.AppendLine("[Folders]");
+			Builder.AppendLine("[objectOptimization]");
+			Builder.AppendLine($"mode = {ObjectOptimizationMode}");
+			Builder.AppendLine();
+			Builder.AppendLine("[parsers]");
+			Builder.AppendLine("xObject = " + (int)CurrentXParser);
+			Builder.AppendLine("objObject = " + (int)CurrentObjParser);
+			Builder.AppendLine();
+			Builder.AppendLine("[Folders]");
 				Builder.AppendLine($"routesearch = {RouteSearchDirectory}");
 				File.WriteAllText(fileName, Builder.ToString(), new System.Text.UTF8Encoding(true));
 			}
@@ -153,12 +187,16 @@ namespace RouteViewer
 							block.GetValue(OptionsKey.ShowProgressBar, out Interface.CurrentOptions.LoadingProgressBar);
 							block.GetValue(OptionsKey.ShowBackground, out Interface.CurrentOptions.LoadingBackground);
 							break;
-						case OptionsSection.Parsers:
-							block.GetEnumValue(OptionsKey.XObject, out Interface.CurrentOptions.CurrentXParser);
-							block.GetEnumValue(OptionsKey.ObjObject, out Interface.CurrentOptions.CurrentObjParser);
-							block.GetValue(OptionsKey.GDIPlus, out Interface.CurrentOptions.UseGDIDecoders);
-							break;
-						case OptionsSection.Folders:
+					case OptionsSection.Parsers:
+						block.GetEnumValue(OptionsKey.XObject, out Interface.CurrentOptions.CurrentXParser);
+						block.GetEnumValue(OptionsKey.ObjObject, out Interface.CurrentOptions.CurrentObjParser);
+						block.GetValue(OptionsKey.GDIPlus, out Interface.CurrentOptions.UseGDIDecoders);
+						break;
+					case OptionsSection.ObjectOptimization:
+						block.GetEnumValue(OptionsKey.Mode, out ObjectOptimizationMode mode);
+						Interface.CurrentOptions.ObjectOptimizationMode = mode;
+						break;
+					case OptionsSection.Folders:
 							block.GetValue(OptionsKey.RouteSearch, out string folder);
 							if (Directory.Exists(folder))
 							{

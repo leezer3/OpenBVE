@@ -58,6 +58,8 @@ namespace RouteViewer
             this.comboBoxNewObjParser = new System.Windows.Forms.ComboBox();
             this.label15 = new System.Windows.Forms.Label();
             this.numericUpDownViewingDistance = new System.Windows.Forms.NumericUpDown();
+            this.labelOptimizeObjects = new System.Windows.Forms.Label();
+            this.comboBoxOptimizeObjects = new System.Windows.Forms.ComboBox();
             this.tabPageShadows = new System.Windows.Forms.TabPage();
             this.comboBoxShadowResolution = new System.Windows.Forms.ComboBox();
             this.labelShadowResolution = new System.Windows.Forms.Label();
@@ -162,7 +164,10 @@ namespace RouteViewer
                     { this.label15, 0, 15 },
                     { this.numericUpDownViewingDistance, 1, 15 },
                     { this.labelNearClip, 0, 16 },
-                    { this.numericUpDownNearClip, 1, 16 }
+                    { this.numericUpDownNearClip, 1, 16 },
+                    // Object Optimization
+                    { this.labelOptimizeObjects, 0, 17 },
+                    { this.comboBoxOptimizeObjects, 1, 17 }
                 }
             };
             tlpOptions.SetColumnSpan(this.InterpolationLabel, 2);
@@ -886,6 +891,28 @@ namespace RouteViewer
             0,
             65536});
             // 
+            // labelOptimizeObjects
+            // 
+            this.labelOptimizeObjects.AutoSize = true;
+            this.labelOptimizeObjects.Location = new System.Drawing.Point(6, 443);
+            this.labelOptimizeObjects.Name = "labelOptimizeObjects";
+            this.labelOptimizeObjects.Size = new System.Drawing.Size(131, 13);
+            this.labelOptimizeObjects.TabIndex = 56;
+            this.labelOptimizeObjects.Text = "Object Optimization Mode:";
+            // 
+            // comboBoxOptimizeObjects
+            // 
+            this.comboBoxOptimizeObjects.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBoxOptimizeObjects.FormattingEnabled = true;
+            this.comboBoxOptimizeObjects.Items.AddRange(new object[] {
+            "None",
+            "Low",
+            "High"});
+            this.comboBoxOptimizeObjects.Location = new System.Drawing.Point(160, 443);
+            this.comboBoxOptimizeObjects.Name = "comboBoxOptimizeObjects";
+            this.comboBoxOptimizeObjects.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxOptimizeObjects.TabIndex = 57;
+            // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -987,5 +1014,7 @@ namespace RouteViewer
         private System.Windows.Forms.NumericUpDown numericUpDownShadowNormalBias;
         private System.Windows.Forms.Label labelShadowFilterCascades;
         private System.Windows.Forms.CheckBox checkBoxShadowFilterCascades;
+        private System.Windows.Forms.Label labelOptimizeObjects;
+        private System.Windows.Forms.ComboBox comboBoxOptimizeObjects;
     }
 }
