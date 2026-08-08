@@ -198,21 +198,17 @@ namespace RouteViewer
 		}
 		
 		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false, int timeout = 1000) {
-			if (File.Exists(path) || Directory.Exists(path)) {
-				Stopwatch sw = Stopwatch.StartNew();
-				bool registered = Program.Renderer.TextureManager.RegisterTexture(path, parameters, out Texture data);
-				sw.Stop();
-				TextureRegistrationTime += sw.ElapsedMilliseconds;
-				if (registered) {
-					handle = data;
-					if (loadTexture)
-					{
-						LoadTexture(ref data, OpenGlTextureWrapMode.ClampClamp);
-					}
-					return true;
+			Stopwatch sw = Stopwatch.StartNew();
+			bool registered = Program.Renderer.TextureManager.RegisterTexture(path, parameters, out Texture data);
+			sw.Stop();
+			TextureRegistrationTime += sw.ElapsedMilliseconds;
+			if (registered) {
+				handle = data;
+				if (loadTexture)
+				{
+					LoadTexture(ref data, OpenGlTextureWrapMode.ClampClamp);
 				}
-			} else {
-				ReportProblem(ProblemType.PathNotFound, path);
+				return true;
 			}
 			handle = null;
 			return false;
