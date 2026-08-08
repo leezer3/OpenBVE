@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using LibRender2.Textures;
@@ -160,7 +161,10 @@ namespace LibRender2.Objects
 						}
 						else
 						{
+							Stopwatch sw = Stopwatch.StartNew();
 							State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin.GetTexture(out daytimeTexture);
+							sw.Stop();
+							TextureManager.TextureDecodeTime += sw.ElapsedMilliseconds;
 							if (!TextureManager.textureCache.ContainsKey(State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin)) // because getting the Origin may change the ref
 							{
 								TextureManager.textureCache.Add(State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin, daytimeTexture);
@@ -194,7 +198,10 @@ namespace LibRender2.Objects
 						}
 						else
 						{
+							Stopwatch sw = Stopwatch.StartNew();
 							State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Origin.GetTexture(out nighttimeTexture);
+							sw.Stop();
+							TextureManager.TextureDecodeTime += sw.ElapsedMilliseconds;
 							TextureManager.textureCache.Add(State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Origin, nighttimeTexture);
 						}
 						TextureTransparencyType transparencyType = TextureTransparencyType.Opaque;

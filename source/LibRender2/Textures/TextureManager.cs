@@ -25,6 +25,9 @@ namespace LibRender2.Textures
 		/// <summary>Holds cached texture origins</summary>
 		internal static Dictionary<TextureOrigin, Texture> textureCache = new Dictionary<TextureOrigin, Texture>();
 
+		/// <summary>Total time spent decoding texture files, in milliseconds.</summary>
+		public static long TextureDecodeTime;
+
 		private static Dictionary<TextureOrigin, Texture> animatedTextures;
 
 		/// <summary>Holds the registered path-based textures, indexed by path.</summary>

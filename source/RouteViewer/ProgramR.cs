@@ -9,6 +9,7 @@ using LibRender2.Cameras;
 using LibRender2.Menu;
 using LibRender2.Overlays;
 using LibRender2.Screens;
+using LibRender2.Textures;
 using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -23,6 +24,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using RouteManager2;
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Runtime;
@@ -204,6 +206,10 @@ namespace RouteViewer
 				return false;
 			}
 			Renderer.UpdateViewport(ViewportChangeMode.NoChange);
+			bool isReload = Loading.Complete;
+			Host.TextureRegistrationTime = 0;
+			TextureManager.TextureDecodeTime = 0;
+			Stopwatch loadTimer = Stopwatch.StartNew();
 			bool result;
 			try
 			{
@@ -222,10 +228,23 @@ namespace RouteViewer
 				result = false;
 				CurrentRouteFile = null;
 			}
+			loadTimer.Stop();
 
 			Renderer.Camera.QuadTreeLeaf = null;
 			Renderer.Lighting.Initialize();
+			Stopwatch visibilityTimer = Stopwatch.StartNew();
 			Renderer.InitializeVisibility();
+			visibilityTimer.Stop();
+
+			if (result)
+			{
+				Interface.AddMessage(MessageType.Information, false,
+					(isReload ? "Route reloaded" : "Route loaded") + " in " + loadTimer.ElapsedMilliseconds + " ms (parse: " + Loading.RouteParseTime + " ms, textures: " + Host.TextureRegistrationTime + " ms, decode: " + TextureManager.TextureDecodeTime + " ms, setup: " + Loading.PostParseTime + " ms, visibility: " + visibilityTimer.ElapsedMilliseconds + " ms).");
+			}
+			else if (Loading.Cancel)
+			{
+				Interface.AddMessage(MessageType.Information, false, "Route load cancelled after " + loadTimer.ElapsedMilliseconds + " ms.");
+			}
 			for (int i = 0; i < CurrentRoute.Tracks.Count; i++)
 			{
 				int key = CurrentRoute.Tracks.ElementAt(i).Key;
