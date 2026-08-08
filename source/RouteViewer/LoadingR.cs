@@ -54,6 +54,10 @@ namespace RouteViewer {
 		internal static long RouteParseTime;
 		/// <summary>Time taken to set up the route after parsing, in milliseconds.</summary>
 		internal static long PostParseTime;
+		/// <summary>Time spent parsing route data (ms)</summary>
+		internal static long ParserParseTime;
+		/// <summary>Time spent applying route data (ms)</summary>
+		internal static long ParserApplyTime;
 
 		// load
 		internal static void Load(string routeFile, Encoding routeEncoding, byte[] textureBytes)
@@ -132,6 +136,8 @@ namespace RouteViewer {
 			}
 			parseTimer.Stop();
 			RouteParseTime = parseTimer.ElapsedMilliseconds;
+			ParserParseTime = Program.CurrentHost.PluginParseTime;
+			ParserApplyTime = Program.CurrentHost.PluginApplyTime;
 
 			if (!loaded)
 			{

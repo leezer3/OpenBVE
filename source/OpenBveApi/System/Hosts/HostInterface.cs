@@ -726,6 +726,12 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Provides the shared random number generator</summary>
 		public Random Random = new Random();
 
+		/// <summary>Time spent parsing route data by the route plugin (ms)</summary>
+		public long PluginParseTime;
+
+		/// <summary>Time spent applying route data by the route plugin (ms)</summary>
+		public long PluginApplyTime;
+
 		/// <summary>Contains the list of commonly used 'empty' files</summary>
 		/// <remarks>These generally aren't a valid object, and should be ignored for errors</remarks>
 		public static readonly string[] NullFiles =

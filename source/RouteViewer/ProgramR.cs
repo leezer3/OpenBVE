@@ -239,7 +239,10 @@ namespace RouteViewer
 			if (result)
 			{
 				Interface.AddMessage(MessageType.Information, false,
-					(isReload ? "Route reloaded" : "Route loaded") + " in " + loadTimer.ElapsedMilliseconds + " ms (parse: " + Loading.RouteParseTime + " ms, textures: " + Host.TextureRegistrationTime + " ms, decode: " + TextureManager.TextureDecodeTime + " ms, setup: " + Loading.PostParseTime + " ms, visibility: " + visibilityTimer.ElapsedMilliseconds + " ms).");
+					(isReload ? "Route reloaded" : "Route loaded") + " in " + loadTimer.ElapsedMilliseconds + " ms" +
+					" | parser: " + Loading.RouteParseTime + " ms (parse: " + Loading.ParserParseTime + " ms, apply: " + Loading.ParserApplyTime + " ms)" +
+					" | textures: " + Host.TextureRegistrationTime + " ms (decode: " + TextureManager.TextureDecodeTime + " ms)" +
+					" | setup: " + Loading.PostParseTime + " ms, visibility: " + visibilityTimer.ElapsedMilliseconds + " ms.");
 			}
 			else if (Loading.Cancel)
 			{
