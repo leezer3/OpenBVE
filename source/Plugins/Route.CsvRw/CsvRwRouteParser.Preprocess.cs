@@ -68,8 +68,18 @@ namespace CsvRwRouteParser
 				{
 					if (SplitLineHack)
 					{
-						MatchCollection matches = Regex.Matches(Lines[i], ".Load", RegexOptions.IgnoreCase);
-						if (matches.Count > 1)
+						// Count occurrences of ".Load" (case-insensitive)
+						int loadCount = 0;
+						int searchIndex = 0;
+						string line = Lines[i];
+						while (searchIndex < line.Length)
+						{
+							int pos = line.IndexOf(".Load", searchIndex, StringComparison.OrdinalIgnoreCase);
+							if (pos == -1) break;
+							loadCount++;
+							searchIndex = pos + 5;
+						}
+						if (loadCount > 1)
 						{
 							string[] splitLine = Lines[i].Split(',');
 							Lines.RemoveAt(i);
