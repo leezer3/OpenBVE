@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -48,6 +49,11 @@ namespace RouteViewer {
 		internal static bool Complete;
 		private static string CurrentRouteFile;
 		private static Encoding CurrentRouteEncoding;
+
+		/// <summary>Time taken to parse the route file, in milliseconds.</summary>
+		internal static long RouteParseTime;
+		/// <summary>Time taken to set up the route after parsing, in milliseconds.</summary>
+		internal static long PostParseTime;
 
 		// load
 		internal static void Load(string routeFile, Encoding routeEncoding, byte[] textureBytes)
@@ -107,6 +113,7 @@ namespace RouteViewer {
 			string SoundFolder = Path.CombineDirectory(RailwayFolder, "Sound");
 			Program.Renderer.Camera.CurrentMode = CameraViewMode.Track;
 			// load route
+			Stopwatch parseTimer = Stopwatch.StartNew();
 			bool loaded = false;
 			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 			{
@@ -123,11 +130,14 @@ namespace RouteViewer {
 					throw Program.CurrentHost.Plugins[i].Route.LastException;
 				}
 			}
+			parseTimer.Stop();
+			RouteParseTime = parseTimer.ElapsedMilliseconds;
 
 			if (!loaded)
 			{
 				throw new Exception("No plugins capable of loading routefile " + CurrentRouteFile + " were found.");
 			}
+			Stopwatch postTimer = Stopwatch.StartNew();
 			Program.Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			Program.CurrentRoute.Atmosphere.CalculateSeaLevelConstants();
@@ -166,6 +176,8 @@ namespace RouteViewer {
 			Program.Renderer.CameraTrackFollower.UpdateAbsolute(FirstStationPosition, true, false);
 			Program.Renderer.Camera.Alignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
 			World.UpdateAbsoluteCamera(0.0);
+			postTimer.Stop();
+			PostParseTime = postTimer.ElapsedMilliseconds;
 			Complete = true;
 		}
 
