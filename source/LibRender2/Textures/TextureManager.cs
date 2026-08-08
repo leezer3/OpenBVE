@@ -147,27 +147,24 @@ namespace LibRender2.Textures
 			RegisteredTexturesCount++;
 			handle = RegisteredTextures[idx];
 
-			/*
-			 * Pre-seed the texture cache with the decoded texture (not the handle).
-			 * The handle itself has no decoded bytes, so storing it would cause a null
-			 * reference when the transparency type is subsequently queried.
-			 * */
-			if (handle.PixelFormat != PixelFormat.Invalid && handle.DecodedTexture != null)
+			lock (TextureLookupLock)
 			{
-				lock (TextureLookupLock)
+				/*
+				 * Pre-seed the texture cache with the decoded texture (not the handle).
+				 * The handle itself has no decoded bytes, so storing it would cause a null
+				 * reference when the transparency type is subsequently queried.
+				 * */
+				if (handle.PixelFormat != PixelFormat.Invalid && handle.DecodedTexture != null)
 				{
 					if (!textureCache.ContainsKey(handle.Origin))
 					{
 						textureCache.Add(handle.Origin, handle.DecodedTexture);
 					}
 				}
-			}
 
-			/*
-			 * Maintain the registration lookup table.
-			 * */
-			lock (TextureLookupLock)
-			{
+				/*
+				 * Maintain the registration lookup table.
+				 * */
 				if (!RegisteredTextureLookup.TryGetValue(path, out List<Texture> list))
 				{
 					list = new List<Texture>();
@@ -424,45 +421,45 @@ namespace LibRender2.Textures
 					{
 						switch (texture.PixelFormat)
 						{
-							case PixelFormat.GrayscaleAlpha:
-								// NOTE: LuminanceAlpha is deprecated in GL4, so just upconvert to RGBA
-								if (noLuminanceChannel)
-								{
-									int stride = (2 * (texture.Width + 1) >> 2) << 2;
-									byte[] newBytes = new byte[stride * texture.Height];
-									int i = 0, j = 0;
+						case PixelFormat.GrayscaleAlpha:
+							// NOTE: LuminanceAlpha is deprecated in GL4, so just upconvert to RGBA
+							if (noLuminanceChannel)
+							{
+								int stride = (4 * (texture.Width + 1) >> 2) << 2;
+								byte[] newBytes = new byte[stride * texture.Height];
+								int i = 0, j = 0;
 
-									for (int y = 0; y < texture.Height; y++)
+								for (int y = 0; y < texture.Height; y++)
+								{
+									for (int x = 0; x < texture.Width; x++)
 									{
-										for (int x = 0; x < texture.Width; x++)
-										{
-											newBytes[j + 0] = texture.Bytes[i + 0];
-											newBytes[j + 1] = texture.Bytes[i + 0];
-											newBytes[j + 2] = texture.Bytes[i + 0];
-											newBytes[j + 3] = texture.Bytes[i + 1];
-											i += 4;
-											j += 4;
-										}
-
-										j += stride - 3 * texture.Width;
-										GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
-										GL.TexImage2D(TextureTarget.Texture2D, 0,
-											PixelInternalFormat.Rgba8,
-											texture.Width, texture.Height, 0,
-											OpenTK.Graphics.OpenGL.PixelFormat.Rgba,
-											PixelType.UnsignedByte, newBytes);
+										newBytes[j + 0] = texture.Bytes[i + 0];
+										newBytes[j + 1] = texture.Bytes[i + 0];
+										newBytes[j + 2] = texture.Bytes[i + 0];
+										newBytes[j + 3] = texture.Bytes[i + 1];
+										i += 2;
+										j += 4;
 									}
+
+									j += stride - 4 * texture.Width;
 								}
-								else
-								{
-									GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
-									GL.TexImage2D(TextureTarget.Texture2D, 0,
-										PixelInternalFormat.LuminanceAlpha,
-										texture.Width, texture.Height, 0,
-										OpenTK.Graphics.OpenGL.PixelFormat.LuminanceAlpha,
-										PixelType.UnsignedByte, texture.Bytes);
-								}
-								break;
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
+								GL.TexImage2D(TextureTarget.Texture2D, 0,
+									PixelInternalFormat.Rgba8,
+									texture.Width, texture.Height, 0,
+									OpenTK.Graphics.OpenGL.PixelFormat.Rgba,
+									PixelType.UnsignedByte, newBytes);
+							}
+							else
+							{
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
+								GL.TexImage2D(TextureTarget.Texture2D, 0,
+									PixelInternalFormat.LuminanceAlpha,
+									texture.Width, texture.Height, 0,
+									OpenTK.Graphics.OpenGL.PixelFormat.LuminanceAlpha,
+									PixelType.UnsignedByte, texture.Bytes);
+							}
+							break;
 							case PixelFormat.RGBAlpha:
 								/*
 								* The texture uses its alpha channel, so send the bitmap data
@@ -539,7 +536,10 @@ namespace LibRender2.Textures
 			handle.Ignore = false;
 			if (handle.Origin != null)
 			{
-				textureCache.Remove(handle.Origin);
+				lock (TextureLookupLock)
+				{
+					textureCache.Remove(handle.Origin);
+				}
 			}
 		}
 
@@ -577,17 +577,23 @@ namespace LibRender2.Textures
 			}
 			if (currentlyReloading)
 			{
-				foreach (TextureOrigin origin in textureCache.Keys.ToList())
+				lock (TextureLookupLock)
 				{
-					if (origin is PathOrigin && !TextureFileUnchanged(origin))
+					foreach (TextureOrigin origin in textureCache.Keys.ToList())
 					{
-						textureCache.Remove(origin);
+						if (origin is PathOrigin && !TextureFileUnchanged(origin))
+						{
+							textureCache.Remove(origin);
+						}
 					}
 				}
 			}
 			else
 			{
-				textureCache.Clear();
+				lock (TextureLookupLock)
+				{
+					textureCache.Clear();
+				}
 			}
 
 			/*
@@ -612,7 +618,11 @@ namespace LibRender2.Textures
 				}
 			}
 
-			GC.Collect(); //Speculative- https://bveworldwide.forumotion.com/t1873-object-routeviewer-out-of-memory#19423
+			if (!currentlyReloading)
+			{
+				// Only force GC on full unload, not on route reload
+				GC.Collect(0, GCCollectionMode.Optimized);
+			}
 			
 		}
 
