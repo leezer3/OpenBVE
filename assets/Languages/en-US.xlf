@@ -1045,6 +1045,12 @@
 					<trans-unit id="display_vsync_on">
 						<source>Enabled</source>
 					</trans-unit>
+					<trans-unit id="display_fpslimit">
+						<source>FPS Limit:</source>
+					</trans-unit>
+					<trans-unit id="display_fpslimit_unlimited">
+						<source>Unlimited</source>
+					</trans-unit>
 					<trans-unit id="display_window">
 						<source>Window mode</source>
 					</trans-unit>

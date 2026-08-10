@@ -1342,6 +1342,12 @@
 						<source>Enabled</source>
 						<target>Didayakan</target>
 					</trans-unit>
+					<trans-unit id="display_fpslimit">
+						<source>FPS Limit:</source>
+					</trans-unit>
+					<trans-unit id="display_fpslimit_unlimited">
+						<source>Unlimited</source>
+					</trans-unit>
 					<trans-unit id="display_window">
 						<source>Window mode</source>
 						<target>Mod tetingkap</target>

@@ -387,6 +387,16 @@ namespace OpenBve {
 			comboboxVSync.Items.Add("");
 			comboboxVSync.Items.Add("");
 			comboboxVSync.SelectedIndex = Interface.CurrentOptions.VerticalSynchronization ? 1 : 0;
+			// Map FPSLimit value to combo index: 0=Unlimited, 1=30, 2=60, 3=120, 4=240
+			switch (Interface.CurrentOptions.FPSLimit)
+			{
+				case 30: comboBoxFPSLimit.SelectedIndex = 1; break;
+				case 60: comboBoxFPSLimit.SelectedIndex = 2; break;
+				case 120: comboBoxFPSLimit.SelectedIndex = 3; break;
+				case 240: comboBoxFPSLimit.SelectedIndex = 4; break;
+				default: comboBoxFPSLimit.SelectedIndex = 0; break;
+			}
+			UpdateFPSLimitEnabled();
 			switch (Interface.CurrentOptions.UserInterfaceFolder)
 			{
 				case "Slim":
@@ -704,6 +714,8 @@ namespace OpenBve {
 			labelVSync.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_vsync"});
 			comboboxVSync.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_vsync_off"});
 			comboboxVSync.Items[1] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_vsync_on"});
+			labelFPSLimit.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_fpslimit"});
+			comboBoxFPSLimit.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_fpslimit_unlimited"});
 			labelHUDScale.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","hud_size"});
 			labelHUDSmall.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","hud_size_small"});
 			labelHUDNormal.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","hud_size_normal"});
@@ -1193,6 +1205,9 @@ namespace OpenBve {
 		{
 			Interface.CurrentOptions.FullscreenMode = radiobuttonFullscreen.Checked;
 			Interface.CurrentOptions.VerticalSynchronization = comboboxVSync.SelectedIndex == 1;
+			// Map combo index to FPSLimit value
+			int[] fpsPresets = { 0, 30, 60, 120, 240 };
+			Interface.CurrentOptions.FPSLimit = comboBoxFPSLimit.SelectedIndex >= 0 ? fpsPresets[comboBoxFPSLimit.SelectedIndex] : 0;
 			Interface.CurrentOptions.WindowWidth = (int)Math.Round(updownWindowWidth.Value);
 			Interface.CurrentOptions.WindowHeight = (int)Math.Round(updownWindowHeight.Value);
 			Interface.CurrentOptions.FullscreenWidth = (int)Math.Round(updownFullscreenWidth.Value);
