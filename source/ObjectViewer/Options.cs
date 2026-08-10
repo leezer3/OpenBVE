@@ -17,6 +17,8 @@ namespace ObjectViewer
 	{
 		private ObjectOptimizationMode objectOptimizationMode;
 
+		internal int FPSLimit;
+
 		internal string ObjectSearchDirectory;
 
 		internal Key CameraMoveLeft;
@@ -65,6 +67,8 @@ namespace ObjectViewer
 
 		internal Options()
 		{
+			VerticalSynchronization = true;
+			FPSLimit = 0;
 			ObjectOptimizationMode = ObjectOptimizationMode.Low;
 			// Shadow settings use synced base defaults
 		}
@@ -81,6 +85,8 @@ namespace ObjectViewer
 				Builder.AppendLine("; Object Viewer specific options file");
 				Builder.AppendLine();
 				Builder.AppendLine("[display]");
+				Builder.AppendLine("vsync = " + (VerticalSynchronization ? "true" : "false"));
+				Builder.AppendLine("fpslimit = " + FPSLimit.ToString(Culture));
 				Builder.AppendLine("windowWidth = " + Program.Renderer.Screen.Width.ToString(Culture));
 				Builder.AppendLine("windowHeight = " + Program.Renderer.Screen.Height.ToString(Culture));
 				Builder.AppendLine("nearclipbase = " + NearClipBase.ToString(Culture));
@@ -172,6 +178,12 @@ namespace ObjectViewer
 							block.TryGetValue(OptionsKey.WindowWidth, ref Interface.CurrentOptions.WindowWidth, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.WindowHeight, ref Interface.CurrentOptions.WindowHeight, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.NearClipBase, ref Interface.CurrentOptions.NearClipBase, NumberRange.Positive);
+							block.GetValue(OptionsKey.VSync, out Interface.CurrentOptions.VerticalSynchronization);
+							block.GetValue(OptionsKey.FPSLimit, out Interface.CurrentOptions.FPSLimit);
+							if (Interface.CurrentOptions.FPSLimit < 0)
+							{
+								Interface.CurrentOptions.FPSLimit = 0;
+							}
 							// ensure viewing distance is greater than the near clipping plane to avoid rendering issues
 							if (Interface.CurrentOptions.ViewingDistance <= Interface.CurrentOptions.NearClipBase)
 							{
