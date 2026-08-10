@@ -70,20 +70,24 @@ openbve: openbve-debug
 openbve-debug: restore
 	$(info Building OpenBVE in debug mode....)
 	$(MSBUILD) /t:OpenBve /p:Configuration=Debug OpenBVE.sln
+	@cp source/LibRender2/OpenTK.dll.config bin_debug/OpenTK.dll.config
 
 openbve-release: restore
 	$(info Building OpenBVE in release mode....)
 	$(MSBUILD) /t:OpenBve /p:Configuration=Release OpenBVE.sln
+	@cp source/LibRender2/OpenTK.dll.config bin_release/OpenTK.dll.config
 
 all: all-debug
 
 all-debug: restore
 	$(info Building OpenBVE and developer tools in debug mode....)
 	$(MSBUILD) /t:build /p:Configuration=Debug OpenBVE.sln
+	@cp source/LibRender2/OpenTK.dll.config bin_debug/OpenTK.dll.config
 
 all-release: restore
 	$(info Building OpenBVE and developer tools in release mode....)
 	$(MSBUILD) /t:build /p:Configuration=Release OpenBVE.sln
+	@cp source/LibRender2/OpenTK.dll.config bin_release/OpenTK.dll.config
 
 clean-all: clean
 
@@ -201,7 +205,6 @@ $(MAC_BUILD_RESULT): all-release
 
 	@echo $(COLOR_RED)Copying build data into $(COLOR_CYAN)OpenBVE.app$(COLOR_END)
 	@cp -r $(RELEASE_DIR)/* mac/OpenBVE.app/Contents/Resources/
-	@cp source/OpenBVE/OpenTK.dll.config mac/OpenBVE.app/Contents/Resources/OpenTK.dll.config
 	@test -f mac/OpenBVE.app/Contents/Resources/OpenTK.dll.config || (echo "OpenTK.dll.config is missing from the macOS app bundle"; exit 1)
 
 # Because Azure is iffy on MacOS13, let's try a custom script
