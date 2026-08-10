@@ -367,7 +367,6 @@
     <EmbeddedResource Include="Views\FormTouch.resx">
       <DependentUpon>FormTouch.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
