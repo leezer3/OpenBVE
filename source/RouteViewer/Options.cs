@@ -18,6 +18,7 @@ namespace RouteViewer
 		internal bool LoadingLogo;
 		internal bool LoadingBackground;
 		internal string RouteSearchDirectory;
+		internal int FPSLimit;
 
 		/// <summary>
 		/// The mode of optimization to be performed on an object
@@ -49,6 +50,8 @@ namespace RouteViewer
 
 		internal Options()
 		{
+			VerticalSynchronization = true;
+			FPSLimit = 0;
 			ObjectOptimizationMode = ObjectOptimizationMode.Low;
 			ViewingDistance = 600;
 			SoundNumber = 16;
@@ -67,6 +70,7 @@ namespace RouteViewer
 				Builder.AppendLine();
 				Builder.AppendLine("[display]");
 				Builder.AppendLine("vsync = " + (VerticalSynchronization ? "true" : "false"));
+				Builder.AppendLine("fpslimit = " + FPSLimit.ToString(Culture));
 				Builder.AppendLine("windowWidth = " + Program.Renderer.Screen.Width.ToString(Culture));
 				Builder.AppendLine("windowHeight = " + Program.Renderer.Screen.Height.ToString(Culture));
 				Builder.AppendLine("viewingdistance = " + ViewingDistance);
@@ -148,6 +152,11 @@ namespace RouteViewer
 							block.TryGetValue(OptionsKey.WindowWidth, ref Interface.CurrentOptions.WindowWidth, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.WindowHeight, ref Interface.CurrentOptions.WindowHeight, NumberRange.Positive);
 							block.GetValue(OptionsKey.VSync, out Interface.CurrentOptions.VerticalSynchronization);
+							block.GetValue(OptionsKey.FPSLimit, out Interface.CurrentOptions.FPSLimit);
+							if (Interface.CurrentOptions.FPSLimit < 0)
+							{
+								Interface.CurrentOptions.FPSLimit = 0;
+							}
 							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.QuadLeafSize, ref Interface.CurrentOptions.QuadTreeLeafSize, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.NearClipBase, ref Interface.CurrentOptions.NearClipBase, NumberRange.Positive);

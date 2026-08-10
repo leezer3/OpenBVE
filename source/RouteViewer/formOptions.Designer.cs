@@ -60,6 +60,11 @@ namespace RouteViewer
             this.numericUpDownViewingDistance = new System.Windows.Forms.NumericUpDown();
             this.labelOptimizeObjects = new System.Windows.Forms.Label();
             this.comboBoxOptimizeObjects = new System.Windows.Forms.ComboBox();
+            this.labelVSync = new System.Windows.Forms.Label();
+            this.comboBoxVSync = new System.Windows.Forms.ComboBox();
+            this.labelFPSLimit = new System.Windows.Forms.Label();
+            this.comboBoxFPSLimit = new System.Windows.Forms.ComboBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip();
             this.tabPageShadows = new System.Windows.Forms.TabPage();
             this.comboBoxShadowResolution = new System.Windows.Forms.ComboBox();
             this.labelShadowResolution = new System.Windows.Forms.Label();
@@ -167,7 +172,12 @@ namespace RouteViewer
                     { this.numericUpDownNearClip, 1, 16 },
                     // Object Optimization
                     { this.labelOptimizeObjects, 0, 17 },
-                    { this.comboBoxOptimizeObjects, 1, 17 }
+                    { this.comboBoxOptimizeObjects, 1, 17 },
+                    // Display
+                    { this.labelVSync, 0, 18 },
+                    { this.comboBoxVSync, 1, 18 },
+                    { this.labelFPSLimit, 0, 19 },
+                    { this.comboBoxFPSLimit, 1, 19 }
                 }
             };
             tlpOptions.SetColumnSpan(this.InterpolationLabel, 2);
@@ -913,6 +923,58 @@ namespace RouteViewer
             this.comboBoxOptimizeObjects.Size = new System.Drawing.Size(121, 21);
             this.comboBoxOptimizeObjects.TabIndex = 57;
             // 
+            // labelVSync
+            // 
+            this.labelVSync.AutoSize = true;
+            this.labelVSync.Location = new System.Drawing.Point(10, 469);
+            this.labelVSync.Name = "labelVSync";
+            this.labelVSync.Size = new System.Drawing.Size(120, 13);
+            this.labelVSync.TabIndex = 58;
+            this.labelVSync.Text = "Vertical Synchronization:";
+            // 
+            // comboBoxVSync
+            // 
+            this.comboBoxVSync.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBoxVSync.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxVSync.FormattingEnabled = true;
+            this.comboBoxVSync.Items.AddRange(new object[] {
+            "Off",
+            "On"});
+            this.comboBoxVSync.Location = new System.Drawing.Point(160, 469);
+            this.comboBoxVSync.Name = "comboBoxVSync";
+            this.comboBoxVSync.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxVSync.TabIndex = 59;
+            this.comboBoxVSync.SelectedIndexChanged += new System.EventHandler(this.comboBoxVSync_SelectedIndexChanged);
+            // 
+            // labelFPSLimit
+            // 
+            this.labelFPSLimit.AutoSize = true;
+            this.labelFPSLimit.Location = new System.Drawing.Point(10, 495);
+            this.labelFPSLimit.Name = "labelFPSLimit";
+            this.labelFPSLimit.Size = new System.Drawing.Size(120, 13);
+            this.labelFPSLimit.TabIndex = 60;
+            this.labelFPSLimit.Text = "FPS Limit:";
+            // 
+            // comboBoxFPSLimit
+            // 
+            this.comboBoxFPSLimit.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBoxFPSLimit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFPSLimit.FormattingEnabled = true;
+            this.comboBoxFPSLimit.Items.AddRange(new object[] {
+            "Unlimited",
+            "30",
+            "60",
+            "120",
+            "240"});
+            this.comboBoxFPSLimit.Location = new System.Drawing.Point(160, 495);
+            this.comboBoxFPSLimit.Name = "comboBoxFPSLimit";
+            this.comboBoxFPSLimit.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxFPSLimit.TabIndex = 61;
+            this.toolTip1.SetToolTip(this.labelVSync, "Enable vertical synchronization to prevent screen tearing.\nWhen enabled, FPS is capped to your monitor's refresh rate (e.g. 60Hz = 60 FPS).\nFPS Limit is disabled when VSync is ON.");
+            this.toolTip1.SetToolTip(this.comboBoxVSync, "ON = sync to monitor refresh rate (e.g. 60Hz monitor → 60 FPS max)\nOFF = uncapped, use FPS Limit below to cap.");
+            this.toolTip1.SetToolTip(this.labelFPSLimit, "Cap the maximum frames per second.\nDisabled when VSync is ON.");
+            this.toolTip1.SetToolTip(this.comboBoxFPSLimit, "Select FPS cap. 'Unlimited' = no limit.\nDisabled when VSync is ON (monitor refresh rate is used instead).");
+            // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -1016,5 +1078,10 @@ namespace RouteViewer
         private System.Windows.Forms.CheckBox checkBoxShadowFilterCascades;
         private System.Windows.Forms.Label labelOptimizeObjects;
         private System.Windows.Forms.ComboBox comboBoxOptimizeObjects;
+        private System.Windows.Forms.Label labelVSync;
+        private System.Windows.Forms.ComboBox comboBoxVSync;
+        private System.Windows.Forms.Label labelFPSLimit;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ComboBox comboBoxFPSLimit;
     }
 }
