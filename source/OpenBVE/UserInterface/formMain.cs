@@ -1186,6 +1186,8 @@ namespace OpenBve {
 			SetToolTip("transparency", labelTransparency, trackbarTransparency);
 			SetToolTip("viewingdistance", labelDistance, updownDistance);
 			SetToolTip("motionblur", labelMotionBlur, comboboxMotionBlur);
+			SetToolTip("vsync", labelVSync, comboboxVSync);
+			SetToolTip("fpslimit", labelFPSLimit, comboBoxFPSLimit);
 		}
 
 		/// <summary>Sets the tooltip for one or more controls using a translation key</summary>

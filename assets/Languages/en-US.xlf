@@ -1443,6 +1443,12 @@
 					<trans-unit id="motionblur">
 						<source>Enables motion blur effects when moving at speed.</source>
 					</trans-unit>
+					<trans-unit id="vsync">
+						<source>Enable vertical synchronization to prevent screen tearing.\r\nWhen enabled, FPS is capped to your monitor's refresh rate\r\n(e.g. 60Hz = 60 FPS).\r\nFPS Limit is disabled when VSync is ON.</source>
+					</trans-unit>
+					<trans-unit id="fpslimit">
+						<source>Cap the maximum frames per second.\r\nSelect 'Unlimited' for no limit.\r\nDisabled when VSync is ON\r\n(the monitor refresh rate is used instead).</source>
+					</trans-unit>
 				</group>
 				<group id="dialog">
 					<trans-unit id="csvfiles">
