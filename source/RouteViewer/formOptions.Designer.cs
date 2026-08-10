@@ -58,6 +58,13 @@ namespace RouteViewer
             this.comboBoxNewObjParser = new System.Windows.Forms.ComboBox();
             this.label15 = new System.Windows.Forms.Label();
             this.numericUpDownViewingDistance = new System.Windows.Forms.NumericUpDown();
+            this.labelOptimizeObjects = new System.Windows.Forms.Label();
+            this.comboBoxOptimizeObjects = new System.Windows.Forms.ComboBox();
+            this.labelVSync = new System.Windows.Forms.Label();
+            this.comboBoxVSync = new System.Windows.Forms.ComboBox();
+            this.labelFPSLimit = new System.Windows.Forms.Label();
+            this.comboBoxFPSLimit = new System.Windows.Forms.ComboBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip();
             this.tabPageShadows = new System.Windows.Forms.TabPage();
             this.comboBoxShadowResolution = new System.Windows.Forms.ComboBox();
             this.labelShadowResolution = new System.Windows.Forms.Label();
@@ -109,7 +116,7 @@ namespace RouteViewer
             this.tabControl1.Location = new System.Drawing.Point(1, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(312, 476);
+            this.tabControl1.Size = new System.Drawing.Size(348, 476);
             this.tabControl1.TabIndex = 50;
             // 
             // tabPageOptions
@@ -117,13 +124,14 @@ namespace RouteViewer
             this.tabPageOptions.AutoScroll = true;
             var tlpOptions = new System.Windows.Forms.TableLayoutPanel
             {
-                Dock = System.Windows.Forms.DockStyle.Fill,
+                AutoSize = true,
+                Dock = System.Windows.Forms.DockStyle.Top,
                 Padding = new System.Windows.Forms.Padding(10),
                 ColumnCount = 2,
                 ColumnStyles =
                 {
-                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize),
-                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F)
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 45F),
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55F)
                 },
                 Controls =
                 {
@@ -161,7 +169,15 @@ namespace RouteViewer
                     { this.label15, 0, 15 },
                     { this.numericUpDownViewingDistance, 1, 15 },
                     { this.labelNearClip, 0, 16 },
-                    { this.numericUpDownNearClip, 1, 16 }
+                    { this.numericUpDownNearClip, 1, 16 },
+                    // Object Optimization
+                    { this.labelOptimizeObjects, 0, 17 },
+                    { this.comboBoxOptimizeObjects, 1, 17 },
+                    // Display
+                    { this.labelVSync, 0, 18 },
+                    { this.comboBoxVSync, 1, 18 },
+                    { this.labelFPSLimit, 0, 19 },
+                    { this.comboBoxFPSLimit, 1, 19 }
                 }
             };
             tlpOptions.SetColumnSpan(this.InterpolationLabel, 2);
@@ -198,6 +214,8 @@ namespace RouteViewer
             // 
             // InterpolationMode
             // 
+            this.InterpolationMode.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.InterpolationMode.AutoSize = true;
             this.InterpolationMode.FormattingEnabled = true;
             this.InterpolationMode.Items.AddRange(new object[] {
             "Nearest Neighbour",
@@ -222,6 +240,8 @@ namespace RouteViewer
             // 
             // AnisotropicLevel
             // 
+            this.AnisotropicLevel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AnisotropicLevel.AutoSize = true;
             this.AnisotropicLevel.Location = new System.Drawing.Point(160, 52);
             this.AnisotropicLevel.Maximum = new decimal(new int[] {
             16,
@@ -243,6 +263,8 @@ namespace RouteViewer
             // 
             // AntialiasingLevel
             // 
+            this.AntialiasingLevel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AntialiasingLevel.AutoSize = true;
             this.AntialiasingLevel.Location = new System.Drawing.Point(160, 77);
             this.AntialiasingLevel.Maximum = new decimal(new int[] {
             16,
@@ -264,6 +286,8 @@ namespace RouteViewer
             // 
             // TransparencyQuality
             // 
+            this.TransparencyQuality.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TransparencyQuality.AutoSize = true;
             this.TransparencyQuality.FormattingEnabled = true;
             this.TransparencyQuality.Items.AddRange(new object[] {
             "Sharp",
@@ -295,6 +319,8 @@ namespace RouteViewer
             // 
             // width
             // 
+            this.width.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.width.AutoSize = true;
             this.width.Location = new System.Drawing.Point(160, 163);
             this.width.Maximum = new decimal(new int[] {
             4096,
@@ -326,6 +352,8 @@ namespace RouteViewer
             // 
             // height
             // 
+            this.height.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.height.AutoSize = true;
             this.height.Location = new System.Drawing.Point(160, 189);
             this.height.Maximum = new decimal(new int[] {
             4096,
@@ -367,6 +395,7 @@ namespace RouteViewer
             // 
             // checkBoxLogo
             // 
+            this.checkBoxLogo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.checkBoxLogo.AutoSize = true;
             this.checkBoxLogo.Location = new System.Drawing.Point(248, 247);
             this.checkBoxLogo.Name = "checkBoxLogo";
@@ -385,6 +414,7 @@ namespace RouteViewer
             // 
             // checkBoxBackgrounds
             // 
+            this.checkBoxBackgrounds.Dock = System.Windows.Forms.DockStyle.Fill;
             this.checkBoxBackgrounds.AutoSize = true;
             this.checkBoxBackgrounds.Location = new System.Drawing.Point(248, 270);
             this.checkBoxBackgrounds.Name = "checkBoxBackgrounds";
@@ -403,6 +433,7 @@ namespace RouteViewer
             // 
             // checkBoxProgressBar
             // 
+            this.checkBoxProgressBar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.checkBoxProgressBar.AutoSize = true;
             this.checkBoxProgressBar.Location = new System.Drawing.Point(248, 293);
             this.checkBoxProgressBar.Name = "checkBoxProgressBar";
@@ -431,6 +462,8 @@ namespace RouteViewer
             // 
             // comboBoxNewXParser
             // 
+            this.comboBoxNewXParser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBoxNewXParser.AutoSize = true;
             this.comboBoxNewXParser.FormattingEnabled = true;
             this.comboBoxNewXParser.Items.AddRange(new object[] {
             "OriginalXParser",
@@ -452,6 +485,8 @@ namespace RouteViewer
             // 
             // comboBoxNewObjParser
             // 
+            this.comboBoxNewObjParser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBoxNewObjParser.AutoSize = true;
             this.comboBoxNewObjParser.FormattingEnabled = true;
             this.comboBoxNewObjParser.Items.AddRange(new object[] {
             "OriginalObjParser",
@@ -472,6 +507,8 @@ namespace RouteViewer
             // 
             // numericUpDownViewingDistance
             // 
+            this.numericUpDownViewingDistance.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numericUpDownViewingDistance.AutoSize = true;
             this.numericUpDownViewingDistance.Location = new System.Drawing.Point(160, 391);
             this.numericUpDownViewingDistance.Maximum = new decimal(new int[] {
             4096,
@@ -497,13 +534,14 @@ namespace RouteViewer
             this.tabPageShadows.AutoScroll = true;
             var tlpShadows = new System.Windows.Forms.TableLayoutPanel
             {
-                Dock = System.Windows.Forms.DockStyle.Fill,
+                AutoSize = true,
+                Dock = System.Windows.Forms.DockStyle.Top,
                 Padding = new System.Windows.Forms.Padding(10),
                 ColumnCount = 2,
                 ColumnStyles =
                 {
-                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize),
-                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F)
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 45F),
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55F)
                 },
                 Controls =
                 {
@@ -581,6 +619,8 @@ namespace RouteViewer
             // comboBoxShadowResolution
             // 
             this.comboBoxShadowResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxShadowResolution.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBoxShadowResolution.AutoSize = true;
             this.comboBoxShadowResolution.FormattingEnabled = true;
             this.comboBoxShadowResolution.Items.AddRange(new object[] {
             "Off",
@@ -605,6 +645,8 @@ namespace RouteViewer
             // comboBoxShadowDistance
             // 
             this.comboBoxShadowDistance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxShadowDistance.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBoxShadowDistance.AutoSize = true;
             this.comboBoxShadowDistance.FormattingEnabled = true;
             this.comboBoxShadowDistance.Items.AddRange(new object[] {
             "Near (150m)",
@@ -629,6 +671,8 @@ namespace RouteViewer
             // comboBoxShadowCascades
             // 
             this.comboBoxShadowCascades.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxShadowCascades.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBoxShadowCascades.AutoSize = true;
             this.comboBoxShadowCascades.FormattingEnabled = true;
             this.comboBoxShadowCascades.Items.AddRange(new object[] {
             "2 Cascades",
@@ -650,6 +694,8 @@ namespace RouteViewer
             // 
             // numericUpDownShadowStrength
             // 
+            this.numericUpDownShadowStrength.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numericUpDownShadowStrength.AutoSize = true;
             this.numericUpDownShadowStrength.Location = new System.Drawing.Point(160, 114);
             this.numericUpDownShadowStrength.Name = "numericUpDownShadowStrength";
             this.numericUpDownShadowStrength.Size = new System.Drawing.Size(120, 20);
@@ -751,6 +797,8 @@ namespace RouteViewer
             0,
             0,
             393216});
+            this.numericUpDownShadowBias.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numericUpDownShadowBias.AutoSize = true;
             this.numericUpDownShadowBias.Location = new System.Drawing.Point(160, 148);
             this.numericUpDownShadowBias.Maximum = new decimal(new int[] {
             1,
@@ -783,6 +831,8 @@ namespace RouteViewer
             0,
             0,
             65536});
+            this.numericUpDownShadowNormalBias.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numericUpDownShadowNormalBias.AutoSize = true;
             this.numericUpDownShadowNormalBias.Location = new System.Drawing.Point(160, 170);
             this.numericUpDownShadowNormalBias.Maximum = new decimal(new int[] {
             10,
@@ -809,6 +859,7 @@ namespace RouteViewer
             // 
             // checkBoxShadowFilterCascades
             // 
+            this.checkBoxShadowFilterCascades.Dock = System.Windows.Forms.DockStyle.Fill;
             this.checkBoxShadowFilterCascades.AutoSize = true;
             this.checkBoxShadowFilterCascades.Location = new System.Drawing.Point(160, 194);
             this.checkBoxShadowFilterCascades.Name = "checkBoxShadowFilterCascades";
@@ -833,6 +884,8 @@ namespace RouteViewer
             0,
             0,
             131072});
+            this.numericUpDownNearClip.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numericUpDownNearClip.AutoSize = true;
             this.numericUpDownNearClip.Location = new System.Drawing.Point(161, 417);
             this.numericUpDownNearClip.Minimum = new decimal(new int[] {
             1,
@@ -848,10 +901,84 @@ namespace RouteViewer
             0,
             65536});
             // 
+            // labelOptimizeObjects
+            // 
+            this.labelOptimizeObjects.AutoSize = true;
+            this.labelOptimizeObjects.Location = new System.Drawing.Point(6, 443);
+            this.labelOptimizeObjects.Name = "labelOptimizeObjects";
+            this.labelOptimizeObjects.Size = new System.Drawing.Size(131, 13);
+            this.labelOptimizeObjects.TabIndex = 56;
+            this.labelOptimizeObjects.Text = "Object Optimization Mode:";
+            // 
+            // comboBoxOptimizeObjects
+            // 
+            this.comboBoxOptimizeObjects.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBoxOptimizeObjects.FormattingEnabled = true;
+            this.comboBoxOptimizeObjects.Items.AddRange(new object[] {
+            "None",
+            "Low",
+            "High"});
+            this.comboBoxOptimizeObjects.Location = new System.Drawing.Point(160, 443);
+            this.comboBoxOptimizeObjects.Name = "comboBoxOptimizeObjects";
+            this.comboBoxOptimizeObjects.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxOptimizeObjects.TabIndex = 57;
+            // 
+            // labelVSync
+            // 
+            this.labelVSync.AutoSize = true;
+            this.labelVSync.Location = new System.Drawing.Point(10, 469);
+            this.labelVSync.Name = "labelVSync";
+            this.labelVSync.Size = new System.Drawing.Size(120, 13);
+            this.labelVSync.TabIndex = 58;
+            this.labelVSync.Text = "Vertical Synchronization:";
+            // 
+            // comboBoxVSync
+            // 
+            this.comboBoxVSync.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBoxVSync.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxVSync.FormattingEnabled = true;
+            this.comboBoxVSync.Items.AddRange(new object[] {
+            "Off",
+            "On"});
+            this.comboBoxVSync.Location = new System.Drawing.Point(160, 469);
+            this.comboBoxVSync.Name = "comboBoxVSync";
+            this.comboBoxVSync.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxVSync.TabIndex = 59;
+            this.comboBoxVSync.SelectedIndexChanged += new System.EventHandler(this.comboBoxVSync_SelectedIndexChanged);
+            // 
+            // labelFPSLimit
+            // 
+            this.labelFPSLimit.AutoSize = true;
+            this.labelFPSLimit.Location = new System.Drawing.Point(10, 495);
+            this.labelFPSLimit.Name = "labelFPSLimit";
+            this.labelFPSLimit.Size = new System.Drawing.Size(120, 13);
+            this.labelFPSLimit.TabIndex = 60;
+            this.labelFPSLimit.Text = "FPS Limit:";
+            // 
+            // comboBoxFPSLimit
+            // 
+            this.comboBoxFPSLimit.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBoxFPSLimit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFPSLimit.FormattingEnabled = true;
+            this.comboBoxFPSLimit.Items.AddRange(new object[] {
+            "Unlimited",
+            "30",
+            "60",
+            "120",
+            "240"});
+            this.comboBoxFPSLimit.Location = new System.Drawing.Point(160, 495);
+            this.comboBoxFPSLimit.Name = "comboBoxFPSLimit";
+            this.comboBoxFPSLimit.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxFPSLimit.TabIndex = 61;
+            this.toolTip1.SetToolTip(this.labelVSync, "Enable vertical synchronization to prevent screen tearing.\nWhen enabled, FPS is capped to your monitor's refresh rate (e.g. 60Hz = 60 FPS).\nFPS Limit is disabled when VSync is ON.");
+            this.toolTip1.SetToolTip(this.comboBoxVSync, "ON = sync to monitor refresh rate (e.g. 60Hz monitor → 60 FPS max)\nOFF = uncapped, use FPS Limit below to cap.");
+            this.toolTip1.SetToolTip(this.labelFPSLimit, "Cap the maximum frames per second.\nDisabled when VSync is ON.");
+            this.toolTip1.SetToolTip(this.comboBoxFPSLimit, "Select FPS cap. 'Unlimited' = no limit.\nDisabled when VSync is ON (monitor refresh rate is used instead).");
+            // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(234, 494);
+            this.button1.Location = new System.Drawing.Point(268, 504);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 9;
@@ -861,12 +988,12 @@ namespace RouteViewer
             // 
             // FormOptions
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(316, 526);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(350, 530);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.tabControl1);
-            this.MinimumSize = new System.Drawing.Size(330, 400);
+            this.MinimumSize = new System.Drawing.Size(320, 420);
             this.Name = "FormOptions";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -949,5 +1076,12 @@ namespace RouteViewer
         private System.Windows.Forms.NumericUpDown numericUpDownShadowNormalBias;
         private System.Windows.Forms.Label labelShadowFilterCascades;
         private System.Windows.Forms.CheckBox checkBoxShadowFilterCascades;
+        private System.Windows.Forms.Label labelOptimizeObjects;
+        private System.Windows.Forms.ComboBox comboBoxOptimizeObjects;
+        private System.Windows.Forms.Label labelVSync;
+        private System.Windows.Forms.ComboBox comboBoxVSync;
+        private System.Windows.Forms.Label labelFPSLimit;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ComboBox comboBoxFPSLimit;
     }
 }

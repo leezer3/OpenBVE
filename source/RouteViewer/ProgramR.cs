@@ -173,10 +173,8 @@ namespace RouteViewer
 				SetProcessDPIAware();
 			}
 
-			string folder = Program.FileSystem.GetDataFolder("Languages");
+			string folder = FileSystem.GetDataFolder("Languages");
 			Translations.LoadLanguageFiles(folder);
-			Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
-			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// application
 			Renderer.GraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
 			if (Renderer.Screen.Width == 0 || Renderer.Screen.Height == 0)
@@ -185,12 +183,17 @@ namespace RouteViewer
 				Renderer.Screen.Width = 1024;
 				Renderer.Screen.Height = 768;
 			}
-			Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
+			Renderer.CameraTrackFollower = new TrackFollower(CurrentHost);
 			Renderer.GameWindow = new RouteViewer(Renderer.Screen.Width, Renderer.Screen.Height, Renderer.GraphicsMode, "Route Viewer", GameWindowFlags.Default);
 			Renderer.GameWindow.Visible = true;
 			Renderer.GameWindow.TargetUpdateFrequency = 0;
 			Renderer.GameWindow.TargetRenderFrequency = 0;
 			Renderer.GameWindow.Title = "Route Viewer";
+			Renderer.GameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? VSyncMode.On : VSyncMode.Off;
+			if (Interface.CurrentOptions.FPSLimit > 0)
+			{
+				Renderer.GameWindow.TargetRenderFrequency = Interface.CurrentOptions.FPSLimit;
+			}
 			processCommandLineArgs = true;
 			Renderer.GameWindow.Run();
 			//Unload
@@ -239,11 +242,10 @@ namespace RouteViewer
 					}
 					else
 					{
-						Random randomGenerator = new Random();
 						int colorIdx = 5; // known value already in list to make our while loop easy
 						while (Renderer.usedTrackColors.Contains(colorIdx))
 						{
-							colorIdx = randomGenerator.Next(0, 255);
+							colorIdx = CurrentHost.Random.Next(0, 255);
 						}
 						Renderer.usedTrackColors.Add(colorIdx);
 						Renderer.trackColors.Add(key, new RailPath(CurrentHost, Renderer, key, CurrentRoute.BlockLength, ColorPalettes.Windows256ColorPalette[colorIdx])); //use the 256 color Windows palette for a decent set of contrasting colors	

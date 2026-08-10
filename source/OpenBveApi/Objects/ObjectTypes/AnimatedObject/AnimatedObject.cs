@@ -770,7 +770,7 @@ namespace OpenBveApi.Objects
 			//Place track followers if required
 			if (TrackFollowerFunction != null)
 			{
-				var o = this.Clone();
+				AnimatedObject o = this.Clone();
 				currentHost.CreateDynamicObject(ref o.internalObject);
 				TrackFollowingObject currentObject = new TrackFollowingObject(currentHost)
 				{
@@ -814,7 +814,7 @@ namespace OpenBveApi.Objects
 			}
 			else
 			{
-				var o = this.Clone();
+				AnimatedObject o = this.Clone();
 				currentHost.CreateDynamicObject(ref o.internalObject);
 				o.SectionIndex = sectionIndex;
 				AnimatedWorldObject currentObject = new AnimatedWorldObject(currentHost)
@@ -825,7 +825,7 @@ namespace OpenBveApi.Objects
 					Side = FinalTransformation.X,
 					Object = o,
 					SectionIndex = sectionIndex,
-					TrackPosition = TrackPosition,
+					TrackPosition = TrackPosition
 				};
 				for (int i = 0; i < currentObject.Object.States.Length; i++)
 				{

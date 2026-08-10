@@ -86,8 +86,7 @@ namespace ObjectViewer {
                             //Generates a random number between two given doubles
                             double min = Function.Stack[s - 2];
                             double max = Function.Stack[s - 1];
-                            var randomGenerator = new Random();
-                            Function.Stack[s - 2] = min + randomGenerator.NextDouble() * (max - min);
+                            Function.Stack[s - 2] = min + Program.CurrentHost.Random.NextDouble() * (max - min);
                             s--;
                         }
                         break;
@@ -96,8 +95,7 @@ namespace ObjectViewer {
                             //Generates a random number between two given doubles
                             int min = (int)Function.Stack[s - 2];
                             int max = (int)Function.Stack[s - 1];
-                            var randomGenerator = new Random();
-                            Function.Stack[s - 2] = randomGenerator.Next(min, max);
+                            Function.Stack[s - 2] = Program.CurrentHost.Random.Next(min, max);
                             s--;
                         }
                         break;
@@ -653,13 +651,7 @@ namespace ObjectViewer {
 						}
 						break;
 					case Instructions.PilotLamp:
-						//Not currently supported in viewers
-						Function.Stack[s] = 0.0;
-						s++; break;
 					case Instructions.PassAlarm:
-						//Not currently supported in viewers
-						Function.Stack[s] = 0.0;
-						s++; break;
 					case Instructions.StationAdjustAlarm:
 						//Not currently supported in viewers
 						Function.Stack[s] = 0.0;

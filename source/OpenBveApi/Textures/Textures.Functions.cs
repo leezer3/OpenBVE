@@ -55,13 +55,12 @@ namespace OpenBveApi.Textures {
 		        throw new ArgumentException();
 		    }
 		    int width = texture.Width;
-		    byte[] bytes;
 		    if (texture.Bytes == null)
 		    {
 			    texture.Origin.GetTexture(out texture);
 		    }
 		    
-		    bytes = texture.Bytes;
+		    byte[] bytes = texture.Bytes;
 
 			int clipLeft = region.Left;
 		    int clipTop = region.Top;

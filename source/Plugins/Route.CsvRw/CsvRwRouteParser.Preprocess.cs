@@ -397,7 +397,7 @@ namespace CsvRwRouteParser
 										break;
 									}
 									if (!continueWithNextExpression) {
-										double number = Plugin.RandomNumberGenerator.NextDouble() * weightsTotal;
+										double number = Plugin.CurrentHost.Random.NextDouble() * weightsTotal;
 										double value = 0.0;
 										int chosenIndex = 0;
 										for (int ia = 0; ia < count; ia++) {
@@ -476,7 +476,7 @@ namespace CsvRwRouteParser
 											string s2 = s.Substring(m + 1).TrimStart();
 											if (NumberFormats.TryParseIntVb6(s1, out int x)) {
 												if (NumberFormats.TryParseIntVb6(s2, out int y)) {
-													int z = x + (int)Math.Floor(Plugin.RandomNumberGenerator.NextDouble() * (y - x + 1));
+													int z = x + (int)Math.Floor(Plugin.CurrentHost.Random.NextDouble() * (y - x + 1));
 													Expressions[i].Text = Expressions[i].Text.Substring(0, j) + z.ToString(Culture) + Expressions[i].Text.Substring(h + 1);
 												} else {
 													continueWithNextExpression = true;

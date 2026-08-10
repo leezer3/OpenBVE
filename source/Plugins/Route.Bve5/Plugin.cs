@@ -41,8 +41,6 @@ namespace Route.Bve5
 
 	    internal static CurrentRoute CurrentRoute;
 
-	    internal static Random RandomNumberGenerator = new Random();
-
 	    internal static FileSystem FileSystem;
 
 	    internal static BaseOptions CurrentOptions;

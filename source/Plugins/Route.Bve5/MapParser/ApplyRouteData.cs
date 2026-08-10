@@ -417,7 +417,7 @@ namespace Route.Bve5
 											expr += " ?";
 										}
 
-										double refreshRate = 1.0 + 0.01 * Plugin.RandomNumberGenerator.NextDouble();
+										double refreshRate = 1.0 + 0.01 * Plugin.CurrentHost.Random.NextDouble();
 										for (int m = 0; m < aoc.Objects.Length; m++)
 										{
 											aoc.Objects[m].StateFunction = new FunctionScript(Plugin.CurrentHost, expr, false);

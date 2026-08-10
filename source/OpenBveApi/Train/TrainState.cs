@@ -12,7 +12,6 @@
 		/// <summary>The train is pending disposal</summary>
 		DisposePending = 3,
 		/// <summary>The train has traversed it's path, and has been disposed of by the simulation</summary>
-		Disposed = 4,
-		
+		Disposed = 4
 	}
 }

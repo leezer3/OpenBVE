@@ -20,7 +20,7 @@ namespace RouteViewer {
 			}
 			// current alignment
 			Program.Renderer.Camera.AdjustAlignment(ref Program.Renderer.Camera.Alignment.Position, Program.Renderer.Camera.AlignmentDirection.Position, ref Program.Renderer.Camera.AlignmentSpeed.Position, timeElapsed);
-			bool q = Program.Renderer.Camera.AlignmentSpeed.Yaw != 0.0 | Program.Renderer.Camera.AlignmentSpeed.Pitch != 0.0 | Program.Renderer.Camera.AlignmentSpeed.Roll != 0.0;
+			bool q = Program.Renderer.Camera.AlignmentSpeed.Yaw != 0.0 || Program.Renderer.Camera.AlignmentSpeed.Pitch != 0.0 || Program.Renderer.Camera.AlignmentSpeed.Roll != 0.0;
 			Program.Renderer.Camera.AdjustAlignment(ref Program.Renderer.Camera.Alignment.Yaw, Program.Renderer.Camera.AlignmentDirection.Yaw, ref Program.Renderer.Camera.AlignmentSpeed.Yaw, timeElapsed);
 			Program.Renderer.Camera.AdjustAlignment(ref Program.Renderer.Camera.Alignment.Pitch, Program.Renderer.Camera.AlignmentDirection.Pitch, ref Program.Renderer.Camera.AlignmentSpeed.Pitch, timeElapsed);
 			Program.Renderer.Camera.AdjustAlignment(ref Program.Renderer.Camera.Alignment.Roll, Program.Renderer.Camera.AlignmentDirection.Roll, ref Program.Renderer.Camera.AlignmentSpeed.Roll, timeElapsed);
@@ -44,10 +44,9 @@ namespace RouteViewer {
 				dF.Rotate(uF, Program.Renderer.Camera.Alignment.Yaw);
 				sF.Rotate(uF, Program.Renderer.Camera.Alignment.Yaw);
 			}
-			double p = Program.Renderer.Camera.Alignment.Pitch;
-			if (p != 0.0) {
-				dF.Rotate(sF, -p);
-				uF.Rotate(sF, -p);
+			if (Program.Renderer.Camera.Alignment.Pitch != 0.0) {
+				dF.Rotate(sF, -Program.Renderer.Camera.Alignment.Pitch);
+				uF.Rotate(sF, -Program.Renderer.Camera.Alignment.Pitch);
 			}
 			if (Program.Renderer.Camera.Alignment.Roll != 0.0) {
 				uF.Rotate(dF, -Program.Renderer.Camera.Alignment.Roll);

@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
@@ -27,11 +27,14 @@ using OpenBveApi.Math;
 using OpenBveApi.Motor;
 using OpenBveApi.Trains;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using OpenBveApi;
 using TrainManager.Car.Systems;
 using TrainManager.Motor;
 using OpenBveApi.Hosts;
+using SoundManager;
+using TrainManager.Car;
 using TrainManager.SafetySystems;
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 
@@ -137,6 +140,7 @@ namespace Train.MsTs
 		{
 			dynamic dynamicTrain = train;
 			TractionModel tractionModel = dynamicTrain.Cars[carIndex].TractionModel;
+			CarBase driverCar = dynamicTrain.Cars[dynamicTrain.DriverCar];
 			switch (Subject)
 			{
 				case PanelSubject.CP_Handle:
@@ -346,24 +350,21 @@ namespace Train.MsTs
 					}
 					break;
 				case PanelSubject.Alerter_Display:
-					// can't use an extension on a dynamic directly, have to get to known type first
-					Dictionary<SafetySystem, AbstractSafetySystem> safetySystems = dynamicTrain.Cars[dynamicTrain.DriverCar].SafetySystems;
-					if (safetySystems.TryGetTypedValue(SafetySystem.DriverSupervisionDevice, out DriverSupervisionDevice dsd) && dsd.CurrentState == SafetySystemState.Alarm)
+					if (driverCar.SafetySystems.TryGetTypedValue(SafetySystem.DriverSupervisionDevice, out DriverSupervisionDevice dsd) && dsd.CurrentState == SafetySystemState.Alarm)
 					{
 						lastResult = 1;
 					}
-					if (safetySystems.TryGetTypedValue(SafetySystem.OverspeedDevice, out OverspeedDevice osd) && osd.CurrentState == SafetySystemState.Alarm)
+					if (driverCar.SafetySystems.TryGetTypedValue(SafetySystem.OverspeedDevice, out OverspeedDevice osd) && osd.CurrentState == SafetySystemState.Alarm)
 					{
 						lastResult = 1;
 					}
 					break;
 				case PanelSubject.Penalty_App:
-					safetySystems = dynamicTrain.Cars[dynamicTrain.DriverCar].SafetySystems;
-					if (safetySystems.TryGetTypedValue(SafetySystem.DriverSupervisionDevice, out dsd) && dsd.CurrentState == SafetySystemState.Triggered)
+					if (driverCar.SafetySystems.TryGetTypedValue(SafetySystem.DriverSupervisionDevice, out dsd) && dsd.CurrentState == SafetySystemState.Triggered)
 					{
 						lastResult = 1;
 					}
-					if (safetySystems.TryGetTypedValue(SafetySystem.OverspeedDevice, out osd) && osd.CurrentState == SafetySystemState.Triggered)
+					if (driverCar.SafetySystems.TryGetTypedValue(SafetySystem.OverspeedDevice, out osd) && osd.CurrentState == SafetySystemState.Triggered)
 					{
 						lastResult = 1;
 					}
@@ -402,22 +403,22 @@ namespace Train.MsTs
 					MapDigitalResult(amps);
 					break;
 				case PanelSubject.Brake_Pipe:
-					double bp = dynamicTrain.Cars[dynamicTrain.DriverCar].CarBrake.BrakePipe.CurrentPressure;
+					double bp = driverCar.CarBrake.BrakePipe.CurrentPressure;
 					bp *= UnitConversionFactor;
 					MapDigitalResult(bp);
 					break;
 				case PanelSubject.Eq_Res:
-					double er = dynamicTrain.Cars[dynamicTrain.DriverCar].CarBrake.EqualizingReservoir.CurrentPressure;
+					double er = driverCar.CarBrake.EqualizingReservoir.CurrentPressure;
 					er *= UnitConversionFactor;
 					MapDigitalResult(er);
 					break;
 				case PanelSubject.Brake_Cyl:
-					double bc = dynamicTrain.Cars[dynamicTrain.DriverCar].CarBrake.BrakeCylinder.CurrentPressure;
+					double bc = driverCar.CarBrake.BrakeCylinder.CurrentPressure;
 					bc *= UnitConversionFactor;
 					MapDigitalResult(bc);
 					break;
 				case PanelSubject.Main_Res:
-					double mr = dynamicTrain.Cars[dynamicTrain.DriverCar].CarBrake.MainReservoir.CurrentPressure;
+					double mr = driverCar.CarBrake.MainReservoir.CurrentPressure;
 					mr *= UnitConversionFactor;
 					MapDigitalResult(mr);
 					break;
@@ -498,6 +499,49 @@ namespace Train.MsTs
 					if (tractionModel is DieselEngine dE)
 					{
 						lastResult = dE.FuelTank.CurrentLevel;
+					}
+					break;
+				case PanelSubject.Firehole:
+					if (tractionModel.Components.TryGetTypedValue(EngineComponent.Firebox, out Firebox f))
+					{
+						MapResult(f.DoorState);
+					}
+					break;
+				case PanelSubject.Doors_Display:
+					double a = 0.0;
+					for (int j = 0; j < dynamicTrain.Cars.Length; j++)
+					{
+						for (int k = 0; k < dynamicTrain.Cars[j].Doors.Length; k++)
+						{
+							if (dynamicTrain.Cars[j].Doors[k].State > a)
+							{
+								a = dynamicTrain.Cars[j].Doors[k].State;
+							}
+						}
+					}
+					MapResult(1 - a);
+					break;
+				case PanelSubject.Whistle:
+				case PanelSubject.Horn:
+					SoundSource s = driverCar.Horns[0].Source;
+					double h = 0;
+					if (s != null)
+					{
+						h = s.IsPlaying() ? 1 : 0;
+					}
+					MapResult(h);
+					break;
+				case PanelSubject.Reset:
+					lastResult = 0;
+					for (int i = 0; i < driverCar.SafetySystems.Count; i++)
+					{
+						SafetySystem key = driverCar.SafetySystems.ElementAt(i).Key;
+						AbstractSafetySystem abs = driverCar.SafetySystems[key];
+						if (abs.ResetPressed)
+						{
+							lastResult = 1;
+							break;
+						}
 					}
 					break;
 			}

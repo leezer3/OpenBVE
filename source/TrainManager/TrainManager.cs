@@ -20,7 +20,6 @@ namespace TrainManager
 		internal static FileSystem FileSystem;
 		public static bool Toppling;
 		public static bool Derailments;
-		internal static Random RandomNumberGenerator = new Random();
 
 		/// <summary>The list of trains available in the simulation.</summary>
 		public List<TrainBase> Trains = new List<TrainBase>();

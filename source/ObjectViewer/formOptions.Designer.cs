@@ -92,6 +92,11 @@ namespace ObjectViewer
             this.numericUpDownShadowNormalBias = new System.Windows.Forms.NumericUpDown();
             this.labelShadowFilterCascades = new System.Windows.Forms.Label();
             this.checkBoxShadowFilterCascades = new System.Windows.Forms.CheckBox();
+            this.labelVSync = new System.Windows.Forms.Label();
+            this.comboBoxVSync = new System.Windows.Forms.ComboBox();
+            this.labelFPSLimit = new System.Windows.Forms.Label();
+            this.comboBoxFPSLimit = new System.Windows.Forms.ComboBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip();
             this.tabControl1.SuspendLayout();
             this.tabPageOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AntialiasingLevel)).BeginInit();
@@ -117,20 +122,21 @@ namespace ObjectViewer
             this.tabControl1.Location = new System.Drawing.Point(1, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(312, 411);
+            this.tabControl1.Size = new System.Drawing.Size(348, 460);
             this.tabControl1.TabIndex = 26;
             // 
             // tabPageOptions
             // 
             var tlpOptions = new System.Windows.Forms.TableLayoutPanel
             {
-                Dock = System.Windows.Forms.DockStyle.Fill,
+                AutoSize = true,
+                Dock = System.Windows.Forms.DockStyle.Top,
                 Padding = new System.Windows.Forms.Padding(10),
                 ColumnCount = 2,
                 ColumnStyles =
                 {
-                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize),
-                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F)
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 45F),
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55F)
                 },
                 Controls =
                 {
@@ -152,16 +158,20 @@ namespace ObjectViewer
                     { this.height, 1, 7 },
                     // Other Settings
                     { this.labelOtherSettings, 0, 8 },
-                    { this.labelUseNewXParser, 0, 9 },
-                    { this.comboBoxNewXParser, 1, 9 },
-                    { this.labelUseNewObjParser, 0, 10 },
-                    { this.comboBoxNewObjParser, 1, 10 },
-                    { this.labelOptimizeObjects, 0, 11 },
-                    { this.comboBoxOptimizeObjects, 1, 11 },
-                    { this.labelNearClip, 0, 12 },
-                    { this.nearClip, 1, 12 },
-                    { this.labelAutoReloadChanged, 0, 13 },
-                    { this.checkBoxAutoReload, 1, 13 }
+                    { this.labelVSync, 0, 9 },
+                    { this.comboBoxVSync, 1, 9 },
+                    { this.labelFPSLimit, 0, 10 },
+                    { this.comboBoxFPSLimit, 1, 10 },
+                    { this.labelUseNewXParser, 0, 11 },
+                    { this.comboBoxNewXParser, 1, 11 },
+                    { this.labelUseNewObjParser, 0, 12 },
+                    { this.comboBoxNewObjParser, 1, 12 },
+                    { this.labelOptimizeObjects, 0, 13 },
+                    { this.comboBoxOptimizeObjects, 1, 13 },
+                    { this.labelNearClip, 0, 14 },
+                    { this.nearClip, 1, 14 },
+                    { this.labelAutoReloadChanged, 0, 15 },
+                    { this.checkBoxAutoReload, 1, 15 }
                 }
             };
             tlpOptions.SetColumnSpan(this.labelInterpolationSettings, 2);
@@ -179,6 +189,7 @@ namespace ObjectViewer
             // 
             // comboBoxOptimizeObjects
             // 
+            this.comboBoxOptimizeObjects.Dock = System.Windows.Forms.DockStyle.Fill;
             this.comboBoxOptimizeObjects.FormattingEnabled = true;
             this.comboBoxOptimizeObjects.Items.AddRange(new object[] {
             "None",
@@ -209,6 +220,7 @@ namespace ObjectViewer
             // 
             // nearClip
             // 
+            this.nearClip.Dock = System.Windows.Forms.DockStyle.Fill;
             this.nearClip.DecimalPlaces = 3;
             this.nearClip.Increment = new decimal(new int[] {
             1,
@@ -237,6 +249,7 @@ namespace ObjectViewer
             // 
             // comboBoxNewObjParser
             // 
+            this.comboBoxNewObjParser.Dock = System.Windows.Forms.DockStyle.Fill;
             this.comboBoxNewObjParser.FormattingEnabled = true;
             this.comboBoxNewObjParser.Items.AddRange(new object[] {
             "OriginalObjParser",
@@ -257,6 +270,7 @@ namespace ObjectViewer
             // 
             // comboBoxNewXParser
             // 
+            this.comboBoxNewXParser.Dock = System.Windows.Forms.DockStyle.Fill;
             this.comboBoxNewXParser.FormattingEnabled = true;
             this.comboBoxNewXParser.Items.AddRange(new object[] {
             "OriginalXParser",
@@ -297,6 +311,7 @@ namespace ObjectViewer
             // 
             // TransparencyQuality
             // 
+            this.TransparencyQuality.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TransparencyQuality.FormattingEnabled = true;
             this.TransparencyQuality.Items.AddRange(new object[] {
             "Sharp",
@@ -309,6 +324,7 @@ namespace ObjectViewer
             // 
             // AntialiasingLevel
             // 
+            this.AntialiasingLevel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.AntialiasingLevel.Location = new System.Drawing.Point(160, 77);
             this.AntialiasingLevel.Maximum = new decimal(new int[] {
             16,
@@ -321,6 +337,7 @@ namespace ObjectViewer
             // 
             // AnisotropicLevel
             // 
+            this.AnisotropicLevel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.AnisotropicLevel.Location = new System.Drawing.Point(160, 52);
             this.AnisotropicLevel.Maximum = new decimal(new int[] {
             16,
@@ -351,6 +368,7 @@ namespace ObjectViewer
             // 
             // height
             // 
+            this.height.Dock = System.Windows.Forms.DockStyle.Fill;
             this.height.Location = new System.Drawing.Point(161, 189);
             this.height.Maximum = new decimal(new int[] {
             4096,
@@ -373,6 +391,7 @@ namespace ObjectViewer
             // 
             // width
             // 
+            this.width.Dock = System.Windows.Forms.DockStyle.Fill;
             this.width.Location = new System.Drawing.Point(160, 163);
             this.width.Maximum = new decimal(new int[] {
             4096,
@@ -442,6 +461,7 @@ namespace ObjectViewer
             // 
             // InterpolationMode
             // 
+            this.InterpolationMode.Dock = System.Windows.Forms.DockStyle.Fill;
             this.InterpolationMode.FormattingEnabled = true;
             this.InterpolationMode.Items.AddRange(new object[] {
             "Nearest Neighbour",
@@ -459,13 +479,14 @@ namespace ObjectViewer
             // 
             var tlpShadows = new System.Windows.Forms.TableLayoutPanel
             {
-                Dock = System.Windows.Forms.DockStyle.Fill,
+                AutoSize = true,
+                Dock = System.Windows.Forms.DockStyle.Top,
                 Padding = new System.Windows.Forms.Padding(10),
                 ColumnCount = 2,
                 ColumnStyles =
                 {
-                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize),
-                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F)
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 45F),
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55F)
                 },
                 Controls =
                 {
@@ -746,7 +767,8 @@ namespace ObjectViewer
             // 
             var tlpKeys = new System.Windows.Forms.TableLayoutPanel
             {
-                Dock = System.Windows.Forms.DockStyle.Fill,
+                AutoSize = true,
+                Dock = System.Windows.Forms.DockStyle.Top,
                 Padding = new System.Windows.Forms.Padding(10),
                 ColumnCount = 2,
                 ColumnStyles =
@@ -898,7 +920,7 @@ namespace ObjectViewer
             // CloseButton
             // 
             this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CloseButton.Location = new System.Drawing.Point(234, 399);
+            this.CloseButton.Location = new System.Drawing.Point(268, 433);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(75, 23);
             this.CloseButton.TabIndex = 32;
@@ -917,12 +939,65 @@ namespace ObjectViewer
             // 
             // checkBoxAutoReload
             // 
+            this.checkBoxAutoReload.Dock = System.Windows.Forms.DockStyle.Fill;
             this.checkBoxAutoReload.AutoSize = true;
             this.checkBoxAutoReload.Location = new System.Drawing.Point(265, 353);
             this.checkBoxAutoReload.Name = "checkBoxAutoReload";
             this.checkBoxAutoReload.Size = new System.Drawing.Size(15, 14);
             this.checkBoxAutoReload.TabIndex = 49;
             this.checkBoxAutoReload.UseVisualStyleBackColor = true;
+            // 
+            // labelVSync
+            // 
+            this.labelVSync.AutoSize = true;
+            this.labelVSync.Location = new System.Drawing.Point(10, 253);
+            this.labelVSync.Name = "labelVSync";
+            this.labelVSync.Size = new System.Drawing.Size(120, 13);
+            this.labelVSync.TabIndex = 56;
+            this.labelVSync.Text = "Vertical Synchronization:";
+            // 
+            // comboBoxVSync
+            // 
+            this.comboBoxVSync.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBoxVSync.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxVSync.FormattingEnabled = true;
+            this.comboBoxVSync.Items.AddRange(new object[] {
+            "Off",
+            "On"});
+            this.comboBoxVSync.Location = new System.Drawing.Point(160, 253);
+            this.comboBoxVSync.Name = "comboBoxVSync";
+            this.comboBoxVSync.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxVSync.TabIndex = 57;
+            this.comboBoxVSync.SelectedIndexChanged += new System.EventHandler(this.comboBoxVSync_SelectedIndexChanged);
+            // 
+            // labelFPSLimit
+            // 
+            this.labelFPSLimit.AutoSize = true;
+            this.labelFPSLimit.Location = new System.Drawing.Point(10, 279);
+            this.labelFPSLimit.Name = "labelFPSLimit";
+            this.labelFPSLimit.Size = new System.Drawing.Size(80, 13);
+            this.labelFPSLimit.TabIndex = 58;
+            this.labelFPSLimit.Text = "FPS Limit:";
+            // 
+            // comboBoxFPSLimit
+            // 
+            this.comboBoxFPSLimit.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBoxFPSLimit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFPSLimit.FormattingEnabled = true;
+            this.comboBoxFPSLimit.Items.AddRange(new object[] {
+            "Unlimited",
+            "30",
+            "60",
+            "120",
+            "240"});
+            this.comboBoxFPSLimit.Location = new System.Drawing.Point(160, 279);
+            this.comboBoxFPSLimit.Name = "comboBoxFPSLimit";
+            this.comboBoxFPSLimit.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxFPSLimit.TabIndex = 59;
+            this.toolTip1.SetToolTip(this.labelVSync, "Enable vertical synchronization to prevent screen tearing.\nWhen enabled, FPS is capped to your monitor's refresh rate (e.g. 60Hz = 60 FPS).\nFPS Limit is disabled when VSync is ON.");
+            this.toolTip1.SetToolTip(this.comboBoxVSync, "ON = sync to monitor refresh rate (e.g. 60Hz monitor → 60 FPS max)\nOFF = uncapped, use FPS Limit below to cap.");
+            this.toolTip1.SetToolTip(this.labelFPSLimit, "Cap the maximum frames per second.\nDisabled when VSync is ON.");
+            this.toolTip1.SetToolTip(this.comboBoxFPSLimit, "Select FPS cap. 'Unlimited' = no limit.\nDisabled when VSync is ON (monitor refresh rate is used instead).");
             // 
             // labelShadowFilterCascades
             // 
@@ -944,12 +1019,12 @@ namespace ObjectViewer
             // 
             // formOptions
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(311, 464);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(350, 480);
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.tabControl1);
-            this.MinimumSize = new System.Drawing.Size(330, 500);
+            this.MinimumSize = new System.Drawing.Size(320, 420);
             this.Name = "formOptions";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -1041,5 +1116,10 @@ namespace ObjectViewer
 		private System.Windows.Forms.Label labelAutoReloadChanged;
 		private System.Windows.Forms.Label labelShadowFilterCascades;
 		private System.Windows.Forms.CheckBox checkBoxShadowFilterCascades;
+		private System.Windows.Forms.Label labelVSync;
+		private System.Windows.Forms.ComboBox comboBoxVSync;
+		private System.Windows.Forms.Label labelFPSLimit;
+		private System.Windows.Forms.ComboBox comboBoxFPSLimit;
+		private System.Windows.Forms.ToolTip toolTip1;
 	}
 }

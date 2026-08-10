@@ -1261,10 +1261,6 @@ namespace CsvRwRouteParser
 			for (int patternObj = 0; patternObj < Data.PatternObjects.Count; patternObj++)
 			{
 				int key = Data.PatternObjects.ElementAt(patternObj).Key;
-				if (key == 0)
-				{
-					int b = 0;
-				}
 				Data.PatternObjects[key].Create(Data.Structure.FreeObjects, CurrentRoute.Tracks[0].Elements[CurrentRoute.Tracks[0].Elements.Length - 1].StartingTrackPosition);
 			}
 
