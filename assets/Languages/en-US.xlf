@@ -1425,6 +1425,9 @@
 					</trans-unit>
 				</group>
 				<group id="tooltips">
+					<trans-unit id="vsync">
+						<source>Enable vertical synchronization to prevent screen tearing.\r\nWhen enabled, FPS is capped to your monitor's refresh rate\r\n(e.g. 60Hz = 60 FPS).\r\nFPS Limit is disabled when VSync is ON.</source>
+					</trans-unit>
 					<trans-unit id="interpolation">
 						<source>The texture filtering mode used to smooth textures.</source>
 					</trans-unit>

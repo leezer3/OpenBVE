@@ -1180,6 +1180,7 @@ namespace OpenBve {
 		/// <summary>Applies tooltips to the various controls on the form</summary>
 		private void ApplyToolTips()
 		{
+			SetToolTip("vsync", labelVSync, comboboxVSync);
 			SetToolTip("interpolation", labelInterpolation, comboboxInterpolation);
 			SetToolTip("anisotropic", labelAnisotropic, updownAnisotropic);
 			SetToolTip("antialiasing", labelAntiAliasing, updownAntiAliasing);
