@@ -1347,6 +1347,12 @@
 						<source>Enabled</source>
 						<target>Nyala</target>
 					</trans-unit>
+					<trans-unit id="display_fpslimit">
+						<source>FPS Limit:</source>
+					</trans-unit>
+					<trans-unit id="display_fpslimit_unlimited">
+						<source>Unlimited</source>
+					</trans-unit>
 					<trans-unit id="display_window">
 						<source>Window mode</source>
 						<target>Windowed</target>
@@ -1809,6 +1815,10 @@
 					</trans-unit>
 				</group>
 				<group id="tooltips">
+					<trans-unit id="vsync">
+						<source>Enable vertical synchronization to prevent screen tearing.\r\nWhen enabled, FPS is capped to your monitor's refresh rate\r\n(e.g. 60Hz = 60 FPS).\r\nFPS Limit is disabled when VSync is ON.</source>
+						<target>Aktifkan sinkronisasi vertikal untuk mencegah screen tearing.\r\nSaat aktif, FPS dibatasi oleh refresh rate monitor\r\n(mis. 60Hz = 60 FPS).\r\nFPS Limit dinonaktifkan saat VSync AKTIF.</target>
+					</trans-unit>
 					<trans-unit id="interpolation">
 						<source>The texture filtering mode used to smooth textures.</source>
 						<target>Mode pemfilteran tekstur yang digunakan untuk menghaluskan tekstur.</target>
@@ -1832,6 +1842,10 @@
 					<trans-unit id="motionblur">
 						<source>Enables motion blur effects when moving at speed.</source>
 						<target>Mengaktifkan efek motion blur saat bergerak dengan kecepatan tinggi.</target>
+					</trans-unit>
+					<trans-unit id="fpslimit">
+						<source>Cap the maximum frames per second.\r\nSelect 'Unlimited' for no limit.\r\nDisabled when VSync is ON\r\n(the monitor refresh rate is used instead).</source>
+						<target>Batasi jumlah frame maksimum per detik.\r\nPilih 'Unlimited' untuk tanpa batas.\r\nDinonaktifkan saat VSync AKTIF\r\n(refresh rate monitor yang dipakai).</target>
 					</trans-unit>
 				</group>
 				<group id="dialog">

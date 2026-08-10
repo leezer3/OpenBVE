@@ -1384,6 +1384,12 @@
 						<ns0:source>Enabled</ns0:source>
 						<ns0:target state="translated">Aktiverad</ns0:target>
 					</ns0:trans-unit>
+					<ns0:trans-unit id="display_fpslimit">
+						<ns0:source>FPS Limit:</ns0:source>
+					</ns0:trans-unit>
+					<ns0:trans-unit id="display_fpslimit_unlimited">
+						<ns0:source>Unlimited</ns0:source>
+					</ns0:trans-unit>
 					<ns0:trans-unit id="display_window">
 						<ns0:source>Window mode</ns0:source>
 						<ns0:target state="translated">Fönsterläge</ns0:target>

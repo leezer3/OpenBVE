@@ -110,6 +110,8 @@ namespace OpenBve {
             this.labelHUDScale = new System.Windows.Forms.Label();
             this.comboboxVSync = new System.Windows.Forms.ComboBox();
             this.labelVSync = new System.Windows.Forms.Label();
+            this.comboBoxFPSLimit = new System.Windows.Forms.ComboBox();
+            this.labelFPSLimit = new System.Windows.Forms.Label();
             this.radiobuttonFullscreen = new System.Windows.Forms.RadioButton();
             this.radiobuttonWindow = new System.Windows.Forms.RadioButton();
             this.groupboxWindow = new System.Windows.Forms.GroupBox();
@@ -1607,12 +1609,14 @@ namespace OpenBve {
             this.groupboxDisplayMode.Controls.Add(this.labelHUDScale);
             this.groupboxDisplayMode.Controls.Add(this.comboboxVSync);
             this.groupboxDisplayMode.Controls.Add(this.labelVSync);
+            this.groupboxDisplayMode.Controls.Add(this.comboBoxFPSLimit);
+            this.groupboxDisplayMode.Controls.Add(this.labelFPSLimit);
             this.groupboxDisplayMode.Controls.Add(this.radiobuttonFullscreen);
             this.groupboxDisplayMode.Controls.Add(this.radiobuttonWindow);
             this.groupboxDisplayMode.ForeColor = System.Drawing.Color.Black;
             this.groupboxDisplayMode.Location = new System.Drawing.Point(0, 0);
             this.groupboxDisplayMode.Name = "groupboxDisplayMode";
-            this.groupboxDisplayMode.Size = new System.Drawing.Size(316, 189);
+            this.groupboxDisplayMode.Size = new System.Drawing.Size(316, 215);
             this.groupboxDisplayMode.TabIndex = 4;
             this.groupboxDisplayMode.TabStop = false;
             this.groupboxDisplayMode.Text = "Display mode";
@@ -1622,7 +1626,7 @@ namespace OpenBve {
             this.comboBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxFont.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFont.FormattingEnabled = true;
-            this.comboBoxFont.Location = new System.Drawing.Point(45, 155);
+            this.comboBoxFont.Location = new System.Drawing.Point(45, 181);
             this.comboBoxFont.Name = "comboBoxFont";
             this.comboBoxFont.Size = new System.Drawing.Size(264, 21);
             this.comboBoxFont.TabIndex = 14;
@@ -1630,7 +1634,7 @@ namespace OpenBve {
             // 
             // labelFontName
             // 
-            this.labelFontName.Location = new System.Drawing.Point(8, 148);
+            this.labelFontName.Location = new System.Drawing.Point(8, 174);
             this.labelFontName.Name = "labelFontName";
             this.labelFontName.Size = new System.Drawing.Size(50, 36);
             this.labelFontName.TabIndex = 13;
@@ -1639,7 +1643,7 @@ namespace OpenBve {
             // 
             // labelHUDLarge
             // 
-            this.labelHUDLarge.Location = new System.Drawing.Point(258, 125);
+            this.labelHUDLarge.Location = new System.Drawing.Point(258, 151);
             this.labelHUDLarge.Name = "labelHUDLarge";
             this.labelHUDLarge.Size = new System.Drawing.Size(72, 48);
             this.labelHUDLarge.TabIndex = 12;
@@ -1648,7 +1652,7 @@ namespace OpenBve {
             // 
             // labelHUDNormal
             // 
-            this.labelHUDNormal.Location = new System.Drawing.Point(162, 125);
+            this.labelHUDNormal.Location = new System.Drawing.Point(162, 151);
             this.labelHUDNormal.Name = "labelHUDNormal";
             this.labelHUDNormal.Size = new System.Drawing.Size(70, 48);
             this.labelHUDNormal.TabIndex = 11;
@@ -1657,7 +1661,7 @@ namespace OpenBve {
             // 
             // labelHUDSmall
             // 
-            this.labelHUDSmall.Location = new System.Drawing.Point(66, 125);
+            this.labelHUDSmall.Location = new System.Drawing.Point(66, 151);
             this.labelHUDSmall.Name = "labelHUDSmall";
             this.labelHUDSmall.Size = new System.Drawing.Size(70, 48);
             this.labelHUDSmall.TabIndex = 10;
@@ -1667,7 +1671,7 @@ namespace OpenBve {
             // trackBarHUDSize
             // 
             this.trackBarHUDSize.LargeChange = 1;
-            this.trackBarHUDSize.Location = new System.Drawing.Point(88, 100);
+            this.trackBarHUDSize.Location = new System.Drawing.Point(88, 126);
             this.trackBarHUDSize.Maximum = 2;
             this.trackBarHUDSize.Name = "trackBarHUDSize";
             this.trackBarHUDSize.Size = new System.Drawing.Size(220, 45);
@@ -1677,7 +1681,7 @@ namespace OpenBve {
             // labelHUDScale
             // 
             this.labelHUDScale.AutoSize = true;
-            this.labelHUDScale.Location = new System.Drawing.Point(8, 106);
+            this.labelHUDScale.Location = new System.Drawing.Point(8, 132);
             this.labelHUDScale.Name = "labelHUDScale";
             this.labelHUDScale.Size = new System.Drawing.Size(54, 13);
             this.labelHUDScale.TabIndex = 8;
@@ -1692,6 +1696,7 @@ namespace OpenBve {
             this.comboboxVSync.Name = "comboboxVSync";
             this.comboboxVSync.Size = new System.Drawing.Size(152, 21);
             this.comboboxVSync.TabIndex = 7;
+            this.comboboxVSync.SelectedIndexChanged += new System.EventHandler(this.comboBoxVSync_SelectedIndexChanged);
             // 
             // labelVSync
             // 
@@ -1704,6 +1709,34 @@ namespace OpenBve {
             this.labelVSync.TabIndex = 2;
             this.labelVSync.Text = "Vertical syncronization:";
             this.labelVSync.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // comboBoxFPSLimit
+            // 
+            this.comboBoxFPSLimit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxFPSLimit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFPSLimit.FormattingEnabled = true;
+            this.comboBoxFPSLimit.Items.AddRange(new object[] {
+            "Unlimited",
+            "30",
+            "60",
+            "120",
+            "240"});
+            this.comboBoxFPSLimit.Location = new System.Drawing.Point(156, 99);
+            this.comboBoxFPSLimit.Name = "comboBoxFPSLimit";
+            this.comboBoxFPSLimit.Size = new System.Drawing.Size(152, 21);
+            this.comboBoxFPSLimit.TabIndex = 15;
+            // 
+            // labelFPSLimit
+            // 
+            this.labelFPSLimit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelFPSLimit.AutoEllipsis = true;
+            this.labelFPSLimit.Location = new System.Drawing.Point(8, 99);
+            this.labelFPSLimit.Name = "labelFPSLimit";
+            this.labelFPSLimit.Size = new System.Drawing.Size(148, 18);
+            this.labelFPSLimit.TabIndex = 3;
+            this.labelFPSLimit.Text = "FPS Limit:";
+            this.labelFPSLimit.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // radiobuttonFullscreen
             // 
@@ -1737,7 +1770,7 @@ namespace OpenBve {
             this.groupboxWindow.Controls.Add(this.updownWindowWidth);
             this.groupboxWindow.Controls.Add(this.labelWindowWidth);
             this.groupboxWindow.ForeColor = System.Drawing.Color.Black;
-            this.groupboxWindow.Location = new System.Drawing.Point(0, 192);
+            this.groupboxWindow.Location = new System.Drawing.Point(0, 218);
             this.groupboxWindow.Name = "groupboxWindow";
             this.groupboxWindow.Size = new System.Drawing.Size(316, 80);
             this.groupboxWindow.TabIndex = 5;
@@ -1825,7 +1858,7 @@ namespace OpenBve {
             this.groupboxFullscreen.Controls.Add(this.updownFullscreenWidth);
             this.groupboxFullscreen.Controls.Add(this.labelFullscreenWidth);
             this.groupboxFullscreen.ForeColor = System.Drawing.Color.Black;
-            this.groupboxFullscreen.Location = new System.Drawing.Point(0, 275);
+            this.groupboxFullscreen.Location = new System.Drawing.Point(0, 301);
             this.groupboxFullscreen.Name = "groupboxFullscreen";
             this.groupboxFullscreen.Size = new System.Drawing.Size(316, 104);
             this.groupboxFullscreen.TabIndex = 6;
@@ -6582,6 +6615,8 @@ namespace OpenBve {
         private System.Windows.Forms.GroupBox groupboxShadows;
         private System.Windows.Forms.ComboBox comboboxVSync;
         private System.Windows.Forms.Label labelVSync;
+        private System.Windows.Forms.ComboBox comboBoxFPSLimit;
+        private System.Windows.Forms.Label labelFPSLimit;
         private System.Windows.Forms.CheckBox checkboxWarningMessages;
         private System.Windows.Forms.CheckBox checkboxErrorMessages;
         private System.Windows.Forms.GroupBox groupboxVerbosity;
