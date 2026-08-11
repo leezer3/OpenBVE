@@ -57,6 +57,12 @@ namespace OpenBveApi.Textures
 			Path = path;
 			Parameters = parameters;
 			currentHost = Host;
+			// Snapshot on-disk state now so reloads can detect edits.
+			if (System.IO.File.Exists(path))
+			{
+				LastModificationTime = System.IO.File.GetLastWriteTime(path);
+				FileSize = new System.IO.FileInfo(path).Length;
+			}
 		}
 
 		// --- functions ---

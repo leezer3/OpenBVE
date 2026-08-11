@@ -594,7 +594,17 @@ namespace LibRender2.Textures
 			{
 				return false;
 			}
-			return File.Exists(pathOrigin.Path) && pathOrigin.FileSize == new FileInfo(pathOrigin.Path).Length && pathOrigin.LastModificationTime == File.GetLastWriteTime(pathOrigin.Path);
+			// Refresh() first, as FileSystemInfo caches size/last write time.
+			try
+			{
+				FileInfo info = new FileInfo(pathOrigin.Path);
+				info.Refresh();
+				return info.Exists && pathOrigin.FileSize == info.Length && pathOrigin.LastModificationTime == info.LastWriteTime;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 
 		/// <summary>Unloads any textures which have not been accessed</summary>
