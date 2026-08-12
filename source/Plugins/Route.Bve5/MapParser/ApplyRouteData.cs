@@ -146,7 +146,7 @@ namespace Route.Bve5
 				plugin.CurrentProgress = 0.6667 + i * progressFactor;
 				if ((i & 63) == 0)
 				{
-					System.Threading.Thread.Sleep(1);
+					System.Threading.Thread.Yield();
 					if (plugin.Cancel) return;
 				}
 
