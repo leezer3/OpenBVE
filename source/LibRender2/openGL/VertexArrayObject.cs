@@ -176,41 +176,39 @@ namespace LibRender2
 
 	public static class VAOExtensions
 	{
-		/// <summary>Create an OpenGL/OpenTK VAO for a mesh</summary>
+		/// <summary>Creates an OpenGL VAO for a mesh, or updates the existing if present</summary>
 		/// <param name="mesh">The mesh</param>
 		/// <param name="isDynamic">Whether the mesh is dynamic (e.g. part of an animated object / train)</param>
 		/// <param name="vertexLayout">The vertex layout to use</param>
 		/// <param name="renderer">A reference to the base renderer</param>
-		public static void CreateVAO(Mesh mesh, bool isDynamic, VertexLayout vertexLayout, BaseRenderer renderer)
+		public static void CreateOrUpdateVAO(Mesh mesh, bool isDynamic, VertexLayout vertexLayout, BaseRenderer renderer)
 		{
-			if (mesh.VAO is VertexArrayObject)
-			{
-				return;
-			}
+			
 			if (!renderer.GameWindow.Context.IsCurrent)
 			{
 				renderer.RunInRenderThread(() =>
 				{
-					createVAO(mesh, isDynamic, vertexLayout, renderer);
+					createOrUpdateVAO(mesh, isDynamic, vertexLayout, renderer);
+
 				}, 2000);
 			}
 			else
 			{
-				createVAO(mesh, isDynamic, vertexLayout, renderer);
+				createOrUpdateVAO(mesh, isDynamic, vertexLayout, renderer);
 				renderer.lastVAO = -1;
 			}
 		}
 
 		
-		private static void createVAO(Mesh mesh, bool isDynamic, VertexLayout vertexLayout, BaseRenderer renderer)
+		private static void createOrUpdateVAO(Mesh mesh, bool isDynamic, VertexLayout vertexLayout, BaseRenderer renderer)
 		{
 			if (mesh == null)
 			{
 				return;
 			}
 			try
-			{
-				var hint = isDynamic ? BufferUsageHint.DynamicDraw : BufferUsageHint.StaticDraw;
+			{ 
+				BufferUsageHint hint = isDynamic ? BufferUsageHint.DynamicDraw : BufferUsageHint.StaticDraw;
 
 				/* n.b. Initial length should be at least number of vertices in mesh. (may be greater if some are re-used with different UV)
 				 *      This marginally helps loading very large objects (as default C# list starts at a capacity of 4 then doubles exponentially)     
@@ -238,12 +236,27 @@ namespace LibRender2
 			}
 
 			VertexArrayObject VAO = (VertexArrayObject)mesh.VAO;
-			VAO?.UnBind();
-			VAO?.Dispose();
+			if (VAO == null)
+			{
+				VAO = new VertexArrayObject();
+				VAO.Bind();
+				VAO.SetVBO(new VertexBufferObject(vertexData.ToArray(), hint));
+			}
+			else
+			{
+				VAO.Bind();
+				VAO.UpdateVBO(vertexData.ToArray());
+				if (mesh.NormalsVAO is VertexArrayObject normalsVAO)
+				{
+					// if normals VAO exists, purge
+					normalsVAO.Bind();
+					normalsVAO.Dispose();
+					normalsVAO.UnBind();
+					mesh.NormalsVAO = null;
+				}
+			}
 
-			VAO = new VertexArrayObject();
-			VAO.Bind();
-			VAO.SetVBO(new VertexBufferObject(vertexData.ToArray(), hint));
+
 			if (indexData.Count > 65530)
 			{
 				//Marginal headroom, although it probably doesn't matter

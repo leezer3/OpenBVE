@@ -193,7 +193,7 @@ namespace LibRender2.Backgrounds
 					ObjectState state = obj.internalObject;
 					if (state.Prototype.Mesh.VAO == null)
 					{
-						VAOExtensions.CreateVAO(state.Prototype.Mesh, false, renderer.DefaultShader.VertexLayout, renderer);
+						VAOExtensions.CreateOrUpdateVAO(state.Prototype.Mesh, false, renderer.DefaultShader.VertexLayout, renderer);
 					}
 					foreach (MeshFace face in state.Prototype.Mesh.Faces)
 					{
@@ -229,7 +229,7 @@ namespace LibRender2.Backgrounds
 				
 				if (staticObject.Mesh.VAO == null)
 				{
-					VAOExtensions.CreateVAO(staticObject.Mesh, false, renderer.DefaultShader.VertexLayout, renderer);
+					VAOExtensions.CreateOrUpdateVAO(staticObject.Mesh, false, renderer.DefaultShader.VertexLayout, renderer);
 				}
 				foreach (MeshFace face in staticObject.Mesh.Faces)
 				{

@@ -40,7 +40,7 @@ namespace OpenBve.Graphics.Renderers
         private void ShowObject(ObjectState state)
         {
             touchableObject.Add(state);
-            VAOExtensions.CreateVAO(state.Prototype.Mesh, state.Prototype.Dynamic, renderer.pickingShader.VertexLayout, renderer);
+            VAOExtensions.CreateOrUpdateVAO(state.Prototype.Mesh, state.Prototype.Dynamic, renderer.pickingShader.VertexLayout, renderer);
         }
 
         private void PreRender()
