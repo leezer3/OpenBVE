@@ -445,15 +445,13 @@ namespace OpenBve.Formats.DirectX
 		public override int ReadInt()
 		{
 			startPosition = currentPosition;
-			string s = getNextValue();
-			if (char.IsWhiteSpace(myText[currentPosition]))
+			SkipSeparators();
+			if (TryParseIntFast(out int val))
 			{
-				while (char.IsWhiteSpace(myText[currentPosition]))
-				{
-					currentPosition++;
-				}
+				return val;
 			}
-			if (int.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out int val))
+			string s = getNextValue();
+			if (int.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out val))
 			{
 				return val;
 			}
@@ -463,15 +461,13 @@ namespace OpenBve.Formats.DirectX
 		public override ushort ReadUInt16()
 		{
 			startPosition = currentPosition;
-			string s = getNextValue();
-			if (char.IsWhiteSpace(myText[currentPosition]))
+			SkipSeparators();
+			if (TryParseIntFast(out int val))
 			{
-				while (char.IsWhiteSpace(myText[currentPosition]))
-				{
-					currentPosition++;
-				}
+				return (ushort) val;
 			}
-			if (int.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out int val))
+			string s = getNextValue();
+			if (int.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out val))
 			{
 				return (ushort) val;
 			}
@@ -481,15 +477,13 @@ namespace OpenBve.Formats.DirectX
 		public override uint ReadDword()
 		{
 			startPosition = currentPosition;
-			string s = getNextValue();
-			if (char.IsWhiteSpace(myText[currentPosition]))
+			SkipSeparators();
+			if (TryParseUIntFast(out uint val))
 			{
-				while (char.IsWhiteSpace(myText[currentPosition]))
-				{
-					currentPosition++;
-				}
+				return val;
 			}
-			if (uint.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out uint val))
+			string s = getNextValue();
+			if (uint.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out val))
 			{
 				return val;
 			}
@@ -499,14 +493,156 @@ namespace OpenBve.Formats.DirectX
 		public override float ReadSingle()
 		{
 			startPosition = currentPosition;
+			SkipSeparators();
+			if (TryParseFloatFast(out float val))
+			{
+				return val;
+			}
 			string s = getNextValue();
 			currentPosition++;
-			if (float.TryParse(s, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out float val))
+			if (float.TryParse(s, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out val))
 			{
 				return val;
 			}
 
 			throw new Exception("Unable to parse " + s + " to a valid float in block " + Token);
+		}
+
+		/// <summary>Skips any leading whitespace, semicolons or commas.</summary>
+		private void SkipSeparators()
+		{
+			while (currentPosition < myText.Length && (char.IsWhiteSpace(myText[currentPosition]) || myText[currentPosition] == ';' || myText[currentPosition] == ','))
+			{
+				currentPosition++;
+			}
+		}
+
+		/// <summary>Parses an integer directly from the underlying text, without allocating a substring.</summary>
+		private bool TryParseIntFast(out int result)
+		{
+			result = 0;
+			int p = currentPosition;
+			bool neg = false;
+			if (p < myText.Length && (myText[p] == '+' || myText[p] == '-'))
+			{
+				neg = myText[p] == '-';
+				p++;
+			}
+			int digitStart = p;
+			int value = 0;
+			while (p < myText.Length && myText[p] >= '0' && myText[p] <= '9')
+			{
+				if (p - digitStart >= 9)
+				{
+					// too many digits to safely accumulate; fall back to the standard parser
+					return false;
+				}
+				value = value * 10 + (myText[p] - '0');
+				p++;
+			}
+			if (p == digitStart)
+			{
+				return false;
+			}
+			result = neg ? -value : value;
+			currentPosition = p;
+			return true;
+		}
+
+		/// <summary>Parses an unsigned integer directly from the underlying text, without allocating a substring.</summary>
+		private bool TryParseUIntFast(out uint result)
+		{
+			result = 0;
+			int p = currentPosition;
+			int digitStart = p;
+			uint value = 0;
+			while (p < myText.Length && myText[p] >= '0' && myText[p] <= '9')
+			{
+				if (p - digitStart >= 9)
+				{
+					// too many digits to safely accumulate; fall back to the standard parser
+					return false;
+				}
+				value = value * 10 + (uint)(myText[p] - '0');
+				p++;
+			}
+			if (p == digitStart)
+			{
+				return false;
+			}
+			result = value;
+			currentPosition = p;
+			return true;
+		}
+
+		/// <summary>Parses a single-precision float directly from the underlying text, without allocating a substring.</summary>
+		private bool TryParseFloatFast(out float result)
+		{
+			result = 0.0f;
+			int p = currentPosition;
+			bool neg = false;
+			if (p < myText.Length && (myText[p] == '+' || myText[p] == '-'))
+			{
+				neg = myText[p] == '-';
+				p++;
+			}
+			bool hasDigit = false;
+			double mantissa = 0.0;
+			int fracDigits = 0;
+			while (p < myText.Length && myText[p] >= '0' && myText[p] <= '9')
+			{
+				hasDigit = true;
+				mantissa = mantissa * 10.0 + (myText[p] - '0');
+				p++;
+			}
+			if (p < myText.Length && myText[p] == '.')
+			{
+				p++;
+				while (p < myText.Length && myText[p] >= '0' && myText[p] <= '9')
+				{
+					hasDigit = true;
+					mantissa = mantissa * 10.0 + (myText[p] - '0');
+					fracDigits++;
+					p++;
+				}
+			}
+			if (!hasDigit)
+			{
+				return false;
+			}
+			int exponent = -fracDigits;
+			if (p < myText.Length && (myText[p] == 'e' || myText[p] == 'E'))
+			{
+				p++;
+				bool expNeg = false;
+				if (p < myText.Length && (myText[p] == '+' || myText[p] == '-'))
+				{
+					expNeg = myText[p] == '-';
+					p++;
+				}
+				int expStart = p;
+				int expValue = 0;
+				while (p < myText.Length && myText[p] >= '0' && myText[p] <= '9')
+				{
+					expValue = expValue * 10 + (myText[p] - '0');
+					p++;
+				}
+				if (p == expStart)
+				{
+					// an exponent marker with no digits is not a valid float token
+					return false;
+				}
+				exponent += expNeg ? -expValue : expValue;
+			}
+			if (p < myText.Length && myText[p] == '.')
+			{
+				// A second decimal point - not a valid float token; let the standard parser report it
+				return false;
+			}
+			double value = exponent != 0 ? mantissa * Math.Pow(10.0, exponent) : mantissa;
+			result = (float)(neg ? -value : value);
+			currentPosition = p;
+			return true;
 		}
 
 		public override void Skip(int length)
