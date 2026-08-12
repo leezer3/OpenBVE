@@ -25,6 +25,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -63,7 +64,7 @@ namespace Route.Bve5
 				// Some routes with badly optimized objects- Use a much lower threshold to avoid killing the renderer
 				Plugin.CurrentOptions.ObjectOptimizationBasicThreshold = 2000;
 			}
-			for (int i = 1; i < Lines.Length; i++)
+			Parallel.For(1, Lines.Length, i =>
 			{
 				//Cycle through the list of objects
 				//An object index is formatted as follows:
@@ -72,12 +73,12 @@ namespace Route.Bve5
 				Lines[i] = Lines[i].TrimBVE5Comments();
 				if (string.IsNullOrEmpty(Lines[i]))
 				{
-					continue;
+					return;
 				}
 
 				if (string.IsNullOrEmpty(Lines[i]))
 				{
-					continue;
+					return;
 				}
 
 				string[] splitStrings = Lines[i].Split(',');
@@ -88,13 +89,16 @@ namespace Route.Bve5
 					// empty object file name
 					if (string.Equals(Key, "null", StringComparison.InvariantCultureIgnoreCase) || string.Equals(Key, "empty", StringComparison.InvariantCultureIgnoreCase))
 					{
-						RouteData.Objects.Add(Key, new StaticObject(Plugin.CurrentHost));
+						lock (RouteData.Objects)
+						{
+							RouteData.Objects[Key] = new StaticObject(Plugin.CurrentHost);
+						}
 					}
 					else
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: No object file was specified for key " + Lines[i]);
 					}
-					continue;
+					return;
 				}
 
 				
@@ -111,13 +115,16 @@ namespace Route.Bve5
 				if (!File.Exists(FilePath))
 				{
 					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Object File " + splitStrings[1] + " with key " + Key + " was not found.");
-					continue;
+					return;
 				}
 
 				System.Text.Encoding ObjectEncoding = TextEncoding.GetSystemEncodingFromFile(FilePath);
 				Plugin.CurrentHost.LoadObject(FilePath, ObjectEncoding, out UnifiedObject obj);
-				RouteData.Objects.Add(Key, obj);
-			}
+				lock (RouteData.Objects)
+				{
+					RouteData.Objects[Key] = obj;
+				}
+			});
 		}
 	}
 }

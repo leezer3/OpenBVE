@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Bve5_Parsing;
@@ -100,8 +101,10 @@ namespace Route.Bve5
 				throw new Exception("The BVE5 route map file: " + FileName + " was not found");
 			}
 
+			Stopwatch fileTimer = Stopwatch.StartNew();
 			MapParser Parser = new MapParser(FileName, true);
 			MapData RootData = Parser.Parse();
+			fileTimer.Stop();
 
 			System.Threading.Thread.Sleep(1);
 			if (plugin.Cancel) return;
@@ -110,12 +113,48 @@ namespace Route.Bve5
 			System.Threading.Thread.Sleep(1);
 			if (plugin.Cancel) return;
 
+			Stopwatch parseTimer = Stopwatch.StartNew();
 			ConvertToBlock(FileName, PreviewOnly, RootData, out RouteData RouteData);
+			parseTimer.Stop();
+			Plugin.CurrentHost.PluginParseTime = parseTimer.ElapsedMilliseconds;
 
 			System.Threading.Thread.Sleep(1);
 			if (plugin.Cancel) return;
 
+			Stopwatch applyTimer = Stopwatch.StartNew();
 			ApplyRouteData(FileName, PreviewOnly, RouteData);
+			applyTimer.Stop();
+			Plugin.CurrentHost.PluginApplyTime = applyTimer.ElapsedMilliseconds;
+
+			Plugin.FileSystem.AppendToLogFile("Bve5: Map file parse: " + fileTimer.ElapsedMilliseconds + " ms, block conversion: " + parseTimer.ElapsedMilliseconds + " ms, route apply: " + applyTimer.ElapsedMilliseconds + " ms");
+			Plugin.FileSystem.AppendToLogFile("Bve5: Blocks: " + RouteData.Blocks.Count + ", Track elements: " + GetTrackElementCount());
+		}
+
+		private static int GetTrackElementCount()
+		{
+			int count = 0;
+			for (int k = 0; k < Plugin.CurrentRoute.Tracks.Count; k++)
+			{
+				var elements = Plugin.CurrentRoute.Tracks[k].Elements;
+				if (elements == null)
+				{
+					continue;
+				}
+				for (int i = 0; i < elements.Length; i++)
+				{
+					if (elements[i].Events != null)
+					{
+						count++;
+					}
+				}
+			}
+			return count;
+		}
+
+		private static void LogPhase(string name, Stopwatch timer)
+		{
+			timer.Stop();
+			Plugin.FileSystem.AppendToLogFile("Bve5 phase: " + name + ": " + timer.ElapsedMilliseconds + " ms");
 		}
 
 		private static void ConvertToBlock(string FileName, bool PreviewOnly, MapData ParseData, out RouteData RouteData)
@@ -130,35 +169,47 @@ namespace Route.Bve5
 				return;
 			}
 
+			Stopwatch phaseTimer = Stopwatch.StartNew();
 			foreach (string path in ParseData.StationListPaths)
 			{
 				LoadStationList(FileName, path, RouteData);
 			}
+			LogPhase("LoadStationList", phaseTimer);
 
+			phaseTimer = Stopwatch.StartNew();
 			foreach (string path in ParseData.StructureListPaths)
 			{
 				LoadStructureList(FileName, PreviewOnly, path, RouteData);
 			}
+			LogPhase("LoadStructureList", phaseTimer);
 			
+			phaseTimer = Stopwatch.StartNew();
 			foreach (string path in ParseData.SignalListPaths)
 			{
 				LoadSignalList(FileName, PreviewOnly, path, RouteData);
 			}
+			LogPhase("LoadSignalList", phaseTimer);
 
+			phaseTimer = Stopwatch.StartNew();
 			foreach (string path in ParseData.SoundListPaths)
 			{
 				LoadSoundList(FileName, PreviewOnly, path, RouteData);
 			}
+			LogPhase("LoadSoundList", phaseTimer);
 
+			phaseTimer = Stopwatch.StartNew();
 			foreach (string path in ParseData.Sound3DListPaths)
 			{
 				LoadSound3DList(FileName, PreviewOnly, path, RouteData);
 			}
+			LogPhase("LoadSound3DList", phaseTimer);
 			
+			phaseTimer = Stopwatch.StartNew();
 			if (Plugin.CurrentOptions.EnableBve5ScriptedTrain)
 			{
 				LoadScriptedTrain(FileName, PreviewOnly, ParseData, RouteData);
 			}
+			LogPhase("LoadScriptedTrain", phaseTimer);
 
 			System.Threading.Thread.Sleep(1);
 			if (plugin.Cancel) return;
@@ -174,24 +225,50 @@ namespace Route.Bve5
 			 *
 			 */
 
+			phaseTimer = Stopwatch.StartNew();
 			ConvertData(ParseData, RouteData, PreviewOnly);
+			LogPhase("ConvertData", phaseTimer);
+			phaseTimer = Stopwatch.StartNew();
 			ConvertTrack(ParseData, RouteData);
+			LogPhase("ConvertTrack", phaseTimer);
 			
 			System.Threading.Thread.Sleep(1);
 			if (plugin.Cancel) return;
 
+			phaseTimer = Stopwatch.StartNew();
 			ConfirmCurve(RouteData.Blocks);
+			LogPhase("ConfirmCurve", phaseTimer);
+			phaseTimer = Stopwatch.StartNew();
 			ConfirmGradient(RouteData.Blocks);
+			LogPhase("ConfirmGradient", phaseTimer);
+			phaseTimer = Stopwatch.StartNew();
 			ConfirmTrack(RouteData);
+			LogPhase("ConfirmTrack", phaseTimer);
+			phaseTimer = Stopwatch.StartNew();
 			ConfirmStructure(PreviewOnly, ParseData, RouteData);
+			LogPhase("ConfirmStructure", phaseTimer);
+			phaseTimer = Stopwatch.StartNew();
 			ConfirmRepeater(PreviewOnly, ParseData, RouteData);
+			LogPhase("ConfirmRepeater", phaseTimer);
+			phaseTimer = Stopwatch.StartNew();
 			ConfirmSection(PreviewOnly, ParseData, RouteData);
+			LogPhase("ConfirmSection", phaseTimer);
+			phaseTimer = Stopwatch.StartNew();
 			ConfirmSignal(PreviewOnly, ParseData, RouteData);
+			LogPhase("ConfirmSignal", phaseTimer);
+			phaseTimer = Stopwatch.StartNew();
 			ConfirmBeacon(PreviewOnly, ParseData, RouteData);
+			LogPhase("ConfirmBeacon", phaseTimer);
 			// these require looping through existing blocks, so need to be here at the minute
+			phaseTimer = Stopwatch.StartNew();
 			ConfirmIrregularity(PreviewOnly, RouteData);
+			LogPhase("ConfirmIrregularity", phaseTimer);
+			phaseTimer = Stopwatch.StartNew();
 			ConfirmAdhesion(PreviewOnly, RouteData);
+			LogPhase("ConfirmAdhesion", phaseTimer);
+			phaseTimer = Stopwatch.StartNew();
 			ConfirmFlangeNoise(PreviewOnly, ParseData, RouteData);
+			LogPhase("ConfirmFlangeNoise", phaseTimer);
 		}
 
 		private static void ConvertData(MapData parseData, RouteData routeData, bool previewOnly)
