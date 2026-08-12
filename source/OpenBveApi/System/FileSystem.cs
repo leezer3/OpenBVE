@@ -19,6 +19,8 @@ namespace OpenBveApi.FileSystem {
 	/// <summary>Represents the program's organization of files and folders.</summary>
 	public class FileSystem {
 		
+		/// <summary>Locks concurrent appends to the log file.</summary>
+		private static readonly object LogFileLock = new object();
 		
 		// --- members ---
 		
@@ -490,22 +492,25 @@ namespace OpenBveApi.FileSystem {
 		/// <param name="text">The text.</param>
 		/// <param name="addTimestamp">Whether a timestamp should be added to the log file</param>
 		public void AppendToLogFile(string text, bool addTimestamp = true) {
-			try
+			lock (LogFileLock)
 			{
-				string file = System.IO.Path.Combine(SettingsFolder, "log.txt");
-				if (addTimestamp)
+				try
 				{
-					File.AppendAllText(file, DateTime.Now.ToString("HH:mm:ss") + @"  " + text + Environment.NewLine, new UTF8Encoding(false));
+					string file = System.IO.Path.Combine(SettingsFolder, "log.txt");
+					if (addTimestamp)
+					{
+						File.AppendAllText(file, DateTime.Now.ToString("HH:mm:ss") + @"  " + text + Environment.NewLine, new UTF8Encoding(false));
+					}
+					else
+					{
+						File.AppendAllText(file, text + Environment.NewLine, new UTF8Encoding(false));
+					}
+
 				}
-				else
+				catch
 				{
-					File.AppendAllText(file, text + Environment.NewLine, new UTF8Encoding(false));	
+					// ignored
 				}
-				
-			}
-			catch
-			{
-				// ignored
 			}
 		}
 

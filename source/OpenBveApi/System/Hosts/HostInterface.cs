@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -137,10 +138,10 @@ namespace OpenBveApi.Hosts {
 		protected HostInterface(HostApplication host)
 		{
 			Application = host;
-			StaticObjectCache = new Dictionary<ValueTuple<string, bool, DateTime>, StaticObject>();
-			AnimatedObjectCollectionCache = new Dictionary<string, AnimatedObjectCollection>();
+			StaticObjectCache = new ConcurrentDictionary<ValueTuple<string, bool, DateTime>, StaticObject>();
+			AnimatedObjectCollectionCache = new ConcurrentDictionary<string, AnimatedObjectCollection>();
 			MissingFiles = new HashSet<string>();
-			FailedObjects = new HashSet<string>();
+			FailedObjects = new ConcurrentDictionary<string, bool>();
 			FailedTextures = new HashSet<string>();
 
 			if (Platform == HostPlatform.GNULinux)
@@ -177,7 +178,7 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Contains a list of missing files encountered</summary>
 		public readonly HashSet<string> MissingFiles;
 		/// <summary>Contains a list of objects which failed to load</summary>
-		public readonly HashSet<string> FailedObjects;
+		public readonly ConcurrentDictionary<string, bool> FailedObjects;
 		/// <summary>Contains a list of textures which failed to load</summary>
 		public readonly HashSet<string> FailedTextures;
 
@@ -611,13 +612,13 @@ namespace OpenBveApi.Hosts {
 		/// <summary>
 		/// Dictionary of StaticObject with Path and PreserveVertices as keys.
 		/// </summary>
-		public readonly Dictionary<ValueTuple<string, bool, DateTime>, StaticObject> StaticObjectCache;
+		public readonly ConcurrentDictionary<ValueTuple<string, bool, DateTime>, StaticObject> StaticObjectCache;
 
 		/// <summary>
 		/// Dictionary of AnimatedObjectCollection with Path as key.
 		/// </summary>
 
-		public readonly Dictionary<string, AnimatedObjectCollection> AnimatedObjectCollectionCache;
+		public readonly ConcurrentDictionary<string, AnimatedObjectCollection> AnimatedObjectCollectionCache;
 
 		/// <summary>Adds a marker texture to the host application's display</summary>
 		/// <param name="MarkerTexture">The texture to add</param>
