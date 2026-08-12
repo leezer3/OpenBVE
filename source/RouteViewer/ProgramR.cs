@@ -660,17 +660,17 @@ namespace RouteViewer
 					break;
 				case Key.A:
 				case Key.Keypad4:
-					Renderer.Camera.AlignmentDirection.Position.X = -CameraProperties.ExteriorTopSpeed * speedModified;
+					Renderer.Camera.Move(Translations.Command.CameraMoveLeft, speedModified);
 					break;
 				case Key.D:
 				case Key.Keypad6:
-					Renderer.Camera.AlignmentDirection.Position.X = CameraProperties.ExteriorTopSpeed * speedModified;
+					Renderer.Camera.Move(Translations.Command.CameraMoveRight, speedModified);
 					break;
 				case Key.Keypad2:
-					Renderer.Camera.AlignmentDirection.Position.Y = -CameraProperties.ExteriorTopSpeed * speedModified;
+					Renderer.Camera.Move(Translations.Command.CameraMoveDown, speedModified);
 					break;
 				case Key.Keypad8:
-					Renderer.Camera.AlignmentDirection.Position.Y = CameraProperties.ExteriorTopSpeed * speedModified;
+					Renderer.Camera.Move(Translations.Command.CameraMoveUp, speedModified);
 					break;
 				case Key.W:
 				case Key.Keypad9:
