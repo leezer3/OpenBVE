@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Bve5_Parsing.MapGrammar;
@@ -466,18 +467,31 @@ namespace Route.Bve5
 		{
 
 			// Own track is excluded.
+			Dictionary<string, List<Statement>> TrackStatements = new Dictionary<string, List<Statement>>(StringComparer.InvariantCultureIgnoreCase);
+			foreach (Statement Statement in ParseData.Statements)
+			{
+				if (Statement.ElementName != MapElementName.Track)
+				{
+					continue;
+				}
+
+				if (!TrackStatements.TryGetValue(Statement.Key, out List<Statement> RailStatements))
+				{
+					RailStatements = new List<Statement>();
+					TrackStatements.Add(Statement.Key, RailStatements);
+				}
+				RailStatements.Add(Statement);
+			}
+
 			for (int railIndex = 1; railIndex < RouteData.TrackKeyList.Count; railIndex++)
 			{
 				string railKey = RouteData.TrackKeyList[railIndex];
 				Stopwatch railTimer = Stopwatch.StartNew();
-				foreach (Statement Statement in ParseData.Statements)
+				if (TrackStatements.TryGetValue(railKey, out List<Statement> ProcessedRailStatements))
 				{
-					if (Statement.ElementName != MapElementName.Track || !Statement.Key.Equals(RouteData.TrackKeyList[railIndex], StringComparison.InvariantCultureIgnoreCase))
+					foreach (Statement Statement in ProcessedRailStatements)
 					{
-						continue;
-					}
-
-					dynamic d = Statement;
+						dynamic d = Statement;
 
 					if (Statement.FunctionName == MapFunctionName.Position || (Statement.HasSubElement && Statement.SubElementName == MapSubElementName.X))
 					{
@@ -631,6 +645,7 @@ namespace Route.Bve5
 								break;
 						}
 					}
+				}
 				}
 
 				if (!RouteData.Blocks.First().Rails[railKey].InterpolateX)

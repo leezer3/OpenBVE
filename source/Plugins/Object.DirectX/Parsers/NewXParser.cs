@@ -23,7 +23,6 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -227,6 +226,9 @@ namespace Plugin
 			internal int Level;
 			internal int TransformStart;
 			internal bool MaterialUsed;
+			/// <summary>Key-based material definitions declared at root level in the current file.
+			/// Per-parse, so concurrently parsed files cannot overwrite each other's labels.</summary>
+			internal readonly Dictionary<string, Material> RootMaterials = new Dictionary<string, Material>();
 		}
 
 		/// <summary>Appends a single space separator, avoiding runs of whitespace.</summary>
@@ -237,8 +239,6 @@ namespace Plugin
 				sb.Append(' ');
 			}
 		}
-
-		private static readonly ConcurrentDictionary<string, Material> rootMaterials = new ConcurrentDictionary<string, Material>();
 
 		private static void ParseSubBlock(Block block, ref StaticObject obj, ref MeshBuilder builder, ref Material material, XParseState state)
 		{
@@ -457,7 +457,7 @@ namespace Plugin
 							state.MaterialUsed = materialsUsed[i];
 							// YUCKY: skip bracket strings
 							string materialName = block.ReadString();
-							if (!rootMaterials.TryGetValue(materialName, out builder.Materials[i + 1]))
+							if (!state.RootMaterials.TryGetValue(materialName, out builder.Materials[i + 1]))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"Material {materialName} was not found in DirectX binary file {state.File}");
 								builder.Materials[i + 1] = new Material();
@@ -543,7 +543,7 @@ namespace Plugin
 						// Key based material definitions
 						if (!string.IsNullOrEmpty(block.Label))
 						{
-							rootMaterials[block.Label] = newMaterial;
+							state.RootMaterials[block.Label] = newMaterial;
 						}
 					}
 					else
@@ -706,7 +706,7 @@ namespace Plugin
 					int ml = builder.Materials.Length;
 					Array.Resize(ref builder.Materials, ml + 1);
 					builder.Materials[ml] = new Material();
-					rootMaterials.TryGetValue(block.Label, out builder.Materials[ml]);
+					state.RootMaterials.TryGetValue(block.Label, out builder.Materials[ml]);
 					break;
 				case TemplateID.DeclData:
 					int numTemplates = (int)block.ReadDword();

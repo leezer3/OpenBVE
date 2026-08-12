@@ -90,7 +90,7 @@ namespace OpenBveApi.Textures
 			if (ReferenceEquals(a, b)) return true;
 			if (a is null) return false;
 			if (b is null) return false;
-			return a.Path == b.Path;
+			return a.Path == b.Path && a.Parameters == b.Parameters;
 		}
 
 		/// <summary>Checks whether two origins are unequal.</summary>
@@ -102,7 +102,7 @@ namespace OpenBveApi.Textures
 			if (ReferenceEquals(a, b)) return false;
 			if (a is null) return true;
 			if (b is null) return true;
-			return a.Path != b.Path;
+			return a.Path != b.Path || a.Parameters != b.Parameters;
 		}
 
 		/// <summary>Checks whether this instance is equal to the specified object.</summary>
@@ -113,7 +113,7 @@ namespace OpenBveApi.Textures
 			if (ReferenceEquals(this, obj)) return true;
 			if (obj is null) return false;
 			if (!(obj is PathOrigin)) return false;
-			return Path == ((PathOrigin) obj).Path;
+			return Path == ((PathOrigin) obj).Path && Parameters == ((PathOrigin) obj).Parameters;
 		}
 
 		/// <summary>Returns a string representing the absolute on-disk path of this texture</summary>
@@ -122,11 +122,16 @@ namespace OpenBveApi.Textures
 			return Path;
 		}
 
-		/// <summary>Returns the hash code based on the path.</summary>
+		/// <summary>Returns the hash code based on the path and parameters.</summary>
 		/// <returns>A 32-bit signed integer hash code.</returns>
 		public override int GetHashCode()
 		{
-			return Path?.GetHashCode() ?? 0;
+			unchecked
+			{
+				int hash = Path != null ? Path.GetHashCode() : 0;
+				hash = (hash * 397) ^ (Parameters != null ? Parameters.GetHashCode() : 0);
+				return hash;
+			}
 		}
 	}
 }

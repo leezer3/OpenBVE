@@ -165,11 +165,17 @@ namespace LibRender2.Objects
 							TextureOrigin daytimeOrigin = State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin;
 							if (!TextureManager.textureCache.TryGetValue(daytimeOrigin, out daytimeTexture))
 							{
-								Stopwatch sw = Stopwatch.StartNew();
-								daytimeOrigin.GetTexture(out daytimeTexture);
-								sw.Stop();
-								TextureManager.TextureDecodeTime += sw.ElapsedMilliseconds;
-								TextureManager.textureCache[daytimeOrigin] = daytimeTexture;
+								lock (BaseRenderer.GdiPlusLock)
+								{
+									if (!TextureManager.textureCache.TryGetValue(daytimeOrigin, out daytimeTexture))
+									{
+										Stopwatch sw = Stopwatch.StartNew();
+										daytimeOrigin.GetTexture(out daytimeTexture);
+										sw.Stop();
+										TextureManager.TextureDecodeTime += sw.ElapsedMilliseconds;
+										TextureManager.textureCache.TryAdd(daytimeOrigin, daytimeTexture);
+									}
+								}
 							}
 
 							TextureTransparencyType transparencyType = TextureTransparencyType.Opaque;
@@ -195,11 +201,17 @@ namespace LibRender2.Objects
 							TextureOrigin nighttimeOrigin = State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Origin;
 							if (!TextureManager.textureCache.TryGetValue(nighttimeOrigin, out nighttimeTexture))
 							{
-								Stopwatch sw = Stopwatch.StartNew();
-								nighttimeOrigin.GetTexture(out nighttimeTexture);
-								sw.Stop();
-								TextureManager.TextureDecodeTime += sw.ElapsedMilliseconds;
-								TextureManager.textureCache[nighttimeOrigin] = nighttimeTexture;
+								lock (BaseRenderer.GdiPlusLock)
+								{
+									if (!TextureManager.textureCache.TryGetValue(nighttimeOrigin, out nighttimeTexture))
+									{
+										Stopwatch sw = Stopwatch.StartNew();
+										nighttimeOrigin.GetTexture(out nighttimeTexture);
+										sw.Stop();
+										TextureManager.TextureDecodeTime += sw.ElapsedMilliseconds;
+										TextureManager.textureCache.TryAdd(nighttimeOrigin, nighttimeTexture);
+									}
+								}
 							}
 							TextureTransparencyType transparencyType = TextureTransparencyType.Opaque;
 							if (nighttimeTexture != null)
