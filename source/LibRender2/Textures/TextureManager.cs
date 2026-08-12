@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using LibRender2.Screens;
 using OpenBveApi;
 using OpenBveApi.Hosts;
@@ -30,8 +32,9 @@ namespace LibRender2.Textures
 
 		private static Dictionary<TextureOrigin, Texture> animatedTextures;
 
-		/// <summary>Holds the registered path-based textures, indexed by path.</summary>
-		private static readonly Dictionary<string, List<Texture>> RegisteredTextureLookup = new Dictionary<string, List<Texture>>(StringComparer.OrdinalIgnoreCase);
+		/// <summary>Holds the registered path-based textures, indexed by path.
+		/// Values are immutable snapshots, replaced atomically on registration.</summary>
+		private static readonly ConcurrentDictionary<string, Texture[]> RegisteredTextureLookup = new ConcurrentDictionary<string, Texture[]>(StringComparer.OrdinalIgnoreCase);
 
 		private static readonly object TextureLookupLock = new object();
 
@@ -78,61 +81,96 @@ namespace LibRender2.Textures
 			/*
 			 * Check if the texture is already registered.
 			 * If so, return the existing handle.
+			 * The stored arrays are immutable, so this read is lock-free.
 			 * */
-			lock (TextureLookupLock)
+			if (RegisteredTextureLookup.TryGetValue(path, out Texture[] candidates))
 			{
-				if (RegisteredTextureLookup.TryGetValue(path, out List<Texture> candidates))
+				for (int i = 0; i < candidates.Length; i++)
 				{
-					for (int i = 0; i < candidates.Count; i++)
+					try
 					{
-						try
-						{
-							PathOrigin source = candidates[i].Origin as PathOrigin;
+						PathOrigin source = candidates[i].Origin as PathOrigin;
 
-							if (source != null && source.Parameters == parameters)
-							{
-								handle = candidates[i];
-								return true;
-							}
-						}
-						catch
+						if (source != null && source.Parameters == parameters)
 						{
-							// ignored
+							handle = candidates[i];
+							return true;
 						}
+					}
+					catch
+					{
+						// ignored
 					}
 				}
 			}
 
-			/*
+/*
 			 * Register the texture and return the newly created handle.
+			 * The slot is reserved atomically, but texture construction and
+			 * decoding happen OUTSIDE the lock so that concurrent
+			 * registrations do not convoy on the decoder.
 			 * */
-			int idx = GetNextFreeTexture();
-			RegisteredTextures[idx] = new Texture(path, parameters, currentHost);
-			RegisteredTexturesCount++;
-			handle = RegisteredTextures[idx];
-
-			lock (TextureLookupLock)
+			int idx;
+			for (;;)
 			{
-				/*
-				 * Pre-seed the texture cache with the decoded texture (not the handle).
-				 * The handle itself has no decoded bytes, so storing it would cause a null
-				 * reference when the transparency type is subsequently queried.
-				 * */
-				if (handle.PixelFormat != PixelFormat.Invalid && handle.DecodedTexture != null && !textureCache.ContainsKey(handle.Origin))
+				idx = Interlocked.Increment(ref RegisteredTexturesCount) - 1;
+				if (idx < RegisteredTextures.Length)
 				{
-					textureCache.Add(handle.Origin, handle.DecodedTexture);
+					break;
 				}
+				lock (TextureLookupLock)
+				{
+					if (idx >= RegisteredTextures.Length)
+					{
+						Array.Resize(ref RegisteredTextures, Math.Max(RegisteredTextures.Length << 1, idx + 1));
+					}
+				}
+			}
+
+			handle = new Texture(path, parameters, currentHost);
+			RegisteredTextures[idx] = handle;
+
+			/*
+			 * Pre-seed the texture cache with the decoded texture (not the handle).
+			 * The handle itself has no decoded bytes, so storing it would cause a null
+			 * reference when the transparency type is subsequently queried.
+			 * */
+			if (handle.PixelFormat != PixelFormat.Invalid && handle.DecodedTexture != null)
+			{
+				lock (TextureLookupLock)
+				{
+					if (!textureCache.ContainsKey(handle.Origin))
+					{
+						textureCache.Add(handle.Origin, handle.DecodedTexture);
+					}
+				}
+			}
 
 				/*
 				 * Maintain the registration lookup table.
+				 * Publish a new immutable snapshot via compare-and-swap;
+				 * readers never take a lock.
 				 * */
-				if (!RegisteredTextureLookup.TryGetValue(path, out List<Texture> list))
+				while (true)
 				{
-					list = new List<Texture>();
-					RegisteredTextureLookup[path] = list;
+					if (RegisteredTextureLookup.TryGetValue(path, out Texture[] currentList))
+					{
+						Texture[] newList = new Texture[currentList.Length + 1];
+						Array.Copy(currentList, newList, currentList.Length);
+						newList[currentList.Length] = handle;
+						if (RegisteredTextureLookup.TryUpdate(path, newList, currentList))
+						{
+							break;
+						}
+					}
+					else
+					{
+						if (RegisteredTextureLookup.TryAdd(path, new[] { handle }))
+						{
+							break;
+						}
+					}
 				}
-				list.Add(handle);
-			}
 			return true;
 		}
 
@@ -144,10 +182,13 @@ namespace LibRender2.Textures
 			/*
 			 * Register the texture and return the newly created handle.
 			 * */
-			int idx = GetNextFreeTexture();
-			RegisteredTextures[idx] = new Texture(texture);
-			RegisteredTexturesCount++;
-			return RegisteredTextures[idx];
+			lock (TextureLookupLock)
+			{
+				int idx = GetNextFreeTexture();
+				RegisteredTextures[idx] = new Texture(texture);
+				RegisteredTexturesCount++;
+				return RegisteredTextures[idx];
+			}
 		}
 
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>
@@ -160,10 +201,13 @@ namespace LibRender2.Textures
 			/*
 			 * Register the texture and return the newly created handle.
 			 * */
-			int idx = GetNextFreeTexture();
-			RegisteredTextures[idx] = new Texture(bitmap, parameters);
-			RegisteredTexturesCount++;
-			return RegisteredTextures[idx];
+			lock (TextureLookupLock)
+			{
+				int idx = GetNextFreeTexture();
+				RegisteredTextures[idx] = new Texture(bitmap, parameters);
+				RegisteredTexturesCount++;
+				return RegisteredTextures[idx];
+			}
 		}
 
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>
@@ -175,10 +219,13 @@ namespace LibRender2.Textures
 			/*
 			 * Register the texture and return the newly created handle.
 			 * */
-			int idx = GetNextFreeTexture();
-			RegisteredTextures[idx] = new Texture(bitmap);
-			RegisteredTexturesCount++;
-			return RegisteredTextures[idx];
+			lock (TextureLookupLock)
+			{
+				int idx = GetNextFreeTexture();
+				RegisteredTextures[idx] = new Texture(bitmap);
+				RegisteredTexturesCount++;
+				return RegisteredTextures[idx];
+			}
 		}
 
 
@@ -569,12 +616,17 @@ namespace LibRender2.Textures
 					Texture texture = RegisteredTextures[i];
 					if (texture != null && texture.Origin is PathOrigin pathOrigin)
 					{
-						if (!RegisteredTextureLookup.TryGetValue(pathOrigin.Path, out List<Texture> list))
+						if (RegisteredTextureLookup.TryGetValue(pathOrigin.Path, out Texture[] currentList))
 						{
-							list = new List<Texture>();
-							RegisteredTextureLookup[pathOrigin.Path] = list;
+							Texture[] newList = new Texture[currentList.Length + 1];
+							Array.Copy(currentList, newList, currentList.Length);
+							newList[currentList.Length] = texture;
+							RegisteredTextureLookup[pathOrigin.Path] = newList;
 						}
-						list.Add(texture);
+						else
+						{
+							RegisteredTextureLookup[pathOrigin.Path] = new[] { texture };
+						}
 					}
 				}
 			}
