@@ -37,6 +37,7 @@ using RouteManager2.Events;
 using RouteManager2.SignalManager;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Route.Bve5
@@ -44,6 +45,16 @@ namespace Route.Bve5
 	internal static partial class Bve5ScenarioParser
 	{
 		internal static Plugin plugin;
+		private static readonly Stopwatch swCrawl = new Stopwatch();
+		private static readonly Stopwatch swCrawlSetup = new Stopwatch();
+		private static readonly Stopwatch swCrawlTurn = new Stopwatch();
+		private static readonly Stopwatch swCrawlRails = new Stopwatch();
+		private static readonly Stopwatch swCrawlFinal = new Stopwatch();
+		private static readonly Stopwatch swEvents = new Stopwatch();
+		private static readonly Stopwatch swSections = new Stopwatch();
+		private static readonly Stopwatch swRailObjects = new Stopwatch();
+		private static readonly Stopwatch swWorldSounds = new Stopwatch();
+		private static readonly Stopwatch swOther = new Stopwatch();
 		private static void ApplyRouteData(string FileName, bool PreviewOnly, RouteData Data)
 		{
 			Plugin.CurrentOptions.UnitOfSpeed = "km/h";
@@ -133,7 +144,7 @@ namespace Route.Bve5
 			for (int i = 0; i < Data.Blocks.Count; i++)
 			{
 				plugin.CurrentProgress = 0.6667 + i * progressFactor;
-				if ((i & 15) == 0)
+				if ((i & 63) == 0)
 				{
 					System.Threading.Thread.Sleep(1);
 					if (plugin.Cancel) return;
@@ -146,6 +157,7 @@ namespace Route.Bve5
 				// normalize
 				Direction.Normalize();
 
+				swCrawlSetup.Start();
 				TrackElement WorldTrackElement = Data.Blocks[i].CurrentTrackState;
 				int n = CurrentTrackLength;
 				for (int k = 0; k < Plugin.CurrentRoute.Tracks.Count; k++)
@@ -172,6 +184,8 @@ namespace Route.Bve5
 				}
 
 				// background
+				swCrawlSetup.Stop();
+				swEvents.Start();
 				if (!PreviewOnly)
 				{
 					if (!string.IsNullOrEmpty(Data.Blocks[i].Background))
@@ -294,6 +308,8 @@ namespace Route.Bve5
 
 
 				// sections
+				swEvents.Stop();
+				swSections.Start();
 				if (!PreviewOnly)
 				{
 					// sections
@@ -304,6 +320,8 @@ namespace Route.Bve5
 				}
 
 				// rail-aligned objects
+				swSections.Stop();
+				swRailObjects.Start();
 				if (!PreviewOnly)
 				{
 					for (int j = 0; j < Data.Blocks[i].Rails.Count; j++)
@@ -433,6 +451,8 @@ namespace Route.Bve5
 				}
 
 				// turn
+				swRailObjects.Stop();
+				swCrawlTurn.Start();
 				if (Data.Blocks[i].Turn != 0.0)
 				{
 					double ag = -Math.Atan(Data.Blocks[i].Turn);
@@ -446,6 +466,8 @@ namespace Route.Bve5
 				Plugin.CurrentRoute.Tracks[0].Elements[n].Pitch = Data.Blocks[i].Pitch;
 
 				// curves
+				swCrawlTurn.Stop();
+				swCrawlRails.Start();
 				CalcTransformation(WorldTrackElement.CurveRadius, Data.Blocks[i].Pitch, BlockInterval, ref Direction, out double a, out double c, out double h);
 
 				if (!PreviewOnly)
@@ -499,19 +521,25 @@ namespace Route.Bve5
 				}
 
 				// world sounds
+				swCrawlRails.Stop();
+				swWorldSounds.Start();
 				for (int k = 0; k < Data.Blocks[i].SoundEvents.Count; k++)
 				{
 					Data.Blocks[i].SoundEvents[k].Create(Data, n, StartingDistance, Position, Direction);
 				}
 
 				// finalize block
+				swWorldSounds.Stop();
+				swCrawlFinal.Start();
 				Position.X += Direction.X * c;
 				Position.Y += h;
 				Position.Z += Direction.Y * c;
 				Direction.Rotate(-a);
+				swCrawlFinal.Stop();
 			}
 
 			// transponders
+			swOther.Start();
 			if (!PreviewOnly)
 			{
 				for (int i = 0; i < Data.Blocks.Count; i++)
@@ -643,6 +671,8 @@ namespace Route.Bve5
 			{
 				ComputeCantTangents();
 			}
+			swOther.Stop();
+			Plugin.FileSystem.AppendToLogFile("Bve5: Apply breakdown: setup " + swCrawlSetup.ElapsedMilliseconds + " ms, turn " + swCrawlTurn.ElapsedMilliseconds + " ms, rails " + swCrawlRails.ElapsedMilliseconds + " ms, final " + swCrawlFinal.ElapsedMilliseconds + " ms, events " + swEvents.ElapsedMilliseconds + " ms, sections " + swSections.ElapsedMilliseconds + " ms, railObjects " + swRailObjects.ElapsedMilliseconds + " ms, worldSounds " + swWorldSounds.ElapsedMilliseconds + " ms, other " + swOther.ElapsedMilliseconds + " ms");
 		}
 
 		private static void ComputeCantTangents()
