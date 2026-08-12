@@ -215,13 +215,12 @@ namespace OpenBveApi.Objects
 				}
 				Objects[i].Matricies = matriciesToShader;
 				Objects[i].Translation = Matrix4D.CreateTranslation(position.X, position.Y, -position.Z);
-				Matrix4D flipMatrix = Matrix4D.NoTransformation;
+				Objects[i].Rotate = (Matrix4D)new Transformation(direction, up, side);
 				if (IsReversed)
 				{
-					flipMatrix = Matrix4D.CreateFromAxisAngle(Vector3.Down, 3.14159);
+					Objects[i].Rotate *= Matrix4D.ZFlip;
 				}
-				Objects[i].Rotate = (Matrix4D)new Transformation(direction, up, side);
-				Objects[i].Rotate *= flipMatrix;
+				
 				currentHost.ShowObject(Objects[i], ObjectType.Dynamic);
 			}
 		}

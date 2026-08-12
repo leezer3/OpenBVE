@@ -845,5 +845,8 @@ namespace OpenBveApi.Math
 
 		/// <summary>Represents an identity matrix</summary>
 		public static readonly Matrix4D Identity = new Matrix4D(Vector4.UnitX, Vector4.UnitY, Vector4.UnitZ, Vector4.UnitW);
+
+		/// <summary> A matrix performing a Z-axis flip</summary>
+		public static readonly Matrix4D ZFlip = Matrix4D.CreateFromAxisAngle(Vector3.Down, 3.14159);
 	}
 }
