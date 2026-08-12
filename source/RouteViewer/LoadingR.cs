@@ -138,6 +138,7 @@ namespace RouteViewer {
 			RouteParseTime = parseTimer.ElapsedMilliseconds;
 			ParserParseTime = Program.CurrentHost.PluginParseTime;
 			ParserApplyTime = Program.CurrentHost.PluginApplyTime;
+			Program.FileSystem.AppendToLogFile("Object loading: " + Host.TotalObjectLoadCount + " objects, parse: " + Host.TotalObjectParseMs + " ms, optimize: " + Host.TotalObjectOptimizeMs + " ms");
 
 			if (!loaded)
 			{

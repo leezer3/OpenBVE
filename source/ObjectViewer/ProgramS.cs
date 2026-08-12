@@ -341,7 +341,7 @@ namespace ObjectViewer {
 			}
 			foreach (var key in staticKeysToRemove)
 			{
-				CurrentHost.StaticObjectCache.Remove(key);
+				CurrentHost.StaticObjectCache.TryRemove(key, out _);
 			}
 			CurrentHost.AnimatedObjectCollectionCache.Clear();
 			// Let TextureManager check for texture changes

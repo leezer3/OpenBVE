@@ -17,7 +17,10 @@ namespace RouteViewer {
 
 		internal static readonly List<LogMessage> LogMessages = new List<LogMessage>();
 		internal static void AddMessage(MessageType type, bool fileNotFound, string text) {
-			LogMessages.Add(new LogMessage(type, fileNotFound, text));
+			lock (LogMessages)
+			{
+				LogMessages.Add(new LogMessage(type, fileNotFound, text));
+			}
 		}
 	}
 }
