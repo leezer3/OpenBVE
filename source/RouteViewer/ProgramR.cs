@@ -48,7 +48,6 @@ namespace RouteViewer
 		private static bool ShiftPressed = false;
 		private static bool ControlPressed = false;
 		private static bool AltPressed = false;
-		private static bool RPressed = false;
 
 		// mouse
 		private static int MouseButton;
@@ -174,10 +173,8 @@ namespace RouteViewer
 				SetProcessDPIAware();
 			}
 
-			string folder = Program.FileSystem.GetDataFolder("Languages");
+			string folder = FileSystem.GetDataFolder("Languages");
 			Translations.LoadLanguageFiles(folder);
-			Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
-			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// application
 			Renderer.GraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
 			if (Renderer.Screen.Width == 0 || Renderer.Screen.Height == 0)
@@ -186,12 +183,17 @@ namespace RouteViewer
 				Renderer.Screen.Width = 1024;
 				Renderer.Screen.Height = 768;
 			}
-			Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
+			Renderer.CameraTrackFollower = new TrackFollower(CurrentHost);
 			Renderer.GameWindow = new RouteViewer(Renderer.Screen.Width, Renderer.Screen.Height, Renderer.GraphicsMode, "Route Viewer", GameWindowFlags.Default);
 			Renderer.GameWindow.Visible = true;
 			Renderer.GameWindow.TargetUpdateFrequency = 0;
 			Renderer.GameWindow.TargetRenderFrequency = 0;
 			Renderer.GameWindow.Title = "Route Viewer";
+			Renderer.GameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? VSyncMode.On : VSyncMode.Off;
+			if (Interface.CurrentOptions.FPSLimit > 0)
+			{
+				Renderer.GameWindow.TargetRenderFrequency = Interface.CurrentOptions.FPSLimit;
+			}
 			processCommandLineArgs = true;
 			Renderer.GameWindow.Run();
 			//Unload
@@ -240,11 +242,10 @@ namespace RouteViewer
 					}
 					else
 					{
-						Random randomGenerator = new Random();
 						int colorIdx = 5; // known value already in list to make our while loop easy
 						while (Renderer.usedTrackColors.Contains(colorIdx))
 						{
-							colorIdx = randomGenerator.Next(0, 255);
+							colorIdx = CurrentHost.Random.Next(0, 255);
 						}
 						Renderer.usedTrackColors.Add(colorIdx);
 						Renderer.trackColors.Add(key, new RailPath(CurrentHost, Renderer, key, CurrentRoute.BlockLength, ColorPalettes.Windows256ColorPalette[colorIdx])); //use the 256 color Windows palette for a decent set of contrasting colors	
@@ -629,11 +630,8 @@ namespace RouteViewer
 						    Math.Abs(prevShadowBias - Interface.CurrentOptions.ShadowBias) > 0.000001f ||
 						    Math.Abs(prevShadowNormalBias - Interface.CurrentOptions.ShadowNormalBias) > 0.01f)
 						{
-							if (Program.Renderer.AvailableNewRenderer)
-							{
-								Program.Renderer.ReloadShadowSettings();
-							}
-						}
+							Program.Renderer.ReloadShadowSettings();
+                        }
 					}
 					Application.DoEvents();
 					Renderer.Camera.AlignmentDirection.TrackPosition = 0;
@@ -662,17 +660,17 @@ namespace RouteViewer
 					break;
 				case Key.A:
 				case Key.Keypad4:
-					Renderer.Camera.AlignmentDirection.Position.X = -CameraProperties.ExteriorTopSpeed * speedModified;
+					Renderer.Camera.Move(Translations.Command.CameraMoveLeft, speedModified);
 					break;
 				case Key.D:
 				case Key.Keypad6:
-					Renderer.Camera.AlignmentDirection.Position.X = CameraProperties.ExteriorTopSpeed * speedModified;
+					Renderer.Camera.Move(Translations.Command.CameraMoveRight, speedModified);
 					break;
 				case Key.Keypad2:
-					Renderer.Camera.AlignmentDirection.Position.Y = -CameraProperties.ExteriorTopSpeed * speedModified;
+					Renderer.Camera.Move(Translations.Command.CameraMoveDown, speedModified);
 					break;
 				case Key.Keypad8:
-					Renderer.Camera.AlignmentDirection.Position.Y = CameraProperties.ExteriorTopSpeed * speedModified;
+					Renderer.Camera.Move(Translations.Command.CameraMoveUp, speedModified);
 					break;
 				case Key.W:
 				case Key.Keypad9:
@@ -863,13 +861,6 @@ namespace RouteViewer
 						}
 					}
 					break;
-				case Key.R:
-					if (!RPressed)
-					{
-						RPressed = true;
-						Renderer.SwitchOpenGLVersion();
-					}
-					break;
 				case Key.P:
 					if (CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 					{
@@ -951,9 +942,6 @@ namespace RouteViewer
 				case Key.Keypad0:
 				case Key.KeypadPeriod:
 					Renderer.Camera.AlignmentDirection.Zoom = 0.0;
-					break;
-				case Key.R:
-					RPressed = false;
 					break;
 			}
 		}

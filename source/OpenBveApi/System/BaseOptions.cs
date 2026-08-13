@@ -80,8 +80,6 @@ namespace OpenBveApi
 		public int ObjectOptimizationFullThreshold;
 		/// <summary>The maximum number of sounds playing at any one time</summary>
 		public int SoundNumber;
-		/// <summary>Whether to use the new rendering method.</summary>
-		public bool IsUseNewRenderer;
 		/// <summary>Shadow map resolution per cascade. Off disables shadows.</summary>
 		public ShadowMapResolution ShadowResolution = ShadowMapResolution.Off;
 		/// <summary>Maximum distance from the camera at which shadows appear.</summary>

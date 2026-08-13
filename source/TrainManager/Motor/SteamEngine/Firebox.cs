@@ -1,4 +1,4 @@
-﻿//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
+//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -20,6 +20,8 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
+using OpenBveApi.Interface;
 
 namespace TrainManager.Motor
 {
@@ -33,22 +35,68 @@ namespace TrainManager.Motor
 		public double Temperature;
 		/// <summary>The current fuel level in the firebox</summary>
 		public double FuelLevel;
+		/// <summary>The state of the firebox door</summary>
+		public double DoorState;
 
 		/// <summary>The current heat output ratio</summary>
 		/// <remarks>Assumed coal combustion temperature</remarks>
 		public double HeatOutput => (FuelLevel / IdealFuelLevel) * (Temperature / 1000);
 
-		public Firebox(TractionModel engine, double maxFuelLevel, double currentFuelLevel, double idealFuelLevel, double currentTemperature) : base(engine)
+		private bool doorOpenPressed;
+
+		private bool doorClosePressed;
+
+		public Firebox(TractionModel engine, double maxFuelLevel, double currentFuelLevel, double idealFuelLevel,
+			double currentTemperature) : base(engine)
 		{
 			MaxFuelLevel = maxFuelLevel;
 			FuelLevel = currentFuelLevel;
 			IdealFuelLevel = idealFuelLevel;
 			Temperature = currentTemperature;
+			DoorState = 1; // fully open
+			doorOpenPressed = false;
+			doorClosePressed = false;
 		}
 
 		public override void Update(double timeElapsed)
 		{
+			if (doorOpenPressed)
+			{
+				DoorState += timeElapsed;
+			}
 
+			if (doorClosePressed)
+			{
+				DoorState -= timeElapsed;
+			}
+
+			DoorState = Math.Min(Math.Max(DoorState, 0), 1.0);
+		}
+
+		public override void ControlDown(Translations.Command command)
+		{
+			switch (command)
+			{
+				case Translations.Command.FireboxDoorOpen:
+					doorOpenPressed = true;
+					break;
+				case Translations.Command.FireboxDoorClose:
+					doorClosePressed = true;
+					break;
+			}
+		}
+
+		public override void ControlUp(Translations.Command command)
+		{
+			switch (command)
+			{
+				case Translations.Command.FireboxDoorOpen:
+					doorOpenPressed = false;
+					break;
+				case Translations.Command.FireboxDoorClose:
+					doorClosePressed = false;
+					break;
+			}
 		}
 	}
 }

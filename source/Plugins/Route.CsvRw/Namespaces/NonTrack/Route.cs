@@ -29,6 +29,10 @@ namespace CsvRwRouteParser
 						CurrentRoute.Comment = Arguments[0];
 					}
 
+					if (CurrentRoute.Comment.IndexOf("Hmmsim", StringComparison.InvariantCultureIgnoreCase) != -1)
+					{
+						Data.SetHmmsimProperties();
+					}
 					break;
 				case RouteCommand.Image:
 					if (Arguments.Length < 1)

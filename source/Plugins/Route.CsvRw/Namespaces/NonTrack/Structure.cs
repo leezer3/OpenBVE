@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -796,8 +796,7 @@ namespace CsvRwRouteParser
 				{
 					if (Command == StructureCommand.Object)
 					{
-						IsHmmsim = true;
-						Plugin.CurrentOptions.ObjectDisposalMode = ObjectDisposalMode.Accurate;
+						Data.SetHmmsimProperties();
 					}
 					if (commandIndices[0] < 0)
 					{

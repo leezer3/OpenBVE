@@ -22,7 +22,7 @@ namespace LibRender2.Trains
 		public readonly ObjectType Type;
 		/// <summary>If an interior view, the transformation to be used</summary>
 		/// <remarks>Allows rotation of a 2D panel etc.</remarks>
-		public Transformation ViewDirection;
+		public Vector3 ViewDirection;
 
 		/// <summary>Creates a new CarSection</summary>
 		/// <param name="Host">The host</param>
@@ -116,7 +116,7 @@ namespace LibRender2.Trains
 				for (int i = 0; i < k.Objects.Length; i++)
 				{
 					k.Objects[i].Prototype = (StaticObject)k.Objects[i].Prototype.Clone();
-					k.ApplyTranslation(objectPosition.X, objectPosition.Y, objectPosition.Z, true);
+					k.ApplyTranslation(objectPosition, true);
 				}
 				k.BaseCar = baseCar;
 				Groups[gl].Keyframes = k;

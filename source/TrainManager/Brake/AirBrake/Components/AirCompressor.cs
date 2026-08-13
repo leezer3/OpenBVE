@@ -24,6 +24,8 @@ namespace TrainManager.BrakeSystems
 		private readonly MainReservoir mainReservoir;
 		/// <summary>Holds the reference to the car</summary>
 		private readonly AbstractCar baseCar;
+		/// <summary>The pressure at which the compressor restarts</summary>
+		public readonly double RestartPressure;
 
 		public Compressor(double rate, MainReservoir reservoir, AbstractCar car)
 		{
@@ -34,6 +36,19 @@ namespace TrainManager.BrakeSystems
 			EndSound = new CarSound();
 			mainReservoir = reservoir;
 			baseCar = car;
+			RestartPressure = reservoir.MinimumPressure;
+		}
+
+		public Compressor(double rate, double restartPressure, MainReservoir reservoir, AbstractCar car)
+		{
+			Rate = rate;
+			Enabled = false;
+			StartSound = new CarSound();
+			LoopSound = new CarSound();
+			EndSound = new CarSound();
+			mainReservoir = reservoir;
+			baseCar = car;
+			RestartPressure = restartPressure;
 		}
 
 		public void Update(double TimeElapsed)
@@ -66,7 +81,7 @@ namespace TrainManager.BrakeSystems
 			}
 			else
 			{
-				if (mainReservoir.CurrentPressure < mainReservoir.MinimumPressure)
+				if (mainReservoir.CurrentPressure < RestartPressure)
 				{
 					Enabled = true;
 					TimeStarted = TrainManagerBase.currentHost.InGameTime;

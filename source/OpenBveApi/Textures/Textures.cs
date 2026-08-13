@@ -169,8 +169,7 @@ namespace OpenBveApi.Textures {
 		public Texture(string path, TextureParameters parameters, Hosts.HostInterface currentHost)
 		{
 			Origin = new PathOrigin(path, parameters, currentHost);
-			Origin.GetTexture(out Texture t);
-			PixelFormat = t.PixelFormat;
+			PixelFormat = Origin.GetTexture(out Texture t) ? t.PixelFormat : PixelFormat.Invalid;
 			MyOpenGlTextures = new OpenGlTexture[1][];
 			MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 			

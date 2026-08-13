@@ -162,6 +162,12 @@
 		/// <summary>Starts a repeating object cycle</summary>
 		PatternObj,
 		/// <summary>Ends a repeating object cycle</summary>
-		PatternEnd
+		PatternEnd,
+		/// <summary>Changes the rail sound</summary>
+		RailSound,
+		/// <summary>Begins a transition curve</summary>
+		CurveTransition,
+		/// <summary>Begins pitch transition</summary>
+		PitchTransition
 	}
 }

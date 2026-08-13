@@ -6,5 +6,11 @@
 		<FileName>Yongin Line Local.csv</FileName>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
+	<!-- Seoul Subway L1 -->
+	<Patch>
+		<Hash>C6C11E6792B5B1CFFED90728D36018749751E3D412BC6317922DC369B95AC901</Hash>
+		<FileName>K655.csv</FileName>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
+	</Patch>
   </RoutePatches>
 </openBVE>

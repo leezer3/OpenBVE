@@ -424,6 +424,16 @@ namespace OpenBve {
 			comboboxVSync.Items.Add("");
 			comboboxVSync.Items.Add("");
 			comboboxVSync.SelectedIndex = Interface.CurrentOptions.VerticalSynchronization ? 1 : 0;
+			// Map FPSLimit value to combo index: 0=Unlimited, 1=30, 2=60, 3=120, 4=240
+			switch (Interface.CurrentOptions.FPSLimit)
+			{
+				case 30: comboBoxFPSLimit.SelectedIndex = 1; break;
+				case 60: comboBoxFPSLimit.SelectedIndex = 2; break;
+				case 120: comboBoxFPSLimit.SelectedIndex = 3; break;
+				case 240: comboBoxFPSLimit.SelectedIndex = 4; break;
+				default: comboBoxFPSLimit.SelectedIndex = 0; break;
+			}
+			UpdateFPSLimitEnabled();
 			switch (Interface.CurrentOptions.UserInterfaceFolder)
 			{
 				case "Slim":
@@ -499,7 +509,6 @@ namespace OpenBve {
 			checkboxDerailments.Checked = Interface.CurrentOptions.Derailments;
 			checkBoxLoadInAdvance.Checked = Interface.CurrentOptions.LoadInAdvance;
 			checkBoxUnloadTextures.Checked = Interface.CurrentOptions.UnloadUnusedTextures;
-			checkBoxIsUseNewRenderer.Checked = Interface.CurrentOptions.IsUseNewRenderer;
 			// Shadow Resolution
 			switch (Interface.CurrentOptions.ShadowResolution)
 			{
@@ -743,6 +752,8 @@ namespace OpenBve {
 			labelVSync.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_vsync"});
 			comboboxVSync.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_vsync_off"});
 			comboboxVSync.Items[1] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_vsync_on"});
+			labelFPSLimit.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_fpslimit"});
+			comboBoxFPSLimit.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_fpslimit_unlimited"});
 			labelHUDScale.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","hud_size"});
 			labelHUDSmall.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","hud_size_small"});
 			labelHUDNormal.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","hud_size_normal"});
@@ -848,7 +859,6 @@ namespace OpenBve {
 			groupBoxAdvancedOptions.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","advanced"});
 			checkBoxLoadInAdvance.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","advanced_load_advance"});
 			checkBoxUnloadTextures.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","advanced_unload_textures"});
-			checkBoxIsUseNewRenderer.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","advanced_is_use_new_renderer"});
 			labelTimeAcceleration.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","advanced_timefactor"});
 			labelCursor.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","advanced_cursor"});
 			//Other Options
@@ -1213,13 +1223,14 @@ namespace OpenBve {
 		/// <summary>Applies tooltips to the various controls on the form</summary>
 		private void ApplyToolTips()
 		{
+			SetToolTip("vsync", labelVSync, comboboxVSync);
 			SetToolTip("interpolation", labelInterpolation, comboboxInterpolation);
 			SetToolTip("anisotropic", labelAnisotropic, updownAnisotropic);
 			SetToolTip("antialiasing", labelAntiAliasing, updownAntiAliasing);
 			SetToolTip("transparency", labelTransparency, trackbarTransparency);
 			SetToolTip("viewingdistance", labelDistance, updownDistance);
 			SetToolTip("motionblur", labelMotionBlur, comboboxMotionBlur);
-			SetToolTip("new_renderer", checkBoxIsUseNewRenderer);
+			SetToolTip("fpslimit", labelFPSLimit, comboBoxFPSLimit);
 		}
 
 		/// <summary>Sets the tooltip for one or more controls using a translation key</summary>
@@ -1227,11 +1238,46 @@ namespace OpenBve {
 		/// <param name="controls">The controls to apply the tooltip to</param>
 		private void SetToolTip(string key, params Control[] controls)
 		{
-			string text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "tooltips", key });
+			string text = WordWrap(Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "tooltips", key }));
 			foreach (Control control in controls)
 			{
 				toolTip.SetToolTip(control, text);
 			}
+		}
+
+		/// <summary>Wraps long tooltips onto multiple lines so they do not stretch across the screen.</summary>
+		/// <remarks>Works on all platforms: explicit line breaks are honoured by both the native Windows tooltip and Mono's tooltip renderer.</remarks>
+		private static string WordWrap(string text)
+		{
+			if (string.IsNullOrEmpty(text))
+			{
+				return text;
+			}
+			const int maxWidth = 400;
+			Font font = SystemFonts.DefaultFont;
+			var lines = new List<string>();
+			foreach (string line in text.Split('\n'))
+			{
+				string current = string.Empty;
+				foreach (string word in line.TrimEnd('\r').Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+				{
+					string candidate = current.Length == 0 ? word : current + " " + word;
+					if (current.Length == 0 || TextRenderer.MeasureText(candidate, font).Width <= maxWidth)
+					{
+						current = candidate;
+					}
+					else
+					{
+						lines.Add(current);
+						current = word;
+					}
+				}
+				if (current.Length > 0)
+				{
+					lines.Add(current);
+				}
+			}
+			return string.Join(Environment.NewLine, lines);
 		}
 
 		// form closing
@@ -1239,6 +1285,9 @@ namespace OpenBve {
 		{
 			Interface.CurrentOptions.FullscreenMode = radiobuttonFullscreen.Checked;
 			Interface.CurrentOptions.VerticalSynchronization = comboboxVSync.SelectedIndex == 1;
+			// Map combo index to FPSLimit value
+			int[] fpsPresets = { 0, 30, 60, 120, 240 };
+			Interface.CurrentOptions.FPSLimit = comboBoxFPSLimit.SelectedIndex >= 0 ? fpsPresets[comboBoxFPSLimit.SelectedIndex] : 0;
 			Interface.CurrentOptions.WindowWidth = (int)Math.Round(updownWindowWidth.Value);
 			Interface.CurrentOptions.WindowHeight = (int)Math.Round(updownWindowHeight.Value);
 			Interface.CurrentOptions.FullscreenWidth = (int)Math.Round(updownFullscreenWidth.Value);
@@ -1276,7 +1325,6 @@ namespace OpenBve {
 			Interface.CurrentOptions.UnloadUnusedTextures = checkBoxUnloadTextures.Checked;
 			Interface.CurrentOptions.OldTransparencyMode = checkBoxTransparencyFix.Checked;
 			Interface.CurrentOptions.EnableBveTsHacks = checkBoxHacks.Checked;
-			Interface.CurrentOptions.IsUseNewRenderer = checkBoxIsUseNewRenderer.Checked;
 			// Shadow Resolution
 			switch (comboboxShadowResolution.SelectedIndex)
 			{

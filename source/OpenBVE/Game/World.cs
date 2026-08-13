@@ -8,6 +8,7 @@ using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using System;
+using OpenBveApi.World;
 using TrainManager.Trains;
 
 namespace OpenBve {
@@ -342,9 +343,22 @@ namespace OpenBve {
 				{
 					if (TrainManager.PlayerTrain.DriverCar >= 0 && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections.TryGetValue(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CurrentCarSection, out CarSection interiorSection) && interiorSection.ViewDirection != null)
 					{
-						dF.Rotate(interiorSection.ViewDirection);
-						uF.Rotate(interiorSection.ViewDirection);
-						sF.Rotate(interiorSection.ViewDirection);
+
+						if (interiorSection.ViewDirection.X != 0.0)
+						{
+							dF.Rotate(uF, interiorSection.ViewDirection.X);
+							sF.Rotate(uF, interiorSection.ViewDirection.X);
+						}
+						if (interiorSection.ViewDirection.Y != 0.0)
+						{
+							dF.Rotate(sF, -interiorSection.ViewDirection.Y);
+							uF.Rotate(sF, -interiorSection.ViewDirection.Y);
+						}
+						if (interiorSection.ViewDirection.Z != 0.0)
+						{
+							uF.Rotate(dF, -interiorSection.ViewDirection.Z);
+							sF.Rotate(dF, -interiorSection.ViewDirection.Z);
+						}
 					}
 					
 				}

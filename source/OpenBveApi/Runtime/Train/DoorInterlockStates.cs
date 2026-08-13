@@ -11,6 +11,6 @@ namespace OpenBveApi.Runtime
 		/// <summary>The train doors are unlocked only on the right side.</summary>
 		Right = 2,
 		/// <summary>The train doors are fully locked.</summary>
-		Locked = 3,
+		Locked = 3
 	}
 }

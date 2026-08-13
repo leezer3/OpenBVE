@@ -27,6 +27,9 @@ namespace OpenBveApi.Textures {
 				{
 					result = new Texture(texture.Width, texture.Height, PixelFormat.RGBAlpha, ApplyTransparentTexture(texture.Bytes, texture.PixelFormat, texture.Width, texture.Height, parameters.TransparencyTexture), texture.Palette);
 				}
+				else if (parameters.FirstColorTransparent) {
+					result = ApplyTransparentColor(result, result.Palette[0]);
+				}
 				else if (parameters.TransparentColor != null) {
 					result = ApplyTransparentColor(result, parameters.TransparentColor);
 				}
@@ -52,13 +55,12 @@ namespace OpenBveApi.Textures {
 		        throw new ArgumentException();
 		    }
 		    int width = texture.Width;
-		    byte[] bytes;
 		    if (texture.Bytes == null)
 		    {
 			    texture.Origin.GetTexture(out texture);
 		    }
 		    
-		    bytes = texture.Bytes;
+		    byte[] bytes = texture.Bytes;
 
 			int clipLeft = region.Left;
 		    int clipTop = region.Top;

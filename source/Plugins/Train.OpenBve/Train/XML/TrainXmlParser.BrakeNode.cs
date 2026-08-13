@@ -34,7 +34,7 @@ namespace Train.OpenBve
 	{
 		private void ParseBrakeBlock(Block<TrainXMLSection, TrainXMLKey> block, int carIndex, ref TrainBase Train)
 		{
-			double compressorRate = 5000.0, compressorMinimumPressure = 690000.0, compressorMaximumPressure = 780000.0;
+			double compressorRate = 5000.0, compressorMinimumPressure = 690000.0, compressorMaximumPressure = 780000.0, compressorRestartPressure = 690000.0; ;
 			double auxiliaryReservoirChargeRate = 200000.0;
 			double equalizingReservoirChargeRate = 200000.0, equalizingReservoirServiceRate = 50000.0, equalizingReservoirEmergencyRate = 250000.0;
 			double brakePipeNormalPressure = 0.0, brakePipeChargeRate = 10000000.0, brakePipeServiceRate = 1500000.0, brakePipeEmergencyRate = 5000000.0;
@@ -45,17 +45,20 @@ namespace Train.OpenBve
 			double brakeCylinderVolume = 0.14; // 35cm diameter, 15cm stroke
 			double straightAirPipeServiceRate = 300000.0, straightAirPipeEmergencyRate = 400000.0, straightAirPipeReleaseRate = 200000.0;
 			double brakeCylinderServiceMaximumPressure = 440000.0, brakeCylinderEmergencyMaximumPressure = 440000.0, brakeCylinderEmergencyRate = 300000.0, brakeCylinderReleaseRate = 200000.0;
-			if (block.ReadBlock(TrainXMLSection.Compressor, out Block<TrainXMLSection, TrainXMLKey> compressorBlock))
-			{
-				Train.Cars[carIndex].CarBrake.BrakeType = BrakeType.Main; //We have a compressor so must be a main brake type
-				compressorBlock.TryGetValue(TrainXMLKey.Rate, ref compressorRate, NumberRange.Positive);
-			}
 
 			if (block.ReadBlock(TrainXMLSection.MainReservoir, out Block<TrainXMLSection, TrainXMLKey> mainReservoirBlock))
 			{
 				mainReservoirBlock.TryGetValue(TrainXMLKey.MinimumPressure, ref compressorMinimumPressure, NumberRange.Positive);
 				mainReservoirBlock.TryGetValue(TrainXMLKey.MaximumPressure, ref compressorMaximumPressure, NumberRange.Positive);
 				mainReservoirBlock.TryGetValue(TrainXMLKey.Volume, ref mainReservoirVolume, NumberRange.Positive);
+				compressorRestartPressure = compressorMinimumPressure;
+			}
+			// compressor must be read after main res
+			if (block.ReadBlock(TrainXMLSection.Compressor, out Block<TrainXMLSection, TrainXMLKey> compressorBlock))
+			{
+				Train.Cars[carIndex].CarBrake.BrakeType = BrakeType.Main; //We have a compressor so must be a main brake type
+				compressorBlock.TryGetValue(TrainXMLKey.Rate, ref compressorRate, NumberRange.Positive);
+				compressorBlock.TryGetValue(TrainXMLKey.RestartPressure, ref compressorRestartPressure);
 			}
 
 			if (block.ReadBlock(TrainXMLSection.AuxiliaryReservoir, out Block<TrainXMLSection, TrainXMLKey> auxiliaryReservoirBlock))
@@ -110,7 +113,7 @@ namespace Train.OpenBve
 			Train.Cars[carIndex].CarBrake.MainReservoir = new MainReservoir(compressorMinimumPressure, compressorMaximumPressure, 0.01, (Train.Handles.Brake is AirBrakeHandle ? 0.25 : 0.075) / Train.Cars.Length);
 			Train.Cars[carIndex].CarBrake.MainReservoir.Volume = mainReservoirVolume;
 			AirBrake airBrake = Train.Cars[carIndex].CarBrake as AirBrake;
-			airBrake.Compressor = new Compressor(compressorRate, Train.Cars[carIndex].CarBrake.MainReservoir, Train.Cars[carIndex]);
+			airBrake.Compressor = new Compressor(compressorRate, compressorRestartPressure, Train.Cars[carIndex].CarBrake.MainReservoir, Train.Cars[carIndex]);
 			airBrake.StraightAirPipe = new StraightAirPipe(straightAirPipeServiceRate, straightAirPipeEmergencyRate, straightAirPipeReleaseRate);
 			Train.Cars[carIndex].CarBrake.EqualizingReservoir = new EqualizingReservoir(equalizingReservoirServiceRate, equalizingReservoirEmergencyRate, equalizingReservoirChargeRate);
 			Train.Cars[carIndex].CarBrake.EqualizingReservoir.NormalPressure = 1.005 * brakePipeNormalPressure;

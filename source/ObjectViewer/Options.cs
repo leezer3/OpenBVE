@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Formats.OpenBve;
 using ObjectViewer.Graphics;
 using OpenBveApi;
+using OpenBveApi.Colors;
 using OpenBveApi.Input;
 using Path = OpenBveApi.Path;
 
@@ -15,6 +16,8 @@ namespace ObjectViewer
 	internal class Options : BaseOptions
 	{
 		private ObjectOptimizationMode objectOptimizationMode;
+
+		internal int FPSLimit;
 
 		internal string ObjectSearchDirectory;
 
@@ -29,6 +32,10 @@ namespace ObjectViewer
 		internal Key CameraMoveForward;
 
 		internal Key CameraMoveBackward;
+
+		internal Color24 BackgroundColor;
+
+		internal Color32 TextColor;
 
 		/// <summary>
 		/// The mode of optimization to be performed on an object
@@ -60,6 +67,8 @@ namespace ObjectViewer
 
 		internal Options()
 		{
+			VerticalSynchronization = true;
+			FPSLimit = 0;
 			ObjectOptimizationMode = ObjectOptimizationMode.Low;
 			// Shadow settings use synced base defaults
 		}
@@ -76,11 +85,14 @@ namespace ObjectViewer
 				Builder.AppendLine("; Object Viewer specific options file");
 				Builder.AppendLine();
 				Builder.AppendLine("[display]");
+				Builder.AppendLine("vsync = " + (VerticalSynchronization ? "true" : "false"));
+				Builder.AppendLine("fpslimit = " + FPSLimit.ToString(Culture));
 				Builder.AppendLine("windowWidth = " + Program.Renderer.Screen.Width.ToString(Culture));
 				Builder.AppendLine("windowHeight = " + Program.Renderer.Screen.Height.ToString(Culture));
-				Builder.AppendLine("isUseNewRenderer = " + (IsUseNewRenderer ? "true" : "false"));
 				Builder.AppendLine("nearclipbase = " + NearClipBase.ToString(Culture));
 				Builder.AppendLine("autoReloadObjects = " + (AutoReloadObjects ? "true" : "false"));
+				Builder.AppendLine("backgroundColor = " + BackgroundColor);
+				Builder.AppendLine("textColor = " + TextColor);
 				Builder.AppendLine();
 				Builder.AppendLine("[quality]");
 				Builder.AppendLine("interpolation = " + Interpolation);
@@ -165,8 +177,13 @@ namespace ObjectViewer
 						case OptionsSection.Display:
 							block.TryGetValue(OptionsKey.WindowWidth, ref Interface.CurrentOptions.WindowWidth, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.WindowHeight, ref Interface.CurrentOptions.WindowHeight, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.IsUseNewRenderer, ref Interface.CurrentOptions.IsUseNewRenderer);
 							block.TryGetValue(OptionsKey.NearClipBase, ref Interface.CurrentOptions.NearClipBase, NumberRange.Positive);
+							block.GetValue(OptionsKey.VSync, out Interface.CurrentOptions.VerticalSynchronization);
+							block.GetValue(OptionsKey.FPSLimit, out Interface.CurrentOptions.FPSLimit);
+							if (Interface.CurrentOptions.FPSLimit < 0)
+							{
+								Interface.CurrentOptions.FPSLimit = 0;
+							}
 							// ensure viewing distance is greater than the near clipping plane to avoid rendering issues
 							if (Interface.CurrentOptions.ViewingDistance <= Interface.CurrentOptions.NearClipBase)
 							{
@@ -174,6 +191,8 @@ namespace ObjectViewer
 							}
 
 							block.GetValue(OptionsKey.AutoReloadObjects, out Interface.CurrentOptions.AutoReloadObjects);
+							block.GetColor24(OptionsKey.BackgroundColor, out Interface.CurrentOptions.BackgroundColor);
+							block.GetColor32(OptionsKey.TextColor, out Interface.CurrentOptions.TextColor);
 							break;
 						case OptionsSection.Quality:
 							block.GetEnumValue(OptionsKey.Interpolation, out Interface.CurrentOptions.Interpolation);

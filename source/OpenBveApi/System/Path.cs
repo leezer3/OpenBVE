@@ -128,7 +128,7 @@ namespace OpenBveApi {
 		/// <returns>Whether the operation succeeded and the specified file was found.</returns>
 		/// <exception cref="System.Exception">Raised when combining the paths failed, for example due to malformed paths or due to unauthorized access.</exception>
 		public static string CombineFile(string absolute, string relative) {
-			if (System.IO.Path.IsPathRooted(relative))
+			if (System.IO.Path.IsPathRooted(relative) && char.IsLetter(relative[0]))
 			{
 				throw new ArgumentException("The relative path must not be rooted.");
 			}

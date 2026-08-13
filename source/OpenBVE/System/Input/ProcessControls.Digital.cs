@@ -850,10 +850,6 @@ namespace OpenBve
 					case Translations.Command.ShowEvents:
 						Interface.CurrentOptions.ShowEvents = !Interface.CurrentOptions.ShowEvents;
 						break;
-					case Translations.Command.DebugRendererMode:
-						Interface.CurrentOptions.IsUseNewRenderer = !Interface.CurrentOptions.IsUseNewRenderer;
-						MessageManager.AddMessage($"Renderer mode: {(Program.Renderer.AvailableNewRenderer ? "New renderer" : "Original renderer")}", MessageDependency.None, GameMode.Expert, MessageColor.White, 10, null);
-						break;
 					case Translations.Command.MiscAI:
 						// option: AI
 						if (Interface.CurrentOptions.GameMode == GameMode.Expert)
@@ -1088,6 +1084,12 @@ namespace OpenBve
 				{
 					SafetySystem system = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].SafetySystems.ElementAt(i).Key;
 					TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].SafetySystems[system].ControlUp(Control.Command);
+				}
+
+				for (int i = 0; i < TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.Components.Count; i++)
+				{
+					EngineComponent component = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.Components.ElementAt(i).Key;
+					TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.Components[component].ControlUp(Control.Command);
 				}
 				TrainManager.PlayerTrain.Handles.ControlUp(Control);
 

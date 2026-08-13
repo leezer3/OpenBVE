@@ -30,7 +30,6 @@ namespace OpenBveApi
 		LoadInAdvance,
 		UnloadTextures,
 		ForwardsCompatibleContext,
-		IsUseNewRenderer,
 		ViewingDistance,
 		QuadLeafSize,
 		UIScaleFactor,
@@ -41,6 +40,8 @@ namespace OpenBveApi
 		CameraInteriorTransition,
 		CameraExteriorTransition,
 		CameraTransitionSpeed,
+		BackgroundColor,
+		TextColor,
 		// Quality
 		Interpolation,
 		AnisotropicFilteringLevel,

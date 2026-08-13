@@ -132,7 +132,7 @@ namespace Route.Bve5
 				TotalWeight += WeightTable[i];
 			}
 
-			double Value = Plugin.RandomNumberGenerator.NextDouble() * TotalWeight;
+			double Value = Plugin.CurrentHost.Random.NextDouble() * TotalWeight;
 			int RetIndex = -1;
 
 			for (int i = WeightTable.Length - 1; i >= 0; i--)

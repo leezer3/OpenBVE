@@ -413,6 +413,7 @@ namespace CarXmlConvertor
 
 				newLines.Add("<Compressor>");
 				newLines.Add("<Rate>5000.0</Rate>");
+				newLines.Add("<RestartPressure>" + ConvertTrainDat.MainReservoirMinimumPressure + "</RestartPressure>");
 				newLines.Add("</Compressor>");
 			}
 

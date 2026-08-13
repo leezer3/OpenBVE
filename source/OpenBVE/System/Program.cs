@@ -46,9 +46,6 @@ namespace OpenBve {
 		/// <summary>If the program is to be restarted, this contains the command-line arguments that should be passed to the process, or a null reference otherwise.</summary>
 		internal static string RestartArguments;
 
-		/// <summary>The random number generator used by this program.</summary>
-		internal static readonly Random RandomNumberGenerator = new Random();
-
 		internal static JoystickManager Joysticks;
 
 		internal static NewRenderer Renderer;
@@ -104,9 +101,26 @@ namespace OpenBve {
 			//Determine the current CPU architecture-
 			//ARM will generally only support OpenGL-ES
 			typeof(object).Module.GetPEKind(out PortableExecutableKinds _, out CurrentCPUArchitecture);
+
+			// --- check the command-line arguments for route and train ---
+			LaunchParameters result = CommandLine.ParseArguments(args);
 			
-			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault(false);
+			try
+			{
+				Application.EnableVisualStyles();
+				Application.SetCompatibleTextRenderingDefault(false);
+			}
+			catch(Exception ex)
+			{
+				if (ex is TypeInitializationException)
+				{
+					// WinForms library is broken or not available
+					// so try the GL menu instead (Debian Forky)
+					result.ExperimentalGLMenu = true;	
+				}
+			}
+			
+			
 			
 			if (IntPtr.Size == 4)
 			{
@@ -161,11 +175,9 @@ namespace OpenBve {
 			string file = Path.CombineFile(folder, "Default keyboard assignment.controls");
 			Interface.LoadControls(file, out Control[] controls);
 			Interface.AddControls(ref Interface.CurrentControls, controls);
-			
 			InputDevicePlugin.LoadPlugins(Program.FileSystem);
 			
-			// --- check the command-line arguments for route and train ---
-			LaunchParameters result = CommandLine.ParseArguments(args);
+			
 			// --- check whether route and train exist ---
 			if (result.RouteFile != null) {
 				if (!System.IO.File.Exists(result.RouteFile))
@@ -320,6 +332,14 @@ namespace OpenBve {
 								{
 									case "libopenal.so.1":
 										Program.ShowMessageBox(@"openAL was not found on this system. \n Please install libopenal1 via your distribution's package management system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "program", "title" }));
+										break;
+									case "openal32.dll assembly:<unknown assembly> type:<unknown type> member:(null)":
+										if (CurrentHost.Platform != HostPlatform.MicrosoftWindows)
+										{
+											// if building from scratch, the compilation process has failed to copy this file correctly-
+											// place in the application root directory (JetBrains Rider)
+											Program.ShowMessageBox(@"This installation of OpenBVE is corrupt (OpenTk.dll.config could not be found). \n Please reinstall OpenBVE.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "program", "title" }));
+										}
 										break;
 									default:
 										Program.ShowMessageBox(@"The required system library " + ex.Message + @" was not found on this system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "program", "title" }));

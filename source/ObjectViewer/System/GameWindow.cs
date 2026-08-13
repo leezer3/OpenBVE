@@ -75,7 +75,7 @@ namespace ObjectViewer
             if (Program.RotateX == 0)
             {
                 double d = (1.0 + Math.Abs(RotateXSpeed)) * timeElapsed;
-                if (RotateXSpeed >= -d & RotateXSpeed <= d)
+                if (RotateXSpeed >= -d && RotateXSpeed <= d)
                 {
                     RotateXSpeed = 0.0;
                 }
@@ -107,7 +107,7 @@ namespace ObjectViewer
             if (Program.RotateY == 0)
             {
                 double d = (1.0 + Math.Abs(RotateYSpeed)) * timeElapsed;
-                if (RotateYSpeed >= -d & RotateYSpeed <= d)
+                if (RotateYSpeed >= -d && RotateYSpeed <= d)
                 {
                     RotateYSpeed = 0.0;
                 }
@@ -138,7 +138,7 @@ namespace ObjectViewer
             if (Program.MoveX == 0)
             {
                 double d = (2.5 + Math.Abs(MoveXSpeed)) * timeElapsed;
-                if (MoveXSpeed >= -d & MoveXSpeed <= d)
+                if (MoveXSpeed >= -d && MoveXSpeed <= d)
                 {
                     MoveXSpeed = 0.0;
                 }
@@ -168,7 +168,7 @@ namespace ObjectViewer
             if (Program.MoveY == 0)
             {
                 double d = (2.5 + Math.Abs(MoveYSpeed)) * timeElapsed;
-                if (MoveYSpeed >= -d & MoveYSpeed <= d)
+                if (MoveYSpeed >= -d && MoveYSpeed <= d)
                 {
                     MoveYSpeed = 0.0;
                 }
@@ -198,7 +198,7 @@ namespace ObjectViewer
             if (Program.MoveZ == 0)
             {
                 double d = (2.5 + Math.Abs(MoveZSpeed)) * timeElapsed;
-                if (MoveZSpeed >= -d & MoveZSpeed <= d)
+                if (MoveZSpeed >= -d && MoveZSpeed <= d)
                 {
                     MoveZSpeed = 0.0;
                 }

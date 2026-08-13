@@ -9,8 +9,7 @@ namespace OpenBveApi.Objects
 	/// <summary>The AnimatedObjectCollection is a simple container class containing one or more animated objects</summary>
 	public class AnimatedObjectCollection : UnifiedObject
 	{
-
-		private readonly HostInterface currentHost;
+		internal readonly HostInterface currentHost;
 
 		/// <summary>The objects that this collection contains</summary>
 		public AnimatedObject[] Objects;
@@ -197,7 +196,7 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <inheritdoc/>
-		public override void ApplyTranslation(double x, double y, double z, bool absoluteTranslation = false)
+		public override void ApplyTranslation(Vector3 translationVector, bool absoluteTranslation = false)
 		{
 			throw new NotSupportedException();
 		}

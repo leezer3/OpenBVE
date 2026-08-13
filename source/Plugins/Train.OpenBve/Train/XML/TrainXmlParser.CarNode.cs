@@ -147,8 +147,7 @@ namespace Train.OpenBve
 				{
 					Train.Cars[Car].CarSections.Add(CarSectionType.Interior, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, false, Train.Cars[Car]));
 				}
-				Transformation viewTransformation = new Transformation(interiorDirection.X.ToRadians(), interiorDirection.Y.ToRadians(), interiorDirection.Z.ToRadians());
-				Train.Cars[Car].CarSections[CarSectionType.Interior].ViewDirection = viewTransformation;
+				Train.Cars[Car].CarSections[CarSectionType.Interior].ViewDirection = new Vector3(interiorDirection.X.ToRadians(), interiorDirection.Y.ToRadians(), interiorDirection.Z.ToRadians());
 				if (interiorFile.ToLowerInvariant().EndsWith(".xml"))
 				{
 					XDocument CurrentXML = XDocument.Load(interiorFile, LoadOptions.SetLineInfo);
