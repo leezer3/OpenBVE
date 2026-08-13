@@ -1,6 +1,7 @@
 using LibRender2.Shaders;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
@@ -18,14 +19,11 @@ namespace LibRender2.Text
 			this.renderer = renderer;
 			try
 			{
-				if (!renderer.ForceLegacyOpenGL)
-				{
-					Shader = new Shader(renderer, "text", "rectangle", true);
-				}
-			}
+				Shader = new Shader(renderer, "text", "rectangle", true);
+            }
 			catch
 			{
-				renderer.ForceLegacyOpenGL = true;
+				//
 			}
 			
 		}
@@ -104,7 +102,7 @@ namespace LibRender2.Text
 				top = location.Y;
 			}
 
-			if (renderer.AvailableNewRenderer && Shader != null)
+			if (Shader != null && renderer.currentHost.Application != HostApplication.TrainEditor2)
 			{
 				DrawWithShader(text, font, left, top, color);
 			}

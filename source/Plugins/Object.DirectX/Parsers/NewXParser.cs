@@ -163,6 +163,7 @@ namespace Plugin
 		private static int currentLevel = 0;
 		private static int transformStart = 0;
 		private static VertexElement[] vertexElements;
+		private static bool currentMaterialUsed;
 
 		private static readonly Dictionary<string, Material> rootMaterials = new Dictionary<string, Material>();
 
@@ -344,11 +345,13 @@ namespace Plugin
 					break;
 				case TemplateID.MeshMaterialList:
 					int nMaterials = block.ReadInt();
+					bool[] materialsUsed = new bool[nMaterials];
 					int nFaceIndices = block.ReadInt();
 					if (nFaceIndices == 1 && builder.Faces.Count > 1)
 					{
 						//Single material for all faces
 						int globalMaterial = block.ReadInt();
+						materialsUsed[globalMaterial] = true;
 						for (int i = 0; i < builder.Faces.Count; i++)
 						{
 							MeshFace f = builder.Faces[i];
@@ -361,6 +364,7 @@ namespace Plugin
 						for (int i = 0; i < nFaceIndices; i++)
 						{
 							int fMaterial = block.ReadInt();
+							materialsUsed[fMaterial] = true;
 							MeshFace f = builder.Faces[i];
 							f.Material = (ushort) (fMaterial + 1);
 							builder.Faces[i] = f;
@@ -377,6 +381,7 @@ namespace Plugin
 						Array.Resize(ref builder.Materials, nMaterials + 1);
 						for (int i = 0; i < nMaterials; i++)
 						{
+							currentMaterialUsed = materialsUsed[i];
 							// YUCKY: skip bracket strings
 							string materialName = block.ReadString();
 							if (!rootMaterials.TryGetValue(materialName, out builder.Materials[i + 1]))
@@ -397,6 +402,7 @@ namespace Plugin
 					{
 						for (int i = 0; i < nMaterials; i++)
 						{
+							currentMaterialUsed = materialsUsed[i];
 							try
 							{
 								subBlock = block.ReadSubBlock(new[] { TemplateID.Material, TemplateID.TextureKey });
@@ -418,14 +424,31 @@ namespace Plugin
 					Material newMaterial = new Material();
 					newMaterial.Color = new Color32(block.ReadColor128);
 					double mPower = block.ReadSingle(); //TODO: Unsure what this does...
-					newMaterial.SpecularColor = new Color24(block.ReadColor96);
+					try
+					{
+						newMaterial.SpecularColor = new Color24(block.ReadColor96);
+					}
+					catch
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"Specular color is invalid for material {material.Key}");
+						newMaterial.SpecularColor = Color24.Black;
+					}
+					
 					if (newMaterial.SpecularColor != Color24.Black)
 					{
-						Color24 c = (Color24)newMaterial.Color;
 						newMaterial.Flags |= MaterialFlags.Specular;
 					}
 					// Convert Color96 → Color24 → Color32; alpha defaults to 255 (opaque)
-					newMaterial.EmissiveColor = new Color32(new Color24(block.ReadColor96));
+					try
+					{
+						newMaterial.EmissiveColor = new Color32(new Color24(block.ReadColor96));
+					}
+					catch
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"Emissive color is invalid for material {material.Key}");
+						newMaterial.EmissiveColor = Color32.Black;
+					}
+					
 					if (newMaterial.EmissiveColor != Color32.Black)
 					{
 						newMaterial.Flags |= MaterialFlags.Emissive;
@@ -461,7 +484,14 @@ namespace Plugin
 					string texturePath = block.ReadString();
 					if (string.IsNullOrEmpty(texturePath))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"An empty texture was specified for material { material.Key }");
+						if (currentMaterialUsed)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"An empty texture was specified for material {material.Key}");
+						}
+						else
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"Referenced, but unused material {material.Key} specifies an empty texture");
+						}
 						material.DaytimeTexture = null;
 						break;
 					}
@@ -479,13 +509,43 @@ namespace Plugin
 					}
 					catch (Exception e)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"Texture file path { texturePath } in file { currentFile } has the problem: { e.Message }");
+						if (currentMaterialUsed)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"Texture file path {texturePath} in file {currentFile} has the problem: {e.Message}");
+						}
+						else
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, $"Referenced, but unused Texture file path {texturePath} for material {material.Key} in file {currentFile} has the problem: {e.Message}");
+						}
 						material.DaytimeTexture = null;
+					}
+
+
+					if (Plugin.EnabledHacks.BveTsHacks && !File.Exists(material.DaytimeTexture))
+					{
+						// XOF doesn't have a way to specify text encoding, and some (more common with BVE5) stuff is using shift_jis
+						try
+						{
+							byte[] stringBytes = Encoding.GetEncoding(0).GetBytes(texturePath);
+							string shift_jis_string = Encoding.GetEncoding("shift_jis").GetString(stringBytes);
+							material.DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, shift_jis_string);
+						}
+						catch
+						{
+							// ignore
+						}
 					}
 
 					if (!File.Exists(material.DaytimeTexture) && material.DaytimeTexture != null)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, true, $"Texture { material.DaytimeTexture } was not found in file { currentFile }");
+						if (currentMaterialUsed)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, true, $"Texture {material.DaytimeTexture} for material {material.Key} was not found in file {currentFile}");
+						}
+						else
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, true, $"Referenced, but unused Texture {material.DaytimeTexture} for material {material.Key} was not found in file {currentFile}");
+						}
 						material.DaytimeTexture = null;
 					}
 					break;

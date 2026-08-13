@@ -1069,6 +1069,12 @@
 					<trans-unit id="display_vsync_on">
 						<source>Enabled</source>
 					</trans-unit>
+					<trans-unit id="display_fpslimit">
+						<source>FPS Limit:</source>
+					</trans-unit>
+					<trans-unit id="display_fpslimit_unlimited">
+						<source>Unlimited</source>
+					</trans-unit>
 					<trans-unit id="display_window">
 						<source>Window mode</source>
 					</trans-unit>
@@ -1309,9 +1315,6 @@
 					<trans-unit id="advanced_load_advance">
 						<source>Load in advance</source>
 					</trans-unit>
-					<trans-unit id="advanced_is_use_new_renderer">
-						<source>Enable the new renderer</source>
-					</trans-unit>
 					<trans-unit id="advanced_timefactor">
 						<source>Accelerated Time Factor</source>
 					</trans-unit>
@@ -1447,6 +1450,32 @@
 					</trans-unit>
 					<trans-unit id="ui_scalefactor">
 						<source>UI Scale Factor:</source>
+					</trans-unit>
+				</group>
+				<group id="tooltips">
+					<trans-unit id="vsync">
+						<source>Enable vertical synchronization to prevent screen tearing.\r\nWhen enabled, FPS is capped to your monitor's refresh rate\r\n(e.g. 60Hz = 60 FPS).\r\nFPS Limit is disabled when VSync is ON.</source>
+					</trans-unit>
+					<trans-unit id="interpolation">
+						<source>The texture filtering mode used to smooth textures.</source>
+					</trans-unit>
+					<trans-unit id="anisotropic">
+						<source>Higher levels of anisotropic filtering improve texture quality when viewed at an angle.</source>
+					</trans-unit>
+					<trans-unit id="antialiasing">
+						<source>Reduces jagged edges on polygons.</source>
+					</trans-unit>
+					<trans-unit id="transparency">
+						<source>Sets the quality of transparency rendering.</source>
+					</trans-unit>
+					<trans-unit id="viewingdistance">
+						<source>The maximum distance at which objects are rendered.</source>
+					</trans-unit>
+					<trans-unit id="motionblur">
+						<source>Enables motion blur effects when moving at speed.</source>
+					</trans-unit>
+					<trans-unit id="fpslimit">
+						<source>Cap the maximum frames per second.\r\nSelect 'Unlimited' for no limit.\r\nDisabled when VSync is ON\r\n(the monitor refresh rate is used instead).</source>
 					</trans-unit>
 				</group>
 				<group id="dialog">

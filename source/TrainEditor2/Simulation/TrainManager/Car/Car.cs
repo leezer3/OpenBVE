@@ -5,6 +5,7 @@ using SoundManager;
 using TrainEditor2.Models.Sounds;
 using TrainManager.Car;
 using TrainManager.Motor;
+using TrainManager.Power;
 using TrainManager.Trains;
 
 namespace TrainEditor2.Simulation.TrainManager
@@ -18,6 +19,8 @@ namespace TrainEditor2.Simulation.TrainManager
 			public Car() : base(null, 0)
 			{
 				Sounds = new CarSounds();
+
+				TractionModel = new BVEMotorCar(this, new AccelerationCurve[] {});
 			}
 
 			public Car(TrainBase train, int index, double CoefficientOfFriction, double CoefficientOfRollingResistance, double AerodynamicDragCoefficient) : base(train, index, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient)

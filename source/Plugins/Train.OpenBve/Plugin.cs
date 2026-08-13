@@ -30,8 +30,6 @@ namespace Train.OpenBve
 
 	    internal static BaseOptions CurrentOptions;
 
-	    internal static Random RandomNumberGenerator = new Random();
-
 	    internal static BaseRenderer Renderer;
 
 	    internal TrainDatParser TrainDatParser;

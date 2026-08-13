@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.IO;
 using System.Runtime.InteropServices;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MergeCastWithTypeCheck
@@ -125,6 +126,8 @@ namespace OpenBveApi.Colors {
 		// --- read-only fields ---
 		/// <summary>Represents a black color.</summary>
 		public static readonly Color24 Black = new Color24(0, 0, 0);
+		/// <summary>Represents a dark grey color</summary>
+		public static readonly Color24 DarkGrey = new Color24(85, 85, 85);
 		/// <summary>Represents a grey color.</summary>
 		public static readonly Color24 LightGrey = new Color24(178, 178, 178);
 		/// <summary>Represents a grey color.</summary>
@@ -436,17 +439,32 @@ namespace OpenBveApi.Colors {
 		{
 			if (Expression.StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 			{
-				string a = Expression.Substring(1).TrimStart();
-				if (int.TryParse(a, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int x))
+				string hexNumber = Expression.Substring(1).TrimStart();
+				int r = 0, g = 0, b = 255, a = 255; // legacy yuck - undefined color is pure blue
+				if (hexNumber.Length >= 2)
 				{
-					int r = (x >> 16) & 0xFF;
-					int g = (x >> 8) & 0xFF;
-					int b = x & 0xFF;
-					if (r >= 0 & r <= 255 & g >= 0 & g <= 255 & b >= 0 & b <= 255)
-					{
-						Color = new Color32((byte)r, (byte)g, (byte)b, 255);
-						return true;
-					}
+					r = int.Parse(hexNumber.Substring(0, 2), NumberStyles.HexNumber);
+				}
+
+				if (hexNumber.Length >= 4)
+				{
+					g = int.Parse(hexNumber.Substring(2, 2), NumberStyles.HexNumber);
+				}
+
+				if (hexNumber.Length >= 6)
+				{
+					b = int.Parse(hexNumber.Substring(4, 2), NumberStyles.HexNumber);
+				}
+
+				if (hexNumber.Length >= 8)
+				{
+					a = int.Parse(hexNumber.Substring(6, 2), NumberStyles.HexNumber);
+				}
+
+				if (r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255 && a >= 0 && a <= 255)
+				{
+					Color = new Color32((byte)r, (byte)g, (byte)b, 255);
+					return true;
 				}
 			}
 			Color = Blue;
@@ -700,6 +718,12 @@ namespace OpenBveApi.Colors {
 		{
 			return System.Drawing.Color.FromArgb(c.A, c.R, c.G, c.B);
 		}
+
+		/// <summary>Returns a string representation of this Color24</summary>
+		public override string ToString()
+		{
+			return $"#{BitConverter.ToString(new[] { R, G, B, A }).Replace("-", string.Empty)}";
+		}
 	}
 	
 	
@@ -720,6 +744,10 @@ namespace OpenBveApi.Colors {
 		/// <param name="g">The green component.</param>
 		/// <param name="b">The blue component.</param>
 		public Color96(float r, float g, float b) {
+			if (r > 1 || r < 0 || g > 1 || g < 0 || b > 1 || b < 0)
+			{
+				throw new InvalidDataException();
+			}
 			this.R = r;
 			this.G = g;
 			this.B = b;
@@ -933,19 +961,28 @@ namespace OpenBveApi.Colors {
 		public static readonly Color128 Orange = new Color128(1.0f, 0.69f, 0.0f);
 
 		// --- conversions ---
-		/// <summary>Performs a widening conversion from Color96 to Color128.</summary>
+		/// <summary>Performs a widening conversion from Color24 to Color128.</summary>
 		/// <param name="value">The Color96 value.</param>
 		/// <returns>The Color128 value.</returns>
 		public static implicit operator Color128(Color24 value) {
 			return new Color128(value.R, value.G, value.B);
 		}
+
+		/// <summary>Performs a widening conversion from Color32 to Color128.</summary>
+		/// <param name="value">The Color96 value.</param>
+		/// <returns>The Color128 value.</returns>
+		public static implicit operator Color128(Color32 value)
+		{
+			const float inv255 = 1.0f / 255;
+			return new Color128(value.R * inv255, value.G * inv255, value.B * inv255, value.A * inv255);
+		}
+
 		/// <summary>Performs a narrowing conversion from Color128 to Color96.</summary>
 		/// <param name="value">The Color128 value.</param>
 		/// <returns>The Color96 value.</returns>
 		public static explicit operator Color96(Color128 value) {
 			return new Color96(value.R, value.G, value.B);
 		}
-
 	}
 	/// <summary>Represents the available colors for in-game messages.</summary>
 	public enum MessageColor

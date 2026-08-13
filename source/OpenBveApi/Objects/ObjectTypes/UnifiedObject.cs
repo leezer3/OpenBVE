@@ -63,11 +63,9 @@ namespace OpenBveApi.Objects
 		public abstract UnifiedObject TransformRight(double NearDistance, double FarDistance);
 
 		/// <summary>Applies translation</summary>
-		/// <param name="x">The X value</param>
-		/// <param name="y">The Y value</param>
-		/// <param name="z">The Z value</param>
+		/// <param name="translationVector">The translation vector</param>
 		/// <param name="absoluteTranslation">Whether the translation is applied relative to the root matrix, or as an absolute</param>
-		public abstract void ApplyTranslation(double x, double y, double z, bool absoluteTranslation = false);
+		public abstract void ApplyTranslation(Vector3 translationVector, bool absoluteTranslation = false);
 
 	}
 }

@@ -6,6 +6,7 @@
 		<Expression Number="206"></Expression>
 		<Expression Number="207"></Expression>
 		<Expression Number="208"></Expression>
+		<IgnorePitchRoll>true</IgnorePitchRoll>
 	</Patch>
 	<!-- Felsopataj - Bogard -->
 	<Patch>
@@ -86,6 +87,12 @@
 	<Patch>
 		<Hash>48146224FC0D8CEEE144316D0F1291DF9FB2493B58A1B9AE181CB41C3CD84F7D</Hash>
 		<FileName>58_4.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>8444E8B8286A703C70C55C31B4FCE7EB2636C77EA72297004FE4EC2FD61AB842</Hash>
+		<FileName>Teglagyari-kisvasut.csv</FileName>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>

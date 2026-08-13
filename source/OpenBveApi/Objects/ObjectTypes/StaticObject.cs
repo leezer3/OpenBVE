@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
@@ -169,161 +168,162 @@ namespace OpenBveApi.Objects
 			 * If our vertex windings do not conform, it's also broken.
 			 *
 			 */
-			StaticObject transformResult = (StaticObject)this.Clone();
-			int n = 0;
-			double x2 = 0.0, x3 = 0.0, x6 = 0.0, x7 = 0.0;
-			for (int i = 0; i < transformResult.Mesh.Vertices.Length; i++)
+			/*
+			 * BUGFIX: The original algorithm only transformed the first 4 or 8 vertices in the mesh, leaving
+			 * all subsequent vertices at their original coordinates. This distorted or hid objects with larger
+			 * vertex counts (such as the .x platform and roof center objects 'FormCL/CR' and 'RoofCL/CR').
+			 * We now delegate to TransformLeft or TransformRight based on whether the secondary rail is on the
+			 * left (nearDistance < 0.0) or right side of the primary rail.
+			 */
+			if (nearDistance < 0.0)
 			{
-				if (n == 2)
-				{
-					x2 = transformResult.Mesh.Vertices[i].Coordinates.X;
-				}
-				else if (n == 3)
-				{
-					x3 = transformResult.Mesh.Vertices[i].Coordinates.X;
-				}
-				else if (n == 6)
-				{
-					x6 = transformResult.Mesh.Vertices[i].Coordinates.X;
-				}
-				else if (n == 7)
-				{
-					x7 = transformResult.Mesh.Vertices[i].Coordinates.X;
-				}
-				n++;
-				if (n == 8)
-				{
-					break;
-				}
+				return TransformRight(nearDistance, farDistance);
 			}
-			if (n >= 4)
+			else
 			{
-				int m = 0;
-				for (int i = 0; i < transformResult.Mesh.Vertices.Length; i++)
-				{
-					if (m == 0)
-					{
-						transformResult.Mesh.Vertices[i].Coordinates.X = nearDistance - x3;
-					}
-					else if (m == 1)
-					{
-						transformResult.Mesh.Vertices[i].Coordinates.X = farDistance - x2;
-						if (n < 8)
-						{
-							break;
-						}
-					}
-					else if (m == 4)
-					{
-						transformResult.Mesh.Vertices[i].Coordinates.X = nearDistance - x7;
-					}
-					else if (m == 5)
-					{
-						transformResult.Mesh.Vertices[i].Coordinates.X = farDistance - x6;
-						break;
-					}
-					m++;
-					if (m == 8)
-					{
-						break;
-					}
-				}
+				return TransformLeft(nearDistance, farDistance);
 			}
-			return transformResult;
 		}
 
 		/// <inheritdoc/>
 		public override UnifiedObject TransformLeft(double nearDistance, double farDistance)
 		{
-			/*
-			 * **NEW ALGORITHM**
-			 *
-			 * This works *better* than the original algorithm, but is still not happy with objects
-			 * not conforming to 4-vertex faces.
-			 *
-			 * To be improved.....
-			 */
-
-			bool vertical = true;
-			double zPos = Mesh.Vertices[0].Coordinates.Z;
-			double minX = double.MaxValue, maxX = double.MinValue;
-			for (int i = 0; i < Mesh.Vertices.Length; i++)
+			// If we have less than 4 vertices, we cannot perform the interpolation based on the standard reference quad
+			if (Mesh.Vertices.Length < 4)
 			{
-				minX = System.Math.Min(Mesh.Vertices[i].Coordinates.X, minX);
-				maxX = System.Math.Min(Mesh.Vertices[i].Coordinates.X, maxX);
-				if (System.Math.Abs(Mesh.Vertices[i].Coordinates.Z - zPos) > 0.1)
-				{
-					vertical = false;
-				}
+				return (StaticObject)Clone();
+			}
+			// Find reference vertices by manually checking the first 4 vertices
+			// bottomLeft: highest Z, lowest X (Z Descending, X Ascending)
+			// bottomRight: highest Z, highest X (Z Descending, X Descending)
+			// topRight: lowest Z, highest X (Z Ascending, X Descending)
+			// topLeft: lowest Z, lowest X (Z Ascending, X Ascending)
+			int bottomLeftIdx = 0, bottomRightIdx = 0, topRightIdx = 0, topLeftIdx = 0;
+			for (int i = 1; i < 4; i++)
+			{
+				Vector3 c = Mesh.Vertices[i].Coordinates;
+				
+				Vector3 cbl = Mesh.Vertices[bottomLeftIdx].Coordinates;
+				if (c.Z > cbl.Z || (c.Z == cbl.Z && c.X < cbl.X)) bottomLeftIdx = i;
+
+				Vector3 cbr = Mesh.Vertices[bottomRightIdx].Coordinates;
+				if (c.Z > cbr.Z || (c.Z == cbr.Z && c.X > cbr.X)) bottomRightIdx = i;
+
+				Vector3 ctr = Mesh.Vertices[topRightIdx].Coordinates;
+				if (c.Z < ctr.Z || (c.Z == ctr.Z && c.X > ctr.X)) topRightIdx = i;
+
+				Vector3 ctl = Mesh.Vertices[topLeftIdx].Coordinates;
+				if (c.Z < ctl.Z || (c.Z == ctl.Z && c.X < ctl.X)) topLeftIdx = i;
+			}
+
+			if (bottomLeftIdx == bottomRightIdx || bottomLeftIdx == topRightIdx || bottomLeftIdx == topLeftIdx ||
+			    bottomRightIdx == topRightIdx || bottomRightIdx == topLeftIdx || topRightIdx == topLeftIdx)
+			{
+				return (StaticObject)Clone();
 			}
 
 			StaticObject transformResult = (StaticObject)Clone();
+			// Extract Z range of the first face's side vertices to map along the block length (usually 25m)
+			// Vertex 3 is face at Z = 0, Vertex 2 is face at Z = blockLength
+			double zMin = Mesh.Vertices[topLeftIdx].Coordinates.Z;
+			double zMax = Mesh.Vertices[bottomLeftIdx].Coordinates.Z;
+			double zRange = zMax - zMin;
 
-			if (vertical || System.Math.Abs(nearDistance - farDistance) > 0.1)
+			double xLeft0 = Mesh.Vertices[topLeftIdx].Coordinates.X;
+			double xLeft1 = Mesh.Vertices[bottomLeftIdx].Coordinates.X;
+			double xRight0 = Mesh.Vertices[topRightIdx].Coordinates.X;
+			double xRight1 = Mesh.Vertices[bottomRightIdx].Coordinates.X;
+
+			for (int i = 0; i < Mesh.Vertices.Length; i++)
 			{
-				// If vertical, or both distances are within 0.1m use scale instead (this works for all object types)
-				double width = maxX - minX;
-				transformResult.ApplyScale(width / (nearDistance + width), 1,1);
-				return transformResult;
+				double z = Mesh.Vertices[i].Coordinates.Z;
+				// Compute interpolation factor 't' along the Z length of the object
+				double t = zRange > 0.001 ? (z - zMin) / zRange : 0.0;
+				// Interpolate reference coordinates at this vertex's Z position
+				double faceX = xLeft0 + t * (xLeft1 - xLeft0);
+				double originalBackX = xRight0 + t * (xRight1 - xRight0);
+				// The target back position is nearDistance (adjusted for the face offset xLeft0) at Z = 0,
+				// and farDistance (adjusted for the face offset xLeft1) at Z = blockLength
+				double backX = (nearDistance - xLeft0) + t * ((farDistance - xLeft1) - (nearDistance - xLeft0));
+				// Map the vertex's X coordinate from [faceX, originalBackX] to [faceX, backX]
+				double x = Mesh.Vertices[i].Coordinates.X;
+				double range = originalBackX - faceX;
+				if (System.Math.Abs(range) > 0.001)
+				{
+					transformResult.Mesh.Vertices[i].Coordinates.X = faceX + ((x - faceX) / range) * (backX - faceX);
+				}
 			}
-
-
-			for (int i = 0; i < Mesh.Vertices.Length; i += 4)
-			{
-				List<VertexTemplate> tempList = Mesh.Vertices.Skip(i).Take(4).ToList();
-				// find vertices to base transform on
-				int bottomLeft = tempList.IndexOf(tempList.OrderByDescending(c => c.Coordinates.Z).ThenBy(c => c.Coordinates.X).First());
-				int bottomRight = tempList.IndexOf(tempList.OrderByDescending(c => c.Coordinates.Z).ThenByDescending(c => c.Coordinates.X).First());
-				int topRight = tempList.IndexOf(tempList.OrderBy(c => c.Coordinates.Z).ThenByDescending(c => c.Coordinates.X).First());
-				int topLeft = tempList.IndexOf(tempList.OrderBy(c => c.Coordinates.Z).ThenBy(c => c.Coordinates.X).First());
-
-				// for a left-handed transform, we need to transform the right-side coords
-				transformResult.Mesh.Vertices[i + bottomRight].Coordinates.X = farDistance - transformResult.Mesh.Vertices[i + bottomLeft].Coordinates.X;
-				transformResult.Mesh.Vertices[i + topRight].Coordinates.X = nearDistance - transformResult.Mesh.Vertices[i + topLeft].Coordinates.X;
-			}
-
 			return transformResult;
 		}
 
 		/// <inheritdoc/>
 		public override UnifiedObject TransformRight(double nearDistance, double farDistance)
 		{
-			bool vertical = true;
-			double zPos = Mesh.Vertices[0].Coordinates.Z;
-			double minX = double.MaxValue, maxX = double.MinValue;
-			for (int i = 0; i < Mesh.Vertices.Length; i++)
+			// If we have less than 4 vertices, we cannot perform the interpolation based on the standard reference quad
+			if (Mesh.Vertices.Length < 4)
 			{
-				minX = System.Math.Min(Mesh.Vertices[i].Coordinates.X, minX);
-				maxX = System.Math.Min(Mesh.Vertices[i].Coordinates.X, maxX);
-				if (System.Math.Abs(Mesh.Vertices[i].Coordinates.Z - zPos) > 0.1)
-				{
-					vertical = false;
-				}
+				return (StaticObject)Clone();
+			}
+			// Find reference vertices by manually checking the first 4 vertices
+			// bottomLeft: highest Z, lowest X (Z Descending, X Ascending)
+			// bottomRight: highest Z, highest X (Z Descending, X Descending)
+			// topRight: lowest Z, highest X (Z Ascending, X Descending)
+			// topLeft: lowest Z, lowest X (Z Ascending, X Ascending)
+			int bottomLeftIdx = 0, bottomRightIdx = 0, topRightIdx = 0, topLeftIdx = 0;
+			for (int i = 1; i < 4; i++)
+			{
+				Vector3 c = Mesh.Vertices[i].Coordinates;
+				
+				Vector3 cbl = Mesh.Vertices[bottomLeftIdx].Coordinates;
+				if (c.Z > cbl.Z || (c.Z == cbl.Z && c.X < cbl.X)) bottomLeftIdx = i;
+
+				Vector3 cbr = Mesh.Vertices[bottomRightIdx].Coordinates;
+				if (c.Z > cbr.Z || (c.Z == cbr.Z && c.X > cbr.X)) bottomRightIdx = i;
+
+				Vector3 ctr = Mesh.Vertices[topRightIdx].Coordinates;
+				if (c.Z < ctr.Z || (c.Z == ctr.Z && c.X > ctr.X)) topRightIdx = i;
+
+				Vector3 ctl = Mesh.Vertices[topLeftIdx].Coordinates;
+				if (c.Z < ctl.Z || (c.Z == ctl.Z && c.X < ctl.X)) topLeftIdx = i;
+			}
+
+			if (bottomLeftIdx == bottomRightIdx || bottomLeftIdx == topRightIdx || bottomLeftIdx == topLeftIdx ||
+			    bottomRightIdx == topRightIdx || bottomRightIdx == topLeftIdx || topRightIdx == topLeftIdx)
+			{
+				return (StaticObject)Clone();
 			}
 
 			StaticObject transformResult = (StaticObject)Clone();
+			// Extract Z range of the first face's side vertices to map along the block length (usually 25m)
+			// Vertex 3 is face at Z = 0, Vertex 2 is face at Z = blockLength
+			double zMin = Mesh.Vertices[topRightIdx].Coordinates.Z;
+			double zMax = Mesh.Vertices[bottomRightIdx].Coordinates.Z;
+			double zRange = zMax - zMin;
 
-			if (vertical || System.Math.Abs(nearDistance - farDistance) > 0.1)
+			double xLeft0 = Mesh.Vertices[topLeftIdx].Coordinates.X;
+			double xLeft1 = Mesh.Vertices[bottomLeftIdx].Coordinates.X;
+			double xRight0 = Mesh.Vertices[topRightIdx].Coordinates.X;
+			double xRight1 = Mesh.Vertices[bottomRightIdx].Coordinates.X;
+
+			for (int i = 0; i < Mesh.Vertices.Length; i++)
 			{
-				double width = maxX - minX;
-				transformResult.ApplyScale(width / (nearDistance + width), 1, 1);
-				return transformResult;
+				double z = Mesh.Vertices[i].Coordinates.Z;
+				// Compute interpolation factor 't' along the Z length of the object
+				double t = zRange > 0.001 ? (z - zMin) / zRange : 0.0;
+				// Interpolate reference coordinates at this vertex's Z position
+				double faceX = xRight0 + t * (xRight1 - xRight0);
+				double originalBackX = xLeft0 + t * (xLeft1 - xLeft0);
+				// The target back position is nearDistance (adjusted for the face offset xRight0) at Z = 0,
+				// and farDistance (adjusted for the face offset xRight1) at Z = blockLength
+				double backX = (nearDistance - xRight0) + t * ((farDistance - xRight1) - (nearDistance - xRight0));
+				// Map the vertex's X coordinate from [faceX, originalBackX] to [faceX, backX]
+				double x = Mesh.Vertices[i].Coordinates.X;
+				double range = originalBackX - faceX;
+				if (System.Math.Abs(range) > 0.001)
+				{
+					transformResult.Mesh.Vertices[i].Coordinates.X = faceX + ((x - faceX) / range) * (backX - faceX);
+				}
 			}
-
-			for (int i = 0; i < Mesh.Vertices.Length; i += 4)
-			{
-				List<VertexTemplate> tempList = Mesh.Vertices.Skip(i).Take(4).ToList();
-				// find vertices to base transform on
-				int bottomLeft = tempList.IndexOf(tempList.OrderByDescending(c => c.Coordinates.Z).ThenBy(c => c.Coordinates.X).First());
-				int bottomRight = tempList.IndexOf(tempList.OrderByDescending(c => c.Coordinates.Z).ThenByDescending(c => c.Coordinates.X).First());
-				int topRight = tempList.IndexOf(tempList.OrderBy(c => c.Coordinates.Z).ThenByDescending(c => c.Coordinates.X).First());
-				int topLeft = tempList.IndexOf(tempList.OrderBy(c => c.Coordinates.Z).ThenBy(c => c.Coordinates.X).First());
-
-				// for a right-handed transform, we need to transform the left-side coords
-				transformResult.Mesh.Vertices[i + bottomLeft].Coordinates.X = farDistance - transformResult.Mesh.Vertices[i + bottomRight].Coordinates.X;
-				transformResult.Mesh.Vertices[i + topLeft].Coordinates.X = nearDistance - transformResult.Mesh.Vertices[i + topRight].Coordinates.X;
-			}
-
 			return transformResult;
 		}
 
@@ -452,13 +452,11 @@ namespace OpenBveApi.Objects
 		}
 		
 		/// <summary>Applies translation</summary>
-		public override void ApplyTranslation(double x, double y, double z, bool absoluteTranslation = false)
+		public override void ApplyTranslation(Vector3 translationVector, bool absoluteTranslation = false)
 		{
 			for (int i = 0; i < Mesh.Vertices.Length; i++)
 			{
-				Mesh.Vertices[i].Coordinates.X += x;
-				Mesh.Vertices[i].Coordinates.Y += y;
-				Mesh.Vertices[i].Coordinates.Z += z;
+				Mesh.Vertices[i].Coordinates += translationVector;
 			}
 		}
 

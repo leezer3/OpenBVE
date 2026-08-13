@@ -30,6 +30,7 @@ layout(location = 4) in ivec3 iMatrixChain;
 
 uniform mat4 uLightSpaceMatrix;
 uniform mat4 uModelMatrix;
+uniform mat4 uTextureMatrix;
 
 out vec2 vUv;
 
@@ -89,7 +90,7 @@ void main()
 	// OpenBVE explicitly negates Z for world geometry.
 	pos.z = -pos.z;
 
-	vUv = iUv;
+	vUv = (uTextureMatrix * vec4(iUv, 1.0, 1.0)).xy;
 	gl_Position = uLightSpaceMatrix * uModelMatrix * vec4(pos, 1.0);
 }
 

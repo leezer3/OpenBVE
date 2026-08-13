@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System.IO;
 using OpenBveApi.Math;
 
 namespace Train.MsTs
@@ -31,6 +32,8 @@ namespace Train.MsTs
 	{
 		/// <summary>The base texture</summary>
 		internal string FileName;
+		/// <summary>The night-time file name</summary>
+		internal string NightTimeFileName;
 		/// <summary>The top left position within the texture</summary>
 		internal Vector2 TopLeft;
 		/// <summary>The clipped size within the texture</summary>
@@ -44,6 +47,8 @@ namespace Train.MsTs
 		{
 			cabViewFile = cabViewFile.Replace(@"\\", @"\");
 			FileName = OpenBveApi.Path.CombineFile(currentFolder, cabViewFile);
+			string nightDirectory = OpenBveApi.Path.CombineDirectory(currentFolder, "NIGHT");
+			NightTimeFileName = OpenBveApi.Path.CombineFile(nightDirectory, Path.GetFileName(FileName));
 		}
 	}
 }

@@ -12,9 +12,9 @@ namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
-		private void PreprocessSplitIntoExpressions(string FileName, List<string> Lines, out Expression[] Expressions, bool AllowRwRouteDescription, double trackPositionOffset = 0.0) {
-			Expressions = new Expression[4096];
-			int e = 0;
+		private void PreprocessSplitIntoExpressions(string FileName, List<string> Lines, out IList<Expression> Expressions, bool AllowRwRouteDescription, double trackPositionOffset = 0.0) {
+			// use a high initial capacity to try and minimize churn
+			Expressions = new List<Expression>(20000); 
 			// full-line rw comments
 			if (IsRW) {
 				for (int i = 0; i < Lines.Count; i++) {
@@ -66,25 +66,6 @@ namespace CsvRwRouteParser
 					}
 				}
 				{
-					// count expressions
-					int n = 0; int Level = 0;
-					for (int j = 0; j < Lines[i].Length; j++) {
-						switch (Lines[i][j]) {
-							case '(':
-								Level++;
-								break;
-							case ')':
-								Level--;
-								break;
-							case ',':
-								if (!IsRW && Level == 0) n++;
-								break;
-							case '@':
-								if (IsRW && Level == 0) n++;
-								break;
-						}
-					}
-
 					if (SplitLineHack)
 					{
 						MatchCollection matches = Regex.Matches(Lines[i], ".Load", RegexOptions.IgnoreCase);
@@ -103,11 +84,7 @@ namespace CsvRwRouteParser
 						}
 					}
 					// create expressions
-					int m = e + n + 1;
-					while (m >= Expressions.Length) {
-						Array.Resize(ref Expressions, Expressions.Length << 1);
-					}
-					Level = 0;
+					int Level = 0;
 					int a = 0, c = 0;
 					for (int j = 0; j < Lines[i].Length; j++) {
 						switch (Lines[i][j]) {
@@ -138,45 +115,33 @@ namespace CsvRwRouteParser
 									string t = Lines[i].Substring(a, j - a).Trim();
 									if (t.Length > 0 && !t.StartsWith(";"))
 									{
-										Expressions[e] = new Expression(FileName, t, i + 1, c + 1, trackPositionOffset);
-										
-										e++;
+										Expressions.Add(new Expression(FileName, t, i + 1, c + 1, trackPositionOffset));
 									}
 									a = j + 1;
 									c++;
 								}
 								break;
 							case '@':
-								if (Level == 1 && IsRW && Plugin.CurrentOptions.EnableBveTsHacks)
+								if (!IsRW)
 								{
-									//BVE2 doesn't care if a bracket is unclosed, fixes various routefiles
-									Level--;
+									// @ is not a valid control character in CSV files
+									break;
 								}
-								else if (Level == 2 && IsRW && Plugin.CurrentOptions.EnableBveTsHacks)
+
+								if (Plugin.CurrentOptions.EnableBveTsHacks)
 								{
-									int k = j;
-									while (k > 0)
+									if (Level != 0)
 									{
-										k--;
-										if (Lines[i][k] == '(')
-										{
-											//Opening bracket has been used instead of closing bracket, again BVE2 ignores this
-											Level -= 2;
-											break;
-										}
-										if (!char.IsWhiteSpace(Lines[i][k]))
-										{
-											//Bracket not found, and this isn't whitespace either, so break out
-											break;
-										}
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Expression " + (Expressions.Count -1) + " was not closed correctly at line " + i + " character " + j + " in file " + FileName);
 									}
+									Level = 0;
 								}
+								
 								if (Level == 0 && IsRW) {
 									string t = Lines[i].Substring(a, j - a).Trim();
 									if (t.Length > 0 && !t.StartsWith(";"))
 									{
-										Expressions[e] = new Expression(FileName, t, i + 1, c + 1, trackPositionOffset);
-										e++;
+										Expressions.Add(new Expression(FileName, t, i + 1, c + 1, trackPositionOffset));
 									}
 									a = j + 1;
 									c++;
@@ -188,20 +153,22 @@ namespace CsvRwRouteParser
 						string t = Lines[i].Substring(a).Trim();
 						if (t.Length > 0 && !t.StartsWith(";"))
 						{
-							Expressions[e] = new Expression(FileName, t, i + 1, c + 1, trackPositionOffset);
-							e++;
+							Expressions.Add(new Expression(FileName, t, i + 1, c + 1, trackPositionOffset));
 						}
 					}
 				}
 			}
-			Array.Resize(ref Expressions, e);
 		}
 
 		/// <summary>This function processes the list of expressions for $Char, $Rnd, $If and $Sub directives, and evaluates them into the final expressions dataset</summary>
-		private void PreprocessChrRndSub(string FileName, System.Text.Encoding Encoding, ref Expression[] Expressions) {
+		private void PreprocessChrRndSub(string FileName, System.Text.Encoding Encoding, ref IList<Expression> Expressions) {
 			string[] Subs = new string[16];
 			int openIfs = 0;
-			for (int i = 0; i < Expressions.Length; i++) {
+			for (int i = 0; i < Expressions.Count; i++) {
+				if (Expressions[i].Skip)
+				{
+					continue;
+				}
 				string Epilog = " at line " + Expressions[i].Line.ToString(Culture) + ", column " + Expressions[i].Column.ToString(Culture) + " in file " + Expressions[i].File;
 				bool continueWithNextExpression = false;
 				for (int j = Expressions[i].Text.Length - 1; j >= 0; j--) {
@@ -219,6 +186,11 @@ namespace CsvRwRouteParser
 						if (k <= Expressions[i].Text.Length)
 						{
 							string t = Expressions[i].Text.Substring(j, k - j).TrimEnd();
+							if (t[0] != '$' || !Enum.TryParse(t.Substring(1), true, out ControlCommands cmd))
+							{
+								break;
+							}
+							
 							int l = 1, h;
 							for (h = k + 1; h < Expressions[i].Text.Length; h++) {
 								switch (Expressions[i].Text[h]) {
@@ -245,11 +217,12 @@ namespace CsvRwRouteParser
 								break;
 							}
 							string s = Expressions[i].Text.Substring(k + 1, h - k - 1).Trim();
-							switch (t.ToLowerInvariant()) {
-								case "$if":
-								case "$elseif":
+
+							switch (cmd) {
+								case ControlCommands.If:
+								case ControlCommands.ElseIf:
 									if (j != 0) {
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The $If and $ElseIf directives must not appear within another statement" + Epilog);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The $"+ cmd +" directive must not appear within another statement" + Epilog);
 									} else
 									{
 										if (double.TryParse(s, NumberStyles.Float, Culture, out double num)) {
@@ -261,9 +234,10 @@ namespace CsvRwRouteParser
 												 * */
 												i++;
 												int level = 1;
-												while (i < Expressions.Length) {
-													if (Expressions[i].Text.StartsWith("$if", StringComparison.OrdinalIgnoreCase)) {
-														Expressions[i].Text = string.Empty;
+												while (i < Expressions.Count) {
+													if (Expressions[i].Text.StartsWith("$if", StringComparison.OrdinalIgnoreCase))
+													{
+														Expressions[i].Skip = true;
 														level++;
 													} else if (Expressions[i].Text.StartsWith("$else", StringComparison.OrdinalIgnoreCase))
 													{
@@ -274,20 +248,20 @@ namespace CsvRwRouteParser
 															break;
 														}
 
-														Expressions[i].Text = string.Empty;
+														Expressions[i].Skip = true;
 														if (level == 1) {
 															level--;
 															break;
 														}
 													} else if (Expressions[i].Text.StartsWith("$endif", StringComparison.OrdinalIgnoreCase)) {
-														Expressions[i].Text = string.Empty;
+														Expressions[i].Skip = true;
 														level--;
 														if (level == 0) {
 															openIfs--;
 															break;
 														}
 													} else {
-														Expressions[i].Text = string.Empty;
+														Expressions[i].Skip = true;
 													}
 													i++;
 												}
@@ -302,32 +276,32 @@ namespace CsvRwRouteParser
 									}
 									continueWithNextExpression = true;
 									break;
-								case "$else":
+								case ControlCommands.Else:
 									/*
 									 * Blank every expression until the matching $EndIf
 									 * */
-									Expressions[i].Text = string.Empty;
+									Expressions[i].Skip = true;
 									if (openIfs != 0) {
 										i++;
 										int level = 1;
-										while (i < Expressions.Length) {
+										while (i < Expressions.Count) {
 											if (Expressions[i].Text.StartsWith("$if", StringComparison.OrdinalIgnoreCase)) {
-												Expressions[i].Text = string.Empty;
+												Expressions[i].Skip = true;
 												level++;
 											} else if (Expressions[i].Text.StartsWith("$else", StringComparison.OrdinalIgnoreCase)) {
-												Expressions[i].Text = string.Empty;
+												Expressions[i].Skip = true;
 												if (level == 1) {
 													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Duplicate $Else encountered" + Epilog);
 												}
 											} else if (Expressions[i].Text.StartsWith("$endif", StringComparison.OrdinalIgnoreCase)) {
-												Expressions[i].Text = string.Empty;
+												Expressions[i].Skip = true;
 												level--;
 												if (level == 0) {
 													openIfs--;
 													break;
 												}
 											} else {
-												Expressions[i].Text = string.Empty;
+												Expressions[i].Skip = true;
 											}
 											i++;
 										}
@@ -339,8 +313,8 @@ namespace CsvRwRouteParser
 									}
 									continueWithNextExpression = true;
 									break;
-								case "$endif":
-									Expressions[i].Text = string.Empty;
+								case ControlCommands.EndIf:
+									Expressions[i].Skip = true;
 									if (openIfs != 0) {
 										openIfs--;
 									} else {
@@ -348,7 +322,7 @@ namespace CsvRwRouteParser
 									}
 									continueWithNextExpression = true;
 									break;
-								case "$include":
+								case ControlCommands.Include:
 									if (j != 0) {
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The $Include directive must not appear within another statement" + Epilog);
 										continueWithNextExpression = true;
@@ -389,12 +363,6 @@ namespace CsvRwRouteParser
 										{
 											continueWithNextExpression = true;
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The filename " + file + " contains invalid characters in " + t + Epilog);
-											for (int ta = i; ta < Expressions.Length - 1; ta++)
-											{
-												Expressions[ta] = Expressions[ta + 1];
-											}
-											Array.Resize(ref Expressions, Expressions.Length - 1);
-											i--;
 											break;
 										}
 										
@@ -402,12 +370,6 @@ namespace CsvRwRouteParser
 										if (!System.IO.File.Exists(files[ia])) {
 											continueWithNextExpression = true;
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The file " + file + " could not be found in " + t + Epilog);
-											for (int ta = i; ta < Expressions.Length - 1; ta++)
-											{
-												Expressions[ta] = Expressions[ta + 1];
-											}
-											Array.Resize(ref Expressions, Expressions.Length - 1);
-											i--;
 											break;
 										}
 										if (2 * ia + 1 < args.Length)
@@ -435,7 +397,7 @@ namespace CsvRwRouteParser
 										break;
 									}
 									if (!continueWithNextExpression) {
-										double number = Plugin.RandomNumberGenerator.NextDouble() * weightsTotal;
+										double number = Plugin.CurrentHost.Random.NextDouble() * weightsTotal;
 										double value = 0.0;
 										int chosenIndex = 0;
 										for (int ia = 0; ia < count; ia++) {
@@ -454,28 +416,17 @@ namespace CsvRwRouteParser
 											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The text encoding of the $Include file " + files[chosenIndex] + " does not match that of the base routefile.");
 										}
 										List<string> lines = System.IO.File.ReadAllLines(files[chosenIndex], includeEncoding).ToList();
-										PreprocessSplitIntoExpressions(files[chosenIndex], lines, out Expression[] expr, false, offsets[chosenIndex] + Expressions[i].TrackPositionOffset);
-										int length = Expressions.Length;
-										if (expr.Length == 0) {
-											for (int ia = i; ia < Expressions.Length - 1; ia++) {
-												Expressions[ia] = Expressions[ia + 1];
-											}
-											Array.Resize(ref Expressions, length - 1);
-										} else {
-											Array.Resize(ref Expressions, length + expr.Length - 1);
-											for (int ia = Expressions.Length - 1; ia >= i + expr.Length; ia--) {
-												Expressions[ia] = Expressions[ia - expr.Length + 1];
-											}
-											for (int ia = 0; ia < expr.Length; ia++) {
-												Expressions[i + ia] = expr[ia];
-											}
+										PreprocessSplitIntoExpressions(files[chosenIndex], lines, out IList<Expression> expr, false, offsets[chosenIndex] + Expressions[i].TrackPositionOffset);
+										Expressions[i].Skip = true; // always want to skip!
+										if (expr.Count != 0) {
+											// at this point, Expressions will always be List<T>
+											((List<Expression>)Expressions).InsertRange(i, expr);
+											i--;
 										}
-										i--;
 										continueWithNextExpression = true;
 									}
 									break;
-								case "$chr":
-								case "$chruni":
+								case ControlCommands.Chr:
 									{
 										if (NumberFormats.TryParseIntVb6(s, out int x)) {
 											if (x < 0)
@@ -494,7 +445,7 @@ namespace CsvRwRouteParser
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is invalid in " + t + Epilog);
 										}
 									} break;
-								case "$chrascii":
+								case ControlCommands.ChrAscii:
 								{
 									if (NumberFormats.TryParseIntVb6(s, out int x))
 									{
@@ -516,7 +467,7 @@ namespace CsvRwRouteParser
 									}
 								}
 									break;
-								case "$rnd":
+								case ControlCommands.Rnd:
 									{
 										int m = s.IndexOf(";", StringComparison.Ordinal);
 										if (m >= 0)
@@ -525,7 +476,7 @@ namespace CsvRwRouteParser
 											string s2 = s.Substring(m + 1).TrimStart();
 											if (NumberFormats.TryParseIntVb6(s1, out int x)) {
 												if (NumberFormats.TryParseIntVb6(s2, out int y)) {
-													int z = x + (int)Math.Floor(Plugin.RandomNumberGenerator.NextDouble() * (y - x + 1));
+													int z = x + (int)Math.Floor(Plugin.CurrentHost.Random.NextDouble() * (y - x + 1));
 													Expressions[i].Text = Expressions[i].Text.Substring(0, j) + z.ToString(Culture) + Expressions[i].Text.Substring(h + 1);
 												} else {
 													continueWithNextExpression = true;
@@ -537,10 +488,16 @@ namespace CsvRwRouteParser
 											}
 										} else {
 											continueWithNextExpression = true;
+											if (NumberFormats.TryParseIntVb6(s, out int r))
+											{
+												// only one number- return this as the result
+												Expressions[i].Text = Expressions[i].Text.Substring(0, j) + r.ToString(Culture) + Expressions[i].Text.Substring(h + 1);
+												continueWithNextExpression = false;
+											}
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + t + Epilog);
 										}
 									} break;
-								case "$sub":
+								case ControlCommands.Sub:
 									{
 										l = 0;
 										bool f = false;
@@ -613,37 +570,25 @@ namespace CsvRwRouteParser
 				}
 			}
 			// handle comments introduced via chr, rnd, sub
+			for (int i = 0; i < Expressions.Count; i++)
 			{
-				int length = Expressions.Length;
-				for (int i = 0; i < length; i++) {
-					Expressions[i].Text = Expressions[i].Text.Trim();
-					if (Expressions[i].Text.Length != 0) {
-						if (Expressions[i].Text[0] == ';') {
-							for (int j = i; j < length - 1; j++) {
-								Expressions[j] = Expressions[j + 1];
-							}
-							length--;
-							i--;
-						}
-					} else {
-						for (int j = i; j < length - 1; j++) {
-							Expressions[j] = Expressions[j + 1];
-						}
-						length--;
-						i--;
-					}
-				}
-				if (length != Expressions.Length) {
-					Array.Resize(ref Expressions, length);
+				Expressions[i].Text = Expressions[i].Text.Trim();
+				if (Expressions[i].Text.Length != 0 && Expressions[i].Text[0] == ';')
+				{
+					Expressions[i].Skip = true;
 				}
 			}
 		}
 
-		private void PreprocessSortByTrackPosition(double[] unitFactors, ref Expression[] Expressions) {
+		private void PreprocessSortByTrackPosition(double[] unitFactors, ref IList<Expression> Expressions) {
 			SortedList<double, Expression> positionedExpressions = new SortedList<double, Expression>(new DuplicateLessThanKeyComparer<double>());
 			double a = -1.0, pa = -1.0;
 			bool numberCheck = !IsRW;
-			for (int i = 0; i < Expressions.Length; i++) {
+			for (int i = 0; i < Expressions.Count; i++) {
+				if (Expressions[i].Skip)
+				{
+					continue;
+				}
 				if (IsRW) {
 					// only check for track positions in the railway section for RW routes
 					if (Expressions[i].Text.StartsWith("[", StringComparison.Ordinal) && Expressions[i].Text.EndsWith("]", StringComparison.Ordinal))
@@ -689,7 +634,7 @@ namespace CsvRwRouteParser
 					positionedExpressions.Add(a, Expressions[i]);
 				}
 			}
-			Expressions = positionedExpressions.Values.ToArray();
+			Expressions = positionedExpressions.Values;
 		}
 	}
 }

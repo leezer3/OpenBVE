@@ -47,7 +47,7 @@ namespace OpenBve
 				//Compare the current and previous keyboard states
 				//Only process if they are different
 				if (!Enum.IsDefined(typeof(OpenBveApi.Input.Key), Interface.CurrentControls[i].Key)) continue;
-				if ((OpenBveApi.Input.Key)e.Key == Interface.CurrentControls[i].Key & Interface.CurrentControls[i].Modifier == CurrentKeyboardModifier)
+				if ((OpenBveApi.Input.Key)e.Key == Interface.CurrentControls[i].Key && Interface.CurrentControls[i].Modifier == CurrentKeyboardModifier)
 				{
 
 					Interface.CurrentControls[i].AnalogState = 1.0;
@@ -114,7 +114,7 @@ namespace OpenBve
 					//Compare the current and previous keyboard states
 					//Only process if they are different
 					if (!Enum.IsDefined(typeof(OpenBveApi.Input.Key), Interface.CurrentControls[i].Key)) continue;
-					if ((OpenBveApi.Input.Key)e.Key == Interface.CurrentControls[i].Key & Interface.CurrentControls[i].AnalogState == 1.0 & Interface.CurrentControls[i].DigitalState > DigitalControlState.Released)
+					if ((OpenBveApi.Input.Key)e.Key == Interface.CurrentControls[i].Key && Interface.CurrentControls[i].AnalogState == 1.0 && Interface.CurrentControls[i].DigitalState > DigitalControlState.Released)
 					{
 						Interface.CurrentControls[i].AnalogState = 0.0;
 						Interface.CurrentControls[i].DigitalState = DigitalControlState.Released;

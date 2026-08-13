@@ -331,7 +331,12 @@ namespace OpenBveApi.Interface {
 			DriverSupervision,
 			// Added in 1.11.2.0
 			/// <summary>Press to request permission from the signaller to access a permissive section</summary>
-			AccessPermissiveSection
+			AccessPermissiveSection,
+			// Added in 1.14.0.3
+			/// <summary>Opens the firebox door</summary>
+			FireboxDoorOpen,
+			/// <summary>Closes the firebox door</summary>
+			FireboxDoorClose
 		}
 
 		/// <summary>Defines the possible command types</summary>

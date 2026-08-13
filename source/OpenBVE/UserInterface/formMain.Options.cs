@@ -37,6 +37,18 @@ namespace OpenBve {
 			Interface.CurrentOptions.TimeTableStyle = (TimeTableMode)comboBoxTimeTableDisplayMode.SelectedIndex;
 		}
 
+		private void UpdateFPSLimitEnabled()
+		{
+			bool vsyncEnabled = comboboxVSync.SelectedIndex == 1;
+			comboBoxFPSLimit.Enabled = !vsyncEnabled;
+			labelFPSLimit.ForeColor = vsyncEnabled ? System.Drawing.SystemColors.GrayText : System.Drawing.SystemColors.ControlText;
+		}
+
+		private void comboBoxVSync_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			UpdateFPSLimitEnabled();
+		}
+
 
 		private void updownTimeAccelerationFactor_ValueChanged(object sender, EventArgs e)
 		{
@@ -53,6 +65,7 @@ namespace OpenBve {
 			labelShadowStrengthValue.Enabled = shadowEnabled;
 			updownShadowBias.Enabled = shadowEnabled;
 			updownShadowNormalBias.Enabled = shadowEnabled;
+			checkboxShadowFilterCascades.Enabled = shadowEnabled;
 
 			if (!shadowEnabled)
 			{

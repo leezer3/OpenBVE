@@ -26,11 +26,12 @@ namespace LibRender2.Text
 		/// <summary>The border used when calculating texture co-ordinates</summary>
 		private const int coordinateBorder = 1;
 
+
 		// --- constructors ---
 		/// <summary>Creates a new table of characters.</summary>
 		/// <param name="font">The font.</param>
 		/// <param name="offset">The offset from codepoint U+0000.</param>
-		public OpenGlFontTable(Font font, int offset)
+		public OpenGlFontTable(Font font, int offset, StringFormat generic, StringFormat typographic)
 		{
 			/*
 			 * Measure characters.
@@ -44,8 +45,8 @@ namespace LibRender2.Text
 			for (int i = 0; i < 256; i++)
 			{
 				string character = char.ConvertFromUtf32(offset + i);
-				SizeF physicalSize = graphics.MeasureString(character, font, int.MaxValue, StringFormat.GenericDefault);
-				SizeF typographicSize = graphics.MeasureString(character, font, int.MaxValue, StringFormat.GenericTypographic);
+				SizeF physicalSize = graphics.MeasureString(character, font, int.MaxValue, generic);
+				SizeF typographicSize = graphics.MeasureString(character, font, int.MaxValue, typographic);
 				physicalSizes[i] = new Vector2((int)Math.Ceiling(physicalSize.Width), (int)Math.Ceiling(physicalSize.Height));
 				typographicSizes[i] = new Vector2((int)Math.Ceiling(typographicSize.Width == 0.0f ? physicalSize.Width : typographicSize.Width), (int)Math.Ceiling(typographicSize.Height == 0.0f ? physicalSize.Height : typographicSize.Height));
 

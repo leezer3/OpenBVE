@@ -31,9 +31,19 @@ namespace TrainManager.Motor
 		/// <summary>Holds a reference to the base engine</summary>
 	    internal TractionModel baseEngine;
 
+	    public readonly bool Automatic;
+
+
+	    protected AbstractComponent(TractionModel engine, bool automaticOperation)
+	    {
+			baseEngine = engine;
+			Automatic = automaticOperation;
+	    }
+
 	    protected AbstractComponent(TractionModel engine)
 	    {
 			baseEngine = engine;
+			Automatic = false;
 	    }
 
 	    public virtual void Update(double timeElapsed)

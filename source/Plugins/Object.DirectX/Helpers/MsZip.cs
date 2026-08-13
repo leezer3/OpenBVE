@@ -37,8 +37,8 @@ namespace Plugin
 		/// <returns>The uncompressed data</returns>
 		public static byte[] Decompress(byte[] Data)
 		{
-			uint MSZIP_SIGNATURE = 0x4B43;
-	    	uint MSZIP_BLOCK = 32786;
+			const uint MSZIP_SIGNATURE = 0x4B43;
+	    	const uint MSZIP_BLOCK = 32786;
 
 			int p = 0;
             int end = Data.Length;

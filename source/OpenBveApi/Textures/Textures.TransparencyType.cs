@@ -8,6 +8,8 @@
 		/// <summary>All pixels in the texture are either fully opaque or fully transparent.</summary>
 		Partial = 2,
 		/// <summary>Some pixels in the texture are neither fully opaque nor fully transparent.</summary>
-		Alpha = 3
+		Alpha = 3,
+		/// <summary>All pixels in the texture are fully transparent</summary>
+		Transparent
 	}
 }

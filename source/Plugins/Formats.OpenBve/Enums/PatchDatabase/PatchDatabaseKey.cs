@@ -27,6 +27,7 @@
 		AggressiveRWBrackets,
 		Incompatible,
 		DelayedAnimatedUpdates,
-		AdhesionHack
+		AdhesionHack,
+		InsufficientWallDikeArguments
 	}
 }

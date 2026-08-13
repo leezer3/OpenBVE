@@ -4,9 +4,6 @@ using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using System;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Xml;
 
 namespace CsvRwRouteParser
 {
@@ -18,6 +15,10 @@ namespace CsvRwRouteParser
 		internal static bool LocateObject(ref string fileName, string objectPath)
 		{
 			string n;
+			if (EnabledHacks.BveTsHacks)
+			{
+				fileName = fileName.Trim('\\');
+			}
 			try
 			{
 				//Catch completely malformed path references
@@ -218,17 +219,27 @@ namespace CsvRwRouteParser
 				{
 					return false;
 				}
-				if (System.IO.File.Exists(n))
+			}
+
+			// Appears to be a developer oversight
+			if (fileName.StartsWith("TTC_YUS_4.0\\"))
+			{
+				string fn = "TTC_YUS\\" + fileName.Substring(12);
+				try
 				{
-					fileName = n;
-					//The object exists, and does not require a compatibility object
-					return true;
+					//Catch completely malformed path references
+					n = Path.CombineFile(objectPath, fn);
+				}
+				catch
+				{
+					return false;
 				}
 			}
+
 			if (System.IO.File.Exists(n))
 			{
 				fileName = n;
-				//The object exists, and does not require a compatibility object
+				//The sound exists, and does not require a compatibility object
 				return true;
 			}
 

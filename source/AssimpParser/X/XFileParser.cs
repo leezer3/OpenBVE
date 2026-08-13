@@ -309,12 +309,6 @@ namespace AssimpNET.X
 
 			Scene = new Scene();
 			ParseFile();
-
-			// filter the imported hierarchy for some degenerated cases
-			if (Scene.RootNode != null)
-			{
-				FilterHierarchy(Scene.RootNode);
-			}
 		}
 
 		/** Returns the temporary representation of the imported data */
@@ -1363,7 +1357,23 @@ namespace AssimpNET.X
 		//! checks for closing curly brace
 		protected void CheckForClosingBrace()
 		{
-			if (GetNextToken() != "}")
+			string s = GetNextToken();
+			/*
+			 * 3;0,0,0,0;;
+			 *
+			 * if we have unexpected extra components in an array, s
+			 * will be a number (note that at this point it will not
+			 * be , or ; as these have been consumed by the caller)
+			 *
+			 * In this case, parse and discard the number and any
+			 * following separators / terminators
+			 *
+			 */
+			while (double.TryParse(s, out _) || s == "," || s == ";")
+			{
+				s = GetNextToken();
+			}
+			if (s != "}")
 			{
 				ThrowException("Closing brace expected.");
 			}
@@ -1413,7 +1423,7 @@ namespace AssimpNET.X
 			}
 
 			// test and skip
-			if (Buffer[currentPosition] == ';' || Buffer[currentPosition] == ',')
+			while (Buffer[currentPosition] == ';' || Buffer[currentPosition] == ',')
 			{
 				currentPosition++;
 			}
@@ -1654,10 +1664,10 @@ namespace AssimpNET.X
 		protected Color128 ReadRGBA()
 		{
 			Color128 color;
-			color.R = ReadFloat();
-			color.G = ReadFloat();
-			color.B = ReadFloat();
-			color.A = ReadFloat();
+			color.R = Math.Max(0, Math.Min(1, ReadFloat()));
+			color.G = Math.Max(0, Math.Min(1, ReadFloat()));
+			color.B = Math.Max(0, Math.Min(1, ReadFloat()));
+			color.A = Math.Max(0, Math.Min(1, ReadFloat()));
 			TestForSeparator();
 
 			return color;
@@ -1666,9 +1676,9 @@ namespace AssimpNET.X
 		protected Color96 ReadRGB()
 		{
 			Color96 color;
-			color.R = ReadFloat();
-			color.G = ReadFloat();
-			color.B = ReadFloat();
+			color.R = Math.Max(0, Math.Min(1, ReadFloat()));
+			color.G = Math.Max(0, Math.Min(1, ReadFloat()));
+			color.B = Math.Max(0, Math.Min(1, ReadFloat()));
 			TestForSeparator();
 
 			return color;
@@ -1681,39 +1691,6 @@ namespace AssimpNET.X
 				throw new Exception(text);
 			}
 			throw new Exception("Line " + LineNumber + ": " + text);
-		}
-
-		// Filters the imported hierarchy for some degenerated cases that some exporters produce.
-		protected void FilterHierarchy(Node node)
-		{
-			// if the node has just a single unnamed child containing a mesh, remove
-			// the anonymous node between. The 3DSMax kwXport plugin seems to produce this
-			// mess in some cases
-			if (node.Children.Count == 1 && node.Meshes.Count == 0)
-			{
-				Node child = node.Children.First();
-				if (child.Name.Length == 0 && child.Meshes.Count > 0)
-				{
-					// transfer its meshes to us
-					for (int a = 0; a < child.Meshes.Count; a++)
-					{
-						node.Meshes.Add(child.Meshes[a]);
-					}
-					child.Meshes.Clear();
-
-					// transfer the transform as well
-					node.TrafoMatrix *= child.TrafoMatrix;
-
-					// then kill it
-					node.Children.Clear();
-				}
-			}
-
-			// recurse
-			for (int a = 0; a < node.Children.Count; a++)
-			{
-				FilterHierarchy(node.Children[a]);
-			}
 		}
 
 		protected int ConvertToFloat(int position, out float result, bool check_comma = true)

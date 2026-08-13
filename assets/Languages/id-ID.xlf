@@ -1379,6 +1379,12 @@
 						<source>Enabled</source>
 						<target>Nyala</target>
 					</trans-unit>
+					<trans-unit id="display_fpslimit">
+						<source>FPS Limit:</source>
+					</trans-unit>
+					<trans-unit id="display_fpslimit_unlimited">
+						<source>Unlimited</source>
+					</trans-unit>
 					<trans-unit id="display_window">
 						<source>Window mode</source>
 						<target>Windowed</target>
@@ -1622,10 +1628,6 @@
 						<source>Load in advance</source>
 						<target>Load semua objek di awal game</target>
 					</trans-unit>
-					<trans-unit id="advanced_is_use_new_renderer">
-						<source>Enable the new renderer</source>
-						<target>Gunakan mode render terbaru</target>
-					</trans-unit>
 					<trans-unit id="advanced_timefactor">
 						<source>Accelerated Time Factor</source>
 						<target>Tingkat percepatan waktu</target>
@@ -1688,11 +1690,11 @@
 					</trans-unit>
 					<trans-unit id="page_previous">
 						<source>Previous Page...</source>
-						<target>Berikutnya...</target>
+						<target>Sebelumnya...</target>
 					</trans-unit>
 					<trans-unit id="page_next">
 						<source>Next Page...</source>
-						<target>Sebelumnya..</target>
+						<target>Berikutnya...</target>
 					</trans-unit>
 					<trans-unit id="kiosk_mode">
 						<source>Kiosk Mode</source>
@@ -1863,6 +1865,40 @@
 					<trans-unit id="shadows_strength">
 						<source>Shadow Strength:</source>
 						<target>Intensitas Bayangan:</target>
+					</trans-unit>
+				</group>
+				<group id="tooltips">
+					<trans-unit id="vsync">
+						<source>Enable vertical synchronization to prevent screen tearing.\r\nWhen enabled, FPS is capped to your monitor's refresh rate\r\n(e.g. 60Hz = 60 FPS).\r\nFPS Limit is disabled when VSync is ON.</source>
+						<target>Aktifkan sinkronisasi vertikal untuk mencegah screen tearing.\r\nSaat aktif, FPS dibatasi oleh refresh rate monitor\r\n(mis. 60Hz = 60 FPS).\r\nFPS Limit dinonaktifkan saat VSync AKTIF.</target>
+					</trans-unit>
+					<trans-unit id="interpolation">
+						<source>The texture filtering mode used to smooth textures.</source>
+						<target>Mode pemfilteran tekstur yang digunakan untuk menghaluskan tekstur.</target>
+					</trans-unit>
+					<trans-unit id="anisotropic">
+						<source>Higher levels of anisotropic filtering improve texture quality when viewed at an angle.</source>
+						<target>Level pemfilteran anisotropik yang lebih tinggi meningkatkan kualitas tekstur saat dilihat dari sudut miring.</target>
+					</trans-unit>
+					<trans-unit id="antialiasing">
+						<source>Reduces jagged edges on polygons.</source>
+						<target>Mengurangi tepi bergerigi pada poligon.</target>
+					</trans-unit>
+					<trans-unit id="transparency">
+						<source>Sets the quality of transparency rendering.</source>
+						<target>Mengatur kualitas rendering transparansi.</target>
+					</trans-unit>
+					<trans-unit id="viewingdistance">
+						<source>The maximum distance at which objects are rendered.</source>
+						<target>Jarak maksimum di mana objek akan ditampilkan.</target>
+					</trans-unit>
+					<trans-unit id="motionblur">
+						<source>Enables motion blur effects when moving at speed.</source>
+						<target>Mengaktifkan efek motion blur saat bergerak dengan kecepatan tinggi.</target>
+					</trans-unit>
+					<trans-unit id="fpslimit">
+						<source>Cap the maximum frames per second.\r\nSelect 'Unlimited' for no limit.\r\nDisabled when VSync is ON\r\n(the monitor refresh rate is used instead).</source>
+						<target>Batasi jumlah frame maksimum per detik.\r\nPilih 'Unlimited' untuk tanpa batas.\r\nDinonaktifkan saat VSync AKTIF\r\n(refresh rate monitor yang dipakai).</target>
 					</trans-unit>
 				</group>
 				<group id="dialog">

@@ -195,6 +195,7 @@ namespace Plugin
 										break;
 									case "timetable":
 										currentHost.AddObjectForCustomTimeTable(Result.Objects[ObjectCount]);
+										Result.Objects[ObjectCount].isTimeTableObject = true;
 										Result.Objects[ObjectCount].StateFunction = new FunctionScript(currentHost, "timetable", true);
 										break;
 									default:
@@ -219,7 +220,12 @@ namespace Plugin
 								Result.Objects[ObjectCount].States[k].Translation = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
 								if (stateFiles[k] != null)
 								{
-									currentHost.LoadObject(stateFiles[k], Encoding, out UnifiedObject currentObject);
+									if (!currentHost.LoadObject(stateFiles[k], Encoding, out UnifiedObject currentObject))
+									{
+										currentHost.AddMessage(MessageType.Warning, false, "Loading file "+ stateFiles[k] + " for state " + k + " failed. In the Section " + Block.Key + " in file " + FileName);
+										Result.Objects[ObjectCount].States[k].Prototype = new StaticObject(currentHost);
+										continue;
+									}
 									if (currentObject is StaticObject staticObject)
 									{
 										Result.Objects[ObjectCount].States[k].Prototype = staticObject;
@@ -280,7 +286,7 @@ namespace Plugin
 								}
 								else
 								{
-									Result.Objects[ObjectCount].States[k].Prototype = null;
+									Result.Objects[ObjectCount].States[k].Prototype = new StaticObject(Plugin.currentHost);
 								}
 							}
 						}

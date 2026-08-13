@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using OpenBveApi;
+using OpenBveApi.Colors;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -18,8 +19,6 @@ namespace CsvRwRouteParser
 	    internal static HostInterface CurrentHost;
 
 	    internal static CurrentRoute CurrentRoute;
-
-	    internal static Random RandomNumberGenerator = new Random();
 
 	    internal static FileSystem FileSystem;
 
@@ -127,6 +126,7 @@ namespace CsvRwRouteParser
 				Parser parser = new Parser(this, isRw);
 				parser.ParseRoute(path, textEncoding, trainPath, objectPath, soundPath, PreviewOnly);
 				IsLoading = false;
+				CurrentOptions.ClearColor = new Color24(170, 170, 170);
 			    return true;
 		    }
 		    catch(Exception ex)

@@ -137,5 +137,61 @@
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 		<SignalSet>DB_New.xml</SignalSet>
 	</Patch>
+	<!-- Bentschen -->
+	<!-- Developer has used door direction of R for all stations -->
+	<!-- Only fix those which are wrong -->
+	<Patch>
+		<Hash>3DA62E88EEB105809AC3D51CFE72B3BF95BAA9870B1AF59D1E8B46DB6DD90CB3</Hash>
+		<FileName>U1 Fe-TI_F92neu.csv</FileName>
+		<Expression Number="414">.Sta Kehrgleis 7;14.5345;14.5405;; N; 0; 0;; 30; 0</Expression>
+		<Expression Number="595">.Sta Feldsee;14.5505; 14.5525;; L; 0; 0;; 25; 60;;</Expression>
+		<Expression Number="842">.Sta Savignyplatz;14.5625; 14.5645;; L; 0; 0;; 25; 60;;</Expression>
+		<!--Fredrich-Smetana-Str.-->
+		<Expression Number="1393">.Sta Rathaus Langendorf;14.5940;15.0000;; L; 0; 0;; 25; 70;;</Expression>
+		<Expression Number="1625">.Sta Berliner Platz;15.0105;15.0125;; L; 0; 0;; 25; 70;;</Expression>
+		<Expression Number="1879">.Sta Hauptbahnhof;15.0240;15.0300;; L; 0; 0;; 25; 100;;</Expression>
+		<Expression Number="2263">.Sta Brandorfer Str.;15.0415;15.0435;; L; 0; 0;; 25; 100;;</Expression>
+		<Expression Number="2522">.Sta Weinberg-Nord;15.0540;15.0600;; L; 0; 0;; 25; 80;;</Expression>
+		<Expression Number="2861">.Sta Bentschener Str.;15.0730;15.0750;; L; 0; 0;; 25; 80;;</Expression>
+		<Expression Number="3159">.Sta Meseritzbrücke;15.0910;15.0930;; L; 0; 0;; 25; 80;;</Expression>
+		<!--Kobnitzer Tor-->
+		<Expression Number="3724">.Sta Wollsteinallee;15.1230;15.1300;; L; 0; 0;; 25; 50;;</Expression>
+		<Expression Number="3976">.Sta Naßlettler Damm;15.1410;15.1430;; L; 0; 0;; 25; 50;;</Expression>
+		<Expression Number="4229">.Sta Tirschtiegel;15.1555;15.1630;; L; 0; 0;; 25; 0;;</Expression>
+		<Expression Number="4494">.Sta Kehrgleis 7;15.1720;15.2000;; N; 0; 0;; 30; 0;</Expression>
+	</Patch>
+	<Patch>
+		<Hash>5288306AE01764B9FD4D5B72BDC7080C39461484F99A7CB455AA3EAA130E8703</Hash>
+		<FileName>U1 F92.csv</FileName>
+		<Expression Number="485">.Sta Feldsee	Gleis 7;14.5320;14.5340;; N; 0; 0;; 30; 0</Expression>
+		<Expression Number="691">.Sta Feldsee	Fe;14.5505; 14.5525;; L; 0; 0;; 25; 60;;</Expression>
+		<Expression Number="974">.Sta Savignyplatz	Sy;14.5625; 14.5645;; L; 0; 0;; 25; 60;;</Expression>
+		<!--Fredrich-Smetana-Str.-->
+		<Expression Number="1611">.Sta Rathaus Langendorf	RL;14.5940;15.0000;; L; 0; 0;; 25; 70;;</Expression>
+		<Expression Number="1877">.Sta Berliner Platz	Bln;15.0105;15.0125;; L; 0; 0;; 25; 70;;</Expression>
+		<Expression Number="2175">.Sta Hauptbahnhof	Hbf;15.0240;15.0300;; L; 0; 0;; 25; 100;;</Expression>
+		<Expression Number="2607">.Sta Brandorfer Str.	Bd;15.0415;15.0435;; L; 0; 0;; 25; 100;;</Expression>
+		<Expression Number="2881">.Sta Weinberg-Nord	WbN;15.0540;15.0600;; L; 0; 0;; 25; 80;;</Expression>
+		<Expression Number="3237">.Sta Bentschener Str.	BS;15.0730;15.0750;; L; 0; 0;; 25; 80;;</Expression>
+		<Expression Number="3577">.Sta Meseritzbrücke	ME;15.0910;15.0930;; L; 0; 0;; 25; 80;;</Expression>
+		<!--Kobnitzer Tor-->
+		<Expression Number="4210">.Sta Wollsteinallee	WOA;15.1230;15.1300;; L; 0; 0;; 25; 50;;</Expression>
+		<Expression Number="4495">.Sta Naßlettler Damm	NLD;15.1410;15.1430;; L; 0; 0;; 25; 50;;</Expression>
+		<Expression Number="4773">.Sta Tirschtiegel	TI;15.1555;15.1630;;L;0;0;Bentschen\ELA\9003.dat;25;;;</Expression>
+		<Expression Number="5042">.Sta Tirschtiegel	Gleis 7;15.1720;15.2000;;N;;;Bentschen\ELA\9004.dat;30;;</Expression>
+	</Patch>
+	<Patch>
+		<Hash>1CADFCD7932ACA730AF419E86BC25FC49FF7184C3DB9CE9A0743B5AD6B38EBD5</Hash>
+		<FileName>U1 F92.csv</FileName>
+		<Expression Number="475">.Sta Kaisereiche	Ke;14.5840;15.0000;; L; 0; 0;; 30; 0</Expression>
+		<Expression Number="867">.Sta Kaiser-Wilhelm-Allee	Kw;15.0115;15.0135;; L; 0; 0;; 30; 0</Expression>
+		<Expression Number="1177">.Sta Hauptbahnhof	Hbb;15.0245;15.0305;;L; 0; 0;; 30; 0</Expression>
+		<Expression Number="1613">.Sta Hauptstraße	Hs;15.0425;15.0500;; L; 0; 0;; 20; 0</Expression>
+		<Expression Number="1836">.Sta Bentschener Rathaus	BR;15.0545;15.0610;; L; 0; 0;; 25; 60;;</Expression>
+		<Expression Number="2112">.Sta Meckenheimer Chaussee	MHC;15.0705;15.0730;;L; 0; 0;; 20; 0</Expression>
+		<!--Reinickenberg-->
+		<Expression Number="3029">.Sta Neutomischel	N; 15.1035;15.1100;;L;;;Bentschen\ELA\9003.dat;20;</Expression>
+		<Expression Number="3231">.Sta Neutomischel	Gleis 6; 15.1230;15.1400;;N;;;Bentschen\ELA\9004.dat;300;</Expression>
+	</Patch>
   </RoutePatches>
 </openBVE>

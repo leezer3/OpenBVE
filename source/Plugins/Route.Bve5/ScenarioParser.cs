@@ -90,7 +90,7 @@ namespace Route.Bve5
 			ScenarioGrammarParser Parser = new ScenarioGrammarParser();
 			ScenarioData Data = Parser.Parse(File.ReadAllText(fileName, Encoding));
 
-			Plugin.CurrentRoute.Comment = Data.Comment;
+			Plugin.CurrentRoute.Comment = Data.Comment ?? string.Empty;
 			Plugin.CurrentRoute.Stations = Array.Empty<RouteStation>();
 			CurrentStation = 0;
 			if (!string.IsNullOrEmpty(Data.Image))
@@ -132,7 +132,7 @@ namespace Route.Bve5
 				TotalWeight += WeightTable[i];
 			}
 
-			double Value = Plugin.RandomNumberGenerator.NextDouble() * TotalWeight;
+			double Value = Plugin.CurrentHost.Random.NextDouble() * TotalWeight;
 			int RetIndex = -1;
 
 			for (int i = WeightTable.Length - 1; i >= 0; i--)

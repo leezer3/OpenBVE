@@ -41,9 +41,7 @@ namespace LibRender2.Smoke
 		internal readonly List<Particle> Particles;
 
 		internal const int MaximumParticles = 200;
-
-		internal readonly Random Random;
-
+		
 		internal readonly double MaximumLifeSpan;
 
 		internal readonly double MaximumSize;
@@ -89,7 +87,6 @@ namespace LibRender2.Smoke
 		public ParticleSource(BaseRenderer renderer, AbstractCar car, Vector3 offset, double maximumSize, double maximumGrownSize, Vector3 movementSpeed, double maximumLifeSpan, ParticleType type = ParticleType.Smoke)
 		{
 			Renderer = renderer;
-			Random = new Random();
 			MaximumSize = maximumSize;
 			MaximumGrownSize = maximumGrownSize;
 			Particles = new List<Particle>();
@@ -112,7 +109,7 @@ namespace LibRender2.Smoke
 
 		public void Update(double timeElapsed, bool currentlyVisible)
 		{
-			if (!Renderer.AvailableNewRenderer || Controller == null)
+			if (Controller == null)
 			{
 				return;
 			}
@@ -134,7 +131,7 @@ namespace LibRender2.Smoke
 					// Apply base motion (stationary)
 					Vector3 transformedSpeed = new Vector3(MovementSpeed);
 					transformedSpeed.Rotate(directionalTransform);
-					Vector3 baseMovement = Random.NextDouble() * transformedSpeed * timeElapsed;
+					Vector3 baseMovement = Renderer.currentHost.Random.NextDouble() * transformedSpeed * timeElapsed;
 					Particles[i].Position += baseMovement;
 
 					Vector3 movementDirection = new Vector3(0, 0, 1); // moving forwards, so smoke flows backwards
@@ -154,30 +151,30 @@ namespace LibRender2.Smoke
 						if (MaximumGrownSize < MaximumSize)
 						{
 							// particles shrink
-							if (Particles[i].Size.X > MaximumGrownSize && Random.NextDouble() < Controller.LastResult * 0.5 && particleSizeTimer > 0.05)
+							if (Particles[i].Size.X > MaximumGrownSize && Renderer.currentHost.Random.NextDouble() < Controller.LastResult * 0.5 && particleSizeTimer > 0.05)
 							{
-								if (Random.NextDouble() < 0.3)
+								if (Renderer.currentHost.Random.NextDouble() < 0.3)
 								{
-									Particles[i].Size.X += Random.NextDouble() * timeElapsed;
+									Particles[i].Size.X += Renderer.currentHost.Random.NextDouble() * timeElapsed;
 								}
 								else
 								{
-									Particles[i].Size.X -= Random.NextDouble() * timeElapsed;
+									Particles[i].Size.X -= Renderer.currentHost.Random.NextDouble() * timeElapsed;
 								}
 
 								Particles[i].Size.X = Math.Max(0, Math.Max(Particles[i].Size.X, MaximumGrownSize));
 								particleSizeTimer = 0;
 							}
 
-							if (Particles[i].Size.Y > MaximumGrownSize && Random.NextDouble() < Controller.LastResult * 0.5 && particleSizeTimer > 0.05)
+							if (Particles[i].Size.Y > MaximumGrownSize && Renderer.currentHost.Random.NextDouble() < Controller.LastResult * 0.5 && particleSizeTimer > 0.05)
 							{
-								if (Random.NextDouble() < 0.3)
+								if (Renderer.currentHost.Random.NextDouble() < 0.3)
 								{
-									Particles[i].Size.Y += Random.NextDouble() * timeElapsed;
+									Particles[i].Size.Y += Renderer.currentHost.Random.NextDouble() * timeElapsed;
 								}
 								else
 								{
-									Particles[i].Size.Y -= Random.NextDouble() * timeElapsed;
+									Particles[i].Size.Y -= Renderer.currentHost.Random.NextDouble() * timeElapsed;
 								}
 
 								Particles[i].Size.Y = Math.Max(0, Math.Max(Particles[i].Size.Y, MaximumGrownSize));
@@ -187,29 +184,29 @@ namespace LibRender2.Smoke
 						else
 						{
 							// particles grow (or do nothing)
-							if (Particles[i].Size.X < MaximumGrownSize && Random.NextDouble() < Controller.LastResult * 0.5)
+							if (Particles[i].Size.X < MaximumGrownSize && Renderer.currentHost.Random.NextDouble() < Controller.LastResult * 0.5)
 							{
-								if (Random.NextDouble() < 0.3)
+								if (Renderer.currentHost.Random.NextDouble() < 0.3)
 								{
-									Particles[i].Size.X -= Random.NextDouble() * timeElapsed;
+									Particles[i].Size.X -= Renderer.currentHost.Random.NextDouble() * timeElapsed;
 								}
 								else
 								{
-									Particles[i].Size.X += Random.NextDouble() * timeElapsed;
+									Particles[i].Size.X += Renderer.currentHost.Random.NextDouble() * timeElapsed;
 								}
 
 								Particles[i].Size.X = Math.Max(0, Math.Min(Particles[i].Size.X, MaximumGrownSize));
 							}
 
-							if (Particles[i].Size.Y < MaximumGrownSize && Random.NextDouble() < Controller.LastResult * 0.5)
+							if (Particles[i].Size.Y < MaximumGrownSize && Renderer.currentHost.Random.NextDouble() < Controller.LastResult * 0.5)
 							{
-								if (Random.NextDouble() < 0.3)
+								if (Renderer.currentHost.Random.NextDouble() < 0.3)
 								{
-									Particles[i].Size.Y -= Random.NextDouble() * timeElapsed;
+									Particles[i].Size.Y -= Renderer.currentHost.Random.NextDouble() * timeElapsed;
 								}
 								else
 								{
-									Particles[i].Size.Y += Random.NextDouble() * timeElapsed;
+									Particles[i].Size.Y += Renderer.currentHost.Random.NextDouble() * timeElapsed;
 								}
 
 								Particles[i].Size.Y = Math.Max(0, Math.Min(Particles[i].Size.Y, MaximumGrownSize));
@@ -225,11 +222,11 @@ namespace LibRender2.Smoke
 			{
 				if (dynamicCar.TractionModel.IsRunning && timeElapsed > 0)
 				{
-					if ((EmitsAtIdle || Controller.LastResult > 0) && particleAdditionTimer > 0.05 && Random.NextDouble() >= 0.5)
+					if ((EmitsAtIdle || Controller.LastResult > 0) && particleAdditionTimer > 0.05 && Renderer.currentHost.Random.NextDouble() >= 0.5)
 					{
 						Vector3 startingPosition = new Vector3(Offset);
 						startingPosition.Rotate(directionalTransform);
-						Particles.Add(new Particle(startingPosition, new Vector2(Random.NextDouble() * MaximumSize, Random.NextDouble() * MaximumSize), Random.NextDouble() * MaximumLifeSpan, Random.Next(0, 11)));
+						Particles.Add(new Particle(startingPosition, new Vector2(Renderer.currentHost.Random.NextDouble() * MaximumSize, Renderer.currentHost.Random.NextDouble() * MaximumSize), Renderer.currentHost.Random.NextDouble() * MaximumLifeSpan, Renderer.currentHost.Random.Next(0, 11)));
 						particleAdditionTimer = 0;
 					}
 				}

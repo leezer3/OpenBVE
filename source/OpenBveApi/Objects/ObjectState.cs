@@ -101,6 +101,13 @@ namespace OpenBveApi.Objects
 			Prototype = prototype;
 		}
 
+		/// <summary>Creates a new ObjectState</summary>
+		public ObjectState(StaticObject prototype, Matrix4D translation) : this()
+		{
+			Prototype = prototype;
+			Translation = translation;
+		}
+
 		/// <summary>Clones this ObjectState</summary>
 		public object Clone()
 		{

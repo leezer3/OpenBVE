@@ -12,7 +12,7 @@ using Path = OpenBveApi.Path;
 
 namespace CsvRwRouteParser
 {
-	class StationXMLParser
+	internal class StationXMLParser
 	{
 		public static RouteStation ReadStationXML(CurrentRoute Route, string fileName, bool PreviewOnly, Texture[] daytimeTimetableTextures, Texture[] nighttimeTimetableTextures, int CurrentStation, ref bool passAlarm, ref StopRequest stopRequest)
 		{

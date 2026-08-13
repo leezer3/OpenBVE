@@ -139,7 +139,7 @@ namespace Route.Bve5
 					continue;
 				}
 
-				string TrackKey = d.TrackKey;
+				string TrackKey = Statement.GetArgumentValueAsString(ArgumentName.TrackKey);
 				object TrainKey = Statement.Key;
 
 				if (string.IsNullOrEmpty(TrackKey))

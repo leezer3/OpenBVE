@@ -181,24 +181,30 @@ namespace Train.MsTs
 			currentCar.Driver = cabViews[0].Position;
 			for (int i = 0; i < cabViews.Count; i++)
 			{
-				
-				Plugin.CurrentHost.RegisterTexture(cabViews[i].FileName, new TextureParameters(null, null), out Texture tday, true);
+				Texture tDay = null, tNight = null;
+				Plugin.CurrentHost.RegisterTexture(cabViews[i].FileName, new TextureParameters(null, null), out tDay, true);
+				if (File.Exists(cabViews[i].NightTimeFileName))
+				{
+					Plugin.CurrentHost.RegisterTexture(cabViews[i].FileName, new TextureParameters(null, null), out tNight, true);
+				}
+
+
 				switch (i)
 				{
 					case 0:
 						currentCar.CarSections.Add(CarSectionType.Interior, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, currentCar));
-						CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Vector2.Null, panelSize, new Vector2(0.5, 0.5), 0.0, cabViews[0].Position, tday, new Color32(255, 255, 255, 255));
-						currentCar.CarSections[CarSectionType.Interior].ViewDirection = new Transformation(cabViews[0].Direction.Y.ToRadians(), -cabViews[0].Direction.X.ToRadians(), -cabViews[0].Direction.Z.ToRadians());
+						CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Vector2.Null, panelSize, new Vector2(0.5, 0.5), 0.0, cabViews[0].Position, tDay, tNight, new Color32(255, 255, 255, 255));
+						currentCar.CarSections[CarSectionType.Interior].ViewDirection = new Vector3(cabViews[0].Direction.X.ToRadians(), cabViews[0].Direction.Y.ToRadians(), cabViews[0].Direction.Z.ToRadians());
 						break;
 					case 1:
 						currentCar.CarSections.Add(CarSectionType.HeadOutLeft, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, currentCar));
-						CreateElement(ref currentCar.CarSections[CarSectionType.HeadOutLeft].Groups[0], Vector2.Null, panelSize, new Vector2(0.5, 0.5), 0.0, cabViews[1].Position, tday, new Color32(255, 255, 255, 255));
-						currentCar.CarSections[CarSectionType.HeadOutLeft].ViewDirection = new Transformation(cabViews[1].Direction.Y.ToRadians(), -cabViews[1].Direction.X.ToRadians(), -cabViews[1].Direction.Z.ToRadians());
+						CreateElement(ref currentCar.CarSections[CarSectionType.HeadOutLeft].Groups[0], Vector2.Null, panelSize, new Vector2(0.5, 0.5), 0.0, cabViews[1].Position, tDay, tNight, new Color32(255, 255, 255, 255));
+						currentCar.CarSections[CarSectionType.HeadOutLeft].ViewDirection = new Vector3(cabViews[1].Direction.X.ToRadians(), cabViews[1].Direction.Y.ToRadians(), cabViews[1].Direction.Z.ToRadians());
 						break;
 					case 2:
 						currentCar.CarSections.Add(CarSectionType.HeadOutRight, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, currentCar));
-						CreateElement(ref currentCar.CarSections[CarSectionType.HeadOutRight].Groups[0], Vector2.Null, panelSize, new Vector2(0.5, 0.5), 0.0, cabViews[2].Position, tday, new Color32(255, 255, 255, 255));
-						currentCar.CarSections[CarSectionType.HeadOutRight].ViewDirection = new Transformation(cabViews[2].Direction.Y.ToRadians(), -cabViews[2].Direction.X.ToRadians(), -cabViews[2].Direction.Z.ToRadians());
+						CreateElement(ref currentCar.CarSections[CarSectionType.HeadOutRight].Groups[0], Vector2.Null, panelSize, new Vector2(0.5, 0.5), 0.0, cabViews[2].Position, tDay, tNight, new Color32(255, 255, 255, 255));
+						currentCar.CarSections[CarSectionType.HeadOutRight].ViewDirection = new Vector3(cabViews[2].Direction.X.ToRadians(), cabViews[2].Direction.Y.ToRadians(), cabViews[2].Direction.Z.ToRadians());
 						break;
 				}
 			}
@@ -242,9 +248,14 @@ namespace Train.MsTs
 
 					break;
 				case KujuTokenID.Direction:
+					/*
+					 * WARNING:
+					 * Y,X,Z format
+					 * Values also need to be negated to get to GL format
+					 */
+					currentCabView.Direction.Y = -block.ReadSingle();
 					currentCabView.Direction.X = block.ReadSingle();
-					currentCabView.Direction.Y = block.ReadSingle();
-					currentCabView.Direction.Z = block.ReadSingle();
+					currentCabView.Direction.Z = -block.ReadSingle();
 					break;
 				case KujuTokenID.Position:
 					currentCabView.Position.X = block.ReadSingle();
@@ -461,6 +472,7 @@ namespace Train.MsTs
 				case PanelSubject.Throttle:
 					Code = "brakeNotchLinear 0 powerNotch ?";
 					break;
+				case PanelSubject.Dynamic_Brake:
 				case PanelSubject.Train_Brake:
 					Code = "brakeNotchLinear";
 					break;
@@ -532,7 +544,7 @@ namespace Train.MsTs
 			return Code;
 		}
 
-		internal static int CreateElement(ref ElementsGroup Group, Vector2 TopLeft, Vector2 Size, Vector2 RelativeRotationCenter, double Distance, Vector3 Driver, Texture DaytimeTexture, Color32 Color, bool AddStateToLastElement = false)
+		internal static int CreateElement(ref ElementsGroup Group, Vector2 TopLeft, Vector2 Size, Vector2 RelativeRotationCenter, double Distance, Vector3 Driver, Texture DaytimeTexture, Texture NightTimeTexture, Color32 Color, bool AddStateToLastElement = false)
 		{
 			if (Size.X == 0 || Size.Y == 0)
 			{
@@ -590,7 +602,7 @@ namespace Train.MsTs
 			staticObject.Mesh.Materials[0].Color = Color;
 			staticObject.Mesh.Materials[0].TransparentColor = Color24.Blue;
 			staticObject.Mesh.Materials[0].DaytimeTexture = DaytimeTexture;
-			staticObject.Mesh.Materials[0].NighttimeTexture = null;
+			staticObject.Mesh.Materials[0].NighttimeTexture = NightTimeTexture;
 			staticObject.Dynamic = true;
 			// calculate offset
 			Vector3 o;
@@ -603,11 +615,7 @@ namespace Train.MsTs
 				int n = Group.Elements.Length - 1;
 				int j = Group.Elements[n].States.Length;
 				Array.Resize(ref Group.Elements[n].States, j + 1);
-				Group.Elements[n].States[j] = new ObjectState
-				{
-					Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z),
-					Prototype = staticObject
-				};
+				Group.Elements[n].States[j] = new ObjectState(staticObject, Matrix4D.CreateTranslation(o.X, o.Y, -o.Z));
 				return n;
 			}
 			else
@@ -615,17 +623,13 @@ namespace Train.MsTs
 				int n = Group.Elements.Length;
 				Array.Resize(ref Group.Elements, n + 1);
 				Group.Elements[n] = new AnimatedObject(Plugin.CurrentHost);
-				Group.Elements[n].States = new[] {new ObjectState()};
-				Group.Elements[n].States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
-				Group.Elements[n].States[0].Prototype = staticObject;
-				Group.Elements[n].CurrentState = 0;
-				Group.Elements[n].internalObject = new ObjectState {Prototype = staticObject};
+				Group.Elements[n].States = new[] { new ObjectState(staticObject, Matrix4D.CreateTranslation(o.X, o.Y, -o.Z)) };
 				Plugin.CurrentHost.CreateDynamicObject(ref Group.Elements[n].internalObject);
 				return n;
 			}
 		}
 
-		internal static int CreateScalableYElement(ref ElementsGroup Group, Vector2 TopLeft, Vector2 Size, Vector2 InitialSize, double Distance, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool DirIncrease)
+		internal static int CreateScalableYElement(ref ElementsGroup Group, Vector2 TopLeft, Vector2 Size, Vector2 InitialSize, double Distance, Vector3 Driver, Texture DaytimeTexture, Texture NightTimeTexture, Color32 Color, bool DirIncrease)
 		{
 			if (InitialSize.X == 0 || InitialSize.Y == 0)
 			{
@@ -709,7 +713,7 @@ namespace Train.MsTs
 			staticObject.Mesh.Materials[0].Color = Color;
 			staticObject.Mesh.Materials[0].TransparentColor = Color24.Blue;
 			staticObject.Mesh.Materials[0].DaytimeTexture = DaytimeTexture;
-			staticObject.Mesh.Materials[0].NighttimeTexture = null;
+			staticObject.Mesh.Materials[0].NighttimeTexture = NightTimeTexture;
 			staticObject.Dynamic = true;
 			// calculate offset
 			Vector3 o;

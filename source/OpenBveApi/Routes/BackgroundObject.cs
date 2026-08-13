@@ -1,5 +1,6 @@
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Hosts;
 using System;
 using System.Collections.Generic;
 
@@ -8,8 +9,8 @@ namespace OpenBveApi.Routes
 	/// <summary>Represents a background object</summary>
 	public sealed class BackgroundObject : BackgroundHandle
 	{
-		/// <summary>The object used for this background (NOTE: Static objects only)</summary>
-		public readonly StaticObject Object;
+		/// <summary>The object used for this background</summary>
+		public readonly UnifiedObject Object;
 		/// <summary>The clipping distance required to fully render the object</summary>
 		public readonly double ClipDistance = 0;
 		/// <summary>The object state</summary>
@@ -19,8 +20,10 @@ namespace OpenBveApi.Routes
 		/// <param name="staticObject">The object to use for the background</param>
 		/// <param name="backgroundImageDistance">The user-selected viewing distance</param>
 		/// <param name="createCylinderCaps">Whether to auto-generate cylinder caps</param>
-		public BackgroundObject(StaticObject staticObject, double backgroundImageDistance, bool createCylinderCaps = false)
+		/// <param name="fogDistance">The fog distance</param>
+		public BackgroundObject(StaticObject staticObject, double backgroundImageDistance, bool createCylinderCaps = false, double fogDistance = 600)
 		{
+			FogDistance = fogDistance;
 			BackgroundImageDistance = backgroundImageDistance;
 			if (createCylinderCaps)
 			{
@@ -101,13 +104,60 @@ namespace OpenBveApi.Routes
 				}
 			}
 
-			ObjectState = new ObjectState(Object);
+			ObjectState = new ObjectState(Object as StaticObject);
+		}
+
+		/// <summary>Creates a new background object from an animated object collection</summary>
+		/// <param name="animatedObject">The animated object collection to use for the background</param>
+		/// <param name="backgroundImageDistance">The user-selected viewing distance</param>
+		/// <param name="fogDistance">The fog distance</param>
+		public BackgroundObject(AnimatedObjectCollection animatedObject, double backgroundImageDistance, double fogDistance = 600)
+		{
+			FogDistance = fogDistance;
+			BackgroundImageDistance = backgroundImageDistance;
+			AnimatedObjectCollection animatedObjectCollection = (AnimatedObjectCollection)animatedObject.Clone();
+			//Register the internal dynamic object states so their VAOs are created
+			foreach (AnimatedObject obj in animatedObjectCollection.Objects)
+			{
+				if (obj.States.Length == 0)
+				{
+					continue;
+				}
+				animatedObject.currentHost.CreateDynamicObject(ref obj.internalObject);
+				obj.internalObject.Prototype = obj.States[0].Prototype;
+				obj.CurrentState = 0;
+				foreach (ObjectState state in obj.States)
+				{
+					if (state.Prototype == null)
+					{
+						continue;
+					}
+					foreach (VertexTemplate v in state.Prototype.Mesh.Vertices)
+					{
+						ClipDistance = System.Math.Max(ClipDistance, System.Math.Abs(v.Coordinates.X));
+						ClipDistance = System.Math.Max(ClipDistance, System.Math.Abs(v.Coordinates.Z));
+					}
+				}
+			}
+
+			Object = animatedObjectCollection;
 		}
 
 		/// <inheritdoc/>
 		public override void UpdateBackground(double secondsSinceMidnight, double timeElapsed, bool target)
 		{
-			//No updates required
+			if (Object is AnimatedObjectCollection animatedObjectCollection)
+			{
+				foreach (AnimatedObject obj in animatedObjectCollection.Objects)
+				{
+					if (obj.States.Length == 0)
+					{
+						continue;
+					}
+					obj.Update(null, 0, 0, Vector3.Zero, Vector3.Forward, Vector3.Up, Vector3.Right, true, true, timeElapsed, true);
+				}
+			}
+			//Static objects require no updates
 		}
 	}
 }

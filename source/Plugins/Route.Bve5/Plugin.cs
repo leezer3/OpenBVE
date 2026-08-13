@@ -25,6 +25,7 @@
 using System;
 using System.Text;
 using OpenBveApi;
+using OpenBveApi.Colors;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
@@ -39,8 +40,6 @@ namespace Route.Bve5
 	    internal static HostInterface CurrentHost;
 
 	    internal static CurrentRoute CurrentRoute;
-
-	    internal static Random RandomNumberGenerator = new Random();
 
 	    internal static FileSystem FileSystem;
 
@@ -103,6 +102,7 @@ namespace Route.Bve5
 			    }
 		    }
 
+		    CurrentOptions.ClearColor = Color24.Black;
 			return true;
 
 	    }

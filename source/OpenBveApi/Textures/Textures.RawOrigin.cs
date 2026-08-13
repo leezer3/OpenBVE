@@ -15,6 +15,24 @@
 			Texture = texture;
 		}
 
+		/// <summary>Checks whether two origins are equal.</summary>
+		/// <param name="a">The first origin.</param>
+		/// <param name="b">The second origin.</param>
+		/// <returns>Whether the two origins are equal.</returns>
+		public static bool operator ==(RawOrigin a, RawOrigin b)
+		{
+			return false;
+		}
+
+		/// <summary>Checks whether two origins are unequal.</summary>
+		/// <param name="a">The first origin.</param>
+		/// <param name="b">The second origin.</param>
+		/// <returns>Whether the two origins are unequal.</returns>
+		public static bool operator !=(RawOrigin a, RawOrigin b)
+		{
+			return true;
+		}
+
 		// --- functions ---
 		/// <summary>Gets the texture from this origin.</summary>
 		/// <param name="texture">Receives the texture.</param>

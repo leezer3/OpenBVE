@@ -38,7 +38,7 @@ namespace OpenBve
 						try
 						{
 							DisplayDevice.Default.ChangeResolution(currentResolution);
-							if (Interface.CurrentOptions.IsUseNewRenderer && (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4 || Interface.CurrentOptions.ForceForwardsCompatibleContext))
+							if ((Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4 || Interface.CurrentOptions.ForceForwardsCompatibleContext))
 							{
 								/*
 								 * OS-X is a fickle beast
@@ -48,7 +48,7 @@ namespace OpenBve
 									GameWindowFlags.Default, GraphicsContextFlags.ForwardCompatible)
 								{
 									Visible = true,
-									WindowState = WindowState.Fullscreen,
+									WindowState = WindowState.Fullscreen
 								};
 							}
 							else
@@ -57,7 +57,7 @@ namespace OpenBve
 									GameWindowFlags.Default)
 								{
 									Visible = true,
-									WindowState = WindowState.Fullscreen,
+									WindowState = WindowState.Fullscreen
 								};	
 							}
 							
@@ -89,7 +89,7 @@ namespace OpenBve
 			{
 				try
 				{
-					if (Interface.CurrentOptions.IsUseNewRenderer && (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4 || Interface.CurrentOptions.ForceForwardsCompatibleContext))
+					if ((Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4 || Interface.CurrentOptions.ForceForwardsCompatibleContext))
 					{
 						/*
 						 * OS-X is a fickle beast
@@ -131,9 +131,10 @@ namespace OpenBve
 				return;
 			}
 
-			// BUG: Currently disabled- https://github.com/leezer3/OpenBVE/issues/957
-			//Program.currentGameWindow.TargetUpdateFrequency = Interface.CurrentOptions.FPSLimit;
-			//Program.currentGameWindow.TargetRenderFrequency = Interface.CurrentOptions.FPSLimit;
+			// Cap the render rate only, leaving the update rate uncapped.
+			// Setting the update rate too caused train shaking and dropped input device plugin events (issue #957)
+			Program.Renderer.GameWindow.TargetUpdateFrequency = 0;
+			Program.Renderer.GameWindow.TargetRenderFrequency = Interface.CurrentOptions.FPSLimit > 0 ? Interface.CurrentOptions.FPSLimit : 0;
 			Program.Renderer.GameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? VSyncMode.On : VSyncMode.Off;
 			
 		}

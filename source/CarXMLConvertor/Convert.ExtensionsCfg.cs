@@ -1,6 +1,5 @@
 ﻿using Formats.OpenBve;
 using OpenBveApi;
-using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using System;
 using System.Diagnostics;
@@ -414,6 +413,7 @@ namespace CarXmlConvertor
 
 				newLines.Add("<Compressor>");
 				newLines.Add("<Rate>5000.0</Rate>");
+				newLines.Add("<RestartPressure>" + ConvertTrainDat.MainReservoirMinimumPressure + "</RestartPressure>");
 				newLines.Add("</Compressor>");
 			}
 

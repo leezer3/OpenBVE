@@ -894,7 +894,7 @@ namespace Route.Bve5
 				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Unable to find the Station ArrivalSound with key " + RouteData.StationList[stationKey].ArrivalSoundKey + " for station " + stationKey);
 			}
 
-			if (!string.IsNullOrEmpty(RouteData.StationList[stationKey].ArrivalSoundKey) && !RouteData.Sounds.TryGetValue(RouteData.StationList[stationKey].DepartureSoundKey, out NewStation.DepartureSoundBuffer))
+			if (!string.IsNullOrEmpty(RouteData.StationList[stationKey].DepartureSoundKey) && !RouteData.Sounds.TryGetValue(RouteData.StationList[stationKey].DepartureSoundKey, out NewStation.DepartureSoundBuffer))
 			{
 				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Unable to find the Station DepartureSound with key " + RouteData.StationList[stationKey].DepartureSoundKey + " for station " + stationKey);
 			}
@@ -992,7 +992,7 @@ namespace Route.Bve5
 				case MapFunctionName.Interpolate:
 				case MapFunctionName.Set:
 					RouteData.TryAddBlock(Statement.Distance);
-					float Density = 1.0f, r = 1.0f, g = 1.0f, b = 1.0f;
+					float Density = 0.0f, r = 1.0f, g = 1.0f, b = 1.0f;
 					if (!Statement.HasArgument(ArgumentName.Red) && !Statement.HasArgument(ArgumentName.Green) &&
 					    !Statement.HasArgument(ArgumentName.Blue))
 					{

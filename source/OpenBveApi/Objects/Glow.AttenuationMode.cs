@@ -7,7 +7,11 @@
 		None = 0,
 		/// <summary>The glow intensity is determined via the function x² / (x² + GlowHalfDistance2), where x is the distance from the camera to the object in meters. </summary>
 		DivisionExponent2 = 1,
+		/// <summary>The glow intensity is determined via the function x² / (x² + GlowHalfDistance2), where x is the distance from the camera to the object in meters. </summary>
+		DivideExponent2 = DivisionExponent2,
 		/// <summary>The glow intensity is determined via the function x⁴ / (x⁴ + GlowHalfDistance4), where x is the distance from the camera to the object in meters.</summary>
 		DivisionExponent4 = 2,
+		/// <summary>The glow intensity is determined via the function x⁴ / (x⁴ + GlowHalfDistance4), where x is the distance from the camera to the object in meters.</summary>
+		DivideExponent4 = DivisionExponent4
 	}
 }

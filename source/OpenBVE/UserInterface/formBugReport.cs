@@ -44,8 +44,8 @@ namespace OpenBve
 		private void buttonViewLog_Click(object sender, EventArgs e)
 		{
 			try
-			{
-				var file = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "log.txt");
+			{ 
+				string file = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "log.txt");
 				if(File.Exists(file))
 				{
 					if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
@@ -73,8 +73,8 @@ namespace OpenBve
 		{
 			try
 			{
-				var directory = new DirectoryInfo(Program.FileSystem.SettingsFolder);
-				var file = directory.GetFiles("OpenBVE Crash*.log").OrderByDescending(f => f.LastWriteTime).First();
+				DirectoryInfo directory = new DirectoryInfo(Program.FileSystem.SettingsFolder);
+				FileInfo file = directory.GetFiles("OpenBVE Crash*.log").OrderByDescending(f => f.LastWriteTime).First();
 				if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 				{
 					Process.Start(file.FullName);
@@ -98,7 +98,7 @@ namespace OpenBve
 			{
 				using (var ProblemReport = File.OpenWrite(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), fileName)))
 				{
-					using (var zipWriter = WriterFactory.Open(ProblemReport, ArchiveType.Zip, CompressionType.LZMA))
+					using (var zipWriter = WriterFactory.OpenWriter(ProblemReport, ArchiveType.Zip, new WriterOptions(CompressionType.LZMA)))
 					{
 						//Add log file to the archive
 						var file = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "log.txt");

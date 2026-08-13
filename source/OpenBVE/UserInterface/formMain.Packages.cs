@@ -1448,13 +1448,13 @@ namespace OpenBve
 			{
 
 				filesToPackageBox.Text += folderDisplay + Environment.NewLine;
-				var tempList = new List<PackageFile>();
+				List<PackageFile> tempList = new List<PackageFile>();
 				for (int i = 0; i < files.Length; i++)
 				{
-					var tempFile = new PackageFile
+					PackageFile tempFile = new PackageFile
 					{
 						absolutePath = files[i],
-						relativePath = files[i].Replace(folder, ""),
+						relativePath = files[i].Replace(folder, "")
 					};
 					tempList.Add(tempFile);
 				}

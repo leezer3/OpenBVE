@@ -158,7 +158,7 @@ namespace CsvRwRouteParser
 			// create objects and track
 			CurrentRoute.Switches = new Dictionary<Guid, RouteManager2.Tracks.Switch>();
 			Vector3 Position = Vector3.Zero;
-			Vector2 Direction = Vector2.Down;
+			Vector2 Direction = Data.StartingDirection;
 			double CurrentSpeedLimit = double.PositiveInfinity;
 			int CurrentRunIndex = 0;
 			int CurrentFlangeIndex = 0;
@@ -784,11 +784,11 @@ namespace CsvRwRouteParser
 								continue;
 							}
 
-							if (Data.Structure.RailObjects.ContainsKey(Data.Blocks[i].RailType[railKey]))
+							if (railKey >= 0 && Data.Structure.RailObjects.ContainsKey(Data.Blocks[i].RailType[railKey]))
 							{
 								Data.Structure.RailObjects[Data.Blocks[i].RailType[railKey]]?.CreateObject(pos, RailTransformation, railParameters);
 							}
-
+							
 							// points of interest
 							for (int k = 0; k < Data.Blocks[i].PointsOfInterest.Length; k++)
 							{
@@ -824,7 +824,7 @@ namespace CsvRwRouteParser
 							
 
 							// poles
-							if (Data.Blocks[i].RailPole.Length > railKey)
+							if (railKey >= 0 && Data.Blocks[i].RailPole.Length > railKey)
 							{
 								Data.Blocks[i].RailPole[railKey].Create(Data.Structure.Poles, pos, RailTransformation, Direction, planar, updown, railParameters);
 							}
@@ -851,20 +851,26 @@ namespace CsvRwRouteParser
 							}
 
 							// forms
-							for (int k = 0; k < Data.Blocks[i].Forms.Length; k++)
+							if (railKey >= 0)
 							{
-								// primary rail
-								if (Data.Blocks[i].Forms[k].PrimaryRail == railKey)
+								// Note that negative numbers are used by BVE4 as 'magic' constants for left / right....
+								// Hmmsim uses a 'rail' with the index of -1 to allow for it's ground objects
+								for (int k = 0; k < Data.Blocks[i].Forms.Length; k++)
 								{
-									Data.Blocks[i].Forms[k].CreatePrimaryRail(Data.Blocks[i], Data.Blocks[i + 1], pos, RailTransformation, railParameters);
-								}
+									// primary rail
+									if (Data.Blocks[i].Forms[k].PrimaryRail == railKey)
+									{
+										Data.Blocks[i].Forms[k].CreatePrimaryRail(Data.Blocks[i], Data.Blocks[i + 1], pos, RailTransformation, railParameters);
+									}
 
-								// secondary rail
-								if (Data.Blocks[i].Forms[k].SecondaryRail == railKey)
-								{
-									Data.Blocks[i].Forms[k].CreateSecondaryRail(Data.Blocks[i], pos, RailTransformation, railParameters);
+									// secondary rail
+									if (Data.Blocks[i].Forms[k].SecondaryRail == railKey)
+									{
+										Data.Blocks[i].Forms[k].CreateSecondaryRail(Data.Blocks[i], pos, RailTransformation, railParameters);
+									}
 								}
 							}
+							
 
 							// cracks
 							for (int k = 0; k < Data.Blocks[i].Cracks.Length; k++)
@@ -880,35 +886,7 @@ namespace CsvRwRouteParser
 									Data.Blocks[i].RailFreeObj[railKey][k].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance);
 								}
 							}
-
-							// pattern objects
-							if (railInBlock == 0)
-							{
-								for (int k = 0; k < Data.Blocks[i].PatternObjs.Count; k++)
-								{
-									int key = Data.Blocks[i].PatternObjs.ElementAt(k).Key;
-									if (Data.Blocks[i].PatternObjs[key].Interval <= 0)
-									{
-										continue;
-									}
-
-									// patterns key off rail 0
-									while (Data.Blocks[i].PatternObjs[key].LastPlacement + Data.Blocks[i].PatternObjs[key].Interval < (i + 1) * Data.BlockInterval)
-									{
-										if (!Data.Blocks[i].PatternObjs[key].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance))
-										{
-											break;
-										}
-									}
-
-									if (i < Data.Blocks.Count - 1 && Data.Blocks[i + 1].PatternObjs.ContainsKey(key))
-									{
-										Data.Blocks[i + 1].PatternObjs[key].LastPlacement = Data.Blocks[i].PatternObjs[key].LastPlacement;
-										Data.Blocks[i + 1].PatternObjs[key].LastType = Data.Blocks[i].PatternObjs[key].LastType;
-									}
-								}
-							}
-
+							
 							// transponder objects
 							if (railKey == 0)
 							{
@@ -1055,13 +1033,18 @@ namespace CsvRwRouteParser
 						CurrentRoute.PointsOfInterest[n].Text = CurrentRoute.Stations[i].Name;
 						CurrentRoute.PointsOfInterest[n].TrackPosition = CurrentRoute.Stations[i].Stops[0].TrackPosition;
 						CurrentRoute.PointsOfInterest[n].TrackOffset = new Vector3(0.0, 2.8, 0.0);
-						if (CurrentRoute.Stations[i].OpenLeftDoors && !CurrentRoute.Stations[i].OpenRightDoors)
+						if (Plugin.CurrentHost.Application != HostApplication.RouteViewer)
 						{
-							CurrentRoute.PointsOfInterest[n].TrackOffset.X = -2.5;
-						}
-						else if (!CurrentRoute.Stations[i].OpenLeftDoors && CurrentRoute.Stations[i].OpenRightDoors)
-						{
-							CurrentRoute.PointsOfInterest[n].TrackOffset.X = 2.5;
+							// this is intended to place default POI on platform when using exterior view
+							// leave track centered in Route Viewer
+							if (CurrentRoute.Stations[i].OpenLeftDoors && !CurrentRoute.Stations[i].OpenRightDoors)
+							{
+								CurrentRoute.PointsOfInterest[n].TrackOffset.X = -2.5;
+							}
+							else if (!CurrentRoute.Stations[i].OpenLeftDoors && CurrentRoute.Stations[i].OpenRightDoors)
+							{
+								CurrentRoute.PointsOfInterest[n].TrackOffset.X = 2.5;
+							}
 						}
 						n++;
 					}
@@ -1272,6 +1255,13 @@ namespace CsvRwRouteParser
 					}
 					ComputeCantTangents();
 				}
+			}
+
+			// insert PatternObj (using a TrackFollower)
+			for (int patternObj = 0; patternObj < Data.PatternObjects.Count; patternObj++)
+			{
+				int key = Data.PatternObjects.ElementAt(patternObj).Key;
+				Data.PatternObjects[key].Create(Data.Structure.FreeObjects, CurrentRoute.Tracks[0].Elements[CurrentRoute.Tracks[0].Elements.Length - 1].StartingTrackPosition);
 			}
 
 			if (!PreviewOnly)

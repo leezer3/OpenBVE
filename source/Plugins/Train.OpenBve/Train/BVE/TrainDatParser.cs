@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -1257,7 +1257,7 @@ namespace Train.OpenBve
 				}
 
 				Train.Cars[i].CarBrake.MainReservoir = new MainReservoir(MainReservoirMinimumPressure, MainReservoirMaximumPressure, 0.01, (trainBrakeType == BrakeSystemType.AutomaticAirBrake ? 0.25 : 0.075) / Cars);
-				Train.Cars[i].CarBrake.MainReservoir.Volume = 0.5; // Organization for Co-Operation between Railways specifies 340L to 680L main reservoir capacity for EMU, so let's pick something in the middle (in m�)
+				Train.Cars[i].CarBrake.MainReservoir.Volume = 0.5; // Organization for Co-Operation between Railways specifies 340L to 680L main reservoir capacity for EMU, so let's pick something in the middle (in m³)
 
 				Train.Cars[i].CarBrake.EqualizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
 				Train.Cars[i].CarBrake.EqualizingReservoir.NormalPressure = 1.005 * OperatingPressure;
@@ -1409,7 +1409,7 @@ namespace Train.OpenBve
 
 			// assign motor/trailer-specific settings
 			for (int i = 0; i < Cars; i++) {
-				Train.Cars[i].ConstSpeed = new CarConstSpeed(Train.Cars[i]);
+				Train.Cars[i].SafetySystems.Add(SafetySystem.ConstantSpeedDevice, new CarConstSpeed(Train.Cars[i]));
 				Train.Cars[i].HoldBrake = new CarHoldBrake(Train.Cars[i]);
 				Train.Cars[i].ReAdhesionDevice = new BveReAdhesionDevice(Train.Cars[i], ReAdhesionDevice);
 				if (Train.Cars[i].TractionModel.ProvidesPower) {
@@ -1437,9 +1437,57 @@ namespace Train.OpenBve
 			{
 				Train.Cars[DriverCar].HasInteriorView = true;
 			}
+
 			
-			// finish
-			
+			/*
+			 * Determine the maximum width of the handle strings for drawing purposes
+			 * (As translators may use much longer strings than we expect)
+			 */
+			if (Plugin.Renderer?.Fonts?.NormalFont != null && Translations.QuickReferences != null)
+			{
+				Vector2 rs = Plugin.Renderer.Fonts.NormalFont.MeasureString(Translations.QuickReferences.HandleForward);
+				if (rs.X > Train.Handles.Reverser.MaxWidth)
+				{
+					Train.Handles.Reverser.MaxWidth = rs.X;
+				}
+				rs = Plugin.Renderer.Fonts.NormalFont.MeasureString(Translations.QuickReferences.HandleNeutral);
+				if (rs.X > Train.Handles.Reverser.MaxWidth)
+				{
+					Train.Handles.Reverser.MaxWidth = rs.X;
+				}
+				rs = Plugin.Renderer.Fonts.NormalFont.MeasureString(Translations.QuickReferences.HandleBackward);
+				if (rs.X > Train.Handles.Reverser.MaxWidth)
+				{
+					Train.Handles.Reverser.MaxWidth = rs.X;
+				}
+
+				rs = Plugin.Renderer.Fonts.NormalFont.MeasureString(Translations.QuickReferences.HandlePower);
+				if (rs.X > Train.Handles.Power.MaxWidth)
+				{
+					Train.Handles.Power.MaxWidth = rs.X;
+				}
+				rs = Plugin.Renderer.Fonts.NormalFont.MeasureString(Translations.QuickReferences.HandlePowerNull);
+				if (rs.X > Train.Handles.Power.MaxWidth)
+				{
+					Train.Handles.Power.MaxWidth = rs.X;
+				}
+
+				rs = Plugin.Renderer.Fonts.NormalFont.MeasureString(Translations.QuickReferences.HandleBrake);
+				if (rs.X > Train.Handles.Brake.MaxWidth)
+				{
+					Train.Handles.Brake.MaxWidth = rs.X;
+				}
+				rs = Plugin.Renderer.Fonts.NormalFont.MeasureString(Translations.QuickReferences.HandleBrakeNull);
+				if (rs.X > Train.Handles.Brake.MaxWidth)
+				{
+					Train.Handles.Brake.MaxWidth = rs.X;
+				}
+				rs = Plugin.Renderer.Fonts.NormalFont.MeasureString(Translations.QuickReferences.HandleEmergency);
+				if (rs.X > Train.Handles.Brake.MaxWidth)
+				{
+					Train.Handles.Brake.MaxWidth = rs.X;
+				}
+			}
 		}
 
 	}

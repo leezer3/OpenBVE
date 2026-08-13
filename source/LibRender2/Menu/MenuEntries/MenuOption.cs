@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2024, Maurizo M. Gavioli, The OpenBVE Project
 //
@@ -169,6 +169,9 @@ namespace LibRender2.Menu
 							break;
 					}
 					return;
+				case OptionType.ShadowFilterCascades:
+					CurrentlySelectedOption = BaseMenu.CurrentOptions.ShadowFilterCascades ? 0 : 1;
+					return;
 			}
 			CurrentlySelectedOption = 0;
 		}
@@ -315,6 +318,9 @@ namespace LibRender2.Menu
 							break;
 					}
 					BaseMenu.Renderer.InitializeShadows();
+					break;
+				case OptionType.ShadowFilterCascades:
+					BaseMenu.CurrentOptions.ShadowFilterCascades = !BaseMenu.CurrentOptions.ShadowFilterCascades;
 					break;
 
 			}

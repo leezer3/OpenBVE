@@ -618,15 +618,15 @@ namespace TrainEditor2.IO.Trains.TrainDat
 										if (b > 0)
 										{
 											train.Handle.PowerNotches = b;
+											train.Handle.DriverPowerNotches = b;
 										}
-
 										break;
 									case 2:
 										if (b > 0)
 										{
 											train.Handle.BrakeNotches = b;
+											train.Handle.DriverBrakeNotches = b;
 										}
-
 										break;
 									case 3:
 										if (b >= 0)
@@ -654,7 +654,6 @@ namespace TrainEditor2.IO.Trains.TrainDat
 										{
 											train.Handle.LocoBrake = (LocoBrakeType)b;
 										}
-
 										break;
 									case 7:
 										if (b > 0)
@@ -668,7 +667,6 @@ namespace TrainEditor2.IO.Trains.TrainDat
 										{
 											train.Handle.DriverBrakeNotches = b;
 										}
-
 										break;
 								}
 							}

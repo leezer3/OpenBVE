@@ -690,8 +690,8 @@ namespace Train.OpenBve
 						// Create drops
 						for (int drop = 0; drop < numberOfDrops; drop++)
 						{
-							int DropTexture = Plugin.RandomNumberGenerator.Next(daytimeDrops.Count);
-							double currentDropY = Plugin.RandomNumberGenerator.NextDouble() * (bottomRight.Y - topLeft.Y) + topLeft.Y;
+							int DropTexture = Plugin.CurrentHost.Random.Next(daytimeDrops.Count);
+							double currentDropY = Plugin.CurrentHost.Random.NextDouble() * (bottomRight.Y - topLeft.Y) + topLeft.Y;
 							//Create both a drop and a snowflake at the same position, the windscreen code will determine which is shown
 							int panelDropIndex = CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[GroupIndex], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White);
 							int panelFlakeIndex = CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[GroupIndex], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, daytimeFlakes[DropTexture], nighttimeFlakes[DropTexture], Color32.White);
@@ -723,7 +723,7 @@ namespace Train.OpenBve
 				string currentDropFile = !Path.IsPathRooted(dropFiles[l]) ? Path.CombineFile(TrainPath, dropFiles[l]) : dropFiles[l];
 				if (string.IsNullOrEmpty(currentDropFile) || !File.Exists(currentDropFile))
 				{
-					currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\" + compatabilityString + Plugin.RandomNumberGenerator.Next(1, 4) + ".png");
+					currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\" + compatabilityString + Plugin.CurrentHost.Random.Next(1, 4) + ".png");
 					TransparentColor = Color24.Blue;
 				}
 				Plugin.CurrentHost.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out var drop, true, 20000);

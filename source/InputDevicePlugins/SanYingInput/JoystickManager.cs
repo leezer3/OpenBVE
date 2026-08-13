@@ -39,11 +39,11 @@ namespace SanYingInput {
 		}
 
 		/// <summary>Holds all joysticks currently attached to the computer.</summary>
-		internal static Joystick[] AttachedJoysticks = new Joystick[] { };
+		internal static Joystick[] AttachedJoysticks = { };
 
 		// --- functions ---
 
-		/// <returns>Call this function to refresh the list of available joysticks and thier capabilities</returns>
+		/// <returns>Call this function to refresh the list of available joysticks and their capabilities</returns>
 		internal void RefreshJoysticks()
 		{
 			for (int i = 0; i < 10; i++)

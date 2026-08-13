@@ -18,7 +18,7 @@ namespace ObjectViewer
 		{
 			InitializeComponent();
 			InterpolationMode.SelectedIndex = (int) Interface.CurrentOptions.Interpolation;
-			AnsiotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
+			AnisotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
 			AntialiasingLevel.Value = Interface.CurrentOptions.AntiAliasingLevel;
 			nearClip.Value = (decimal)Interface.CurrentOptions.NearClipBase;
 			if (Translations.CurrentLanguageCode != "en-US")
@@ -64,10 +64,6 @@ namespace ObjectViewer
 			numericUpDownShadowStrength.Value = (decimal)(Interface.CurrentOptions.ShadowStrength * 100.0);
 			numericUpDownShadowBias.Value = (decimal)Interface.CurrentOptions.ShadowBias;
 			numericUpDownShadowNormalBias.Value = (decimal)Interface.CurrentOptions.ShadowNormalBias;
-			if (numericUpDownShadowBias.Value == 0)
-			{
-				numericUpDownShadowBias.Value = 0.000050m;
-			}
 
 
 			// Initialize sun direction sliders from current light position
@@ -90,6 +86,20 @@ namespace ObjectViewer
 			comboBoxBackwards.DataSource = Enum.GetValues(typeof(Key));
 			comboBoxBackwards.SelectedItem = Interface.CurrentOptions.CameraMoveBackward;
 			checkBoxAutoReload.Checked = Interface.CurrentOptions.AutoReloadObjects;
+			checkBoxShadowFilterCascades.Checked = Interface.CurrentOptions.ShadowFilterCascades;
+
+			// VSync and FPS Limit
+			comboBoxVSync.SelectedIndex = Interface.CurrentOptions.VerticalSynchronization ? 1 : 0;
+			// Map FPSLimit value to combo index: 0=Unlimited, 1=30, 2=60, 3=120, 4=240
+			switch (Interface.CurrentOptions.FPSLimit)
+			{
+				case 30: comboBoxFPSLimit.SelectedIndex = 1; break;
+				case 60: comboBoxFPSLimit.SelectedIndex = 2; break;
+				case 120: comboBoxFPSLimit.SelectedIndex = 3; break;
+				case 240: comboBoxFPSLimit.SelectedIndex = 4; break;
+				default: comboBoxFPSLimit.SelectedIndex = 0; break;
+			}
+			UpdateFPSLimitEnabled();
 		}
 
 		private void InitializeSunSliders()
@@ -110,9 +120,8 @@ namespace ObjectViewer
 			numericUpDownShadowBias.ReadOnly = !enabled;
 			numericUpDownShadowNormalBias.Enabled = enabled;
 			numericUpDownShadowNormalBias.ReadOnly = !enabled;
-			trackBarSunAzimuth.Enabled = enabled;
-
-			trackBarSunElevation.Enabled = enabled;
+			
+			checkBoxShadowFilterCascades.Enabled = enabled;
 		}
 
 		private void comboBoxShadowResolution_SelectedIndexChanged(object sender, EventArgs e)
@@ -130,10 +139,22 @@ namespace ObjectViewer
 
 			// Convert spherical to direction vector (matching DirectionalLight docs)
 			float x = (float)(-Math.Cos(elevationRad) * Math.Sin(azimuthRad));
-			float y = (float)(Math.Sin(elevationRad));
+			float y = (float)Math.Sin(elevationRad);
 			float z = (float)(-Math.Cos(elevationRad) * Math.Cos(azimuthRad));
 
 			Program.Renderer.Lighting.OptionLightPosition = new Vector3(x, y, z);
+		}
+
+		private void UpdateFPSLimitEnabled()
+		{
+			bool vsyncEnabled = comboBoxVSync.SelectedIndex == 1;
+			comboBoxFPSLimit.Enabled = !vsyncEnabled;
+			labelFPSLimit.ForeColor = vsyncEnabled ? System.Drawing.SystemColors.GrayText : System.Drawing.SystemColors.ControlText;
+		}
+
+		private void comboBoxVSync_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			UpdateFPSLimitEnabled();
 		}
 
 		private void trackBarSunAzimuth_Scroll(object sender, EventArgs e)
@@ -190,7 +211,7 @@ namespace ObjectViewer
 			}
 
 			//Anisotropic filtering level
-			Interface.CurrentOptions.AnisotropicFilteringLevel = (int) AnsiotropicLevel.Value;
+			Interface.CurrentOptions.AnisotropicFilteringLevel = (int) AnisotropicLevel.Value;
 			//Antialiasing level
 			Interface.CurrentOptions.AntiAliasingLevel = (int) AntialiasingLevel.Value;
 			if (Interface.CurrentOptions.AntiAliasingLevel != previousAntialiasingLevel)
@@ -253,6 +274,14 @@ namespace ObjectViewer
 			}
 			Interface.CurrentOptions.AutoReloadObjects = checkBoxAutoReload.Checked;
 
+			// VSync and FPS Limit
+			Interface.CurrentOptions.VerticalSynchronization = comboBoxVSync.SelectedIndex == 1;
+			// Map combo index to FPSLimit value
+			int[] fpsPresets = { 0, 30, 60, 120, 240 };
+			Interface.CurrentOptions.FPSLimit = comboBoxFPSLimit.SelectedIndex >= 0 ? fpsPresets[comboBoxFPSLimit.SelectedIndex] : 0;
+			Program.Renderer.GameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? OpenTK.VSyncMode.On : OpenTK.VSyncMode.Off;
+			Program.Renderer.GameWindow.TargetRenderFrequency = Interface.CurrentOptions.FPSLimit > 0 ? Interface.CurrentOptions.FPSLimit : 0;
+
 			// Saving shadow settings
 			switch (comboBoxShadowResolution.SelectedIndex)
 			{
@@ -282,6 +311,7 @@ namespace ObjectViewer
 			Interface.CurrentOptions.ShadowStrength = (double)numericUpDownShadowStrength.Value / 100.0;
 			Interface.CurrentOptions.ShadowBias = (double)numericUpDownShadowBias.Value;
 			Interface.CurrentOptions.ShadowNormalBias = (double)numericUpDownShadowNormalBias.Value;
+			Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
 			
 			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));
 			Program.RefreshObjects();

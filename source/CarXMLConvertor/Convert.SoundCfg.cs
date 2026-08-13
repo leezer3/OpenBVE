@@ -705,8 +705,8 @@ namespace CarXmlConvertor
                             int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
                             if (j >= 0)
                             {
-	                            string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-	                            string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+	                            string a = Lines[i].Substring(0, j).TrimEnd();
+	                            string b = Lines[i].Substring(j + 1).TrimStart();
                                 if (b.Length == 0 || Path.ContainsInvalidChars(b))
                                 {
                                     continue;
@@ -747,25 +747,23 @@ namespace CarXmlConvertor
                                 {
                                     continue;
                                 }
-                                else
+
+                                switch (a.ToLowerInvariant())
                                 {
-                                    switch (a.ToLowerInvariant())
-                                    {
-                                        case "on":
-                                            newLines.Add("<On>");
-                                            newLines.Add("<FileName>" + b.Escape() + "</FileName>");
-                                            newLines.Add("<Position>" + panel + "</Position>");
-                                            newLines.Add("<Radius>5.0</Radius>");
-                                            newLines.Add("</On>");
-                                            break;
-                                        case "off":
-                                            newLines.Add("<Off>");
-                                            newLines.Add("<FileName>" + b.Escape() + "</FileName>");
-                                            newLines.Add("<Position>" + panel + "</Position>");
-                                            newLines.Add("<Radius>5.0</Radius>");
-                                            newLines.Add("</Off>");
-                                            break;
-                                    }
+	                                case "on":
+		                                newLines.Add("<On>");
+		                                newLines.Add("<FileName>" + b.Escape() + "</FileName>");
+		                                newLines.Add("<Position>" + panel + "</Position>");
+		                                newLines.Add("<Radius>5.0</Radius>");
+		                                newLines.Add("</On>");
+		                                break;
+	                                case "off":
+		                                newLines.Add("<Off>");
+		                                newLines.Add("<FileName>" + b.Escape() + "</FileName>");
+		                                newLines.Add("<Position>" + panel + "</Position>");
+		                                newLines.Add("<Radius>5.0</Radius>");
+		                                newLines.Add("</Off>");
+		                                break;
                                 }
                             }
                             i++;
@@ -813,8 +811,8 @@ namespace CarXmlConvertor
                             int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
                             if (j >= 0)
                             {
-	                            string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-	                            string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+	                            string a = Lines[i].Substring(0, j).TrimEnd();
+	                            string b = Lines[i].Substring(j + 1).TrimStart();
                                 if (b.Length == 0 || Path.ContainsInvalidChars(b))
                                 {
                                     continue;

@@ -433,8 +433,7 @@ namespace Route.Bve5
 					case MapFunctionName.Put:
 					case MapFunctionName.Put0:
 					{
-						dynamic d = Statement; // HACK: as we don't know which type
-						string TrackKey = d.TrackKey;
+						string TrackKey = Statement.GetArgumentValueAsString(ArgumentName.TrackKey);
 						if (string.IsNullOrEmpty(TrackKey))
 						{
 							TrackKey = "0";
@@ -448,7 +447,7 @@ namespace Route.Bve5
 
 						if (!RouteData.TrackKeyList.Contains(TrackKey, StringComparer.OrdinalIgnoreCase))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Attempted to place Structure " + Statement.Key + " on the non-existent track " + d.TrackKey + " at track position " + Statement.Distance + "m");
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Attempted to place Structure " + Statement.Key + " on the non-existent track " + TrackKey + " at track position " + Statement.Distance + "m");
 							TrackKey = "0";
 						}
 						
@@ -460,7 +459,7 @@ namespace Route.Bve5
 
 						if (Tilt > 3)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Invalid ObjectTransformType for Structure " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Invalid ObjectTransformType for Structure " + Statement.Key + " on track " + TrackKey + " at track position " + Statement.Distance + "m");
 							Tilt = 0;
 						}
 
@@ -550,7 +549,7 @@ namespace Route.Bve5
 								}
 
 								dynamic d = Statement; // HACK: as we don't know which type
-								string TrackKey = d.TrackKey;
+								string TrackKey = Statement.GetArgumentValueAsString(ArgumentName.TrackKey);
 								if (string.IsNullOrEmpty(TrackKey))
 								{
 									TrackKey = "0";
@@ -558,7 +557,7 @@ namespace Route.Bve5
 
 								if (!RouteData.TrackKeyList.Contains(TrackKey, StringComparer.OrdinalIgnoreCase))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Attempted to place Repeater " + Statement.Key + " on the non-existent track " + d.TrackKey + " at track position " + Statement.Distance + "m");
+									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Attempted to place Repeater " + Statement.Key + " on the non-existent track " + TrackKey + " at track position " + Statement.Distance + "m");
 									TrackKey = "0";
 								}
 								double RX = Statement.GetArgumentValueAsDouble(ArgumentName.RX);
@@ -570,7 +569,7 @@ namespace Route.Bve5
 
 								if (Tilt > 3)
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Invalid ObjectTransformType for Repeater " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
+									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Invalid ObjectTransformType for Repeater " + Statement.Key + " on track " + TrackKey + " at track position " + Statement.Distance + "m");
 									Tilt = 0;
 								}
 
@@ -587,12 +586,15 @@ namespace Route.Bve5
 
 								
 								Repeater.ObjectKeys = new string[d.StructureKeys.Count];
+								HashSet<string> missingObjectKeys = new HashSet<string>();
 								d.StructureKeys.CopyTo(Repeater.ObjectKeys, 0);
 								for (int i = 0; i < Repeater.ObjectKeys.Length; i++)
 								{
-									if (!RouteData.Objects.ContainsKey(Repeater.ObjectKeys[i]))
+									// empty string == no object placed
+									// also only add the error once per position (even if the object appears multiple times in the cycle)
+									if (!RouteData.Objects.ContainsKey(Repeater.ObjectKeys[i]) && missingObjectKeys.Add(Repeater.ObjectKeys[i]) && !string.IsNullOrEmpty(Repeater.ObjectKeys[i]))
 									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Structure " + Repeater.ObjectKeys[i] + " was not found in Repeater " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Structure " + Repeater.ObjectKeys[i] + " was not found in Repeater " + Statement.Key + " on track " + TrackKey + " at track position " + Statement.Distance + "m");
 									}
 								}
 								possibleEnd = false;
@@ -608,7 +610,7 @@ namespace Route.Bve5
 					 * work around that by triggering the end on the next track position instead
 					 */
 
-					if (possibleEnd && lastDistance != Statement.Distance && Repeater.StartRefreshed)
+					if (possibleEnd && Repeater.StartRefreshed)
 					{
 						Repeater.EndingDistance = Statement.Distance;
 						PutRepeater(RouteData, Repeater);
@@ -741,7 +743,7 @@ namespace Route.Bve5
 
 				dynamic d = Statement;
 
-				string TrackKey = d.TrackKey;
+				string TrackKey = Statement.GetArgumentValueAsString(ArgumentName.TrackKey);
 				object Section = d.Section;
 				if (string.IsNullOrEmpty(TrackKey))
 				{
@@ -762,7 +764,7 @@ namespace Route.Bve5
 
 				if ((int)Tilt > 3)
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Invalid ObjectTransformType for Signal " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Invalid ObjectTransformType for Signal " + Statement.Key + " on track " + TrackKey + " at track position " + Statement.Distance + "m");
 					Tilt = 0;
 				}
 

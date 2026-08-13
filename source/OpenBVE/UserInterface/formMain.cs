@@ -29,6 +29,7 @@ namespace OpenBve {
 		private formMain()
 		{
 			InitializeComponent();
+			toolTip = new ToolTip(components);
 		}
 
 		public sealed override string Text
@@ -57,6 +58,7 @@ namespace OpenBve {
 		}
 
 		// members
+		private readonly ToolTip toolTip;
 		private LaunchParameters Result;
 		private int[] EncodingCodepages;
 		private Image JoystickImage;
@@ -73,11 +75,11 @@ namespace OpenBve {
 		private void formMain_Load(object sender, EventArgs e)
 		{
 			MinimumSize = Size;
-			if (Interface.CurrentOptions.MainMenuWidth == -1 & Interface.CurrentOptions.MainMenuHeight == -1)
+			if (Interface.CurrentOptions.MainMenuWidth == -1 && Interface.CurrentOptions.MainMenuHeight == -1)
 			{
 				WindowState = FormWindowState.Maximized;
 			}
-			else if (Interface.CurrentOptions.MainMenuWidth > 0 & Interface.CurrentOptions.MainMenuHeight > 0)
+			else if (Interface.CurrentOptions.MainMenuWidth > 0 && Interface.CurrentOptions.MainMenuHeight > 0)
 			{
 				Size = new Size(Interface.CurrentOptions.MainMenuWidth, Interface.CurrentOptions.MainMenuHeight);
 				CenterToScreen();
@@ -385,6 +387,16 @@ namespace OpenBve {
 			comboboxVSync.Items.Add("");
 			comboboxVSync.Items.Add("");
 			comboboxVSync.SelectedIndex = Interface.CurrentOptions.VerticalSynchronization ? 1 : 0;
+			// Map FPSLimit value to combo index: 0=Unlimited, 1=30, 2=60, 3=120, 4=240
+			switch (Interface.CurrentOptions.FPSLimit)
+			{
+				case 30: comboBoxFPSLimit.SelectedIndex = 1; break;
+				case 60: comboBoxFPSLimit.SelectedIndex = 2; break;
+				case 120: comboBoxFPSLimit.SelectedIndex = 3; break;
+				case 240: comboBoxFPSLimit.SelectedIndex = 4; break;
+				default: comboBoxFPSLimit.SelectedIndex = 0; break;
+			}
+			UpdateFPSLimitEnabled();
 			switch (Interface.CurrentOptions.UserInterfaceFolder)
 			{
 				case "Slim":
@@ -460,7 +472,6 @@ namespace OpenBve {
 			checkboxDerailments.Checked = Interface.CurrentOptions.Derailments;
 			checkBoxLoadInAdvance.Checked = Interface.CurrentOptions.LoadInAdvance;
 			checkBoxUnloadTextures.Checked = Interface.CurrentOptions.UnloadUnusedTextures;
-			checkBoxIsUseNewRenderer.Checked = Interface.CurrentOptions.IsUseNewRenderer;
 			// Shadow Resolution
 			switch (Interface.CurrentOptions.ShadowResolution)
 			{
@@ -494,10 +505,12 @@ namespace OpenBve {
 			labelShadowStrengthValue.Text = trackbarShadowStrength.Value + @"%";
 			updownShadowBias.Value = (decimal)Interface.CurrentOptions.ShadowBias;
 			updownShadowNormalBias.Value = (decimal)Interface.CurrentOptions.ShadowNormalBias;
+			checkboxShadowFilterCascades.Checked = Interface.CurrentOptions.ShadowFilterCascades;
 			// Enable/disable shadow sub-controls based on resolution setting
 			bool shadowEnabled = Interface.CurrentOptions.ShadowResolution != ShadowMapResolution.Off;
 			comboboxShadowDistance.Enabled = shadowEnabled;
 			comboboxShadowCascades.Enabled = shadowEnabled;
+			checkboxShadowFilterCascades.Enabled = shadowEnabled;
 			trackbarShadowStrength.Enabled = shadowEnabled;
 			updownShadowBias.Enabled = shadowEnabled;
 			updownShadowNormalBias.Enabled = shadowEnabled;
@@ -702,6 +715,8 @@ namespace OpenBve {
 			labelVSync.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_vsync"});
 			comboboxVSync.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_vsync_off"});
 			comboboxVSync.Items[1] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_vsync_on"});
+			labelFPSLimit.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_fpslimit"});
+			comboBoxFPSLimit.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_fpslimit_unlimited"});
 			labelHUDScale.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","hud_size"});
 			labelHUDSmall.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","hud_size_small"});
 			labelHUDNormal.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","hud_size_normal"});
@@ -807,7 +822,6 @@ namespace OpenBve {
 			groupBoxAdvancedOptions.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","advanced"});
 			checkBoxLoadInAdvance.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","advanced_load_advance"});
 			checkBoxUnloadTextures.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","advanced_unload_textures"});
-			checkBoxIsUseNewRenderer.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","advanced_is_use_new_renderer"});
 			labelTimeAcceleration.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","advanced_timefactor"});
 			labelCursor.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","advanced_cursor"});
 			//Other Options
@@ -936,7 +950,7 @@ namespace OpenBve {
 				case GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","arcade"}); break;
 				case GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","normal"}); break;
 				case GameMode.Expert: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","expert"}); break;
-				default: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","unkown"}); break;
+				default: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","unknown"}); break;
 			}
 			{
 				double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.CurrentValue / Game.CurrentScore.Maximum;
@@ -1173,6 +1187,68 @@ namespace OpenBve {
 			}
 
 
+			
+			ApplyToolTips();
+		}
+
+		/// <summary>Applies tooltips to the various controls on the form</summary>
+		private void ApplyToolTips()
+		{
+			SetToolTip("vsync", labelVSync, comboboxVSync);
+			SetToolTip("interpolation", labelInterpolation, comboboxInterpolation);
+			SetToolTip("anisotropic", labelAnisotropic, updownAnisotropic);
+			SetToolTip("antialiasing", labelAntiAliasing, updownAntiAliasing);
+			SetToolTip("transparency", labelTransparency, trackbarTransparency);
+			SetToolTip("viewingdistance", labelDistance, updownDistance);
+			SetToolTip("motionblur", labelMotionBlur, comboboxMotionBlur);
+			SetToolTip("fpslimit", labelFPSLimit, comboBoxFPSLimit);
+		}
+
+		/// <summary>Sets the tooltip for one or more controls using a translation key</summary>
+		/// <param name="key">The translation key in the 'tooltips' group</param>
+		/// <param name="controls">The controls to apply the tooltip to</param>
+		private void SetToolTip(string key, params Control[] controls)
+		{
+			string text = WordWrap(Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "tooltips", key }));
+			foreach (Control control in controls)
+			{
+				toolTip.SetToolTip(control, text);
+			}
+		}
+
+		/// <summary>Wraps long tooltips onto multiple lines so they do not stretch across the screen.</summary>
+		/// <remarks>Works on all platforms: explicit line breaks are honoured by both the native Windows tooltip and Mono's tooltip renderer.</remarks>
+		private static string WordWrap(string text)
+		{
+			if (string.IsNullOrEmpty(text))
+			{
+				return text;
+			}
+			const int maxWidth = 400;
+			Font font = SystemFonts.DefaultFont;
+			var lines = new List<string>();
+			foreach (string line in text.Split('\n'))
+			{
+				string current = string.Empty;
+				foreach (string word in line.TrimEnd('\r').Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+				{
+					string candidate = current.Length == 0 ? word : current + " " + word;
+					if (current.Length == 0 || TextRenderer.MeasureText(candidate, font).Width <= maxWidth)
+					{
+						current = candidate;
+					}
+					else
+					{
+						lines.Add(current);
+						current = word;
+					}
+				}
+				if (current.Length > 0)
+				{
+					lines.Add(current);
+				}
+			}
+			return string.Join(Environment.NewLine, lines);
 		}
 
 		// form closing
@@ -1180,6 +1256,9 @@ namespace OpenBve {
 		{
 			Interface.CurrentOptions.FullscreenMode = radiobuttonFullscreen.Checked;
 			Interface.CurrentOptions.VerticalSynchronization = comboboxVSync.SelectedIndex == 1;
+			// Map combo index to FPSLimit value
+			int[] fpsPresets = { 0, 30, 60, 120, 240 };
+			Interface.CurrentOptions.FPSLimit = comboBoxFPSLimit.SelectedIndex >= 0 ? fpsPresets[comboBoxFPSLimit.SelectedIndex] : 0;
 			Interface.CurrentOptions.WindowWidth = (int)Math.Round(updownWindowWidth.Value);
 			Interface.CurrentOptions.WindowHeight = (int)Math.Round(updownWindowHeight.Value);
 			Interface.CurrentOptions.FullscreenWidth = (int)Math.Round(updownFullscreenWidth.Value);
@@ -1217,7 +1296,6 @@ namespace OpenBve {
 			Interface.CurrentOptions.UnloadUnusedTextures = checkBoxUnloadTextures.Checked;
 			Interface.CurrentOptions.OldTransparencyMode = checkBoxTransparencyFix.Checked;
 			Interface.CurrentOptions.EnableBveTsHacks = checkBoxHacks.Checked;
-			Interface.CurrentOptions.IsUseNewRenderer = checkBoxIsUseNewRenderer.Checked;
 			// Shadow Resolution
 			switch (comboboxShadowResolution.SelectedIndex)
 			{
@@ -1247,6 +1325,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.ShadowStrength = trackbarShadowStrength.Value / 100.0;
 			Interface.CurrentOptions.ShadowBias = (double)updownShadowBias.Value;
 			Interface.CurrentOptions.ShadowNormalBias = (double)updownShadowNormalBias.Value;
+			Interface.CurrentOptions.ShadowFilterCascades = checkboxShadowFilterCascades.Checked;
 			Interface.CurrentOptions.GameMode = (GameMode)comboboxMode.SelectedIndex;
 			Interface.CurrentOptions.BlackBox = checkboxBlackBox.Checked;
 			Interface.CurrentOptions.LoadingSway = checkBoxLoadingSway.Checked;
@@ -1553,7 +1632,7 @@ namespace OpenBve {
 			if (WindowState != FormWindowState.Maximized)
 			{
 				System.Windows.Forms.Screen s = System.Windows.Forms.Screen.FromControl(this);
-				if (Width >= 0.95 * s.WorkingArea.Width | Height >= 0.95 * s.WorkingArea.Height)
+				if (Width >= 0.95 * s.WorkingArea.Width || Height >= 0.95 * s.WorkingArea.Height)
 				{
 					WindowState = FormWindowState.Maximized;
 				}
@@ -1650,6 +1729,10 @@ namespace OpenBve {
 			panelPackages.Visible = false;
 			pictureboxJoysticks.Visible = false;
 			UpdatePanelColor();
+			if (radiobuttonOptions.Checked)
+			{
+				SetOptionsPage(0);
+			}
 		}
 		private void radioButtonPackages_CheckedChanged(object sender, EventArgs e)
 		{
@@ -2070,26 +2153,50 @@ namespace OpenBve {
 			CheckForUpdate();
 		}
 
-		private void buttonOptionsPrevious_Click(object sender, EventArgs e)
+		private Control[][] optionsPages;
+		private int currentOptionsPage = 0;
+
+		private void SetOptionsPage(int pageIndex)
 		{
-			if (panelOptionsLeft.Visible)
+			if (optionsPages == null)
 			{
-				panelOptionsLeft.Hide();
-				panelOptionsRight.Hide();
-				panelOptionsPage2.Show();
+				optionsPages = new[] {
+					new Control[] { panelOptionsLeft, panelOptionsRight },
+					new Control[] { panelOptionsPage2 },
+					new Control[] { panelOptionsPage3 }
+				};
+			}
+			currentOptionsPage = pageIndex;
+			for (int i = 0; i < optionsPages.Length; i++)
+			{
+				for (int j = 0; j < optionsPages[i].Length; j++)
+				{
+					optionsPages[i][j].Visible = (i == pageIndex);
+				}
+			}
+			buttonOptionsPrevious.Enabled = (currentOptionsPage > 0);
+			buttonOptionsNext.Enabled = (currentOptionsPage < optionsPages.Length - 1);
+
+			if (panelOptionsPage2.Visible)
+			{
 				//HACK: Column Header in list view won't appear in Mono without resizing it...
 				listviewInputDevice.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
 			}
-			else if(panelOptionsPage2.Visible)
+		}
+
+		private void buttonOptionsPrevious_Click(object sender, EventArgs e)
+		{
+			if (currentOptionsPage > 0)
 			{
-				panelOptionsPage2.Hide();
-				panelOptionsPage3.Show();
+				SetOptionsPage(currentOptionsPage - 1);
 			}
-			else
+		}
+
+		private void buttonOptionsNext_Click(object sender, EventArgs e)
+		{
+			if (currentOptionsPage < optionsPages.Length - 1)
 			{
-				panelOptionsPage3.Hide();
-				panelOptionsLeft.Show();
-				panelOptionsRight.Show();
+				SetOptionsPage(currentOptionsPage + 1);
 			}
 		}
 
