@@ -12,6 +12,8 @@ namespace OpenBveApi.Objects
 	    public int Headlights;
 		/// <summary>The unit conditional</summary>
 	    public int Unit;
+	    /// <summary>The control conditional</summary>
+	    public int Control;
 		/// <summary>The type of light</summary>
 	    public SceneLightType Type;
 		/// <summary>Holds a reference to the car the light is attached to</summary>
@@ -118,6 +120,27 @@ namespace OpenBveApi.Objects
 					// lit if at front and reversed
 					// not currently handled
 					shouldBeLit = false;
+					break;
+		    }
+
+		    switch (Control)
+		    {
+				case 0:
+					// not checked
+					break;
+				case 1:
+					// lit if AI train
+					if (d.baseTrain.IsPlayerTrain)
+					{
+						shouldBeLit = false;
+					}
+					break;
+				case 2:
+					// lit if player train
+					if (!d.baseTrain.IsPlayerTrain)
+					{
+						shouldBeLit = false;
+					}
 					break;
 		    }
 

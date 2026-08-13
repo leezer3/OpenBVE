@@ -735,7 +735,11 @@ namespace Train.MsTs
 							switch (lightType)
 							{
 								case 0:
-									/* Two textured triangles, forming a diamond
+									/* MSTS TECHDOCS:
+									 * Two textured triangles, forming a diamond. No lighting of other faces
+									 * However, if we use an area light with a low wattage (currently 40w), this
+									 * produces the appropriate effect, and has the bonus of emitting a small
+									 * amount of light onto the scene as well.
 									 */
 									vehicleLights[vehicleLights.Count - 1].Type = SceneLightType.Area;
 									break;
@@ -1487,10 +1491,7 @@ namespace Train.MsTs
 				case KujuTokenID.HeadOut:
 					// head out view is triggered when pressing UP / DOWN in cabview
 					// view to exterior of train at specified position, looking F / R
-					Vector3 headOutPos = Vector3.Zero;
-					headOutPos.X = block.ReadSingle();
-					headOutPos.Y = block.ReadSingle();
-					headOutPos.Z = block.ReadSingle();
+					Vector3 headOutPos = block.ReadVector3();
 					break;
 				case KujuTokenID.AirBrakesMainResVolume:
 					mainReservoirVolume = block.ReadSingle(UnitOfVolume.Litres, UnitOfVolume.MetersCubed);
@@ -1553,6 +1554,9 @@ namespace Train.MsTs
 								break;
 							case KujuTokenID.Headlight:
 								vehicleLights[vehicleLights.Count - 1].Headlights = condition;
+								break;
+							case KujuTokenID.Control:
+								vehicleLights[vehicleLights.Count - 1].Control = condition;
 								break;
 						}
 					}
