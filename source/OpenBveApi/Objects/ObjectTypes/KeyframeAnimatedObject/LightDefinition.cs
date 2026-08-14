@@ -1,4 +1,28 @@
-﻿using System.Collections.Generic;
+﻿//Simplified BSD License (BSD-2-Clause)
+//
+//Copyright (c) 2026, Christopher Lees, The OpenBVE Project
+//
+//Redistribution and use in source and binary forms, with or without
+//modification, are permitted provided that the following conditions are met:
+//
+//1. Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//2. Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+//ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+using System.Collections.Generic;
 using OpenBveApi.Trains;
 
 namespace OpenBveApi.Objects
@@ -16,14 +40,22 @@ namespace OpenBveApi.Objects
 	    public int Control;
 		/// <summary>The type of light</summary>
 	    public SceneLightType Type;
+		/// <summary>The cycle type</summary>
+	    public int Cycle;
 		/// <summary>Holds a reference to the car the light is attached to</summary>
 	    private readonly AbstractCar BaseCar;
 		/// <summary>Holds the currently active light state, or null if no light active</summary>
 	    public SceneLight CurrentState;
 
-	    private int lastStateIndex;
+		// Control variables
 
-	    private double stateTimer;
+		/// <summary>The index of the current state</summary>
+		private int currentStateIndex;
+		/// <summary>Timer controlling the cycle</summary>
+		private double stateTimer;
+		/// <summary>The current cycle direction</summary>
+		/// <remarks>>TRUE for forwards, FALSE for reverse</remarks>
+		private bool cycleDirection;
 
 		/// <summary>Creates a new LightDefinition</summary>
 		/// <param name="baseCar"></param>
@@ -33,7 +65,7 @@ namespace OpenBveApi.Objects
 			Headlights = 0;
 			Unit = 0;
 			BaseCar = baseCar;
-			lastStateIndex = 0;
+			currentStateIndex = 0;
 	    }
 
 	    /// <summary>Updates the LightDefinition</summary>
@@ -150,18 +182,43 @@ namespace OpenBveApi.Objects
 			    return;
 		    }
 
-		    if (States[lastStateIndex].Duration != 0)
+		    if (States[currentStateIndex].Duration != 0)
 		    {
 			    stateTimer += timeElapsed;
-			    if (stateTimer > States[lastStateIndex].Duration)
+			    if (stateTimer > States[currentStateIndex].Duration)
 			    {
 					stateTimer = 0;
-					lastStateIndex++;
-					lastStateIndex %= States.Count;
+					
+					if (Cycle == 1)
+					{
+						currentStateIndex++;
+						currentStateIndex %= States.Count;
+					}
+					else
+					{
+						if (currentStateIndex == States.Count - 1)
+						{
+							cycleDirection = true;
+						}
+						else if (currentStateIndex == 0)
+						{
+							cycleDirection = false;
+						}
+
+						if (cycleDirection)
+						{
+							currentStateIndex--;
+						}
+						else
+						{
+							currentStateIndex++;
+						}
+					}
+					
 			    }
 		    }
 
-		    CurrentState = States[lastStateIndex];
+		    CurrentState = States[currentStateIndex];
 	    }
     }
 }

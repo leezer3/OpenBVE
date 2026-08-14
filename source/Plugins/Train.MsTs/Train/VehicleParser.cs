@@ -1568,6 +1568,7 @@ namespace Train.MsTs
 				case KujuTokenID.Cycle:
 					// 0 - cycles forwards then back through states
 					// 1 - cycles forwards only through states
+					vehicleLights[vehicleLights.Count - 1].Cycle = block.ReadInt16();
 					break;
 				case KujuTokenID.States:
 					int numStates = block.ReadInt16();
