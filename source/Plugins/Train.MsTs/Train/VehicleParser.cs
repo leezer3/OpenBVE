@@ -39,7 +39,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using OpenBveApi.Colors;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
@@ -1630,7 +1629,6 @@ namespace Train.MsTs
 						{
 							light.Power = 200;
 						}
-							
 					}
 					break;
 			}

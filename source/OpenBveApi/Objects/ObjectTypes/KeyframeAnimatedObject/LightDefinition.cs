@@ -59,7 +59,7 @@ namespace OpenBveApi.Objects
 		/// <summary>Timer controlling the cycle</summary>
 		private double stateTimer;
 		/// <summary>The current cycle direction</summary>
-		/// <remarks>>TRUE for forwards, FALSE for reverse</remarks>
+		/// <remarks>TRUE for forwards, FALSE for reverse</remarks>
 		private bool cycleDirection;
 
 		/// <summary>Creates a new LightDefinition</summary>
