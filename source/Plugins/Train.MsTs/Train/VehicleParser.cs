@@ -1533,7 +1533,7 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.Light:
-					vehicleLights.Add(new MSTSLightDefinition(car));
+					vehicleLights.Add(new MSTSLightDefinition(Plugin.CurrentHost, car));
 					while (block.Position() < block.Length() - 2)
 					{
 						newBlock = block.ReadSubBlock(true);
@@ -1557,6 +1557,9 @@ namespace Train.MsTs
 								break;
 							case KujuTokenID.Control:
 								vehicleLights[vehicleLights.Count - 1].Control = condition;
+								break;
+							case KujuTokenID.TimeOfDay:
+								vehicleLights[vehicleLights.Count - 1].TimeOfDay = condition;
 								break;
 						}
 					}

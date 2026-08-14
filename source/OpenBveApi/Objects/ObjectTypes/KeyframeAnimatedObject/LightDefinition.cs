@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System.Collections.Generic;
+using OpenBveApi.Hosts;
 using OpenBveApi.Trains;
 
 namespace OpenBveApi.Objects
@@ -38,12 +39,16 @@ namespace OpenBveApi.Objects
 	    public int Unit;
 	    /// <summary>The control conditional</summary>
 	    public int Control;
+		/// <summary>The time of day control conditional</summary>
+	    public int TimeOfDay;
 		/// <summary>The type of light</summary>
 	    public SceneLightType Type;
 		/// <summary>The cycle type</summary>
 	    public int Cycle;
 		/// <summary>Holds a reference to the car the light is attached to</summary>
-	    private readonly AbstractCar BaseCar;
+	    private readonly AbstractCar baseCar;
+		/// <summary>Holds a reference to the host application</summary>
+	    private readonly HostInterface currentHost;
 		/// <summary>Holds the currently active light state, or null if no light active</summary>
 	    public SceneLight CurrentState;
 
@@ -58,13 +63,13 @@ namespace OpenBveApi.Objects
 		private bool cycleDirection;
 
 		/// <summary>Creates a new LightDefinition</summary>
-		/// <param name="baseCar"></param>
-	    public MSTSLightDefinition(AbstractCar baseCar)
+	    public MSTSLightDefinition(HostInterface CurrentHost, AbstractCar BaseCar)
 	    {
 			States = new List<SceneLight>();
 			Headlights = 0;
 			Unit = 0;
-			BaseCar = baseCar;
+			currentHost = CurrentHost;
+			baseCar = BaseCar;
 			currentStateIndex = 0;
 	    }
 
@@ -77,7 +82,7 @@ namespace OpenBveApi.Objects
 		    // https://www.coalstonewcastle.com.au/physics/or-parameter-lights/
 			// maybe move to enums
 
-			dynamic d = BaseCar;
+			dynamic d = baseCar;
 
 			switch (Headlights)
 		    {
@@ -134,14 +139,14 @@ namespace OpenBveApi.Objects
 					break;
 				case 2:
 					// lit if front car
-					if (BaseCar.Index != 0)
+					if (baseCar.Index != 0)
 					{
 						shouldBeLit = false;
 					}
 					break;
 				case 3:
 					// lit if rear car
-					if (BaseCar.Index != d.baseTrain.Cars.Length - 1)
+					if (baseCar.Index != d.baseTrain.Cars.Length - 1)
 					{
 						shouldBeLit = false;
 					}
@@ -170,6 +175,43 @@ namespace OpenBveApi.Objects
 				case 2:
 					// lit if player train
 					if (!d.baseTrain.IsPlayerTrain)
+					{
+						shouldBeLit = false;
+					}
+					break;
+		    }
+
+
+			double currentHour = System.Math.Floor(currentHost.InGameTime / 3600.0);
+			currentHour %= 24;
+
+			switch (TimeOfDay)
+		    {
+				/*
+				 * MSTS keeps the day / night variables within the route
+				 * and varies these based upon the season etc.
+				 *
+				 * OpenBVE has no concept of this at the minute (dynamic light
+				 * is as close as we come...) so let's assume a 6PM to 6AM night
+				 * cycle for the minute.
+				 *
+				 * TODO: This is the sort of thing that might have more general
+				 * use via a routefile property
+				 */
+
+				case 0:
+					// not checked
+					break;
+				case 1:
+					// lit during the day
+					if (currentHour < 6 || currentHour > 18)
+					{
+						shouldBeLit = false;
+					}
+					break;
+				case 2:
+					// lit during the night
+					if (currentHour > 6 && currentHour < 18)
 					{
 						shouldBeLit = false;
 					}
