@@ -33,6 +33,8 @@ namespace OpenBveApi.Motor
 		Diesel,
 		/// <summary>Diesel prime mover, hydraulic transmission</summary>
 		DieselHydraulic,
+		/// <summary>Diesel prime mover, mechanical (geared) transmission</summary>
+		DieselMechanical,
 		/// <summary>Steam engine</summary>
 		Steam,
 		/// <summary>Pure electric engine</summary>

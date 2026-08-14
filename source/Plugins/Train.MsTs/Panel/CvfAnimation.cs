@@ -28,7 +28,6 @@ using OpenBveApi.Motor;
 using OpenBveApi.Trains;
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using OpenBveApi;
 using TrainManager.Car.Systems;
 using TrainManager.Motor;
@@ -541,6 +540,34 @@ namespace Train.MsTs
 						{
 							lastResult = 1;
 							break;
+						}
+					}
+					break;
+				case PanelSubject.ORTS_OIL_PRESSURE:
+					// NOTE: This was simulated in MSTS, just no CVF subject
+					// for the minute, just return an approx fixed value
+					{
+						if (tractionModel is DieselEngine dieselEngine)
+						{
+							lastResult = dieselEngine.MaxOilPressure * 0.8;
+						}
+						else
+						{
+							lastResult = 0;
+						}
+					}
+					break;
+				case PanelSubject.ORTS_DIESEL_TEMPERATURE:
+					// NOTE: This was simulated in MSTS, just no CVF subject
+					// for the minute, just return an approx fixed value
+					{
+						if (tractionModel is DieselEngine dieselEngine)
+						{
+							lastResult = dieselEngine.MaxTemperature * 0.8;
+						}
+						else
+						{
+							lastResult = 0;
 						}
 					}
 					break;

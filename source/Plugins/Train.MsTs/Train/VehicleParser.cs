@@ -177,6 +177,7 @@ namespace Train.MsTs
 							currentCar.TractionModel.Components.Add(EngineComponent.TractionMotor, new TractionMotor(currentCar.TractionModel, maxEngineAmps));
 						}
 						break;
+					case EngineType.DieselMechanical:
 					case EngineType.DieselHydraulic:
 						AccelerationCurve[] accelerationCurves;
 						if (Gears == null)
@@ -192,7 +193,14 @@ namespace Train.MsTs
 							}
 						}
 
-						currentCar.TractionModel = new DieselEngine(currentCar, accelerationCurves, dieselIdleRPM, dieselIdleRPM, dieselMaxRPM, dieselRPMChangeRate, dieselRPMChangeRate, dieselIdleUse, dieselMaxUse);
+						DieselEngine dieselEngine = new DieselEngine(currentCar, accelerationCurves, dieselIdleRPM, dieselIdleRPM, dieselMaxRPM, dieselRPMChangeRate, dieselRPMChangeRate, dieselIdleUse, dieselMaxUse)
+						{
+							// changeable to allow for failures etc.
+							MaxOilPressure =  dieselMaxOilPressure,
+							MaxTemperature = dieselMaxTemperature
+						};
+
+						currentCar.TractionModel = dieselEngine;
 						currentCar.TractionModel.FuelTank = new FuelTank(GetMaxDieselCapacity(currentCar.Index));
 						currentCar.TractionModel.IsRunning = true;
 						currentCar.TractionModel.Components.Add(EngineComponent.Gearbox, new Gearbox(currentCar.TractionModel, Gears, gearboxOperationMode));
@@ -558,6 +566,8 @@ namespace Train.MsTs
 		private double dieselMaxUse;
 		private double dieselCapacity;
 		private double dieselMaxTractiveEffortSpeed;
+		private double dieselMaxTemperature = 120; // degrees c
+		private double dieselMaxOilPressure = 90; // psi
 		private double maxEngineAmps;
 		private double maxBrakeAmps;
 		private double mainReservoirMinimumPressure = 690000.0;
@@ -712,6 +722,12 @@ namespace Train.MsTs
 						{
 							case "hydraulic":
 								currentEngineType = EngineType.DieselHydraulic;
+								break;
+							case "electric":
+								currentEngineType = EngineType.Diesel;
+								break;
+							case "mechanical":
+								currentEngineType = EngineType.DieselMechanical;
 								break;
 						}
 					}
@@ -1067,6 +1083,13 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.MaxDieselLevel:
 					dieselCapacity = block.ReadSingle(UnitOfVolume.Litres);
+					break;
+				case KujuTokenID.MaxTemperature:
+					// TODO: no temperature converter yet...
+					dieselMaxTemperature = block.ReadSingle();
+					break;
+				case KujuTokenID.MaxOilPressure:
+					dieselMaxOilPressure = block.ReadSingle(UnitOfPressure.PoundsPerSquareInch);
 					break;
 				case KujuTokenID.MaxCurrent:
 					maxEngineAmps = block.ReadSingle(UnitOfCurrent.Amps);
