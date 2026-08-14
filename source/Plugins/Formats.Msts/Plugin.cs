@@ -65,6 +65,9 @@ namespace OpenBve.Formats.MsTs
 		/// <summary>Reads a single-bit precision floating point number from the block</summary>
 		public abstract float ReadSingle();
 
+		/// <summary>Reads a Color24 from the block</summary>
+		public abstract Color24 ReadColorRgb();
+
 		/// <summary>Reads a Color32 from the block</summary>
 		public abstract Color32 ReadColorArgb();
 
@@ -258,6 +261,11 @@ namespace OpenBve.Formats.MsTs
 		public override float ReadSingle()
 		{
 			return myReader.ReadSingle();
+		}
+
+		public override Color24 ReadColorRgb()
+		{
+			throw new NotImplementedException();
 		}
 
 		public override Color32 ReadColorArgb()
@@ -967,6 +975,22 @@ namespace OpenBve.Formats.MsTs
 			}
 
 			throw new InvalidDataException("Unable to parse " + s + " to a valid single in block " + Token);
+		}
+
+		public override Color24 ReadColorRgb()
+		{
+			byte r = 1, g = 1, b = 1;
+			try
+			{
+				r = (byte)ReadInt16();
+				g = (byte)ReadInt16();
+				r = (byte)ReadInt16();
+			}
+			catch
+			{
+				// ignored
+			}
+			return new Color24(r, g, b);
 		}
 
 		public override Color32 ReadColorArgb()
