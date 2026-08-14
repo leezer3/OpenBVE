@@ -984,7 +984,7 @@ namespace OpenBve.Formats.MsTs
 			{
 				r = (byte)ReadInt16();
 				g = (byte)ReadInt16();
-				r = (byte)ReadInt16();
+				b = (byte)ReadInt16();
 			}
 			catch
 			{
