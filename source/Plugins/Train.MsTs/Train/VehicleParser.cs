@@ -824,9 +824,57 @@ namespace Train.MsTs
 						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Cab view file " + cabViewFile + " was not found");
 						return true;
 					}
-					
+					if (car.CarSections.ContainsKey(CarSectionType.Interior))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle defines a CabView, but an interior is already present.");
+						return true;
+					}
 					CabviewFileParser.ParseCabViewFile(cabViewFile, ref car);
 					car.HasInteriorView = true;
+					break;
+				case KujuTokenID.Inside:
+					// Loads interior view
+					if (Plugin.PreviewOnly)
+					{
+						break;
+					}
+					while (block.Position() < block.Length() - 2)
+					{
+						newBlock = block.ReadSubBlock();
+						ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
+					}
+					break;
+				case KujuTokenID.PassengerCabinFile:
+					// 3D passenger interior
+					string interiorViewFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(fileName), block.ReadString());
+					if (car.CarSections.ContainsKey(CarSectionType.Interior))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle defines a PassengerCabinFile, but an interior is already present.");
+						return true;
+					}
+					for (int i = 0; i < Plugin.CurrentHost.Plugins.Length; i++)
+					{
+						if (Plugin.CurrentHost.Plugins[i].Object == null || !Plugin.CurrentHost.Plugins[i].Object.CanLoadObject(interiorViewFile))
+						{
+							continue;
+						}
+						Plugin.CurrentHost.Plugins[i].Object.LoadObject(interiorViewFile, Path.GetDirectoryName(fileName), Encoding.Default, out UnifiedObject interiorObject);
+						if (car.CarSections.ContainsKey(CarSectionType.Interior))
+						{
+							CarSection interiorCarSection = car.CarSections[CarSectionType.Interior];
+							interiorCarSection.AppendObject(Plugin.CurrentHost, new Vector3(0, 0, 0), car, interiorObject);
+							car.CarSections[CarSectionType.Interior] = interiorCarSection;
+						}
+						else
+						{
+							car.CarSections.Add(CarSectionType.Interior, new CarSection(Plugin.CurrentHost, ObjectType.Dynamic, false, car, interiorObject));
+						}
+						break;
+					}
+					car.HasInteriorView = true;
+					break;
+				case KujuTokenID.PassengerCabinHeadPos:
+					car.Driver = block.ReadVector3();
 					break;
 				case KujuTokenID.Description:
 					/*
