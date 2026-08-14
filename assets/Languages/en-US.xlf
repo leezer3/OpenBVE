@@ -2361,6 +2361,12 @@
 					<trans-unit id="cylinder_cocks">
 						<source>Activates or deactivates the cylinder cocks</source>
 					</trans-unit>
+					<trans-unit id="firebox_door_open">
+						<source>Opens the firebox door</source>
+					</trans-unit>
+					<trans-unit id="firebox_door_close">
+						<source>Closes the firebox door</source>
+					</trans-unit>
 					<trans-unit id="engine_start">
 						<source>Starts the engine</source>
 					</trans-unit>
