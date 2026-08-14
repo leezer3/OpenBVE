@@ -779,6 +779,11 @@ namespace Train.MsTs
 					// Sets the empty mass of the car
 					car.EmptyMass = block.ReadSingle(UnitOfWeight.Kilograms);
 					break;
+				case KujuTokenID.CentreOfGravity:
+					block.ReadSingle(UnitOfLength.Meter); // coupler #1 center of gravity
+					car.Specs.CenterOfGravityHeight = block.ReadSingle(UnitOfLength.Meter);
+					block.ReadSingle(UnitOfLength.Meter); // coupler #2 center of gravity
+					break;
 				case KujuTokenID.BrakeEquipmentType:
 					// Determines the brake equipment types available
 					BrakeEquipmentType[] brakeEquipmentTypes = block.ReadEnumArray(default(BrakeEquipmentType));
@@ -1399,6 +1404,9 @@ namespace Train.MsTs
 						CylinderCocksPowerModifier = 1;
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Vehicle Parser: CylinderCocksPowerModifier must be between 0 and 1");
 					}
+					break;
+				case KujuTokenID.DoesHornTriggerBell:
+					train.Specs.HornTriggersBell = block.ReadInt16() != 0;
 					break;
 			}
 			return true;

@@ -662,10 +662,8 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.Position:
-					Position.X = block.ReadSingle();
-					Position.Y = block.ReadSingle();
-					Size.X = block.ReadSingle();
-					Size.Y = block.ReadSingle();
+					Position = block.ReadVector2();
+					Size = block.ReadVector2();
 					break;
 				case KujuTokenID.Type:
 					panelSubject = block.ReadEnumValue(default(PanelSubject));
@@ -755,10 +753,8 @@ namespace Train.MsTs
 					Accuracy = block.ReadInt16();
 					break;
 				case KujuTokenID.Area:
-					AreaPosition.X = block.ReadInt16();
-					AreaPosition.Y = block.ReadInt16();
-					AreaSize.X = block.ReadInt16();
-					AreaSize.Y = block.ReadInt16();
+					AreaPosition = block.ReadVector2();
+					AreaSize = block.ReadVector2();
 					break;
 			}
 		}
