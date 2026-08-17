@@ -87,6 +87,6 @@
 		Switch,
 		Raise,
 		Lower,
-		Toggle,
+		Toggle
 	}
 }
