@@ -66,8 +66,11 @@ namespace OpenBveApi.Objects
 	     *
 	     */
 
+		
+		private readonly double myFrameRate;
+
 		/// <summary>The framerate</summary>
-		public readonly double FrameRate;
+		public double FrameRate => ParentObject.IsInterior ? myFrameRate * 30 : myFrameRate;
 
 	    /// <summary>The total number of frames in the animation</summary>
 	    public readonly int FrameCount;
@@ -99,7 +102,7 @@ namespace OpenBveApi.Objects
 			Name = name;
 		    baseMatrix = matrix;
 			FrameCount = frameCount;
-			FrameRate = frameRate / 100;
+			myFrameRate = frameRate / 100;
 			IsWheelLinked = wheeLinked;
 	    }
 

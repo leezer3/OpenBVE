@@ -46,7 +46,9 @@ namespace OpenBveApi.Objects
 		/// <summary>The objects within this object</summary>
 		public ObjectState[] Objects;
 		/// <summary>The keyframe matrices to be sent to the shader</summary>
-		public KeyframeMatrix[] Matricies;
+		public KeyframeMatrix[] Matrices;
+		/// <summary>Whether the object is an interior object</summary>
+		public bool IsInterior;
 		/// <summary>The pivots</summary>
 		public Dictionary<string, PivotPoint> Pivots = new Dictionary<string, PivotPoint>();
 		/// <summary>Holds a reference to the car if appropriate</summary>
@@ -69,7 +71,7 @@ namespace OpenBveApi.Objects
 			this.currentHost = currentHost;
 			RefreshRate = 0;
 			SecondsSinceLastUpdate = 0;
-			Matricies = Array.Empty<KeyframeMatrix>();
+			Matrices = Array.Empty<KeyframeMatrix>();
 			Animations = new Dictionary<int, KeyframeAnimation>();
 			trackFollower = new TrackFollower(currentHost);
 		}
@@ -84,10 +86,10 @@ namespace OpenBveApi.Objects
 				Animations[key].Update(null, IsReversed, position, parameters.TrackPosition, 0); // current state not applicable, no hand-crafted functions
 			}
 			Transformation finalTransformation = new Transformation(localTransformation, worldTransformation);
-			Matrix4D[] matriciesToShader = new Matrix4D[Matricies.Length];
+			Matrix4D[] matriciesToShader = new Matrix4D[Matrices.Length];
 			for (int i = 0; i < matriciesToShader.Length; i++)
 			{
-				matriciesToShader[i] = Matricies[i].Matrix;
+				matriciesToShader[i] = Matrices[i].Matrix;
 			}
 
 			for (int i = 0; i < Objects.Length; i++)
@@ -133,10 +135,10 @@ namespace OpenBveApi.Objects
 				clonedObject.Objects[i] = (ObjectState)Objects[i].Clone();
 			}
 
-			clonedObject.Matricies = new KeyframeMatrix[Matricies.Length];
-			for (int i = 0; i < Matricies.Length; i++)
+			clonedObject.Matrices = new KeyframeMatrix[Matrices.Length];
+			for (int i = 0; i < Matrices.Length; i++)
 			{
-				clonedObject.Matricies[i] = new KeyframeMatrix(clonedObject, Matricies[i].Index, Matricies[i].Name, Matricies[i]._matrix);
+				clonedObject.Matrices[i] = new KeyframeMatrix(clonedObject, Matrices[i].Index, Matrices[i].Name, Matrices[i]._matrix);
 			}
 
 			for (int i = 0; i < Animations.Count; i++)
@@ -202,10 +204,10 @@ namespace OpenBveApi.Objects
 				int key = Animations.ElementAt(i).Key;
 				Animations[key].Update(BaseCar, IsReversed, position, trackPosition, timeElapsed); // current state not applicable, no hand-crafted functions
 			}
-			Matrix4D[] matriciesToShader = new Matrix4D[Matricies.Length];
+			Matrix4D[] matriciesToShader = new Matrix4D[Matrices.Length];
 			for (int i = 0; i < matriciesToShader.Length; i++)
 			{
-				matriciesToShader[i] = Matricies[i].Matrix;
+				matriciesToShader[i] = Matrices[i].Matrix;
 			}
 			for (int i = 0; i < Objects.Length; i++)
 			{
@@ -236,7 +238,7 @@ namespace OpenBveApi.Objects
 		/// <remarks>This will set all animation positions to Frame 0</remarks>
         public static implicit operator StaticObject(KeyframeAnimatedObject keyframeAnimatedObject)
 		{
-			Matrix4D[] matricies = new Matrix4D[keyframeAnimatedObject.Matricies.Length];
+			Matrix4D[] matricies = new Matrix4D[keyframeAnimatedObject.Matrices.Length];
 			for (int i = 0; i < keyframeAnimatedObject.Animations.Count; i++)
 			{
 				int key = keyframeAnimatedObject.Animations.ElementAt(i).Key;
@@ -245,7 +247,7 @@ namespace OpenBveApi.Objects
 
 			for (int i = 0; i < matricies.Length; i++)
 			{
-				matricies[i] = keyframeAnimatedObject.Matricies[i].Matrix;
+				matricies[i] = keyframeAnimatedObject.Matrices[i].Matrix;
 			}
 			StaticObject staticObject = new StaticObject(keyframeAnimatedObject.currentHost);
 			for (int i = 0; i < keyframeAnimatedObject.Objects.Length; i++)
@@ -260,11 +262,11 @@ namespace OpenBveApi.Objects
 		{
 			if (absoluteTranslation)
 			{
-				Matricies[0]._matrix.Row3.Xyz = translationVector;
+				Matrices[0]._matrix.Row3.Xyz = translationVector;
 			}
 			else
 			{
-				Matricies[0]._matrix.Row3.Xyz += translationVector;
+				Matrices[0]._matrix.Row3.Xyz += translationVector;
 			}
 		}
 	}

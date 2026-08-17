@@ -875,6 +875,10 @@ namespace Train.MsTs
 							continue;
 						}
 						Plugin.CurrentHost.Plugins[i].Object.LoadObject(interiorViewFile, Path.GetDirectoryName(fileName), Encoding.Default, out UnifiedObject interiorObject);
+						if (interiorObject is KeyframeAnimatedObject ko)
+						{
+							ko.IsInterior = true;
+						}
 						if (car.CarSections.ContainsKey(CarSectionType.Interior))
 						{
 							CarSection interiorCarSection = car.CarSections[CarSectionType.Interior];

@@ -157,6 +157,13 @@ namespace OpenBve.Formats.MsTs
 		/// <returns>The new block</returns>
 		/// <remarks>The type of the new block will always match that of the base block</remarks>
 		public abstract Block ReadSubBlock(bool allowEmptyBlock = false);
+
+		/// <summary>Reads a Quaternion from the block</summary>
+		/// <remarks>The file stores in DirectX format, but they are returned in OpenGL format</remarks>
+		public Quaternion ReadQuaternion()
+		{
+			return new Quaternion(ReadSingle(), ReadSingle(), ReadSingle(), -ReadSingle());
+		}
 	}
 
 	/// <inheritdoc cref="Block" />
