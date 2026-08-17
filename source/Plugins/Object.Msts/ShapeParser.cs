@@ -22,7 +22,9 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
 using OpenBve.Formats.MsTs;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -30,7 +32,6 @@ using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.Deflate;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -423,7 +424,7 @@ namespace Plugin
 
 		private static bool IsAnimated(string matrixName)
 		{
-			if (matrixName.StartsWith("WHEELS", StringComparison.InvariantCultureIgnoreCase) || matrixName.StartsWith("ROD", StringComparison.InvariantCultureIgnoreCase) || matrixName.StartsWith("BOGIE", StringComparison.InvariantCultureIgnoreCase) || matrixName.StartsWith("PISTON", StringComparison.InvariantCultureIgnoreCase) || matrixName.StartsWith("PANTOGRAPH", StringComparison.InvariantCultureIgnoreCase) || wheelsLinkedNodes.Contains(matrixName, StringComparer.InvariantCultureIgnoreCase))
+			if (matrixName.StartsWithAny(new[] { "WHEELS", "ROD", "PISTON", "PANTOGRAPH", "JOINT" }) || wheelsLinkedNodes.Contains(matrixName, StringComparer.InvariantCultureIgnoreCase) || (matrixName[0] == 'A' && char.IsDigit(matrixName[1])))
 			{
 				return true;
 			}
@@ -433,7 +434,7 @@ namespace Plugin
 
 		private static bool IsWheelLinked(string matrixName)
 		{
-			if (matrixName.StartsWith("WHEEL", StringComparison.InvariantCultureIgnoreCase) || matrixName.StartsWith("ROD", StringComparison.InvariantCultureIgnoreCase) || matrixName.StartsWith("PISTON", StringComparison.InvariantCultureIgnoreCase) || wheelsLinkedNodes.Contains(matrixName, StringComparer.InvariantCultureIgnoreCase))
+			if (matrixName.StartsWithAny(new [] {"WHEEL", "ROD", "PISTON", "JOINT"}, StringComparison.InvariantCultureIgnoreCase) || (matrixName[0] == 'A' && char.IsDigit(matrixName[1]) || wheelsLinkedNodes.Contains(matrixName, StringComparer.InvariantCultureIgnoreCase)))
 			{
 				return true;
 			}
@@ -446,7 +447,7 @@ namespace Plugin
 			MsTsShape shape = new MsTsShape();
 			newResult = new KeyframeAnimatedObject(Plugin.CurrentHost);
 
-			currentFolder = Path.GetDirectoryName(fileName);
+			currentFolder = OpenBveApi.Path.GetDirectoryName(fileName);
 			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
 
 			byte[] buffer = new byte[34];

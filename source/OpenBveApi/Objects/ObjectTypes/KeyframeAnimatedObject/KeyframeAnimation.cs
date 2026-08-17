@@ -121,7 +121,13 @@ namespace OpenBveApi.Objects
 				if (baseCar != null)
 				{
 					// HACK: use the train as a dynamic to allow us to pull out the car reference
-					if (IsWheelLinked)
+					bool wheelLinked = IsWheelLinked;
+					if (ParentAnimation != -1 && ParentObject.Animations.ContainsKey(ParentAnimation))
+					{
+						wheelLinked |= ParentObject.Animations[ParentAnimation].IsWheelLinked;
+					}
+						
+					if (wheelLinked)
 					{
 						double wheelRadius = 0;
 
@@ -238,15 +244,27 @@ namespace OpenBveApi.Objects
 					}
 					else
 					{
-						// unknown animation key- for the minute, we'll stick to the MSTS keys
-						AnimationKey = 0;
+						switch (Name)
+						{
+							// OE interior view smoke / fan
+							case "CYLINDER03":
+							case "CYLINDER04":
+							case "SMOKE":
+								AnimationKey += timeElapsed * FrameRate;
+								AnimationKey %= FrameCount;
+								break;
+							default:
+								// unknown animation key- for the minute, we'll stick to the MSTS keys
+								AnimationKey = 0;
+								break;
+						}
+						
 					}
 				}
 				else
 				{
 					AnimationKey = 0;
 				}
-				
 			}
 			
 			// we start off with the base matrix (clone!)

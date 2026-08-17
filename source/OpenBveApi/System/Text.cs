@@ -242,5 +242,22 @@ namespace OpenBveApi
 			Array.Copy(splitString, result, System.Math.Min(desiredLength, splitString.Length));
 			return result;
 		}
+
+		/// <summary>Checks whether the string starts with any of the specified candidate strings</summary>
+		/// <param name="value">The string to test</param>
+		/// <param name="candidates">The list of candidate strings</param>
+		/// <param name="comparision">The StringComparison to use</param>
+		public static bool StartsWithAny(this string value, string[] candidates, StringComparison comparision = StringComparison.CurrentCulture)
+		{
+			foreach (string c in candidates)
+			{
+				if (value.StartsWith(c, comparision))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
 	}
 }
