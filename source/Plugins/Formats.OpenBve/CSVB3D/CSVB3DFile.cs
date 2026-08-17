@@ -267,8 +267,9 @@ namespace Formats.OpenBve
 
 				if (IsB3D)
 				{
-					// B3D bracket enclosed section names
-					command = command.TrimStart('[').TrimEnd(']').Trim();
+				// B3D bracket enclosed section names
+				// Strip trailing commas after the closing bracket (e.g. [MeshBuilder],,,,,)
+				command = command.TrimStart('[').Split(',')[0].TrimEnd(']').Trim();
 				}
 
 				if(Enum.TryParse(command, true, out T1 section))
