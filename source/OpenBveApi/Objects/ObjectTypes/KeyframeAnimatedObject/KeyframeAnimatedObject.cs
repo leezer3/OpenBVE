@@ -61,6 +61,8 @@ namespace OpenBveApi.Objects
 		internal double currentTrackPosition;
 		/// <summary>Whether the object is reversed</summary>
 		internal bool IsReversed;
+		/// <summary>The list of lights in the object</summary>
+		public List<MSTSLightDefinition> Lights;
 
 		/// <summary>Creates an empty KeyFrameAnimatedObject</summary>
 		/// <param name="currentHost">The host application interface</param>
@@ -72,6 +74,7 @@ namespace OpenBveApi.Objects
 			Matricies = Array.Empty<KeyframeMatrix>();
 			Animations = new Dictionary<int, KeyframeAnimation>();
 			trackFollower = new TrackFollower(currentHost);
+			Lights = new List<MSTSLightDefinition>();
 		}
 
 		/// <inheritdoc />
@@ -201,6 +204,22 @@ namespace OpenBveApi.Objects
 			{
 				int key = Animations.ElementAt(i).Key;
 				Animations[key].Update(BaseCar, IsReversed, position, trackPosition, timeElapsed); // current state not applicable, no hand-crafted functions
+			}
+			// Update lights
+			Objects[0].Lights.Clear();
+			Matrix4D lightMatrix = Matrix4D.Identity;
+			lightMatrix *= (Matrix4D)new Transformation(direction, up, side);
+			lightMatrix *= Matrix4D.CreateTranslation(position.X, position.Y, -position.Z);
+			for (int i = 0; i < Lights.Count; i++)
+			{
+				Lights[i].Update(timeElapsed);
+				if (Lights[i].CurrentState != null)
+				{
+					SceneLight light = Lights[i].CurrentState.Clone();
+					light.Position.Transform(lightMatrix, false);
+					light.Direction.Transform(lightMatrix, false);
+					Objects[0].Lights.Add(light);
+				}
 			}
 			Matrix4D[] matriciesToShader = new Matrix4D[Matricies.Length];
 			for (int i = 0; i < matriciesToShader.Length; i++)

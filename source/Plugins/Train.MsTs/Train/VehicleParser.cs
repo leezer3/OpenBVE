@@ -421,6 +421,16 @@ namespace Train.MsTs
 				currentCar.CarBrake = new ThroughPiped(currentCar);
 			}
 
+			if (currentCar.CarSections.ContainsKey(CarSectionType.Exterior) && vehicleLights.Count > 0)
+			{
+				if (currentCar.CarSections[CarSectionType.Exterior].Groups[0].Keyframes != null)
+				{
+					currentCar.CarSections[CarSectionType.Exterior].Groups[0].Keyframes.Lights = vehicleLights;
+				}
+
+				vehicleLights = new List<MSTSLightDefinition>();
+			}
+
 			currentCar.FrontAxle = new MSTSAxle(Plugin.CurrentHost, train, currentCar, friction ?? new Friction(), adhesion ?? new Adhesion(currentCar, currentEngineType == EngineType.Steam));
 			currentCar.RearAxle = new MSTSAxle(Plugin.CurrentHost, train, currentCar, friction ?? new Friction(), adhesion ?? new Adhesion(currentCar, currentEngineType == EngineType.Steam));
 
@@ -608,8 +618,10 @@ namespace Train.MsTs
 		internal double ExhaustMaxMagnitude;
 		/// <summary>The rate of particle emissions at idle</summary>
 		internal double ExhaustInitialRate;
-		/// <summary>The rate of particle emissions at maximum power</summary>SmokeMaxMagnitude`
+		/// <summary>The rate of particle emissions at maximum power</summary>
 		internal double ExhaustMaxRate;
+
+		private List<MSTSLightDefinition> vehicleLights = new List<MSTSLightDefinition>();
 
 		private bool cylinderCocksAutomatic = false;
 
@@ -711,6 +723,30 @@ namespace Train.MsTs
 							break;
 						case KujuTokenID.Coupling:
 							couplingType = block.ReadEnumValue(default(CouplingType));
+							break;
+						case KujuTokenID.Light:
+							int lightType = block.ReadInt16();
+							if (lightType < 0 || lightType > 1)
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Invalid light type specified.");
+							}
+
+							switch (lightType)
+							{
+								case 0:
+									/* MSTS TECHDOCS:
+									 * Two textured triangles, forming a diamond. No lighting of other faces
+									 * However, if we use an area light with a low wattage (currently 40w), this
+									 * produces the appropriate effect, and has the bonus of emitting a small
+									 * amount of light onto the scene as well.
+									 */
+									vehicleLights[vehicleLights.Count - 1].Type = SceneLightType.Area;
+									break;
+								case 1:
+									// spot
+									vehicleLights[vehicleLights.Count - 1].Type = SceneLightType.Spot;
+									break;
+							}
 							break;
 					}
 					break;
@@ -1454,10 +1490,7 @@ namespace Train.MsTs
 				case KujuTokenID.HeadOut:
 					// head out view is triggered when pressing UP / DOWN in cabview
 					// view to exterior of train at specified position, looking F / R
-					Vector3 headOutPos = Vector3.Zero;
-					headOutPos.X = block.ReadSingle();
-					headOutPos.Y = block.ReadSingle();
-					headOutPos.Z = block.ReadSingle();
+					Vector3 headOutPos = block.ReadVector3();
 					break;
 				case KujuTokenID.AirBrakesMainResVolume:
 					mainReservoirVolume = block.ReadSingle(UnitOfVolume.Litres, UnitOfVolume.MetersCubed);
@@ -1478,6 +1511,125 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.DoesHornTriggerBell:
 					train.Specs.HornTriggersBell = block.ReadInt16() != 0;
+					break;
+				case KujuTokenID.Lights:
+					int numLights = block.ReadInt16();
+					int foundLights = 0;
+					while (block.Position() < block.Length() - 2)
+					{
+						newBlock = block.ReadSubBlock(true);
+						if (newBlock.Token == KujuTokenID.Light)
+						{
+							foundLights++;
+						}
+
+						ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
+					}
+
+					if (numLights != foundLights)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Vehicle Parser: Expected " + numLights + " Lights, found " + foundLights);
+					}
+					break;
+				case KujuTokenID.Light:
+					vehicleLights.Add(new MSTSLightDefinition(Plugin.CurrentHost, car));
+					while (block.Position() < block.Length() - 2)
+					{
+						newBlock = block.ReadSubBlock(true);
+						ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
+					}
+					break;
+				case KujuTokenID.Conditions:
+					while (block.Position() < block.Length() - 2)
+					{
+						newBlock = block.ReadSubBlock(true);
+						// condition blocks only contain a single number
+						// https://www.coalstonewcastle.com.au/physics/or-parameter-lights/
+						int condition = newBlock.ReadInt16();
+						switch (newBlock.Token)
+						{
+							case KujuTokenID.Unit:
+								vehicleLights[vehicleLights.Count -1].Unit = condition;
+								break;
+							case KujuTokenID.Headlight:
+								vehicleLights[vehicleLights.Count - 1].Headlights = condition;
+								break;
+							case KujuTokenID.Control:
+								vehicleLights[vehicleLights.Count - 1].Control = condition;
+								break;
+							case KujuTokenID.TimeOfDay:
+								vehicleLights[vehicleLights.Count - 1].TimeOfDay = condition;
+								break;
+						}
+					}
+					break;
+				case KujuTokenID.FadeIn:
+				case KujuTokenID.FadeOut:
+					// time taken to turn on / off
+					break;
+				case KujuTokenID.Cycle:
+					// 0 - cycles forwards then back through states
+					// 1 - cycles forwards only through states
+					vehicleLights[vehicleLights.Count - 1].Cycle = block.ReadInt16();
+					break;
+				case KujuTokenID.States:
+					int numStates = block.ReadInt16();
+					int foundStates = 0;
+					while (block.Position() < block.Length() - 2)
+					{
+						newBlock = block.ReadSubBlock(true);
+						if (newBlock.Token == KujuTokenID.State)
+						{
+							vehicleLights[vehicleLights.Count - 1].States.Add(new SceneLight());
+							foundStates++;
+						}
+
+						ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
+					}
+
+					if (numStates != foundStates)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Vehicle Parser: Expected " + numStates + " LightStates, found " + foundStates);
+					}
+					break;
+				case KujuTokenID.State:
+					while (block.Position() < block.Length() - 2)
+					{
+						newBlock = block.ReadSubBlock(true);
+						SceneLight light = vehicleLights[vehicleLights.Count - 1].States[vehicleLights[vehicleLights.Count - 1].States.Count -1];
+						switch (newBlock.Token)
+						{
+							case KujuTokenID.Duration:
+								light.Duration = newBlock.ReadSingle();
+								break;
+							case KujuTokenID.LightColour:
+								light.Color = newBlock.ReadHexColorArgb();
+								break;
+							case KujuTokenID.Position:
+								light.Position = newBlock.ReadVector3();
+								light.Position.Z = -light.Position.Z; // dx format
+								break;
+							case KujuTokenID.Azimuth:
+								// n.b. 3 values in degrees, not a vector
+								Transformation t = new Transformation(Transformation.NullTransformation, newBlock.ReadSingle(), newBlock.ReadSingle(), newBlock.ReadSingle());
+								light.Direction.Rotate(t);
+								break;
+							case KujuTokenID.Transition:
+								break;
+							case KujuTokenID.Radius:
+								light.Radius = newBlock.ReadSingle();
+								break;
+						}
+
+						if (vehicleLights[vehicleLights.Count - 1].Type == SceneLightType.Area)
+						{
+							light.Power = 40; // approximation to what looks OK
+						}
+						else
+						{
+							light.Power = 200;
+						}
+					}
 					break;
 			}
 			return true;
