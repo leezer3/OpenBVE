@@ -12,6 +12,7 @@
 		Flange,
 		Horn,
 		MasterController,
+		PowerHandle = MasterController,
 		Motor,
 		PilotLamp,
 		SwitchFrontAxle,
