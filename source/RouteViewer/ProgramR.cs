@@ -317,7 +317,7 @@ namespace RouteViewer
 
 		internal static void MouseWheelEvent(object sender, MouseWheelEventArgs e)
 		{
-			switch (Program.Renderer.CurrentInterface)
+			switch (Renderer.CurrentInterface)
 			{
 				case InterfaceType.Menu:
 				case InterfaceType.GLMainMenu:
@@ -350,18 +350,19 @@ namespace RouteViewer
 					}
 					break;
 				default:
-					if (e.Button == OpenTK.Input.MouseButton.Left)
+					switch (e.Button)
 					{
-						MouseButton = e.Mouse.LeftButton == ButtonState.Pressed ? 1 : 0;
+						case OpenTK.Input.MouseButton.Left:
+							MouseButton = e.Mouse.LeftButton == ButtonState.Pressed ? 1 : 0;
+							break;
+						case OpenTK.Input.MouseButton.Right:
+							MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 2 : 0;
+							break;
+						case OpenTK.Input.MouseButton.Middle:
+							MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 3 : 0;
+							break;
 					}
-					if (e.Button == OpenTK.Input.MouseButton.Right)
-					{
-						MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 2 : 0;
-					}
-					if (e.Button == OpenTK.Input.MouseButton.Middle)
-					{
-						MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 3 : 0;
-					}
+
 					previousMouseState = Mouse.GetState();
 					if (MouseButton == 0)
 					{
@@ -380,7 +381,7 @@ namespace RouteViewer
 
 		internal static void MouseMovement()
 		{
-			if (MouseButton == 0 || Program.Renderer.CurrentInterface != InterfaceType.Normal) return;
+			if (MouseButton == 0 || Renderer.CurrentInterface != InterfaceType.Normal) return;
 
 			currentMouseState = Mouse.GetState();
 			if (currentMouseState != previousMouseState)
@@ -630,7 +631,7 @@ namespace RouteViewer
 						    Math.Abs(prevShadowBias - Interface.CurrentOptions.ShadowBias) > 0.000001f ||
 						    Math.Abs(prevShadowNormalBias - Interface.CurrentOptions.ShadowNormalBias) > 0.01f)
 						{
-							Program.Renderer.ReloadShadowSettings();
+							Renderer.ReloadShadowSettings();
                         }
 					}
 					Application.DoEvents();
@@ -748,9 +749,6 @@ namespace RouteViewer
 				case Key.I:
 					Renderer.OptionInterface = !Renderer.OptionInterface;
 					break;
-				case Key.M:
-					//SoundManager.Mute = !SoundManager.Mute;
-					break;
 				case Key.Plus:
 				case Key.KeypadPlus:
 					if (!JumpToPositionEnabled)
@@ -812,19 +810,19 @@ namespace RouteViewer
 						if (JumpToPositionValue.Length != 0)
 						{
 							int direction;
-							if (JumpToPositionValue[0] == '-')
+							switch (JumpToPositionValue[0])
 							{
-								JumpToPositionValue = JumpToPositionValue.Substring(1);
-								direction = -1;
-							}
-							else if (JumpToPositionValue[0] == '+')
-							{
-								JumpToPositionValue = JumpToPositionValue.Substring(1);
-								direction = 1;
-							}
-							else
-							{
-								direction = 0;
+								case '-':
+									JumpToPositionValue = JumpToPositionValue.Substring(1);
+									direction = -1;
+									break;
+								case '+':
+									JumpToPositionValue = JumpToPositionValue.Substring(1);
+									direction = 1;
+									break;
+								default:
+									direction = 0;
+									break;
 							}
 							if (double.TryParse(JumpToPositionValue, NumberStyles.Float, CultureInfo.InvariantCulture, out double value))
 							{
@@ -889,8 +887,6 @@ namespace RouteViewer
 						}
 
 					}
-					
-					//pathForm.ShowDialog();
 					break;
 			}
 		}
@@ -950,7 +946,7 @@ namespace RouteViewer
 		internal static void UpdateCaption() {
 			if (CurrentRouteFile != null)
 			{
-				Renderer.GameWindow.Title = Program.CurrentlyLoading ? @"Loading: " + System.IO.Path.GetFileName(CurrentRouteFile) + " - " + Application.ProductName : System.IO.Path.GetFileName(CurrentRouteFile) + " - " + Application.ProductName;
+				Renderer.GameWindow.Title = CurrentlyLoading ? @"Loading: " + System.IO.Path.GetFileName(CurrentRouteFile) + " - " + Application.ProductName : System.IO.Path.GetFileName(CurrentRouteFile) + " - " + Application.ProductName;
 			} else
 			{
 				Renderer.GameWindow.Title = Application.ProductName;
