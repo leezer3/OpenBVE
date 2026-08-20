@@ -93,9 +93,9 @@ namespace ObjectViewer {
 			// Apply persistent sun direction
 			double azimuthRad = Interface.CurrentOptions.LightAzimuth * Math.PI / 180.0;
 			double elevationRad = Interface.CurrentOptions.LightElevation * Math.PI / 180.0;
-			float lx = (float)(Math.Sin(azimuthRad) * Math.Cos(elevationRad));
+			float lx = (float)(-Math.Sin(azimuthRad) * Math.Cos(elevationRad));
 			float ly = (float)Math.Sin(elevationRad);
-			float lz = (float)(Math.Cos(azimuthRad) * Math.Cos(elevationRad));
+			float lz = (float)(-Math.Cos(azimuthRad) * Math.Cos(elevationRad));
 			Renderer.Lighting.OptionLightPosition = new Vector3(lx, ly, lz);
 	        
 	        
