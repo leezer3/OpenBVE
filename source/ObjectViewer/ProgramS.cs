@@ -282,7 +282,7 @@ namespace ObjectViewer {
 
 	    internal static void MouseMovement()
 	    {
-	        if (MouseButton == 0 || Program.Renderer.CurrentInterface != InterfaceType.Normal) return;
+	        if (MouseButton == 0 || Renderer.CurrentInterface != InterfaceType.Normal) return;
 	        CurrentMouseState = Mouse.GetState();
 	        if (CurrentMouseState != PreviousMouseState)
 	        {
@@ -291,18 +291,14 @@ namespace ObjectViewer {
 		            Renderer.Camera.AbsoluteDirection = MouseCameraDirection;
 		            Renderer.Camera.AbsoluteUp = MouseCameraUp;
 		            Renderer.Camera.AbsoluteSide = MouseCameraSide;
-                    {
-                        double dx = 0.0025 * (PreviousMouseState.X - CurrentMouseState.X);
-                        Renderer.Camera.AbsoluteDirection.Rotate(Vector3.Down, dx);
-                        Renderer.Camera.AbsoluteUp.Rotate(Vector3.Down, dx);
-                        Renderer.Camera.AbsoluteSide.Rotate(Vector3.Down, dx);
-                    }
-                    {
-                        double dy = 0.0025 * (PreviousMouseState.Y - CurrentMouseState.Y);
-                        Renderer.Camera.AbsoluteDirection.Rotate(Renderer.Camera.AbsoluteSide, dy);
-                        Renderer.Camera.AbsoluteUp.Rotate(Renderer.Camera.AbsoluteSide, dy);
-                    }
-	            }
+					double dx = 0.0025 * (PreviousMouseState.X - CurrentMouseState.X);
+					Renderer.Camera.AbsoluteDirection.Rotate(Vector3.Down, dx);
+					Renderer.Camera.AbsoluteUp.Rotate(Vector3.Down, dx);
+					Renderer.Camera.AbsoluteSide.Rotate(Vector3.Down, dx);
+					double dy = 0.0025 * (PreviousMouseState.Y - CurrentMouseState.Y);
+					Renderer.Camera.AbsoluteDirection.Rotate(Renderer.Camera.AbsoluteSide, dy);
+					Renderer.Camera.AbsoluteUp.Rotate(Renderer.Camera.AbsoluteSide, dy);
+				}
 	            else if(MouseButton == 2)
 	            {
 		            Renderer.Camera.AbsolutePosition = MouseCameraPosition;
@@ -357,11 +353,11 @@ namespace ObjectViewer {
 				    if(currentFile.EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || currentFile.EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || currentFile.EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase) || currentFile.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
 				    {
 					    string currentTrain = currentFile;
-						if (currentTrain.EndsWith("extensions.cfg", StringComparison.InvariantCultureIgnoreCase))
+						if (currentTrain.EndsWith("extensions.cfg", StringComparison.InvariantCultureIgnoreCase) || currentTrain.EndsWith("train.dat"))
 					    {
 						    currentTrain = System.IO.Path.GetDirectoryName(currentTrain);
 					    }
-					    bool canLoad = false;
+					    bool trainLoaded = false;
 					    for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
 					    {
 						    if (Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(currentTrain))
@@ -371,31 +367,30 @@ namespace ObjectViewer {
 								AbstractTrain playerTrain = TrainManager.Trains[0];
 								Program.CurrentHost.Plugins[j].Train.LoadTrain(Encoding.UTF8, currentTrain, ref playerTrain, ref dummyControls);
 								TrainManager.PlayerTrain = TrainManager.Trains[0];
-								canLoad = true;
+								trainLoaded = true;
+
+								TrainManager.PlayerTrain.Initialize();
+								foreach (var Car in TrainManager.PlayerTrain.Cars)
+								{
+									double length = Math.Max(TrainManager.PlayerTrain.Cars[0].Length, 1);
+									Car.Move(-length);
+									Car.Move(length);
+								}
+								TrainManager.PlayerTrain.PlaceCars(0);
+								
+								for (int k = 0; k < TrainManager.PlayerTrain.Cars.Length; k++)
+								{
+									TrainManager.PlayerTrain.Cars[k].UpdateTrackFollowers(0, true, false);
+									TrainManager.PlayerTrain.Cars[k].UpdateTopplingCantAndSpring(0.0);
+									TrainManager.PlayerTrain.Cars[k].ChangeCarSection(CarSectionType.Exterior);
+									TrainManager.PlayerTrain.Cars[k].FrontBogie.UpdateTopplingCantAndSpring();
+									TrainManager.PlayerTrain.Cars[k].RearBogie.UpdateTopplingCantAndSpring();
+								}
 								break;
 						    }
 					    }
 
-					    if (canLoad)
-					    {
-						    TrainManager.PlayerTrain.Initialize();
-						    foreach (var Car in TrainManager.PlayerTrain.Cars)
-						    {
-							    double length = Math.Max(TrainManager.PlayerTrain.Cars[0].Length, 1);
-							    Car.Move(-length);
-							    Car.Move(length);
-						    }
-						    TrainManager.PlayerTrain.PlaceCars(0);
-						    for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
-						    {
-							    TrainManager.PlayerTrain.Cars[j].UpdateTrackFollowers(0, true, false);
-							    TrainManager.PlayerTrain.Cars[j].UpdateTopplingCantAndSpring(0.0);
-							    TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
-							    TrainManager.PlayerTrain.Cars[j].FrontBogie.UpdateTopplingCantAndSpring();
-							    TrainManager.PlayerTrain.Cars[j].RearBogie.UpdateTopplingCantAndSpring();
-						    }
-					    }
-					    else
+					    if (!trainLoaded)
 					    {
 							//As we now attempt to load the train as a whole, the most likely outcome is that the train.dat file is MIA
 						    Interface.AddMessage(MessageType.Critical, false, "No plugin found capable of loading file " + currentFile + ".");
@@ -789,7 +784,7 @@ namespace ObjectViewer {
 						}
 						else
 						{
-							Program.Renderer.CurrentInterface = InterfaceType.Menu;
+							Renderer.CurrentInterface = InterfaceType.Menu;
 							Game.Menu.PushMenu(MenuType.GameStart);
 						}
 					}
