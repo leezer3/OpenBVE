@@ -51,6 +51,8 @@ namespace OpenBveApi
 		OldTransparencyMode,
 		MotionBlur,
 		FPSLimit,
+		CompressTextures,
+		MaxTextureSize,
 		ShadowResolution,
 		ShadowDrawDistance,
 		ShadowCascades,

@@ -113,6 +113,10 @@ namespace ObjectViewer {
 									if (Program.CurrentHost.Plugins[i].Texture.LoadTexture(path, out texture)) {
 										texture.CompatibleTransparencyMode = false;
 										texture = texture.ApplyParameters(parameters);
+										if (Interface.CurrentOptions.MaxTextureSize > 0 && !path.StartsWith(Program.FileSystem.DataFolder, StringComparison.OrdinalIgnoreCase))
+										{
+											texture.Downscale(Interface.CurrentOptions.MaxTextureSize);
+										}
 										return true;
 									}
 									if(!FailedTextures.Contains(path))
