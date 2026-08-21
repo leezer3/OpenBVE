@@ -250,7 +250,7 @@ namespace Formats.OpenBve
 
 								continue;
 							}
-							if (Enum.TryParse(splitLine[j], true, out CSVB3DSection _) || Enum.TryParse(splitLine[j], true, out CSVB3DKey _))
+							if (EnumCache<CSVB3DSection>.TryParse(splitLine[j], out CSVB3DSection _) || EnumCache<CSVB3DKey>.TryParse(splitLine[j], out CSVB3DKey _))
 							{
 								// add multi-columns to the end of our line list (to be parsed)
 								Lines.Add(string.Join(",", splitLine.Skip(j)));
@@ -271,7 +271,7 @@ namespace Formats.OpenBve
 					command = command.Split(']')[0].TrimStart('[');
 				}
 
-				if(Enum.TryParse(command, true, out T1 section))
+				if(EnumCache<T1>.TryParse(command, out T1 section))
 				{
 					if (currentSection != null)
 					{
@@ -281,7 +281,7 @@ namespace Formats.OpenBve
 					currentSection = new CSVB3DFileSection<T1, T2>(section, myFile, currentHost);
 				}
 
-				if (Enum.TryParse(command, true, out T2 key))
+				if (EnumCache<T2>.TryParse(command, out T2 key))
 				{
 					// Unfortunately, can't cast to generic directly- we've got to go via object
 					if (currentSection == null)
@@ -556,7 +556,7 @@ namespace Formats.OpenBve
 			
 			if (value.Length >= 1)
 			{
-				if (Enum.TryParse(value[0], true, out MeshMaterialBlendMode mode))
+				if (EnumCache<MeshMaterialBlendMode>.TryParse(value[0], out MeshMaterialBlendMode mode))
 				{
 					enumValue = (T3)(object)mode;
 				}
@@ -575,7 +575,7 @@ namespace Formats.OpenBve
 
 			if (value.Length >= 3 && !string.IsNullOrWhiteSpace(value[2])) // mode is optional, but string may consist of whitespace :(
 			{
-				if (Enum.TryParse(value[2], true, out GlowAttenuationMode glowMode))
+				if (EnumCache<GlowAttenuationMode>.TryParse(value[2], out GlowAttenuationMode glowMode))
 				{
 					glowAttenuationMode = (T4)(object)glowMode;
 				}
@@ -592,7 +592,7 @@ namespace Formats.OpenBve
 			string[] value = Dequeue();
 			enumValue = default;
 
-			if (value.Length >= 1 && !Enum.TryParse(value[0], true, out enumValue))
+			if (value.Length >= 1 && !EnumCache<T3>.TryParse(value[0], out enumValue))
 			{
 				currentHost.AddMessage(MessageType.Error, false, "Value was invalid for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				return false;
