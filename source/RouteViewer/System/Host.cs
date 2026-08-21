@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -23,6 +24,18 @@ namespace RouteViewer
 	/// <summary>Represents the host application.</summary>
 	internal class Host : HostInterface
 	{
+		/// <summary>Total time spent registering textures, in milliseconds.</summary>
+		internal static long TextureRegistrationTime;
+
+		/// <summary>Total time spent parsing object files, in milliseconds.</summary>
+		internal static long TotalObjectParseMs;
+
+		/// <summary>Total time spent optimizing object meshes, in milliseconds.</summary>
+		internal static long TotalObjectOptimizeMs;
+
+		/// <summary>The number of unique object files parsed.</summary>
+		internal static int TotalObjectLoadCount;
+
 		/// <summary>Reports a problem to the host application.</summary>
 		/// <param name="type">The type of problem that is reported.</param>
 		/// <param name="text">The textual message that describes the problem.</param>
@@ -194,17 +207,17 @@ namespace RouteViewer
 		}
 		
 		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false, int timeout = 1000) {
-			if (File.Exists(path) || Directory.Exists(path)) {
-				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out Texture data)) {
-					handle = data;
-					if (loadTexture)
-					{
-						LoadTexture(ref data, OpenGlTextureWrapMode.ClampClamp);
-					}
-					return true;
+			Stopwatch sw = Stopwatch.StartNew();
+			bool registered = Program.Renderer.TextureManager.RegisterTexture(path, parameters, out Texture data);
+			sw.Stop();
+			TextureRegistrationTime += sw.ElapsedMilliseconds;
+			if (registered) {
+				handle = data;
+				if (loadTexture)
+				{
+					LoadTexture(ref data, OpenGlTextureWrapMode.ClampClamp);
 				}
-			} else {
-				ReportProblem(ProblemType.PathNotFound, path);
+				return true;
 			}
 			handle = null;
 			return false;
@@ -216,8 +229,11 @@ namespace RouteViewer
 		/// <param name="handle">Receives the handle to the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool RegisterTexture(Texture texture, TextureParameters parameters, out Texture handle) {
+			Stopwatch sw = Stopwatch.StartNew();
 			texture = texture.ApplyParameters(parameters);
 			handle = Program.Renderer.TextureManager.RegisterTexture(texture);
+			sw.Stop();
+			TextureRegistrationTime += sw.ElapsedMilliseconds;
 			return true;
 		}
 
@@ -346,7 +362,8 @@ namespace RouteViewer
 										{
 											staticObject.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
 											Object = staticObject;
-											StaticObjectCache.Add(ValueTuple.Create(path.ToLowerInvariant(), PreserveVertices, File.GetLastWriteTime(path)), Object);
+											ValueTuple<string, bool, DateTime> cacheKey = ValueTuple.Create(path.ToLowerInvariant(), PreserveVertices, File.GetLastWriteTime(path));
+											StaticObjectCache.TryAdd(cacheKey, Object);
 											return true;
 										}
 
@@ -354,9 +371,8 @@ namespace RouteViewer
 										// may be trying to load in different places, so leave
 										Interface.AddMessage(MessageType.Error, false, "Attempted to load " + path + " which is an animated object where only static objects are allowed.");
 									}
-									if (!FailedObjects.Contains(path))
+									if (FailedObjects.TryAdd(path, true))
 									{
-										FailedObjects.Add(path);
 										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");
 									}
 
@@ -373,9 +389,8 @@ namespace RouteViewer
 						}
 					}
 				}
-				if (!FailedObjects.Contains(path))
+				if (FailedObjects.TryAdd(path, true))
 				{
-					FailedObjects.Add(path);
 					Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
 				}
 
@@ -409,31 +424,38 @@ namespace RouteViewer
 							{
 								try
 								{
+									Stopwatch parseTimer = Stopwatch.StartNew();
 									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out UnifiedObject obj))
 									{
+										parseTimer.Stop();
+										System.Threading.Interlocked.Add(ref Host.TotalObjectParseMs, parseTimer.ElapsedMilliseconds);
+										System.Threading.Interlocked.Increment(ref Host.TotalObjectLoadCount);
 										if (obj == null)
 										{
 											continue;
 										}
+										Stopwatch optimizeTimer = Stopwatch.StartNew();
 										obj.OptimizeObject(false, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
+										optimizeTimer.Stop();
+										System.Threading.Interlocked.Add(ref Host.TotalObjectOptimizeMs, optimizeTimer.ElapsedMilliseconds);
 										Object = obj;
 
 										if (Object is StaticObject staticObject)
 										{
-											StaticObjectCache.Add(ValueTuple.Create(path.ToLowerInvariant(), false, File.GetLastWriteTime(path)), staticObject);
+											ValueTuple<string, bool, DateTime> cacheKey = ValueTuple.Create(path.ToLowerInvariant(), false, File.GetLastWriteTime(path));
+											StaticObjectCache.TryAdd(cacheKey, staticObject);
 											return true;
 										}
 
 										if (Object is AnimatedObjectCollection aoc)
 										{
-											AnimatedObjectCollectionCache.Add(path.ToLowerInvariant(), aoc);
+											AnimatedObjectCollectionCache.TryAdd(path.ToLowerInvariant(), aoc);
 										}
 
 										return true;
 									}
-									if (!FailedObjects.Contains(path))
+									if (FailedObjects.TryAdd(path, true))
 									{
-										FailedObjects.Add(path);
 										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");
 									}
 
@@ -454,17 +476,15 @@ namespace RouteViewer
 				FileInfo f = new FileInfo(path);
 				if (f.Length == 0)
 				{
-					if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path).ToLowerInvariant()) && !FailedObjects.Contains(path))
+					if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path).ToLowerInvariant()) && FailedObjects.TryAdd(path, true))
 					{
-						FailedObjects.Add(path);
 						Interface.AddMessage(MessageType.Error, false, "Zero-byte object file encountered at " + path);
 					}
 				}
 				else
 				{
-					if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path).ToLowerInvariant()) && !FailedObjects.Contains(path))
+					if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path).ToLowerInvariant()) && FailedObjects.TryAdd(path, true))
 					{
-						FailedObjects.Add(path);
 						Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
 					}
 				}

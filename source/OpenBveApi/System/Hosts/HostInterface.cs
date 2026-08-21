@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -137,11 +138,11 @@ namespace OpenBveApi.Hosts {
 		protected HostInterface(HostApplication host)
 		{
 			Application = host;
-			StaticObjectCache = new Dictionary<ValueTuple<string, bool, DateTime>, StaticObject>();
-			AnimatedObjectCollectionCache = new Dictionary<string, AnimatedObjectCollection>();
-			MissingFiles = new List<string>();
-			FailedObjects = new List<string>();
-			FailedTextures = new List<string>();
+			StaticObjectCache = new ConcurrentDictionary<ValueTuple<string, bool, DateTime>, StaticObject>();
+			AnimatedObjectCollectionCache = new ConcurrentDictionary<string, AnimatedObjectCollection>();
+			MissingFiles = new HashSet<string>();
+			FailedObjects = new ConcurrentDictionary<string, bool>();
+			FailedTextures = new HashSet<string>();
 
 			if (Platform == HostPlatform.GNULinux)
             {
@@ -175,11 +176,11 @@ namespace OpenBveApi.Hosts {
 		}
 
 		/// <summary>Contains a list of missing files encountered</summary>
-		public readonly List<string> MissingFiles;
+		public readonly HashSet<string> MissingFiles;
 		/// <summary>Contains a list of objects which failed to load</summary>
-		public readonly List<string> FailedObjects;
+		public readonly ConcurrentDictionary<string, bool> FailedObjects;
 		/// <summary>Contains a list of textures which failed to load</summary>
-		public readonly List<string> FailedTextures;
+		public readonly HashSet<string> FailedTextures;
 
 		/// <summary>Queries the dimensions of a texture.</summary>
 		/// <param name="path">The path to the file or folder that contains the texture.</param>
@@ -611,13 +612,13 @@ namespace OpenBveApi.Hosts {
 		/// <summary>
 		/// Dictionary of StaticObject with Path and PreserveVertices as keys.
 		/// </summary>
-		public readonly Dictionary<ValueTuple<string, bool, DateTime>, StaticObject> StaticObjectCache;
+		public readonly ConcurrentDictionary<ValueTuple<string, bool, DateTime>, StaticObject> StaticObjectCache;
 
 		/// <summary>
 		/// Dictionary of AnimatedObjectCollection with Path as key.
 		/// </summary>
 
-		public readonly Dictionary<string, AnimatedObjectCollection> AnimatedObjectCollectionCache;
+		public readonly ConcurrentDictionary<string, AnimatedObjectCollection> AnimatedObjectCollectionCache;
 
 		/// <summary>Adds a marker texture to the host application's display</summary>
 		/// <param name="MarkerTexture">The texture to add</param>
@@ -725,6 +726,12 @@ namespace OpenBveApi.Hosts {
 
 		/// <summary>Provides the shared random number generator</summary>
 		public Random Random = new Random();
+
+		/// <summary>Time spent parsing route data by the route plugin (ms)</summary>
+		public long PluginParseTime;
+
+		/// <summary>Time spent applying route data by the route plugin (ms)</summary>
+		public long PluginApplyTime;
 
 		/// <summary>Contains the list of commonly used 'empty' files</summary>
 		/// <remarks>These generally aren't a valid object, and should be ignored for errors</remarks>

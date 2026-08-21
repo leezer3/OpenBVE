@@ -22,7 +22,10 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
+using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -33,6 +36,7 @@ namespace Plugin
     public class Plugin : ObjectInterface
     {
 	    internal static HostInterface CurrentHost;
+	    internal static FileSystem CurrentFileSystem;
 	    private static XParsers currentXParser = XParsers.Original;
 	    internal static CompatabilityHacks EnabledHacks;
 
@@ -41,6 +45,7 @@ namespace Plugin
 	    public override void Load(HostInterface host, FileSystem fileSystem) 
 	    {
 		    CurrentHost = host;
+		    CurrentFileSystem = fileSystem;
 	    }
 
 	    public override void SetCompatibilityHacks(CompatabilityHacks enabledHacks)
@@ -60,7 +65,10 @@ namespace Plugin
 		    }
 	    }
 
-	    private int pathRecursions;
+	    [ThreadStatic]
+	    private static int pathRecursions;
+
+	    private static readonly Stopwatch wallClock = Stopwatch.StartNew();
 
 	    public override bool CanLoadObject(string path)
 	    {
@@ -115,7 +123,20 @@ namespace Plugin
 			    case XParsers.NewXParser:
 				    try
 				    {
-					    unifiedObject = NewXParser.ReadObject(path, textEncoding);
+				    Stopwatch sw = Stopwatch.StartNew();
+				    unifiedObject = NewXParser.ReadObject(path, textEncoding);
+				    sw.Stop();
+				    System.Threading.Interlocked.Increment(ref NewXParser.TotalCount);
+				    System.Threading.Interlocked.Add(ref NewXParser.TotalLoadObjectMs, sw.Elapsed.Ticks);
+				    if (sw.ElapsedMilliseconds > 25)
+				    {
+					    CurrentFileSystem.AppendToLogFile("Slow .x object: " + path + " (" + sw.ElapsedMilliseconds + " ms)");
+				    }
+				    if (NewXParser.TotalCount % 100 == 0)
+				    {
+					    double untimed = NewXParser.TicksToMs(NewXParser.TotalReadObjectMs - (NewXParser.TotalReadMs + NewXParser.TotalPreprocessMs + NewXParser.TotalParseMs + NewXParser.TotalApplyMs));
+					    CurrentFileSystem.AppendToLogFile("XParser " + NewXParser.TotalCount + " objects: wall " + wallClock.Elapsed.TotalMilliseconds.ToString("F0") + " ms, load " + NewXParser.TicksToMs(NewXParser.TotalLoadObjectMs).ToString("F0") + " ms, read " + NewXParser.TicksToMs(NewXParser.TotalReadMs).ToString("F0") + " ms, prep " + NewXParser.TicksToMs(NewXParser.TotalPreprocessMs).ToString("F0") + " ms, parse " + NewXParser.TicksToMs(NewXParser.TotalParseMs).ToString("F0") + " ms, apply " + NewXParser.TicksToMs(NewXParser.TotalApplyMs).ToString("F0") + " ms, untimed " + untimed.ToString("F0") + " ms");
+					    }
 					    return true;
 				    }
 				    catch

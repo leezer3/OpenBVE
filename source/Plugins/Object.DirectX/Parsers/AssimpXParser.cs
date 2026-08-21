@@ -35,15 +35,11 @@ namespace Plugin
 {
 	internal class AssimpXParser
 	{
-		private static string currentFolder;
-		private static string currentFile;
-		private static Matrix4D rootMatrix;
-
 		internal static StaticObject ReadObject(string fileName)
 		{
-			currentFolder = Path.GetDirectoryName(fileName);
-			currentFile = fileName;
-			rootMatrix = Matrix4D.NoTransformation;
+			string currentFolder = Path.GetDirectoryName(fileName);
+			string currentFile = fileName;
+			Matrix4D rootMatrix = Matrix4D.NoTransformation;
 
 #if !DEBUG
 			try
@@ -91,7 +87,7 @@ namespace Plugin
 				// Global
 				foreach (var mesh in scene.GlobalMeshes)
 				{
-					MeshBuilder(ref obj, ref builder, mesh);
+					MeshBuilder(ref obj, ref builder, mesh, currentFolder, currentFile);
 				}
 
 				if (scene.RootNode != null)
@@ -106,7 +102,7 @@ namespace Plugin
 
 					foreach (var mesh in scene.RootNode.Meshes)
 					{
-						MeshBuilder(ref obj, ref builder, mesh);
+						MeshBuilder(ref obj, ref builder, mesh, currentFolder, currentFile);
 					}
 
 					// Children Node
@@ -114,7 +110,7 @@ namespace Plugin
 					{
 						Node node = scene.RootNode.Children[i];
 						SetReferenceMaterials(scene, ref node);
-						ChildrenNode(ref obj, ref builder, node);
+						ChildrenNode(ref obj, ref builder, node, currentFolder, currentFile);
 					}
 				}
 
@@ -160,7 +156,7 @@ namespace Plugin
 			
 		}
 
-		private static void  MeshBuilder(ref StaticObject obj, ref MeshBuilder builder, AssimpNET.X.Mesh mesh)
+		private static void  MeshBuilder(ref StaticObject obj, ref MeshBuilder builder, AssimpNET.X.Mesh mesh, string currentFolder, string currentFile)
 		{
 			if (builder.Vertices.Count != 0)
 			{
@@ -326,12 +322,12 @@ namespace Plugin
 			}
 		}
 
-		private static void ChildrenNode(ref StaticObject obj, ref MeshBuilder builder, Node child)
+		private static void ChildrenNode(ref StaticObject obj, ref MeshBuilder builder, Node child, string currentFolder, string currentFile)
 		{
 			foreach (var mesh in child.Meshes)
 			{
 				builder.TransformMatrix = child.TrafoMatrix;
-				MeshBuilder(ref obj, ref builder, mesh);
+				MeshBuilder(ref obj, ref builder, mesh, currentFolder, currentFile);
 				if (builder.Vertices.Count != 0)
 				{
 					builder.Apply(ref obj, false, false);
@@ -340,7 +336,7 @@ namespace Plugin
 			}
 			foreach (var grandchild in child.Children)
 			{
-				ChildrenNode(ref obj, ref builder, grandchild);
+				ChildrenNode(ref obj, ref builder, grandchild, currentFolder, currentFile);
 			}
 
 		}

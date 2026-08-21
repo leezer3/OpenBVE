@@ -44,6 +44,8 @@ namespace OpenBveApi.Textures
 			if (b is null) return false;
 			if (a.ClipRegion != b.ClipRegion) return false;
 			if (a.TransparentColor != b.TransparentColor) return false;
+			if (a.FirstColorTransparent != b.FirstColorTransparent) return false;
+			if (!ReferenceEquals(a.TransparencyTexture, b.TransparencyTexture)) return false;
 			return true;
 		}
 
@@ -58,6 +60,8 @@ namespace OpenBveApi.Textures
 			if (b is null) return true;
 			if (a.ClipRegion != b.ClipRegion) return true;
 			if (a.TransparentColor != b.TransparentColor) return true;
+			if (a.FirstColorTransparent != b.FirstColorTransparent) return true;
+			if (!ReferenceEquals(a.TransparencyTexture, b.TransparencyTexture)) return true;
 			return false;
 		}
 
@@ -72,7 +76,23 @@ namespace OpenBveApi.Textures
 			TextureParameters x = (TextureParameters) obj;
 			if (ClipRegion != x.ClipRegion) return false;
 			if (TransparentColor != x.TransparentColor) return false;
+			if (FirstColorTransparent != x.FirstColorTransparent) return false;
+			if (!ReferenceEquals(TransparencyTexture, x.TransparencyTexture)) return false;
 			return true;
+		}
+
+		/// <summary>Returns a hash code for the parameter values.</summary>
+		/// <returns>A 32-bit signed integer hash code.</returns>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hash = ClipRegion != null ? ClipRegion.GetHashCode() : 0;
+				hash = (hash * 397) ^ (TransparentColor.HasValue ? TransparentColor.Value.GetHashCode() : 0);
+				hash = (hash * 397) ^ FirstColorTransparent.GetHashCode();
+				hash = (hash * 397) ^ (TransparencyTexture != null ? System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(TransparencyTexture) : 0);
+				return hash;
+			}
 		}
 	}
 }

@@ -90,5 +90,19 @@ namespace OpenBveApi.Textures
 			if (Height != x.Height) return false;
 			return true;
 		}
+
+		/// <summary>Returns a hash code based on the region coordinates.</summary>
+		/// <returns>A 32-bit signed integer hash code.</returns>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hash = Left;
+				hash = (hash * 397) ^ Top;
+				hash = (hash * 397) ^ Width;
+				hash = (hash * 397) ^ Height;
+				return hash;
+			}
+		}
 	}
 }

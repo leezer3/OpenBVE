@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -38,12 +39,37 @@ namespace Plugin
 {
 	internal class NewXParser
 	{
+		/// <summary>Total time spent reading object files from disk, in ticks.</summary>
+		internal static long TotalReadMs;
+		/// <summary>Total time spent on text preprocessing, in ticks.</summary>
+		internal static long TotalPreprocessMs;
+		/// <summary>Total time spent parsing block data, in ticks.</summary>
+		internal static long TotalParseMs;
+		/// <summary>Total time spent applying meshes to objects, in ticks.</summary>
+		internal static long TotalApplyMs;
+		/// <summary>Total time spent in ReadObject (read + preprocess + parse + apply), in ticks.</summary>
+		internal static long TotalReadObjectMs;
+		/// <summary>Total time spent in the plugin load call, in ticks.</summary>
+		internal static long TotalLoadObjectMs;
+		/// <summary>The number of objects parsed.</summary>
+		internal static int TotalCount;
+		/// <summary>Converts ticks to milliseconds.</summary>
+		internal static double TicksToMs(long ticks)
+		{
+			return ticks / (double)Stopwatch.Frequency * 1000.0;
+		}
+
 		internal static StaticObject ReadObject(string fileName, Encoding encoding)
 		{
-			rootMatrix = Matrix4D.NoTransformation;
-			currentFolder = Path.GetDirectoryName(fileName);
-			currentFile = fileName;
+			XParseState state = new XParseState
+			{
+				Folder = Path.GetDirectoryName(fileName),
+				File = fileName
+			};
+			Stopwatch readTimer = Stopwatch.StartNew();
 			byte[] Data = File.ReadAllBytes(fileName);
+			readTimer.Stop();
+			System.Threading.Interlocked.Add(ref TotalReadMs, readTimer.Elapsed.Ticks);
 			
 			if (Data.Length < 16 || Data[0] != 120 | Data[1] != 111 | Data[2] != 102 | Data[3] != 32)
 			{
@@ -75,31 +101,57 @@ namespace Plugin
 			if (Data[8] == 116 & Data[9] == 120 & Data[10] == 116 & Data[11] == 32)
 			{
 				// textual flavor
-				string[] Lines = File.ReadAllLines(fileName, encoding);
-				// strip away comments
+				// Single pass over the raw text: strip comments (respecting quoted strings),
+				// collapse runs of whitespace to a single space and append to a single buffer.
+				Stopwatch prepTimer = Stopwatch.StartNew();
+				string Text = encoding.GetString(Data);
+				// Skip the 17 character "xof 0303txt 0032" file header while building the preprocessed text.
+				StringBuilder stripped = new StringBuilder(Text.Length);
 				bool Quote = false;
-				for (int i = 0; i < Lines.Length; i++) {
-					for (int j = 0; j < Lines[i].Length; j++) {
-						if (Lines[i][j] == '"') Quote = !Quote;
-						if (!Quote) {
-							if (Lines[i][j] == '#' || j < Lines[i].Length - 1 && Lines[i].Substring(j, 2) == "//") {
-								Lines[i] = Lines[i].Substring(0, j);
-								break;
-							}
+				bool InComment = false;
+				for (int i = 17; i < Text.Length; i++)
+				{
+					char c = Text[i];
+					if (InComment)
+					{
+						if (c == '\n')
+						{
+							InComment = false;
+							Quote = false;
+							AppendSeparator(stripped);
 						}
+						continue;
 					}
-					//Convert runs of whitespace to single
-					var list = Lines[i].Split().Where(s => !string.IsNullOrWhiteSpace(s));
-					Lines[i] = string.Join(" ", list);
+					if (c == '"')
+					{
+						Quote = !Quote;
+						stripped.Append(c);
+						continue;
+					}
+					if (!Quote && (c == '#' || c == '/' && i + 1 < Text.Length && Text[i + 1] == '/'))
+					{
+						InComment = true;
+						continue;
+					}
+					if (c == '\n')
+					{
+						Quote = false;
+					}
+					if (c == ' ' || c == '\t' || c == '\r' || c == '\n')
+					{
+						AppendSeparator(stripped);
+						continue;
+					}
+					stripped.Append(c);
 				}
-				StringBuilder Builder = new StringBuilder();
-				for (int i = 0; i < Lines.Length; i++) {
-					Builder.Append(Lines[i]);
-					Builder.Append(' ');
-				}
-				string Content = Builder.ToString();
-				Content = Content.Substring(17).Trim();
-				return LoadTextualX(Content);
+				string Content = stripped.ToString();
+				prepTimer.Stop();
+				System.Threading.Interlocked.Add(ref TotalPreprocessMs, prepTimer.Elapsed.Ticks);
+				Stopwatch readObjectTimer = Stopwatch.StartNew();
+				StaticObject result = LoadTextualX(Content, true, state);
+				readObjectTimer.Stop();
+				System.Threading.Interlocked.Add(ref TotalReadObjectMs, readObjectTimer.Elapsed.Ticks);
+				return result;
 			}
 
 			byte[] newData;
@@ -108,7 +160,7 @@ namespace Plugin
 				//Uncompressed binary, so skip the header
 				newData = new byte[Data.Length - 16];
 				Array.Copy(Data, 16, newData, 0, Data.Length - 16);
-				return LoadBinaryX(newData, floatingPointSize);
+				return LoadBinaryX(newData, floatingPointSize, state);
 			}
 
 			if (Data[8] == 116 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112)
@@ -116,7 +168,7 @@ namespace Plugin
 				// compressed textual flavor
 				newData = MSZip.Decompress(Data);
 				string Text = encoding.GetString(newData);
-				return LoadTextualX(Text);
+				return LoadTextualX(Text, false, state);
 			}
 
 			if (Data[8] == 98 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112)
@@ -124,7 +176,7 @@ namespace Plugin
 				//Compressed binary
 				//16 bytes of header, then 8 bytes of padding, followed by the actual compressed data
 				byte[] uncompressedData = MSZip.Decompress(Data);
-				return LoadBinaryX(uncompressedData, floatingPointSize);
+				return LoadBinaryX(uncompressedData, floatingPointSize, state);
 			}
 
 			// unsupported flavor
@@ -132,9 +184,13 @@ namespace Plugin
 			return null;
 		}
 		
-		private static StaticObject LoadTextualX(string Text)
+		private static StaticObject LoadTextualX(string Text, bool preprocessed, XParseState state)
 		{
-			Text = Text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
+			if (!preprocessed)
+			{
+				Text = Text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
+			}
+			Stopwatch parseTimer = Stopwatch.StartNew();
 			StaticObject obj = new StaticObject(Plugin.CurrentHost);
 			MeshBuilder builder = new MeshBuilder(Plugin.CurrentHost);
 			Material material = new Material();
@@ -142,32 +198,49 @@ namespace Plugin
 			while (block.Position() < block.Length() - 5)
 			{
 				Block subBlock = block.ReadSubBlock();
-				ParseSubBlock(subBlock, ref obj, ref builder, ref material);
+				ParseSubBlock(subBlock, ref obj, ref builder, ref material, state);
 			}
+			parseTimer.Stop();
+			System.Threading.Interlocked.Add(ref TotalParseMs, parseTimer.Elapsed.Ticks);
+			Stopwatch applyTimer = Stopwatch.StartNew();
 			builder.Apply(ref obj, false, false);
 			obj.Mesh.CreateNormals();
-			if (rootMatrix != Matrix4D.NoTransformation)
+			applyTimer.Stop();
+			System.Threading.Interlocked.Add(ref TotalApplyMs, applyTimer.Elapsed.Ticks);
+			if (state.RootMatrix != Matrix4D.NoTransformation)
 			{
-				for (int i = transformStart; i < obj.Mesh.Vertices.Length; i++)
+				for (int i = state.TransformStart; i < obj.Mesh.Vertices.Length; i++)
 				{
-					obj.Mesh.Vertices[i].Coordinates.Transform(rootMatrix, false);
+					obj.Mesh.Vertices[i].Coordinates.Transform(state.RootMatrix, false);
 				}
 			}
 			return obj;
 		}
 
-		private static string currentFolder;
-		private static string currentFile;
+		/// <summary>Per-call parse state, allowing multiple objects to be parsed concurrently.</summary>
+		private sealed class XParseState
+		{
+			internal string Folder;
+			internal string File;
+			internal Matrix4D RootMatrix = Matrix4D.NoTransformation;
+			internal int Level;
+			internal int TransformStart;
+			internal bool MaterialUsed;
+			/// <summary>Key-based material definitions declared at root level in the current file.
+			/// Per-parse, so concurrently parsed files cannot overwrite each other's labels.</summary>
+			internal readonly Dictionary<string, Material> RootMaterials = new Dictionary<string, Material>();
+		}
 
-		private static Matrix4D rootMatrix;
-		private static int currentLevel = 0;
-		private static int transformStart = 0;
-		private static VertexElement[] vertexElements;
-		private static bool currentMaterialUsed;
+		/// <summary>Appends a single space separator, avoiding runs of whitespace.</summary>
+		private static void AppendSeparator(StringBuilder sb)
+		{
+			if (sb.Length == 0 || sb[sb.Length - 1] != ' ')
+			{
+				sb.Append(' ');
+			}
+		}
 
-		private static readonly Dictionary<string, Material> rootMaterials = new Dictionary<string, Material>();
-
-		private static void ParseSubBlock(Block block, ref StaticObject obj, ref MeshBuilder builder, ref Material material)
+		private static void ParseSubBlock(Block block, ref StaticObject obj, ref MeshBuilder builder, ref Material material, XParseState state)
 		{
 			Block subBlock;
 			switch (block.Token)
@@ -222,19 +295,19 @@ namespace Plugin
 					}
 					return;
 				case TemplateID.Frame:
-					currentLevel++;
+					state.Level++;
 					if (builder.Vertices.Count != 0)
 					{
 						builder.Apply(ref obj, false, false);
-						if (rootMatrix != Matrix4D.NoTransformation)
+						if (state.RootMatrix != Matrix4D.NoTransformation)
 						{
-							for (int i = transformStart; i < obj.Mesh.Vertices.Length; i++)
+							for (int i = state.TransformStart; i < obj.Mesh.Vertices.Length; i++)
 							{
-								obj.Mesh.Vertices[i].Coordinates.Transform(rootMatrix, false);
+								obj.Mesh.Vertices[i].Coordinates.Transform(state.RootMatrix, false);
 							}
 						}
-						transformStart = obj.Mesh.Vertices.Length;
-						rootMatrix = Matrix4D.NoTransformation;
+						state.TransformStart = obj.Mesh.Vertices.Length;
+						state.RootMatrix = Matrix4D.NoTransformation;
 						builder = new MeshBuilder(Plugin.CurrentHost);
 					}
 					while (block.Position() < block.Length() - 5)
@@ -247,9 +320,9 @@ namespace Plugin
 						 */
 						//TemplateID[] validTokens = { TemplateID.Mesh , TemplateID.FrameTransformMatrix, TemplateID.Frame };
 						subBlock = block.ReadSubBlock();
-						ParseSubBlock(subBlock, ref obj, ref builder, ref material);
+						ParseSubBlock(subBlock, ref obj, ref builder, ref material, state);
 					}
-					currentLevel--;
+					state.Level--;
 					if (builder.Vertices.Count == 0)
 					{
 						builder.TransformMatrix = Matrix4D.NoTransformation;
@@ -262,18 +335,18 @@ namespace Plugin
 						matrixValues[i] = block.ReadSingle();
 					}
 
-					if (currentLevel > 1)
+					if (state.Level > 1)
 					{
 						builder.TransformMatrix = new Matrix4D(matrixValues) * builder.TransformMatrix;
 					}
 					else
 					{
-						transformStart = obj.Mesh.Vertices.Length;
-						rootMatrix = new Matrix4D(matrixValues);
+						state.TransformStart = obj.Mesh.Vertices.Length;
+						state.RootMatrix = new Matrix4D(matrixValues);
 					}
 					break;
 				case TemplateID.Mesh:
-					currentLevel++;
+					state.Level++;
 					if (builder.Vertices.Count != 0)
 					{
 						builder.Apply(ref obj, false, false);
@@ -308,7 +381,7 @@ namespace Plugin
 							if (block.Position() < block.Length() - 5)
 							{
 								subBlock = block.ReadSubBlock();
-								ParseSubBlock(subBlock, ref obj, ref builder, ref material);
+								ParseSubBlock(subBlock, ref obj, ref builder, ref material, state);
 							}
 							goto NoFaces;
 						}
@@ -338,10 +411,10 @@ namespace Plugin
 					while (block.Position() < block.Length() - 5)
 					{
 						subBlock = block.ReadSubBlock();
-						ParseSubBlock(subBlock, ref obj, ref builder, ref material);
+						ParseSubBlock(subBlock, ref obj, ref builder, ref material, state);
 					}
 
-					currentLevel--;
+					state.Level--;
 					break;
 				case TemplateID.MeshMaterialList:
 					int nMaterials = block.ReadInt();
@@ -381,12 +454,12 @@ namespace Plugin
 						Array.Resize(ref builder.Materials, nMaterials + 1);
 						for (int i = 0; i < nMaterials; i++)
 						{
-							currentMaterialUsed = materialsUsed[i];
+							state.MaterialUsed = materialsUsed[i];
 							// YUCKY: skip bracket strings
 							string materialName = block.ReadString();
-							if (!rootMaterials.TryGetValue(materialName, out builder.Materials[i + 1]))
+							if (!state.RootMaterials.TryGetValue(materialName, out builder.Materials[i + 1]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"Material {materialName} was not found in DirectX binary file {currentFile}");
+								Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"Material {materialName} was not found in DirectX binary file {state.File}");
 								builder.Materials[i + 1] = new Material();
 							}
 							
@@ -402,17 +475,17 @@ namespace Plugin
 					{
 						for (int i = 0; i < nMaterials; i++)
 						{
-							currentMaterialUsed = materialsUsed[i];
+							state.MaterialUsed = materialsUsed[i];
 							try
 							{
 								subBlock = block.ReadSubBlock(new[] { TemplateID.Material, TemplateID.TextureKey });
-								ParseSubBlock(subBlock, ref obj, ref builder, ref material);
+								ParseSubBlock(subBlock, ref obj, ref builder, ref material, state);
 							}
 							catch (Exception ex)
 							{
 								if (ex is EndOfStreamException)
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"{ nMaterials } materials expected, but { i } found in DirectX binary file { currentFile }");
+									Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"{ nMaterials } materials expected, but { i } found in DirectX binary file { state.File }");
 								}
 								break;
 							}
@@ -463,18 +536,20 @@ namespace Plugin
 					if (block.Position() < block.Length() - 5)
 					{
 						subBlock = block.ReadSubBlock(TemplateID.TextureFilename);
-						ParseSubBlock(subBlock, ref obj, ref builder, ref newMaterial);
+						ParseSubBlock(subBlock, ref obj, ref builder, ref newMaterial, state);
 					}
-					if (currentLevel == 0)
+					if (state.Level == 0)
 					{
 						// Key based material definitions
 						if (!string.IsNullOrEmpty(block.Label))
 						{
-							rootMaterials[block.Label] = newMaterial;
+							state.RootMaterials[block.Label] = newMaterial;
 						}
 					}
 					else
 					{
+						// Optimize: Use a list for materials and only update the builder at the end if needed 
+						// but to keep it simple, we check if current material matches before resizing
 						int m = builder.Materials.Length;
 						Array.Resize(ref builder.Materials, m + 1);
 						builder.Materials[m] = newMaterial;
@@ -484,7 +559,7 @@ namespace Plugin
 					string texturePath = block.ReadString();
 					if (string.IsNullOrEmpty(texturePath))
 					{
-						if (currentMaterialUsed)
+						if (state.MaterialUsed)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"An empty texture was specified for material {material.Key}");
 						}
@@ -505,17 +580,17 @@ namespace Plugin
 
 					try
 					{
-						material.DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, texturePath);
+						material.DaytimeTexture = OpenBveApi.Path.CombineFile(state.Folder, texturePath);
 					}
 					catch (Exception e)
 					{
-						if (currentMaterialUsed)
+						if (state.MaterialUsed)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"Texture file path {texturePath} in file {currentFile} has the problem: {e.Message}");
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"Texture file path {texturePath} in file {state.File} has the problem: {e.Message}");
 						}
 						else
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, $"Referenced, but unused Texture file path {texturePath} for material {material.Key} in file {currentFile} has the problem: {e.Message}");
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, $"Referenced, but unused Texture file path {texturePath} for material {material.Key} in file {state.File} has the problem: {e.Message}");
 						}
 						material.DaytimeTexture = null;
 					}
@@ -528,7 +603,7 @@ namespace Plugin
 						{
 							byte[] stringBytes = Encoding.GetEncoding(0).GetBytes(texturePath);
 							string shift_jis_string = Encoding.GetEncoding("shift_jis").GetString(stringBytes);
-							material.DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, shift_jis_string);
+							material.DaytimeTexture = OpenBveApi.Path.CombineFile(state.Folder, shift_jis_string);
 						}
 						catch
 						{
@@ -538,13 +613,13 @@ namespace Plugin
 
 					if (!File.Exists(material.DaytimeTexture) && material.DaytimeTexture != null)
 					{
-						if (currentMaterialUsed)
+						if (state.MaterialUsed)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, true, $"Texture {material.DaytimeTexture} for material {material.Key} was not found in file {currentFile}");
+							Plugin.CurrentHost.AddMessage(MessageType.Error, true, $"Texture {material.DaytimeTexture} for material {material.Key} was not found in file {state.File}");
 						}
 						else
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, true, $"Referenced, but unused Texture {material.DaytimeTexture} for material {material.Key} was not found in file {currentFile}");
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, true, $"Referenced, but unused Texture {material.DaytimeTexture} for material {material.Key} was not found in file {state.File}");
 						}
 						material.DaytimeTexture = null;
 					}
@@ -631,11 +706,11 @@ namespace Plugin
 					int ml = builder.Materials.Length;
 					Array.Resize(ref builder.Materials, ml + 1);
 					builder.Materials[ml] = new Material();
-					rootMaterials.TryGetValue(block.Label, out builder.Materials[ml]);
+					state.RootMaterials.TryGetValue(block.Label, out builder.Materials[ml]);
 					break;
 				case TemplateID.DeclData:
 					int numTemplates = (int)block.ReadDword();
-					vertexElements = new VertexElement[numTemplates];
+					VertexElement[] vertexElements = new VertexElement[numTemplates];
 					for (int i = 0; i < numTemplates; i++)
 					{
 						vertexElements[i] = new VertexElement(block.ReadDword(), block.ReadDword(), block.ReadDword(), block.ReadDword());
@@ -659,15 +734,18 @@ namespace Plugin
 									uint z = block.ReadDword();
 									Vector3 normal = new Vector3(*(float*)&x, *(float*)&y, *(float*)&z);
 
+									// Optimize: Avoid O(N^2) search by updating only relevant facial vertices
 									for (int i = 0; i < builder.Faces.Count; i++)
 									{
-										for (int j = 0; j < builder.Faces[i].Vertices.Length; j++)
+										MeshFace f = builder.Faces[i];
+										for (int j = 0; j < f.Vertices.Length; j++)
 										{
-											if (builder.Faces[i].Vertices[j].Index == currentVertex)
+											if (f.Vertices[j].Index == currentVertex)
 											{
-												builder.Faces[i].Vertices[j].Normal = normal;
+												f.Vertices[j].Normal = normal;
 											}
 										}
+										builder.Faces[i] = f;
 									}
 									numRemainingDwords -= 3;
 									break;
@@ -719,7 +797,7 @@ namespace Plugin
 			}
 		}
 
-		private static StaticObject LoadBinaryX(byte[] objectBytes, int floatingPointSize)
+		private static StaticObject LoadBinaryX(byte[] objectBytes, int floatingPointSize, XParseState state)
 		{
 			Block block = new BinaryBlock(objectBytes, floatingPointSize);
 			StaticObject obj = new StaticObject(Plugin.CurrentHost);
@@ -728,15 +806,15 @@ namespace Plugin
 			while (block.Position() < block.Length())
 			{
 				Block subBlock = block.ReadSubBlock();
-				ParseSubBlock(subBlock, ref obj, ref builder, ref material);
+				ParseSubBlock(subBlock, ref obj, ref builder, ref material, state);
 			}
 			builder.Apply(ref obj, false, false);
 			obj.Mesh.CreateNormals();
-			if (rootMatrix != Matrix4D.NoTransformation)
+			if (state.RootMatrix != Matrix4D.NoTransformation)
 			{
-				for (int i = transformStart; i < obj.Mesh.Vertices.Length; i++)
+				for (int i = state.TransformStart; i < obj.Mesh.Vertices.Length; i++)
 				{
-					obj.Mesh.Vertices[i].Coordinates.Transform(rootMatrix, false);
+					obj.Mesh.Vertices[i].Coordinates.Transform(state.RootMatrix, false);
 				}
 			}
 			return obj;

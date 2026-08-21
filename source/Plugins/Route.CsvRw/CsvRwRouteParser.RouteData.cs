@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
@@ -42,6 +41,10 @@ namespace CsvRwRouteParser
 			internal bool IsHmmsim = false;
 
 			internal readonly List<string> ScriptedTrainFiles;
+
+			// Cached indices for brightness lookup optimization
+			private int cachedBrightnessBlockIndex = 0;
+			private int cachedBrightnessChangeIndex = 0;
 
 			internal void SetHmmsimProperties()
 			{
@@ -141,42 +144,40 @@ namespace CsvRwRouteParser
 							}
 						}
 						
-						for (int j = 0; j < Blocks[i - 1].Rails.Count; j++)
+						foreach (var railKvp in Blocks[i - 1].Rails)
 						{
-							int key = Blocks[i - 1].Rails.ElementAt(j).Key;
-							Rail rail = new Rail(Blocks[i - 1].Rails[key].Accuracy,Blocks[i - 1].Rails[key].AdhesionMultiplier)
+							int key = railKvp.Key;
+							Rail rail = new Rail(railKvp.Value.Accuracy, railKvp.Value.AdhesionMultiplier)
 							{
-								RailStarted = Blocks[i -1].Rails[key].RailStarted,
-								RailStart = new Vector2(Blocks[i -1].Rails[key].RailStart),
+								RailStarted = railKvp.Value.RailStarted,
+								RailStart = new Vector2(railKvp.Value.RailStart),
 								RailStartRefreshed = false,
 								RailEnded = false,
-								RailEnd = new Vector2(Blocks[i - 1].Rails[key].RailStart),
-								IsDriveable = Blocks[i - 1].Rails[key].IsDriveable,
-								PowerSupplies = new Dictionary<PowerSupplyTypes, PowerSupply>(Blocks[i -1].Rails[key].PowerSupplies)
+								RailEnd = new Vector2(railKvp.Value.RailStart),
+								IsDriveable = railKvp.Value.IsDriveable,
+								PowerSupplies = new Dictionary<PowerSupplyTypes, PowerSupply>(railKvp.Value.PowerSupplies)
 							};
 							Blocks[i].Rails.Add(key, rail);
 						}
 						if (!PreviewOnly)
 						{
 							Blocks[i].RailWall = new Dictionary<int, WallDike>();
-							for (int j = 0; j < Blocks[i - 1].RailWall.Count; j++)
+							foreach (var wallKvp in Blocks[i - 1].RailWall)
 							{
-								int key = Blocks[i - 1].RailWall.ElementAt(j).Key;
-								if (Blocks[i - 1].RailWall[key] == null || !Blocks[i - 1].RailWall[key].Exists)
+								if (wallKvp.Value == null || !wallKvp.Value.Exists)
 								{
 									continue;
 								}
-								Blocks[i].RailWall.Add(key, Blocks[i - 1].RailWall[key].Clone());
+								Blocks[i].RailWall.Add(wallKvp.Key, wallKvp.Value.Clone());
 							}
 							Blocks[i].RailDike = new Dictionary<int, WallDike>();
-							for (int j = 0; j < Blocks[i - 1].RailDike.Count; j++)
+							foreach (var dikeKvp in Blocks[i - 1].RailDike)
 							{
-								int key = Blocks[i - 1].RailDike.ElementAt(j).Key;
-								if (Blocks[i - 1].RailDike[key] == null || !Blocks[i - 1].RailDike[key].Exists)
+								if (dikeKvp.Value == null || !dikeKvp.Value.Exists)
 								{
 									continue;
 								}
-								Blocks[i].RailDike.Add(key, Blocks[i - 1].RailDike[key].Clone());
+								Blocks[i].RailDike.Add(dikeKvp.Key, dikeKvp.Value.Clone());
 							}
 							Blocks[i].RailPole = new Pole[Blocks[i - 1].RailPole.Length];
 							for (int j = 0; j < Blocks[i].RailPole.Length; j++)
@@ -199,17 +200,24 @@ namespace CsvRwRouteParser
 				double tMin = double.PositiveInfinity;
 				double tMax = double.NegativeInfinity;
 				double bMin = 1.0, bMax = 1.0;
-				for (int i = 0; i < Blocks.Count; i++)
+
+				// Forward scan - find last brightness change <= trackPosition
+				// Start from cached position since track positions are queried in order
+				for (int i = cachedBrightnessBlockIndex; i < Blocks.Count; i++)
 				{
-					for (int j = 0; j < Blocks[i].BrightnessChanges.Length; j++)
+					for (int j = (i == cachedBrightnessBlockIndex ? cachedBrightnessChangeIndex : 0); j < Blocks[i].BrightnessChanges.Length; j++)
 					{
 						if (Blocks[i].BrightnessChanges[j].TrackPosition <= trackPosition)
 						{
 							tMin = Blocks[i].BrightnessChanges[j].TrackPosition;
 							bMin = Blocks[i].BrightnessChanges[j].Value;
+							cachedBrightnessBlockIndex = i;
+							cachedBrightnessChangeIndex = j;
 						}
 					}
 				}
+
+				// Backward scan - find first brightness change >= trackPosition
 				for (int i = Blocks.Count - 1; i >= 0; i--)
 				{
 					for (int j = Blocks[i].BrightnessChanges.Length - 1; j >= 0; j--)
@@ -221,6 +229,7 @@ namespace CsvRwRouteParser
 						}
 					}
 				}
+
 				if (tMin == double.PositiveInfinity && tMax == double.NegativeInfinity)
 				{
 					return 1.0;

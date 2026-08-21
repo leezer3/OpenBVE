@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -86,7 +87,6 @@ namespace CsvRwRouteParser {
 				Data.Structure.Poles[3].Add(0, LoadStaticObject(Path.CombineFile(poleFolder, "pole_4.csv"), System.Text.Encoding.UTF8, false));
 				
 				Data.Structure.RailObjects = new ObjectDictionary();
-				Data.Structure.RailObjects = new ObjectDictionary();
 				Data.Structure.Ground = new ObjectDictionary();
 				Data.Structure.WallL = new ObjectDictionary();
 				Data.Structure.WallR = new ObjectDictionary();
@@ -127,13 +127,17 @@ namespace CsvRwRouteParser {
 				CurrentRoute.Sections[0].CurrentAspect = 0;
 				CurrentRoute.Sections[0].StationIndex = -1;
 			}
+			Stopwatch parseTimer = Stopwatch.StartNew();
 			ParseRouteForData(fileName, Encoding, ref Data, PreviewOnly);
 			if (Plugin.Cancel)
 			{
 				Plugin.IsLoading = false;
 				return;
 			}
+			Plugin.CurrentHost.PluginParseTime = parseTimer.ElapsedMilliseconds;
+			Stopwatch applyTimer = Stopwatch.StartNew();
 			ApplyRouteData(fileName, ref Data, PreviewOnly);
+			Plugin.CurrentHost.PluginApplyTime = applyTimer.ElapsedMilliseconds;
 		}
 
 		private void ParseRouteForData(string FileName, System.Text.Encoding Encoding, ref RouteData Data, bool PreviewOnly) {
@@ -191,7 +195,7 @@ namespace CsvRwRouteParser {
 			for (int j = 0; j < Expressions.Count; j++) {
 				Plugin.CurrentProgress = j * progressFactor;
 				if ((j & 255) == 0) {
-					System.Threading.Thread.Sleep(1);
+					System.Threading.Thread.Yield();
 					if (Plugin.Cancel)
 					{
 						Plugin.IsLoading = false;
@@ -223,7 +227,7 @@ namespace CsvRwRouteParser {
 						string[] Arguments = SplitArguments(ArgumentSequence);
 
 						// preprocess command
-						if (Command.ToLowerInvariant() == "with") {
+						if (string.Equals(Command, "with", StringComparison.OrdinalIgnoreCase)) {
 							SectionAlwaysPrefix = false;
 							Section = Arguments.Length >= 1 ? Arguments[0] : string.Empty;
 							Command = null;
@@ -393,7 +397,7 @@ namespace CsvRwRouteParser {
 			for (int j = 0; j < Expressions.Count; j++) {
 				Plugin.CurrentProgress = 0.3333 + j * progressFactor;
 				if ((j & 255) == 0) {
-					System.Threading.Thread.Sleep(1);
+					System.Threading.Thread.Yield();
 					if (Plugin.Cancel)
 					{
 						Plugin.IsLoading = false;
@@ -460,7 +464,7 @@ namespace CsvRwRouteParser {
 						string[] Arguments = SplitArguments(ArgumentSequence);
 						
 						// preprocess command
-						if (Command.ToLowerInvariant() == "with") {
+						if (string.Equals(Command, "with", StringComparison.OrdinalIgnoreCase)) {
 							SectionAlwaysPrefix = false;
 							Section = Arguments.Length >= 1 ? Arguments[0] : string.Empty;
 							Command = null;

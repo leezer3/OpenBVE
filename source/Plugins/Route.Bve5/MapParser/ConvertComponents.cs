@@ -23,6 +23,8 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Bve5_Parsing.MapGrammar;
 using Bve5_Parsing.MapGrammar.EvaluateData;
@@ -465,17 +467,31 @@ namespace Route.Bve5
 		{
 
 			// Own track is excluded.
+			Dictionary<string, List<Statement>> TrackStatements = new Dictionary<string, List<Statement>>(StringComparer.InvariantCultureIgnoreCase);
+			foreach (Statement Statement in ParseData.Statements)
+			{
+				if (Statement.ElementName != MapElementName.Track)
+				{
+					continue;
+				}
+
+				if (!TrackStatements.TryGetValue(Statement.Key, out List<Statement> RailStatements))
+				{
+					RailStatements = new List<Statement>();
+					TrackStatements.Add(Statement.Key, RailStatements);
+				}
+				RailStatements.Add(Statement);
+			}
+
 			for (int railIndex = 1; railIndex < RouteData.TrackKeyList.Count; railIndex++)
 			{
 				string railKey = RouteData.TrackKeyList[railIndex];
-				foreach (Statement Statement in ParseData.Statements)
+				Stopwatch railTimer = Stopwatch.StartNew();
+				if (TrackStatements.TryGetValue(railKey, out List<Statement> ProcessedRailStatements))
 				{
-					if (Statement.ElementName != MapElementName.Track || !Statement.Key.Equals(RouteData.TrackKeyList[railIndex], StringComparison.InvariantCultureIgnoreCase))
+					foreach (Statement Statement in ProcessedRailStatements)
 					{
-						continue;
-					}
-
-					dynamic d = Statement;
+						dynamic d = Statement;
 
 					if (Statement.FunctionName == MapFunctionName.Position || (Statement.HasSubElement && Statement.SubElementName == MapSubElementName.X))
 					{
@@ -630,6 +646,7 @@ namespace Route.Bve5
 						}
 					}
 				}
+				}
 
 				if (!RouteData.Blocks.First().Rails[railKey].InterpolateX)
 				{
@@ -678,8 +695,11 @@ namespace Route.Bve5
 					RouteData.Blocks.Last().Rails[railKey].RadiusV = LastInterpolateIndex != -1 ? RouteData.Blocks[LastInterpolateIndex].Rails[railKey].RadiusV : 0.0;
 					RouteData.Blocks.Last().Rails[railKey].InterpolateY = true;
 				}
+				railTimer.Stop();
+				Plugin.FileSystem.AppendToLogFile("Bve5 phase: ConvertTrack statements rail " + railKey + ": " + railTimer.ElapsedMilliseconds + " ms");
 			}
 
+			Stopwatch passTimer = Stopwatch.StartNew();
 			for (int j = 1; j < RouteData.TrackKeyList.Count; j++)
 			{
 				string railKey = RouteData.TrackKeyList[j];
@@ -720,7 +740,9 @@ namespace Route.Bve5
 					i = RouteData.sortedBlocks.IndexOfKey(dist) + 1;
 				}
 			}
+			LogPhase("ConvertTrack X interp", passTimer);
 
+			passTimer = Stopwatch.StartNew();
 			for (int j = 1; j < RouteData.TrackKeyList.Count; j++)
 			{
 				string railKey = RouteData.TrackKeyList[j];
@@ -761,7 +783,9 @@ namespace Route.Bve5
 					i = RouteData.sortedBlocks.IndexOfKey(dist) + 1;
 				}
 			}
+			LogPhase("ConvertTrack Y interp", passTimer);
 
+			passTimer = Stopwatch.StartNew();
 			for (int j = 1; j < RouteData.TrackKeyList.Count; j++)
 			{
 				string railKey = RouteData.TrackKeyList[j];
@@ -808,7 +832,9 @@ namespace Route.Bve5
 					i = RouteData.sortedBlocks.IndexOfKey(dist) + 1;
 				}
 			}
+			LogPhase("ConvertTrack curve transition", passTimer);
 
+			passTimer = Stopwatch.StartNew();
 			for (int j = 1; j < RouteData.TrackKeyList.Count; j++)
 			{
 				string railKey = RouteData.TrackKeyList[j];
@@ -846,22 +872,23 @@ namespace Route.Bve5
 						double EndDistance = RouteData.Blocks[i].StartingDistance;
 						double EndCant = RouteData.Blocks[i].Rails[railKey].CurveCant;
 
-						if (StartCant == EndCant)
-						{
-							i++;
-							continue;
-						}
-
-						for (double k = StartDistance; k < EndDistance; k += InterpolateInterval)
-						{
-							RouteData.FindOrAddBlock(k);
-						}
+					if (StartCant == EndCant)
+					{
+						i++;
+						continue;
 					}
 
-					// now use distance to retrieve the *new* index of said block after insertions (+1 to carry on with loop)
-					i = RouteData.sortedBlocks.IndexOfKey(dist) + 1;
+					for (double k = StartDistance; k < EndDistance; k += InterpolateInterval)
+					{
+						RouteData.FindOrAddBlock(k);
+					}
 				}
+
+				// now use distance to retrieve the *new* index of said block after insertions (+1 to carry on with loop)
+				i = RouteData.sortedBlocks.IndexOfKey(dist) + 1;
 			}
+			}
+			LogPhase("ConvertTrack curve interp", passTimer);
 		}
 
 		private static int CurrentStation = 0;
