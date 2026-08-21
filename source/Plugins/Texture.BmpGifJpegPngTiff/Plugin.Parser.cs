@@ -22,14 +22,14 @@ namespace Plugin {
 		private bool Parse(string file, out Texture texture) 
 		{
 			/*
-			 * First, check if our file is a GIF by
-			 * reading the header bytes to check the signature
-			 *
-			 * If true, pass to the dedicated GIF decoder to handle
-			 * animations etc.
+			 * First, check the header bytes for a known signature,
+			 * then pass the file to the matching dedicated decoder.
 			 */
 			try
 			{
+				bool gifHeader = false;
+				bool bmpHeader = false;
+				bool pngHeader = false;
 				using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
 				{
 					byte[] buffer = new byte[6];
@@ -38,55 +38,57 @@ namespace Plugin {
 						// ReSharper disable once MustUseReturnValue
 						fs.Read(buffer, 0, buffer.Length);
 					}
-					fs.Close();
-					if (buffer.SequenceEqual(GifDecoder.GIF87Header) || buffer.SequenceEqual(GifDecoder.GIF89Header))
-					{
-						using (GifDecoder decoder = new GifDecoder())
-						{
-							decoder.Read(file);
-							int frameCount = decoder.GetFrameCount();
-							int duration = 0;
-							if (frameCount != 1)
-							{
-								Vector2 frameSize = decoder.GetFrameSize();
-								byte[][] frameBytes = new byte[frameCount][];
-								for (int i = 0; i < frameCount; i++)
-								{
-									int[] framePixels = decoder.GetFrame(i);
-									frameBytes[i] = new byte[framePixels.Length * sizeof(int)];
-									Buffer.BlockCopy(framePixels, 0, frameBytes[i], 0, frameBytes[i].Length);
-									duration += decoder.GetDuration(i);
-								}
-								texture = new Texture((int)frameSize.X, (int)frameSize.Y, OpenBveApi.Textures.PixelFormat.RGBAlpha, frameBytes, ((double)duration / frameCount) / 10000000.0);
-								return true;
-							}
-						}
-						
-					}
-					
-					if (Encoding.ASCII.GetString(buffer, 0, 2) == "BM")
-					{
-						using (BmpDecoder decoder = new BmpDecoder())
-						{
-							if (decoder.Read(file))
-							{
-								texture = new Texture(decoder.Width, decoder.Height, OpenBveApi.Textures.PixelFormat.RGBAlpha, decoder.ImageData, decoder.ColorTable);
-								return true;
-							}
-						}
-					}
+					gifHeader = buffer.SequenceEqual(GifDecoder.GIF87Header) || buffer.SequenceEqual(GifDecoder.GIF89Header);
+					bmpHeader = Encoding.ASCII.GetString(buffer, 0, 2) == "BM";
+					pngHeader = Encoding.ASCII.GetString(buffer, 1, 3) == "PNG";
+				}
 
-					if (Encoding.ASCII.GetString(buffer, 1, 3) == "PNG" && !CurrentOptions.UseGDIDecoders)
+				if (gifHeader)
+				{
+					using (GifDecoder decoder = new GifDecoder())
 					{
-						// NB: GDI+ decoders are curerntly enabled by default as they are marginally faster (~10ms or so per texture unless massively interlaced which is worse)
-						//     If / when mobile device support is added, these will likely be removed
-						using (PngDecoder decoder = new PngDecoder())
+						decoder.Read(file);
+						int frameCount = decoder.GetFrameCount();
+						int duration = 0;
+						if (frameCount != 1)
 						{
-							if (decoder.Read(file))
+							Vector2 frameSize = decoder.GetFrameSize();
+							byte[][] frameBytes = new byte[frameCount][];
+							for (int i = 0; i < frameCount; i++)
 							{
-								texture = new Texture(decoder.Width, decoder.Height, (OpenBveApi.Textures.PixelFormat)decoder.BytesPerPixel, decoder.pixelBuffer, null);
-								return true;
+								int[] framePixels = decoder.GetFrame(i);
+								frameBytes[i] = new byte[framePixels.Length * sizeof(int)];
+								Buffer.BlockCopy(framePixels, 0, frameBytes[i], 0, frameBytes[i].Length);
+								duration += decoder.GetDuration(i);
 							}
+							texture = new Texture((int)frameSize.X, (int)frameSize.Y, OpenBveApi.Textures.PixelFormat.RGBAlpha, frameBytes, ((double)duration / frameCount) / 10000000.0);
+							return true;
+						}
+					}
+				}
+
+				if (bmpHeader)
+				{
+					using (BmpDecoder decoder = new BmpDecoder())
+					{
+						if (decoder.Read(file))
+						{
+							texture = new Texture(decoder.Width, decoder.Height, OpenBveApi.Textures.PixelFormat.RGBAlpha, decoder.ImageData, decoder.ColorTable);
+							return true;
+						}
+					}
+				}
+
+				if (pngHeader && !CurrentOptions.UseGDIDecoders)
+				{
+					// NB: GDI+ decoders are curerntly enabled by default as they are marginally faster (~10ms or so per texture unless massively interlaced which is worse)
+					//     If / when mobile device support is added, these will likely be removed
+					using (PngDecoder decoder = new PngDecoder())
+					{
+						if (decoder.Read(file))
+						{
+							texture = new Texture(decoder.Width, decoder.Height, (OpenBveApi.Textures.PixelFormat)decoder.BytesPerPixel, decoder.pixelBuffer, null);
+							return true;
 						}
 					}
 				}
