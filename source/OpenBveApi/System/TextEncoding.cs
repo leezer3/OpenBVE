@@ -297,7 +297,27 @@ namespace OpenBveApi
 			try
 			{
 				System.IO.FileInfo fInfo = new System.IO.FileInfo(File);
-				Encoding encoding = GetEncodingFromBytes(System.IO.File.ReadAllBytes(File));
+				/*
+				 * Read at most the first megabyte for detection.
+				 * Character sets are reliably identified from the leading portion of a file,
+				 * and feeding the entire file to the detector is wasteful for large files.
+				 */
+				int detectLength = (int)System.Math.Min(fInfo.Length, 1048576);
+				byte[] data = new byte[detectLength];
+				using (System.IO.FileStream stream = new System.IO.FileStream(File, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.Read))
+				{
+					int read = 0;
+					while (read < detectLength)
+					{
+						int r = stream.Read(data, read, detectLength - read);
+						if (r <= 0)
+						{
+							break;
+						}
+						read += r;
+					}
+				}
+				Encoding encoding = GetEncodingFromBytes(data);
 
 				switch (encoding)
 				{
