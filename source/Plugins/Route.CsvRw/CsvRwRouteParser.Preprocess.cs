@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
-using Route.CsvRw;
 
 namespace CsvRwRouteParser
 {
@@ -82,15 +81,17 @@ namespace CsvRwRouteParser
 						if (loadCount > 1)
 						{
 							string[] splitLine = Lines[i].Split(',');
-							Lines.RemoveAt(i);
-							for (int j = 0; j < splitLine.Length; j++)
+							List<string> replacement = new List<string>(splitLine.Length);
+							for (int j = splitLine.Length - 1; j >= 0; j--)
 							{
 								string newLine = splitLine[j].Trim();
 								if (newLine.Length > 0)
 								{
-									Lines.Insert(i, newLine);
+									replacement.Add(newLine);
 								}
 							}
+							Lines.RemoveAt(i);
+							Lines.InsertRange(i, replacement);
 						}
 					}
 					// create expressions
@@ -591,7 +592,7 @@ namespace CsvRwRouteParser
 		}
 
 		private void PreprocessSortByTrackPosition(double[] unitFactors, ref IList<Expression> Expressions) {
-			SortedList<double, Expression> positionedExpressions = new SortedList<double, Expression>(new DuplicateLessThanKeyComparer<double>());
+			List<KeyValuePair<double, Expression>> positionedExpressions = new List<KeyValuePair<double, Expression>>(Expressions.Count);
 			double a = -1.0, pa = -1.0;
 			bool numberCheck = !IsRW;
 			for (int i = 0; i < Expressions.Count; i++) {
@@ -638,13 +639,13 @@ namespace CsvRwRouteParser
 				} else {
 					if (pa != a)
 					{
-						positionedExpressions.Add(a, new Expression(string.Empty, (a / unitFactors[unitFactors.Length - 1]).ToString(Culture), -1, -1, -1));
+						positionedExpressions.Add(new KeyValuePair<double, Expression>(a, new Expression(string.Empty, (a / unitFactors[unitFactors.Length - 1]).ToString(Culture), -1, -1, -1)));
 						pa = a;
 					}
-					positionedExpressions.Add(a, Expressions[i]);
+					positionedExpressions.Add(new KeyValuePair<double, Expression>(a, Expressions[i]));
 				}
 			}
-			Expressions = positionedExpressions.Values;
+			Expressions = positionedExpressions.OrderBy(p => p.Key).Select(p => p.Value).ToList();
 		}
 	}
 }
