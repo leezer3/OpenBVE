@@ -190,7 +190,7 @@ namespace LokSimRouteParser
 					o.Rotate(tf.WorldDirection, tf.WorldUp, tf.WorldSide);
 					Vector3 objectWpos = tf.WorldPosition + o;
 					Transformation tr = new Transformation(tf.WorldDirection, tf.WorldUp, tf.WorldSide);
-					UnifiedObject.CreateObject(objectWpos, tr, new Transformation(Rotation.X.ToRadians(), Rotation.Y.ToRadians(), Rotation.Z.ToRadians()), new ObjectCreationParameters(tf.TrackPosition, tf.TrackPosition, tf.TrackPosition + Distance));
+					UnifiedObject.CreateObject(objectWpos, tr, new Transformation(Rotation.X.ToRadians(), Rotation.Y.ToRadians(), Rotation.Z.ToRadians()), new ObjectCreationParameters(tf.TrackPosition, tf.TrackPosition, tf.TrackPosition + 500));
 				}
 				else
 				{
@@ -226,7 +226,7 @@ namespace LokSimRouteParser
 						}
 						repetitionPosition.Rotate(d,u,s);
 						Transformation tr = new Transformation(d,u,s);
-						UnifiedObject.CreateObject(objectWpos + repetitionPosition, tr, new Transformation(Rotation.X.ToRadians(), Rotation.Y.ToRadians(), Rotation.Z.ToRadians()), new ObjectCreationParameters(tf.TrackPosition + i * Distance, tf.TrackPosition + i * Distance, tf.TrackPosition + i * Distance));
+						UnifiedObject.CreateObject(objectWpos + repetitionPosition, tr, new Transformation(Rotation.X.ToRadians(), Rotation.Y.ToRadians(), Rotation.Z.ToRadians()), new ObjectCreationParameters(tf.TrackPosition, tf.TrackPosition, tf.TrackPosition + 500));
 
 
 						lastWpos = tf.WorldPosition;
