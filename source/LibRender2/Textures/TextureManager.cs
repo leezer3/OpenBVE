@@ -272,11 +272,23 @@ namespace LibRender2.Textures
 				/*
 				 * Reuse the register-time decode held by the texture cache where possible,
 				 * as the cached instance already has the origin's parameters applied,
-				 * avoiding a second full decode of the same file
+				 * avoiding a second full decode of the same file.
+				 * NB: Origin equality only compares the path, so the cached instance must be
+				 * checked against this handle's parameters before reuse- files registered with
+				 * differing parameters (e.g. different clip regions) require their own decode.
 				 */
 				lock (TextureLookupLock)
 				{
-					textureCache.TryGetValue(handle.Origin, out texture);
+					Texture cachedTexture;
+					if (textureCache.TryGetValue(handle.Origin, out cachedTexture))
+					{
+						PathOrigin cachedPathOrigin = cachedTexture.Origin as PathOrigin;
+						PathOrigin handlePathOrigin = handle.Origin as PathOrigin;
+						if (cachedPathOrigin != null && handlePathOrigin != null && cachedPathOrigin.Parameters == handlePathOrigin.Parameters)
+						{
+							texture = cachedTexture;
+						}
+					}
 				}
 				if (texture == null)
 				{
