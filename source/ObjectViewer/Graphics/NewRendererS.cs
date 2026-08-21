@@ -89,21 +89,26 @@ namespace ObjectViewer.Graphics
             // opaque face
             PerformCSMShadowPass();
 
-            //Setup the shader for rendering the scene
-            DefaultShader.Activate();
-            BindCSMToDefaultShader();
-            if (OptionLighting)
-            {
-	            DefaultShader.SetIsLight(true);
-	            DefaultShader.SetLightPosition(TransformedLightPosition);
-	            DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
-	            DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
-	            DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
-	            DefaultShader.SetLightModel(Lighting.LightModel);
-            }
-            DefaultShader.SetTexture(0);
-            DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
-            ResetOpenGlState();
+//Setup the shader for rendering the scene
+			DefaultShader.Activate();
+			BindCSMToDefaultShader();
+			if (OptionLighting)
+			{
+				DefaultShader.SetIsLight(true);
+				DefaultShader.SetLightPosition(TransformedLightPosition);
+				DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
+				DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
+				DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
+				DefaultShader.SetLightModel(Lighting.LightModel);
+				UpdateActiveLights(DefaultShader);
+			}
+			else
+			{
+				DefaultShader.SetDynamicLights(new List<SceneLight>(), CurrentViewMatrix, 0);
+			}
+			DefaultShader.SetTexture(0);
+			DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
+			ResetOpenGlState();
 			List<FaceState> opaqueFaces, alphaFaces;
 			lock (VisibleObjects.LockObject)
 			{
@@ -177,8 +182,9 @@ namespace ObjectViewer.Graphics
 			DefaultShader.Deactivate();
 			lastVAO = -1;
 
-            // render overlays
-            ResetOpenGlState();
+			DrawLightVisuals();
+			// render overlays
+			ResetOpenGlState();
 			OptionLighting = false;
 			UnsetAlphaFunc();
 			GL.Disable(EnableCap.DepthTest);

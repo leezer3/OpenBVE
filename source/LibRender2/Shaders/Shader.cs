@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System.Collections.Generic;
 using LibRender2.Fogs;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -67,6 +68,21 @@ namespace LibRender2.Shaders
 		private readonly int uLightSpaceMatrix3Location;
 		private readonly int uModelMatrixLocation;
 		private readonly int uCurrentViewMatrixLocation;
+		private readonly int uDynamicLightCountLocation;
+		private readonly int[] uDynamicLightTypeLocation = new int[16];
+		private readonly int[] uDynamicLightPositionLocation = new int[16];
+		private readonly int[] uDynamicLightDirectionLocation = new int[16];
+		private readonly int[] uDynamicLightColorLocation = new int[16];
+		private readonly int[] uDynamicLightRangeLocation = new int[16];
+		private readonly int[] uDynamicLightRangeSquaredLocation = new int[16];
+		private readonly int[] uDynamicLightSpotCutoffLocation = new int[16];
+		private readonly int[] uDynamicLightPowerLocation = new int[16];
+		private readonly int[] uDynamicLightExposureLocation = new int[16];
+		private readonly int[] uDynamicLightNormalizeLocation = new int[16];
+		private readonly int[] uDynamicLightRadiusLocation = new int[16];
+		private readonly int[] uDynamicLightSoftFalloffLocation = new int[16];
+		private readonly int[] uDynamicLightSoftnessLocation = new int[16];
+		private readonly int[] uDynamicLightAreaSizeLocation = new int[16];
 
 
 		/// <summary>
@@ -103,6 +119,24 @@ namespace LibRender2.Shaders
 			uLightSpaceMatrix3Location = GL.GetUniformLocation(Handle, "uLightSpaceMatrix3");
 			uModelMatrixLocation = GL.GetUniformLocation(Handle, "uModelMatrix");
 			uCurrentViewMatrixLocation = GL.GetUniformLocation(Handle, "uCurrentViewMatrix");
+			uDynamicLightCountLocation = GL.GetUniformLocation(Handle, "uDynamicLightCount");
+			for (int i = 0; i < 16; i++)
+			{
+				uDynamicLightTypeLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].type");
+				uDynamicLightPositionLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].position");
+				uDynamicLightDirectionLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].direction");
+				uDynamicLightColorLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].color");
+				uDynamicLightRangeLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].range");
+				uDynamicLightRangeSquaredLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].rangeSquared");
+				uDynamicLightSpotCutoffLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].spotCutoff");
+				uDynamicLightPowerLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].power");
+				uDynamicLightExposureLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].exposure");
+				uDynamicLightNormalizeLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].isNormalize");
+				uDynamicLightRadiusLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].radius");
+				uDynamicLightSoftFalloffLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].softFalloff");
+				uDynamicLightSoftnessLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].softness");
+				uDynamicLightAreaSizeLocation[i] = GL.GetUniformLocation(Handle, $"uDynamicLights[{i}].areaSize");
+			}
 
 			VertexLayout = GetVertexLayout();
 			UniformLayout = GetUniformLayout();
@@ -535,6 +569,68 @@ namespace LibRender2.Shaders
 				(float)m.Row2.X, (float)m.Row2.Y, (float)m.Row2.Z, (float)m.Row2.W,
 				(float)m.Row3.X, (float)m.Row3.Y, (float)m.Row3.Z, (float)m.Row3.W
 			};
+		}
+
+		private readonly List<SceneLight> lastBoundLights = new List<SceneLight>();
+		private Matrix4D lastViewMatrix = Matrix4D.Identity;
+
+		public void SetDynamicLights(List<SceneLight> lights, Matrix4D viewMatrix, int maxLimit)
+		{
+			int count = System.Math.Min(lights.Count, maxLimit);
+			
+			bool identical = lastBoundLights.Count == count && lastViewMatrix == viewMatrix;
+			if (identical)
+			{
+				for (int i = 0; i < count; i++)
+				{
+					if (lastBoundLights[i] != lights[i])
+					{
+						identical = false;
+						break;
+					}
+				}
+			}
+
+			if (identical)
+			{
+				return;
+			}
+
+			lastBoundLights.Clear();
+			for (int i = 0; i < count; i++)
+			{
+				lastBoundLights.Add(lights[i]);
+			}
+			lastViewMatrix = viewMatrix;
+
+			GL.ProgramUniform1(Handle, uDynamicLightCountLocation, count);
+			for (int i = 0; i < count; i++)
+			{
+				SceneLight light = lights[i];
+				
+				Matrix4D lightViewMatrix = Renderer.Camera != null ? Renderer.Camera.TranslationMatrix * viewMatrix : viewMatrix;
+				Vector3 viewPos = light.Position;
+				viewPos.Transform(lightViewMatrix, false);
+
+				Vector3 viewDir = light.Direction;
+				viewDir.Transform(viewMatrix, true);
+				viewDir.Normalize();
+
+				GL.ProgramUniform1(Handle, uDynamicLightTypeLocation[i], (int)light.Type);
+				GL.ProgramUniform3(Handle, uDynamicLightPositionLocation[i], (float)viewPos.X, (float)viewPos.Y, (float)viewPos.Z);
+				GL.ProgramUniform3(Handle, uDynamicLightDirectionLocation[i], (float)viewDir.X, (float)viewDir.Y, (float)viewDir.Z);
+				GL.ProgramUniform4(Handle, uDynamicLightColorLocation[i], light.Color.R, light.Color.G, light.Color.B, light.Color.A);
+				GL.ProgramUniform1(Handle, uDynamicLightRangeLocation[i], light.Range);
+				GL.ProgramUniform1(Handle, uDynamicLightRangeSquaredLocation[i], light.RangeSquared);
+				GL.ProgramUniform1(Handle, uDynamicLightSpotCutoffLocation[i], light.SpotCutoff);
+				GL.ProgramUniform1(Handle, uDynamicLightPowerLocation[i], light.Power);
+				GL.ProgramUniform1(Handle, uDynamicLightExposureLocation[i], light.Exposure);
+				GL.ProgramUniform1(Handle, uDynamicLightNormalizeLocation[i], light.NormalizeCone ? 1 : 0);
+				GL.ProgramUniform1(Handle, uDynamicLightRadiusLocation[i], light.Radius);
+				GL.ProgramUniform1(Handle, uDynamicLightSoftFalloffLocation[i], light.SoftFalloff ? 1 : 0);
+				GL.ProgramUniform1(Handle, uDynamicLightSoftnessLocation[i], light.Softness);
+				GL.ProgramUniform2(Handle, uDynamicLightAreaSizeLocation[i], (float)light.AreaSize.X, (float)light.AreaSize.Y);
+			}
 		}
 
 		#endregion
