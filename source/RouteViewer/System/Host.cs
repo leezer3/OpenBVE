@@ -128,6 +128,15 @@ namespace RouteViewer
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool LoadTexture(string path, TextureParameters parameters, out Texture texture)
 		{
+			Stopwatch textureDecodeTimer = Stopwatch.StartNew();
+			bool result = LoadTextureInternal(path, parameters, out texture);
+			TextureDecodeCalls++;
+			TextureDecodeMs += textureDecodeTimer.ElapsedMilliseconds;
+			return result;
+		}
+
+		private bool LoadTextureInternal(string path, TextureParameters parameters, out Texture texture)
+		{
 			if (File.Exists(path) || Directory.Exists(path))
 			{
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)

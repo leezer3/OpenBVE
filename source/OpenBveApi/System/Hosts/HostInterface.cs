@@ -732,6 +732,12 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Time spent applying route data by the route plugin (ms)</summary>
 		public long PluginApplyTime;
 
+		/// <summary>Number of texture decode requests handled by the host</summary>
+		public long TextureDecodeCalls;
+
+		/// <summary>Time spent in host texture decode requests, including plugin decoding and parameter application (ms)</summary>
+		public long TextureDecodeMs;
+
 		/// <summary>Contains the list of commonly used 'empty' files</summary>
 		/// <remarks>These generally aren't a valid object, and should be ignored for errors</remarks>
 		public static readonly HashSet<string> NullFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase)

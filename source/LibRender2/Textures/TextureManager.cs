@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -27,6 +28,12 @@ namespace LibRender2.Textures
 
 		/// <summary>Total time spent decoding texture files, in milliseconds.</summary>
 		public static long TextureDecodeTime;
+
+		/// <summary>Number of texture upload requests handled.</summary>
+		public static long UploadCount;
+
+		/// <summary>Time spent in texture upload requests, including cached-handle early exits (ms).</summary>
+		public static long UploadMs;
 
 		private static Dictionary<TextureOrigin, Texture> animatedTextures;
 
@@ -198,6 +205,15 @@ namespace LibRender2.Textures
 		/// <param name="AnisotropicFilteringLevel">The anisotropic filtering level to use when loading the texture</param>
 		/// <returns>Whether loading the texture was successful.</returns>
 		public bool LoadTexture(ref Texture handle, OpenGlTextureWrapMode wrap, int currentTicks, InterpolationMode Interpolation, int AnisotropicFilteringLevel)
+		{
+			Stopwatch uploadTimer = Stopwatch.StartNew();
+			bool result = LoadTextureInternal(ref handle, wrap, currentTicks, Interpolation, AnisotropicFilteringLevel);
+			UploadCount++;
+			UploadMs += uploadTimer.ElapsedMilliseconds;
+			return result;
+		}
+
+		private bool LoadTextureInternal(ref Texture handle, OpenGlTextureWrapMode wrap, int currentTicks, InterpolationMode Interpolation, int AnisotropicFilteringLevel)
 		{
 
 			Texture texture = null;
