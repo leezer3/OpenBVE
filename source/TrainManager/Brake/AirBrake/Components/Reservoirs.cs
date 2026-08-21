@@ -26,13 +26,14 @@ namespace TrainManager.BrakeSystems
 		/// <summary>The rate when EB brakes are applied in Pa/s</summary>
 		internal readonly double EmergencyRate;
 		/// <summary>The normal pressure</summary>
-		public double NormalPressure;
+		public readonly double NormalPressure;
 		/// <summary>The internal volume of the reservoir</summary>
 
-		public EqualizingReservoir(double serviceRate, double emergencyRate, double chargeRate) : base(chargeRate, 0.0)
+		public EqualizingReservoir(double serviceRate, double emergencyRate, double chargeRate, double normalPressure) : base(chargeRate, 0.0)
 		{
 			ServiceRate = serviceRate;
 			EmergencyRate = emergencyRate;
+			NormalPressure = normalPressure;
 		}
 
 		/// <summary>Creates a dummy equalizing reservoir</summary>
