@@ -158,10 +158,10 @@ namespace LibRender2.Objects
 					}
 					else
 					{
-						if (State.Prototype.Mesh.Materials[face.Material].DaytimeTexture != null)
+						if (State.Prototype.Mesh.Materials[face.Material].DaytimeTexture != null && State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin != null)
 						{
 							// Have to load the texture bytes in order to determine transparency type
-							Texture daytimeTexture; 
+							Texture daytimeTexture;
 							TextureOrigin daytimeOrigin = State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin;
 							if (!TextureManager.textureCache.TryGetValue(daytimeOrigin, out daytimeTexture))
 							{
@@ -189,9 +189,9 @@ namespace LibRender2.Objects
 							}
 						}
 
-						if (!alpha && State.Prototype.Mesh.Materials[face.Material].NighttimeTexture != null)
+						if (!alpha && State.Prototype.Mesh.Materials[face.Material].NighttimeTexture != null && State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Origin != null)
 						{
-							Texture nighttimeTexture; 
+							Texture nighttimeTexture;
 							TextureOrigin nighttimeOrigin = State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Origin;
 							if (!TextureManager.textureCache.TryGetValue(nighttimeOrigin, out nighttimeTexture))
 							{

@@ -66,6 +66,12 @@ namespace LibRender2.Textures
 		/// <returns>Whether registering the texture was successful.</returns>
 		public bool RegisterTexture(string path, TextureParameters parameters, out Texture handle)
 		{
+			if (string.IsNullOrEmpty(path) || !File.Exists(path))
+			{
+				// shouldn't happen, but handle gracefully
+				handle = null;
+				return false;
+			}
 			/* BUG:
 			 * The registered textures count very occasional becomes greater than the array length (Texture loader crashes possibly?)
 			 * This then crashes when we attempt to itinerate the array, so reset it...
