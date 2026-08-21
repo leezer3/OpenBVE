@@ -15,7 +15,7 @@ namespace OpenBveApi.Textures {
 		/// <summary>The pixel format of the texture.</summary>
 		public readonly PixelFormat PixelFormat;
 		/// <summary>The texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</summary>
-		private readonly byte[][] MyBytes;
+		private byte[][] MyBytes;
 		/// <summary>The restricted color palette for this texture, or a null reference if the texture was 24/ 32 bit originally</summary>
 		public readonly Color24[] Palette;
 		/// <summary>Whether the texture is invalid and should be ignored</summary>
@@ -276,6 +276,11 @@ namespace OpenBveApi.Textures {
 			if (a.Origin != b.Origin) return false;
 			if (a.Size != b.Size) return false;
 			if (a.PixelFormat != b.PixelFormat) return false;
+			if (a.MyBytes == null || b.MyBytes == null)
+			{
+				// The CPU-side data of one instance has been released after uploading to OpenGL, so fall back to reference equality
+				return false;
+			}
 			if (a.MyBytes.Length != b.MyBytes.Length) return false;
 			for (int i = 0; i < a.MyBytes.Length; i++)
 			{
@@ -297,9 +302,10 @@ namespace OpenBveApi.Textures {
 			if (a.Origin != b.Origin) return true;
 			if (a.Size != b.Size) return true;
 			if (a.PixelFormat != b.PixelFormat) return true;
-			if (a.MyBytes == null)
+			if (a.MyBytes == null || b.MyBytes == null)
 			{
-				return b.MyBytes != null;
+				// The CPU-side data of one instance has been released after uploading to OpenGL, so fall back to reference equality
+				return true;
 			}
 			if (a.MyBytes.Length != b.MyBytes.Length) return true;
 			for (int i = 0; i < a.MyBytes.Length; i++)
@@ -334,6 +340,14 @@ namespace OpenBveApi.Textures {
 		}
 
 		// --- functions ---
+		/// <summary>Releases the retained CPU-side pixel data of this texture.</summary>
+		/// <remarks>Once released, the data is lazily re-decoded from the origin if required again.
+		/// Must not be used on multi-frame (animated) textures, whose frames are re-uploaded individually.</remarks>
+		public void ReleaseBytes()
+		{
+			MyBytes = null;
+		}
+
 		/// <summary>Applies the specified parameters onto this texture.</summary>
 		/// <param name="parameters">The parameters, or a null reference.</param>
 		/// <returns>The texture with the parameters applied.</returns>
@@ -362,10 +376,24 @@ namespace OpenBveApi.Textures {
 					break;
 				case PixelFormat.RGBAlpha:
 					transparencyType = TextureTransparencyType.Opaque;
-					for (int i = 3; i < this.MyBytes[CurrentFrame].Length; i += 4)
+					byte[] frameBytes = MyBytes != null ? MyBytes[CurrentFrame] : null;
+					if (frameBytes == null)
+					{
+						/*
+						 * The CPU-side copy has been released after uploading to OpenGL.
+						 * Obtain the data from the origin instead; the scan is then performed
+						 * on the returned texture, which also caches the result there.
+						 */
+						if (Origin == null || !Origin.GetTexture(out Texture released) || released == null)
+						{
+							return transparencyType;
+						}
+						return released.GetTransparencyType();
+					}
+					for (int i = 3; i < frameBytes.Length; i += 4)
 					{
 
-						switch (MyBytes[CurrentFrame][i])
+						switch (frameBytes[i])
 						{
 							case 0:
 								if (i == 3)

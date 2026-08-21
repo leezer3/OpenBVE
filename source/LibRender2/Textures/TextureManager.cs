@@ -449,6 +449,28 @@ namespace LibRender2.Textures
 					{
 						texture.OpenGlTextures[(int)wrap].Valid = true;
 					}
+					else
+					{
+						/*
+						 * The pixel data now lives in OpenGL, so release the retained CPU-side copies:
+						 * the transient upload instance, the register-time decode held by the handle,
+						 * and the entry in the texture cache.
+						 * The data is lazily re-decoded from the origin if required again.
+						 */
+						texture.ReleaseBytes();
+						lock (TextureLookupLock)
+						{
+							Texture cachedTexture;
+							if (textureCache.TryGetValue(handle.Origin, out cachedTexture))
+							{
+								cachedTexture.ReleaseBytes();
+							}
+						}
+						if (handle.DecodedTexture != null)
+						{
+							handle.DecodedTexture.ReleaseBytes();
+						}
+					}
 					return true;
 				}
 			}
