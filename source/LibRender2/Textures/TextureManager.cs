@@ -458,16 +458,20 @@ namespace LibRender2.Textures
 						 * The data is lazily re-decoded from the origin if required again.
 						 */
 						texture.ReleaseBytes();
+						Texture cachedTexture = null;
 						lock (TextureLookupLock)
 						{
-							Texture cachedTexture;
 							if (textureCache.TryGetValue(handle.Origin, out cachedTexture))
 							{
+								// Compute the transparency type whilst the data is still available,
+								// as otherwise a later query would have to re-decode the file from disk
+								cachedTexture.GetTransparencyType();
 								cachedTexture.ReleaseBytes();
 							}
 						}
-						if (handle.DecodedTexture != null)
+						if (handle.DecodedTexture != null && handle.DecodedTexture != cachedTexture)
 						{
+							handle.DecodedTexture.GetTransparencyType();
 							handle.DecodedTexture.ReleaseBytes();
 						}
 					}
