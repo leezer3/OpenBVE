@@ -14,6 +14,8 @@ namespace OpenBveApi.Textures
 
 		private readonly int Height;
 
+		private readonly PixelFormat Format;
+
 		private readonly int NumberOfFrames;
 
 		private readonly double FrameInterval;
@@ -24,9 +26,21 @@ namespace OpenBveApi.Textures
 		/// <param name="bytes">The bytes</param>
 		/// <param name="frameInterval">The frame interval</param>
 		public ByteArrayOrigin(int width, int height, byte[][] bytes, double frameInterval)
+			: this(width, height, PixelFormat.RGBAlpha, bytes, frameInterval)
+		{
+		}
+
+		/// <summary>Creates a byte array origin</summary>
+		/// <param name="width">The width of the underlying texture</param>
+		/// <param name="height">The height of the underlying texture</param>
+		/// <param name="pixelFormat">The pixel format of the data</param>
+		/// <param name="bytes">The bytes</param>
+		/// <param name="frameInterval">The frame interval</param>
+		public ByteArrayOrigin(int width, int height, PixelFormat pixelFormat, byte[][] bytes, double frameInterval)
 		{
 			Width = width;
 			Height = height;
+			Format = pixelFormat;
 			TextureBytes = bytes;
 			FrameInterval = frameInterval;
 			NumberOfFrames = bytes.Length;
@@ -37,9 +51,20 @@ namespace OpenBveApi.Textures
 		/// <param name="height">The height of the underlying texture</param>
 		/// <param name="bytes">The bytes</param>
 		public ByteArrayOrigin(int width, int height, byte[] bytes)
+			: this(width, height, PixelFormat.RGBAlpha, bytes)
+		{
+		}
+
+		/// <summary>Creates a byte array origin</summary>
+		/// <param name="width">The width of the underlying texture</param>
+		/// <param name="height">The height of the underlying texture</param>
+		/// <param name="pixelFormat">The pixel format of the data</param>
+		/// <param name="bytes">The bytes</param>
+		public ByteArrayOrigin(int width, int height, PixelFormat pixelFormat, byte[] bytes)
 		{
 			Width = width;
 			Height = height;
+			Format = pixelFormat;
 			TextureBytes = new[]
 			{
 				bytes
@@ -54,10 +79,10 @@ namespace OpenBveApi.Textures
 		{
 			if (TextureBytes.Length == 1)
 			{
-				texture = new Texture(Width, Height, PixelFormat.RGBAlpha, TextureBytes[0], Array.Empty<Color24>());
+				texture = new Texture(Width, Height, Format, TextureBytes[0], Array.Empty<Color24>());
 				return true;
 			}
-			texture = new Texture(Width, Height, PixelFormat.RGBAlpha, TextureBytes, FrameInterval);
+			texture = new Texture(Width, Height, Format, TextureBytes, FrameInterval);
 			return true;
 		}
 
