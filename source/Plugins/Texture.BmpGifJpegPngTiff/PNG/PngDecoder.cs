@@ -253,17 +253,19 @@ namespace Plugin.PNG
 									{
 										// decompress the entire stream upfront, as reading small buffers from the deflate stream per scanline is slow
 										byte[] inflated;
-										using (MemoryStream inflatedStream = new MemoryStream())
+										int inflatedLength;
+										using (MemoryStream inflatedStream = new MemoryStream((ScanlineLength + 1) * Height))
 										{
 											deflate.CopyTo(inflatedStream);
-											inflated = inflatedStream.ToArray();
+											inflatedLength = (int)inflatedStream.Length;
+											inflated = inflatedStream.GetBuffer();
 										}
 										byte[] scanline = new byte[ScanlineLength];
 										byte[] previousScanline = new byte[ScanlineLength];
 										int currentRowByte = 0;
 										for (int i = 0; i < Height; i++)
 										{
-											if (currentRowByte + 1 + ScanlineLength > inflated.Length)
+											if (currentRowByte + 1 + ScanlineLength > inflatedLength)
 											{
 												Plugin.CurrentHost.ReportProblem(ProblemType.UnsupportedData, "Insufficient data decompressed from IDAT chunk in PNG file " + fileName);
 												return false;
