@@ -606,6 +606,11 @@ namespace OpenBve
 							if (TrainManager.PlayerTrain.Cars[d].Horns.Length > j)
 							{
 								TrainManager.PlayerTrain.Cars[d].Horns[j].Play();
+								if (j == 1 && TrainManager.PlayerTrain.Specs.HornTriggersBell)
+								{
+									// MSTS allows the horn to also simultaneously trigger the bell (US trains)
+									TrainManager.PlayerTrain.Cars[d].Horns[3].Play();
+								}
 								TrainManager.PlayerTrain.Plugin?.HornBlow(j == 0 ? HornTypes.Primary : j == 1 ? HornTypes.Secondary : HornTypes.Music);
 							}
 						}

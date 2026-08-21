@@ -34,6 +34,6 @@
 		EqualizingReservoir,
 		BrakePipe,
 		StraightAirPipe,
-		BrakeCylinder,
+		BrakeCylinder
 	}
 }

@@ -65,6 +65,9 @@ namespace OpenBve.Formats.MsTs
 		/// <summary>Reads a single-bit precision floating point number from the block</summary>
 		public abstract float ReadSingle();
 
+		/// <summary>Reads a Color24 from the block</summary>
+		public abstract Color24 ReadColorRgb();
+
 		/// <summary>Reads a Color32 from the block</summary>
 		public abstract Color32 ReadColorArgb();
 
@@ -154,6 +157,13 @@ namespace OpenBve.Formats.MsTs
 		/// <returns>The new block</returns>
 		/// <remarks>The type of the new block will always match that of the base block</remarks>
 		public abstract Block ReadSubBlock(bool allowEmptyBlock = false);
+
+		/// <summary>Reads a Quaternion from the block</summary>
+		/// <remarks>The file stores in DirectX format, but they are returned in OpenGL format</remarks>
+		public Quaternion ReadQuaternion()
+		{
+			return new Quaternion(ReadSingle(), ReadSingle(), ReadSingle(), -ReadSingle());
+		}
 	}
 
 	/// <inheritdoc cref="Block" />
@@ -258,6 +268,11 @@ namespace OpenBve.Formats.MsTs
 		public override float ReadSingle()
 		{
 			return myReader.ReadSingle();
+		}
+
+		public override Color24 ReadColorRgb()
+		{
+			throw new NotImplementedException();
 		}
 
 		public override Color32 ReadColorArgb()
@@ -967,6 +982,22 @@ namespace OpenBve.Formats.MsTs
 			}
 
 			throw new InvalidDataException("Unable to parse " + s + " to a valid single in block " + Token);
+		}
+
+		public override Color24 ReadColorRgb()
+		{
+			byte r = 1, g = 1, b = 1;
+			try
+			{
+				r = (byte)ReadInt16();
+				g = (byte)ReadInt16();
+				b = (byte)ReadInt16();
+			}
+			catch
+			{
+				// ignored
+			}
+			return new Color24(r, g, b);
 		}
 
 		public override Color32 ReadColorArgb()

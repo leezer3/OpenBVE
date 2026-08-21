@@ -83,7 +83,7 @@ namespace RouteViewer
             // Wire up shadow resolution change to enable/disable related controls
             comboBoxShadowResolution.SelectedIndexChanged += comboBoxShadowResolution_SelectedIndexChanged;
             UpdateShadowControlsEnabled();
-			numericUpDownViewingDistance.Value = (decimal)Math.Min(Interface.CurrentOptions.ViewingDistance, numericUpDownViewingDistance.Maximum);
+			numericUpDownViewingDistance.Value = Math.Min(Interface.CurrentOptions.ViewingDistance, numericUpDownViewingDistance.Maximum);
 			numericUpDownNearClip.Value = (decimal)Interface.CurrentOptions.NearClipBase;
 			if (Translations.CurrentLanguageCode != "en-US")
 			{
@@ -347,11 +347,11 @@ namespace RouteViewer
 			    previousShadowStrength != Interface.CurrentOptions.ShadowStrength || previousShadowBias != Interface.CurrentOptions.ShadowBias || previousShadowNormalBias != Interface.CurrentOptions.ShadowNormalBias || 
 			    Interface.CurrentOptions.NearClipBase != previousNearClipBase || previousShadowFilterCascades != Interface.CurrentOptions.ShadowFilterCascades)
 			{
-				this.DialogResult = DialogResult.OK;
+				DialogResult = DialogResult.OK;
 			}
 			else
 			{
-				this.DialogResult = DialogResult.Abort;
+				DialogResult = DialogResult.Abort;
 			}
 			Close();
 

@@ -268,7 +268,7 @@ namespace Formats.OpenBve
 				if (IsB3D)
 				{
 					// B3D bracket enclosed section names
-					command = command.TrimStart('[').TrimEnd(']').Trim();
+					command = command.Split(']')[0].TrimStart('[');
 				}
 
 				if(Enum.TryParse(command, true, out T1 section))

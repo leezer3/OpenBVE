@@ -702,13 +702,13 @@ namespace Formats.OpenBve
 				for (i = s.Length - 1; i >= 0; i--)
 				{
 					int a = char.ConvertToUtf32(s, i);
-					if (a < 48 | a > 57) break;
+					if (a < 48 || a > 57) break;
 				}
-				if (i >= 0 & i < s.Length - 1)
+				if (i >= 0 && i < s.Length - 1)
 				{
 					if (s[i] == 'd')
 					{
-						if (int.TryParse(s.Substring(i + 1), NumberStyles.Integer, CultureInfo.InvariantCulture, out var n))
+						if (int.TryParse(s.Substring(i + 1), NumberStyles.Integer, CultureInfo.InvariantCulture, out int n))
 						{
 							if (n == 0)
 							{
@@ -726,22 +726,17 @@ namespace Formats.OpenBve
 				}
 
 				string num = string.Empty;
-				if (s.StartsWith("ats"))
+				if (s.StartsWith("ats", StringComparison.InvariantCulture))
 				{
 					num = s.Substring(3);
 					s = s.Substring(0, 3);
 				}
-				else if (s.StartsWith("doorl"))
+				else if (s.StartsWith("doorl", StringComparison.InvariantCultureIgnoreCase) || s.StartsWith("doorr", StringComparison.InvariantCultureIgnoreCase))
 				{
 					num = s.Substring(5);
 					s = s.Substring(0, 5);
 				}
-				else if (s.StartsWith("doorr"))
-				{
-					num = s.Substring(5);
-					s = s.Substring(0, 5);
-				}
-
+				
 				if (Enum.TryParse(s, true, out enumValue))
 				{
 					int.TryParse(num, out index);
@@ -767,7 +762,7 @@ namespace Formats.OpenBve
 
 				if (Enum.TryParse(s, true, out enumValue))
 				{
-					if (Color32.TryParseColor(colorValue.Split(','), out var newColor))
+					if (Color32.TryParseColor(colorValue.Split(','), out Color32 newColor))
 					{
 						color = newColor;
 					}
@@ -896,7 +891,7 @@ namespace Formats.OpenBve
 						if (int.TryParse(Expression.Substring(0, i), NumberStyles.Integer, Culture, out int h))
 						{
 							int n = Expression.Length - i - 1;
-							if (n == 1 | n == 2)
+							if (n == 1 || n == 2)
 							{
 								if (uint.TryParse(Expression.Substring(i + 1, n), NumberStyles.None, Culture,
 									    out uint m))

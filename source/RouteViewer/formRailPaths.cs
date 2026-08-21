@@ -61,7 +61,7 @@ namespace RouteViewer
 				}
 			}
 			Program.pathForm = null;
-			this.Close();
+			Close();
 		}
 
 		private void dataGridViewPaths_CurrentCellDirtyStateChanged(object sender, EventArgs e)

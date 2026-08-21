@@ -209,6 +209,7 @@ namespace OpenBve
 				Train.Handles.HoldBrake.ApplyState(false);
 				foreach (CarBase car in Train.Cars)
 				{
+					// operate traction model specific AI
 					if (car.TractionModel.Components.TryGetTypedValue(EngineComponent.Pantograph, out Pantograph pantograph) && pantograph.State == PantographState.Lowered)
 					{
 						pantograph.Raise();
@@ -232,6 +233,25 @@ namespace OpenBve
 								// gear change up
 								gearbox.GearUp();
 							}
+						}
+					}
+				}
+
+				if (Train.SafetySystems.Headlights != null)
+				{
+					if (Program.Renderer.Lighting.OptionAmbientColor.IsDark() || Program.Renderer.Lighting.OptionDiffuseColor.IsDark())
+					{
+						// if our lighting is dark, turn headlights to max
+						if (Train.SafetySystems.Headlights.CurrentState < Train.SafetySystems.Headlights.NumberOfStates)
+						{
+							Train.SafetySystems.Headlights.ChangeState();
+						}
+					}
+					else
+					{
+						if (Train.SafetySystems.Headlights.CurrentState != 0)
+						{
+							Train.SafetySystems.Headlights.ChangeState();
 						}
 					}
 				}
