@@ -122,8 +122,14 @@ namespace OpenBve
 		// MOUSE EVENTS
 		//
 
-		/// <summary>The current mouse state</summary>
-		internal static MouseState currentMouseState, previousMouseState;
+		/// <summary>The sensitivity of mouse-look in interior views</summary>
+		private const double InteriorLookSensitivity = 1.0;
+		/// <summary>The sensitivity of mouse-look in exterior views</summary>
+		private const double ExteriorLookSensitivity = 3.0;
+		/// <summary>The base scale applied to raw mouse movement deltas</summary>
+		private const double LookSensitivityScale = 0.001;
+		/// <summary>The distance in pixels from the window center at which the cursor is recentered whilst grabbing</summary>
+		private const double RecenterThresholdPixels = 400.0;
 
 		internal static bool MouseGrabEnabled = false;
 		private static bool scrollUpPressed = false;
@@ -254,11 +260,6 @@ namespace OpenBve
 				MainLoop.MouseGrabEnabled = false;
 			}
 
-			if (Interface.CurrentOptions.CursorHideDelay > 0 && timeSinceLastMouseEvent > Interface.CurrentOptions.CursorHideDelay)
-			{
-				Program.Renderer.GameWindow.CursorVisible = false;
-			}
-
 			if (scrollUpPressed)
 			{
 				ProcessMouseControl(MouseElement.ScrollUp, false);
@@ -269,34 +270,51 @@ namespace OpenBve
 				ProcessMouseControl(MouseElement.ScrollDown, false);
 				scrollDownPressed = false;
 			}
-			
+
 			if (MainLoop.MouseGrabEnabled)
 			{
 				Program.Renderer.GameWindow.CursorVisible = false;
+				if (Program.Renderer.GameWindow.Focused)
+				{
+					ApplyMouseGrab();
+				}
+				else
+				{
+					// Suspend mouse-look whilst the window is not focused,
+					// as otherwise we would yank the global cursor around other applications
+					MouseGrabIgnoreOnce = true;
+					MouseGrabTarget = OpenBveApi.Math.Vector2.Null;
+				}
 			}
 			else if (Interface.CurrentOptions.CursorHideDelay > 0 && timeSinceLastMouseEvent > Interface.CurrentOptions.CursorHideDelay)
 			{
 				Program.Renderer.GameWindow.CursorVisible = false;
 			}
+		}
 
-			if (MainLoop.MouseGrabEnabled)
+		/// <summary>Applies the accumulated mouse movement to the camera whilst the mouse is grabbed</summary>
+		private static void ApplyMouseGrab()
+		{
+			if (MouseGrabTarget.IsNullVector())
 			{
-				double factor;
-				if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead)
-				{
-					factor = 1.0;
-				}
-				else
-				{
-					factor = 3.0;
-				}
-
-				double zoomFactor = Math.Exp(Program.Renderer.Camera.Alignment.Zoom);
-				Program.Renderer.Camera.Alignment.Yaw += factor * MouseGrabTarget.X * 0.001 * zoomFactor;
-				Program.Renderer.Camera.Alignment.Pitch -= factor * MouseGrabTarget.Y * 0.001 * zoomFactor;
-				Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
-				MouseGrabTarget = OpenBveApi.Math.Vector2.Null;
+				return;
 			}
+			double factor;
+			if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead)
+			{
+				factor = InteriorLookSensitivity;
+			}
+			else
+			{
+				factor = ExteriorLookSensitivity;
+			}
+
+			double zoomFactor = System.Math.Exp(Program.Renderer.Camera.Alignment.Zoom);
+			Program.Renderer.Camera.Alignment.Yaw += factor * MouseGrabTarget.X * LookSensitivityScale * zoomFactor;
+			Program.Renderer.Camera.Alignment.Pitch -= factor * MouseGrabTarget.Y * LookSensitivityScale * zoomFactor;
+			// The viewing distances depend on the camera direction, so update them now that it has changed
+			Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
+			MouseGrabTarget = OpenBveApi.Math.Vector2.Null;
 		}
 
 		//
@@ -359,12 +377,12 @@ namespace OpenBve
 				}
 				return;
 			}
-			if (MouseGrabEnabled)
+			if (MouseGrabEnabled && Program.Renderer.GameWindow.Focused)
 			{
 				int centerX = Program.Renderer.GameWindow.ClientRectangle.Width / 2;
 				int centerY = Program.Renderer.GameWindow.ClientRectangle.Height / 2;
 				System.Drawing.Point screenCenter = Program.Renderer.GameWindow.PointToScreen(new System.Drawing.Point(centerX, centerY));
-				
+
 				if (MouseGrabIgnoreOnce)
 				{
 					MouseGrabIgnoreOnce = false;
@@ -381,7 +399,7 @@ namespace OpenBve
 					MouseGrabTarget = new OpenBveApi.Math.Vector2(curX - lastMouseX, curY - lastMouseY);
 					lastMouseX = curX;
 					lastMouseY = curY;
-					if (Math.Abs(curX - screenCenter.X) > 400 || Math.Abs(curY - screenCenter.Y) > 400)
+					if (Math.Abs(curX - screenCenter.X) > RecenterThresholdPixels || Math.Abs(curY - screenCenter.Y) > RecenterThresholdPixels)
 					{
 						Mouse.SetPosition(screenCenter.X, screenCenter.Y);
 						MouseGrabIgnoreOnce = true;

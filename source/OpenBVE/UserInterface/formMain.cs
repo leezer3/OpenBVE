@@ -795,11 +795,7 @@ namespace OpenBve {
 			checkboxCameraInteriorTransition.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","camera_interior_transition"});
 			checkboxCameraExteriorTransition.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","camera_exterior_transition"});
 			labelCameraTransitionSpeed.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","camera_transition_duration"});
-			labelZoomScrollSpeed.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "camera_zoom_scroll_speed" });
-			if (labelZoomScrollSpeed.Text == "camera_zoom_scroll_speed")
-			{
-				labelZoomScrollSpeed.Text = "Zoom Scroll Speed:";
-			}
+			labelZoomScrollSpeed.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","camera_zoom_scroll_speed"});
 			checkboxToppling.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation_toppling"});
 			checkboxCollisions.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation_collisions"});
 			checkboxDerailments.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation_derailments"});
