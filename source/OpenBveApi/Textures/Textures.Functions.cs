@@ -96,7 +96,7 @@ namespace OpenBveApi.Textures {
 						    j += 2;
 					    }
 				    }
-				    return new Texture(clipWidth, clipHeight, PixelFormat.Grayscale, newBytes, texture.Palette);
+				    return new Texture(clipWidth, clipHeight, PixelFormat.GrayscaleAlpha, newBytes, texture.Palette);
 				case PixelFormat.RGB:
 					newBytes = new byte[3 * clipWidth * clipHeight];
 					for (int y = 0; y < clipHeight; y++)
