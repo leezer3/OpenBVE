@@ -182,7 +182,23 @@ namespace OpenBveApi.Textures {
 			bool usedTransparentColor = false;
 			if (texture.MultipleFrames)
 			{
-				
+				/*
+				 * Scan the frames for the transparent color first;
+				 * building the converted frames is expensive and pointless when the color does not occur
+				 */
+				int savedFrame = texture.CurrentFrame;
+				bool anyFrameContainsColor = false;
+				for (int i = 0; i < texture.TotalFrames && !anyFrameContainsColor; i++)
+				{
+					texture.CurrentFrame = i;
+					anyFrameContainsColor = ContainsColor(texture.Bytes, texture.PixelFormat, color.Value);
+				}
+				texture.CurrentFrame = savedFrame;
+				if (!anyFrameContainsColor)
+				{
+					return texture;
+				}
+
 				byte[][] newFrames = new byte[texture.TotalFrames][];
 				for (int i = 0; i < texture.TotalFrames; i++)
 				{
@@ -197,6 +213,11 @@ namespace OpenBveApi.Textures {
 				}
 				return texture;
 
+			}
+
+			if (!ContainsColor(texture.Bytes, texture.PixelFormat, color.Value))
+			{
+				return texture;
 			}
 
 			byte[] newBytes = ApplyTransparentColor(texture.Bytes, texture.PixelFormat, texture.Width, texture.Height, color.Value, ref usedTransparentColor);
@@ -299,6 +320,62 @@ namespace OpenBveApi.Textures {
 			}
 
 			return target;
+		}
+
+		/// <summary>Scans the pixel data for the given color, using the same matching rules as <see cref="ApplyTransparentColor"/>.</summary>
+		/// <param name="source">The source pixel data.</param>
+		/// <param name="pixelFormat">The pixel format of the data.</param>
+		/// <param name="color">The color to find.</param>
+		/// <returns>Whether the color occurs in the data. Unknown formats return true, so that the regular conversion path is taken.</returns>
+		private static bool ContainsColor(byte[] source, PixelFormat pixelFormat, Color24 color)
+		{
+			byte r = color.R;
+			byte g = color.G;
+			byte b = color.B;
+			switch (pixelFormat)
+			{
+				case PixelFormat.Grayscale:
+					if (r == g && g == b)
+					{
+						for (int i = 0; i < source.Length; i++)
+						{
+							if (source[i] == r)
+							{
+								return true;
+							}
+						}
+					}
+					return false;
+				case PixelFormat.GrayscaleAlpha:
+					for (int i = 0; i + 1 < source.Length; i += 2)
+					{
+						if (source[i] == r && source[i] == g && source[i] == b)
+						{
+							return true;
+						}
+					}
+					return false;
+				case PixelFormat.RGB:
+					for (int i = 0; i + 2 < source.Length; i += 3)
+					{
+						if (source[i] == r && source[i + 1] == g && source[i + 2] == b)
+						{
+							return true;
+						}
+					}
+					return false;
+				case PixelFormat.RGBAlpha:
+					for (int i = 0; i + 2 < source.Length; i += 4)
+					{
+						if (source[i] == r && source[i + 1] == g && source[i + 2] == b)
+						{
+							return true;
+						}
+					}
+					return false;
+				default:
+					return true;
+			}
 		}
 
 		private static byte[] ApplyTransparentColor(byte[] source, PixelFormat pixelFormat, int width, int height, Color24 color, ref bool usedTransparentColor)
