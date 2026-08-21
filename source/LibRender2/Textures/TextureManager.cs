@@ -388,32 +388,16 @@ namespace LibRender2.Textures
 									PixelType.UnsignedByte, textureBytes);
 								break;
 							case PixelFormat.RGBAlpha:
-								// down convert to RGB
-								int stride = (3 * (texture.Width + 1) >> 2) << 2;
-								byte[] newBytes = new byte[stride * texture.Height];
-								int i = 0, j = 0;
-
-								for (int y = 0; y < texture.Height; y++)
-								{
-									for (int x = 0; x < texture.Width; x++)
-									{
-										newBytes[j + 0] = textureBytes[i + 0];
-										newBytes[j + 1] = textureBytes[i + 1];
-										newBytes[j + 2] = textureBytes[i + 2];
-										i += 4;
-										j += 3;
-									}
-
-									j += stride - 3 * texture.Width;
-								}
-								// send as is
-								// n.b. Must reset the unpack alignment in case of changes
+								/*
+								 * Opaque texture, so the alpha channel is discarded by the RGB8 internal format.
+								 * Upload the RGBA data directly rather than stripping it CPU-side.
+								 */
 								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
 								GL.TexImage2D(TextureTarget.Texture2D, 0,
 									PixelInternalFormat.Rgb8,
 									texture.Width, texture.Height, 0,
-									OpenTK.Graphics.OpenGL.PixelFormat.Rgb,
-									PixelType.UnsignedByte, newBytes);
+									OpenTK.Graphics.OpenGL.PixelFormat.Rgba,
+									PixelType.UnsignedByte, textureBytes);
 								break;
 						}
 					}
