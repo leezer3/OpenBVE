@@ -18,7 +18,10 @@ namespace OpenBve {
 	{
 
 		private bool blockComboBoxIndexEvent = false;
-		
+
+		/// <summary>Maps the indices of the mouse button combobox onto the mouse elements they represent</summary>
+		private static readonly int[] MouseButtonElements = { MouseElement.Left, MouseElement.Middle, MouseElement.Right, MouseElement.ScrollUp, MouseElement.ScrollDown };
+
 		// ========
 		// controls
 		// ========
@@ -78,7 +81,7 @@ namespace OpenBve {
 					} else if (radiobuttonJoystick.Checked) {
 						labelJoystickAssignmentValue.Text = GetControlDetails(i);
 					} else if (radiobuttonMouse.Checked) {
-						comboboxMouseButton.SelectedIndex = Interface.CurrentControls[i].Element;
+						comboboxMouseButton.SelectedIndex = Array.IndexOf(MouseButtonElements, Interface.CurrentControls[i].Element);
 					} else {
 						comboboxKeyboardKey.SelectedIndex = -1;
 						checkboxKeyboardShift.Checked = false;
@@ -286,11 +289,11 @@ namespace OpenBve {
 			if (Interface.CurrentControls[Index].Method == ControlMethod.Mouse) {
 				string t = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse"}) + Separator;
 				switch (Interface.CurrentControls[Index].Element) {
-					case 0: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_left"}); break;
-					case 1: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_middle"}); break;
-					case 2: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_right"}); break;
-					case 3: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_scrollup"}); break;
-					case 4: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_scrolldown"}); break;
+					case MouseElement.Left: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_left"}); break;
+					case MouseElement.Middle: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_middle"}); break;
+					case MouseElement.Right: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_right"}); break;
+					case MouseElement.ScrollUp: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_scrollup"}); break;
+					case MouseElement.ScrollDown: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_scrolldown"}); break;
 					default: t += "{" + Interface.CurrentControls[Index].Element.ToString(Culture) + "}"; break;
 				}
 				return t;
@@ -411,9 +414,9 @@ namespace OpenBve {
 		}
 
 		private void comboboxMouseButton_SelectedIndexChanged(object sender, EventArgs e) {
-			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
+			if (Tag == null & listviewControls.SelectedIndices.Count == 1 && comboboxMouseButton.SelectedIndex >= 0) {
 				int i = listviewControls.SelectedIndices[0];
-				Interface.CurrentControls[i].Element = comboboxMouseButton.SelectedIndex;
+				Interface.CurrentControls[i].Element = MouseButtonElements[comboboxMouseButton.SelectedIndex];
 				UpdateControlListElement(listviewControls.Items[i], i, true);
 			}
 		}

@@ -143,7 +143,14 @@ namespace OpenBve
 				return;
 			}
 			timeSinceLastMouseEvent = 0;
-			ProcessMouseControl((int)e.Button, true);
+			switch (e.Button)
+			{
+				case MouseButton.Left:
+				case MouseButton.Middle:
+				case MouseButton.Right:
+					ProcessMouseControl((int)e.Button, true);
+					break;
+			}
 			if (e.Button == MouseButton.Left)
 			{
 				switch (Program.Renderer.CurrentInterface)
@@ -171,7 +178,14 @@ namespace OpenBve
 				return;
 			}
 			timeSinceLastMouseEvent = 0;
-			ProcessMouseControl((int)e.Button, false);
+			switch (e.Button)
+			{
+				case MouseButton.Left:
+				case MouseButton.Middle:
+				case MouseButton.Right:
+					ProcessMouseControl((int)e.Button, false);
+					break;
+			}
 			if (e.Button == MouseButton.Left)
 			{
 				if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
@@ -212,7 +226,7 @@ namespace OpenBve
 			}
 			if (e.Delta != 0)
 			{
-				int element = e.Delta > 0 ? 3 : 4;
+				int element = e.Delta > 0 ? MouseElement.ScrollUp : MouseElement.ScrollDown;
 				// Accumulate scroll delta in AnalogState for smoother multi-scroll frames
 				for (int i = 0; i < Interface.CurrentControls.Length; i++)
 				{
@@ -222,8 +236,8 @@ namespace OpenBve
 						Interface.CurrentControls[i].DigitalState = DigitalControlState.Pressed;
 					}
 				}
-				if (element == 3) scrollUpPressed = true;
-				if (element == 4) scrollDownPressed = true;
+				if (element == MouseElement.ScrollUp) scrollUpPressed = true;
+				if (element == MouseElement.ScrollDown) scrollDownPressed = true;
 			}
 		}
 
@@ -247,12 +261,12 @@ namespace OpenBve
 
 			if (scrollUpPressed)
 			{
-				ProcessMouseControl(3, false);
+				ProcessMouseControl(MouseElement.ScrollUp, false);
 				scrollUpPressed = false;
 			}
 			if (scrollDownPressed)
 			{
-				ProcessMouseControl(4, false);
+				ProcessMouseControl(MouseElement.ScrollDown, false);
 				scrollDownPressed = false;
 			}
 			

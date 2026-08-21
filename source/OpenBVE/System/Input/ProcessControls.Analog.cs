@@ -9,6 +9,17 @@ namespace OpenBve
 {
 	internal static partial class MainLoop
 	{
+		/// <summary>The boost applied to camera rotation when driven by the mouse scroll wheel</summary>
+		private const double ScrollRotateBoost = 10.0;
+		/// <summary>The boost applied to timetable scrolling when driven by the mouse scroll wheel</summary>
+		private const double ScrollTimetableBoost = 5.0;
+
+		/// <summary>Checks whether the control is bound to the mouse scroll wheel</summary>
+		private static bool IsMouseScroll(Control Control)
+		{
+			return Control.Method == ControlMethod.Mouse && (Control.Element == MouseElement.ScrollUp || Control.Element == MouseElement.ScrollDown);
+		}
+
 		private static void ProcessAnalogControl(double TimeElapsed, ref Control Control)
 		{
 			// analog control
@@ -218,9 +229,9 @@ namespace OpenBve
 				case Translations.Command.CameraMoveUp:
 				case Translations.Command.CameraMoveDown:
 					double moveFactor = Control.AnalogState;
-					if (Control.Method == ControlMethod.Mouse && Control.Element >= 3)
+					if (IsMouseScroll(Control))
 					{
-						moveFactor *= Interface.CurrentOptions.ZoomScrollSpeed; 
+						moveFactor *= Interface.CurrentOptions.ZoomScrollSpeed;
 					}
 					Program.Renderer.Camera.Move(Control.Command, moveFactor);
 					break;
@@ -231,9 +242,9 @@ namespace OpenBve
 				case Translations.Command.CameraRotateCCW:
 				case Translations.Command.CameraRotateCW:
 					double rotateFactor = Control.AnalogState;
-					if (Control.Method == ControlMethod.Mouse && Control.Element >= 3)
+					if (IsMouseScroll(Control))
 					{
-						rotateFactor *= 10.0; // Boost scroll rotation
+						rotateFactor *= ScrollRotateBoost;
 					}
 					Program.Renderer.Camera.Rotate(Control.Command, rotateFactor);
 					break;
@@ -242,9 +253,9 @@ namespace OpenBve
 					if (TimeElapsed > 0.0)
 					{
 						double factor = Control.AnalogState;
-						if (Control.Method == ControlMethod.Mouse && Control.Element >= 3)
+						if (IsMouseScroll(Control))
 						{
-							factor *= Interface.CurrentOptions.ZoomScrollSpeed; 
+							factor *= Interface.CurrentOptions.ZoomScrollSpeed;
 						}
 						Program.Renderer.Camera.AlignmentDirection.Zoom = -CameraProperties.ZoomTopSpeed * factor;
 					}
@@ -255,9 +266,9 @@ namespace OpenBve
 					if (TimeElapsed > 0.0)
 					{
 						double factor = Control.AnalogState;
-						if (Control.Method == ControlMethod.Mouse && Control.Element >= 3)
+						if (IsMouseScroll(Control))
 						{
-							factor *= Interface.CurrentOptions.ZoomScrollSpeed; 
+							factor *= Interface.CurrentOptions.ZoomScrollSpeed;
 						}
 						Program.Renderer.Camera.AlignmentDirection.Zoom = CameraProperties.ZoomTopSpeed * factor;
 					}
@@ -269,9 +280,9 @@ namespace OpenBve
 					{
 						const double scrollSpeed = 250.0;
 						double timetableFactor = Control.AnalogState;
-						if (Control.Method == ControlMethod.Mouse && Control.Element >= 3)
+						if (IsMouseScroll(Control))
 						{
-							timetableFactor *= 5.0;
+							timetableFactor *= ScrollTimetableBoost;
 						}
 						switch (Program.Renderer.CurrentTimetable)
 						{
@@ -295,9 +306,9 @@ namespace OpenBve
 					{
 						const double scrollSpeed = 250.0;
 						double timetableFactor = Control.AnalogState;
-						if (Control.Method == ControlMethod.Mouse && Control.Element >= 3)
+						if (IsMouseScroll(Control))
 						{
-							timetableFactor *= 5.0;
+							timetableFactor *= ScrollTimetableBoost;
 						}
 						switch (Program.Renderer.CurrentTimetable)
 						{

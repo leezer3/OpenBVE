@@ -75,11 +75,11 @@ namespace OpenBve
 					str = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "controls", "assignment_mouse" }) + " [";
 					switch (loadedControl.Element)
 					{
-						case 0: str += Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "controls", "assignment_mouse_left" }); break;
-						case 1: str += Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "controls", "assignment_mouse_middle" }); break;
-						case 2: str += Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "controls", "assignment_mouse_right" }); break;
-						case 3: str += Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "controls", "assignment_mouse_scrollup" }); break;
-						case 4: str += Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "controls", "assignment_mouse_scrolldown" }); break;
+						case MouseElement.Left: str += Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "controls", "assignment_mouse_left" }); break;
+						case MouseElement.Middle: str += Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "controls", "assignment_mouse_middle" }); break;
+						case MouseElement.Right: str += Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "controls", "assignment_mouse_right" }); break;
+						case MouseElement.ScrollUp: str += Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "controls", "assignment_mouse_scrollup" }); break;
+						case MouseElement.ScrollDown: str += Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "controls", "assignment_mouse_scrolldown" }); break;
 						default: str += loadedControl.Element; break;
 					}
 					str += "]";
