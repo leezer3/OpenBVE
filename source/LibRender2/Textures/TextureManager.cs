@@ -267,7 +267,23 @@ namespace LibRender2.Textures
 				return false;
 			}
 
-			if (texture == null && handle.Origin.GetTexture(out texture) || texture != null)
+			if (texture == null)
+			{
+				/*
+				 * Reuse the register-time decode held by the texture cache where possible,
+				 * as the cached instance already has the origin's parameters applied,
+				 * avoiding a second full decode of the same file
+				 */
+				lock (TextureLookupLock)
+				{
+					textureCache.TryGetValue(handle.Origin, out texture);
+				}
+				if (texture == null)
+				{
+					handle.Origin.GetTexture(out texture);
+				}
+			}
+			if (texture != null)
 			{
 				if (texture.MultipleFrames)
 				{
@@ -286,7 +302,8 @@ namespace LibRender2.Textures
 
 					handle.Size = texture.Size;
 					handle.Transparency = texture.GetTransparencyType();
-
+					// Fetch the pixel data once; the getter may lazily re-decode released instances, which must not happen per access
+					byte[] textureBytes = texture.Bytes;
 					switch (Interpolation)
 					{
 						case InterpolationMode.NearestNeighbor:
@@ -352,7 +369,7 @@ namespace LibRender2.Textures
 									noLuminanceChannel ? PixelInternalFormat.R8 : PixelInternalFormat.Luminance,
 									texture.Width, texture.Height, 0,
 									noLuminanceChannel ? OpenTK.Graphics.OpenGL.PixelFormat.Red : OpenTK.Graphics.OpenGL.PixelFormat.Luminance,
-									PixelType.UnsignedByte, texture.Bytes);
+									PixelType.UnsignedByte, textureBytes);
 								
 								if (noLuminanceChannel)
 								{
@@ -368,7 +385,7 @@ namespace LibRender2.Textures
 									PixelInternalFormat.Rgb8,
 									texture.Width, texture.Height, 0,
 									OpenTK.Graphics.OpenGL.PixelFormat.Rgb,
-									PixelType.UnsignedByte, texture.Bytes);
+									PixelType.UnsignedByte, textureBytes);
 								break;
 							case PixelFormat.RGBAlpha:
 								// down convert to RGB
@@ -380,9 +397,9 @@ namespace LibRender2.Textures
 								{
 									for (int x = 0; x < texture.Width; x++)
 									{
-										newBytes[j + 0] = texture.Bytes[i + 0];
-										newBytes[j + 1] = texture.Bytes[i + 1];
-										newBytes[j + 2] = texture.Bytes[i + 2];
+										newBytes[j + 0] = textureBytes[i + 0];
+										newBytes[j + 1] = textureBytes[i + 1];
+										newBytes[j + 2] = textureBytes[i + 2];
 										i += 4;
 										j += 3;
 									}
@@ -416,10 +433,10 @@ namespace LibRender2.Textures
 								{
 									for (int x = 0; x < texture.Width; x++)
 									{
-										newBytes[j + 0] = texture.Bytes[i + 0];
-										newBytes[j + 1] = texture.Bytes[i + 0];
-										newBytes[j + 2] = texture.Bytes[i + 0];
-										newBytes[j + 3] = texture.Bytes[i + 1];
+										newBytes[j + 0] = textureBytes[i + 0];
+										newBytes[j + 1] = textureBytes[i + 0];
+										newBytes[j + 2] = textureBytes[i + 0];
+										newBytes[j + 3] = textureBytes[i + 1];
 										i += 2;
 										j += 4;
 									}
@@ -440,7 +457,7 @@ namespace LibRender2.Textures
 									PixelInternalFormat.LuminanceAlpha,
 									texture.Width, texture.Height, 0,
 									OpenTK.Graphics.OpenGL.PixelFormat.LuminanceAlpha,
-									PixelType.UnsignedByte, texture.Bytes);
+									PixelType.UnsignedByte, textureBytes);
 							}
 							break;
 							case PixelFormat.RGBAlpha:
@@ -454,7 +471,7 @@ namespace LibRender2.Textures
 									PixelInternalFormat.Rgba8,
 									texture.Width, texture.Height, 0,
 									OpenTK.Graphics.OpenGL.PixelFormat.Rgba,
-									PixelType.UnsignedByte, texture.Bytes);
+									PixelType.UnsignedByte, textureBytes);
 								break;
 						}
 						
