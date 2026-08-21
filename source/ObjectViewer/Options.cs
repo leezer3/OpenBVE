@@ -133,6 +133,11 @@ namespace ObjectViewer
 			}
 		}
 
+		private static Key ResetIfUnknown(Key key, Key defaultKey)
+		{
+			return key == Key.Unknown ? defaultKey : key;
+		}
+
 		internal static void LoadOptions()
 		{
 			Interface.CurrentOptions = new Options
@@ -231,6 +236,13 @@ namespace ObjectViewer
 							block.GetEnumValue(OptionsKey.Down, out Interface.CurrentOptions.CameraMoveDown);
 							block.GetEnumValue(OptionsKey.Forward, out Interface.CurrentOptions.CameraMoveForward);
 							block.GetEnumValue(OptionsKey.Backward, out Interface.CurrentOptions.CameraMoveBackward);
+							// Reset any invalid or unknown camera keys back to their defaults
+							Interface.CurrentOptions.CameraMoveLeft = ResetIfUnknown(Interface.CurrentOptions.CameraMoveLeft, Key.A);
+							Interface.CurrentOptions.CameraMoveRight = ResetIfUnknown(Interface.CurrentOptions.CameraMoveRight, Key.D);
+							Interface.CurrentOptions.CameraMoveUp = ResetIfUnknown(Interface.CurrentOptions.CameraMoveUp, Key.W);
+							Interface.CurrentOptions.CameraMoveDown = ResetIfUnknown(Interface.CurrentOptions.CameraMoveDown, Key.S);
+							Interface.CurrentOptions.CameraMoveForward = ResetIfUnknown(Interface.CurrentOptions.CameraMoveForward, Key.Q);
+							Interface.CurrentOptions.CameraMoveBackward = ResetIfUnknown(Interface.CurrentOptions.CameraMoveBackward, Key.E);
 							break;
 
 					}
