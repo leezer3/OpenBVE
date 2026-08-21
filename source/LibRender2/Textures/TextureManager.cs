@@ -486,7 +486,11 @@ namespace LibRender2.Textures
 				 * This allows it to be re-loaded from disk
 				 */
 				var texture = handle;
-				TextureOrigin key = animatedTextures.FirstOrDefault(x => x.Value == texture).Key;
+				TextureOrigin key = null;
+				if (texture.Origin != null && animatedTextures.ContainsKey(texture.Origin))
+				{
+					key = texture.Origin;
+				}
 				handle = new Texture(key);
 			}
 			else

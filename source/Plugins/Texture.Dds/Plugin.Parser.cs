@@ -26,11 +26,8 @@ namespace Texture.Dds
             if (ddsImage == null) return;
             if (ddsImage.Length == 0) return;
 
-            using (MemoryStream stream = new MemoryStream(ddsImage.Length))
+            using (MemoryStream stream = new MemoryStream(ddsImage))
             {
-                stream.Write(ddsImage, 0, ddsImage.Length);
-                stream.Seek(0, SeekOrigin.Begin);
-
                 using (BinaryReader reader = new BinaryReader(stream))
                 {
                     this.Parse(reader);
@@ -73,17 +70,7 @@ namespace Texture.Dds
 
         private void CreateTexture(int width, int height, byte[] rawData)
         {
-            
-            int size = width * height * 4;
-			byte[] textureData = new byte[size];
-	        for (int i = 0; i < size; i += 4)
-	        {
-		        textureData[i] = rawData[i]; // red
-		        textureData[i + 1] = rawData[i + 1]; // green
-		        textureData[i + 2] = rawData[i + 2]; // blue
-		        textureData[i + 3] = rawData[i + 3]; // alpha
-	        }
-	        myTexture = new OpenBveApi.Textures.Texture(width, height, OpenBveApi.Textures.PixelFormat.RGBAlpha, textureData, null);
+	        myTexture = new OpenBveApi.Textures.Texture(width, height, OpenBveApi.Textures.PixelFormat.RGBAlpha, rawData, null);
         }
 
         private static PixelFormat GetFormat(DdsHeader header, out int blocksize)
