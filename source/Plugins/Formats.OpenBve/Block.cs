@@ -662,7 +662,7 @@ namespace Formats.OpenBve
 	    {
 			if (keyValuePairs.TryRemove(key, out var value))
 			{
-				if (Enum.TryParse(value.Value, true, out enumValue))
+				if (EnumCache<T3>.TryParse(value.Value, out enumValue))
 				{
 					return true;
 				}
@@ -679,7 +679,7 @@ namespace Formats.OpenBve
 		{
 			if (keyValuePairs.TryRemove(key, out var value))
 			{
-				if (Enum.TryParse(value.Value, true, out enumValue))
+				if (EnumCache<T3>.TryParse(value.Value, out enumValue))
 				{
 					return true;
 				}
@@ -737,7 +737,7 @@ namespace Formats.OpenBve
 					s = s.Substring(0, 5);
 				}
 				
-				if (Enum.TryParse(s, true, out enumValue))
+				if (EnumCache<T3>.TryParse(s, out enumValue))
 				{
 					int.TryParse(num, out index);
 					return true;
@@ -760,7 +760,7 @@ namespace Formats.OpenBve
 				string colorValue = value.Value.Substring(colonIndex + 1);
 				string s = value.Value.Substring(0, colonIndex);
 
-				if (Enum.TryParse(s, true, out enumValue))
+				if (EnumCache<T3>.TryParse(s, out enumValue))
 				{
 					if (Color32.TryParseColor(colorValue.Split(','), out Color32 newColor))
 					{

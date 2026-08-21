@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -299,6 +299,11 @@ namespace OpenBve
 			if (Interface.CurrentOptions.UnloadUnusedTextures)
 			{
 				Program.Renderer.TextureManager.UnloadUnusedTextures(TimeElapsed);
+			}
+			if (!textureStatsLogged && simulationSetup && Environment.TickCount - setupTickCount > 10000)
+			{
+				textureStatsLogged = true;
+				Program.FileSystem.AppendToLogFile("Texture stats @10s: decodes " + Program.CurrentHost.TextureDecodeCalls + " calls / " + Program.CurrentHost.TextureDecodeMs + " ms | uploads " + LibRender2.Textures.TextureManager.UploadCount + " calls / " + LibRender2.Textures.TextureManager.UploadMs + " ms | GC gen0/1/2: " + GC.CollectionCount(0) + "/" + GC.CollectionCount(1) + "/" + GC.CollectionCount(2));
 			}
 			// finish
 			try
@@ -1132,10 +1137,14 @@ namespace OpenBve
 			simulationSetup = true;
 			Program.FileSystem.AppendToLogFile(@"--------------------", false);
 			Program.FileSystem.AppendToLogFile(@"Loading complete, starting simulation.");
+			Program.FileSystem.AppendToLogFile("Texture stats @load: decodes " + Program.CurrentHost.TextureDecodeCalls + " calls / " + Program.CurrentHost.TextureDecodeMs + " ms | uploads " + LibRender2.Textures.TextureManager.UploadCount + " calls / " + LibRender2.Textures.TextureManager.UploadMs + " ms | GC gen0/1/2: " + GC.CollectionCount(0) + "/" + GC.CollectionCount(1) + "/" + GC.CollectionCount(2));
+			setupTickCount = Environment.TickCount;
 			Program.FileSystem.AppendToLogFile(@"--------------------", false);
 		}
 
 		private bool simulationSetup = false;
+		private int setupTickCount;
+		private bool textureStatsLogged;
 
 		public void LoadingScreenLoop()
 		{

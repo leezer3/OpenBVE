@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -25,7 +26,21 @@ namespace LibRender2.Textures
 		/// <summary>Holds cached texture origins</summary>
 		internal static Dictionary<TextureOrigin, Texture> textureCache = new Dictionary<TextureOrigin, Texture>();
 
+		/// <summary>Total time spent decoding texture files, in milliseconds.</summary>
+		public static long TextureDecodeTime;
+
+		/// <summary>Number of texture upload requests handled.</summary>
+		public static long UploadCount;
+
+		/// <summary>Time spent in texture upload requests, including cached-handle early exits (ms).</summary>
+		public static long UploadMs;
+
 		private static Dictionary<TextureOrigin, Texture> animatedTextures;
+
+		/// <summary>Holds the registered path-based textures, indexed by path.</summary>
+		private static readonly Dictionary<string, List<Texture>> RegisteredTextureLookup = new Dictionary<string, List<Texture>>(StringComparer.OrdinalIgnoreCase);
+
+		private static readonly object TextureLookupLock = new object();
 
 		/// <summary>The number of currently registered textures.</summary>
 		public int RegisteredTexturesCount;
@@ -58,75 +73,47 @@ namespace LibRender2.Textures
 		/// <returns>Whether registering the texture was successful.</returns>
 		public bool RegisterTexture(string path, TextureParameters parameters, out Texture handle)
 		{
-			if (!File.Exists(path))
+			if (string.IsNullOrEmpty(path) || !File.Exists(path))
 			{
 				// shouldn't happen, but handle gracefully
 				handle = null;
 				return false;
 			}
 			/* BUG:
-			 * Attempt to delete null texture handles from the end of the array
-			 * These sometimes seem to end up there
-			 * 
-			 * Have also seen a registered textures count of 72 and an array length of 64
-			 * Is it possible for a texture to fail to register, but still increment the registered textures count?
-			 * 
-			 * There appears to be a timing issue somewhere whilst loading, as this only happens intermittently
+			 * The registered textures count very occasional becomes greater than the array length (Texture loader crashes possibly?)
+			 * This then crashes when we attempt to itinerate the array, so reset it...
 			 */
 			if (RegisteredTexturesCount > RegisteredTextures.Length)
 			{
-				/* BUG:
-				 * The registered textures count very occasional becomes greater than the array length (Texture loader crashes possibly?)
-				 * This then crashes when we attempt to itinerate the array, so reset it...
-				 */
 				RegisteredTexturesCount = RegisteredTextures.Length;
-			}
-
-			if (RegisteredTexturesCount != 0)
-			{
-				try
-				{
-					for (int i = RegisteredTexturesCount - 1; i >= 0; i--)
-					{
-						if (RegisteredTextures[i] != null)
-						{
-							break;
-						}
-
-						Array.Resize(ref RegisteredTextures, RegisteredTextures.Length - 1);
-					}
-				}
-				catch
-				{
-					// ignored
-				}
 			}
 
 			/*
 			 * Check if the texture is already registered.
 			 * If so, return the existing handle.
 			 * */
-			for (int i = 0; i < RegisteredTexturesCount; i++)
+			lock (TextureLookupLock)
 			{
-				if (RegisteredTextures[i] != null)
+				if (RegisteredTextureLookup.TryGetValue(path, out List<Texture> candidates))
 				{
-					try
+					for (int i = 0; i < candidates.Count; i++)
 					{
-						//The only exceptions thrown were these when it barfed
-						PathOrigin source = RegisteredTextures[i].Origin as PathOrigin;
-
-						if (source != null && source.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase) && source.Parameters == parameters)
+						try
 						{
-							handle = RegisteredTextures[i];
-							return true;
+							PathOrigin source = candidates[i].Origin as PathOrigin;
+
+							if (source != null && source.Parameters == parameters)
+							{
+								handle = candidates[i];
+								return true;
+							}
+						}
+						catch
+						{
+							// ignored
 						}
 					}
-					catch
-					{
-						// ignored
-					}
 				}
-
 			}
 
 			/*
@@ -136,6 +123,29 @@ namespace LibRender2.Textures
 			RegisteredTextures[idx] = new Texture(path, parameters, currentHost);
 			RegisteredTexturesCount++;
 			handle = RegisteredTextures[idx];
+
+			lock (TextureLookupLock)
+			{
+				/*
+				 * Pre-seed the texture cache with the decoded texture (not the handle).
+				 * The handle itself has no decoded bytes, so storing it would cause a null
+				 * reference when the transparency type is subsequently queried.
+				 * */
+				if (handle.PixelFormat != PixelFormat.Invalid && handle.DecodedTexture != null && !textureCache.ContainsKey(handle.Origin))
+				{
+					textureCache.Add(handle.Origin, handle.DecodedTexture);
+				}
+
+				/*
+				 * Maintain the registration lookup table.
+				 * */
+				if (!RegisteredTextureLookup.TryGetValue(path, out List<Texture> list))
+				{
+					list = new List<Texture>();
+					RegisteredTextureLookup[path] = list;
+				}
+				list.Add(handle);
+			}
 			return true;
 		}
 
@@ -196,6 +206,15 @@ namespace LibRender2.Textures
 		/// <returns>Whether loading the texture was successful.</returns>
 		public bool LoadTexture(ref Texture handle, OpenGlTextureWrapMode wrap, int currentTicks, InterpolationMode Interpolation, int AnisotropicFilteringLevel)
 		{
+			Stopwatch uploadTimer = Stopwatch.StartNew();
+			bool result = LoadTextureInternal(ref handle, wrap, currentTicks, Interpolation, AnisotropicFilteringLevel);
+			UploadCount++;
+			UploadMs += uploadTimer.ElapsedMilliseconds;
+			return result;
+		}
+
+		private bool LoadTextureInternal(ref Texture handle, OpenGlTextureWrapMode wrap, int currentTicks, InterpolationMode Interpolation, int AnisotropicFilteringLevel)
+		{
 
 			Texture texture = null;
 			//Don't try to load a texture to a null handle, this is a seriously bad idea....
@@ -248,7 +267,35 @@ namespace LibRender2.Textures
 				return false;
 			}
 
-			if (texture == null && handle.Origin.GetTexture(out texture) || texture != null)
+			if (texture == null)
+			{
+				/*
+				 * Reuse the register-time decode held by the texture cache where possible,
+				 * as the cached instance already has the origin's parameters applied,
+				 * avoiding a second full decode of the same file.
+				 * NB: Origin equality only compares the path, so the cached instance must be
+				 * checked against this handle's parameters before reuse- files registered with
+				 * differing parameters (e.g. different clip regions) require their own decode.
+				 */
+				lock (TextureLookupLock)
+				{
+					Texture cachedTexture;
+					if (textureCache.TryGetValue(handle.Origin, out cachedTexture))
+					{
+						PathOrigin cachedPathOrigin = cachedTexture.Origin as PathOrigin;
+						PathOrigin handlePathOrigin = handle.Origin as PathOrigin;
+						if (cachedPathOrigin != null && handlePathOrigin != null && cachedPathOrigin.Parameters == handlePathOrigin.Parameters)
+						{
+							texture = cachedTexture;
+						}
+					}
+				}
+				if (texture == null)
+				{
+					handle.Origin.GetTexture(out texture);
+				}
+			}
+			if (texture != null)
 			{
 				if (texture.MultipleFrames)
 				{
@@ -267,7 +314,8 @@ namespace LibRender2.Textures
 
 					handle.Size = texture.Size;
 					handle.Transparency = texture.GetTransparencyType();
-
+					// Fetch the pixel data once; the getter may lazily re-decode released instances, which must not happen per access
+					byte[] textureBytes = texture.Bytes;
 					switch (Interpolation)
 					{
 						case InterpolationMode.NearestNeighbor:
@@ -333,7 +381,7 @@ namespace LibRender2.Textures
 									noLuminanceChannel ? PixelInternalFormat.R8 : PixelInternalFormat.Luminance,
 									texture.Width, texture.Height, 0,
 									noLuminanceChannel ? OpenTK.Graphics.OpenGL.PixelFormat.Red : OpenTK.Graphics.OpenGL.PixelFormat.Luminance,
-									PixelType.UnsignedByte, texture.Bytes);
+									PixelType.UnsignedByte, textureBytes);
 								
 								if (noLuminanceChannel)
 								{
@@ -349,35 +397,19 @@ namespace LibRender2.Textures
 									PixelInternalFormat.Rgb8,
 									texture.Width, texture.Height, 0,
 									OpenTK.Graphics.OpenGL.PixelFormat.Rgb,
-									PixelType.UnsignedByte, texture.Bytes);
+									PixelType.UnsignedByte, textureBytes);
 								break;
 							case PixelFormat.RGBAlpha:
-								// down convert to RGB
-								int stride = (3 * (texture.Width + 1) >> 2) << 2;
-								byte[] newBytes = new byte[stride * texture.Height];
-								int i = 0, j = 0;
-
-								for (int y = 0; y < texture.Height; y++)
-								{
-									for (int x = 0; x < texture.Width; x++)
-									{
-										newBytes[j + 0] = texture.Bytes[i + 0];
-										newBytes[j + 1] = texture.Bytes[i + 1];
-										newBytes[j + 2] = texture.Bytes[i + 2];
-										i += 4;
-										j += 3;
-									}
-
-									j += stride - 3 * texture.Width;
-								}
-								// send as is
-								// n.b. Must reset the unpack alignment in case of changes
+								/*
+								 * Opaque texture, so the alpha channel is discarded by the RGB8 internal format.
+								 * Upload the RGBA data directly rather than stripping it CPU-side.
+								 */
 								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
 								GL.TexImage2D(TextureTarget.Texture2D, 0,
 									PixelInternalFormat.Rgb8,
 									texture.Width, texture.Height, 0,
-									OpenTK.Graphics.OpenGL.PixelFormat.Rgb,
-									PixelType.UnsignedByte, newBytes);
+									OpenTK.Graphics.OpenGL.PixelFormat.Rgba,
+									PixelType.UnsignedByte, textureBytes);
 								break;
 						}
 					}
@@ -385,45 +417,45 @@ namespace LibRender2.Textures
 					{
 						switch (texture.PixelFormat)
 						{
-							case PixelFormat.GrayscaleAlpha:
-								// NOTE: LuminanceAlpha is deprecated in GL4, so just upconvert to RGBA
-								if (noLuminanceChannel)
-								{
-									int stride = (2 * (texture.Width + 1) >> 2) << 2;
-									byte[] newBytes = new byte[stride * texture.Height];
-									int i = 0, j = 0;
+						case PixelFormat.GrayscaleAlpha:
+							// NOTE: LuminanceAlpha is deprecated in GL4, so just upconvert to RGBA
+							if (noLuminanceChannel)
+							{
+								int stride = (4 * (texture.Width + 1) >> 2) << 2;
+								byte[] newBytes = new byte[stride * texture.Height];
+								int i = 0, j = 0;
 
-									for (int y = 0; y < texture.Height; y++)
+								for (int y = 0; y < texture.Height; y++)
+								{
+									for (int x = 0; x < texture.Width; x++)
 									{
-										for (int x = 0; x < texture.Width; x++)
-										{
-											newBytes[j + 0] = texture.Bytes[i + 0];
-											newBytes[j + 1] = texture.Bytes[i + 0];
-											newBytes[j + 2] = texture.Bytes[i + 0];
-											newBytes[j + 3] = texture.Bytes[i + 1];
-											i += 4;
-											j += 4;
-										}
-
-										j += stride - 3 * texture.Width;
-										GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
-										GL.TexImage2D(TextureTarget.Texture2D, 0,
-											PixelInternalFormat.Rgba8,
-											texture.Width, texture.Height, 0,
-											OpenTK.Graphics.OpenGL.PixelFormat.Rgba,
-											PixelType.UnsignedByte, newBytes);
+										newBytes[j + 0] = textureBytes[i + 0];
+										newBytes[j + 1] = textureBytes[i + 0];
+										newBytes[j + 2] = textureBytes[i + 0];
+										newBytes[j + 3] = textureBytes[i + 1];
+										i += 2;
+										j += 4;
 									}
+
+									j += stride - 4 * texture.Width;
 								}
-								else
-								{
-									GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
-									GL.TexImage2D(TextureTarget.Texture2D, 0,
-										PixelInternalFormat.LuminanceAlpha,
-										texture.Width, texture.Height, 0,
-										OpenTK.Graphics.OpenGL.PixelFormat.LuminanceAlpha,
-										PixelType.UnsignedByte, texture.Bytes);
-								}
-								break;
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
+								GL.TexImage2D(TextureTarget.Texture2D, 0,
+									PixelInternalFormat.Rgba8,
+									texture.Width, texture.Height, 0,
+									OpenTK.Graphics.OpenGL.PixelFormat.Rgba,
+									PixelType.UnsignedByte, newBytes);
+							}
+							else
+							{
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
+								GL.TexImage2D(TextureTarget.Texture2D, 0,
+									PixelInternalFormat.LuminanceAlpha,
+									texture.Width, texture.Height, 0,
+									OpenTK.Graphics.OpenGL.PixelFormat.LuminanceAlpha,
+									PixelType.UnsignedByte, textureBytes);
+							}
+							break;
 							case PixelFormat.RGBAlpha:
 								/*
 								* The texture uses its alpha channel, so send the bitmap data
@@ -435,7 +467,7 @@ namespace LibRender2.Textures
 									PixelInternalFormat.Rgba8,
 									texture.Width, texture.Height, 0,
 									OpenTK.Graphics.OpenGL.PixelFormat.Rgba,
-									PixelType.UnsignedByte, texture.Bytes);
+									PixelType.UnsignedByte, textureBytes);
 								break;
 						}
 						
@@ -445,6 +477,32 @@ namespace LibRender2.Textures
 					if (texture.MultipleFrames)
 					{
 						texture.OpenGlTextures[(int)wrap].Valid = true;
+					}
+					else
+					{
+						/*
+						 * The pixel data now lives in OpenGL, so release the retained CPU-side copies:
+						 * the transient upload instance, the register-time decode held by the handle,
+						 * and the entry in the texture cache.
+						 * The data is lazily re-decoded from the origin if required again.
+						 */
+						texture.ReleaseBytes();
+						Texture cachedTexture = null;
+						lock (TextureLookupLock)
+						{
+							if (textureCache.TryGetValue(handle.Origin, out cachedTexture))
+							{
+								// Compute the transparency type whilst the data is still available,
+								// as otherwise a later query would have to re-decode the file from disk
+								cachedTexture.GetTransparencyType();
+								cachedTexture.ReleaseBytes();
+							}
+						}
+						if (handle.DecodedTexture != null && handle.DecodedTexture != cachedTexture)
+						{
+							handle.DecodedTexture.GetTransparencyType();
+							handle.DecodedTexture.ReleaseBytes();
+						}
 					}
 					return true;
 				}
@@ -483,7 +541,11 @@ namespace LibRender2.Textures
 				 * This allows it to be re-loaded from disk
 				 */
 				var texture = handle;
-				TextureOrigin key = animatedTextures.FirstOrDefault(x => x.Value == texture).Key;
+				TextureOrigin key = null;
+				if (texture.Origin != null && animatedTextures.ContainsKey(texture.Origin))
+				{
+					key = texture.Origin;
+				}
 				handle = new Texture(key);
 			}
 			else
@@ -500,7 +562,10 @@ namespace LibRender2.Textures
 			handle.Ignore = false;
 			if (handle.Origin != null)
 			{
-				textureCache.Remove(handle.Origin);
+				lock (TextureLookupLock)
+				{
+					textureCache.Remove(handle.Origin);
+				}
 			}
 		}
 
@@ -526,15 +591,23 @@ namespace LibRender2.Textures
 		{
 			for (int i = 0; i < RegisteredTexturesCount; i++)
 			{
+				/*
+				 * On a route reload, preserve textures whose source file is unchanged,
+				 * so that the first frame after the reload does not re-upload every texture.
+				 */
+				if (currentlyReloading && RegisteredTextures[i] != null && !RegisteredTextures[i].MultipleFrames && TextureFileUnchanged(RegisteredTextures[i].Origin))
+				{
+					continue;
+				}
 				UnloadTexture(ref RegisteredTextures[i]);
 			}
 			if (currentlyReloading)
 			{
-				foreach(TextureOrigin origin in textureCache.Keys.ToList())
+				lock (TextureLookupLock)
 				{
-					if (origin is PathOrigin pathOrigin)
+					foreach (TextureOrigin origin in textureCache.Keys.ToList())
 					{
-						if (!File.Exists(pathOrigin.Path) || pathOrigin.FileSize != new FileInfo(pathOrigin.Path).Length || pathOrigin.LastModificationTime != File.GetLastWriteTime(pathOrigin.Path))
+						if (origin is PathOrigin && !TextureFileUnchanged(origin))
 						{
 							textureCache.Remove(origin);
 						}
@@ -543,11 +616,60 @@ namespace LibRender2.Textures
 			}
 			else
 			{
-				textureCache.Clear();
+				lock (TextureLookupLock)
+				{
+					textureCache.Clear();
+				}
+			}
+
+			/*
+			 * Rebuild the registration lookup table from the surviving textures,
+			 * so that it does not retain handles which have been unloaded.
+			 * */
+			lock (TextureLookupLock)
+			{
+				RegisteredTextureLookup.Clear();
+				for (int i = 0; i < RegisteredTexturesCount; i++)
+				{
+					Texture texture = RegisteredTextures[i];
+					if (texture != null && texture.Origin is PathOrigin pathOrigin)
+					{
+						if (!RegisteredTextureLookup.TryGetValue(pathOrigin.Path, out List<Texture> list))
+						{
+							list = new List<Texture>();
+							RegisteredTextureLookup[pathOrigin.Path] = list;
+						}
+						list.Add(texture);
+					}
+				}
+			}
+
+			if (!currentlyReloading)
+			{
+				// Only force GC on full unload, not on route reload
+				GC.Collect(0, GCCollectionMode.Optimized);
 			}
 			
-			GC.Collect(); //Speculative- https://bveworldwide.forumotion.com/t1873-object-routeviewer-out-of-memory#19423
-			
+		}
+
+		/// <summary>Checks whether the on-disk source file of the given texture origin is unchanged.</summary>
+		private static bool TextureFileUnchanged(TextureOrigin origin)
+		{
+			if (!(origin is PathOrigin pathOrigin))
+			{
+				return false;
+			}
+			// Refresh() first, as FileSystemInfo caches size/last write time.
+			try
+			{
+				FileInfo info = new FileInfo(pathOrigin.Path);
+				info.Refresh();
+				return info.Exists && pathOrigin.FileSize == info.Length && pathOrigin.LastModificationTime == info.LastWriteTime;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 
 		/// <summary>Unloads any textures which have not been accessed</summary>

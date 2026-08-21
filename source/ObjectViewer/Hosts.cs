@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -320,7 +320,7 @@ namespace ObjectViewer {
 				FileInfo f = new FileInfo(path);
 				if (f.Length == 0)
 				{
-					if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path).ToLowerInvariant()) && !FailedObjects.Contains(path))
+					if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path)) && !FailedObjects.Contains(path))
 					{
 						FailedObjects.Add(path);
 						Interface.AddMessage(MessageType.Error, false, "Zero-byte object file encountered at " + path);
@@ -328,7 +328,7 @@ namespace ObjectViewer {
 				}
 				else
 				{
-					if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path).ToLowerInvariant()) && !FailedObjects.Contains(path))
+					if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path)) && !FailedObjects.Contains(path))
 					{
 						FailedObjects.Add(path);
 						Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
