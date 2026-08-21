@@ -575,8 +575,6 @@ namespace Train.MsTs
 								break;
 							}
 						}
-						
-
 					}
 					break;
 				case KujuTokenID.DirIncrease:
@@ -664,10 +662,8 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.Position:
-					Position.X = block.ReadSingle();
-					Position.Y = block.ReadSingle();
-					Size.X = block.ReadSingle();
-					Size.Y = block.ReadSingle();
+					Position = block.ReadVector2();
+					Size = block.ReadVector2();
 					break;
 				case KujuTokenID.Type:
 					panelSubject = block.ReadEnumValue(default(PanelSubject));
@@ -687,7 +683,7 @@ namespace Train.MsTs
 						if (block.Length() - block.Position() > 3)
 						{
 							Block subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
-							PositiveColors[0] = new Tuple<double, Color24>(0, new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16()));
+							PositiveColors[0] = new Tuple<double, Color24>(0, subBlock.ReadColorRgb());
 						}
 					}
 					else
@@ -701,9 +697,7 @@ namespace Train.MsTs
 								Block subBlock = block.ReadSubBlock(new[] { KujuTokenID.ControlColour, KujuTokenID.SwitchVal });
 								if (subBlock.Token == KujuTokenID.ControlColour)
 								{
-									Color24 color = new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(),
-										(byte)subBlock.ReadInt16());
-									PositiveColors[i] = new Tuple<double, Color24>(value, color);
+									PositiveColors[i] = new Tuple<double, Color24>(value, subBlock.ReadColorRgb());
 								}
 								else
 								{
@@ -727,7 +721,7 @@ namespace Train.MsTs
 						if (block.Length() - block.Position() > 3)
 						{
 							Block subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
-							NegativeColors[0] = new Tuple<double, Color24>(double.NegativeInfinity, new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16()));
+							NegativeColors[0] = new Tuple<double, Color24>(double.NegativeInfinity, subBlock.ReadColorRgb());
 						}
 					}
 					else
@@ -741,9 +735,7 @@ namespace Train.MsTs
 								Block subBlock = block.ReadSubBlock(new[] { KujuTokenID.ControlColour, KujuTokenID.SwitchVal });
 								if (subBlock.Token == KujuTokenID.ControlColour)
 								{
-									Color24 color = new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(),
-										(byte)subBlock.ReadInt16());
-									NegativeColors[i] = new Tuple<double, Color24>(value, color);
+									NegativeColors[i] = new Tuple<double, Color24>(value, subBlock.ReadColorRgb());
 								}
 								else
 								{
@@ -755,16 +747,14 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.ControlColour:
-					ControlColor = new Color24((byte)block.ReadInt16(), (byte)block.ReadInt16(), (byte)block.ReadInt16());
+					ControlColor = block.ReadColorRgb();
 					break;
 				case KujuTokenID.Accuracy:
 					Accuracy = block.ReadInt16();
 					break;
 				case KujuTokenID.Area:
-					AreaPosition.X = block.ReadInt16();
-					AreaPosition.Y = block.ReadInt16();
-					AreaSize.X = block.ReadInt16();
-					AreaSize.Y = block.ReadInt16();
+					AreaPosition = block.ReadVector2();
+					AreaSize = block.ReadVector2();
 					break;
 			}
 		}

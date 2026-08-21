@@ -33,12 +33,13 @@ namespace RouteViewer {
 			if (q) {
 				Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 			}
+			
 			Vector3 dF = new Vector3(Program.Renderer.CameraTrackFollower.WorldDirection);
 			Vector3 uF = new Vector3(Program.Renderer.CameraTrackFollower.WorldUp);
 			Vector3 sF = new Vector3(Program.Renderer.CameraTrackFollower.WorldSide);
-			Vector3 pF = new Vector3(Program.Renderer.Camera.Alignment.Position);
-			
-			Program.Renderer.Camera.AbsolutePosition = new Vector3(Program.Renderer.CameraTrackFollower.WorldPosition) + sF * pF + uF * pF + dF * pF;
+			// BUG: Somehow, this wants the Direction and Up vectors reversing in RouteViewer only
+			Vector3 cF = Program.Renderer.CameraTrackFollower.WorldPosition + sF * Program.Renderer.Camera.Alignment.Position.X + dF * Program.Renderer.Camera.Alignment.Position.Z + uF * Program.Renderer.Camera.Alignment.Position.Y;
+
 
 			if (Program.Renderer.Camera.Alignment.Yaw != 0.0) {
 				dF.Rotate(uF, Program.Renderer.Camera.Alignment.Yaw);
@@ -53,7 +54,7 @@ namespace RouteViewer {
 				sF.Rotate(dF, -Program.Renderer.Camera.Alignment.Roll);
 			}
 
-			
+			Program.Renderer.Camera.AbsolutePosition = cF;
 			Program.Renderer.Camera.AbsoluteDirection = dF;
 			Program.Renderer.Camera.AbsoluteUp = uF;
 			Program.Renderer.Camera.AbsoluteSide = sF;

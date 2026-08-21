@@ -50,7 +50,7 @@ namespace Formats.OpenBve
 			bool addToBlock = defaultFirstBlock;
 			int idx = -1;
 			int previousIdx = -1;
-			T1 previousSection = default(T1);
+			T1 previousSection = default;
 
 			// ReSharper disable once InconsistentNaming
 			bool headerOK = string.IsNullOrEmpty(expectedHeader);
@@ -160,9 +160,6 @@ namespace Formats.OpenBve
 
 	public class ConfigSection<T1, T2> : Block<T1, T2> where T1 : struct, Enum where T2 : struct, Enum
 	{
-		public readonly T1 Token;
-
-		
 		public override Block<T1, T2> ReadNextBlock()
 		{
 			currentHost.AddMessage(MessageType.Error, false, "A section in a CFG file cannot contain sub-blocks.");
@@ -198,7 +195,7 @@ namespace Formats.OpenBve
 				{
 					string a = myLines[i].Substring(0, j).TrimEnd();
 					string b = myLines[i].Substring(j + 1).TrimStart();
-					if (int.TryParse(a, out var idx))
+					if (int.TryParse(a, out int idx))
 					{
 						if (idx >= 0)
 						{
