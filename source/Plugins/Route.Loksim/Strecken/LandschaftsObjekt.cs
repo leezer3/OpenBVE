@@ -50,31 +50,40 @@ namespace LokSimRouteParser
 
 		internal LightStates Lighting;
 
+		internal bool IntermediatePoints;
+
+		internal bool Valid;
+
+		internal string TextureFile;
+
+		private List<Vector3> coordinateList;
+
 		internal LandschaftsObjekt(Block<LoksimNode, LoksimAttribute> landschaftBlock)
 		{
 			// A Landschaftsobjekt is a world ground object
 			internalObject = new StaticObject(Plugin.CurrentHost);
 
-			string textureFile = string.Empty;
-			bool shouldTexture = true;
+			bool shouldTexture = false;
 
 			landschaftBlock.GetValue(LoksimAttribute.Abstand, out Distance);
 			landschaftBlock.GetValue(LoksimAttribute.Position, out TrackPosition);
 			landschaftBlock.GetValue(LoksimAttribute.Polygon, out Polygon);
 			landschaftBlock.GetValue(LoksimAttribute.Scale, out Scale);
-			if (landschaftBlock.GetPath(LoksimAttribute.TextureFile, Plugin.FileSystem.LoksimDataDirectory, out textureFile))
+			landschaftBlock.GetValue(LoksimAttribute.Zwischenpunkte, out IntermediatePoints);
+			if (landschaftBlock.GetPath(LoksimAttribute.TextureFile, Plugin.FileSystem.LoksimDataDirectory, out TextureFile))
 			{
+				Valid = true;
 				landschaftBlock.GetValue(LoksimAttribute.Texture, out shouldTexture);
 			}
-			else
+
+			if (!shouldTexture)
 			{
-				shouldTexture = false;
+				Valid = false;
+				return;
 			}
 
-			// Zwischenpunkte : additional points for curving the object
-
 			// may contain multiple Landschaftsobjekt blocks
-			List<Vector3> coordinateList = new List<Vector3>();
+			coordinateList = new List<Vector3>();
 			while (landschaftBlock.RemainingSubBlocks > 0)
 			{
 				Block<LoksimNode, LoksimAttribute> subBlock = landschaftBlock.ReadNextBlock();
@@ -96,8 +105,17 @@ namespace LokSimRouteParser
 						break;
 				}
 			}
+		}
 
-			
+		internal void Create(TrackFollower t)
+		{
+			if (Valid == false)
+			{
+				// polygon with no texture creates a 'hole' in the ground
+				// as the experiment is to render ground behind everything, discard
+				return;
+			}
+
 			/*
 			 * Need to figure out how to deal with the handling of these properly.
 			 *
@@ -110,6 +128,17 @@ namespace LokSimRouteParser
 			 * Need to dig into this some more, but I *suspect* that any area
 			 * covered by a LandschaftsObjeckt actually doesn't generate a ground at all
 			 * (most of this then masked by the badly limited camera view ability)
+			 *
+			 * EXPERIMENT:
+			 * Trying a new flag on objects so that the ground is rendered without depth
+			 * writes (e.g. behind everything)
+			 * Can possible merge this with the background code...
+			 *
+			 * ------------------------------------------------
+			 * Zwischenpunkt
+			 * -------------
+			 * Essentially, this adds a *new* vertex every 10m Z, but transformed by the X-pos of the rail
+			 * yucky...
 			 */
 
 			internalObject.Mesh.Vertices = new VertexTemplate[coordinateList.Count];
@@ -143,24 +172,18 @@ namespace LokSimRouteParser
 			MeshMaterial material = new MeshMaterial();
 			material.Color = Color32.White;
 
-			if (shouldTexture && !string.IsNullOrEmpty(textureFile))
-			{
-				Plugin.CurrentHost.RegisterTexture(textureFile, new TextureParameters(null, null), out material.DaytimeTexture);
-			}
+			Plugin.CurrentHost.RegisterTexture(TextureFile, new TextureParameters(null, null), out material.DaytimeTexture);
 			internalObject.Mesh.Materials = new[]
 			{
 				material
 			};
-			
-		}
 
-		internal void Create(TrackFollower t)
-		{
+
 			t.UpdateAbsolute(TrackPosition, true, false);
-			Vector3 fPos = t.WorldPosition;
+			Vector3 wPos = t.WorldPosition;
 			t.UpdateRelative(Length, true, false);
-			Vector3 rPos = t.WorldPosition;
-			Vector3 d = fPos == rPos ? fPos : new Vector3(rPos - fPos);
+
+			Vector3 d = t.WorldPosition == wPos ? t.WorldPosition : new Vector3(t.WorldPosition - wPos);
 			double tt = d.Magnitude();
 			d *= tt;
 			tt = 1.0 / Math.Sqrt(d.X * d.X + d.Z * d.Z);
@@ -168,9 +191,8 @@ namespace LokSimRouteParser
 			double ez = d.Z * tt;
 			Vector3 s = new Vector3(ez, 0.0, -ex);
 			Vector3 u = Vector3.Cross(d, s);
-			Transformation tr = new Transformation(d, u, s);
-			// 
-			internalObject.CreateObject(fPos, tr, new ObjectCreationParameters(TrackPosition, TrackPosition -500, TrackPosition + 500));
+
+			internalObject.CreateObject(wPos, new Transformation(d,u,s), new ObjectCreationParameters(TrackPosition, TrackPosition -500, TrackPosition + 500));
 		}
 	}
 }
