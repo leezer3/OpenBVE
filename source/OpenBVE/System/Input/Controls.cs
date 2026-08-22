@@ -191,7 +191,21 @@ namespace OpenBve
 										Controls[Length].Key = (OpenBveApi.Input.Key)CurrentKey;
 										Controls[Length].Direction = 0;
 										Controls[Length].Modifier = (KeyboardModifier) Modifiers;
-										if (Terms.Length >= 5 && int.TryParse(Terms[4], NumberStyles.Integer, Culture, out int Option))
+										if (Terms.Length >= 6)
+										{
+											// Format including the required modifier press order: key, modifiers, order, option
+											int Order;
+											if (!int.TryParse(Terms[4], NumberStyles.Integer, Culture, out Order) || Order < 0)
+											{
+												Order = 0;
+											}
+											Controls[Length].ModifierOrder = Order;
+											if (int.TryParse(Terms[5], NumberStyles.Integer, Culture, out int Option))
+											{
+												Controls[Length].Option = Option;
+											}
+										}
+										else if (Terms.Length >= 5 && int.TryParse(Terms[4], NumberStyles.Integer, Culture, out int Option))
 										{
 											Controls[Length].Option = Option;
 										}

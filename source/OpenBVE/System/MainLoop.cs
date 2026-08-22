@@ -236,11 +236,16 @@ namespace OpenBve
 				// Accumulate scroll delta in AnalogState for smoother multi-scroll frames
 				for (int i = 0; i < Interface.CurrentControls.Length; i++)
 				{
-					if (Interface.CurrentControls[i].Method == ControlMethod.Mouse && Interface.CurrentControls[i].Element == element && Interface.CurrentControls[i].Modifier == HeldKeyboardModifiers)
+					if (Interface.CurrentControls[i].Method != ControlMethod.Mouse || Interface.CurrentControls[i].Element != element || Interface.CurrentControls[i].Modifier != HeldKeyboardModifiers)
 					{
-						Interface.CurrentControls[i].AnalogState += 1.0;
-						Interface.CurrentControls[i].DigitalState = DigitalControlState.Pressed;
+						continue;
 					}
+					if (Interface.CurrentControls[i].ModifierOrder != 0 && Interface.CurrentControls[i].ModifierOrder != ModifierOrder.GetRank(HeldModifierSequence, HeldModifierSequenceCount, HeldKeyboardModifiers))
+					{
+						continue;
+					}
+					Interface.CurrentControls[i].AnalogState += 1.0;
+					Interface.CurrentControls[i].DigitalState = DigitalControlState.Pressed;
 				}
 				if (element == MouseElement.ScrollUp) scrollUpPressed = true;
 				if (element == MouseElement.ScrollDown) scrollDownPressed = true;
@@ -323,6 +328,40 @@ namespace OpenBve
 		private static KeyboardModifier CurrentKeyboardModifier = KeyboardModifier.None;
 		/// <summary>The keyboard modifiers currently held down, tracked across KeyDown/KeyUp events so that mouse bindings can require modifiers</summary>
 		internal static KeyboardModifier HeldKeyboardModifiers = KeyboardModifier.None;
+		/// <summary>The keyboard modifiers currently held down, in the order they were pressed (for sequence-sensitive bindings)</summary>
+		internal static readonly KeyboardModifier[] HeldModifierSequence = new KeyboardModifier[3];
+		internal static int HeldModifierSequenceCount;
+
+		internal static void PushHeldModifier(KeyboardModifier modifier)
+		{
+			for (int i = 0; i < HeldModifierSequenceCount; i++)
+			{
+				if (HeldModifierSequence[i] == modifier)
+				{
+					return;
+				}
+			}
+			if (HeldModifierSequenceCount < HeldModifierSequence.Length)
+			{
+				HeldModifierSequence[HeldModifierSequenceCount++] = modifier;
+			}
+		}
+
+		internal static void RemoveHeldModifier(KeyboardModifier modifier)
+		{
+			for (int i = 0; i < HeldModifierSequenceCount; i++)
+			{
+				if (HeldModifierSequence[i] == modifier)
+				{
+					for (int j = i; j < HeldModifierSequenceCount - 1; j++)
+					{
+						HeldModifierSequence[j] = HeldModifierSequence[j + 1];
+					}
+					HeldModifierSequenceCount--;
+					return;
+				}
+			}
+		}
 
 		internal static void ProcessKeyboard()
 		{
@@ -691,8 +730,14 @@ namespace OpenBve
 			{
 				if (Interface.CurrentControls[i].Method == ControlMethod.Mouse && Interface.CurrentControls[i].Element == element)
 				{
-					// On press require the modifiers to match; on release always release so controls cannot get stuck
-					if (!pressed || Interface.CurrentControls[i].Modifier == HeldKeyboardModifiers)
+					// On press require the modifiers to match (including press order when the binding demands it);
+					// on release always release so controls cannot get stuck
+					bool matches = !pressed || Interface.CurrentControls[i].Modifier == HeldKeyboardModifiers;
+					if (matches && pressed && Interface.CurrentControls[i].ModifierOrder != 0)
+					{
+						matches = Interface.CurrentControls[i].ModifierOrder == ModifierOrder.GetRank(HeldModifierSequence, HeldModifierSequenceCount, HeldKeyboardModifiers);
+					}
+					if (matches)
 					{
 						Interface.CurrentControls[i].AnalogState = pressed ? 1.0 : 0.0;
 						Interface.CurrentControls[i].DigitalState = pressed ? DigitalControlState.Pressed : DigitalControlState.Released;

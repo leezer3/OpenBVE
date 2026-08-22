@@ -78,6 +78,7 @@ namespace OpenBve {
 						checkboxKeyboardShift.Checked = (Interface.CurrentControls[i].Modifier & KeyboardModifier.Shift) != 0;
 						checkboxKeyboardCtrl.Checked = (Interface.CurrentControls[i].Modifier & KeyboardModifier.Ctrl) != 0;
 						checkboxKeyboardAlt.Checked = (Interface.CurrentControls[i].Modifier & KeyboardModifier.Alt) != 0;
+						LoadKeyboardCheckboxOrder(i);
 					} else if (radiobuttonJoystick.Checked) {
 						labelJoystickAssignmentValue.Text = GetControlDetails(i);
 					} else if (radiobuttonMouse.Checked) {
@@ -85,6 +86,7 @@ namespace OpenBve {
 						checkboxMouseShift.Checked = (Interface.CurrentControls[i].Modifier & KeyboardModifier.Shift) != 0;
 						checkboxMouseCtrl.Checked = (Interface.CurrentControls[i].Modifier & KeyboardModifier.Ctrl) != 0;
 						checkboxMouseAlt.Checked = (Interface.CurrentControls[i].Modifier & KeyboardModifier.Alt) != 0;
+						LoadMouseCheckboxOrder(i);
 					} else {
 						comboboxKeyboardKey.SelectedIndex = -1;
 						checkboxKeyboardShift.Checked = false;
@@ -94,6 +96,8 @@ namespace OpenBve {
 						checkboxMouseShift.Checked = false;
 						checkboxMouseCtrl.Checked = false;
 						checkboxMouseAlt.Checked = false;
+						KeyboardCheckboxOrderCount = 0;
+						MouseCheckboxOrderCount = 0;
 					}
 					panelJoystick.Enabled = radiobuttonJoystick.Checked;
 					panelJoystick.Visible = radiobuttonJoystick.Checked;
@@ -122,6 +126,8 @@ namespace OpenBve {
 				checkboxMouseShift.Checked = false;
 				checkboxMouseCtrl.Checked = false;
 				checkboxMouseAlt.Checked = false;
+				KeyboardCheckboxOrderCount = 0;
+				MouseCheckboxOrderCount = 0;
 				labelJoystickAssignmentValue.Text = "";
 				Tag = null;
 				buttonControlRemove.Enabled = false;
@@ -167,10 +173,7 @@ namespace OpenBve {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string Separator = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_separator"});
 			if (Interface.CurrentControls[Index].Method == ControlMethod.Keyboard) {
-				string t = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard"}) + Separator;
-				if ((Interface.CurrentControls[Index].Modifier & KeyboardModifier.Shift) != 0) t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_shift"});
-				if ((Interface.CurrentControls[Index].Modifier & KeyboardModifier.Ctrl) != 0) t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_ctrl"});
-				if ((Interface.CurrentControls[Index].Modifier & KeyboardModifier.Alt) != 0) t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_alt"});
+				string t = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard"}) + Separator + BuildModifierDetails(Index);
 
 				if (Interface.CurrentControls[Index].Key != Key.Unknown)
 				{
@@ -296,10 +299,7 @@ namespace OpenBve {
 				return t;
 			} 
 			if (Interface.CurrentControls[Index].Method == ControlMethod.Mouse) {
-				string t = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse"}) + Separator;
-				if ((Interface.CurrentControls[Index].Modifier & KeyboardModifier.Shift) != 0) t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_shift"});
-				if ((Interface.CurrentControls[Index].Modifier & KeyboardModifier.Ctrl) != 0) t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_ctrl"});
-				if ((Interface.CurrentControls[Index].Modifier & KeyboardModifier.Alt) != 0) t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_alt"});
+				string t = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse"}) + Separator + BuildModifierDetails(Index);
 				switch (Interface.CurrentControls[Index].Element) {
 					case MouseElement.Left: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_left"}); break;
 					case MouseElement.Middle: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_middle"}); break;
@@ -312,6 +312,27 @@ namespace OpenBve {
 			}
 			return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_invalid"});
 			
+		}
+
+		// modifiers
+		private string BuildModifierDetails(int Index) {
+			string t = string.Empty;
+			KeyboardModifier modifier = Interface.CurrentControls[Index].Modifier;
+			bool ordered = Interface.CurrentControls[Index].ModifierOrder != 0 && CountModifiers((int)modifier) >= 2;
+			if (ordered) {
+				foreach (KeyboardModifier m in ModifierOrder.FromRank((int)modifier, Interface.CurrentControls[Index].ModifierOrder)) {
+					switch (m) {
+						case KeyboardModifier.Shift: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_shift"}); break;
+						case KeyboardModifier.Ctrl: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_ctrl"}); break;
+						case KeyboardModifier.Alt: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_alt"}); break;
+					}
+				}
+			} else {
+				if ((modifier & KeyboardModifier.Shift) != 0) t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_shift"});
+				if ((modifier & KeyboardModifier.Ctrl) != 0) t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_ctrl"});
+				if ((modifier & KeyboardModifier.Alt) != 0) t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_alt"});
+			}
+			return t;
 		}
 
 		// control add
@@ -435,29 +456,22 @@ namespace OpenBve {
 
 		// mouse modifiers
 		private void checkboxMouseShift_CheckedChanged(object sender, EventArgs e) {
-			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
-				int i = listviewControls.SelectedIndices[0];
-				Interface.CurrentControls[i].Modifier = (checkboxMouseShift.Checked ? KeyboardModifier.Shift : KeyboardModifier.None) |
-					(checkboxMouseCtrl.Checked ? KeyboardModifier.Ctrl : KeyboardModifier.None) |
-					(checkboxMouseAlt.Checked ? KeyboardModifier.Alt : KeyboardModifier.None);
-				UpdateControlListElement(listviewControls.Items[i], i, true);
-			}
+			UpdateMouseModifiers(KeyboardModifier.Shift, checkboxMouseShift.Checked);
 		}
 		private void checkboxMouseCtrl_CheckedChanged(object sender, EventArgs e) {
-			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
-				int i = listviewControls.SelectedIndices[0];
-				Interface.CurrentControls[i].Modifier = (checkboxMouseShift.Checked ? KeyboardModifier.Shift : KeyboardModifier.None) |
-					(checkboxMouseCtrl.Checked ? KeyboardModifier.Ctrl : KeyboardModifier.None) |
-					(checkboxMouseAlt.Checked ? KeyboardModifier.Alt : KeyboardModifier.None);
-				UpdateControlListElement(listviewControls.Items[i], i, true);
-			}
+			UpdateMouseModifiers(KeyboardModifier.Ctrl, checkboxMouseCtrl.Checked);
 		}
 		private void checkboxMouseAlt_CheckedChanged(object sender, EventArgs e) {
+			UpdateMouseModifiers(KeyboardModifier.Alt, checkboxMouseAlt.Checked);
+		}
+		private void UpdateMouseModifiers(KeyboardModifier toggled, bool pressed) {
 			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int i = listviewControls.SelectedIndices[0];
+				ToggleCheckboxModifier(MouseCheckboxOrder, ref MouseCheckboxOrderCount, toggled, pressed);
 				Interface.CurrentControls[i].Modifier = (checkboxMouseShift.Checked ? KeyboardModifier.Shift : KeyboardModifier.None) |
 					(checkboxMouseCtrl.Checked ? KeyboardModifier.Ctrl : KeyboardModifier.None) |
 					(checkboxMouseAlt.Checked ? KeyboardModifier.Alt : KeyboardModifier.None);
+				Interface.CurrentControls[i].ModifierOrder = CountModifiers((int)Interface.CurrentControls[i].Modifier) >= 2 ? ModifierOrder.GetRank(MouseCheckboxOrder, MouseCheckboxOrderCount, Interface.CurrentControls[i].Modifier) : 0;
 				UpdateControlListElement(listviewControls.Items[i], i, true);
 			}
 		}
@@ -480,29 +494,22 @@ namespace OpenBve {
 
 		// modifiers
 		private void checkboxKeyboardShift_CheckedChanged(object sender, EventArgs e) {
-			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
-				int i = listviewControls.SelectedIndices[0];
-				Interface.CurrentControls[i].Modifier = (checkboxKeyboardShift.Checked ? KeyboardModifier.Shift : KeyboardModifier.None) |
-					(checkboxKeyboardCtrl.Checked ? KeyboardModifier.Ctrl : KeyboardModifier.None) |
-					(checkboxKeyboardAlt.Checked ? KeyboardModifier.Alt : KeyboardModifier.None);
-				UpdateControlListElement(listviewControls.Items[i], i, true);
-			}
+			UpdateKeyboardModifiers(KeyboardModifier.Shift, checkboxKeyboardShift.Checked);
 		}
 		private void checkboxKeyboardCtrl_CheckedChanged(object sender, EventArgs e) {
-			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
-				int i = listviewControls.SelectedIndices[0];
-				Interface.CurrentControls[i].Modifier = (checkboxKeyboardShift.Checked ? KeyboardModifier.Shift : KeyboardModifier.None) |
-					(checkboxKeyboardCtrl.Checked ? KeyboardModifier.Ctrl : KeyboardModifier.None) |
-					(checkboxKeyboardAlt.Checked ? KeyboardModifier.Alt : KeyboardModifier.None);
-				UpdateControlListElement(listviewControls.Items[i], i, true);
-			}
+			UpdateKeyboardModifiers(KeyboardModifier.Ctrl, checkboxKeyboardCtrl.Checked);
 		}
 		private void checkboxKeyboardAlt_CheckedChanged(object sender, EventArgs e) {
+			UpdateKeyboardModifiers(KeyboardModifier.Alt, checkboxKeyboardAlt.Checked);
+		}
+		private void UpdateKeyboardModifiers(KeyboardModifier toggled, bool pressed) {
 			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int i = listviewControls.SelectedIndices[0];
+				ToggleCheckboxModifier(KeyboardCheckboxOrder, ref KeyboardCheckboxOrderCount, toggled, pressed);
 				Interface.CurrentControls[i].Modifier = (checkboxKeyboardShift.Checked ? KeyboardModifier.Shift : KeyboardModifier.None) |
 					(checkboxKeyboardCtrl.Checked ? KeyboardModifier.Ctrl : KeyboardModifier.None) |
 					(checkboxKeyboardAlt.Checked ? KeyboardModifier.Alt : KeyboardModifier.None);
+				Interface.CurrentControls[i].ModifierOrder = CountModifiers((int)Interface.CurrentControls[i].Modifier) >= 2 ? ModifierOrder.GetRank(KeyboardCheckboxOrder, KeyboardCheckboxOrderCount, Interface.CurrentControls[i].Modifier) : 0;
 				UpdateControlListElement(listviewControls.Items[i], i, true);
 			}
 		}
@@ -619,6 +626,85 @@ namespace OpenBve {
 		}
 
 		private bool KeyGrab = false;
+		private readonly KeyboardModifier[] GrabSequence = new KeyboardModifier[3];
+		private int GrabSequenceCount;
+		private readonly KeyboardModifier[] KeyboardCheckboxOrder = new KeyboardModifier[3];
+		private int KeyboardCheckboxOrderCount;
+		private readonly KeyboardModifier[] MouseCheckboxOrder = new KeyboardModifier[3];
+		private int MouseCheckboxOrderCount;
+
+		private void PushGrabModifier(KeyboardModifier modifier)
+		{
+			for (int i = 0; i < GrabSequenceCount; i++)
+			{
+				if (GrabSequence[i] == modifier)
+				{
+					return;
+				}
+			}
+			if (GrabSequenceCount < GrabSequence.Length)
+			{
+				GrabSequence[GrabSequenceCount++] = modifier;
+			}
+		}
+
+		private static void ToggleCheckboxModifier(KeyboardModifier[] order, ref int count, KeyboardModifier modifier, bool pressed)
+		{
+			if (pressed)
+			{
+				for (int i = 0; i < count; i++)
+				{
+					if (order[i] == modifier)
+					{
+						return;
+					}
+				}
+				if (count < order.Length)
+				{
+					order[count++] = modifier;
+				}
+				return;
+			}
+			for (int i = 0; i < count; i++)
+			{
+				if (order[i] == modifier)
+				{
+					for (int j = i; j < count - 1; j++)
+					{
+						order[j] = order[j + 1];
+					}
+					count--;
+					return;
+				}
+			}
+		}
+
+		private void LoadKeyboardCheckboxOrder(int index)
+		{
+			LoadCheckboxOrder(index, KeyboardCheckboxOrder, ref KeyboardCheckboxOrderCount);
+		}
+
+		private void LoadMouseCheckboxOrder(int index)
+		{
+			LoadCheckboxOrder(index, MouseCheckboxOrder, ref MouseCheckboxOrderCount);
+		}
+
+		private void LoadCheckboxOrder(int index, KeyboardModifier[] order, ref int count)
+		{
+			count = 0;
+			if (Interface.CurrentControls[index].ModifierOrder != 0)
+			{
+				foreach (KeyboardModifier m in ModifierOrder.FromRank((int)Interface.CurrentControls[index].Modifier, Interface.CurrentControls[index].ModifierOrder))
+				{
+					order[count++] = m;
+				}
+			}
+		}
+
+		private static int CountModifiers(int modifierBits)
+		{
+			return ((modifierBits & 1) != 0 ? 1 : 0) + ((modifierBits & 2) != 0 ? 1 : 0) + ((modifierBits & 4) != 0 ? 1 : 0);
+		}
 
 		// joystick grab
 		private void textboxJoystickGrab_Enter(object sender, EventArgs e) {
@@ -627,6 +713,7 @@ namespace OpenBve {
 				textboxJoystickGrab.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_keyboard_assignment_grabbing"});
 				textboxJoystickGrab.BackColor = Color.LightSkyBlue;
 				textboxJoystickGrab.ForeColor = Color.Black;
+				GrabSequenceCount = 0;
 				KeyGrab = true;
 				return;
 
@@ -654,16 +741,54 @@ namespace OpenBve {
 			{
 				return;
 			}
+			//Capture held modifiers, but never treat the modifier keys themselves as the assigned key
+			switch (e.KeyCode)
+			{
+				case Keys.LShiftKey:
+				case Keys.RShiftKey:
+					PushGrabModifier(KeyboardModifier.Shift);
+					break;
+				case Keys.LControlKey:
+				case Keys.RControlKey:
+					PushGrabModifier(KeyboardModifier.Ctrl);
+					break;
+				case Keys.LMenu:
+				case Keys.RMenu:
+					PushGrabModifier(KeyboardModifier.Alt);
+					break;
+			}
+			KeyboardModifier modifier =
+				(kbState.IsKeyDown(OpenTK.Input.Key.ShiftLeft) | kbState.IsKeyDown(OpenTK.Input.Key.ShiftRight) ? KeyboardModifier.Shift : KeyboardModifier.None) |
+				(kbState.IsKeyDown(OpenTK.Input.Key.ControlLeft) | kbState.IsKeyDown(OpenTK.Input.Key.ControlRight) ? KeyboardModifier.Ctrl : KeyboardModifier.None) |
+				(kbState.IsKeyDown(OpenTK.Input.Key.AltLeft) | kbState.IsKeyDown(OpenTK.Input.Key.AltRight) ? KeyboardModifier.Alt : KeyboardModifier.None);
+			int selected = -1;
 			for (int j = 0; j < Translations.TranslatedKeys.Count; j++)
 			{
-				Key k = Translations.TranslatedKeys.ElementAt(j).Key;
-				if (kbState.IsKeyDown((OpenTK.Input.Key)k))
+				OpenTK.Input.Key k = (OpenTK.Input.Key)Translations.TranslatedKeys.ElementAt(j).Key;
+				if (k == OpenTK.Input.Key.ShiftLeft | k == OpenTK.Input.Key.ShiftRight | k == OpenTK.Input.Key.ControlLeft | k == OpenTK.Input.Key.ControlRight | k == OpenTK.Input.Key.AltLeft | k == OpenTK.Input.Key.AltRight)
 				{
-					int i = listviewControls.SelectedIndices[0];
-					Interface.CurrentControls[i].Key = k;
-					UpdateControlListElement(listviewControls.Items[i], i, true);
-					comboboxKeyboardKey.SelectedIndex = j;
+					continue;
 				}
+				if (kbState.IsKeyDown(k))
+				{
+					selected = j;
+					break;
+				}
+			}
+			if (selected >= 0 && listviewControls.SelectedIndices.Count == 1)
+			{
+				int i = listviewControls.SelectedIndices[0];
+				Interface.CurrentControls[i].Key = Translations.TranslatedKeys.ElementAt(selected).Key;
+				Interface.CurrentControls[i].Modifier = modifier;
+				Interface.CurrentControls[i].ModifierOrder = modifier != KeyboardModifier.None ? ModifierOrder.GetRank(GrabSequence, GrabSequenceCount, modifier) : 0;
+				UpdateControlListElement(listviewControls.Items[i], i, true);
+				Tag = new object();
+				checkboxKeyboardShift.Checked = (modifier & KeyboardModifier.Shift) != 0;
+				checkboxKeyboardCtrl.Checked = (modifier & KeyboardModifier.Ctrl) != 0;
+				checkboxKeyboardAlt.Checked = (modifier & KeyboardModifier.Alt) != 0;
+				Tag = null;
+				LoadKeyboardCheckboxOrder(i);
+				comboboxKeyboardKey.SelectedIndex = selected;
 			}
 			textboxJoystickGrab.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_keyboard_assignment_grab"});
 			textboxJoystickGrab.BackColor = Color.White;
