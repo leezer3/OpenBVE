@@ -60,6 +60,10 @@ namespace OpenBveApi.Interface
 					break;
 				case ControlMethod.Mouse:
 					s += Element + ", " + Option;
+					if (Modifier != KeyboardModifier.None)
+					{
+						s += ", " + (int)Modifier;
+					}
 					break;
 			}
 			return s;

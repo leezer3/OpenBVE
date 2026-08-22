@@ -82,12 +82,18 @@ namespace OpenBve {
 						labelJoystickAssignmentValue.Text = GetControlDetails(i);
 					} else if (radiobuttonMouse.Checked) {
 						comboboxMouseButton.SelectedIndex = Array.IndexOf(MouseButtonElements, Interface.CurrentControls[i].Element);
+						checkboxMouseShift.Checked = (Interface.CurrentControls[i].Modifier & KeyboardModifier.Shift) != 0;
+						checkboxMouseCtrl.Checked = (Interface.CurrentControls[i].Modifier & KeyboardModifier.Ctrl) != 0;
+						checkboxMouseAlt.Checked = (Interface.CurrentControls[i].Modifier & KeyboardModifier.Alt) != 0;
 					} else {
 						comboboxKeyboardKey.SelectedIndex = -1;
 						checkboxKeyboardShift.Checked = false;
 						checkboxKeyboardCtrl.Checked = false;
 						checkboxKeyboardAlt.Checked = false;
 						comboboxMouseButton.SelectedIndex = -1;
+						checkboxMouseShift.Checked = false;
+						checkboxMouseCtrl.Checked = false;
+						checkboxMouseAlt.Checked = false;
 					}
 					panelJoystick.Enabled = radiobuttonJoystick.Checked;
 					panelJoystick.Visible = radiobuttonJoystick.Checked;
@@ -113,6 +119,9 @@ namespace OpenBve {
 				checkboxKeyboardCtrl.Checked = false;
 				checkboxKeyboardAlt.Checked = false;
 				comboboxMouseButton.SelectedIndex = -1;
+				checkboxMouseShift.Checked = false;
+				checkboxMouseCtrl.Checked = false;
+				checkboxMouseAlt.Checked = false;
 				labelJoystickAssignmentValue.Text = "";
 				Tag = null;
 				buttonControlRemove.Enabled = false;
@@ -288,6 +297,9 @@ namespace OpenBve {
 			} 
 			if (Interface.CurrentControls[Index].Method == ControlMethod.Mouse) {
 				string t = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse"}) + Separator;
+				if ((Interface.CurrentControls[Index].Modifier & KeyboardModifier.Shift) != 0) t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_shift"});
+				if ((Interface.CurrentControls[Index].Modifier & KeyboardModifier.Ctrl) != 0) t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_ctrl"});
+				if ((Interface.CurrentControls[Index].Modifier & KeyboardModifier.Alt) != 0) t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_alt"});
 				switch (Interface.CurrentControls[Index].Element) {
 					case MouseElement.Left: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_left"}); break;
 					case MouseElement.Middle: t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_middle"}); break;
@@ -417,6 +429,35 @@ namespace OpenBve {
 			if (Tag == null & listviewControls.SelectedIndices.Count == 1 && comboboxMouseButton.SelectedIndex >= 0) {
 				int i = listviewControls.SelectedIndices[0];
 				Interface.CurrentControls[i].Element = MouseButtonElements[comboboxMouseButton.SelectedIndex];
+				UpdateControlListElement(listviewControls.Items[i], i, true);
+			}
+		}
+
+		// mouse modifiers
+		private void checkboxMouseShift_CheckedChanged(object sender, EventArgs e) {
+			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
+				int i = listviewControls.SelectedIndices[0];
+				Interface.CurrentControls[i].Modifier = (checkboxMouseShift.Checked ? KeyboardModifier.Shift : KeyboardModifier.None) |
+					(checkboxMouseCtrl.Checked ? KeyboardModifier.Ctrl : KeyboardModifier.None) |
+					(checkboxMouseAlt.Checked ? KeyboardModifier.Alt : KeyboardModifier.None);
+				UpdateControlListElement(listviewControls.Items[i], i, true);
+			}
+		}
+		private void checkboxMouseCtrl_CheckedChanged(object sender, EventArgs e) {
+			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
+				int i = listviewControls.SelectedIndices[0];
+				Interface.CurrentControls[i].Modifier = (checkboxMouseShift.Checked ? KeyboardModifier.Shift : KeyboardModifier.None) |
+					(checkboxMouseCtrl.Checked ? KeyboardModifier.Ctrl : KeyboardModifier.None) |
+					(checkboxMouseAlt.Checked ? KeyboardModifier.Alt : KeyboardModifier.None);
+				UpdateControlListElement(listviewControls.Items[i], i, true);
+			}
+		}
+		private void checkboxMouseAlt_CheckedChanged(object sender, EventArgs e) {
+			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
+				int i = listviewControls.SelectedIndices[0];
+				Interface.CurrentControls[i].Modifier = (checkboxMouseShift.Checked ? KeyboardModifier.Shift : KeyboardModifier.None) |
+					(checkboxMouseCtrl.Checked ? KeyboardModifier.Ctrl : KeyboardModifier.None) |
+					(checkboxMouseAlt.Checked ? KeyboardModifier.Alt : KeyboardModifier.None);
 				UpdateControlListElement(listviewControls.Items[i], i, true);
 			}
 		}

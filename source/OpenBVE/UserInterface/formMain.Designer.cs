@@ -344,6 +344,10 @@ namespace OpenBve {
             this.panelMouse = new System.Windows.Forms.Panel();
             this.labelMouseButton = new System.Windows.Forms.Label();
             this.comboboxMouseButton = new System.Windows.Forms.ComboBox();
+            this.labelMouseModifier = new System.Windows.Forms.Label();
+            this.checkboxMouseShift = new System.Windows.Forms.CheckBox();
+            this.checkboxMouseCtrl = new System.Windows.Forms.CheckBox();
+            this.checkboxMouseAlt = new System.Windows.Forms.CheckBox();
             this.panelInfo = new System.Windows.Forms.Panel();
             this.linkLabelReportBug = new System.Windows.Forms.LinkLabel();
             this.linkLabelCheckUpdates = new System.Windows.Forms.LinkLabel();
@@ -2134,6 +2138,7 @@ namespace OpenBve {
             // 
             // labelZoomScrollSpeed
             // 
+            this.labelZoomScrollSpeed.AutoSize = true;
             this.labelZoomScrollSpeed.Location = new System.Drawing.Point(8, 98);
             this.labelZoomScrollSpeed.Name = "labelZoomScrollSpeed";
             this.labelZoomScrollSpeed.Size = new System.Drawing.Size(130, 18);
@@ -2155,7 +2160,7 @@ namespace OpenBve {
             0,
             0});
             this.updownZoomScrollSpeed.Name = "updownZoomScrollSpeed";
-            this.updownZoomScrollSpeed.Size = new System.Drawing.Size(152, 20);
+            this.updownZoomScrollSpeed.Size = new System.Drawing.Size(52, 20);
             this.updownZoomScrollSpeed.TabIndex = 3;
             this.updownZoomScrollSpeed.Value = new decimal(new int[] {
             30,
@@ -2734,7 +2739,7 @@ namespace OpenBve {
             this.groupboxCamera.ForeColor = System.Drawing.Color.Black;
             this.groupboxCamera.Location = new System.Drawing.Point(330, 245);
             this.groupboxCamera.Name = "groupboxCamera";
-            this.groupboxCamera.Size = new System.Drawing.Size(321, 150);
+            this.groupboxCamera.Size = new System.Drawing.Size(321, 120);
             this.groupboxCamera.TabIndex = 22;
             this.groupboxCamera.TabStop = false;
             this.groupboxCamera.Text = "Camera options";
@@ -4604,10 +4609,14 @@ namespace OpenBve {
             // 
             this.panelMouse.Controls.Add(this.comboboxMouseButton);
             this.panelMouse.Controls.Add(this.labelMouseButton);
+            this.panelMouse.Controls.Add(this.checkboxMouseAlt);
+            this.panelMouse.Controls.Add(this.checkboxMouseCtrl);
+            this.panelMouse.Controls.Add(this.checkboxMouseShift);
+            this.panelMouse.Controls.Add(this.labelMouseModifier);
             this.panelMouse.Enabled = false;
             this.panelMouse.Location = new System.Drawing.Point(8, 72);
             this.panelMouse.Name = "panelMouse";
-            this.panelMouse.Size = new System.Drawing.Size(192, 48);
+            this.panelMouse.Size = new System.Drawing.Size(248, 48);
             this.panelMouse.TabIndex = 12;
             this.panelMouse.Visible = false;
             // 
@@ -4632,6 +4641,49 @@ namespace OpenBve {
             this.comboboxMouseButton.Size = new System.Drawing.Size(104, 21);
             this.comboboxMouseButton.TabIndex = 1;
             this.comboboxMouseButton.SelectedIndexChanged += new System.EventHandler(this.comboboxMouseButton_SelectedIndexChanged);
+            // 
+            // checkboxMouseAlt
+            // 
+            this.checkboxMouseAlt.AutoSize = true;
+            this.checkboxMouseAlt.Location = new System.Drawing.Point(192, 26);
+            this.checkboxMouseAlt.Name = "checkboxMouseAlt";
+            this.checkboxMouseAlt.Size = new System.Drawing.Size(38, 17);
+            this.checkboxMouseAlt.TabIndex = 5;
+            this.checkboxMouseAlt.Text = "Alt";
+            this.checkboxMouseAlt.UseVisualStyleBackColor = true;
+            this.checkboxMouseAlt.CheckedChanged += new System.EventHandler(this.checkboxMouseAlt_CheckedChanged);
+            // 
+            // checkboxMouseCtrl
+            // 
+            this.checkboxMouseCtrl.AutoSize = true;
+            this.checkboxMouseCtrl.Location = new System.Drawing.Point(136, 26);
+            this.checkboxMouseCtrl.Name = "checkboxMouseCtrl";
+            this.checkboxMouseCtrl.Size = new System.Drawing.Size(41, 17);
+            this.checkboxMouseCtrl.TabIndex = 4;
+            this.checkboxMouseCtrl.Text = "Ctrl";
+            this.checkboxMouseCtrl.UseVisualStyleBackColor = true;
+            this.checkboxMouseCtrl.CheckedChanged += new System.EventHandler(this.checkboxMouseCtrl_CheckedChanged);
+            // 
+            // checkboxMouseShift
+            // 
+            this.checkboxMouseShift.AutoSize = true;
+            this.checkboxMouseShift.Location = new System.Drawing.Point(80, 26);
+            this.checkboxMouseShift.Name = "checkboxMouseShift";
+            this.checkboxMouseShift.Size = new System.Drawing.Size(47, 17);
+            this.checkboxMouseShift.TabIndex = 3;
+            this.checkboxMouseShift.Text = "Shift";
+            this.checkboxMouseShift.UseVisualStyleBackColor = true;
+            this.checkboxMouseShift.CheckedChanged += new System.EventHandler(this.checkboxMouseShift_CheckedChanged);
+            // 
+            // labelMouseModifier
+            // 
+            this.labelMouseModifier.AutoEllipsis = true;
+            this.labelMouseModifier.Location = new System.Drawing.Point(0, 29);
+            this.labelMouseModifier.Name = "labelMouseModifier";
+            this.labelMouseModifier.Size = new System.Drawing.Size(76, 18);
+            this.labelMouseModifier.TabIndex = 2;
+            this.labelMouseModifier.Text = "Modifiers:";
+            this.labelMouseModifier.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // panelInfo
             // 
@@ -6823,6 +6875,10 @@ namespace OpenBve {
         private System.Windows.Forms.Panel panelMouse;
         private System.Windows.Forms.Label labelMouseButton;
         private System.Windows.Forms.ComboBox comboboxMouseButton;
+        private System.Windows.Forms.Label labelMouseModifier;
+        private System.Windows.Forms.CheckBox checkboxMouseShift;
+        private System.Windows.Forms.CheckBox checkboxMouseCtrl;
+        private System.Windows.Forms.CheckBox checkboxMouseAlt;
         private System.Windows.Forms.Panel panelKeyboard;
         private System.Windows.Forms.ComboBox comboboxKeyboardKey;
         private System.Windows.Forms.Label labelKeyboardKey;

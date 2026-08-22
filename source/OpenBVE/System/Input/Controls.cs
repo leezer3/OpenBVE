@@ -338,10 +338,15 @@ namespace OpenBve
 								{
 									Controls[Length].Method = Method;
 									Controls[Length].Element = CurrentButton;
+									Controls[Length].Modifier = KeyboardModifier.None;
 									Controls[Length].Option = 0;
 									if (Terms.Length >= 4 && int.TryParse(Terms[3], NumberStyles.Integer, Culture, out int Option))
 									{
 										Controls[Length].Option = Option;
+									}
+									if (Terms.Length >= 5 && int.TryParse(Terms[4], NumberStyles.Integer, Culture, out int Modifiers))
+									{
+										Controls[Length].Modifier = (KeyboardModifier) Modifiers;
 									}
 									Valid = true;
 								}

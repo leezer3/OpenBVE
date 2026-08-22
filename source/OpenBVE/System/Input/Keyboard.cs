@@ -34,6 +34,7 @@ namespace OpenBve
 			if (e.Shift) CurrentKeyboardModifier |= KeyboardModifier.Shift;
 			if (e.Control) CurrentKeyboardModifier |= KeyboardModifier.Ctrl;
 			if (e.Alt) CurrentKeyboardModifier |= KeyboardModifier.Alt;
+			HeldKeyboardModifiers |= CurrentKeyboardModifier;
 			if (Program.Renderer.CurrentInterface >= InterfaceType.Menu && Game.Menu.IsCustomizingControl())
 			{
 				Game.Menu.SetControlKbdCustomData((OpenBveApi.Input.Key)e.Key, CurrentKeyboardModifier);
@@ -103,8 +104,23 @@ namespace OpenBve
 			{
 				TrainManager.PlayerTrain.Plugin.RawKeyUp((OpenBveApi.Input.Key)e.Key);
 			}
-			//We don't need to check for modifiers on key up
+			//Track held modifiers so mouse bindings requiring them can be matched
 			BlockKeyRepeat = true;
+			switch (e.Key)
+			{
+				case Key.ShiftLeft:
+				case Key.ShiftRight:
+					HeldKeyboardModifiers &= ~KeyboardModifier.Shift;
+					break;
+				case Key.ControlLeft:
+				case Key.ControlRight:
+					HeldKeyboardModifiers &= ~KeyboardModifier.Ctrl;
+					break;
+				case Key.AltLeft:
+				case Key.AltRight:
+					HeldKeyboardModifiers &= ~KeyboardModifier.Alt;
+					break;
+			}
 			//Traverse the controls array
 			for (int i = 0; i < Interface.CurrentControls.Length; i++)
 			{

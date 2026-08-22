@@ -236,7 +236,7 @@ namespace OpenBve
 				// Accumulate scroll delta in AnalogState for smoother multi-scroll frames
 				for (int i = 0; i < Interface.CurrentControls.Length; i++)
 				{
-					if (Interface.CurrentControls[i].Method == ControlMethod.Mouse && Interface.CurrentControls[i].Element == element)
+					if (Interface.CurrentControls[i].Method == ControlMethod.Mouse && Interface.CurrentControls[i].Element == element && Interface.CurrentControls[i].Modifier == HeldKeyboardModifiers)
 					{
 						Interface.CurrentControls[i].AnalogState += 1.0;
 						Interface.CurrentControls[i].DigitalState = DigitalControlState.Pressed;
@@ -321,6 +321,8 @@ namespace OpenBve
 		// KEYBOARD EVENTS
 		//
 		private static KeyboardModifier CurrentKeyboardModifier = KeyboardModifier.None;
+		/// <summary>The keyboard modifiers currently held down, tracked across KeyDown/KeyUp events so that mouse bindings can require modifiers</summary>
+		internal static KeyboardModifier HeldKeyboardModifiers = KeyboardModifier.None;
 
 		internal static void ProcessKeyboard()
 		{
@@ -689,15 +691,11 @@ namespace OpenBve
 			{
 				if (Interface.CurrentControls[i].Method == ControlMethod.Mouse && Interface.CurrentControls[i].Element == element)
 				{
-					if (pressed)
+					// On press require the modifiers to match; on release always release so controls cannot get stuck
+					if (!pressed || Interface.CurrentControls[i].Modifier == HeldKeyboardModifiers)
 					{
-						Interface.CurrentControls[i].AnalogState = 1.0;
-						Interface.CurrentControls[i].DigitalState = DigitalControlState.Pressed;
-					}
-					else
-					{
-						Interface.CurrentControls[i].AnalogState = 0.0;
-						Interface.CurrentControls[i].DigitalState = DigitalControlState.Released;
+						Interface.CurrentControls[i].AnalogState = pressed ? 1.0 : 0.0;
+						Interface.CurrentControls[i].DigitalState = pressed ? DigitalControlState.Pressed : DigitalControlState.Released;
 					}
 				}
 			}
