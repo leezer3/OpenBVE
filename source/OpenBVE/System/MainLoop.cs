@@ -122,11 +122,20 @@ namespace OpenBve
 		// MOUSE EVENTS
 		//
 
-		/// <summary>The current mouse state</summary>
-		internal static MouseState currentMouseState, previousMouseState;
+		/// <summary>The sensitivity of mouse-look in interior views</summary>
+		private const double InteriorLookSensitivity = 1.0;
+		/// <summary>The sensitivity of mouse-look in exterior views</summary>
+		private const double ExteriorLookSensitivity = 3.0;
+		/// <summary>The base scale applied to raw mouse movement deltas</summary>
+		private const double LookSensitivityScale = 0.001;
+		/// <summary>The distance in pixels from the window center at which the cursor is recentered whilst grabbing</summary>
+		private const double RecenterThresholdPixels = 400.0;
 
 		internal static bool MouseGrabEnabled = false;
+		private static bool scrollUpPressed = false;
+		private static bool scrollDownPressed = false;
 		internal static bool MouseGrabIgnoreOnce = false;
+		private static int lastMouseX, lastMouseY;
 		internal static OpenBveApi.Math.Vector2 MouseGrabTarget = new OpenBveApi.Math.Vector2(0.0, 0.0);
 
 		/// <summary>Called when a mouse button is pressed</summary>
@@ -140,10 +149,13 @@ namespace OpenBve
 				return;
 			}
 			timeSinceLastMouseEvent = 0;
-			if (e.Button == MouseButton.Right)
+			switch (e.Button)
 			{
-				MouseGrabEnabled = !MouseGrabEnabled;
-				MouseGrabIgnoreOnce = true;
+				case MouseButton.Left:
+				case MouseButton.Middle:
+				case MouseButton.Right:
+					ProcessMouseControl((int)e.Button, true);
+					break;
 			}
 			if (e.Button == MouseButton.Left)
 			{
@@ -172,6 +184,14 @@ namespace OpenBve
 				return;
 			}
 			timeSinceLastMouseEvent = 0;
+			switch (e.Button)
+			{
+				case MouseButton.Left:
+				case MouseButton.Middle:
+				case MouseButton.Right:
+					ProcessMouseControl((int)e.Button, false);
+					break;
+			}
 			if (e.Button == MouseButton.Left)
 			{
 				if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
@@ -210,6 +230,26 @@ namespace OpenBve
 			{
 				Game.Menu.ProcessMouseScroll(e.Delta);
 			}
+			if (e.Delta != 0)
+			{
+				int element = e.Delta > 0 ? MouseElement.ScrollUp : MouseElement.ScrollDown;
+				// Accumulate scroll delta in AnalogState for smoother multi-scroll frames
+				for (int i = 0; i < Interface.CurrentControls.Length; i++)
+				{
+					if (Interface.CurrentControls[i].Method != ControlMethod.Mouse || Interface.CurrentControls[i].Element != element || Interface.CurrentControls[i].Modifier != HeldKeyboardModifiers)
+					{
+						continue;
+					}
+					if (Interface.CurrentControls[i].ModifierOrder != 0 && Interface.CurrentControls[i].ModifierOrder != ModifierOrder.GetRank(HeldModifierSequence, HeldModifierSequenceCount, HeldKeyboardModifiers))
+					{
+						continue;
+					}
+					Interface.CurrentControls[i].AnalogState += 1.0;
+					Interface.CurrentControls[i].DigitalState = DigitalControlState.Pressed;
+				}
+				if (element == MouseElement.ScrollUp) scrollUpPressed = true;
+				if (element == MouseElement.ScrollDown) scrollDownPressed = true;
+			}
 		}
 
 		internal static void UpdateMouse(double TimeElapsed)
@@ -221,39 +261,107 @@ namespace OpenBve
 			else
 			{
 				timeSinceLastMouseEvent = 0; //Always show the mouse in the menu
+				Program.Renderer.GameWindow.CursorVisible = true;
+				MainLoop.MouseGrabEnabled = false;
 			}
 
-			if (Interface.CurrentOptions.CursorHideDelay > 0 && timeSinceLastMouseEvent > Interface.CurrentOptions.CursorHideDelay)
+			if (scrollUpPressed)
 			{
-				Program.Renderer.GameWindow.CursorVisible = false;
+				ProcessMouseControl(MouseElement.ScrollUp, false);
+				scrollUpPressed = false;
 			}
-			else
+			if (scrollDownPressed)
 			{
-				Program.Renderer.GameWindow.CursorVisible = true;
+				ProcessMouseControl(MouseElement.ScrollDown, false);
+				scrollDownPressed = false;
 			}
 
 			if (MainLoop.MouseGrabEnabled)
 			{
-				double factor;
-				if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead)
+				Program.Renderer.GameWindow.CursorVisible = false;
+				if (Program.Renderer.GameWindow.Focused)
 				{
-					factor = 1.0;
+					ApplyMouseGrab();
 				}
 				else
 				{
-					factor = 3.0;
+					// Suspend mouse-look whilst the window is not focused,
+					// as otherwise we would yank the global cursor around other applications
+					MouseGrabIgnoreOnce = true;
+					MouseGrabTarget = OpenBveApi.Math.Vector2.Null;
 				}
-
-				Program.Renderer.Camera.AlignmentDirection.Yaw += factor * MouseGrabTarget.X;
-				Program.Renderer.Camera.AlignmentDirection.Pitch -= factor * MouseGrabTarget.Y;
-				MouseGrabTarget = OpenBveApi.Math.Vector2.Null;
 			}
+			else if (Interface.CurrentOptions.CursorHideDelay > 0 && timeSinceLastMouseEvent > Interface.CurrentOptions.CursorHideDelay)
+			{
+				Program.Renderer.GameWindow.CursorVisible = false;
+			}
+		}
+
+		/// <summary>Applies the accumulated mouse movement to the camera whilst the mouse is grabbed</summary>
+		private static void ApplyMouseGrab()
+		{
+			if (MouseGrabTarget.IsNullVector())
+			{
+				return;
+			}
+			double factor;
+			if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead)
+			{
+				factor = InteriorLookSensitivity;
+			}
+			else
+			{
+				factor = ExteriorLookSensitivity;
+			}
+
+			double zoomFactor = System.Math.Exp(Program.Renderer.Camera.Alignment.Zoom);
+			Program.Renderer.Camera.Alignment.Yaw += factor * MouseGrabTarget.X * LookSensitivityScale * zoomFactor;
+			Program.Renderer.Camera.Alignment.Pitch -= factor * MouseGrabTarget.Y * LookSensitivityScale * zoomFactor;
+			// The viewing distances depend on the camera direction, so update them now that it has changed
+			Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
+			MouseGrabTarget = OpenBveApi.Math.Vector2.Null;
 		}
 
 		//
 		// KEYBOARD EVENTS
 		//
 		private static KeyboardModifier CurrentKeyboardModifier = KeyboardModifier.None;
+		/// <summary>The keyboard modifiers currently held down, tracked across KeyDown/KeyUp events so that mouse bindings can require modifiers</summary>
+		internal static KeyboardModifier HeldKeyboardModifiers = KeyboardModifier.None;
+		/// <summary>The keyboard modifiers currently held down, in the order they were pressed (for sequence-sensitive bindings)</summary>
+		internal static readonly KeyboardModifier[] HeldModifierSequence = new KeyboardModifier[3];
+		internal static int HeldModifierSequenceCount;
+
+		internal static void PushHeldModifier(KeyboardModifier modifier)
+		{
+			for (int i = 0; i < HeldModifierSequenceCount; i++)
+			{
+				if (HeldModifierSequence[i] == modifier)
+				{
+					return;
+				}
+			}
+			if (HeldModifierSequenceCount < HeldModifierSequence.Length)
+			{
+				HeldModifierSequence[HeldModifierSequenceCount++] = modifier;
+			}
+		}
+
+		internal static void RemoveHeldModifier(KeyboardModifier modifier)
+		{
+			for (int i = 0; i < HeldModifierSequenceCount; i++)
+			{
+				if (HeldModifierSequence[i] == modifier)
+				{
+					for (int j = i; j < HeldModifierSequenceCount - 1; j++)
+					{
+						HeldModifierSequence[j] = HeldModifierSequence[j + 1];
+					}
+					HeldModifierSequenceCount--;
+					return;
+				}
+			}
+		}
 
 		internal static void ProcessKeyboard()
 		{
@@ -310,19 +418,32 @@ namespace OpenBve
 				}
 				return;
 			}
-			if (MouseGrabEnabled)
+			if (MouseGrabEnabled && Program.Renderer.GameWindow.Focused)
 			{
-				previousMouseState = currentMouseState;
-				currentMouseState = Mouse.GetState();
-				if (previousMouseState != currentMouseState)
+				int centerX = Program.Renderer.GameWindow.ClientRectangle.Width / 2;
+				int centerY = Program.Renderer.GameWindow.ClientRectangle.Height / 2;
+				System.Drawing.Point screenCenter = Program.Renderer.GameWindow.PointToScreen(new System.Drawing.Point(centerX, centerY));
+
+				if (MouseGrabIgnoreOnce)
 				{
-					if (MouseGrabIgnoreOnce)
+					MouseGrabIgnoreOnce = false;
+					MouseState state = Mouse.GetCursorState();
+					lastMouseX = state.X;
+					lastMouseY = state.Y;
+					MouseGrabTarget = OpenBveApi.Math.Vector2.Null;
+				}
+				else
+				{
+					MouseState state = Mouse.GetCursorState();
+					int curX = state.X;
+					int curY = state.Y;
+					MouseGrabTarget = new OpenBveApi.Math.Vector2(curX - lastMouseX, curY - lastMouseY);
+					lastMouseX = curX;
+					lastMouseY = curY;
+					if (Math.Abs(curX - screenCenter.X) > RecenterThresholdPixels || Math.Abs(curY - screenCenter.Y) > RecenterThresholdPixels)
 					{
-						MouseGrabIgnoreOnce = false;
-					}
-					else if (MouseGrabEnabled)
-					{
-						MouseGrabTarget = new OpenBveApi.Math.Vector2(currentMouseState.X - previousMouseState.X, currentMouseState.Y - previousMouseState.Y);
+						Mouse.SetPosition(screenCenter.X, screenCenter.Y);
+						MouseGrabIgnoreOnce = true;
 					}
 				}
 			}
@@ -603,5 +724,26 @@ namespace OpenBve
 			}
 		}
 #endif
+		private static void ProcessMouseControl(int element, bool pressed)
+		{
+			for (int i = 0; i < Interface.CurrentControls.Length; i++)
+			{
+				if (Interface.CurrentControls[i].Method == ControlMethod.Mouse && Interface.CurrentControls[i].Element == element)
+				{
+					// On press require the modifiers to match (including press order when the binding demands it);
+					// on release always release so controls cannot get stuck
+					bool matches = !pressed || Interface.CurrentControls[i].Modifier == HeldKeyboardModifiers;
+					if (matches && pressed && Interface.CurrentControls[i].ModifierOrder != 0)
+					{
+						matches = Interface.CurrentControls[i].ModifierOrder == ModifierOrder.GetRank(HeldModifierSequence, HeldModifierSequenceCount, HeldKeyboardModifiers);
+					}
+					if (matches)
+					{
+						Interface.CurrentControls[i].AnalogState = pressed ? 1.0 : 0.0;
+						Interface.CurrentControls[i].DigitalState = pressed ? DigitalControlState.Pressed : DigitalControlState.Released;
+					}
+				}
+			}
+		}
 	}
 }

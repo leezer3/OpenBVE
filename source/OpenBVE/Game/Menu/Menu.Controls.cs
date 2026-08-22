@@ -1,4 +1,4 @@
-﻿using LibRender2.Primitives;
+using LibRender2.Primitives;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -70,6 +70,19 @@ namespace OpenBve
 					break;
 				case ControlMethod.Invalid:
 					str = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "joystick_notavailable" });
+					break;
+				case ControlMethod.Mouse:
+					str = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "controls", "assignment_mouse" }) + " [";
+					switch (loadedControl.Element)
+					{
+						case MouseElement.Left: str += Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "controls", "assignment_mouse_left" }); break;
+						case MouseElement.Middle: str += Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "controls", "assignment_mouse_middle" }); break;
+						case MouseElement.Right: str += Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "controls", "assignment_mouse_right" }); break;
+						case MouseElement.ScrollUp: str += Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "controls", "assignment_mouse_scrollup" }); break;
+						case MouseElement.ScrollDown: str += Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "controls", "assignment_mouse_scrolldown" }); break;
+						default: str += loadedControl.Element; break;
+					}
+					str += "]";
 					break;
 			}
 
