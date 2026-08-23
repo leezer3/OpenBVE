@@ -963,7 +963,9 @@ namespace RouteViewer
             this.comboBoxFPSLimit.Items.AddRange(new object[] {
             "Unlimited",
             "30",
+            "45",
             "60",
+            "75",
             "120",
             "240"});
             this.comboBoxFPSLimit.Location = new System.Drawing.Point(160, 495);
