@@ -126,14 +126,16 @@ namespace OpenBveApi
 			{
 				return;
 			}
-			RaiseTimerResolution();
 			long now = Stopwatch.GetTimestamp();
 			long target = frameStartTimestamp + (long)((double)Stopwatch.Frequency / limit);
 			double remainingMs = (double)(target - now) * 1000.0 / Stopwatch.Frequency;
 			if (remainingMs <= 0.0)
 			{
+				// The frame overran its timeslot (or was throttled by VSync) - nothing to wait for,
+				// so do not raise the system timer resolution needlessly
 				return;
 			}
+			RaiseTimerResolution();
 			double sleepMs = remainingMs - schedulerPeriod * Tolerance;
 			int ticks = (int)(sleepMs / schedulerPeriod);
 			if (ticks > 0)
