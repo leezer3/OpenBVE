@@ -96,8 +96,8 @@ namespace OpenBveApi
 	{
 		// Tolerance as a fraction of the scheduler period, left unslept so that we do not overshoot the target
 		private const double Tolerance = 0.02;
-		// On Windows, timeBeginPeriod(8) is a good compromise between accuracy and power consumption
-		private const uint WindowsTimerPeriod = 8;
+		// On Windows, raise the timer resolution to 1ms for accurate frame pacing
+		private const uint WindowsTimerPeriod = 1;
 		// Hard cap applied even when the user selects 'Unlimited'
 		private const int HardFpsLimit = 540;
 
@@ -128,7 +128,7 @@ namespace OpenBveApi
 			}
 			RaiseTimerResolution();
 			long now = Stopwatch.GetTimestamp();
-			long target = frameStartTimestamp + (long)(Stopwatch.Frequency / limit);
+			long target = frameStartTimestamp + (long)((double)Stopwatch.Frequency / limit);
 			double remainingMs = (double)(target - now) * 1000.0 / Stopwatch.Frequency;
 			if (remainingMs <= 0.0)
 			{
