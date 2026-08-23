@@ -99,7 +99,7 @@ namespace OpenBveApi
 		// On Windows, raise the timer resolution to 1ms for accurate frame pacing
 		private const uint WindowsTimerPeriod = 1;
 		// Hard cap applied even when the user selects 'Unlimited'
-		private const int HardFpsLimit = 540;
+		private const int HardFpsLimit = 1000;
 
 		private static bool timerResolutionRaised;
 		private static int schedulerPeriod = 1;

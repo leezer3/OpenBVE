@@ -310,7 +310,7 @@ namespace OpenBve
 			{
 				Interface.CurrentOptions.BlackBox = false;
 			}
-			// A hard cap of 540fps is always applied, even when unlimited is selected
+			// A hard cap of 1000fps is always applied, even when unlimited is selected
 			FrameLimiter.ApplyLimit(Interface.CurrentOptions.FPSLimit);
 		}
 

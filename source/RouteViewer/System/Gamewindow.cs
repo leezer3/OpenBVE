@@ -85,7 +85,7 @@ namespace RouteViewer
             Program.Renderer.RenderScene(TimeElapsed);
             MessageManager.UpdateMessages(TimeElapsed);
 	        SwapBuffers();
-	        // A hard cap of 540fps is always applied, even when unlimited is selected
+	        // A hard cap of 1000fps is always applied, even when unlimited is selected
 	        FrameLimiter.ApplyLimit(Interface.CurrentOptions.FPSLimit);
         }
 
