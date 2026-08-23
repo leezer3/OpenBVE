@@ -122,9 +122,13 @@ namespace OpenBveApi
 		public static void ApplyLimit(int fpsLimit)
 		{
 			int limit = fpsLimit > 0 ? System.Math.Min(fpsLimit, HardFpsLimit) : HardFpsLimit;
+			if (frameStartTimestamp == 0)
+			{
+				return;
+			}
 			RaiseTimerResolution();
 			long now = Stopwatch.GetTimestamp();
-			long target = frameStartTimestamp + (long)((1000.0 / fpsLimit / 1000.0) * Stopwatch.Frequency);
+			long target = frameStartTimestamp + (long)(Stopwatch.Frequency / limit);
 			double remainingMs = (double)(target - now) * 1000.0 / Stopwatch.Frequency;
 			if (remainingMs <= 0.0)
 			{
