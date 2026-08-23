@@ -190,10 +190,6 @@ namespace RouteViewer
 			Renderer.GameWindow.TargetRenderFrequency = 0;
 			Renderer.GameWindow.Title = "Route Viewer";
 			Renderer.GameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? VSyncMode.On : VSyncMode.Off;
-			if (Interface.CurrentOptions.FPSLimit > 0)
-			{
-				Renderer.GameWindow.TargetRenderFrequency = Interface.CurrentOptions.FPSLimit;
-			}
 			processCommandLineArgs = true;
 			Renderer.GameWindow.Run();
 			//Unload

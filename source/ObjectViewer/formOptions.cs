@@ -280,7 +280,6 @@ namespace ObjectViewer
 			int[] fpsPresets = { 0, 30, 60, 120, 240 };
 			Interface.CurrentOptions.FPSLimit = comboBoxFPSLimit.SelectedIndex >= 0 ? fpsPresets[comboBoxFPSLimit.SelectedIndex] : 0;
 			Program.Renderer.GameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? OpenTK.VSyncMode.On : OpenTK.VSyncMode.Off;
-			Program.Renderer.GameWindow.TargetRenderFrequency = Interface.CurrentOptions.FPSLimit > 0 ? Interface.CurrentOptions.FPSLimit : 0;
 
 			// Saving shadow settings
 			switch (comboBoxShadowResolution.SelectedIndex)

@@ -100,6 +100,7 @@ namespace OpenBve
 				//If the load is not complete, then we shouldn't be running the mainloop
 				return;
 			}
+			FrameLimiter.StartFrame();
 
 			if (Program.Renderer.RenderThreadJobWaiting)
 			{
@@ -309,6 +310,8 @@ namespace OpenBve
 			{
 				Interface.CurrentOptions.BlackBox = false;
 			}
+			// A hard cap of 540fps is always applied, even when unlimited is selected
+			FrameLimiter.ApplyLimit(Interface.CurrentOptions.FPSLimit);
 		}
 
 		protected override void OnUpdateFrame(FrameEventArgs e)
@@ -547,6 +550,7 @@ namespace OpenBve
 				}
 			}
 			Program.Renderer.TextureManager.UnloadAllTextures(false);
+			FrameLimiter.RestoreTimerResolution();
 			Program.Renderer.VisibilityThreadShouldRun = false;
 			for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
 			{

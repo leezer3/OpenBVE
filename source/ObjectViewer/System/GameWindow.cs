@@ -39,6 +39,7 @@ namespace ObjectViewer
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+	        FrameLimiter.StartFrame();
 	        if (Program.Renderer.RenderThreadJobWaiting)
 	        {
 		        while (!Program.Renderer.RenderThreadJobs.IsEmpty)
@@ -263,6 +264,8 @@ namespace ObjectViewer
             Program.Renderer.Lighting.Initialize();
             Program.Renderer.RenderScene(timeElapsed);
             SwapBuffers();
+			// A hard cap of 540fps is always applied, even when unlimited is selected
+			FrameLimiter.ApplyLimit(Interface.CurrentOptions.FPSLimit);
 
 			RenderRealTimeElapsed = 0.0;
         }
@@ -327,6 +330,7 @@ namespace ObjectViewer
 	        Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));
 			Program.Renderer.VisibilityThreadShouldRun = false;
 			Program.Renderer.DeInitialize();
+			FrameLimiter.RestoreTimerResolution();
 			if (Program.CurrentHost.MonoRuntime)
 			{
 				Environment.Exit(0);
