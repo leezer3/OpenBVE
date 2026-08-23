@@ -100,6 +100,9 @@ namespace OpenBveApi
 		private const uint WindowsTimerPeriod = 1;
 		// Hard cap applied even when the user selects 'Unlimited'
 		private const int HardFpsLimit = 1000;
+		// Frameslots shorter than this multiple of the scheduler period cannot be paced accurately by
+		// Thread.Sleep without a power-hungry busy spin, so limiting is skipped above around 330fps
+		private const double MinimumSlotPeriods = 3.0;
 
 		private static bool timerResolutionRaised;
 		private static int schedulerPeriod = 1;
@@ -118,12 +121,18 @@ namespace OpenBveApi
 		}
 
 		/// <summary>Waits until the end of the current frame's allotted timeslot.</summary>
-		/// <param name="fpsLimit">The maximum frames per second selected by the user. A value of zero or less means unlimited, subject to the hard cap.</param>
+		/// <param name="fpsLimit">The maximum frames per second selected by the user. A value of zero or less means unlimited, subject to the hard cap.
+		/// Above around 330fps no limiting is performed, as sleep-based pacing is impractical at such frame rates.</param>
 		public static void ApplyLimit(int fpsLimit)
 		{
 			int limit = fpsLimit > 0 ? System.Math.Min(fpsLimit, HardFpsLimit) : HardFpsLimit;
 			if (frameStartTimestamp == 0)
 			{
+				return;
+			}
+			if ((double)Stopwatch.Frequency / limit < schedulerPeriod * MinimumSlotPeriods)
+			{
+				// The timeslot is too short to pace accurately without busy-spinning - skip limiting
 				return;
 			}
 			long now = Stopwatch.GetTimestamp();

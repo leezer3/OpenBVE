@@ -264,7 +264,8 @@ namespace ObjectViewer
             Program.Renderer.Lighting.Initialize();
             Program.Renderer.RenderScene(timeElapsed);
             SwapBuffers();
-			// A hard cap of 1000fps is always applied, even when unlimited is selected
+			// Applies the FPS limit; a hard cap of 1000fps applies when unlimited is selected,
+			// although no pacing is performed above around 330fps as sleep granularity makes it impractical
 			FrameLimiter.ApplyLimit(Interface.CurrentOptions.FPSLimit);
 
 			RenderRealTimeElapsed = 0.0;
