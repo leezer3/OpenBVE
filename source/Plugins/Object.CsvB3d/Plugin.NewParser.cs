@@ -258,13 +258,17 @@ namespace Object.CsvB3d
 						case CSVB3DKey.Load:
 							if (subBlock.GetNextTexturePath(basePath, out string tDay, out string tNight))
 							{
-								currentMeshBuilder.CurrentMaterial.DaytimeTexture = tDay;
-								currentMeshBuilder.CurrentMaterial.NighttimeTexture = tNight;
-								if (!string.IsNullOrWhiteSpace(tDay) && !string.IsNullOrWhiteSpace(tNight) && Plugin.enabledHacks.BveTsHacks)
+								foreach (Material meshMaterial in currentMeshBuilder.Materials)
 								{
-									// https://github.com/leezer3/OpenBVE/wiki/Errata#lighting-behaviour-with-a-defined-daytime-and-nighttime-texture
-									currentMeshBuilder.CurrentMaterial.Flags |= MaterialFlags.DisableLighting;
+									meshMaterial.DaytimeTexture = tDay;
+									meshMaterial.NighttimeTexture = tNight;
+									if (!string.IsNullOrWhiteSpace(tDay) && !string.IsNullOrWhiteSpace(tNight) && Plugin.enabledHacks.BveTsHacks)
+									{
+										// https://github.com/leezer3/OpenBVE/wiki/Errata#lighting-behaviour-with-a-defined-daytime-and-nighttime-texture
+										meshMaterial.Flags |= MaterialFlags.DisableLighting;
+									}
 								}
+								
 							}
 							else
 							{
@@ -314,15 +318,22 @@ namespace Object.CsvB3d
 								}
 							}
 
-							currentMeshBuilder.CurrentMaterial.TransparentColor = (Color24)c;
-							currentMeshBuilder.CurrentMaterial.Flags |= MaterialFlags.TransparentColor;
+							foreach (Material meshMaterial in currentMeshBuilder.Materials)
+							{
+								meshMaterial.TransparentColor = (Color24)c;
+								meshMaterial.Flags |= MaterialFlags.TransparentColor;
+							}
+							
 							lastTransparentColor = c;
 							break;
 						case CSVB3DKey.BlendMode:
 							if (subBlock.GetBlendMode(out MeshMaterialBlendMode blendMode, out double glowHalfDistance, out GlowAttenuationMode glowMode))
 							{
-								currentMeshBuilder.CurrentMaterial.BlendMode = blendMode;
-								currentMeshBuilder.CurrentMaterial.GlowAttenuationData = Glow.GetAttenuationData(glowHalfDistance, glowMode);
+								foreach (Material meshMaterial in currentMeshBuilder.Materials)
+								{
+									meshMaterial.BlendMode = blendMode;
+									meshMaterial.GlowAttenuationData = Glow.GetAttenuationData(glowHalfDistance, glowMode);
+								}
 							}
 							break;
 						case CSVB3DKey.WrapMode:
