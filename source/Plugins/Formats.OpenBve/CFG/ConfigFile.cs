@@ -123,7 +123,7 @@ namespace Formats.OpenBve
 						sct = sct.Substring(0, c);
 
 					}
-					if (!Enum.TryParse(sct, true, out T1 currentSection))
+					if (!EnumCache<T1>.TryParse(sct, out T1 currentSection))
 					{
 						addToBlock = false;
 						currentHost.AddMessage(MessageType.Error, false, "Unknown Section " + sct + " encountered at line " + i);
@@ -216,7 +216,7 @@ namespace Formats.OpenBve
 						}
 
 					}
-					else if (Enum.TryParse(a.Replace(" ", ""), true, out T2 key))
+					else if (EnumCache<T2>.TryParse(a.Replace(" ", ""), out T2 key))
 					{
 						keyValuePairs.TryAdd(key, new KeyValuePair<int, string>(i + startingLine, b));
 					}

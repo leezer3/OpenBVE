@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CFG\ConfigFile.cs" />
+    <Compile Include="EnumCache.cs" />
     <Compile Include="CSVB3D\CSVB3DFile.cs" />
     <Compile Include="Enums\CompatibilityObject\CompatibilityObjectKey.cs" />
     <Compile Include="Enums\CompatibilityObject\CompatibilityObjectSection.cs" />

@@ -77,7 +77,7 @@ namespace CsvRwRouteParser
 							Array.Resize(ref Arguments, h);
 						}
 						// preprocess command
-						if (Command.ToLowerInvariant() == "with")
+						if (string.Equals(Command, "with", StringComparison.OrdinalIgnoreCase))
 						{
 							SectionAlwaysPrefix = false;
 							Section = Arguments.Length >= 1 ? Arguments[0] : string.Empty;

@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Runtime.CompilerServices;
@@ -90,6 +91,7 @@ namespace Plugin.PNG
 					}
 
 					int currentChunk = 0;
+					List<byte[]> idatChunks = new List<byte[]>(8);
 					while (true)
 					{
 						if (fileReader.Read(buffer, 0,8) != 8)
@@ -194,18 +196,7 @@ namespace Plugin.PNG
 							case ChunkType.IDAT:
 								// IDAT chunks contain image data
 								// Data may be split over one or more chunks
-								if (idatBuffer == null)
-								{
-									// First chunk
-									idatBuffer = chunkBuffer;
-								}
-								else
-								{
-									// Combine the new chunk with the old
-									int idatLength = idatBuffer.Length;
-									Array.Resize(ref idatBuffer, idatLength + chunkBuffer.Length);
-									Buffer.BlockCopy(chunkBuffer, 0, idatBuffer, idatLength, chunkBuffer.Length);
-								}
+								idatChunks.Add(chunkBuffer);
 								break;
 							case ChunkType.CgBI:
 								Plugin.CurrentHost.ReportProblem(ProblemType.InvalidOperation, "CgBI encoded PNGs are not supported by this decoder in PNG file " + fileName);
@@ -222,10 +213,30 @@ namespace Plugin.PNG
 						currentChunk++;
 					}
 
-					if (idatBuffer == null)
+					if (idatChunks.Count == 0)
 					{
 						Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "No IDAT chunk found in PNG file " + fileName);
 						return false;
+					}
+
+					if (idatChunks.Count == 1)
+					{
+						idatBuffer = idatChunks[0];
+					}
+					else
+					{
+						int totalLength = 0;
+						for (int i = 0; i < idatChunks.Count; i++)
+						{
+							totalLength += idatChunks[i].Length;
+						}
+						idatBuffer = new byte[totalLength];
+						int offset = 0;
+						for (int i = 0; i < idatChunks.Count; i++)
+						{
+							Buffer.BlockCopy(idatChunks[i], 0, idatBuffer, offset, idatChunks[i].Length);
+							offset += idatChunks[i].Length;
+						}
 					}
 
 					using (MemoryStream chunkDataStream = new MemoryStream(idatBuffer))
@@ -239,16 +250,29 @@ namespace Plugin.PNG
 							switch (interlaceMethod)
 							{
 								case InterlaceMethod.Disabled:
-									byte[] scanline = new byte[ScanlineLength];
-									byte[] previousScanline = new byte[ScanlineLength];
-									for (int i = 0; i < Height; i++)
 									{
-										ScanlineFilterAlgorithm scanlineFilterAlgorithm = (ScanlineFilterAlgorithm)deflate.ReadByte();
-										if (deflate.Read(scanline, 0, ScanlineLength) != ScanlineLength)
+										// decompress the entire stream upfront, as reading small buffers from the deflate stream per scanline is slow
+										byte[] inflated;
+										int inflatedLength;
+										using (MemoryStream inflatedStream = new MemoryStream((ScanlineLength + 1) * Height))
 										{
-											Plugin.CurrentHost.ReportProblem(ProblemType.UnsupportedData, "Insufficient data decompressed from IDAT chunk in PNG file " + fileName);
-											return false;
+											deflate.CopyTo(inflatedStream);
+											inflatedLength = (int)inflatedStream.Length;
+											inflated = inflatedStream.GetBuffer();
 										}
+										byte[] scanline = new byte[ScanlineLength];
+										byte[] previousScanline = new byte[ScanlineLength];
+										int currentRowByte = 0;
+										for (int i = 0; i < Height; i++)
+										{
+											if (currentRowByte + 1 + ScanlineLength > inflatedLength)
+											{
+												Plugin.CurrentHost.ReportProblem(ProblemType.UnsupportedData, "Insufficient data decompressed from IDAT chunk in PNG file " + fileName);
+												return false;
+											}
+											ScanlineFilterAlgorithm scanlineFilterAlgorithm = (ScanlineFilterAlgorithm)inflated[currentRowByte++];
+											Buffer.BlockCopy(inflated, currentRowByte, scanline, 0, ScanlineLength);
+											currentRowByte += ScanlineLength;
 										
 										for (int x = 0; x < scanline.Length; x++)
 										{										
@@ -261,22 +285,22 @@ namespace Plugin.PNG
 													break;
 												case ScanlineFilterAlgorithm.Sub:
 													leftByte = x >= BytesPerPixel ? scanline[x - BytesPerPixel] : (byte)0;
-													scanline[x] = (byte)((scanline[x] + leftByte) % 256);
+													scanline[x] = (byte)((scanline[x] + leftByte) & 0xFF);
 													break;
 												case ScanlineFilterAlgorithm.Up:
 													upByte = previousScanline[x];
-													scanline[x] = (byte)((scanline[x] + upByte) % 256);
+													scanline[x] = (byte)((scanline[x] + upByte) & 0xFF);
 													break;
 												case ScanlineFilterAlgorithm.Average:
 													leftByte = x >= BytesPerPixel ? scanline[x - BytesPerPixel] : (byte)0;
 													upByte = previousScanline[x];
-													scanline[x] = (byte)((scanline[x] + ((leftByte + upByte) >> 1)) % 256);
+													scanline[x] = (byte)((scanline[x] + ((leftByte + upByte) >> 1)) & 0xFF);
 													break;
 												case ScanlineFilterAlgorithm.Paeth:
 													leftByte = x >= BytesPerPixel ? scanline[x - BytesPerPixel] : (byte)0;
 													upByte = previousScanline[x];
 													upLeftByte = x >= BytesPerPixel ? previousScanline[x - BytesPerPixel] : (byte)0;
-													scanline[x] = (byte)((scanline[x] + PaethPredictor(leftByte, upByte, upLeftByte)) % 256);
+													scanline[x] = (byte)((scanline[x] + PaethPredictor(leftByte, upByte, upLeftByte)) & 0xFF);
 													break;
 												default:
 													// decoder has messed up somewhere, so don't return junk data
@@ -441,6 +465,7 @@ namespace Plugin.PNG
                                         }
 
                                         Buffer.BlockCopy(scanline, 0, previousScanline, 0, scanline.Length);
+										}
 									}
 									break;
 									case InterlaceMethod.Adam7:
@@ -485,16 +510,16 @@ namespace Plugin.PNG
 															break;
 														case ScanlineFilterAlgorithm.Sub:
 															leftByte = j >= BytesPerPixel ? data[rowStartByte + j - BytesPerPixel] : (byte)0;
-															data[rowStartByte + j] = (byte)((data[rowStartByte + j] + leftByte) % 256);
+															data[rowStartByte + j] = (byte)((data[rowStartByte + j] + leftByte) & 0xFF);
 															break;
 														case ScanlineFilterAlgorithm.Up:
 															upByte = currentScanline == 0 ? (byte)0 : data[previousRowStartByte + j];
-															data[rowStartByte + j] = (byte)((data[rowStartByte + j] + upByte) % 256);
+															data[rowStartByte + j] = (byte)((data[rowStartByte + j] + upByte) & 0xFF);
 															break;
 														case ScanlineFilterAlgorithm.Average:
 															leftByte = j >= BytesPerPixel ? data[rowStartByte + j - BytesPerPixel] : (byte)0;
 															upByte = currentScanline == 0 ? (byte)0 : data[previousRowStartByte + j];
-															data[rowStartByte + j] = (byte)((data[rowStartByte + j] + ((leftByte + upByte) >> 1)) % 256);
+															data[rowStartByte + j] = (byte)((data[rowStartByte + j] + ((leftByte + upByte) >> 1)) & 0xFF);
 															break;
 														case ScanlineFilterAlgorithm.Paeth:
 															// NOTE: For Paeth filtered Row0 in any given pass, the previous scanline must be all zeroes
@@ -502,7 +527,7 @@ namespace Plugin.PNG
 															leftByte = j - BytesPerPixel >= 0 ? data[rowStartByte + j - BytesPerPixel] : (byte)0;
 															upByte = currentScanline == 0 ? (byte)0 : data[previousRowStartByte + j];
 															upLeftByte = currentScanline == 0 ? (byte)0 : j >= BytesPerPixel ? data[previousRowStartByte + j - BytesPerPixel] : (byte)0;	
-															data[rowStartByte + j] = (byte)((data[rowStartByte + j] + PaethPredictor(leftByte, upByte, upLeftByte)) % 256);
+															data[rowStartByte + j] = (byte)((data[rowStartByte + j] + PaethPredictor(leftByte, upByte, upLeftByte)) & 0xFF);
 															break;
 														default:
 															throw new Exception("Decoder error probably...");

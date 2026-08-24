@@ -33,9 +33,9 @@ namespace Object.CsvB3d
 		    {
 			    return false;
 		    }
-		    if (path.EndsWith(".b3d", StringComparison.InvariantCultureIgnoreCase) || path.ToLowerInvariant().EndsWith(".csv", StringComparison.InvariantCultureIgnoreCase))
+		    if (path.EndsWith(".b3d", StringComparison.OrdinalIgnoreCase) || path.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
 		    {
-			    if (File.Exists(path) && FileFormats.IsNautilusFile(path))
+			    if (FileFormats.IsNautilusFile(path))
 			    {
 				    return false;
 			    }

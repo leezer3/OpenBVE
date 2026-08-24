@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -12,7 +12,22 @@ namespace OpenBve
     /// <summary>Provides functions for handling crashes, and producing an appropriate error log</summary>
     internal class CrashHandler
     {
-        private static readonly string CrashLog = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder,"OpenBVE Crash- " + DateTime.Now.ToString("yyyy.M.dd[HH.mm]") + ".log");
+        private static string crashLog;
+        /// <summary>The path to the crash log file, computed on first access as the filesystem may not be initialised when a crash occurs</summary>
+        private static string CrashLog
+        {
+            get
+            {
+                if (crashLog == null)
+                {
+                    var settingsFolder = Program.FileSystem != null ? Program.FileSystem.SettingsFolder : null;
+                    crashLog = string.IsNullOrEmpty(settingsFolder)
+                        ? System.IO.Path.Combine(System.IO.Path.GetTempPath(), "OpenBVE Crash- " + DateTime.Now.ToString("yyyy.M.dd[HH.mm]") + ".log")
+                        : OpenBveApi.Path.CombineFile(settingsFolder, "OpenBVE Crash- " + DateTime.Now.ToString("yyyy.M.dd[HH.mm]") + ".log");
+                }
+                return crashLog;
+            }
+        }
         /// <summary>Catches all unhandled exceptions within the current appdomain</summary>
         internal static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
@@ -90,7 +105,7 @@ namespace OpenBve
         /// <summary>This function logs an unhandled crash to disk</summary>
         internal static void LogCrash(string exceptionText)
         {
-			Program.FileSystem.AppendToLogFile("WARNING: Program crashing. Creating CrashLog file: " + CrashLog);
+			if (Program.FileSystem != null) Program.FileSystem.AppendToLogFile("WARNING: Program crashing. Creating CrashLog file: " + CrashLog);
 			using (StreamWriter outputFile = new StreamWriter(CrashLog))
             {
                 //Basic information
@@ -123,26 +138,42 @@ namespace OpenBve
                     outputFile.WriteLine("Current screen resolution is: Windowed " + Interface.CurrentOptions.WindowWidth + "px x " + Interface.CurrentOptions.WindowHeight + "px ");
                 }
                 //Route and train
-	            if (Program.CurrentRoute.Information.RouteFile != null)
-	            {
-		            outputFile.WriteLine("Current routefile is: " + Program.CurrentRoute.Information.RouteFile);
-	            }
-	            if (Program.CurrentRoute.Information.TrainFolder != null)
-	            {
-		            outputFile.WriteLine("Current train is: " + Program.CurrentRoute.Information.TrainFolder);
-	            }
-	            if (TrainManager.PlayerTrain != null && TrainManager.PlayerTrain.Plugin != null)
-	            {
-		            outputFile.WriteLine("Current train plugin is: " + TrainManager.PlayerTrain.Plugin.PluginTitle);
-	            }
-	            //Errors and Warnings
-                if (Program.CurrentRoute.Information.FilesNotFound != null)
+                //We need the try/ catch block as these may be mutated by other threads whilst we are crashing
+                try
                 {
-                    outputFile.WriteLine(Program.CurrentRoute.Information.FilesNotFound);
+	                if (Program.CurrentRoute != null && Program.CurrentRoute.Information != null)
+	                {
+		                if (Program.CurrentRoute.Information.RouteFile != null)
+		                {
+			                outputFile.WriteLine("Current routefile is: " + Program.CurrentRoute.Information.RouteFile);
+		                }
+		                if (Program.CurrentRoute.Information.TrainFolder != null)
+		                {
+			                outputFile.WriteLine("Current train is: " + Program.CurrentRoute.Information.TrainFolder);
+		                }
+	                }
+	                var playerTrain = TrainManager.PlayerTrain;
+	                if (playerTrain != null && playerTrain.Plugin != null)
+	                {
+		                var pluginTitle = playerTrain.Plugin.PluginTitle;
+		                outputFile.WriteLine("Current train plugin is: " + (pluginTitle ?? "unknown"));
+	                }
+	                //Errors and Warnings
+	                if (Program.CurrentRoute != null && Program.CurrentRoute.Information != null)
+	                {
+		                if (Program.CurrentRoute.Information.FilesNotFound != null)
+		                {
+			                outputFile.WriteLine(Program.CurrentRoute.Information.FilesNotFound);
+		                }
+		                if (Program.CurrentRoute.Information.ErrorsAndWarnings != null)
+		                {
+			                outputFile.WriteLine(Program.CurrentRoute.Information.ErrorsAndWarnings);
+		                }
+	                }
                 }
-                if (Program.CurrentRoute.Information.ErrorsAndWarnings != null)
+                catch
                 {
-                    outputFile.WriteLine(Program.CurrentRoute.Information.ErrorsAndWarnings);
+	                //Most likely died before the route/ train init, or state was mutated by another thread whilst crashing
                 }
                 //Track position and viewing distance
                 try
@@ -181,7 +212,7 @@ namespace OpenBve
         /// <summary>This function logs an exception caught whilst loading a route/ train to disk</summary>
         internal static void LoadingCrash(string ExceptionText, bool Train)
         {
-			Program.FileSystem.AppendToLogFile("WARNING: Program crashing. Creating CrashLog file: " + CrashLog);
+			if (Program.FileSystem != null) Program.FileSystem.AppendToLogFile("WARNING: Program crashing. Creating CrashLog file: " + CrashLog);
 			using (StreamWriter outputFile = new StreamWriter(CrashLog))
             {
                 //Basic information

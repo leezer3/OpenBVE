@@ -1,4 +1,4 @@
-using LibRender2.Screens;
+﻿using LibRender2.Screens;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
@@ -133,6 +133,15 @@ namespace OpenBve {
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool LoadTexture(string path, TextureParameters parameters, out Texture texture)
 		{
+			Stopwatch textureDecodeTimer = Stopwatch.StartNew();
+			bool result = LoadTextureInternal(path, parameters, out texture);
+			TextureDecodeCalls++;
+			TextureDecodeMs += textureDecodeTimer.ElapsedMilliseconds;
+			return result;
+		}
+
+		private bool LoadTextureInternal(string path, TextureParameters parameters, out Texture texture)
+		{
 			if (File.Exists(path) || Directory.Exists(path))
 			{
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
@@ -221,21 +230,17 @@ namespace OpenBve {
 		/// <param name="timeout">The timeout for loading the texture</param>
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false, int timeout = 1000) {
-			if (File.Exists(path) || Directory.Exists(path)) {
-				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out var data)) {
-					handle = data;
-					if (loadTexture)
+			if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out var data)) {
+				handle = data;
+				if (loadTexture)
+				{
+					Program.Renderer.RunInRenderThread(() =>
 					{
-						Program.Renderer.RunInRenderThread(() =>
-						{
-							LoadTexture(ref data, OpenGlTextureWrapMode.ClampClamp);
-						}, timeout);
+						LoadTexture(ref data, OpenGlTextureWrapMode.ClampClamp);
+					}, timeout);
 
-					}
-					return true;
 				}
-			} else {
-				ReportProblem(ProblemType.PathNotFound, path);
+				return true;
 			}
 			handle = null;
 			return false;
@@ -458,7 +463,7 @@ namespace OpenBve {
 				FileInfo f = new FileInfo(path);
 				if (f.Length == 0)
 				{
-					if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path).ToLowerInvariant()) && !FailedObjects.Contains(path))
+					if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path)) && !FailedObjects.Contains(path))
 					{
 						FailedObjects.Add(path);
 						Interface.AddMessage(MessageType.Error, false, "Zero-byte object file encountered at " + path);
@@ -466,7 +471,7 @@ namespace OpenBve {
 				}
 				else
 				{
-					if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path).ToLowerInvariant()) && !FailedObjects.Contains(path))
+					if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path)) && !FailedObjects.Contains(path))
 					{
 						FailedObjects.Add(path);
 						Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
