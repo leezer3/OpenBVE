@@ -43,6 +43,8 @@ namespace OpenBveApi.Textures {
 		public int TotalFrames;
 		/// <summary>Whether this texture uses the compatible transparency mode (Matches to the nearest color in a restricted palette)</summary>
 		public bool CompatibleTransparencyMode;
+		/// <summary>Holds the video context reference</summary>
+		public object VideoContext;
 
 		/// <summary>Gets the color of the given pixel</summary>
 		/// <param name="pix">The pixel index</param>
