@@ -466,8 +466,27 @@ namespace Formats.OpenBve
 		{
 			string[] value = Dequeue();
 
-			tDay = value.Length >= 1 && !string.IsNullOrWhiteSpace(value[0]) ? OpenBveApi.Path.CombineFile(absolutePath, value[0].Trim()) : null;
-			tNight = value.Length >= 2 && !string.IsNullOrWhiteSpace(value[1]) ? OpenBveApi.Path.CombineFile(absolutePath, value[1].Trim()) : null;
+			try
+			{
+				tDay = value.Length >= 1 && !string.IsNullOrWhiteSpace(value[0]) ? OpenBveApi.Path.CombineFile(absolutePath, value[0].Trim()) : null;
+			}
+			catch
+			{
+				tDay = string.Empty;
+				tNight = string.Empty;
+				return false;
+			}
+			
+			try
+			{
+				tNight = value.Length >= 2 && !string.IsNullOrWhiteSpace(value[1]) ? OpenBveApi.Path.CombineFile(absolutePath, value[1].Trim()) : null;
+			}
+			catch
+			{
+				// ignore otherwise
+				tNight = string.Empty;
+				
+			}
 
 			bool textureFound = false;
 			
