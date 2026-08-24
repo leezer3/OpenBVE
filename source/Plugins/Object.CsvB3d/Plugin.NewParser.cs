@@ -104,6 +104,7 @@ namespace Object.CsvB3d
 								{
 									f.Flags |= FaceFlags.Face2Mask;
 								}
+								f.Material = (ushort)(currentMeshBuilder.Materials.Length - 1);
 
 								if (valid)
 								{
@@ -121,8 +122,10 @@ namespace Object.CsvB3d
 								{
 									CheckForColorHacks(fileName, currentMeshBuilder, staticObject, ref c);
 								}
-
+								// https://github.com/leezer3/OpenBVE/issues/1397 : Color commands should not apply to following faces in a MeshBuilder
 								currentMeshBuilder.ApplyColor(c, key == CSVB3DKey.EmissiveColor || key == CSVB3DKey.EmissiveColorAll);
+								Array.Resize(ref currentMeshBuilder.Materials, currentMeshBuilder.Materials.Length + 1);
+								currentMeshBuilder.Materials[currentMeshBuilder.Materials.Length - 1] = new Material();
 								if (key == CSVB3DKey.ColorAll || key == CSVB3DKey.EmissiveColorAll)
 								{
 									staticObject.ApplyColor(c, key == CSVB3DKey.EmissiveColorAll);
@@ -255,19 +258,19 @@ namespace Object.CsvB3d
 						case CSVB3DKey.Load:
 							if (subBlock.GetNextTexturePath(basePath, out string tDay, out string tNight))
 							{
-								currentMeshBuilder.Materials[0].DaytimeTexture = tDay;
-								currentMeshBuilder.Materials[0].NighttimeTexture = tNight;
+								currentMeshBuilder.CurrentMaterial.DaytimeTexture = tDay;
+								currentMeshBuilder.CurrentMaterial.NighttimeTexture = tNight;
 								if (!string.IsNullOrWhiteSpace(tDay) && !string.IsNullOrWhiteSpace(tNight) && Plugin.enabledHacks.BveTsHacks)
 								{
 									// https://github.com/leezer3/OpenBVE/wiki/Errata#lighting-behaviour-with-a-defined-daytime-and-nighttime-texture
-									currentMeshBuilder.Materials[0].Flags |= MaterialFlags.DisableLighting;
+									currentMeshBuilder.CurrentMaterial.Flags |= MaterialFlags.DisableLighting;
 								}
 							}
 							else
 							{
 								if (CheckForTextureHacks(fileName, ref tDay))
 								{
-									currentMeshBuilder.Materials[0].DaytimeTexture = tDay;
+									currentMeshBuilder.CurrentMaterial.DaytimeTexture = tDay;
 								}
 							}
 
@@ -275,7 +278,7 @@ namespace Object.CsvB3d
 						case CSVB3DKey.LoadLightMap:
 							if (subBlock.GetNextPath(basePath, out string lightMap))
 							{
-								currentMeshBuilder.Materials[0].LightMap = lightMap;
+								currentMeshBuilder.CurrentMaterial.LightMap = lightMap;
 							}
 							break;
 						case CSVB3DKey.Coordinates:
@@ -311,45 +314,45 @@ namespace Object.CsvB3d
 								}
 							}
 
-							currentMeshBuilder.Materials[0].TransparentColor = (Color24)c;
-							currentMeshBuilder.Materials[0].Flags |= MaterialFlags.TransparentColor;
+							currentMeshBuilder.CurrentMaterial.TransparentColor = (Color24)c;
+							currentMeshBuilder.CurrentMaterial.Flags |= MaterialFlags.TransparentColor;
 							lastTransparentColor = c;
 							break;
 						case CSVB3DKey.BlendMode:
 							if (subBlock.GetBlendMode(out MeshMaterialBlendMode blendMode, out double glowHalfDistance, out GlowAttenuationMode glowMode))
 							{
-								currentMeshBuilder.Materials[0].BlendMode = blendMode;
-								currentMeshBuilder.Materials[0].GlowAttenuationData = Glow.GetAttenuationData(glowHalfDistance, glowMode);
+								currentMeshBuilder.CurrentMaterial.BlendMode = blendMode;
+								currentMeshBuilder.CurrentMaterial.GlowAttenuationData = Glow.GetAttenuationData(glowHalfDistance, glowMode);
 							}
 							break;
 						case CSVB3DKey.WrapMode:
 							if (subBlock.GetNextEnumValue(out OpenGlTextureWrapMode wrapMode))
 							{
-								currentMeshBuilder.Materials[0].WrapMode = wrapMode;
+								currentMeshBuilder.CurrentMaterial.WrapMode = wrapMode;
 							}
 							break;
 						case CSVB3DKey.Text:
 							if (subBlock.GetNextRawValue(out string text))
 							{
-								currentMeshBuilder.Materials[0].Text = text;
+								currentMeshBuilder.CurrentMaterial.Text = text;
 							}
 							break;
 						case CSVB3DKey.TextColor:
 							if (subBlock.GetNextColor32(out c))
 							{
-								currentMeshBuilder.Materials[0].TextColor = c;
+								currentMeshBuilder.CurrentMaterial.TextColor = c;
 							}
 							break;
 						case CSVB3DKey.TextPadding:
 							if (subBlock.GetNextVector2(out Vector2 textPadding))
 							{
-								currentMeshBuilder.Materials[0].TextPadding = textPadding;
+								currentMeshBuilder.CurrentMaterial.TextPadding = textPadding;
 							}
 							break;
 						case CSVB3DKey.DisableShadowCasting:
 							if (subBlock.GetNextBool(out bool disableShadowCasting) && disableShadowCasting)
 							{
-								currentMeshBuilder.Materials[0].Flags |= MaterialFlags.NoShadow;
+								currentMeshBuilder.CurrentMaterial.Flags |= MaterialFlags.NoShadow;
 							}
 							break;
 						default:

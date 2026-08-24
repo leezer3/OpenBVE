@@ -16,6 +16,8 @@ namespace OpenBveApi.Objects
 		public List<MeshFace> Faces;
 		/// <summary>The materials present</summary>
 		public Material[] Materials;
+		/// <summary>Returns the current material</summary>
+		public Material CurrentMaterial => Materials[Materials.Length - 1];
 		/// <summary>The transform matrix to be applied</summary>
 		public Matrix4D TransformMatrix = Matrix4D.NoTransformation;
 		/// <summary>
