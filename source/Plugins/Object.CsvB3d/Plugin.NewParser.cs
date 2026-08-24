@@ -371,11 +371,9 @@ namespace Object.CsvB3d
 							break;
 					}
 				}
-
-
 			}
 			currentMeshBuilder.Apply(ref staticObject, Plugin.enabledHacks.BveTsHacks);
-			staticObject.Mesh.CreateNormals();
+			staticObject.Mesh.FinalizeMesh();
 			return staticObject;
 		}
 	}

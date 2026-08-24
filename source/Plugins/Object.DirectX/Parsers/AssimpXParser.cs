@@ -119,7 +119,7 @@ namespace Plugin
 				}
 
 				builder.Apply(ref obj, false, false);
-				obj.Mesh.CreateNormals();
+				obj.Mesh.FinalizeMesh();
 				if (rootMatrix != Matrix4D.NoTransformation)
 				{
 					for (int i = 0; i < obj.Mesh.Vertices.Length; i++)

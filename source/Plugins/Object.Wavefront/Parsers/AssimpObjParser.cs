@@ -143,7 +143,7 @@ namespace Plugin
 					}
 				}
 				builder.Apply(ref obj);
-				obj.Mesh.CreateNormals();
+				obj.Mesh.FinalizeMesh();
 				return obj;
 			}
 			catch (Exception e)

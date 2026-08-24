@@ -98,42 +98,6 @@ namespace LibRender2.Objects
 
 			foreach (MeshFace face in State.Prototype.Mesh.Faces)
 			{
-				OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
-
-				if (State.Prototype.Mesh.Materials[face.Material].DaytimeTexture != null || State.Prototype.Mesh.Materials[face.Material].NighttimeTexture != null)
-				{
-					if (State.Prototype.Mesh.Materials[face.Material].WrapMode == null)
-					{
-						/*
-						 * If the object does not have a stored wrapping mode determine it now. However:
-						 * https://github.com/leezer3/OpenBVE/issues/971
-						 *
-						 * Unfortunately, there appear to be X objects in the wild which expect a non-default wrapping mode
-						 * which means the best fast exit we can do is to check for RepeatRepeat....
-						 *
-						 */
-						for (int i = 0; i < face.Vertices.Length; i++)
-						{
-							int v = face.Vertices[i].Index;
-							if (State.Prototype.Mesh.Vertices[v].TextureCoordinates.X < 0.0f || State.Prototype.Mesh.Vertices[v].TextureCoordinates.X > 1.0f)
-							{
-								wrap |= OpenGlTextureWrapMode.RepeatClamp;
-							}
-
-							if (State.Prototype.Mesh.Vertices[v].TextureCoordinates.Y < 0.0f || State.Prototype.Mesh.Vertices[v].TextureCoordinates.Y > 1.0f)
-							{
-								wrap |= OpenGlTextureWrapMode.ClampRepeat;
-							}
-
-							if (wrap == OpenGlTextureWrapMode.RepeatRepeat)
-							{
-								break;
-							}
-						}
-						State.Prototype.Mesh.Materials[face.Material].WrapMode = wrap;
-					}
-				}
-
 				bool alpha;
 
 				if (!materialAlphaCache.TryGetValue(face.Material, out alpha))
@@ -306,9 +270,9 @@ namespace LibRender2.Objects
 			{
 				if (faces[i].Face.Vertices.Length >= 3)
 				{
-					Vector4 v0 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[0].Index].Coordinates, 1.0);
-					Vector4 v1 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[1].Index].Coordinates, 1.0);
-					Vector4 v2 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[2].Index].Coordinates, 1.0);
+					Vector4 v0 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[0]].Coordinates, 1.0);
+					Vector4 v1 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[1]].Coordinates, 1.0);
+					Vector4 v2 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[2]].Coordinates, 1.0);
 					Vector4 w1 = v1 - v0;
 					Vector4 w2 = v2 - v0;
 					v0.Z *= -1.0;

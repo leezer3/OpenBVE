@@ -1,5 +1,6 @@
 ﻿#pragma warning disable 0660, 0661
 using System;
+using System.Runtime.CompilerServices;
 using OpenBveApi.Math;
 
 namespace OpenBveApi.Objects
@@ -48,6 +49,11 @@ namespace OpenBveApi.Objects
 			if (A.Normal.Y != B.Normal.Y) return true;
 			if (A.Normal.Z != B.Normal.Z) return true;
 			return false;
+		}
+
+		public static implicit operator int(MeshFaceVertex v)
+		{
+			return v.Index;
 		}
 	}
 }

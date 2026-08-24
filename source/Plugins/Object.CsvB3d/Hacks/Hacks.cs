@@ -212,7 +212,7 @@ namespace Object.CsvB3d
 				int[] faceVertexIndices = new int[indicies.Length];
 				for (int v = 0; v < currentFace.Vertices.Length; v++)
 				{
-					faceVertexIndices[v] = currentFace.Vertices[v].Index;
+					faceVertexIndices[v] = currentFace.Vertices[v];
 				}
 
 				Array.Sort(faceVertexIndices);

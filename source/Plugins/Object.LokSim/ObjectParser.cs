@@ -401,7 +401,7 @@ namespace Plugin
 
 			}
 			Builder.Apply(ref Object);
-			Object.Mesh.CreateNormals();
+			Object.Mesh.FinalizeMesh();
 			return Object;
 		}
 	}

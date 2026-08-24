@@ -145,7 +145,7 @@ namespace Plugin
 				ParseSubBlock(subBlock, ref obj, ref builder, ref material);
 			}
 			builder.Apply(ref obj, false, false);
-			obj.Mesh.CreateNormals();
+			obj.Mesh.FinalizeMesh();
 			if (rootMatrix != Matrix4D.NoTransformation)
 			{
 				for (int i = transformStart; i < obj.Mesh.Vertices.Length; i++)
@@ -731,7 +731,7 @@ namespace Plugin
 				ParseSubBlock(subBlock, ref obj, ref builder, ref material);
 			}
 			builder.Apply(ref obj, false, false);
-			obj.Mesh.CreateNormals();
+			obj.Mesh.FinalizeMesh();
 			if (rootMatrix != Matrix4D.NoTransformation)
 			{
 				for (int i = transformStart; i < obj.Mesh.Vertices.Length; i++)

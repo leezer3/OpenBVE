@@ -762,7 +762,7 @@ namespace OpenBveApi.Objects
 				{
 					for (int j = 0; j < Mesh.Faces[i].Vertices.Length; j++)
 					{
-						int oldIndex = Mesh.Faces[i].Vertices[j].Index;
+						int oldIndex = Mesh.Faces[i].Vertices[j];
 						VertexTemplate vertex = Mesh.Vertices[oldIndex];
 
 						// If the exact same vertex structure hasn't been cached yet, cache it and add it to our new array.

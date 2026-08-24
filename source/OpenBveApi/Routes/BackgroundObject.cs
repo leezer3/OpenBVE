@@ -62,9 +62,9 @@ namespace OpenBveApi.Routes
 			{
 				if (staticObject.Mesh.Faces[i].Vertices.Length >= 3)
 				{
-					Vector4 v0 = new Vector4(staticObject.Mesh.Vertices[staticObject.Mesh.Faces[i].Vertices[0].Index].Coordinates, 1.0);
-					Vector4 v1 = new Vector4(staticObject.Mesh.Vertices[staticObject.Mesh.Faces[i].Vertices[1].Index].Coordinates, 1.0);
-					Vector4 v2 = new Vector4(staticObject.Mesh.Vertices[staticObject.Mesh.Faces[i].Vertices[2].Index].Coordinates, 1.0);
+					Vector4 v0 = new Vector4(staticObject.Mesh.Vertices[staticObject.Mesh.Faces[i].Vertices[0]].Coordinates, 1.0);
+					Vector4 v1 = new Vector4(staticObject.Mesh.Vertices[staticObject.Mesh.Faces[i].Vertices[1]].Coordinates, 1.0);
+					Vector4 v2 = new Vector4(staticObject.Mesh.Vertices[staticObject.Mesh.Faces[i].Vertices[2]].Coordinates, 1.0);
 					Vector4 w1 = v1 - v0;
 					Vector4 w2 = v2 - v0;
 					v0.Z *= -1.0;

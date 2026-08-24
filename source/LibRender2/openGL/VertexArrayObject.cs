@@ -229,7 +229,7 @@ namespace LibRender2
 
 				foreach (var vertex in mesh.Faces[i].Vertices)
 				{
-					vertexData.Add(new LibRenderVertex(mesh.Vertices[vertex.Index], vertex.Normal));
+					vertexData.Add(new LibRenderVertex(mesh.Vertices[vertex], vertex.Normal));
 				}
 
 				indexData.AddRange(Enumerable.Range(mesh.Faces[i].IboStartIndex, mesh.Faces[i].Vertices.Length).Select(x => (uint)x));
@@ -362,7 +362,7 @@ namespace LibRender2
 				{
 					foreach (var vertex in mesh.Faces[i].Vertices)
 					{
-						Vector3 coordinates = mesh.Vertices[vertex.Index].Coordinates;
+						Vector3 coordinates = mesh.Vertices[vertex].Coordinates;
 						Vector3 tip = coordinates + vertex.Normal * scale;
 						// Pass the normal so the shader's lighting produces a visible (non-black) colour.
 						// UV/MatrixChain are omitted so the shader cannot sample any texture.
