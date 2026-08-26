@@ -205,7 +205,7 @@ namespace Plugin
 				vertices = new List<Vertex>();
 				vertexSets = new List<VertexSet>();
 				faces = new List<Face>();
-				materials = new List<Material>();
+				materials = new List<MeshMaterial>();
 				hierarchy = new List<int>();
 			}
 
@@ -380,37 +380,15 @@ namespace Plugin
 
 				}
 
-
-
 				Array.Resize(ref Object.Mesh.Faces, usedFaces);
-
-				for (int i = 0; i < materials.Count; i++)
-				{
-					Object.Mesh.Materials[i].Flags = materials[i].Flags;
-					Object.Mesh.Materials[i].Color = materials[i].Color;
-					Object.Mesh.Materials[i].TransparentColor = Color24.Black;
-					Object.Mesh.Materials[i].BlendMode = MeshMaterialBlendMode.Normal;
-					if (materials[i].DaytimeTexture != null)
-					{
-						Plugin.CurrentHost.RegisterTexture(materials[i].DaytimeTexture, TextureParameters.NoChange, out OpenBveApi.Textures.Texture tDay);
-						Object.Mesh.Materials[i].DaytimeTexture = tDay;
-					}
-					else
-					{
-						Object.Mesh.Materials[i].DaytimeTexture = null;
-					}
-
-					Object.Mesh.Materials[i].EmissiveColor = materials[i].EmissiveColor;
-					Object.Mesh.Materials[i].NighttimeTexture = null;
-					Object.Mesh.Materials[i].GlowAttenuationData = materials[i].GlowAttenuationData;
-					Object.Mesh.Materials[i].WrapMode = materials[i].WrapMode;
-				}
+				Object.Mesh.Materials = materials.ToArray();
+				Object.Mesh.FinalizeMesh();
 			}
 
 			internal readonly List<Vertex> vertices;
 			internal readonly List<VertexSet> vertexSets;
 			internal readonly List<Face> faces;
-			internal readonly List<Material> materials;
+			internal readonly List<MeshMaterial> materials;
 			internal List<int> hierarchy;
 			internal List<Vertex> transformedVertices;
 		}
@@ -1103,7 +1081,14 @@ namespace Plugin
 									Plugin.CurrentHost.AddMessage(MessageType.Warning, true, "Texture file path " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was invalid.");
 								}
 
-								Material mat = new Material(txF);
+								MeshMaterial mat = new MeshMaterial();
+								if (txF != null)
+								{
+									Plugin.CurrentHost.RegisterTexture(txF, TextureParameters.NoChange, out OpenBveApi.Textures.Texture tDay);
+									mat.DaytimeTexture = tDay;
+								}
+								mat.Color = Color32.White;
+								
 								switch (shape.ShaderNames[shape.prim_states[shape.currentPrimitiveState].Shader])
 								{
 									case ShaderNames.Tex:

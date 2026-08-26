@@ -1239,7 +1239,7 @@ namespace LibRender2
 		}
 
 
-		// Cached object state and matricies for shader drawing
+		// Cached object state and matrices for shader drawing
 		protected internal ObjectState lastObjectState;
 		private Matrix4D lastModelMatrix;
 		private Matrix4D lastModelViewMatrix;
@@ -1253,7 +1253,7 @@ namespace LibRender2
 			RenderFace(CurrentShader as Shader, state.Object, state.Face, isDebugTouchMode);
 		}
 
-		/// <summary>Draws a face using the specified shader and matricies</summary>
+		/// <summary>Draws a face using the specified shader and matrices</summary>
 		/// <param name="shader">The shader to use</param>
 		/// <param name="state">The ObjectState to draw</param>
 		/// <param name="face">The Face within the ObjectState</param>
