@@ -641,25 +641,12 @@ namespace Texture.Tga
 			BitmapData data = bitmap.LockBits(rect, ImageLockMode.ReadOnly, bitmap.PixelFormat);
 			if (data.Stride == 4 * data.Width)
 			{
-				/*
-				 * Copy the data from the bitmap
-				 * to the array in BGRA format.
-				 * */
 				byte[] raw = new byte[data.Stride * data.Height];
 				Marshal.Copy(data.Scan0, raw, 0, data.Stride * data.Height);
 				bitmap.UnlockBits(data);
 				int width = bitmap.Width;
 				int height = bitmap.Height;
 				bitmap.Dispose();
-				/*
-				 * Change the byte order from BGRA to RGBA.
-				 * */
-				for (int i = 0; i < raw.Length; i += 4)
-				{
-					byte temp = raw[i];
-					raw[i] = raw[i + 2];
-					raw[i + 2] = temp;
-				}
 				texture = new OpenBveApi.Textures.Texture(width, height, OpenBveApi.Textures.PixelFormat.RGBAlpha, raw, null);
 				return true;
 			}
