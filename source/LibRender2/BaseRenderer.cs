@@ -145,12 +145,15 @@ namespace LibRender2
 
 		public List<int> usedTrackColors = new List<int>();
 		public Dictionary<int, RailPath> trackColors = new Dictionary<int, RailPath>();
-
+#if RELEASE
 #pragma warning disable 0219, CS0169
+#endif
 		/// <summary>Holds the last openGL error</summary>
 		/// <remarks>Is only used in debug builds, hence the pragma</remarks>
 		private ErrorCode lastError;
+#if RELEASE
 #pragma warning restore 0219, CS0169
+#endif
 
 		/// <summary>The current shader in use</summary>
 		protected internal AbstractShader CurrentShader;

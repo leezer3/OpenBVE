@@ -1,8 +1,6 @@
 ﻿using System;
 // ReSharper disable MergeCastWithTypeCheck
 
-#pragma warning disable 0659, 0661
-
 namespace OpenBveApi.Textures
 {
 	/// <summary>Represents a file or directory where the texture can be loaded from.</summary>
@@ -20,7 +18,7 @@ namespace OpenBveApi.Textures
 		private DateTime? lastModificationTime;
 		/// <summary>The file size (on load) of this texture</summary>
 		private long? fileSize;
-
+		/// <summary>Returns the date and time the specified path was last modified</summary>
 		public DateTime LastModificationTime
 		{
 			get
@@ -33,7 +31,7 @@ namespace OpenBveApi.Textures
 			}
 			set => lastModificationTime = value;
 		}
-
+		/// <summary>Gets the size in bytes of the file</summary>
 		public long FileSize
 		{
 			get

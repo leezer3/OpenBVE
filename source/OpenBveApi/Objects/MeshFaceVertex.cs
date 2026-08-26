@@ -51,6 +51,7 @@ namespace OpenBveApi.Objects
 			return false;
 		}
 
+		/// <summary>Implicitly converts the MeshFaceVertex into it's integer representation</summary>
 		public static implicit operator int(MeshFaceVertex v)
 		{
 			return v.Index;

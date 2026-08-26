@@ -376,7 +376,7 @@ namespace OpenBveApi.Textures {
 					break;
 				case PixelFormat.RGBAlpha:
 					transparencyType = TextureTransparencyType.Opaque;
-					byte[] frameBytes = MyBytes != null ? MyBytes[CurrentFrame] : null;
+					byte[] frameBytes = MyBytes?[CurrentFrame];
 					if (frameBytes == null)
 					{
 						/*
