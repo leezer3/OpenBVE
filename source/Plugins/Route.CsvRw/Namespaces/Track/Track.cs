@@ -1571,8 +1571,8 @@ namespace CsvRwRouteParser
 					CurrentRoute.Stations[CurrentStation].DepartureSoundBuffer = depsnd;
 					CurrentRoute.Stations[CurrentStation].StopTime = halt;
 					CurrentRoute.Stations[CurrentStation].ForceStopSignal = stop == 1;
-					CurrentRoute.Stations[CurrentStation].OpenLeftDoors = door == Direction.Left | door == Direction.Both;
-					CurrentRoute.Stations[CurrentStation].OpenRightDoors = door == Direction.Right | door == Direction.Both;
+					CurrentRoute.Stations[CurrentStation].OpenLeftDoors = door == Direction.Left || door == Direction.Both;
+					CurrentRoute.Stations[CurrentStation].OpenRightDoors = door == Direction.Right || door == Direction.Both;
 					CurrentRoute.Stations[CurrentStation].SafetySystem = device;
 					CurrentRoute.Stations[CurrentStation].Stops = new StationStop[] { };
 					CurrentRoute.Stations[CurrentStation].PassengerRatio = 0.01 * jam;
@@ -1695,9 +1695,18 @@ namespace CsvRwRouteParser
 					}
 
 					SafetySystem device = Data.IsHmmsim ? SafetySystem.Any : SafetySystem.Atc;
+					Direction door = Direction.Both;
 					if (Arguments.Length >= 5 && Arguments[4].Length > 0)
 					{
+						if (Data.IsHmmsim)
+						{
+							door = FindDirection(Arguments[4], "Hmmsim.Station", false, Expression.Line, Expression.File);
+						}
+						else
+						{
 							ParseSafetySystem(Arguments[4], Command, Expression, Data, out device);
+
+						}
 					}
 
 					if (!PreviewOnly)
@@ -1728,8 +1737,17 @@ namespace CsvRwRouteParser
 					CurrentRoute.Stations[CurrentStation].DepartureTime = dep;
 					CurrentRoute.Stations[CurrentStation].StopTime = 15.0;
 					CurrentRoute.Stations[CurrentStation].ForceStopSignal = stop == 1;
-					CurrentRoute.Stations[CurrentStation].OpenLeftDoors = true;
-					CurrentRoute.Stations[CurrentStation].OpenRightDoors = true;
+					if (Data.IsHmmsim)
+					{
+						CurrentRoute.Stations[CurrentStation].OpenLeftDoors = door == Direction.Left || door == Direction.Both;
+						CurrentRoute.Stations[CurrentStation].OpenRightDoors = door == Direction.Right || door == Direction.Both;
+					}
+					else
+					{
+						CurrentRoute.Stations[CurrentStation].OpenLeftDoors = true;
+						CurrentRoute.Stations[CurrentStation].OpenRightDoors = true;
+					}
+					
 					CurrentRoute.Stations[CurrentStation].SafetySystem = device;
 					CurrentRoute.Stations[CurrentStation].Stops = new StationStop[] { };
 					CurrentRoute.Stations[CurrentStation].PassengerRatio = 1.0;
