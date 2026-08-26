@@ -325,13 +325,11 @@ namespace Texture.Tga
 								//We should now have all the data required to read our image into memory
 
 								//Calculate the stride value
-								var stride = ((ImageWidth * PixelDepth + 31) & ~31) >> 3;
+								int stride = ((ImageWidth * PixelDepth + 31) & ~31) >> 3;
 								//Calculate the padding value
-								var padding = stride - (((ImageWidth * PixelDepth) + 7) / 8);
+								int padding = stride - (((ImageWidth * PixelDepth) + 7) / 8);
 								//Next, load the image data into memory
 
-								//Create the padding array, as stride must be a multiple of 4
-								byte[] paddingBytes = new byte[padding];
 								//Create the temporary row lists
 								var rows = new List<List<byte>>();
 								var row = new List<byte>();
@@ -387,7 +385,7 @@ namespace Texture.Tga
 												RowBytesRead += Pixel.Length;
 												BytesRead += Pixel.Length;
 
-												//If this is a full row, addit to the list of rows, clear it and restart the counter
+												//If this is a full row, add it to the list of rows, clear it and restart the counter
 												if (RowBytesRead == ImageRowByteSize)
 												{
 													rows.Add(row);
@@ -405,7 +403,7 @@ namespace Texture.Tga
 												BytesRead++;
 												RowBytesRead++;
 
-												//If this is a full row, addit to the list of rows, clear it and restart the counter
+												//If this is a full row, add it to the list of rows, clear it and restart the counter
 												if (RowBytesRead == ImageRowByteSize)
 												{
 													rows.Add(row);
@@ -466,21 +464,17 @@ namespace Texture.Tga
 										rows[i].Reverse();
 									}
 								}
-								byte[] ImageData;
-								//Now create the final array using MemoryStream
-								using (MemoryStream memoryStream = new MemoryStream())
-								{
-									for (int i = 0; i < rows.Count; i++)
-									{
-										byte[] RowBytes = rows[i].ToArray();
-										//Write out the row and padding into the memorystream
-										memoryStream.Write(RowBytes, 0, RowBytes.Length);
-										memoryStream.Write(paddingBytes, 0, paddingBytes.Length);
-									}
-									//Convert the contents of the memorystream to our array
-									ImageData = memoryStream.ToArray();
+								byte[] ImageData = new byte[rows.Count * (rows[0].Count + padding)];
 
+								int offset = 0;
+
+								for (int i = 0; i < rows.Count; i++)
+								{
+									rows[i].CopyTo(ImageData, offset);
+									offset += rows[i].Count;
+									offset += padding;
 								}
+
 								//Convert the byte array into a bitmap
 
 								//First, calculate the stride
