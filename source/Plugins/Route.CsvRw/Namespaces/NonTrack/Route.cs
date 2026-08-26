@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using OpenBveApi;
@@ -29,7 +29,7 @@ namespace CsvRwRouteParser
 						CurrentRoute.Comment = Arguments[0];
 					}
 
-					if (CurrentRoute.Comment.IndexOf("Hmmsim", StringComparison.InvariantCultureIgnoreCase) != -1)
+					if (CurrentRoute.Comment.IndexOf("Hmmsim", StringComparison.InvariantCultureIgnoreCase) != -1 && CurrentRoute.Comment.IndexOf(@"建議openBVE版本", StringComparison.InvariantCultureIgnoreCase) == -1) // block HKHOS 
 					{
 						Data.SetHmmsimProperties();
 					}
