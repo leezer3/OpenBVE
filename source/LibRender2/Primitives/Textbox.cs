@@ -41,7 +41,6 @@ namespace LibRender2.Primitives
 
 		private List<string> WrappedLines(int width)
 		{
-			width = 200;
 			// string literal as well as escaped character as we may have loaded from language file
 			string[] firstSplit = Text.Split(new[] {"\r\n", "\n", @"\r\n"}, StringSplitOptions.None);
 			List<string> wrappedLines = new List<string>();
