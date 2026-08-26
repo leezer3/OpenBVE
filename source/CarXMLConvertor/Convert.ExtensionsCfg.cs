@@ -193,11 +193,13 @@ namespace CarXmlConvertor
 								{
 									CarInfos[CarIndex].FrontBogie.RearAxle = bogieAxles.X;
 									CarInfos[CarIndex].FrontBogie.FrontAxle = bogieAxles.Y;
+									CarInfos[CarIndex].FrontBogie.AxlesDefined = true;
 								}
 								else
 								{
 									CarInfos[CarIndex].RearBogie.RearAxle = bogieAxles.X;
 									CarInfos[CarIndex].RearBogie.FrontAxle = bogieAxles.Y;
+									CarInfos[CarIndex].RearBogie.AxlesDefined = true;
 								}
 							}
 						}
@@ -371,8 +373,8 @@ namespace CarXmlConvertor
 			if (CarInfos[i].FrontBogie.AxlesDefined || !string.IsNullOrEmpty(CarInfos[i].FrontBogie.Object))
 			{
 				newLines.Add("<FrontBogie>");
-				newLines.Add("<FrontAxle>" + CarInfos[i].FrontBogie.FrontAxle + "</FrontAxle>");
-				newLines.Add("<RearAxle>" + CarInfos[i].FrontBogie.RearAxle + "</RearAxle>");
+				newLines.Add("<FrontAxle>" + (CarInfos[i].FrontBogie.AxlesDefined ? CarInfos[i].FrontBogie.FrontAxle : 0.5) + "</FrontAxle>");
+				newLines.Add("<RearAxle>" + (CarInfos[i].FrontBogie.AxlesDefined ? CarInfos[i].FrontBogie.RearAxle : -0.5) + "</RearAxle>");
 				newLines.Add("<Object>" + CarInfos[i].FrontBogie.Object.Escape() + "</Object>");
 				newLines.Add("<Reversed>" + CarInfos[i].FrontBogie.Reversed + "</Reversed>");
 				newLines.Add("</FrontBogie>");
@@ -381,8 +383,8 @@ namespace CarXmlConvertor
 			if (CarInfos[i].RearBogie.AxlesDefined || !string.IsNullOrEmpty(CarInfos[i].RearBogie.Object))
 			{
 				newLines.Add("<RearBogie>");
-				newLines.Add("<FrontAxle>" + CarInfos[i].RearBogie.FrontAxle + "</FrontAxle>");
-				newLines.Add("<RearAxle>" + CarInfos[i].RearBogie.RearAxle + "</RearAxle>");
+				newLines.Add("<FrontAxle>" + (CarInfos[i].RearBogie.AxlesDefined ? CarInfos[i].RearBogie.FrontAxle : 0.5) + "</FrontAxle>");
+				newLines.Add("<RearAxle>" + (CarInfos[i].RearBogie.AxlesDefined ? CarInfos[i].RearBogie.RearAxle : -0.5) + "</RearAxle>");
 				newLines.Add("<Object>" + CarInfos[i].RearBogie.Object.Escape() + "</Object>");
 				newLines.Add("<Reversed>" + CarInfos[i].RearBogie.Reversed + "</Reversed>");
 				newLines.Add("</RearBogie>");
