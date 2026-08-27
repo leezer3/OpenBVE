@@ -517,7 +517,7 @@ namespace CsvRwRouteParser
 							{
 								if (commandIndices[0] == 0)
 								{
-									if (!IsRW)
+									if (Data.FileFormat != RoutefileFormat.RW)
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex was omitted or is 0 in " + Command + " argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 									}
@@ -572,7 +572,7 @@ namespace CsvRwRouteParser
 							{
 								if (commandIndices[0] == 0)
 								{
-									if (!IsRW)
+									if (Data.FileFormat != RoutefileFormat.RW)
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex was omitted or is 0 in " + Command + " argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 									}
@@ -627,7 +627,7 @@ namespace CsvRwRouteParser
 							{
 								if (commandIndices[0] == 0)
 								{
-									if (!IsRW)
+									if (Data.FileFormat != RoutefileFormat.RW)
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex was omitted or is 0 in " + Command + " argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 									}
@@ -682,7 +682,7 @@ namespace CsvRwRouteParser
 							{
 								if (commandIndices[0] == 0)
 								{
-									if (!IsRW)
+									if (Data.FileFormat != RoutefileFormat.RW)
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex was omitted or is 0 in " + Command + " argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 									}

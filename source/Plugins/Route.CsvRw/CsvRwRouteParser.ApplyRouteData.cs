@@ -350,7 +350,7 @@ namespace CsvRwRouteParser
 					}
 				}
 				// rail sounds
-				if (!PreviewOnly)
+				if (!PreviewOnly && Data.FileFormat != RoutefileFormat.Hmmsim)
 				{
 					int j = Data.Blocks[i].RailType[0];
 					int r = j < Data.Structure.Run.Length ? Data.Structure.Run[j] : 0;
@@ -1255,11 +1255,25 @@ namespace CsvRwRouteParser
 				}
 			}
 
-			// insert PatternObj (using a TrackFollower)
-			foreach (var patternKvp in Data.PatternObjects)
+			if (!PreviewOnly && Data.FileFormat == RoutefileFormat.Hmmsim)
 			{
-				patternKvp.Value.Create(Data.Structure.FreeObjects, CurrentRoute.Tracks[0].Elements[CurrentRoute.Tracks[0].Elements.Length - 1].StartingTrackPosition);
+				// Create rail sounds events
+				CurrentRunIndex = 0;
+				for (int i = 0; i < Data.Blocks.Count; i++)
+				{
+					for (int j = 0; j < Data.Blocks[i].RailSounds.Count; j++)
+					{
+						Data.Blocks[i].RailSounds[j].Create(CurrentRunIndex);
+						CurrentRunIndex = Data.Blocks[i].RailSounds[j].NewSound;
+					}
+				}
+				// insert PatternObj (using a TrackFollower)
+				foreach (var patternKvp in Data.PatternObjects)
+				{
+					patternKvp.Value.Create(Data.Structure.FreeObjects, CurrentRoute.Tracks[0].Elements[CurrentRoute.Tracks[0].Elements.Length - 1].StartingTrackPosition);
+				}
 			}
+			
 
 			if (!PreviewOnly)
 			{

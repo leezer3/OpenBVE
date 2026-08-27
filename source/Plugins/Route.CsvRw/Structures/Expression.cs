@@ -59,10 +59,10 @@ namespace CsvRwRouteParser
 		/// <param name="Command">The command</param>
 		/// <param name="ArgumentSequence">The sequence of arguments contained within the expression</param>
 		/// <param name="Culture">The current culture</param>
+		/// <param name="FileFormat">The format of the routefile</param>
 		/// <param name="RaiseErrors">Whether errors should be raised at this point</param>
-		/// <param name="IsRw">Whether this is a RW format file</param>
 		/// <param name="CurrentSection">The current section being processed</param>
-		internal void SeparateCommandsAndArguments(out string Command, out string ArgumentSequence, System.Globalization.CultureInfo Culture, bool RaiseErrors, bool IsRw, string CurrentSection)
+		internal void SeparateCommandsAndArguments(out string Command, out string ArgumentSequence, System.Globalization.CultureInfo Culture, RoutefileFormat FileFormat, bool RaiseErrors, string CurrentSection)
 		{
 			bool openingError = false, closingError = false;
 			int i, firstClosingBracket = 0;
@@ -104,7 +104,7 @@ namespace CsvRwRouteParser
 					Text = "Track.Sta(" + Text.Substring(11);
 				}
 
-				if (IsRw && CurrentSection.ToLowerInvariant() == "track")
+				if (FileFormat == RoutefileFormat.RW && CurrentSection.ToLowerInvariant() == "track")
 				{
 					//Removes misplaced track position indices from the end of a command in the Track section
 					int idx = Text.LastIndexOf(')');
@@ -118,7 +118,7 @@ namespace CsvRwRouteParser
 					}
 				}
 
-				if (IsRw && Text.EndsWith("))"))
+				if (FileFormat == RoutefileFormat.RW && Text.EndsWith("))"))
 				{
 					int openingBrackets = Text.Count(x => x == '(');
 					int closingBrackets = Text.Count(x => x == ')');
@@ -136,7 +136,7 @@ namespace CsvRwRouteParser
 					Text = Text.Replace("(c)", "©");
 				}
 
-				if(IsRw && Parser.EnabledHacks.AggressiveRwBrackets)
+				if(FileFormat == RoutefileFormat.RW && Parser.EnabledHacks.AggressiveRwBrackets)
 				{
 					//Attempts to aggressively discard *anything* encountered after a closing bracket
 					int c = Text.IndexOf(')');

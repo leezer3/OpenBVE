@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -15,7 +14,7 @@ namespace CsvRwRouteParser
 			// use a high initial capacity to try and minimize churn
 			Expressions = new List<Expression>(20000); 
 			// full-line rw comments
-			if (IsRW) {
+			if (Data.FileFormat == RoutefileFormat.RW) {
 				for (int i = 0; i < Lines.Count; i++) {
 					int Level = 0;
 					for (int j = 0; j < Lines[i].Length; j++) {
@@ -48,7 +47,7 @@ namespace CsvRwRouteParser
 				//Found these in a couple of older routes, harmless but generate errors
 				//Possibly caused by BVE-RR (DOS version)
 				Lines[i] = Lines[i].Replace("\0", string.Empty);
-				if (IsRW & AllowRwRouteDescription) {
+				if (Data.FileFormat == RoutefileFormat.RW & AllowRwRouteDescription) {
 					// ignore rw route description
 					if (
 						Lines[i].StartsWith("[", StringComparison.Ordinal) && Lines[i].IndexOf("]", StringComparison.Ordinal) > 0 ||
@@ -122,7 +121,7 @@ namespace CsvRwRouteParser
 								}
 								break;
 							case ',':
-								if (Level == 0 && !IsRW) {
+								if (Level == 0 && Data.FileFormat != RoutefileFormat.RW) {
 									string t = Lines[i].Substring(a, j - a).Trim();
 									if (t.Length > 0 && !t.StartsWith(";"))
 									{
@@ -133,7 +132,7 @@ namespace CsvRwRouteParser
 								}
 								break;
 							case '@':
-								if (!IsRW)
+								if (Data.FileFormat != RoutefileFormat.RW)
 								{
 									// @ is not a valid control character in CSV files
 									break;
@@ -148,7 +147,7 @@ namespace CsvRwRouteParser
 									Level = 0;
 								}
 								
-								if (Level == 0 && IsRW) {
+								if (Level == 0 && Data.FileFormat == RoutefileFormat.RW) {
 									string t = Lines[i].Substring(a, j - a).Trim();
 									if (t.Length > 0 && !t.StartsWith(";"))
 									{
@@ -594,13 +593,13 @@ namespace CsvRwRouteParser
 		private void PreprocessSortByTrackPosition(double[] unitFactors, ref IList<Expression> Expressions) {
 			List<KeyValuePair<double, Expression>> positionedExpressions = new List<KeyValuePair<double, Expression>>(Expressions.Count);
 			double a = -1.0, pa = -1.0;
-			bool numberCheck = !IsRW;
+			bool numberCheck = Data.FileFormat != RoutefileFormat.RW;
 			for (int i = 0; i < Expressions.Count; i++) {
 				if (Expressions[i].Skip)
 				{
 					continue;
 				}
-				if (IsRW) {
+				if (Data.FileFormat == RoutefileFormat.RW) {
 					// only check for track positions in the railway section for RW routes
 					if (Expressions[i].Text.StartsWith("[", StringComparison.Ordinal) && Expressions[i].Text.EndsWith("]", StringComparison.Ordinal))
 					{

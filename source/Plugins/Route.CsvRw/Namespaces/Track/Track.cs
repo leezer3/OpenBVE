@@ -21,7 +21,7 @@ namespace CsvRwRouteParser
 		private int CurrentStop = -1;
 		private int CurrentSection = 0;
 		private bool DepartureSignalUsed = false;
-		private void ParseTrackCommand(TrackCommand Command, string[] Arguments, string FileName, double[] UnitOfLength, Expression Expression, ref RouteData Data, int BlockIndex, bool PreviewOnly, bool IsRw, int RailIndex = 0)
+		private void ParseTrackCommand(TrackCommand Command, string[] Arguments, string FileName, double[] UnitOfLength, Expression Expression, ref RouteData Data, int BlockIndex, bool PreviewOnly, int RailIndex = 0)
 		{
 			switch (Command)
 			{
@@ -110,7 +110,7 @@ namespace CsvRwRouteParser
 						if (Data.Blocks[BlockIndex].RailType.Length <= idx)
 						{
 							Array.Resize(ref Data.Blocks[BlockIndex].RailType, idx + 1);
-							if (Data.IsHmmsim)
+							if (Data.FileFormat == RoutefileFormat.Hmmsim)
 							{
 								Data.Blocks[BlockIndex].RailType[idx] = -1;
 							}
@@ -129,7 +129,7 @@ namespace CsvRwRouteParser
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
-							else if ((!Data.IsHmmsim && !Data.Structure.RailObjects.ContainsKey(sttype)) || (Data.IsHmmsim && !Data.Structure.FreeObjects.ContainsKey(sttype)))
+							else if ((Data.FileFormat != RoutefileFormat.Hmmsim && !Data.Structure.RailObjects.ContainsKey(sttype)) || (Data.FileFormat == RoutefileFormat.Hmmsim && !Data.Structure.FreeObjects.ContainsKey(sttype)))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex " + sttype + " references an object not loaded in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
@@ -635,7 +635,7 @@ namespace CsvRwRouteParser
 						if (num == 0)
 						{
 							//Aspects value of zero produces a 2-aspect R/G signal in BVE2
-							if (IsRw || Plugin.CurrentOptions.EnableBveTsHacks)
+							if (Data.FileFormat == RoutefileFormat.RW || Plugin.CurrentOptions.EnableBveTsHacks)
 							{
 								num = -2;
 							}
@@ -1363,10 +1363,10 @@ namespace CsvRwRouteParser
 						stop = 0;
 					}
 
-					SafetySystem device = Data.IsHmmsim ? SafetySystem.Any : SafetySystem.Ats;
+					SafetySystem device = Data.FileFormat == RoutefileFormat.Hmmsim ? SafetySystem.Any : SafetySystem.Ats;
 					if (Arguments.Length >= 7 && Arguments[6].Length > 0)
 					{
-						ParseSafetySystem(Arguments[6], Command, Expression, Data, out device);
+						ParseSafetySystem(Arguments[6], Command, Expression, out device);
 					}
 
 					OpenBveApi.Sounds.SoundHandle arrsnd = null;
@@ -1694,17 +1694,17 @@ namespace CsvRwRouteParser
 						stop = 0;
 					}
 
-					SafetySystem device = Data.IsHmmsim ? SafetySystem.Any : SafetySystem.Atc;
+					SafetySystem device = Data.FileFormat == RoutefileFormat.Hmmsim ? SafetySystem.Any : SafetySystem.Atc;
 					Direction door = Direction.Both;
 					if (Arguments.Length >= 5 && Arguments[4].Length > 0)
 					{
-						if (Data.IsHmmsim)
+						if (Data.FileFormat == RoutefileFormat.Hmmsim)
 						{
 							door = FindDirection(Arguments[4], "Hmmsim.Station", false, Expression.Line, Expression.File);
 						}
 						else
 						{
-							ParseSafetySystem(Arguments[4], Command, Expression, Data, out device);
+							ParseSafetySystem(Arguments[4], Command, Expression, out device);
 
 						}
 					}
@@ -1737,7 +1737,7 @@ namespace CsvRwRouteParser
 					CurrentRoute.Stations[CurrentStation].DepartureTime = dep;
 					CurrentRoute.Stations[CurrentStation].StopTime = 15.0;
 					CurrentRoute.Stations[CurrentStation].ForceStopSignal = stop == 1;
-					if (Data.IsHmmsim)
+					if (Data.FileFormat == RoutefileFormat.Hmmsim)
 					{
 						CurrentRoute.Stations[CurrentStation].OpenLeftDoors = door == Direction.Left || door == Direction.Both;
 						CurrentRoute.Stations[CurrentStation].OpenRightDoors = door == Direction.Right || door == Direction.Both;
@@ -1767,7 +1767,7 @@ namespace CsvRwRouteParser
 						CurrentRoute.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1).ToString(Culture);
 						if (CurrentRoute.Stations[CurrentStation].ForceStopSignal)
 						{
-							if (IsRW)
+							if (Data.FileFormat == RoutefileFormat.RW)
 							{
 								/*
 								 * NOTE: The Track.Sta command is not valid in RW format routes (and this is what allows the
@@ -1839,7 +1839,7 @@ namespace CsvRwRouteParser
 							{
 								idx2 = Form.SecondaryRailR;
 							}
-							else if (IsRW && string.Compare(Arguments[1], "9X", StringComparison.OrdinalIgnoreCase) == 0)
+							else if (Data.FileFormat == RoutefileFormat.RW && string.Compare(Arguments[1], "9X", StringComparison.OrdinalIgnoreCase) == 0)
 							{
 								idx2 = int.MaxValue;
 							}
@@ -1850,7 +1850,7 @@ namespace CsvRwRouteParser
 							}
 						}
 
-						if (IsRW)
+						if (Data.FileFormat == RoutefileFormat.RW)
 						{
 							switch (idx2)
 							{
@@ -2403,7 +2403,7 @@ namespace CsvRwRouteParser
 								else
 								{
 									Color24? transparentColor = new Color24(64, 64, 64);
-									if (Plugin.CurrentOptions.EnableBveTsHacks && IsRw)
+									if (Plugin.CurrentOptions.EnableBveTsHacks && Data.FileFormat == RoutefileFormat.RW)
 									{
 										/*
 										 * RW routes were only for BVE1 / BVE2
@@ -2433,9 +2433,9 @@ namespace CsvRwRouteParser
 							h = 0.0;
 						}
 
-						if (!Data.IsHmmsim)
+						if (Data.FileFormat != RoutefileFormat.Hmmsim)
 						{
-							Data.Blocks[BlockIndex].Height = IsRW ? h + 0.3 : h;
+							Data.Blocks[BlockIndex].Height = Data.FileFormat == RoutefileFormat.RW ? h + 0.3 : h;
 						}
 						else
 						{
@@ -2627,7 +2627,7 @@ namespace CsvRwRouteParser
 									roll = 0.0;
 								}
 
-								if (idx == -1 && !Data.IsHmmsim)
+								if (idx == -1 && Data.FileFormat != RoutefileFormat.Hmmsim)
 								{
 									if (!Data.IgnorePitchRoll)
 									{
@@ -3305,7 +3305,7 @@ namespace CsvRwRouteParser
 					 */
 					if (!PreviewOnly)
 					{
-						if (!Data.IsHmmsim)
+						if (Data.FileFormat != RoutefileFormat.Hmmsim)
 						{
 							Data.SetHmmsimProperties();
 						}
@@ -3381,7 +3381,7 @@ namespace CsvRwRouteParser
 				case TrackCommand.PatternEnd:
 					if (!PreviewOnly)
 					{
-						if (!Data.IsHmmsim)
+						if (Data.FileFormat != RoutefileFormat.Hmmsim)
 						{
 							Data.SetHmmsimProperties();
 						}
@@ -3891,6 +3891,18 @@ namespace CsvRwRouteParser
 					}
 					break;
 				case TrackCommand.RailSound:
+					if (!PreviewOnly)
+					{
+						int idx = 0;
+						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx) || idx < 0)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailSoundIndex is invalid in Hmm.RailSound at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							break;
+						}
+
+						Data.Blocks[BlockIndex].RailSounds.Add(new RailSound(Data.TrackPosition, idx));
+					}
+					break;
 				case TrackCommand.CurveTransition:
 				case TrackCommand.PitchTransition:
 					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Hmmsim: Command " + Command + " is not currently implemented at Line "+ Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);

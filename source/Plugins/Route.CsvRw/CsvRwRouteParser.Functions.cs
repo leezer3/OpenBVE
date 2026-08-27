@@ -181,7 +181,7 @@ namespace CsvRwRouteParser
 			{
 				int n = 0;
 				for (int k = 0; k < ArgumentSequence.Length; k++) {
-					if ((IsRW && ArgumentSequence[k] == ',') || ArgumentSequence[k] == ';') 
+					if ((Data.FileFormat == RoutefileFormat.RW && ArgumentSequence[k] == ',') || ArgumentSequence[k] == ';') 
 					{
 						n++;
 					}
@@ -189,7 +189,7 @@ namespace CsvRwRouteParser
 				Arguments = new string[n + 1];
 				int a = 0, h = 0;
 				for (int k = 0; k < ArgumentSequence.Length; k++) {
-					if ((IsRW && ArgumentSequence[k] == ',') || ArgumentSequence[k] == ';') 
+					if ((Data.FileFormat == RoutefileFormat.RW && ArgumentSequence[k] == ',') || ArgumentSequence[k] == ';') 
 					{
 						Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim();
 						a = k + 1; h++;

@@ -26,7 +26,7 @@ namespace CsvRwRouteParser
 				{
 					continue;
 				}
-				if (IsRW && Expressions[j].Text.StartsWith("[") && Expressions[j].Text.EndsWith("]"))
+				if (Data.FileFormat == RoutefileFormat.RW && Expressions[j].Text.StartsWith("[") && Expressions[j].Text.EndsWith("]"))
 				{
 					Section = Expressions[j].Text.Substring(1, Expressions[j].Text.Length - 2).Trim();
 					if (string.Compare(Section, "object", StringComparison.OrdinalIgnoreCase) == 0)
@@ -43,9 +43,9 @@ namespace CsvRwRouteParser
 				{
 					Expressions[j].ConvertRwToCsv(Section, SectionAlwaysPrefix);
 					// separate command and arguments
-					Expressions[j].SeparateCommandsAndArguments(out string Command, out string ArgumentSequence, Culture, true, IsRW, Section);
+					Expressions[j].SeparateCommandsAndArguments(out string Command, out string ArgumentSequence, Culture, Data.FileFormat, true, Section);
 					// process command
-					bool NumberCheck = !IsRW || string.Compare(Section, "track", StringComparison.OrdinalIgnoreCase) == 0;
+					bool NumberCheck = Data.FileFormat != RoutefileFormat.RW || string.Compare(Section, "track", StringComparison.OrdinalIgnoreCase) == 0;
 					if (!NumberCheck || !NumberFormats.TryParseDoubleVb6(Command, UnitOfLength, out _))
 					{
 						// split arguments
@@ -54,7 +54,7 @@ namespace CsvRwRouteParser
 							int n = 0;
 							for (int k = 0; k < ArgumentSequence.Length; k++)
 							{
-								if ((IsRW && ArgumentSequence[k] == ',') || ArgumentSequence[k] == ';')
+								if ((Data.FileFormat == RoutefileFormat.RW && ArgumentSequence[k] == ',') || ArgumentSequence[k] == ';')
 								{
 									n++;
 								}
@@ -63,7 +63,7 @@ namespace CsvRwRouteParser
 							int a = 0, h = 0;
 							for (int k = 0; k < ArgumentSequence.Length; k++)
 							{
-								if ((IsRW && ArgumentSequence[k] == ',') || ArgumentSequence[k] == ';')
+								if ((Data.FileFormat == RoutefileFormat.RW && ArgumentSequence[k] == ',') || ArgumentSequence[k] == ';')
 								{
 									Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim();
 									a = k + 1; h++;
