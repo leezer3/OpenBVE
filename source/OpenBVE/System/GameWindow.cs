@@ -432,6 +432,7 @@ namespace OpenBve
 				Game.SwitchChangeDialog.Show();
 			}
 			Game.Menu.OnResize();
+			Program.Renderer.Rectangle.Update();
 		}
 
 		[DllImport("user32.dll")]

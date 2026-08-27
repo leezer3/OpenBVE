@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using LibRender2.Screens;
 using LibRender2.Shaders;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -48,6 +49,18 @@ namespace LibRender2.Primitives
 			{
 				//
 			}
+
+			Matrix4D.CreateOrthographicOffCenter(0.0f, renderer.Screen.Width, renderer.Screen.Height, 0.0f, -1.0f, 1.0f, out Matrix4D ProjectionMatrix);
+			Shader.Activate();
+			Shader.SetCurrentProjectionMatrix(ProjectionMatrix);
+			Shader.SetCurrentModelViewMatrix(Matrix4D.Identity);
+		}
+
+		public void Update()
+		{
+			Matrix4D.CreateOrthographicOffCenter(0.0f, renderer.Screen.Width, renderer.Screen.Height, 0.0f, -1.0f, 1.0f, out Matrix4D ProjectionMatrix);
+			Shader.Activate();
+			Shader.SetCurrentProjectionMatrix(ProjectionMatrix);
 		}
 
 		/// <summary>Draws a simple 2D rectangle using two-pass alpha blending.</summary>
@@ -156,8 +169,6 @@ namespace LibRender2.Primitives
 				Shader.DisableTexturing();
 			}
 			
-			Shader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
-			Shader.SetCurrentModelViewMatrix(renderer.CurrentViewMatrix);
 			Shader.SetColor(color ?? Color128.White);
 			Shader.SetPoint(point);
 			Shader.SetSize(size);
