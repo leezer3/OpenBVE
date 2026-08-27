@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2023, Christopher Lees, The OpenBVE Project
 //
@@ -38,7 +38,7 @@ namespace LibRender2.Primitives
 			set
 			{
 				_text = value;
-				Size = Font.MeasureString(Text) * 1.5 * Renderer.currentOptions.UserInterfaceScaleFactor;
+				Size = Font.MeasureString(Text) * 1.5 * baseRenderer.currentOptions.UserInterfaceScaleFactor;
 			}
 		}
 
@@ -57,9 +57,11 @@ namespace LibRender2.Primitives
 		/// <summary>The font for the button</summary>
 		public OpenGlFont Font;
 
-		public Button(BaseRenderer renderer, string text) : base(renderer)
+		private BaseRenderer baseRenderer => Renderer as BaseRenderer;
+
+		public Button(IGLRenderer renderer, string text) : base(renderer)
 		{
-			Font = Renderer.Fonts.LargeFont;
+			Font = baseRenderer.Fonts.LargeFont;
 			Text = text;
 			Enabled = true;
 			// default colors to match GLMenu
@@ -75,12 +77,12 @@ namespace LibRender2.Primitives
 			{
 				return;
 			}
-			Renderer.Rectangle.Draw(Texture, Location, Size, BackgroundColor);
+			baseRenderer.Rectangle.Draw(Texture, Location, Size, BackgroundColor, null, null, CornerRadius);
 			if (CurrentlySelected && Enabled)
 			{
-				Renderer.Rectangle.Draw(Texture, Location + Size * 0.1, Size - (Size * 0.2), HighlightColor);
+				baseRenderer.Rectangle.Draw(Texture, Location + Size * 0.1, Size - (Size * 0.2), HighlightColor, null, null, CornerRadius * 0.8f);
 			}
-			Renderer.OpenGlString.Draw(Font, Text, Location + (Size * 0.15), TextAlignment.TopLeft, Enabled ?  EnabledTextColor : DisabledTextColor);
+			baseRenderer.OpenGlString.Draw(Font, Text, Location + (Size * 0.15), TextAlignment.TopLeft, Enabled ?  EnabledTextColor : DisabledTextColor);
 		}
 
 		public override void MouseMove(int x, int y)
