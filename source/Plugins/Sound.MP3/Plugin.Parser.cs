@@ -25,7 +25,6 @@
 using System;
 using System.IO;
 using NAudio.Wave;
-using NLayer.NAudioSupport;
 using OpenBveApi.Sounds;
 
 namespace Plugin
@@ -37,12 +36,15 @@ namespace Plugin
 		/// <returns>The raw sound data.</returns>
 		private static Sound LoadFromFile(string fileName)
 		{
-			using (Mp3FileReader reader = new Mp3FileReader(fileName, wf => new Mp3FrameDecompressor(wf)))
+
+			using (Mp3FileReader reader = new Mp3FileReader(fileName))
 			{
 				byte[] dataBytes = new byte[reader.Length];
 
 				// Convert MP3 to raw 32-bit float n channels PCM.
 				int bytesRead = reader.Read(dataBytes, 0, (int)reader.Length);
+
+				
 
 				int sampleCount = bytesRead / (reader.WaveFormat.Channels * sizeof(float));
 				byte[] newDataBytes = new byte[sampleCount * reader.WaveFormat.Channels * sizeof(short)];
@@ -53,26 +55,33 @@ namespace Plugin
 					buffers[i] = new byte[newDataBytes.Length / buffers.Length];
 				}
 
-				// Convert PCM bit depth from 32-bit float to 16-bit integer.
-				using (MemoryStream stream = new MemoryStream(newDataBytes))
-				using (BinaryWriter writer = new BinaryWriter(stream))
+				if (reader.WaveFormat.BitsPerSample == 32)
 				{
-					for (int i = 0; i < bytesRead; i += sizeof(float))
+					// Convert PCM bit depth from 32-bit float to 16-bit integer.
+					using (MemoryStream stream = new MemoryStream(newDataBytes))
+					using (BinaryWriter writer = new BinaryWriter(stream))
 					{
-						float sample = BitConverter.ToSingle(dataBytes, i);
-
-						if (sample < -1.0f)
+						for (int i = 0; i < bytesRead; i += sizeof(float))
 						{
-							sample = -1.0f;
-						}
+							float sample = BitConverter.ToSingle(dataBytes, i);
 
-						if (sample > 1.0f)
-						{
-							sample = 1.0f;
-						}
+							if (sample < -1.0f)
+							{
+								sample = -1.0f;
+							}
 
-						writer.Write((short)(sample * short.MaxValue));
+							if (sample > 1.0f)
+							{
+								sample = 1.0f;
+							}
+
+							writer.Write((short)(sample * short.MaxValue));
+						}
 					}
+				}
+				else
+				{
+					newDataBytes = dataBytes;
 				}
 
 				// Separated for each channel.

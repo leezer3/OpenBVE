@@ -80,31 +80,39 @@ namespace Plugin
 					buffers[i] = new byte[newDataBytes.Length / buffers.Length];
 				}
 
-				// Convert PCM bit depth from 32-bit float to 16-bit integer.
-				using (MemoryStream writeStream = new MemoryStream(newDataBytes))
-				using (BinaryWriter writer = new BinaryWriter(writeStream))
+
+				if (reader.WaveFormat.BitsPerSample == 32)
 				{
-					for (int i = 0; i < bytesRead; i += sizeof(float))
+					// Convert PCM bit depth from 32-bit float to 16-bit integer.
+					using (MemoryStream writeStream = new MemoryStream(newDataBytes))
+					using (BinaryWriter writer = new BinaryWriter(writeStream))
 					{
-						float sample = BitConverter.ToSingle(dataBytes, i);
-
-						if (sample < -1.0f)
+						for (int i = 0; i < bytesRead; i += sizeof(float))
 						{
-							sample = -1.0f;
-						}
+							float sample = BitConverter.ToSingle(dataBytes, i);
 
-						if (sample > 1.0f)
-						{
-							sample = 1.0f;
-						}
+							if (sample < -1.0f)
+							{
+								sample = -1.0f;
+							}
 
-						if (float.IsNaN(sample))
-						{
-							sample = 0;
-						}
+							if (sample > 1.0f)
+							{
+								sample = 1.0f;
+							}
 
-						writer.Write((short)(sample * short.MaxValue));
+							if (float.IsNaN(sample))
+							{
+								sample = 0;
+							}
+
+							writer.Write((short)(sample * short.MaxValue));
+						}
 					}
+				}
+				else
+				{
+					newDataBytes = dataBytes;
 				}
 
 				// Separated for each channel.
