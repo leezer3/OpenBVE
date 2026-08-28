@@ -433,6 +433,7 @@ namespace OpenBve
 			}
 			Game.Menu.OnResize();
 			Program.Renderer.Rectangle.Update();
+			Program.Renderer.OpenGlString.Update();
 		}
 
 		[DllImport("user32.dll")]

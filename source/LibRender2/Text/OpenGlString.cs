@@ -25,8 +25,20 @@ namespace LibRender2.Text
 			{
 				//
 			}
-			
+
+			Matrix4D.CreateOrthographicOffCenter(0.0f, renderer.Screen.Width, renderer.Screen.Height, 0.0f, -1.0f, 1.0f, out Matrix4D ProjectionMatrix);
+			Shader.Activate();
+			Shader.SetCurrentProjectionMatrix(ProjectionMatrix);
+			Shader.SetCurrentModelViewMatrix(Matrix4D.Identity);
 		}
+
+		public void Update()
+		{
+			Matrix4D.CreateOrthographicOffCenter(0.0f, renderer.Screen.Width, renderer.Screen.Height, 0.0f, -1.0f, 1.0f, out Matrix4D ProjectionMatrix);
+			Shader.Activate();
+			Shader.SetCurrentProjectionMatrix(ProjectionMatrix);
+		}
+
 
 		/// <summary>Renders a string to the screen.</summary>
 		/// <param name="font">The font to use.</param>
@@ -197,9 +209,7 @@ namespace LibRender2.Text
 		{
 			Shader.Activate();
 			renderer.CurrentShader = Shader;
-			Shader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
-			Shader.SetCurrentModelViewMatrix(renderer.CurrentViewMatrix);
-
+			
 			for (int i = 0; i < text.Length; i++)
 			{
 				i += font.GetCharacterData(text, i, out Texture texture, out OpenGlFontChar data) - 1;
