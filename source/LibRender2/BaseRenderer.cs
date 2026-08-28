@@ -156,7 +156,7 @@ namespace LibRender2
 #endif
 
 		/// <summary>The current shader in use</summary>
-		protected internal AbstractShader CurrentShader;
+		public AbstractShader CurrentShader;
 
 		public Shader DefaultShader;
 		
@@ -364,15 +364,7 @@ namespace LibRender2
 			currentHost = CurrentHost;
 			currentOptions = CurrentOptions;
 			fileSystem = FileSystem;
-			if (CurrentHost.Application != HostApplication.TrainEditor && CurrentHost.Application != HostApplication.TrainEditor2)
-			{
-				/*
-				 * TrainEditor2 uses a GLControl
-				 * On the Linux SLD2 backend, this crashes when attempting to get the list of supported screen resolutions
-				 * As we don't care about fullscreen here, just don't bother with this constructor
-				 */
-				Screen = new Screen();
-			}
+			Screen = new Screen(this);
 			Camera = new CameraProperties(this);
 			Lighting = new Lighting(this);
 			Marker = new Marker(this);
