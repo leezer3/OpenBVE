@@ -228,7 +228,7 @@ namespace Formats.OpenBve
 				
 				if (!IsB3D)
 				{
-					if (splitLine.Length > 4)
+					if (splitLine.Length > 4 && Lines.Count < 1000)
 					{
 						for (int j = 4; j < splitLine.Length; j++)
 						{
@@ -246,6 +246,9 @@ namespace Formats.OpenBve
 								 * Multi-column objects are however vanishingly rare (I've seen only about two instances in the wild)
 								 * 
 								 * It may be better to hide this behind a dedicated detection and entry in the compatibility database
+								 * 
+								 * https://bveworldwide.forumotion.com/post?p=22502
+								 * Let's also skip this if more than 1k lines
 								 */
 
 								continue;
