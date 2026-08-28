@@ -53,7 +53,6 @@ namespace LibRender2.Text
 			{
 				return;
 			}
-			renderer.LastBoundTexture = null;
 			/*
 			 * Prepare the top-left coordinates for rendering, incorporating the
 			 * orientation of the string in relation to the specified location.
@@ -215,7 +214,12 @@ namespace LibRender2.Text
 				i += font.GetCharacterData(text, i, out Texture texture, out OpenGlFontChar data) - 1;
 				if (renderer.currentHost.LoadTexture(ref texture, OpenGlTextureWrapMode.ClampClamp))
 				{
-					GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
+					if (renderer.LastBoundTexture != texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp])
+					{
+						GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
+						renderer.LastBoundTexture = texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp];
+					}
+					
 					Shader.SetAtlasLocation(data.TextureCoordinates);
 					double x = left - (data.PhysicalSize.X - data.TypographicSize.X) / 2;
 					double y = top - (data.PhysicalSize.Y - data.TypographicSize.Y) / 2;
