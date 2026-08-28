@@ -53,6 +53,16 @@ namespace OpenBveApi.Objects
 					Vertices[i].Coordinates.Transform(TransformMatrix, IgnoreW);
 				}
 			}
+			
+			
+			for (int i = Faces.Count - 1; i >= 0; i--)
+			{
+				if (Faces[i].Vertices.Length == 0)
+				{
+					Faces.RemoveAt(i);
+				}
+			}
+
 			if (Faces.Count != 0)
 			{
 				int mf = Object.Mesh.Faces.Length;

@@ -79,7 +79,7 @@ namespace Object.CsvB3d
 							{
 								CheckForFaceHacks(fileName, currentMeshBuilder, staticObject, key == CSVB3DKey.Face2, ref faceVertices);
 								MeshFace f = new MeshFace(faceVertices.Length);
-								bool valid = true;
+								bool valid = faceVertices.Length > 0;
 								for (int j = 0; j < faceVertices.Length; j++)
 								{
 									if (faceVertices[j] >= currentMeshBuilder.Vertices.Count)

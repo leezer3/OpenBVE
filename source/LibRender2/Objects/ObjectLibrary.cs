@@ -99,7 +99,11 @@ namespace LibRender2.Objects
 			foreach (MeshFace face in State.Prototype.Mesh.Faces)
 			{
 				bool alpha;
-
+				if (face.Vertices.Length == 0)
+				{
+					// defensive, may occur if ObjectOptimisation is disabled or object is too big to optimise
+					continue;
+				}
 				if (!materialAlphaCache.TryGetValue(face.Material, out alpha))
 				{
 					alpha = false;
