@@ -208,7 +208,14 @@ namespace LibRender2.Text
 		{
 			Shader.Activate();
 			renderer.CurrentShader = Shader;
-			
+
+			/*
+			 * In order to call GL.DrawArrays with procedural data within the shader,
+			 * we first need to bind a dummy VAO
+			 * If this is not done, it will generate an InvalidOperation error code
+			 */
+			renderer.dummyVao.Bind();
+
 			for (int i = 0; i < text.Length; i++)
 			{
 				i += font.GetCharacterData(text, i, out Texture texture, out OpenGlFontChar data) - 1;
@@ -231,12 +238,7 @@ namespace LibRender2.Text
 					Shader.SetColor(new Color128(color.A, color.A, color.A, 1.0f));
 					Shader.SetPoint(new Vector2(x, y));
 					Shader.SetSize(data.PhysicalSize);
-					/*
-					 * In order to call GL.DrawArrays with procedural data within the shader,
-					 * we first need to bind a dummy VAO
-					* If this is not done, it will generate an InvalidOperation error code
-					*/
-					renderer.dummyVao.Bind();
+					
 					GL.DrawArrays(PrimitiveType.TriangleStrip, 0, 6);
 					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
 					Shader.SetColor(color);
