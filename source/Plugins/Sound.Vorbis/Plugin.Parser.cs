@@ -64,8 +64,6 @@ namespace Plugin
 
 				return new Sound(reader.WaveFormat.SampleRate, sizeof(short) * 8, buffers);
 			}
-			
-			return null;
 		}
 	}
 }

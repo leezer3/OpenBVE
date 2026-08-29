@@ -43,7 +43,7 @@ namespace Texture.Tga
 		private VerticalTransferOrder verticalTransferOrder;
 		private HorizontalTransferOrder horizontalTransferOrder;
 
-		internal FirstPixelDestination firstPixelDestination
+		internal FirstPixelDestination FirstPixelDestination
 		{
 			get
 			{
@@ -72,7 +72,6 @@ namespace Texture.Tga
 		private short ImageHeight;
 
 		//Color map
-		private int ColorMapType;
 		private ImageTypes ImageType;
 		private int ColorMapLength;
 		private byte ColorMapEntrySize;
@@ -431,7 +430,7 @@ namespace Texture.Tga
 								bool reverseRows = false;
 								bool reverseBytes = false;
 								//We now need to get the location of the first pixel to see if the rows need to be reversed when converted to bitmap
-								switch (firstPixelDestination)
+								switch (FirstPixelDestination)
 								{
 									case FirstPixelDestination.TopLeft:
 										reverseRows = false;

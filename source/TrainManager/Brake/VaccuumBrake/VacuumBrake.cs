@@ -225,12 +225,8 @@ namespace TrainManager.BrakeSystems
 				BrakeCylinder.SoundPlayedForPressure = BrakeCylinder.EmergencyMaximumPressure;
 			}
 
-			double p;
-			if (Car.baseTrain.Handles.EmergencyBrake.Actual)
-			{
-				p = 0.0;
-			}
-			else
+			double p = 0.0;
+			if (Car.baseTrain.Handles.EmergencyBrake.Actual == false)
 			{
 				p = brakeHandle.Actual / (double)brakeHandle.MaximumNotch;
 				p *= BrakeCylinder.ServiceMaximumPressure;
