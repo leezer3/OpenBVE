@@ -324,6 +324,8 @@ namespace OpenBve
 				Builder.AppendLine("shadowbias = " + ShadowBias.ToString(Culture));
 				Builder.AppendLine("shadownormalbias = " + ShadowNormalBias.ToString(Culture));
 				Builder.AppendLine("shadowfiltercascades = " + (ShadowFilterCascades ? "true" : "false"));
+				Builder.AppendLine("shadowsmooth = " + (ShadowSmooth ? "true" : "false"));
+				Builder.AppendLine("shadowfilterradius = " + ShadowFilterRadius.ToString(Culture));
 				Builder.AppendLine("fpslimit = " + FPSLimit.ToString(Culture));
 				Builder.AppendLine();
 				Builder.AppendLine("[objectOptimization]");
@@ -537,6 +539,13 @@ namespace OpenBve
 							block.TryGetValue(OptionsKey.ShadowNormalBias, ref CurrentOptions.ShadowNormalBias);
 							if (CurrentOptions.ShadowNormalBias < 0.0) CurrentOptions.ShadowNormalBias = 0.0;
 							block.GetValue(OptionsKey.ShadowFilterCascades, out Interface.CurrentOptions.ShadowFilterCascades);
+							if (block.GetValue(OptionsKey.ShadowSmooth, out string smoothVal))
+							{
+								Interface.CurrentOptions.ShadowSmooth = smoothVal.Trim().Equals("true", StringComparison.OrdinalIgnoreCase) || smoothVal.Trim() == "1";
+							}
+							block.TryGetValue(OptionsKey.ShadowFilterRadius, ref CurrentOptions.ShadowFilterRadius);
+							if (CurrentOptions.ShadowFilterRadius < 0.5) CurrentOptions.ShadowFilterRadius = 0.5;
+							if (CurrentOptions.ShadowFilterRadius > 3.0) CurrentOptions.ShadowFilterRadius = 3.0;
 							block.GetValue(OptionsKey.FPSLimit, out CurrentOptions.FPSLimit);
 							if (CurrentOptions.FPSLimit < 0)
 							{
