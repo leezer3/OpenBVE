@@ -88,6 +88,9 @@ namespace RouteViewer
             this.labelShadowFilterCascades = new System.Windows.Forms.Label();
             this.checkBoxShadowFilterCascades = new System.Windows.Forms.CheckBox();
             this.checkBoxShadowSmooth = new System.Windows.Forms.CheckBox();
+            this.labelShadowSmooth = new System.Windows.Forms.Label();
+            this.labelShadowFilterRadius = new System.Windows.Forms.Label();
+            this.panelShadowSmooth = new System.Windows.Forms.FlowLayoutPanel();
             this.comboboxShadowFilterRadius = new System.Windows.Forms.ComboBox();
             this.labelNearClip = new System.Windows.Forms.Label();
             this.numericUpDownNearClip = new System.Windows.Forms.NumericUpDown();
@@ -560,14 +563,16 @@ namespace RouteViewer
                     { this.numericUpDownShadowBias, 1, 4 },
                     { this.labelShadowNormalBias, 0, 5 },
                     { this.numericUpDownShadowNormalBias, 1, 5 },
-                    { this.checkBoxShadowSmooth, 0, 6 },
-                    { this.comboboxShadowFilterRadius, 1, 6 },
-                    { this.labelShadowFilterCascades, 0, 7 },
-                    { this.checkBoxShadowFilterCascades, 1, 7 },
+                    { this.labelShadowSmooth, 0, 6 },
+                    { this.checkBoxShadowSmooth, 1, 6 },
+                    { this.labelShadowFilterRadius, 0, 7 },
+                    { this.comboboxShadowFilterRadius, 1, 7 },
+                    { this.labelShadowFilterCascades, 0, 8 },
+                    { this.checkBoxShadowFilterCascades, 1, 8 },
                     // Sun Direction
-                    { this.labelSunDirection, 0, 8 },
-                    { this.labelSunAzimuth, 0, 9 },
-                    { this.labelSunElevation, 0, 11 }
+                    { this.labelSunDirection, 0, 9 },
+                    { this.labelSunAzimuth, 0, 10 },
+                    { this.labelSunElevation, 0, 12 }
                 }
             };
             tlpShadows.SetColumnSpan(this.labelSunDirection, 2);
@@ -854,29 +859,46 @@ namespace RouteViewer
             // 
             // labelShadowSmooth
             // 
+            this.labelShadowSmooth.AutoSize = true;
+            this.labelShadowSmooth.Location = new System.Drawing.Point(6, 193);
+            this.labelShadowSmooth.Name = "labelShadowSmooth";
+            this.labelShadowSmooth.Size = new System.Drawing.Size(79, 13);
+            this.labelShadowSmooth.TabIndex = 53;
+            this.labelShadowSmooth.Text = "Smooth shadow";
             // 
-            // checkBoxShadowSmooth
+            // panelShadowSmooth
             // 
             this.checkBoxShadowSmooth.AutoSize = true;
-            this.checkBoxShadowSmooth.Location = new System.Drawing.Point(6, 194);
+            this.checkBoxShadowSmooth.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.checkBoxShadowSmooth.Location = new System.Drawing.Point(160, 193);
             this.checkBoxShadowSmooth.Name = "checkBoxShadowSmooth";
-            this.checkBoxShadowSmooth.Size = new System.Drawing.Size(110, 17);
+            this.checkBoxShadowSmooth.Size = new System.Drawing.Size(15, 14);
             this.checkBoxShadowSmooth.TabIndex = 54;
-            this.checkBoxShadowSmooth.Text = "Smooth shadow";
+            this.checkBoxShadowSmooth.Text = "";
             this.checkBoxShadowSmooth.UseVisualStyleBackColor = true;
             // 
             // comboboxShadowFilterRadius
             // 
             this.comboboxShadowFilterRadius.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboboxShadowFilterRadius.Dock = System.Windows.Forms.DockStyle.None;
             this.comboboxShadowFilterRadius.FormattingEnabled = true;
             this.comboboxShadowFilterRadius.Items.AddRange(new object[] {
             "Low",
             "Medium",
             "High"});
-            this.comboboxShadowFilterRadius.Location = new System.Drawing.Point(160, 194);
+            this.comboboxShadowFilterRadius.Location = new System.Drawing.Point(160, 215);
             this.comboboxShadowFilterRadius.Name = "comboboxShadowFilterRadius";
             this.comboboxShadowFilterRadius.Size = new System.Drawing.Size(120, 21);
             this.comboboxShadowFilterRadius.TabIndex = 55;
+            // 
+            // labelShadowFilterRadius
+            // 
+            this.labelShadowFilterRadius.AutoSize = true;
+            this.labelShadowFilterRadius.Location = new System.Drawing.Point(6, 215);
+            this.labelShadowFilterRadius.Name = "labelShadowFilterRadius";
+            this.labelShadowFilterRadius.Size = new System.Drawing.Size(52, 13);
+            this.labelShadowFilterRadius.TabIndex = 56;
+            this.labelShadowFilterRadius.Text = "Smooth Radius";
             // 
             // labelShadowFilterCascades
             // 
@@ -1105,8 +1127,11 @@ namespace RouteViewer
         private System.Windows.Forms.Label labelShadowNormalBias;
         private System.Windows.Forms.NumericUpDown numericUpDownShadowNormalBias;
         private System.Windows.Forms.CheckBox checkBoxShadowSmooth;
+        private System.Windows.Forms.Label labelShadowSmooth;
+        private System.Windows.Forms.FlowLayoutPanel panelShadowSmooth;
         private System.Windows.Forms.ComboBox comboboxShadowFilterRadius;
         private System.Windows.Forms.Label labelShadowFilterCascades;
+        private System.Windows.Forms.Label labelShadowFilterRadius;
         private System.Windows.Forms.CheckBox checkBoxShadowFilterCascades;
         private System.Windows.Forms.Label labelOptimizeObjects;
         private System.Windows.Forms.ComboBox comboBoxOptimizeObjects;
