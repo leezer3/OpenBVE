@@ -291,6 +291,24 @@ namespace LibRender2.ShadowMapping
 			shader.Activate();
 			shader.SetShadowEnabled(true);
 			shader.SetShadowStrength((float)renderer.currentOptions.ShadowStrength);
+			shader.SetShadowSmooth(renderer.currentOptions.ShadowSmooth);
+			// Auto-scale filter radius by cascade count, shadow distance and resolution
+			// keeps softness perceptually consistent: far distance / few cascades / high res → slightly larger texel radius
+			double baseRadius = renderer.currentOptions.ShadowFilterRadius;
+			double shadowDist = renderer.currentOptions.ShadowDrawDistance == ShadowDistance.ViewingDistance
+				? renderer.currentOptions.ViewingDistance
+				: (double)(int)renderer.currentOptions.ShadowDrawDistance;
+			int optCascadeCount = Math.Max(1, (int)renderer.currentOptions.ShadowCascades);
+			int res = Math.Max(512, (int)renderer.currentOptions.ShadowResolution);
+			double refDistPerCascade = 100.0; // Medium 300 / 3 cascades
+			double actualDistPerCascade = shadowDist / optCascadeCount;
+			double distFactor = Math.Sqrt(actualDistPerCascade / refDistPerCascade);
+			distFactor = Math.Max(0.7, Math.Min(1.8, distFactor));
+			double resFactor = Math.Sqrt((double)res / 2048.0);
+			resFactor = Math.Max(0.7, Math.Min(1.4, resFactor));
+			double effectiveRadius = baseRadius * distFactor * resFactor;
+			effectiveRadius = Math.Max(0.5, Math.Min(3.0, effectiveRadius));
+			shader.SetShadowFilterRadius((float)effectiveRadius);
 			shader.SetCurrentViewMatrix(renderer.CurrentViewMatrix);
 
 			Map.BindAllCascadesForReading(TextureUnit.Texture4);
