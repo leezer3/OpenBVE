@@ -45,6 +45,8 @@ namespace LibRender2.Shaders
 		private readonly int uShadowEnabledLocation;
 		private readonly int uShadowStrengthLocation;
 		private readonly int uShadowCascadeCountLocation;
+		private readonly int uShadowSmoothLocation;
+		private readonly int uShadowFilterRadiusLocation;
 		private readonly int uShadowMap0Location;
 		private readonly int uShadowMap1Location;
 		private readonly int uShadowMap2Location;
@@ -81,6 +83,8 @@ namespace LibRender2.Shaders
 			uShadowEnabledLocation = GL.GetUniformLocation(Handle, "uShadowEnabled");
 			uShadowStrengthLocation = GL.GetUniformLocation(Handle, "uShadowStrength");
 			uShadowCascadeCountLocation = GL.GetUniformLocation(Handle, "uShadowCascadeCount");
+			uShadowSmoothLocation = GL.GetUniformLocation(Handle, "uShadowSmooth");
+			uShadowFilterRadiusLocation = GL.GetUniformLocation(Handle, "uShadowFilterRadius");
 			uShadowMap0Location = GL.GetUniformLocation(Handle, "uShadowMap0");
 			uShadowMap1Location = GL.GetUniformLocation(Handle, "uShadowMap1");
 			uShadowMap2Location = GL.GetUniformLocation(Handle, "uShadowMap2");
@@ -117,6 +121,8 @@ namespace LibRender2.Shaders
 			GL.ProgramUniform1(Handle, uShadowEnabledLocation, 0);
 			GL.ProgramUniform1(Handle, uShadowCascadeCountLocation, 0);
 			GL.ProgramUniform1(Handle, uShadowStrengthLocation, 1.0f);
+			if (uShadowSmoothLocation != -1) GL.ProgramUniform1(Handle, uShadowSmoothLocation, 1);
+			if (uShadowFilterRadiusLocation != -1) GL.ProgramUniform1(Handle, uShadowFilterRadiusLocation, 1.5f);
 		}
 		
 		public VertexLayout GetVertexLayout()
@@ -512,6 +518,16 @@ namespace LibRender2.Shaders
 		public void SetShadowStrength(float strength)
 		{
 			GL.ProgramUniform1(Handle, uShadowStrengthLocation, strength);
+		}
+
+		public void SetShadowSmooth(bool smooth)
+		{
+			if (uShadowSmoothLocation != -1) GL.ProgramUniform1(Handle, uShadowSmoothLocation, smooth ? 1 : 0);
+		}
+
+		public void SetShadowFilterRadius(float radius)
+		{
+			if (uShadowFilterRadiusLocation != -1) GL.ProgramUniform1(Handle, uShadowFilterRadiusLocation, radius);
 		}
 
 		public void SetCurrentViewMatrix(OpenBveApi.Math.Matrix4D viewMatrix)
