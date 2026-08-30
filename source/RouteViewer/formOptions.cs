@@ -81,13 +81,17 @@ namespace RouteViewer
             numericUpDownShadowNormalBias.Value = (decimal)Interface.CurrentOptions.ShadowNormalBias;
             numericUpDownShadowNormalBias.Refresh();
 
+            if (Interface.CurrentOptions.ShadowFilterRadius < 1.25) comboboxShadowFilterRadius.SelectedIndex = 0;
+            else if (Interface.CurrentOptions.ShadowFilterRadius < 2.0) comboboxShadowFilterRadius.SelectedIndex = 1;
+            else comboboxShadowFilterRadius.SelectedIndex = 2;
+
 
             // Initialize sun direction sliders from current light position
             InitializeSunSliders();
 
             // Wire up shadow resolution change to enable/disable related controls
             comboBoxShadowResolution.SelectedIndexChanged += comboBoxShadowResolution_SelectedIndexChanged;
-            UpdateShadowControlsEnabled();
+            checkBoxShadowSmooth.CheckedChanged += (s, e) => UpdateShadowControlsEnabled();
 			numericUpDownViewingDistance.Value = Math.Min(Interface.CurrentOptions.ViewingDistance, numericUpDownViewingDistance.Maximum);
 			numericUpDownNearClip.Value = (decimal)Interface.CurrentOptions.NearClipBase;
 			if (Translations.CurrentLanguageCode != "en-US")
@@ -95,6 +99,8 @@ namespace RouteViewer
 				labelNearClip.Text = Translations.GetInterfaceString(OpenBveApi.Hosts.HostApplication.OpenBve, new[] { "options", "quality_distance_nearclip" });
 			}
 			checkBoxShadowFilterCascades.Checked = Interface.CurrentOptions.ShadowFilterCascades;
+			checkBoxShadowSmooth.Checked = Interface.CurrentOptions.ShadowSmooth;
+			UpdateShadowControlsEnabled();
 
 			// VSync and FPS Limit
 			comboBoxVSync.SelectedIndex = Interface.CurrentOptions.VerticalSynchronization ? 1 : 0;
@@ -231,6 +237,8 @@ namespace RouteViewer
             // Sun position is independent of shadows and must stay enabled for realtime preview
             trackBarSunAzimuth.Enabled = true;
             trackBarSunElevation.Enabled = true;
+            checkBoxShadowSmooth.Enabled = enabled;
+            comboboxShadowFilterRadius.Enabled = enabled && checkBoxShadowSmooth.Checked;
             checkBoxShadowFilterCascades.Enabled = enabled;
         }
 
@@ -569,6 +577,8 @@ namespace RouteViewer
             Interface.CurrentOptions.ShadowBias = (double)numericUpDownShadowBias.Value;
             Interface.CurrentOptions.ShadowNormalBias = (double)numericUpDownShadowNormalBias.Value;
             Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
+            Interface.CurrentOptions.ShadowSmooth = checkBoxShadowSmooth.Checked;
+            Interface.CurrentOptions.ShadowFilterRadius = comboboxShadowFilterRadius.SelectedIndex == 0 ? 1.0 : comboboxShadowFilterRadius.SelectedIndex == 2 ? 2.5 : 1.5;
 
 			// VSync and FPS Limit
 			Interface.CurrentOptions.VerticalSynchronization = comboBoxVSync.SelectedIndex == 1;
@@ -596,7 +606,8 @@ namespace RouteViewer
 			// the old values here.)
 			bool shadowChanged = Program.PrevShadowResolution != Interface.CurrentOptions.ShadowResolution || Program.PrevShadowDistance != Interface.CurrentOptions.ShadowDrawDistance || Program.PrevShadowCascades != Interface.CurrentOptions.ShadowCascades ||
 			    Program.PrevShadowStrength != Interface.CurrentOptions.ShadowStrength || Program.PrevShadowBias != Interface.CurrentOptions.ShadowBias || Program.PrevShadowNormalBias != Interface.CurrentOptions.ShadowNormalBias ||
-			    Program.PrevShadowFilterCascades != Interface.CurrentOptions.ShadowFilterCascades;
+			    Program.PrevShadowFilterCascades != Interface.CurrentOptions.ShadowFilterCascades ||
+			    Program.PrevShadowSmooth != Interface.CurrentOptions.ShadowSmooth || Program.PrevShadowFilterRadius != Interface.CurrentOptions.ShadowFilterRadius;
 			if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnisotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel || GraphicsModeChanged || Interface.CurrentOptions.ViewingDistance != previousViewingDistance ||
 			    shadowChanged ||
 			    Interface.CurrentOptions.NearClipBase != previousNearClipBase)
