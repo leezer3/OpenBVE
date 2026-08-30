@@ -1031,7 +1031,7 @@ namespace OpenBve
 					case Translations.Command.MiscMute:
 						// mute
 						Program.Sounds.GlobalMute = !Program.Sounds.GlobalMute;
-						Program.Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
+						Program.Sounds.Update(TimeElapsed);
 						break;
 					case Translations.Command.RouteInformation:
 						Game.RouteInfoOverlay.ProcessCommand(Translations.Command.RouteInformation);

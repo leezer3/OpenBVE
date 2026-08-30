@@ -60,7 +60,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sounds.Options.cs" />
     <Compile Include="Sounds.SoundBuffer.cs" />
-    <Compile Include="Sounds.SoundModels.cs" />
     <Compile Include="Sounds.SoundSource.cs" />
     <Compile Include="Sounds.SoundBuffer.States.cs" />
     <Compile Include="Sounds.Update.cs" />

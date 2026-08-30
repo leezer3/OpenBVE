@@ -266,7 +266,7 @@ namespace OpenBve
 				Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight, Program.CurrentRoute.LightDefinitions);
 			}
 			Program.Renderer.RenderScene(TimeElapsed, RealTimeElapsed);
-			Program.Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
+			Program.Sounds.Update(TimeElapsed);
 			Program.Renderer.GameWindow.SwapBuffers();
 			Game.UpdateBlackBox();
 			// pause/menu

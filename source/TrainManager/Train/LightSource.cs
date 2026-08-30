@@ -12,7 +12,7 @@ namespace TrainManager.Trains
 		/// <summary>The sound buffer for the switch sound</summary>
 		public SoundBuffer SwitchSoundBuffer;
 
-		private TrainBase baseTrain;
+		private readonly TrainBase baseTrain;
 
 		/// <summary>Creates a new light source</summary>
 		/// /// <param name="train">The base train</param>

@@ -228,7 +228,7 @@ namespace Formats.OpenBve
 				
 				if (!IsB3D)
 				{
-					if (splitLine.Length > 4 && Lines.Count > 1000)
+					if (splitLine.Length > 4 && Lines.Count < 1000)
 					{
 						for (int j = 4; j < splitLine.Length; j++)
 						{
