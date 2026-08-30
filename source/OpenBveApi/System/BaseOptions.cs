@@ -94,6 +94,10 @@ namespace OpenBveApi
 		public double ShadowNormalBias = 2.0;
 		/// <summary>Whether to filter shadow casters per cascade to improve performance.</summary>
 		public bool ShadowFilterCascades = true;
+		/// <summary>Whether smooth (Vogel disk + IGN) shadow filtering is enabled. If false, sharp 4-tap grid is used.</summary>
+		public bool ShadowSmooth = true;
+		/// <summary>Shadow filter radius in texels for smooth mode (1.0 = sharper, 2.5 = softer).</summary>
+		public double ShadowFilterRadius = 1.5;
 
 
 		/// <summary>The sun azimuth in degrees</summary>
