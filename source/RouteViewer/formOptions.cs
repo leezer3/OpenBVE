@@ -76,13 +76,17 @@ namespace RouteViewer
             numericUpDownShadowNormalBias.Value = (decimal)Interface.CurrentOptions.ShadowNormalBias;
             numericUpDownShadowNormalBias.Refresh();
 
+            if (Interface.CurrentOptions.ShadowFilterRadius < 1.25) comboboxShadowFilterRadius.SelectedIndex = 0;
+            else if (Interface.CurrentOptions.ShadowFilterRadius < 2.0) comboboxShadowFilterRadius.SelectedIndex = 1;
+            else comboboxShadowFilterRadius.SelectedIndex = 2;
+
 
             // Initialize sun direction sliders from current light position
             InitializeSunSliders();
 
             // Wire up shadow resolution change to enable/disable related controls
             comboBoxShadowResolution.SelectedIndexChanged += comboBoxShadowResolution_SelectedIndexChanged;
-            UpdateShadowControlsEnabled();
+            checkBoxShadowSmooth.CheckedChanged += (s, e) => UpdateShadowControlsEnabled();
 			numericUpDownViewingDistance.Value = Math.Min(Interface.CurrentOptions.ViewingDistance, numericUpDownViewingDistance.Maximum);
 			numericUpDownNearClip.Value = (decimal)Interface.CurrentOptions.NearClipBase;
 			if (Translations.CurrentLanguageCode != "en-US")
@@ -90,6 +94,8 @@ namespace RouteViewer
 				labelNearClip.Text = Translations.GetInterfaceString(OpenBveApi.Hosts.HostApplication.OpenBve, new[] { "options", "quality_distance_nearclip" });
 			}
 			checkBoxShadowFilterCascades.Checked = Interface.CurrentOptions.ShadowFilterCascades;
+			checkBoxShadowSmooth.Checked = Interface.CurrentOptions.ShadowSmooth;
+			UpdateShadowControlsEnabled();
 
 			// VSync and FPS Limit
 			comboBoxVSync.SelectedIndex = Interface.CurrentOptions.VerticalSynchronization ? 1 : 0;
@@ -126,6 +132,8 @@ namespace RouteViewer
 
             trackBarSunAzimuth.Enabled = enabled;
             trackBarSunElevation.Enabled = enabled;
+            checkBoxShadowSmooth.Enabled = enabled;
+            comboboxShadowFilterRadius.Enabled = enabled && checkBoxShadowSmooth.Checked;
             checkBoxShadowFilterCascades.Enabled = enabled;
         }
 
@@ -201,6 +209,8 @@ namespace RouteViewer
 	        double previousShadowBias = Interface.CurrentOptions.ShadowBias;
 	        double previousShadowNormalBias = Interface.CurrentOptions.ShadowNormalBias;
 	        bool previousShadowFilterCascades = Interface.CurrentOptions.ShadowFilterCascades;
+	        bool previousShadowSmooth = Interface.CurrentOptions.ShadowSmooth;
+	        double previousShadowFilterRadius = Interface.CurrentOptions.ShadowFilterRadius;
 
 			//Interpolation mode
 			InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
@@ -320,6 +330,8 @@ namespace RouteViewer
             Interface.CurrentOptions.ShadowBias = (double)numericUpDownShadowBias.Value;
             Interface.CurrentOptions.ShadowNormalBias = (double)numericUpDownShadowNormalBias.Value;
             Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
+            Interface.CurrentOptions.ShadowSmooth = checkBoxShadowSmooth.Checked;
+            Interface.CurrentOptions.ShadowFilterRadius = comboboxShadowFilterRadius.SelectedIndex == 0 ? 1.0 : comboboxShadowFilterRadius.SelectedIndex == 2 ? 2.5 : 1.5;
 
 			// VSync and FPS Limit
 			Interface.CurrentOptions.VerticalSynchronization = comboBoxVSync.SelectedIndex == 1;
@@ -345,7 +357,7 @@ namespace RouteViewer
 			if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnisotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel || GraphicsModeChanged || Interface.CurrentOptions.ViewingDistance != previousViewingDistance ||
 			    previousShadowResolution != Interface.CurrentOptions.ShadowResolution || previousShadowDistance != Interface.CurrentOptions.ShadowDrawDistance || previousShadowCascades != Interface.CurrentOptions.ShadowCascades ||
 			    previousShadowStrength != Interface.CurrentOptions.ShadowStrength || previousShadowBias != Interface.CurrentOptions.ShadowBias || previousShadowNormalBias != Interface.CurrentOptions.ShadowNormalBias || 
-			    Interface.CurrentOptions.NearClipBase != previousNearClipBase || previousShadowFilterCascades != Interface.CurrentOptions.ShadowFilterCascades)
+			    Interface.CurrentOptions.NearClipBase != previousNearClipBase || previousShadowFilterCascades != Interface.CurrentOptions.ShadowFilterCascades || previousShadowSmooth != Interface.CurrentOptions.ShadowSmooth || previousShadowFilterRadius != Interface.CurrentOptions.ShadowFilterRadius)
 			{
 				DialogResult = DialogResult.OK;
 			}
