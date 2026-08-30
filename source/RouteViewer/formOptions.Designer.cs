@@ -87,6 +87,8 @@ namespace RouteViewer
             this.numericUpDownShadowNormalBias = new System.Windows.Forms.NumericUpDown();
             this.labelShadowFilterCascades = new System.Windows.Forms.Label();
             this.checkBoxShadowFilterCascades = new System.Windows.Forms.CheckBox();
+            this.checkBoxShadowSmooth = new System.Windows.Forms.CheckBox();
+            this.comboboxShadowFilterRadius = new System.Windows.Forms.ComboBox();
             this.labelNearClip = new System.Windows.Forms.Label();
             this.numericUpDownNearClip = new System.Windows.Forms.NumericUpDown();
             this.button1 = new System.Windows.Forms.Button();
@@ -558,12 +560,14 @@ namespace RouteViewer
                     { this.numericUpDownShadowBias, 1, 4 },
                     { this.labelShadowNormalBias, 0, 5 },
                     { this.numericUpDownShadowNormalBias, 1, 5 },
-                    { this.labelShadowFilterCascades, 0, 6 },
-                    { this.checkBoxShadowFilterCascades, 1, 6 },
+                    { this.checkBoxShadowSmooth, 0, 6 },
+                    { this.comboboxShadowFilterRadius, 1, 6 },
+                    { this.labelShadowFilterCascades, 0, 7 },
+                    { this.checkBoxShadowFilterCascades, 1, 7 },
                     // Sun Direction
-                    { this.labelSunDirection, 0, 7 },
-                    { this.labelSunAzimuth, 0, 8 },
-                    { this.labelSunElevation, 0, 10 }
+                    { this.labelSunDirection, 0, 8 },
+                    { this.labelSunAzimuth, 0, 9 },
+                    { this.labelSunElevation, 0, 11 }
                 }
             };
             tlpShadows.SetColumnSpan(this.labelSunDirection, 2);
@@ -586,7 +590,7 @@ namespace RouteViewer
                 }
             };
             this.trackBarSunAzimuth.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            tlpShadows.Controls.Add(panelAzimuth, 0, 9);
+            tlpShadows.Controls.Add(panelAzimuth, 0, 10);
             tlpShadows.SetColumnSpan(panelAzimuth, 2);
             var panelElevation = new System.Windows.Forms.TableLayoutPanel
             {
@@ -605,7 +609,7 @@ namespace RouteViewer
                 }
             };
             this.trackBarSunElevation.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            tlpShadows.Controls.Add(panelElevation, 0, 11);
+            tlpShadows.Controls.Add(panelElevation, 0, 12);
             tlpShadows.SetColumnSpan(panelElevation, 2);
             this.tabPageShadows.Controls.Add(tlpShadows);
             this.tabPageShadows.Location = new System.Drawing.Point(4, 22);
@@ -848,23 +852,49 @@ namespace RouteViewer
             0,
             0});
             // 
+            // labelShadowSmooth
+            // 
+            // 
+            // checkBoxShadowSmooth
+            // 
+            this.checkBoxShadowSmooth.AutoSize = true;
+            this.checkBoxShadowSmooth.Location = new System.Drawing.Point(6, 194);
+            this.checkBoxShadowSmooth.Name = "checkBoxShadowSmooth";
+            this.checkBoxShadowSmooth.Size = new System.Drawing.Size(110, 17);
+            this.checkBoxShadowSmooth.TabIndex = 54;
+            this.checkBoxShadowSmooth.Text = "Smooth shadow";
+            this.checkBoxShadowSmooth.UseVisualStyleBackColor = true;
+            // 
+            // comboboxShadowFilterRadius
+            // 
+            this.comboboxShadowFilterRadius.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboboxShadowFilterRadius.FormattingEnabled = true;
+            this.comboboxShadowFilterRadius.Items.AddRange(new object[] {
+            "Low",
+            "Medium",
+            "High"});
+            this.comboboxShadowFilterRadius.Location = new System.Drawing.Point(160, 194);
+            this.comboboxShadowFilterRadius.Name = "comboboxShadowFilterRadius";
+            this.comboboxShadowFilterRadius.Size = new System.Drawing.Size(120, 21);
+            this.comboboxShadowFilterRadius.TabIndex = 55;
+            // 
             // labelShadowFilterCascades
             // 
             this.labelShadowFilterCascades.AutoSize = true;
-            this.labelShadowFilterCascades.Location = new System.Drawing.Point(6, 194);
+            this.labelShadowFilterCascades.Location = new System.Drawing.Point(6, 215);
             this.labelShadowFilterCascades.Name = "labelShadowFilterCascades";
             this.labelShadowFilterCascades.Size = new System.Drawing.Size(126, 13);
-            this.labelShadowFilterCascades.TabIndex = 54;
+            this.labelShadowFilterCascades.TabIndex = 56;
             this.labelShadowFilterCascades.Text = "Per-cascade culling:";
             // 
             // checkBoxShadowFilterCascades
             // 
             this.checkBoxShadowFilterCascades.Dock = System.Windows.Forms.DockStyle.Fill;
             this.checkBoxShadowFilterCascades.AutoSize = true;
-            this.checkBoxShadowFilterCascades.Location = new System.Drawing.Point(160, 194);
+            this.checkBoxShadowFilterCascades.Location = new System.Drawing.Point(160, 215);
             this.checkBoxShadowFilterCascades.Name = "checkBoxShadowFilterCascades";
             this.checkBoxShadowFilterCascades.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxShadowFilterCascades.TabIndex = 55;
+            this.checkBoxShadowFilterCascades.TabIndex = 57;
             this.checkBoxShadowFilterCascades.UseVisualStyleBackColor = true;
             // 
             // labelNearClip
@@ -1074,6 +1104,8 @@ namespace RouteViewer
         private System.Windows.Forms.NumericUpDown numericUpDownShadowBias;
         private System.Windows.Forms.Label labelShadowNormalBias;
         private System.Windows.Forms.NumericUpDown numericUpDownShadowNormalBias;
+        private System.Windows.Forms.CheckBox checkBoxShadowSmooth;
+        private System.Windows.Forms.ComboBox comboboxShadowFilterRadius;
         private System.Windows.Forms.Label labelShadowFilterCascades;
         private System.Windows.Forms.CheckBox checkBoxShadowFilterCascades;
         private System.Windows.Forms.Label labelOptimizeObjects;
