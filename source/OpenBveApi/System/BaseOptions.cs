@@ -76,8 +76,6 @@ namespace OpenBveApi
 		 */
 		/// <summary>The minimum number of vertices for basic optimisation to be performed on an object</summary>
 		public int ObjectOptimizationBasicThreshold;
-		/// <summary>The minimum number of vertices for full optimisation to be performed on an object</summary>
-		public int ObjectOptimizationFullThreshold;
 		/// <summary>The maximum number of sounds playing at any one time</summary>
 		public int SoundNumber;
 		/// <summary>Shadow map resolution per cascade. Off disables shadows.</summary>

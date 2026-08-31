@@ -146,7 +146,6 @@ namespace OpenBve
 				ShowWarningMessages = true;
 				ShowErrorMessages = true;
 				ObjectOptimizationBasicThreshold = 10000;
-				ObjectOptimizationFullThreshold = 1000;
 				ObjectOptimizationVertexCulling = false;
 				RouteFolder = "";
 				TrainFolder = "";
@@ -325,7 +324,6 @@ namespace OpenBve
 				Builder.AppendLine();
 				Builder.AppendLine("[objectOptimization]");
 				Builder.AppendLine("basicThreshold = " + ObjectOptimizationBasicThreshold.ToString(Culture));
-				Builder.AppendLine("fullThreshold = " + ObjectOptimizationFullThreshold.ToString(Culture));
 				Builder.AppendLine("vertexCulling = " + ObjectOptimizationVertexCulling.ToString(Culture));
 				Builder.AppendLine();
 				Builder.AppendLine("[simulation]");
@@ -544,7 +542,6 @@ namespace OpenBve
 						case OptionsSection.ObjectOptimization:
 						{
 							block.GetValue(OptionsKey.BasicThreshold, out CurrentOptions.ObjectOptimizationBasicThreshold);
-							block.GetValue(OptionsKey.FullThreshold, out CurrentOptions.ObjectOptimizationFullThreshold);
 							block.GetValue(OptionsKey.VertexCulling, out CurrentOptions.ObjectOptimizationVertexCulling);
 							break;
 						}
