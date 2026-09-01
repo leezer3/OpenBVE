@@ -36,6 +36,9 @@ namespace LibRender2.Textures
 		public static long UploadMs;
 
 		private static Dictionary<TextureOrigin, Texture> animatedTextures;
+		// Reused buffer for paletted GIF to avoid per-frame new byte[] leak (Can get StackOverflow in glTexSubImage2D)
+		private static byte[] _palettedExpandBuffer;
+		private static readonly object _expandLock = new object();
 
 		/// <summary>Holds the registered path-based textures, indexed by path.</summary>
 		private static readonly Dictionary<string, List<Texture>> RegisteredTextureLookup = new Dictionary<string, List<Texture>>(StringComparer.OrdinalIgnoreCase);
@@ -227,10 +230,36 @@ namespace LibRender2.Textures
 			{
 				if (!animatedTextures.TryGetValue(handle.Origin, out texture))
 				{
-					if (!handle.Origin.GetTexture(out texture))
+					// Reuse register-time decode from textureCache where possible to avoid decoding the same large animated GIF twice (2× memory). See RegisterTexture pre-seed at line 136.
+					lock (TextureLookupLock)
 					{
-						//Loading animated texture barfed
-						return false;
+						if (textureCache.TryGetValue(handle.Origin, out Texture cachedTexture) && cachedTexture.MultipleFrames)
+						{
+							PathOrigin cachedPathOrigin = cachedTexture.Origin as PathOrigin;
+							PathOrigin handlePathOrigin = handle.Origin as PathOrigin;
+							// PathOrigin equality is path-only, so check Parameters explicitly; ByteArrayOrigin path never hits here (handled below)
+							if (cachedPathOrigin != null && handlePathOrigin != null)
+							{
+								if (cachedPathOrigin.Parameters == handlePathOrigin.Parameters)
+									texture = cachedTexture;
+							}
+							else if (handle.Origin is ByteArrayOrigin || cachedTexture.Origin is ByteArrayOrigin)
+							{
+								texture = cachedTexture;
+							}
+							else if (cachedPathOrigin == null && handlePathOrigin == null)
+							{
+								texture = cachedTexture;
+							}
+						}
+					}
+					if (texture == null)
+					{
+						if (!handle.Origin.GetTexture(out texture))
+						{
+							//Loading animated texture barfed
+							return false;
+						}
 					}
 					animatedTextures.Add(handle.Origin, texture);
 				}
@@ -239,9 +268,76 @@ namespace LibRender2.Textures
 				int elapsedFrames = (int)(elapsedTime / texture.FrameInterval);
 				if (elapsedFrames > 0)
 				{
+					int oldFrame = texture.CurrentFrame;
 					texture.CurrentFrame += elapsedFrames;
 					texture.CurrentFrame %= texture.TotalFrames;
 					handle.LastAccess = currentTicks;
+					// If frame changed and GL texture already uploaded, update in-place via TexSubImage2D to avoid creating a lot of GL calls and per-frame alloc leak
+					if (oldFrame != texture.CurrentFrame && texture.OpenGlTextures[(int)wrap].Valid && handle.OpenGlTextures[(int)wrap].Valid)
+					{
+						// Reuse same GL name across frames, update existing texture
+						GL.BindTexture(TextureTarget.Texture2D, handle.OpenGlTextures[(int)wrap].Name);
+						byte[] subBytes = texture.Bytes; // current frame's bytes (paletted or RGBA)
+						// For paletted, expand via reused static buffer to avoid per-frame new byte[] GC pressure. (I think this how web browser do frame discarding)
+						if (texture.PixelFormat == PixelFormat.Paletted)
+						{
+							bool opaque = texture.GetTransparencyType() == TextureTransparencyType.Opaque;
+							int need = texture.Width * texture.Height * (opaque ? 3 : 4);
+							byte[] pooled;
+							lock (_expandLock)
+							{
+								if (_palettedExpandBuffer == null || _palettedExpandBuffer.Length < need) _palettedExpandBuffer = new byte[need];
+								pooled = _palettedExpandBuffer;
+							}
+							var pal = texture.Palette32;
+							if (opaque)
+							{
+								for (int p = 0; p < texture.Width * texture.Height; p++)
+								{
+									int idx = subBytes[p] & 0xFF;
+									var c = pal != null && idx < pal.Length ? pal[idx] : new OpenBveApi.Colors.Color32(0,0,0,255);
+									pooled[p*3] = c.R; pooled[p*3+1] = c.G; pooled[p*3+2] = c.B;
+								}
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
+								GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.Width, texture.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgb, PixelType.UnsignedByte, pooled);
+							}
+							else
+							{
+								for (int p = 0; p < texture.Width * texture.Height; p++)
+								{
+									int idx = subBytes[p] & 0xFF;
+									var c = pal != null && idx < pal.Length ? pal[idx] : new OpenBveApi.Colors.Color32(0,0,0,255);
+									pooled[p*4] = c.R; pooled[p*4+1] = c.G; pooled[p*4+2] = c.B; pooled[p*4+3] = c.A;
+								}
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
+								GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.Width, texture.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, pooled);
+							}
+							GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+						}
+						else
+						{
+							// RGB/RGBA direct – no expansion
+							if (texture.PixelFormat == PixelFormat.RGBAlpha || texture.GetTransparencyType() != TextureTransparencyType.Opaque)
+							{
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
+								GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.Width, texture.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, subBytes);
+							}
+							else if (texture.PixelFormat == PixelFormat.RGB)
+							{
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
+								GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.Width, texture.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgb, PixelType.UnsignedByte, subBytes);
+							}
+							else
+							{
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
+								GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.Width, texture.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, subBytes);
+							}
+							GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+						}
+						// Keep handle in sync – both point to same GL call
+						handle = texture;
+						return true;
+					}
 				}
 			}
 			else
@@ -282,11 +378,29 @@ namespace LibRender2.Textures
 					Texture cachedTexture;
 					if (textureCache.TryGetValue(handle.Origin, out cachedTexture))
 					{
-						PathOrigin cachedPathOrigin = cachedTexture.Origin as PathOrigin;
-						PathOrigin handlePathOrigin = handle.Origin as PathOrigin;
-						if (cachedPathOrigin != null && handlePathOrigin != null && cachedPathOrigin.Parameters == handlePathOrigin.Parameters)
+						// The cache value is the DecodedTexture (ByteArrayOrigin) created at registration – its Origin is not PathOrigin,
+						// so the original check (cachedPathOrigin != null) never succeeds for decoded GIFs and caused a second decode (2× memory).
+						// Reuse if the cached entry is animated (GIF video) or its ByteArrayOrigin, and parameters match (or both null).
+						if (cachedTexture.MultipleFrames)
 						{
+							// Animated: reuse single copy to halve memory usage for large GIFs
 							texture = cachedTexture;
+						}
+						else
+						{
+							PathOrigin cachedPathOrigin = cachedTexture.Origin as PathOrigin;
+							PathOrigin handlePathOrigin = handle.Origin as PathOrigin;
+							if (cachedPathOrigin != null && handlePathOrigin != null && cachedPathOrigin.Parameters == handlePathOrigin.Parameters)
+							{
+								texture = cachedTexture;
+							}
+							else if (cachedTexture.Origin is ByteArrayOrigin && handlePathOrigin != null)
+							{
+								// DecodedTexture path: key's Parameters are in handle.Origin; value has no Parameters to compare.
+								// Reuse when handle has no special parameters to avoid duplicate decode.
+								if (handlePathOrigin.Parameters == null)
+									texture = cachedTexture;
+							}
 						}
 					}
 				}
@@ -373,6 +487,21 @@ namespace LibRender2.Textures
 					{
 						switch (texture.PixelFormat)
 						{
+							case PixelFormat.Paletted:
+								{
+									// Expand indexed to RGB (alpha discarded for opaque)
+									byte[] expanded = new byte[texture.Width * texture.Height * 3];
+									var pal = texture.Palette32;
+									for (int p = 0; p < texture.Width * texture.Height; p++)
+									{
+										int idx = textureBytes[p] & 0xFF;
+										var c = pal != null && idx < pal.Length ? pal[idx] : new OpenBveApi.Colors.Color32(0,0,0,255);
+										expanded[p*3] = c.R; expanded[p*3+1] = c.G; expanded[p*3+2] = c.B;
+									}
+									GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
+									GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb8, texture.Width, texture.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Rgb, PixelType.UnsignedByte, expanded);
+									break;
+								}
 							case PixelFormat.Grayscale:
 								// send as is to the luminance channel [NOTE: deprecated in GL4, so use Red channel instead]
 								// n.b. Make sure to set the unpack alignment as otherwise we corrupt textures where stride > width
@@ -417,6 +546,20 @@ namespace LibRender2.Textures
 					{
 						switch (texture.PixelFormat)
 						{
+						case PixelFormat.Paletted:
+							{
+								byte[] expanded = new byte[texture.Width * texture.Height * 4];
+								var pal = texture.Palette32;
+								for (int p = 0; p < texture.Width * texture.Height; p++)
+								{
+									int idx = textureBytes[p] & 0xFF;
+									var c = pal != null && idx < pal.Length ? pal[idx] : new OpenBveApi.Colors.Color32(0,0,0,255);
+									expanded[p*4] = c.R; expanded[p*4+1] = c.G; expanded[p*4+2] = c.B; expanded[p*4+3] = c.A;
+								}
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
+								GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, texture.Width, texture.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, expanded);
+								break;
+							}
 						case PixelFormat.GrayscaleAlpha:
 							// NOTE: LuminanceAlpha is deprecated in GL4, so just upconvert to RGBA
 							if (noLuminanceChannel)
