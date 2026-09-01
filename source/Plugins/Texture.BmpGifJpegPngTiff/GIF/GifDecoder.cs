@@ -28,6 +28,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
 namespace Plugin.GIF
@@ -56,10 +57,20 @@ namespace Plugin.GIF
 		protected int[] localColorTable;
 		/// <summary>Gets the active color table</summary>
 		protected int[] activeColorTable => lctFlag ? localColorTable : globalColorTable;
+		/// <summary>Stores the global palette as 32-bit colors (for paletted output)</summary>
+		protected Color32[] globalPalette32;
+		/// <summary>Unified palette for paletted output (global + merged locals)</summary>
+		protected Color32[] unifiedPalette;
+		/// <summary>Map from packed ARGB to unified palette index</summary>
+		protected Dictionary<int,int> paletteMap;
+		private static int PackColor(Color32 c) => (c.A << 24) | (c.R << 16) | (c.G << 8) | c.B;
+		private static int PackColor(byte r, byte g, byte b, byte a) => (a << 24) | (r << 16) | (g << 8) | b;
 		/// <summary>The index of the background color within the global color table</summary>
 		protected int bgIndex;
+		protected byte bgIndexByte;
 		protected int bgColor; // background color
 		protected int lastBgColor; // previous bg color
+		protected byte lastBgIndex;
 		/// <summary>The pixel aspect ratio</summary>
 		protected int pixelAspect;
 		/// <summary>Whether the local color table is in use</summary>
@@ -73,6 +84,15 @@ namespace Plugin.GIF
 		protected int[] image; // current frame
 		protected int[] bitmap;
 		protected int[] lastImage; // previous frame
+		/// <summary>Indexed (1 Bpp) storage for paletted optimization</summary>
+		protected byte[] imageBytes;
+		protected byte[] bitmapBytes;
+		protected byte[] lastImageBytes;
+		/// <summary>Whether to use paletted (indexed) storage</summary>
+		protected bool usePaletted = true;
+		protected bool hasLocalPalette = false;
+		/// <summary>Reusable remap table for local-to-unified palette mapping (avoids per-frame allocation)</summary>
+		protected byte[] remapTable;
 
 		protected byte[] block = new byte[256]; // current data block
 		protected int blockSize; // block size
@@ -94,6 +114,8 @@ namespace Plugin.GIF
 		protected byte[] pixels;
 
 		protected List<int[]> frames;
+		/// <summary>Indexed frames for paletted output (1 byte per pixel)</summary>
+		protected List<byte[]> indexedFrames;
 		protected List<int> delays;
 
 		protected int frameCount;
@@ -116,7 +138,139 @@ namespace Plugin.GIF
 		{
 			return frameCount;
 		}
+
+		/// <summary>Gets palette for paletted output (Color32 with alpha)</summary>
+		public Color32[] GetPalette()
+		{
+			if (unifiedPalette != null) return unifiedPalette;
+			if (globalPalette32 != null) return globalPalette32;
+			return null;
+		}
+
+		/// <summary>Gets an indexed frame (1 byte per pixel) for paletted output</summary>
+		public byte[] GetIndexedFrame(int n)
+		{
+			if (n >= 0 && n < frameCount && indexedFrames != null && n < indexedFrames.Count) return indexedFrames[n];
+			return null;
+		}
 		
+		/// <summary>Sets the pixels for a GIF frame, indexed version (1 Bpp) for paletted optimization</summary>
+		protected void SetPixelsIndexed() 
+		{
+			byte[] dest = new byte[width * height];
+			byte bg = bgIndexByte;
+			bool hasPrev = lastDispose > DisposeMode.NoAction && bitmapBytes != null;
+			if (hasPrev)
+			{
+				Array.Copy(bitmapBytes, dest, bitmapBytes.Length);
+				if (lastDispose == DisposeMode.RestoreToPrevious)
+				{
+					int n = frameCount - 2;
+					byte[] prev = n > 0 ? GetIndexedFrame(n - 1) : null;
+					if (prev != null) lastImageBytes = prev;
+				}
+				if (lastImageBytes != null) 
+				{
+					if (lastDispose == DisposeMode.RestoreToBackground) 
+					{
+						int startX = (int)imagePosition.X;
+						int startY = (int)imagePosition.Y;
+						int w = (int)imageSize.X;
+						int h = (int)imageSize.Y;
+						for (int y = 0; y < h; y++)
+						{
+							int line = startY + y;
+							if (line < 0 || line >= height) continue;
+							int baseIdx = line * width + startX;
+							for (int x = 0; x < w; x++)
+							{
+								if (baseIdx + x >= 0 && baseIdx + x < dest.Length)
+									dest[baseIdx + x] = bg;
+							}
+						}
+					}
+					else
+					{
+						Array.Copy(lastImageBytes, 0, dest, 0, Math.Min(lastImageBytes.Length, dest.Length));
+						Array.Copy(lastImageBytes, 0, bitmapBytes, 0, Math.Min(lastImageBytes.Length, bitmapBytes.Length));
+					}
+				}
+			}
+			else
+			{
+				for (int i = 0; i < dest.Length; i++) dest[i] = bg;
+			}
+			byte[] remap = null;
+			if (lctFlag && localColorTable != null && unifiedPalette != null)
+			{
+				if (remapTable == null) remapTable = new byte[256];
+				remap = remapTable;
+				for (int i = 0; i < 256; i++) remap[i] = (byte)i;
+				if (paletteMap != null)
+				{
+					int localSize = 2 << 7; // will be overridden by actual size; use localColorTable length
+					localSize = Math.Min(localSize, localColorTable.Length);
+					// Determine actual local size from packed value would need caller; approximate by scanning non-zero
+					for (int i = 0; i < localColorTable.Length && i < 256; i++)
+					{
+						int col = localColorTable[i];
+						byte r = (byte)(col & 0xFF);
+						byte g = (byte)((col >> 8) & 0xFF);
+						byte b = (byte)((col >> 16) & 0xFF);
+						Color32 c = new Color32(r,g,b,255);
+						if (transparency && i == transIndex) c.A = 0;
+						int key = PackColor(c);
+						int unifiedIdx;
+						if (paletteMap.TryGetValue(key, out unifiedIdx))
+							remap[i] = (byte)unifiedIdx;
+					}
+				}
+			}
+			int pass = 1;
+			int inc = 8;
+			int iline = 0;
+			for (int i = 0; i < imageSize.Y; i++) 
+			{
+				int line = i;
+				if (interlace) 
+				{
+					if (iline >= imageSize.Y) 
+					{
+						pass++;
+						switch (pass) 
+						{
+							case 2 : iline = 4; break;
+							case 3 : iline = 2; inc = 4; break;
+							case 4 : iline = 1; inc = 2; break;
+						}
+					}
+					line = iline;
+					iline += inc;
+				}
+				line += (int)imagePosition.Y;
+				if (line < height) 
+				{
+					int k = line * width;
+					int dx = k + (int)imagePosition.X;
+					int dlim = dx + (int)imageSize.X;
+					if (k + width < dlim) dlim = k + width;
+					int sx = i * (int)imageSize.X;
+					while (dx < dlim) 
+					{
+						int index = pixels[sx] & 0xff;
+						int orig = pixels[sx++] & 0xff;
+						if (lctFlag && remap != null) index = remap[index] & 0xFF;
+						if (!(transparency && orig == transIndex))
+						{
+							dest[dx] = (byte)index;
+						}
+						dx++;
+					}
+				}
+			}
+			Array.Copy(dest, bitmapBytes, dest.Length);
+		}
+
 		/// <summary>Sets the pixels for a GIF frame from the current bitmap</summary>
 		protected void SetPixels() 
 		{
@@ -143,7 +297,7 @@ namespace Plugin.GIF
 						{
 							if (transparency)
 							{
-								image[i] = BitConverter.ToInt32(new byte[] {0,0,0,byte.MaxValue}, 0); 	// assume background is transparent
+								image[i] = unchecked((int)0xFF000000); 	// assume background is transparent
 							} 
 							else
 							{
@@ -222,6 +376,22 @@ namespace Plugin.GIF
 		/// <returns>The image</returns>
 		public int[] GetFrame(int n) 
 		{
+			// If paletted optimization is active, expand on demand for legacy callers
+			if (usePaletted && indexedFrames != null && n >= 0 && n < indexedFrames.Count && indexedFrames[n] != null)
+			{
+				byte[] idx = indexedFrames[n];
+				Color32[] pal = GetPalette();
+				int[] expanded = new int[idx.Length];
+				for (int i = 0; i < idx.Length; i++)
+				{
+					int index = idx[i] & 0xFF;
+						if (pal != null && index < pal.Length)
+						expanded[i] = pal[index].R | (pal[index].G << 8) | (pal[index].B << 16) | (pal[index].A << 24);
+					else
+						expanded[i] = unchecked((int)0xFF000000);
+				}
+				return expanded;
+			}
 			int[] im = null;
 			if (n >= 0 && n < frameCount) 
 			{
@@ -424,9 +594,15 @@ namespace Plugin.GIF
 			status = DecoderStatus.OK;
 			frameCount = 0;
 			frames = new List<int[]>();
+			indexedFrames = new List<byte[]>();
 			delays = new List<int>();
 			globalColorTable = null;
 			localColorTable = null;
+			globalPalette32 = null;
+			unifiedPalette = null;
+			paletteMap = null;
+			usePaletted = true;
+			hasLocalPalette = false;
 		}
 
 		/// <summary>Reads a single byte from the input stream</summary>
@@ -481,6 +657,25 @@ namespace Plugin.GIF
 			return n;
 		}
 
+		/// <summary>Reads the GIF Color Table as Color32 array</summary>
+		protected Color32[] ReadColorTable32(int numberOfColors)
+		{
+			int nbytes = 3 * numberOfColors;
+			Color32[] tab = new Color32[256];
+			byte[] c = new byte[nbytes];
+			int n = 0;
+			try { n = inStream.Read(c, 0, c.Length); } catch (IOException) {}
+			if (n < nbytes) { status = DecoderStatus.FormatError; return null; }
+			int j = 0;
+			for (int i=0;i<numberOfColors;i++)
+			{
+				byte r = c[j++]; byte g = c[j++]; byte b = c[j++];
+				tab[i] = new Color32(r,g,b,255);
+			}
+			for (int i=numberOfColors;i<256;i++) tab[i] = new Color32(0,0,0,255);
+			return tab;
+		}
+
 		/// <summary>Reads the GIF Color Table as 256 integer values</summary>
 		/// <param name="numberOfColors">The number of colors to read</param>
 		/// <returns>The GIF color table</returns>
@@ -511,7 +706,7 @@ namespace Plugin.GIF
 					byte r = (byte) (c[j++] & 0xff);
 					byte g = (byte) (c[j++] & 0xff);
 					byte b = (byte) (c[j++] & 0xff);
-					tab[i++] = BitConverter.ToInt32(new[] {r,g,b,byte.MaxValue}, 0);
+					tab[i++] = r | (g << 8) | (b << 16) | unchecked((int)0xFF000000);
 				}
 			}
 			return tab;
@@ -609,6 +804,25 @@ namespace Plugin.GIF
 			{
 				globalColorTable = ReadColorTable(golbalColorTableSize);
 				bgColor = globalColorTable[bgIndex];
+				bgIndexByte = (byte)bgIndex;
+				if (globalColorTable != null)
+				{
+					globalPalette32 = new Color32[256];
+					for (int i=0;i<256;i++)
+					{
+						int col = globalColorTable[i];
+						byte r = (byte)(col & 0xFF);
+						byte g = (byte)((col>>8)&0xFF);
+						byte b = (byte)((col>>16)&0xFF);
+						byte a = (byte)((col>>24)&0xFF);
+						if (a==0) a=255;
+						globalPalette32[i] = new Color32(r,g,b,a);
+					}
+					unifiedPalette = new Color32[256];
+					Array.Copy(globalPalette32, unifiedPalette, 256);
+					paletteMap = new Dictionary<int,int>();
+					for (int i=0;i<golbalColorTableSize;i++) paletteMap[PackColor(unifiedPalette[i])] = i;
+				}
 			}
 		}
 
@@ -627,6 +841,51 @@ namespace Plugin.GIF
 			if (lctFlag) 
 			{
 				localColorTable = ReadColorTable(localColorTableSize); // read table
+				if (usePaletted && unifiedPalette == null && localColorTable != null)
+				{
+					// No global palette – initialise unified from first local palette
+					unifiedPalette = new Color32[256];
+					paletteMap = new Dictionary<int,int>();
+					for (int i = 0; i < localColorTableSize; i++)
+					{
+						int col = localColorTable[i];
+						byte r = (byte)(col & 0xFF); byte g = (byte)((col>>8)&0xFF); byte b = (byte)((col>>16)&0xFF);
+						Color32 c = new Color32(r,g,b,255);
+						unifiedPalette[i] = c;
+						paletteMap[PackColor(c)] = i;
+					}
+					for (int i = localColorTableSize; i < 256; i++) unifiedPalette[i] = new Color32(0,0,0,255);
+					hasLocalPalette = true;
+				}
+				if (usePaletted && unifiedPalette != null && localColorTable != null)
+				{
+					Color32[] localPal = new Color32[localColorTableSize];
+					for (int i=0;i<localColorTableSize;i++)
+					{
+						int col = localColorTable[i];
+						byte r = (byte)(col & 0xFF); byte g = (byte)((col>>8)&0xFF); byte b = (byte)((col>>16)&0xFF);
+						localPal[i] = new Color32(r,g,b,255);
+					}
+					bool canMerge = true;
+					foreach (var c in localPal)
+					{
+						int key = PackColor(c);
+						if (!paletteMap.ContainsKey(key))
+						{
+							if (paletteMap.Count >= 256) { canMerge = false; break; }
+							int newIdx = paletteMap.Count;
+							while (newIdx < 256 && paletteMap.ContainsValue(newIdx)) newIdx++;
+							if (newIdx >= 256) { canMerge = false; break; }
+							unifiedPalette[newIdx] = c;
+							paletteMap[key] = newIdx;
+						}
+					}
+					if (!canMerge)
+					{
+						usePaletted = false;
+					}
+					else hasLocalPalette = true;
+				}
 			} 
 			else 
 			{
@@ -635,10 +894,12 @@ namespace Plugin.GIF
 			}
 			int save = 0;
 			
-			if (transparency) 
+			if (transparency && activeColorTable != null) 
 			{
 				save = activeColorTable[transIndex];
-				activeColorTable[transIndex] = 0; // set transparent color if specified
+				activeColorTable[transIndex] = 0; // set transparent color if specified (for legacy RGBA path)
+				// For paletted path, transparency is handled by skipping the index in SetPixelsIndexed,
+				// so do NOT modify unifiedPalette alpha here – it would make that palette entry transparent for all frames
 			}
 
 			if (activeColorTable == null) 
@@ -654,17 +915,38 @@ namespace Plugin.GIF
 			if (Error) return;
 
 			frameCount++;
-			// create new image to receive frame data
-			bitmap = new int[width * height];
-			image = bitmap;
-			SetPixels(); // transfer pixel data to image
-
-			frames.Add(bitmap); // add image to frame list
-			delays.Add(delay);
-
-			if (transparency && activeColorTable != null) 
+			if (usePaletted)
 			{
-				activeColorTable[transIndex] = save;
+				bitmapBytes = bitmapBytes ?? new byte[width * height];
+				if (bitmapBytes.Length != width*height) bitmapBytes = new byte[width*height];
+				imageBytes = bitmapBytes;
+				SetPixelsIndexed();
+				byte[] stored = new byte[bitmapBytes.Length];
+				Array.Copy(bitmapBytes, stored, stored.Length);
+				indexedFrames.Add(stored);
+				frames.Add(null); // keep frames list aligned for legacy callers
+				delays.Add(delay);
+				if (transparency && activeColorTable != null) 
+				{
+					activeColorTable[transIndex] = save;
+				}
+			}
+			else
+			{
+				// Fallback RGBA path (preserves original comments and logic)
+				// create new image to receive frame data
+				bitmap = new int[width * height];
+				image = bitmap;
+				SetPixels(); // transfer pixel data to image
+
+				frames.Add(bitmap); // add image to frame list
+				indexedFrames.Add(null);
+				delays.Add(delay);
+
+				if (transparency && activeColorTable != null) 
+				{
+					activeColorTable[transIndex] = save;
+				}
 			}
 			ResetFrame();
 
@@ -723,8 +1005,16 @@ namespace Plugin.GIF
 		protected void ResetFrame() 
 		{
 			lastDispose = dispose;
-			lastImage = image;
-			lastBgColor = bgColor;
+			if (usePaletted)
+			{
+				lastImageBytes = imageBytes;
+				lastBgIndex = bgIndexByte;
+			}
+			else
+			{
+				lastImage = image;
+				lastBgColor = bgColor;
+			}
 			transparency = false;
 			delay = 0;
 			localColorTable = null;
