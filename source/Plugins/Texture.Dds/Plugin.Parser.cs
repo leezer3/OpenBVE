@@ -70,7 +70,7 @@ namespace Texture.Dds
 
         private void CreateTexture(int width, int height, byte[] rawData)
         {
-	        myTexture = new OpenBveApi.Textures.Texture(width, height, OpenBveApi.Textures.PixelFormat.RGBAlpha, rawData, null);
+	        myTexture = new OpenBveApi.Textures.Texture(width, height, OpenBveApi.Textures.PixelFormat.RGBAlpha, rawData, (OpenBveApi.Colors.Color24[])null);
         }
 
         private static PixelFormat GetFormat(DdsHeader header, out int blocksize)
