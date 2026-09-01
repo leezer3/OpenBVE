@@ -16,6 +16,8 @@ namespace OpenBveApi.Textures
 
 		private readonly PixelFormat Format;
 
+		private readonly Color32[] Palette32;
+
 		private readonly int NumberOfFrames;
 
 		private readonly double FrameInterval;
@@ -42,6 +44,19 @@ namespace OpenBveApi.Textures
 			Height = height;
 			Format = pixelFormat;
 			TextureBytes = bytes;
+			Palette32 = null;
+			FrameInterval = frameInterval;
+			NumberOfFrames = bytes.Length;
+		}
+
+		/// <summary>Creates a paletted byte array origin (animated)</summary>
+		public ByteArrayOrigin(int width, int height, PixelFormat pixelFormat, byte[][] bytes, Color32[] palette32, double frameInterval)
+		{
+			Width = width;
+			Height = height;
+			Format = pixelFormat;
+			TextureBytes = bytes;
+			Palette32 = palette32;
 			FrameInterval = frameInterval;
 			NumberOfFrames = bytes.Length;
 		}
@@ -69,6 +84,18 @@ namespace OpenBveApi.Textures
 			{
 				bytes
 			};
+			Palette32 = null;
+			NumberOfFrames = 1;
+		}
+
+		/// <summary>Creates a paletted byte array origin</summary>
+		public ByteArrayOrigin(int width, int height, PixelFormat pixelFormat, byte[] bytes, Color32[] palette32)
+		{
+			Width = width;
+			Height = height;
+			Format = pixelFormat;
+			TextureBytes = new[] { bytes };
+			Palette32 = palette32;
 			NumberOfFrames = 1;
 		}
 
@@ -77,6 +104,16 @@ namespace OpenBveApi.Textures
 		/// <returns>Whether the texture could be obtained successfully.</returns>
 		public override bool GetTexture(out Texture texture)
 		{
+			if (Palette32 != null)
+			{
+				if (TextureBytes.Length == 1)
+				{
+					texture = new Texture(Width, Height, Format, TextureBytes[0], Palette32);
+					return true;
+				}
+				texture = new Texture(Width, Height, Format, TextureBytes, Palette32, FrameInterval);
+				return true;
+			}
 			if (TextureBytes.Length == 1)
 			{
 				texture = new Texture(Width, Height, Format, TextureBytes[0], Array.Empty<Color24>());
