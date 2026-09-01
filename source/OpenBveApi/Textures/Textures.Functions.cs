@@ -25,7 +25,23 @@ namespace OpenBveApi.Textures {
 
 				if (parameters.TransparencyTexture != null && parameters.TransparencyTexture.Size == texture.Size)
 				{
-					result = new Texture(texture.Width, texture.Height, PixelFormat.RGBAlpha, ApplyTransparentTexture(texture.Bytes, texture.PixelFormat, texture.Width, texture.Height, parameters.TransparencyTexture), texture.Palette);
+					if (texture.PixelFormat == PixelFormat.Paletted && texture.Palette32 != null)
+					{
+						// Expand paletted to RGBA first, then apply texture transparency
+						byte[] expanded = new byte[texture.Width * texture.Height * 4];
+						byte[] src = texture.Bytes;
+						for (int p = 0; p < src.Length; p++)
+						{
+							int idx = src[p] & 0xFF;
+							Color32 c = idx < texture.Palette32.Length ? texture.Palette32[idx] : new Color32(0,0,0,255);
+							expanded[p*4] = c.R; expanded[p*4+1] = c.G; expanded[p*4+2] = c.B; expanded[p*4+3] = c.A;
+						}
+						result = new Texture(texture.Width, texture.Height, PixelFormat.RGBAlpha, ApplyTransparentTexture(expanded, PixelFormat.RGBAlpha, texture.Width, texture.Height, parameters.TransparencyTexture), texture.Palette);
+					}
+					else
+					{
+						result = new Texture(texture.Width, texture.Height, PixelFormat.RGBAlpha, ApplyTransparentTexture(texture.Bytes, texture.PixelFormat, texture.Width, texture.Height, parameters.TransparencyTexture), texture.Palette);
+					}
 				}
 				else if (parameters.FirstColorTransparent) {
 					result = ApplyTransparentColor(result, result.Palette[0]);
@@ -83,6 +99,20 @@ namespace OpenBveApi.Textures {
 					    }
 				    }
 				    return new Texture(clipWidth, clipHeight, PixelFormat.Grayscale, newBytes, texture.Palette);
+				case PixelFormat.Paletted:
+					newBytes = new byte[clipWidth * clipHeight];
+					for (int y = 0; y < clipHeight; y++)
+					{
+						int j = width * (clipTop + y) + clipLeft;
+						for (int x = 0; x < clipWidth; x++)
+						{
+							newBytes[i] = bytes[j];
+							i++;
+							j++;
+						}
+					}
+					if (texture.Palette32 != null) return new Texture(clipWidth, clipHeight, PixelFormat.Paletted, newBytes, texture.Palette32);
+					return new Texture(clipWidth, clipHeight, PixelFormat.Paletted, newBytes, texture.Palette);
 				case PixelFormat.GrayscaleAlpha:
 				    newBytes = new byte[2 * clipWidth * clipHeight];
 				    for (int y = 0; y < clipHeight; y++)
@@ -179,6 +209,53 @@ namespace OpenBveApi.Textures {
 				}
 			}
 
+			// Paletted special handling: check palette index directly, modify palette alpha without iterating all frames
+			if (texture.PixelFormat == PixelFormat.Paletted && texture.Palette32 != null)
+			{
+				int matchIdx = -1;
+				for (int i = 0; i < texture.Palette32.Length; i++)
+				{
+					if (texture.Palette32[i].R == color.Value.R && texture.Palette32[i].G == color.Value.G && texture.Palette32[i].B == color.Value.B)
+					{ matchIdx = i; break; }
+				}
+				if (matchIdx == -1) return texture;
+				// Check only current frame for usage, avoids decoding all frames for streaming GIFs
+				bool anyUse = false;
+				byte[] curFrame = texture.Bytes;
+				if (curFrame != null)
+				{
+					for (int i = 0; i < curFrame.Length; i++) { if ((curFrame[i] & 0xFF) == matchIdx) { anyUse = true; break; } }
+				}
+				if (!anyUse) return texture;
+				Color32[] newPal = (Color32[])texture.Palette32.Clone();
+				newPal[matchIdx].A = 0;
+				if (texture.MultipleFrames)
+				{
+					// For streaming GIFs, create a new origin with modified palette, avoids decoding all frames
+					if (texture.Origin is StreamingGifOrigin sgo)
+					{
+						var newOrigin = sgo.WithModifiedPalette(newPal);
+						return new Texture(newOrigin);
+					}
+					// For non-streaming, share original frame references, palette index data doesn't change
+					byte[][] framesRef = new byte[texture.TotalFrames][];
+					int saved = texture.CurrentFrame;
+					for (int f = 0; f < texture.TotalFrames; f++)
+					{
+						texture.CurrentFrame = f;
+						byte[] frameData = texture.Bytes;
+						if (frameData == null) frameData = new byte[texture.Width * texture.Height];
+						framesRef[f] = frameData;
+					}
+					texture.CurrentFrame = saved;
+					return new Texture(texture.Width, texture.Height, PixelFormat.Paletted, framesRef, newPal, texture.FrameInterval);
+				}
+				else
+				{
+					return new Texture(texture.Width, texture.Height, PixelFormat.Paletted, (byte[])texture.Bytes.Clone(), newPal);
+				}
+			}
+
 			bool usedTransparentColor = false;
 			if (texture.MultipleFrames)
 			{
@@ -236,6 +313,25 @@ namespace OpenBveApi.Textures {
 			int targetIndex = 0;
 			switch (pixelFormat)
 			{
+				case PixelFormat.Paletted:
+					// Caller should have expanded to RGBA before calling this as a fallback, just apply transparency alpha to the source index treated as luminance
+					for (int i = 0; i < width * height; i++)
+					{
+						byte val = source[i];
+						target[i*4] = val;
+						target[i*4+1] = val;
+						target[i*4+2] = val;
+						if (transparencyTexture.PixelFormat == PixelFormat.Grayscale || transparencyTexture.PixelFormat == PixelFormat.RGB)
+						{
+							Color24 c = transparencyTexture.GetPixel(i);
+							target[i*4 + 3] = (byte)(255 * c.GetBrightness());
+						}
+						else
+						{
+							target[i*4 + 3] = transparencyTexture.GetAlpha(i);
+						}
+					}
+					break;
 				case PixelFormat.Grayscale:
 					for (int i = 0; i < source.Length; i++, targetIndex += 4)
 					{
@@ -364,6 +460,9 @@ namespace OpenBveApi.Textures {
 						}
 					}
 					return false;
+				case PixelFormat.Paletted:
+					// Cannot determine without palette, just assume true to trigger palette path handled at higher level
+					return true;
 				case PixelFormat.RGBAlpha:
 					for (int i = 0; i + 2 < source.Length; i += 4)
 					{
@@ -439,6 +538,8 @@ namespace OpenBveApi.Textures {
 						}
 					}
 					break;
+				case PixelFormat.Paletted:
+					throw new NotSupportedException("Paletted ApplyTransparentColor should be handled at texture level with palette");
 				case PixelFormat.RGBAlpha:
 					if (source[0] == r && source[1] == g && source[2] == b) {
 						target[0] = 128;
