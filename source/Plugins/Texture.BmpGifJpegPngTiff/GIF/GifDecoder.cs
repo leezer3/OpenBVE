@@ -94,6 +94,8 @@ namespace Plugin.GIF
 		/// <summary>Reusable remap table for local-to-unified palette mapping (avoids per-frame allocation)</summary>
 		protected byte[] remapTable;
 
+			/// <summary>Reusable composition buffer for SetPixelsIndexed (avoids per-frame alloc)</summary>
+		protected byte[] compositionBuffer;
 		protected byte[] block = new byte[256]; // current data block
 		protected int blockSize; // block size
 
@@ -117,6 +119,10 @@ namespace Plugin.GIF
 		/// <summary>Indexed frames for paletted output (1 byte per pixel)</summary>
 		protected List<byte[]> indexedFrames;
 		protected List<int> delays;
+
+		/// <summary>Cached expanded frame for GetFrame() paletted path (avoids per-call alloc)</summary>
+		private int[] _cachedExpandedFrame;
+		private int _cachedExpandedIndex = -1;
 
 		protected int frameCount;
 
@@ -157,7 +163,10 @@ namespace Plugin.GIF
 		/// <summary>Sets the pixels for a GIF frame, indexed version (1 Bpp) for paletted optimization</summary>
 		protected void SetPixelsIndexed() 
 		{
-			byte[] dest = new byte[width * height];
+			int bufLen = width * height;
+			if (compositionBuffer == null || compositionBuffer.Length != bufLen) compositionBuffer = new byte[bufLen];
+			byte[] dest = compositionBuffer;
+			Array.Clear(dest, 0, bufLen);
 			byte bg = bgIndexByte;
 			bool hasPrev = lastDispose > DisposeMode.NoAction && bitmapBytes != null;
 			if (hasPrev)
@@ -379,6 +388,8 @@ namespace Plugin.GIF
 			// If paletted optimization is active, expand on demand for legacy callers
 			if (usePaletted && indexedFrames != null && n >= 0 && n < indexedFrames.Count && indexedFrames[n] != null)
 			{
+				// Return cached expanded frame if same index (avoids per-call alloc)
+				if (_cachedExpandedFrame != null && _cachedExpandedIndex == n) return _cachedExpandedFrame;
 				byte[] idx = indexedFrames[n];
 				Color32[] pal = GetPalette();
 				int[] expanded = new int[idx.Length];
@@ -390,6 +401,8 @@ namespace Plugin.GIF
 					else
 						expanded[i] = unchecked((int)0xFF000000);
 				}
+				_cachedExpandedFrame = expanded;
+				_cachedExpandedIndex = n;
 				return expanded;
 			}
 			int[] im = null;
