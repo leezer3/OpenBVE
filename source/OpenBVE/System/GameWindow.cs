@@ -100,6 +100,7 @@ namespace OpenBve
 				//If the load is not complete, then we shouldn't be running the mainloop
 				return;
 			}
+			FrameLimiter.StartFrame();
 
 			if (Program.Renderer.RenderThreadJobWaiting)
 			{
@@ -314,6 +315,9 @@ namespace OpenBve
 			{
 				Interface.CurrentOptions.BlackBox = false;
 			}
+			// Applies the FPS limit; a hard cap of 1000fps applies when unlimited is selected,
+			// although no pacing is performed above around 330fps as sleep granularity makes it impractical
+			FrameLimiter.ApplyLimit(Interface.CurrentOptions.FPSLimit);
 		}
 
 		protected override void OnUpdateFrame(FrameEventArgs e)
@@ -554,6 +558,7 @@ namespace OpenBve
 				}
 			}
 			Program.Renderer.TextureManager.UnloadAllTextures(false);
+			FrameLimiter.RestoreTimerResolution();
 			Program.Renderer.VisibilityThreadShouldRun = false;
 			for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
 			{

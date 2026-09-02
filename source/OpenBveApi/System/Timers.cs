@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace OpenBveApi
 {
@@ -84,5 +85,118 @@ namespace OpenBveApi
 		}
 
 
+	}
+
+	/// <summary>
+	/// Cross-platform frame rate limiter.
+	/// Uses a bulk Thread.Sleep followed by a short Thread.Yield wait, mirroring the approach used by modern OpenTK,
+	/// in order to avoid the high power consumption of a pure spin-wait based limiter.
+	/// </summary>
+	public static class FrameLimiter
+	{
+		// Tolerance as a fraction of the scheduler period, left unslept so that we do not overshoot the target
+		private const double Tolerance = 0.02;
+		// On Windows, raise the timer resolution to 1ms for accurate frame pacing
+		private const uint WindowsTimerPeriod = 1;
+		// Hard cap applied even when the user selects 'Unlimited'
+		private const int HardFpsLimit = 1000;
+		// Frameslots shorter than this multiple of the scheduler period cannot be paced accurately by
+		// Thread.Sleep without a power-hungry busy spin, so limiting is skipped above around 330fps
+		private const double MinimumSlotPeriods = 3.0;
+
+		private static bool timerResolutionRaised;
+		private static int schedulerPeriod = 1;
+		private static long frameStartTimestamp;
+
+		[DllImport("winmm")]
+		private static extern uint timeBeginPeriod(uint uPeriod);
+
+		[DllImport("winmm")]
+		private static extern uint timeEndPeriod(uint uPeriod);
+
+		/// <summary>Marks the start of a frame. Must be called once at the beginning of each rendered frame.</summary>
+		public static void StartFrame()
+		{
+			frameStartTimestamp = Stopwatch.GetTimestamp();
+		}
+
+		/// <summary>Waits until the end of the current frame's allotted timeslot.</summary>
+		/// <param name="fpsLimit">The maximum frames per second selected by the user. A value of zero or less means unlimited, subject to the hard cap.
+		/// Above around 330fps no limiting is performed, as sleep-based pacing is impractical at such frame rates.</param>
+		public static void ApplyLimit(int fpsLimit)
+		{
+			int limit = fpsLimit > 0 ? System.Math.Min(fpsLimit, HardFpsLimit) : HardFpsLimit;
+			if (frameStartTimestamp == 0)
+			{
+				return;
+			}
+			if ((double)Stopwatch.Frequency / limit < schedulerPeriod * MinimumSlotPeriods)
+			{
+				// The timeslot is too short to pace accurately without busy-spinning - skip limiting
+				return;
+			}
+			long now = Stopwatch.GetTimestamp();
+			long target = frameStartTimestamp + (long)((double)Stopwatch.Frequency / limit);
+			double remainingMs = (double)(target - now) * 1000.0 / Stopwatch.Frequency;
+			if (remainingMs <= 0.0)
+			{
+				// The frame overran its timeslot (or was throttled by VSync) - nothing to wait for,
+				// so do not raise the system timer resolution needlessly
+				return;
+			}
+			RaiseTimerResolution();
+			double sleepMs = remainingMs - schedulerPeriod * Tolerance;
+			int ticks = (int)(sleepMs / schedulerPeriod);
+			if (ticks > 0)
+			{
+				Thread.Sleep(ticks * schedulerPeriod);
+			}
+			while (Stopwatch.GetTimestamp() < target)
+			{
+				Thread.Yield();
+			}
+		}
+
+		/// <summary>Restores the system timer resolution, if it was previously raised.</summary>
+		public static void RestoreTimerResolution()
+		{
+			if (timerResolutionRaised)
+			{
+				timerResolutionRaised = false;
+				try
+				{
+					timeEndPeriod(WindowsTimerPeriod);
+				}
+				catch
+				{
+					// Not on Windows, or winmm unavailable
+				}
+			}
+		}
+
+		private static void RaiseTimerResolution()
+		{
+			if (!timerResolutionRaised)
+			{
+				timerResolutionRaised = true;
+				try
+				{
+					if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+					{
+						timeBeginPeriod(WindowsTimerPeriod);
+						schedulerPeriod = (int)WindowsTimerPeriod;
+					}
+					else
+					{
+						// Linux and macOS can accurately sleep for around 1ms
+						schedulerPeriod = 1;
+					}
+				}
+				catch
+				{
+					schedulerPeriod = 1;
+				}
+			}
+		}
 	}
 }
