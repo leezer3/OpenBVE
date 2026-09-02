@@ -163,11 +163,27 @@ namespace OpenBveApi.Textures
 			if (ReferenceEquals(this, obj)) return true;
 			if (obj is null) return false;
 			if (!(obj is ByteArrayOrigin)) return false;
-			if (FrameInterval == ((ByteArrayOrigin)obj).FrameInterval) return false;
-			if (NumberOfFrames == ((ByteArrayOrigin)obj).NumberOfFrames) return false;
-			if (Width == ((ByteArrayOrigin)obj).Width) return false;
-			if (Height == ((ByteArrayOrigin)obj).Height) return false;
-			return TextureBytes != ((ByteArrayOrigin)obj).TextureBytes;
+			if (FrameInterval != ((ByteArrayOrigin)obj).FrameInterval) return false;
+			if (NumberOfFrames != ((ByteArrayOrigin)obj).NumberOfFrames) return false;
+			if (Width != ((ByteArrayOrigin)obj).Width) return false;
+			if (Height != ((ByteArrayOrigin)obj).Height) return false;
+			return ReferenceEquals(TextureBytes, ((ByteArrayOrigin)obj).TextureBytes);
+		}
+
+		/// <summary>Returns the hash code for this origin.</summary>
+		/// <returns>A 32-bit signed integer hash code.</returns>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hash = 17;
+				hash = hash * 31 + Width.GetHashCode();
+				hash = hash * 31 + Height.GetHashCode();
+				hash = hash * 31 + NumberOfFrames.GetHashCode();
+				hash = hash * 31 + FrameInterval.GetHashCode();
+				hash = hash * 31 + (TextureBytes?.GetHashCode() ?? 0);
+				return hash;
+			}
 		}
 
 	}

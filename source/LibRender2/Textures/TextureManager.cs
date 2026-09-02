@@ -732,6 +732,11 @@ namespace LibRender2.Textures
 		/// <summary>Unloads all registered textures.</summary>
 		public void UnloadAllTextures(bool currentlyReloading)
 		{
+			// Always clear animated texture cache to prevent memory leak on reload:
+			// animatedTextures retains decoded frame data for every GIF ever loaded,
+			// doubling memory on each reload because old entries are never removed.
+			animatedTextures.Clear();
+
 			for (int i = 0; i < RegisteredTexturesCount; i++)
 			{
 				/*
