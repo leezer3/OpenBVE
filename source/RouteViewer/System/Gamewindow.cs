@@ -92,7 +92,9 @@ namespace RouteViewer
 	        Program.Renderer.Screen.Width = Width;
 	        Program.Renderer.Screen.Height = Height;
 	        Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-        }
+			Program.Renderer.Rectangle.Update();
+			Program.Renderer.OpenGlString.Update();
+		}
 
         protected override void OnLoad(EventArgs e)
         {
