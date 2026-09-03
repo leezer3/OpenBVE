@@ -100,6 +100,8 @@ namespace Plugin.GIF
 		protected byte[] compositionBuffer;
 		protected byte[] block = new byte[256]; // current data block
 		protected int blockSize; // block size
+		/// <summary>Pixels actually decoded for the current frame; the raster data may end early.</summary>
+		protected int decodedPixelCount;
 
 		// last graphic control extension info
 		protected DisposeMode dispose = DisposeMode.NoAction;
@@ -184,7 +186,9 @@ namespace Plugin.GIF
 			Array.Clear(dest, 0, bufLen);
 			// Backgrounds use the transparent slot once reserved.
 			byte bg = transparentEntry >= 0 ? (byte)transparentEntry : bgIndexByte;
-			bool hasPrev = lastDispose > DisposeMode.NoAction && bitmapBytes != null;
+			// NoAction leaves the canvas like LeaveInPlace; lastImageBytes proves a frame completed
+			// (bitmapBytes is already allocated for the current frame, so it can't decide).
+			bool hasPrev = lastImageBytes != null;
 			if (hasPrev)
 			{
 				Array.Copy(bitmapBytes, dest, bitmapBytes.Length);
@@ -280,7 +284,8 @@ namespace Plugin.GIF
 					int dlim = dx + (int)imageSize.X;
 					if (k + width < dlim) dlim = k + width;
 					int sx = i * (int)imageSize.X;
-					while (dx < dlim) 
+					if (sx >= decodedPixelCount) break; // raster data ended early: leave the canvas
+					while (dx < dlim && sx < decodedPixelCount)
 					{
 						int index = pixels[sx] & 0xff;
 						int orig = pixels[sx++] & 0xff;
@@ -301,7 +306,8 @@ namespace Plugin.GIF
 		{
 			int[] dest = new int[width * height];
 			// fill in starting image contents based on last image's dispose code
-			if (lastDispose > DisposeMode.NoAction)
+			// (NoAction leaves the canvas too, see SetPixelsIndexed)
+			if (lastDispose >= DisposeMode.NoAction)
 			{
 				Array.Copy(bitmap, dest, bitmap.Length);
 				
@@ -380,7 +386,8 @@ namespace Plugin.GIF
 						dlim = k + width; // past dest edge
 					}
 					int sx = i * (int)imageSize.X; // start of line in source
-					while (dx < dlim) 
+					if (sx >= decodedPixelCount) break; // raster data ended early: leave the canvas
+					while (dx < dlim && sx < decodedPixelCount)
 					{
 						// map color and insert in destination
 						int index = pixels[sx++] & 0xff;
@@ -583,19 +590,20 @@ namespace Plugin.GIF
 					}
 					first = suffix[code] & 0xff;
 
-					//  Add a new string to the string table,
-
-					if (available >= MaxStackSize)
-						break;
+					//  Add a new string to the string table, unless full:
+					// deferred-CLEAR streams keep decoding instead of truncating.
 					pixelStack[top++] = (byte) first;
-					prefix[available] = (short) old_code;
-					suffix[available] = (byte) first;
-					available++;
-					if ((available & code_mask) == 0
-						&& available < MaxStackSize) 
+					if (available < MaxStackSize)
 					{
-						code_size++;
-						code_mask += available;
+						prefix[available] = (short) old_code;
+						suffix[available] = (byte) first;
+						available++;
+						if ((available & code_mask) == 0
+							&& available < MaxStackSize)
+						{
+							code_size++;
+							code_mask += available;
+						}
 					}
 					old_code = in_code;
 				}
@@ -609,8 +617,9 @@ namespace Plugin.GIF
 
 			for (i = pi; i < npix; i++) 
 			{
-				pixels[i] = 0; // clear missing pixels
+				pixels[i] = 0; // clear missing pixels (never drawn: see decodedPixelCount)
 			}
+			decodedPixelCount = pi;
 
 		}
 
@@ -638,6 +647,7 @@ namespace Plugin.GIF
 			lastImageBytes = null;
 			_cachedExpandedFrame = null;
 			_cachedExpandedIndex = -1;
+			decodedPixelCount = 0;
 		}
 
 		/// <summary>Reads a single byte from the input stream</summary>
