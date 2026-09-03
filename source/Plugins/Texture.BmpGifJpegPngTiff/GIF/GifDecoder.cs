@@ -90,6 +90,8 @@ namespace Plugin.GIF
 		protected byte[] lastImageBytes;
 		/// <summary>Whether to use paletted (indexed) storage</summary>
 		protected bool usePaletted = true;
+		/// <summary>Reserved transparent palette slot, or -1. Never in paletteMap.</summary>
+		protected int transparentEntry = -1;
 		protected bool hasLocalPalette = false;
 		/// <summary>Reusable remap table for local-to-unified palette mapping (avoids per-frame allocation)</summary>
 		protected byte[] remapTable;
@@ -180,7 +182,8 @@ namespace Plugin.GIF
 			if (compositionBuffer == null || compositionBuffer.Length != bufLen) compositionBuffer = new byte[bufLen];
 			byte[] dest = compositionBuffer;
 			Array.Clear(dest, 0, bufLen);
-			byte bg = bgIndexByte;
+			// Backgrounds use the transparent slot once reserved.
+			byte bg = transparentEntry >= 0 ? (byte)transparentEntry : bgIndexByte;
 			bool hasPrev = lastDispose > DisposeMode.NoAction && bitmapBytes != null;
 			if (hasPrev)
 			{
@@ -628,6 +631,7 @@ namespace Plugin.GIF
 			unifiedPalette = null;
 			paletteMap = null;
 			usePaletted = true;
+			transparentEntry = -1;
 			hasLocalPalette = false;
 			bitmapBytes = null;
 			imageBytes = null;
@@ -905,7 +909,8 @@ namespace Plugin.GIF
 						{
 							if (paletteMap.Count >= 256) { canMerge = false; break; }
 							int newIdx = paletteMap.Count;
-							while (newIdx < 256 && paletteMap.ContainsValue(newIdx)) newIdx++;
+							// Keep real colors off the transparent slot.
+							while (newIdx < 256 && (paletteMap.ContainsValue(newIdx) || newIdx == transparentEntry)) newIdx++;
 							if (newIdx >= 256) { canMerge = false; break; }
 							unifiedPalette[newIdx] = c;
 							paletteMap[key] = newIdx;
@@ -931,6 +936,20 @@ namespace Plugin.GIF
 				activeColorTable[transIndex] = 0; // set transparent color if specified (for legacy RGBA path)
 				// For paletted path, transparency is handled by skipping the index in SetPixelsIndexed,
 				// so do NOT modify unifiedPalette alpha here – it would make that palette entry transparent for all frames
+				// Instead reserve one transparent slot (global-table slots are never free).
+				if (usePaletted && transparentEntry < 0 && unifiedPalette != null && paletteMap != null)
+				{
+					int minSlot = golbalColorTableFlag ? golbalColorTableSize : 0;
+					for (int i = minSlot; i < 256; i++)
+					{
+						if (!paletteMap.ContainsValue(i))
+						{
+							transparentEntry = i;
+							unifiedPalette[i] = new Color32(0, 0, 0, 0);
+							break;
+						}
+					}
+				}
 			}
 
 			if (activeColorTable == null) 
