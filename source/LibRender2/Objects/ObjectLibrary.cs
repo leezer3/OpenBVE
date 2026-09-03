@@ -126,49 +126,28 @@ namespace LibRender2.Objects
 					}
 					else
 					{
-						if (State.Prototype.Mesh.Materials[face.Material].DaytimeTexture != null && State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin != null)
-						{
-							// Have to load the texture bytes in order to determine transparency type
-							Texture daytimeTexture;
-							TextureOrigin daytimeOrigin = State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Origin;
-							if (!TextureManager.textureCache.TryGetValue(daytimeOrigin, out daytimeTexture))
-							{
-								Stopwatch sw = Stopwatch.StartNew();
-								daytimeOrigin.GetTexture(out daytimeTexture);
-								sw.Stop();
-								TextureManager.TextureDecodeTime += sw.ElapsedMilliseconds;
-								TextureManager.textureCache[daytimeOrigin] = daytimeTexture;
-							}
+						Texture daytimeTexture = GetTransparencySourceTexture(State.Prototype.Mesh.Materials[face.Material].DaytimeTexture);
 
-							TextureTransparencyType transparencyType = TextureTransparencyType.Opaque;
-							if (daytimeTexture != null)
-							{
-								// as loading the cached texture may have failed, e.g. corrupt file etc
-								transparencyType = daytimeTexture.GetTransparencyType();
-							}
-							
-							if (transparencyType == TextureTransparencyType.Alpha)
-							{
-								alpha = true;
-							}
-							else if (transparencyType == TextureTransparencyType.Partial && renderer.currentOptions.TransparencyMode == TransparencyMode.Quality)
-							{
-								alpha = true;
-							}
+						TextureTransparencyType transparencyType = TextureTransparencyType.Opaque;
+						if (daytimeTexture != null)
+						{
+							// as loading the cached texture may have failed, e.g. corrupt file etc
+							transparencyType = daytimeTexture.GetTransparencyType();
 						}
 
-						if (!alpha && State.Prototype.Mesh.Materials[face.Material].NighttimeTexture != null && State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Origin != null)
+						if (transparencyType == TextureTransparencyType.Alpha)
 						{
-							Texture nighttimeTexture;
-							TextureOrigin nighttimeOrigin = State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Origin;
-							if (!TextureManager.textureCache.TryGetValue(nighttimeOrigin, out nighttimeTexture))
-							{
-								Stopwatch sw = Stopwatch.StartNew();
-								nighttimeOrigin.GetTexture(out nighttimeTexture);
-								sw.Stop();
-								TextureManager.TextureDecodeTime += sw.ElapsedMilliseconds;
-								TextureManager.textureCache[nighttimeOrigin] = nighttimeTexture;
-							}
+							alpha = true;
+						}
+						else if (transparencyType == TextureTransparencyType.Partial && renderer.currentOptions.TransparencyMode == TransparencyMode.Quality)
+						{
+							alpha = true;
+						}
+					}
+
+						if (!alpha)
+						{
+							Texture nighttimeTexture = GetTransparencySourceTexture(State.Prototype.Mesh.Materials[face.Material].NighttimeTexture);
 							TextureTransparencyType transparencyType = TextureTransparencyType.Opaque;
 							if (nighttimeTexture != null)
 							{
@@ -184,7 +163,6 @@ namespace LibRender2.Objects
 								alpha = true;
 							}
 						}
-					}
 
 					materialAlphaCache[face.Material] = alpha;
 				}
@@ -252,6 +230,29 @@ namespace LibRender2.Objects
 		public void HideObject(ObjectState State)
 		{
 			RemoveObject(State);
+		}
+
+		/// <summary>Gets a decoded texture for transparency classification without forcing a full re-decode.</summary>
+		/// <param name="handle">The material texture handle.</param>
+		/// <returns>A decoded texture, or null if unavailable.</returns>
+		/// <remarks>Unload drops textureCache entries, but the register-time decode survives on the
+		/// handle (DecodedTexture) and is reused while the source file is unchanged.</remarks>
+		private Texture GetTransparencySourceTexture(Texture handle)
+		{
+			if (handle == null || handle.Origin == null) return null;
+			if (TextureManager.textureCache.TryGetValue(handle.Origin, out Texture cached)) return cached;
+			Texture decoded = handle.DecodedTexture;
+			if (decoded != null && TextureManager.TextureFileUnchanged(handle.Origin))
+			{
+				TextureManager.textureCache[handle.Origin] = decoded;
+				return decoded;
+			}
+			Stopwatch sw = Stopwatch.StartNew();
+			handle.Origin.GetTexture(out Texture fresh);
+			sw.Stop();
+			TextureManager.TextureDecodeTime += sw.ElapsedMilliseconds;
+			TextureManager.textureCache[handle.Origin] = fresh;
+			return fresh;
 		}
 
 		public List<FaceState> GetSortedPolygons(bool overlay = false)

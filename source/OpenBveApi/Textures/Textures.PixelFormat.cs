@@ -12,7 +12,27 @@
 		/// <summary>The pixel is a RGB triple</summary>
 		RGB = 3,
 		/// <summary>The pixel is a RGB triple and an alpha byte</summary>
-		RGBAlpha = 4
+		RGBAlpha = 4,
+		/// <summary>The pixel is a single palette index byte (requires Palette)</summary>
+		Paletted = 5
 
+	}
+
+	/// <summary>Helper for PixelFormat</summary>
+	public static class PixelFormatExtensions
+	{
+		/// <summary>Gets the bytes per pixel for the format (palette index counts as 1)</summary>
+		public static int BytesPerPixel(this PixelFormat format)
+		{
+			switch (format)
+			{
+				case PixelFormat.Grayscale: return 1;
+				case PixelFormat.Paletted: return 1;
+				case PixelFormat.GrayscaleAlpha: return 2;
+				case PixelFormat.RGB: return 3;
+				case PixelFormat.RGBAlpha: return 4;
+				default: return 0;
+			}
+		}
 	}
 }

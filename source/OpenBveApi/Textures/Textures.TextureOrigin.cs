@@ -30,6 +30,14 @@ namespace OpenBveApi.Textures
 			{
 				return (PathOrigin)a == (PathOrigin)b;
 			}
+			if (a is ByteArrayOrigin && b is ByteArrayOrigin)
+			{
+				return (ByteArrayOrigin)a == (ByteArrayOrigin)b;
+			}
+			if (a is StreamingGifOrigin && b is StreamingGifOrigin)
+			{
+				return (StreamingGifOrigin)a == (StreamingGifOrigin)b;
+			}
 			if (a is BitmapOrigin && b is BitmapOrigin)
 			{
 				return (BitmapOrigin)a == (BitmapOrigin)b;
@@ -60,6 +68,14 @@ namespace OpenBveApi.Textures
 			{
 				return (PathOrigin)a != (PathOrigin)b;
 			}
+			if (a is ByteArrayOrigin && b is ByteArrayOrigin)
+			{
+				return (ByteArrayOrigin)a != (ByteArrayOrigin)b;
+			}
+			if (a is StreamingGifOrigin && b is StreamingGifOrigin)
+			{
+				return (StreamingGifOrigin)a != (StreamingGifOrigin)b;
+			}
 			if (a is BitmapOrigin && b is BitmapOrigin)
 			{
 				return (BitmapOrigin)a != (BitmapOrigin)b;
@@ -88,6 +104,14 @@ namespace OpenBveApi.Textures
 			if (this is PathOrigin && obj is PathOrigin)
 			{
 				return (PathOrigin)this == (PathOrigin)obj;
+			}
+			if (this is ByteArrayOrigin && obj is ByteArrayOrigin)
+			{
+				return (ByteArrayOrigin)this == (ByteArrayOrigin)obj;
+			}
+			if (this is StreamingGifOrigin && obj is StreamingGifOrigin)
+			{
+				return (StreamingGifOrigin)this == (StreamingGifOrigin)obj;
 			}
 			if (this is BitmapOrigin && obj is BitmapOrigin)
 			{
