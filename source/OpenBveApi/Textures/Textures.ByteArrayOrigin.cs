@@ -148,10 +148,10 @@ namespace OpenBveApi.Textures
 			if (ReferenceEquals(a, b)) return false;
 			if (a is null) return true;
 			if (b is null) return true;
-			if (a.FrameInterval == b.FrameInterval) return false;
-			if (a.NumberOfFrames == b.NumberOfFrames) return false;
-			if (a.Width == b.Width) return false;
-			if (a.Height == b.Height) return false;
+			if (a.FrameInterval != b.FrameInterval) return true;
+			if (a.NumberOfFrames != b.NumberOfFrames) return true;
+			if (a.Width != b.Width) return true;
+			if (a.Height != b.Height) return true;
 			return a.TextureBytes != b.TextureBytes;
 		}
 
