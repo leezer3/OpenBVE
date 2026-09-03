@@ -159,6 +159,19 @@ namespace Plugin.GIF
 			if (n >= 0 && n < frameCount && indexedFrames != null && n < indexedFrames.Count) return indexedFrames[n];
 			return null;
 		}
+
+		/// <summary>Gets whether every decoded frame is stored as indexed (paletted) data</summary>
+		/// <remarks>If a mid-stream local palette cannot be merged (&gt;256 total colors), later frames fall back
+		/// to RGBA and this returns false — callers must then use the RGBA path for all frames.</remarks>
+		public bool IsFullyPaletted()
+		{
+			if (frameCount <= 0 || indexedFrames == null || indexedFrames.Count != frameCount) return false;
+			for (int i = 0; i < indexedFrames.Count; i++)
+			{
+				if (indexedFrames[i] == null) return false;
+			}
+			return true;
+		}
 		
 		/// <summary>Sets the pixels for a GIF frame, indexed version (1 Bpp) for paletted optimization</summary>
 		protected void SetPixelsIndexed() 
@@ -616,6 +629,11 @@ namespace Plugin.GIF
 			paletteMap = null;
 			usePaletted = true;
 			hasLocalPalette = false;
+			bitmapBytes = null;
+			imageBytes = null;
+			lastImageBytes = null;
+			_cachedExpandedFrame = null;
+			_cachedExpandedIndex = -1;
 		}
 
 		/// <summary>Reads a single byte from the input stream</summary>
@@ -949,6 +967,22 @@ namespace Plugin.GIF
 				// Fallback RGBA path (preserves original comments and logic)
 				// create new image to receive frame data
 				bitmap = new int[width * height];
+				if (bitmapBytes != null && unifiedPalette != null)
+				{
+					// First RGBA frame after indexed frames: seed the canvas from the indexed
+					// composition so disposal/compositing continues instead of restarting from black.
+					int len = Math.Min(bitmap.Length, bitmapBytes.Length);
+					for (int i = 0; i < len; i++)
+					{
+						int index = bitmapBytes[i] & 0xFF;
+						if (index < unifiedPalette.Length)
+						{
+							Color32 c = unifiedPalette[index];
+							bitmap[i] = c.R | (c.G << 8) | (c.B << 16) | (c.A << 24);
+						}
+						else bitmap[i] = unchecked((int)0xFF000000);
+					}
+				}
 				image = bitmap;
 				SetPixels(); // transfer pixel data to image
 
@@ -1020,7 +1054,14 @@ namespace Plugin.GIF
 			lastDispose = dispose;
 			if (usePaletted)
 			{
-				lastImageBytes = imageBytes;
+				// Copy, do not alias: imageBytes references the reused bitmapBytes canvas,
+				// so a plain assignment would make lastImageBytes track future mutations.
+				if (imageBytes != null)
+				{
+					if (lastImageBytes == null || lastImageBytes.Length != imageBytes.Length) lastImageBytes = new byte[imageBytes.Length];
+					Array.Copy(imageBytes, lastImageBytes, imageBytes.Length);
+				}
+				else lastImageBytes = null;
 				lastBgIndex = bgIndexByte;
 			}
 			else
