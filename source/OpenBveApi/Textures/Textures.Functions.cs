@@ -218,15 +218,31 @@ namespace OpenBveApi.Textures {
 					if (texture.Palette32[i].R == color.Value.R && texture.Palette32[i].G == color.Value.G && texture.Palette32[i].B == color.Value.B)
 					{ matchIdx = i; break; }
 				}
-				if (matchIdx == -1) return texture;
-				// Check only current frame for usage, avoids decoding all frames for streaming GIFs
-				bool anyUse = false;
+			if (matchIdx == -1) return texture;
+			// For streaming GIFs check only the current frame for usage, as decoding every frame
+			// here would defeat on-demand loading; non-streaming textures hold all frames in memory, so scan them all
+			bool anyUse = false;
+			if (texture.MultipleFrames && !(texture.Origin is StreamingGifOrigin))
+			{
+				int savedFrame = texture.CurrentFrame;
+				for (int f = 0; f < texture.TotalFrames && !anyUse; f++)
+				{
+					texture.CurrentFrame = f;
+					byte[] frameData = texture.Bytes;
+					if (frameData == null) continue;
+					for (int i = 0; i < frameData.Length; i++) { if ((frameData[i] & 0xFF) == matchIdx) { anyUse = true; break; } }
+				}
+				texture.CurrentFrame = savedFrame;
+			}
+			else
+			{
 				byte[] curFrame = texture.Bytes;
 				if (curFrame != null)
 				{
 					for (int i = 0; i < curFrame.Length; i++) { if ((curFrame[i] & 0xFF) == matchIdx) { anyUse = true; break; } }
 				}
-				if (!anyUse) return texture;
+			}
+			if (!anyUse) return texture;
 				Color32[] newPal = (Color32[])texture.Palette32.Clone();
 				newPal[matchIdx].A = 0;
 				if (texture.MultipleFrames)
