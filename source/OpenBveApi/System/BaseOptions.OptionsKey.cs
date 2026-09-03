@@ -65,6 +65,7 @@ namespace OpenBveApi
 		LightElevation,
 		// Object Optimization
 		BasicThreshold,
+		/// <remarks>No longer used</remarks>
 		FullThreshold,
 		VertexCulling,
 		// Simulation

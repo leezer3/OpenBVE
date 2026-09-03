@@ -51,15 +51,12 @@ namespace ObjectViewer
 				{
 					case ObjectOptimizationMode.None:
 						ObjectOptimizationBasicThreshold = 0;
-						ObjectOptimizationFullThreshold = 0;
 						break;
 					case ObjectOptimizationMode.Low:
 						ObjectOptimizationBasicThreshold = 1000;
-						ObjectOptimizationFullThreshold = 250;
 						break;
 					case ObjectOptimizationMode.High:
 						ObjectOptimizationBasicThreshold = 10000;
-						ObjectOptimizationFullThreshold = 1000;
 						break;
 				}
 			}
@@ -134,6 +131,11 @@ namespace ObjectViewer
 				MessageBox.Show("An error occured whilst saving the options to disk." + Environment.NewLine +
 								"Please ensure you have write permission.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
+		}
+
+		private static Key ResetIfUnknown(Key key, Key defaultKey)
+		{
+			return key == Key.Unknown ? defaultKey : key;
 		}
 
 		internal static void LoadOptions()
@@ -245,6 +247,13 @@ namespace ObjectViewer
 							block.GetEnumValue(OptionsKey.Down, out Interface.CurrentOptions.CameraMoveDown);
 							block.GetEnumValue(OptionsKey.Forward, out Interface.CurrentOptions.CameraMoveForward);
 							block.GetEnumValue(OptionsKey.Backward, out Interface.CurrentOptions.CameraMoveBackward);
+							// Reset any invalid or unknown camera keys back to their defaults
+							Interface.CurrentOptions.CameraMoveLeft = ResetIfUnknown(Interface.CurrentOptions.CameraMoveLeft, Key.A);
+							Interface.CurrentOptions.CameraMoveRight = ResetIfUnknown(Interface.CurrentOptions.CameraMoveRight, Key.D);
+							Interface.CurrentOptions.CameraMoveUp = ResetIfUnknown(Interface.CurrentOptions.CameraMoveUp, Key.W);
+							Interface.CurrentOptions.CameraMoveDown = ResetIfUnknown(Interface.CurrentOptions.CameraMoveDown, Key.S);
+							Interface.CurrentOptions.CameraMoveForward = ResetIfUnknown(Interface.CurrentOptions.CameraMoveForward, Key.Q);
+							Interface.CurrentOptions.CameraMoveBackward = ResetIfUnknown(Interface.CurrentOptions.CameraMoveBackward, Key.E);
 							break;
 
 					}

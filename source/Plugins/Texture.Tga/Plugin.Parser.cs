@@ -646,7 +646,7 @@ namespace Texture.Tga
 				int width = bitmap.Width;
 				int height = bitmap.Height;
 				bitmap.Dispose();
-				texture = new OpenBveApi.Textures.Texture(width, height, OpenBveApi.Textures.PixelFormat.RGBAlpha, raw, null);
+				texture = new OpenBveApi.Textures.Texture(width, height, OpenBveApi.Textures.PixelFormat.RGBAlpha, raw, (OpenBveApi.Colors.Color24[])null);
 				return true;
 			}
 			else

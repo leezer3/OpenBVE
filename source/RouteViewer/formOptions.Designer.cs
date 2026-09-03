@@ -246,7 +246,7 @@ namespace RouteViewer
             // AnisotropicLevel
             // 
             this.AnisotropicLevel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.AnisotropicLevel.AutoSize = true;
+            this.AnisotropicLevel.AutoSize = false;
             this.AnisotropicLevel.Location = new System.Drawing.Point(160, 52);
             this.AnisotropicLevel.Maximum = new decimal(new int[] {
             16,
@@ -269,7 +269,7 @@ namespace RouteViewer
             // AntialiasingLevel
             // 
             this.AntialiasingLevel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.AntialiasingLevel.AutoSize = true;
+            this.AntialiasingLevel.AutoSize = false;
             this.AntialiasingLevel.Location = new System.Drawing.Point(160, 77);
             this.AntialiasingLevel.Maximum = new decimal(new int[] {
             16,
@@ -325,7 +325,7 @@ namespace RouteViewer
             // width
             // 
             this.width.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.width.AutoSize = true;
+            this.width.AutoSize = false;
             this.width.Location = new System.Drawing.Point(160, 163);
             this.width.Maximum = new decimal(new int[] {
             4096,
@@ -358,7 +358,7 @@ namespace RouteViewer
             // height
             // 
             this.height.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.height.AutoSize = true;
+            this.height.AutoSize = false;
             this.height.Location = new System.Drawing.Point(160, 189);
             this.height.Maximum = new decimal(new int[] {
             4096,
@@ -513,7 +513,7 @@ namespace RouteViewer
             // numericUpDownViewingDistance
             // 
             this.numericUpDownViewingDistance.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numericUpDownViewingDistance.AutoSize = true;
+            this.numericUpDownViewingDistance.AutoSize = false;
             this.numericUpDownViewingDistance.Location = new System.Drawing.Point(160, 391);
             this.numericUpDownViewingDistance.Maximum = new decimal(new int[] {
             4096,
@@ -704,7 +704,7 @@ namespace RouteViewer
             // numericUpDownShadowStrength
             // 
             this.numericUpDownShadowStrength.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numericUpDownShadowStrength.AutoSize = true;
+            this.numericUpDownShadowStrength.AutoSize = false;
             this.numericUpDownShadowStrength.Location = new System.Drawing.Point(160, 114);
             this.numericUpDownShadowStrength.Name = "numericUpDownShadowStrength";
             this.numericUpDownShadowStrength.Size = new System.Drawing.Size(120, 20);
@@ -807,7 +807,7 @@ namespace RouteViewer
             0,
             393216});
             this.numericUpDownShadowBias.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numericUpDownShadowBias.AutoSize = true;
+            this.numericUpDownShadowBias.AutoSize = false;
             this.numericUpDownShadowBias.Location = new System.Drawing.Point(160, 148);
             this.numericUpDownShadowBias.Maximum = new decimal(new int[] {
             1,
@@ -841,7 +841,7 @@ namespace RouteViewer
             0,
             65536});
             this.numericUpDownShadowNormalBias.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numericUpDownShadowNormalBias.AutoSize = true;
+            this.numericUpDownShadowNormalBias.AutoSize = false;
             this.numericUpDownShadowNormalBias.Location = new System.Drawing.Point(160, 170);
             this.numericUpDownShadowNormalBias.Maximum = new decimal(new int[] {
             10,
@@ -937,7 +937,7 @@ namespace RouteViewer
             0,
             131072});
             this.numericUpDownNearClip.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numericUpDownNearClip.AutoSize = true;
+            this.numericUpDownNearClip.AutoSize = false;
             this.numericUpDownNearClip.Location = new System.Drawing.Point(161, 417);
             this.numericUpDownNearClip.Minimum = new decimal(new int[] {
             1,

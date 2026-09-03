@@ -36,7 +36,7 @@ namespace OpenBve
 	/// <summary>Implements the in-game menu system; manages addition and removal of individual menus.</summary>
 	public sealed partial class GameMenu : AbstractMenu
 	{
-		private static readonly Picturebox LogoPictureBox = new Picturebox(Program.Renderer);
+		internal static readonly Picturebox LogoPictureBox = new Picturebox(Program.Renderer);
 		internal static List<FoundSwitch> nextSwitches = new List<FoundSwitch>();
 		internal static List<FoundSwitch> previousSwitches = new List<FoundSwitch>();
 		internal static bool switchesFound = false;
@@ -141,8 +141,6 @@ namespace OpenBve
 			nextImageButton.IsVisible = false;
 			previousImageButton.Location = new Vector2(imageLoc - previousImageButton.Size.X * 2, quarterWidth / 2.0);
 			previousImageButton.IsVisible = false;
-			
-			
 			switchMainPictureBox.Location = new Vector2(imageLoc, quarterHeight);
 			switchMainPictureBox.Size = new Vector2(quarterWidth, quarterWidth);
 			switchMainPictureBox.BackgroundColor = Color128.Transparent;
@@ -153,7 +151,6 @@ namespace OpenBve
 			switchMapPictureBox.Size = new Vector2(quarterWidth * 2.0, Program.Renderer.Screen.Height);
 			LogoPictureBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0);
 			LogoPictureBox.Size = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Width / 2.0);
-			LogoPictureBox.Texture = Program.Renderer.ProgramLogo;
 			controlPictureBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0);
 			controlPictureBox.Size = new Vector2(quarterWidth, quarterWidth);
 			controlPictureBox.BackgroundColor = Color128.Transparent;

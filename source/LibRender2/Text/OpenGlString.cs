@@ -25,8 +25,20 @@ namespace LibRender2.Text
 			{
 				//
 			}
-			
+
+			Matrix4D.CreateOrthographicOffCenter(0.0f, renderer.Screen.Width, renderer.Screen.Height, 0.0f, -1.0f, 1.0f, out Matrix4D ProjectionMatrix);
+			Shader.Activate();
+			Shader.SetCurrentProjectionMatrix(ProjectionMatrix);
+			Shader.SetCurrentModelViewMatrix(Matrix4D.Identity);
 		}
+
+		public void Update()
+		{
+			Matrix4D.CreateOrthographicOffCenter(0.0f, renderer.Screen.Width, renderer.Screen.Height, 0.0f, -1.0f, 1.0f, out Matrix4D ProjectionMatrix);
+			Shader.Activate();
+			Shader.SetCurrentProjectionMatrix(ProjectionMatrix);
+		}
+
 
 		/// <summary>Renders a string to the screen.</summary>
 		/// <param name="font">The font to use.</param>
@@ -41,7 +53,6 @@ namespace LibRender2.Text
 			{
 				return;
 			}
-			renderer.LastBoundTexture = null;
 			/*
 			 * Prepare the top-left coordinates for rendering, incorporating the
 			 * orientation of the string in relation to the specified location.
@@ -197,15 +208,25 @@ namespace LibRender2.Text
 		{
 			Shader.Activate();
 			renderer.CurrentShader = Shader;
-			Shader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
-			Shader.SetCurrentModelViewMatrix(renderer.CurrentViewMatrix);
+
+			/*
+			 * In order to call GL.DrawArrays with procedural data within the shader,
+			 * we first need to bind a dummy VAO
+			 * If this is not done, it will generate an InvalidOperation error code
+			 */
+			renderer.dummyVao.Bind();
 
 			for (int i = 0; i < text.Length; i++)
 			{
 				i += font.GetCharacterData(text, i, out Texture texture, out OpenGlFontChar data) - 1;
 				if (renderer.currentHost.LoadTexture(ref texture, OpenGlTextureWrapMode.ClampClamp))
 				{
-					GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
+					if (renderer.LastBoundTexture != texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp])
+					{
+						GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
+						renderer.LastBoundTexture = texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp];
+					}
+					
 					Shader.SetAtlasLocation(data.TextureCoordinates);
 					double x = left - (data.PhysicalSize.X - data.TypographicSize.X) / 2;
 					double y = top - (data.PhysicalSize.Y - data.TypographicSize.Y) / 2;
@@ -217,12 +238,7 @@ namespace LibRender2.Text
 					Shader.SetColor(new Color128(color.A, color.A, color.A, 1.0f));
 					Shader.SetPoint(new Vector2(x, y));
 					Shader.SetSize(data.PhysicalSize);
-					/*
-					 * In order to call GL.DrawArrays with procedural data within the shader,
-					 * we first need to bind a dummy VAO
-					* If this is not done, it will generate an InvalidOperation error code
-					*/
-					renderer.dummyVao.Bind();
+					
 					GL.DrawArrays(PrimitiveType.TriangleStrip, 0, 6);
 					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
 					Shader.SetColor(color);

@@ -68,7 +68,7 @@ namespace RouteViewer {
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString(), Interface.CurrentOptions.LoadingLogo, Interface.CurrentOptions.LoadingProgressBar);
 			if (textureBytes != null && textureBytes.Length > 0)
 			{
-				Texture t = new Texture(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, PixelFormat.RGBAlpha, textureBytes, null);
+				Texture t = new Texture(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, PixelFormat.RGBAlpha, textureBytes, (OpenBveApi.Colors.Color24[])null);
 				Program.Renderer.Loading.SetLoadingBkg(t);
 			}
 			// members

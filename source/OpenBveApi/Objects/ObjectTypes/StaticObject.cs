@@ -597,18 +597,25 @@ namespace OpenBveApi.Objects
 			int m = Mesh.Materials.Length;
 			int f = Mesh.Faces.Length;
 			
-			if (m >= f / 500 && f >= faceThreshold && f < 20000 && currentHost.Platform != HostPlatform.AppleOSX)
+			if (currentHost.Platform != HostPlatform.AppleOSX)
 			{
 				/*
 				 * HACK:
 				 * A forwards compatible GL3 context (required on OS-X) only supports tris
-				 * No access to the renderer type here, so let's cheat and assume that OS-X
-				 * requires an optimized object (therefore decomposed into tris) in all circumstances
+				 * and thus an optimized object (decomposed into tris) in all circumstances
 				 *
-				 * Also *always* optimise objects with more than 20k faces (some .X as otherwise this kills the renderer)
-				 * Further, always try to squash where there are more than 500 times faces than materials (Some X trees killing the renderer)
+				 * When in viewers, skip optimisation if above the threshold to allow
+				 * faster reload speeds.
+				 *
+				 * When in-game, force optimisation at all times for best possible performance
+				 * even though this may have an effect on load-times
 				 */
-				return;
+
+				if (m >= f / 500 && f >= faceThreshold && f < 20000 && currentHost.Application != HostApplication.OpenBve)
+				{
+					return;
+				}
+				
 			}
 
 			if (Mesh.Vertices.Length > 10000)

@@ -426,12 +426,20 @@ namespace OpenBve
 			}
 			Program.Renderer.Screen.Minimized = false;
 			Screen.WindowResize(Width,Height);
-			if (Program.Renderer.CurrentInterface == InterfaceType.SwitchChangeMap)
+			switch (Program.Renderer.CurrentInterface)
 			{
-				// call the show method again to trigger resize
-				Game.SwitchChangeDialog.Show();
+				case InterfaceType.SwitchChangeMap:
+					// call the show method again to trigger resize
+					Game.SwitchChangeDialog.Show();
+					break;
+				case InterfaceType.Menu:
+				case InterfaceType.GLMainMenu:
+					Game.Menu.OnResize();
+					break;
 			}
-			Game.Menu.OnResize();
+
+			Program.Renderer.Rectangle.Update();
+			Program.Renderer.OpenGlString.Update();
 		}
 
 		[DllImport("user32.dll")]
@@ -472,6 +480,7 @@ namespace OpenBve
 			Program.Renderer.MotionBlur.Initialize(Interface.CurrentOptions.MotionBlur);
 			if (string.IsNullOrEmpty(MainLoop.currentResult.RouteFile))
 			{
+				GameMenu.LogoPictureBox.Texture = Program.Renderer.ProgramLogo;
 				Game.Menu.PushMenu(MenuType.GameStart);
 				Loading.Complete = true;
 				Program.Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost);

@@ -34,15 +34,12 @@ namespace RouteViewer
 				{
 					case ObjectOptimizationMode.None:
 						ObjectOptimizationBasicThreshold = 0;
-						ObjectOptimizationFullThreshold = 0;
 						break;
 					case ObjectOptimizationMode.Low:
 						ObjectOptimizationBasicThreshold = 1000;
-						ObjectOptimizationFullThreshold = 250;
 						break;
 					case ObjectOptimizationMode.High:
 						ObjectOptimizationBasicThreshold = 10000;
-						ObjectOptimizationFullThreshold = 1000;
 						break;
 				}
 			}

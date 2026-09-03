@@ -624,15 +624,22 @@ namespace ObjectViewer {
                         Application.DoEvents();
 	                }
 	                break;
-				case Key.BackSpace:
-	            case Key.Delete:
-		            LightingRelative = -1.0;
-	                Game.Reset();
-		            Files.Clear();
-                    LastReloadTime = DateTime.UtcNow;
-					NearestTrain.UpdateSpecs();
-					Renderer.ApplyBackgroundColor();
-	                break;
+			case Key.BackSpace:
+            case Key.Delete:
+	            LightingRelative = -1.0;
+                Game.Reset();
+				// Pressing delete means unload current loaded objects, so release everything instead of preserving.
+				Renderer.TextureManager.UnloadAllTextures(false);
+				CurrentHost.StaticObjectCache.Clear();
+				CurrentHost.AnimatedObjectCollectionCache.Clear();
+	            Files.Clear();
+				// One full collect so the freed LOH buffers leave RAM immediately.
+				GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
+				GC.WaitForPendingFinalizers();
+                LastReloadTime = DateTime.UtcNow;
+				NearestTrain.UpdateSpecs();
+				Renderer.ApplyBackgroundColor();
+                break;
 	            case Key.Left:
 	                RotateX = -1;
 	                break;
