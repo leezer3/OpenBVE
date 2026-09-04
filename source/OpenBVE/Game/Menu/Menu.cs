@@ -219,7 +219,7 @@ namespace OpenBve
 		//
 		// SET CONTROL CUSTOM DATA
 		//
-		internal void SetControlKbdCustomData(Key key, KeyboardModifier keybMod)
+		internal void SetControlKbdCustomData(Key key, KeyboardModifier keybMod, int modifierOrder)
 		{
 			//Check that we are customising a key, and that our key is NOT the menu back key
 			if (isCustomisingControl && key != MenuBackKey && CustomControlIdx < Interface.CurrentControls.Length)
@@ -227,6 +227,7 @@ namespace OpenBve
 				Interface.CurrentControls[CustomControlIdx].Method = ControlMethod.Keyboard;
 				Interface.CurrentControls[CustomControlIdx].Key = key;
 				Interface.CurrentControls[CustomControlIdx].Modifier = keybMod;
+				Interface.CurrentControls[CustomControlIdx].ModifierOrder = modifierOrder;
 				Interface.SaveControls(null, Interface.CurrentControls);
 			}
 			PopMenu();
