@@ -540,7 +540,7 @@ namespace ObjectViewer
                 }
             };
             this.trackBarSunAzimuth.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            tlpShadows.Controls.Add(azimuthPanel, 0, 10);
+            tlpShadows.Controls.Add(azimuthPanel, 0, 11);
             tlpShadows.SetColumnSpan(azimuthPanel, 2);
             var elevationPanel = new System.Windows.Forms.TableLayoutPanel
             {
