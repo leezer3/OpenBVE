@@ -109,13 +109,18 @@ namespace RouteManager2
 		/// <param name="switchPositions">The list of switch positions on the map</param>
 		/// <param name="follower">The TrackFollower used for drawing</param>
 		/// <param name="drawRadius">The draw radius</param>
-		public static Bitmap CreateRouteMap(int Width, int Height, bool inGame, out Dictionary<Guid, Vector2> switchPositions, TrackFollower follower = null, int drawRadius = 500)
+		public static Bitmap CreateRouteMap(int Width, int Height, bool inGame, out Dictionary<Guid, Vector2> switchPositions, TrackFollower follower = null, int drawRadius = 500, FontFamily fontFamily = null)
 		{
 			switchPositions = null;
 			if (CurrentRoute.Tracks[0].Elements == null)
 			{
 				//Usually caused by selecting another route before preview has finished
 				return new Bitmap(1,1);
+			}
+			// Font check
+			if (fontFamily == null)
+			{
+				fontFamily = FontFamily.GenericSansSerif;
 			}
 			int firstUsedElement, lastUsedElement;
 			if (follower != null)
@@ -331,7 +336,7 @@ namespace RouteManager2
 			// STATION NAMES
 			{
 				double wh = imageSize.X * imageSize.Y;
-				Font f = new Font(FontFamily.GenericSansSerif, wh < 65536.0 ? 9.0f : 10.0f, GraphicsUnit.Pixel);
+				Font f = new Font(fontFamily, wh < 65536.0 ? 9.0f : 10.0f, GraphicsUnit.Pixel);
 				for (int i = firstUsedElement; i <= lastUsedElement; i++)
 				{
 					for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Count; j++)
@@ -463,7 +468,7 @@ namespace RouteManager2
 		/// <param name="Width">The width of the bitmap to create.</param>
 		/// <param name="Height">The height of the bitmap to create.</param>
 		/// <param name="inGame"><c>true</c> = bitmap for in-game overlay | <c>false</c> = for standard window.</param>
-		public static Bitmap CreateRouteGradientProfile(int Width, int Height, bool inGame)
+		public static Bitmap CreateRouteGradientProfile(int Width, int Height, bool inGame, FontFamily fontFamily = null)
 		{
 			if (CurrentRoute.Tracks[0].Elements == null)
 			{
@@ -475,6 +480,11 @@ namespace RouteManager2
 				// than the more generic one thrown later
 				// NOTE: Will throw the generic error message on routes shorter than 900m with no stations
 				throw new InvalidDataException(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","route_corrupt_nostations"}));
+			}
+			// Font check
+			if (fontFamily == null)
+			{
+				fontFamily = FontFamily.GenericSansSerif;
 			}
 			// Track elements are assumed to be all of the same length, and this length
 			// is used as measure unit, rather than computing the incremental track length
@@ -545,7 +555,7 @@ namespace RouteManager2
 			}
 			// STATION NAMES
 			{
-				Font f = new Font(FontFamily.GenericSansSerif, 12.0f, GraphicsUnit.Pixel);
+				Font f = new Font(fontFamily, 12.0f, GraphicsUnit.Pixel);
 				StringFormat m = new StringFormat();
 				for (int i = firstUsedElement; i <= lastUsedElement; i++)
 				{
@@ -604,8 +614,8 @@ namespace RouteManager2
 			}
 			// ROUTE MARKERS
 			{
-				Font f = new Font(FontFamily.GenericSansSerif, 10.0f, GraphicsUnit.Pixel);
-				Font fs = new Font(FontFamily.GenericSansSerif, 9.0f, GraphicsUnit.Pixel);
+				Font f = new Font(fontFamily, 10.0f, GraphicsUnit.Pixel);
+				Font fs = new Font(fontFamily, 9.0f, GraphicsUnit.Pixel);
 				StringFormat m = new StringFormat
 				{
 					Alignment = StringAlignment.Far,
@@ -658,8 +668,13 @@ namespace RouteManager2
 			return b;
 		}
 
-		private static void DrawPlayerPath(Graphics g, TrackFollower follower, int firstUsedElement, int lastUsedElement, Vector2 imageOrigin, Vector2 imageSize, Vector2 imageScale, double x0, double z0)
+		private static void DrawPlayerPath(Graphics g, TrackFollower follower, int firstUsedElement, int lastUsedElement, Vector2 imageOrigin, Vector2 imageSize, Vector2 imageScale, double x0, double z0, FontFamily fontFamily = null)
 		{
+			// Font check
+			if (fontFamily == null)
+			{
+				fontFamily = FontFamily.GenericSansSerif;
+			}
 			int key = follower.TrackIndex;
 			Track currentTrack = CurrentRoute.Tracks[key];
 			int start = 0;
@@ -677,7 +692,7 @@ namespace RouteManager2
 				{
 					continue;
 				}
-				Font boldFont = new Font(FontFamily.GenericSansSerif, 10.0f, FontStyle.Bold, GraphicsUnit.Pixel);
+				Font boldFont = new Font(fontFamily, 10.0f, FontStyle.Bold, GraphicsUnit.Pixel);
 				int nextTrackIndex = -1;
 				for (int j = 0; j < currentTrack.Elements[i + firstUsedElement].Events.Count; j++)
 				{
