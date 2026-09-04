@@ -1,4 +1,4 @@
-﻿namespace Plugin
+namespace Plugin
 {
 	/// <summary>The available sections in an animated file</summary>
 	internal enum AnimatedSection
@@ -7,6 +7,7 @@
 		Include,
 		Object,
 		Sound,
-		StateChangeSound
+		StateChangeSound,
+		Light
 	}
 }
