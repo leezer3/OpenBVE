@@ -73,6 +73,8 @@ namespace Object.CsvB3d
 							currentMeshBuilder.Vertices.Add(subBlock.GetNextVertex(out Vector3 currentNormal));
 							currentNormals.Add(currentNormal);
 							break;
+						case CSVB3DKey.TriFace:
+						case CSVB3DKey.TriFace2:
 						case CSVB3DKey.Face:
 						case CSVB3DKey.Face2:
 							if (subBlock.TryGetNextVertexIndexArray(out int[] faceVertices, Plugin.enabledHacks.BveTsHacks))
@@ -98,6 +100,13 @@ namespace Object.CsvB3d
 								{
 									int l = f.Vertices.Length;
 									(f.Vertices[l - 2], f.Vertices[l - 1]) = (f.Vertices[l - 1], f.Vertices[l - 2]);
+								}
+
+								if (key == CSVB3DKey.TriFace || key == CSVB3DKey.TriFace2)
+								{
+									// if we're using TriFace, assume the exporter has optimised
+									f.Flags |= FaceFlags.Triangles;
+									staticObject.Optimized = true;
 								}
 
 								if (key == CSVB3DKey.Face2)

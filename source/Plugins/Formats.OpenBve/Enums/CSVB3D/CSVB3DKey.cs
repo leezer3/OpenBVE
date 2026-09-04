@@ -12,9 +12,13 @@ namespace Formats.OpenBve
 		/// <summary>Adds a new 1-sided face</summary>
 		Face,
 		AddFace = Face,
+		/// <summary>Adds a new 1-sided face consisting of triangles</summary>
+		TriFace,
 		/// <summary>Adds a new 2-sided face</summary>
 		Face2,
 		AddFace2 = Face2,
+		/// <summary>Adds a new 2-sided face consisting of triangles</summary>
+		TriFace2,
 		/// <summary>Sets the color of all preceding faces in the MeshBuilder</summary>
 		Color,
 		SetColor = Color,
