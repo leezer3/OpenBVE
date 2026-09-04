@@ -16,7 +16,7 @@ namespace RouteViewer
     internal class RouteViewer : GameWindow
     {
         //Deliberately specify the default constructor with various overrides
-        public RouteViewer(int width, int height, GraphicsMode currentGraphicsMode, string windowTitle, GameWindowFlags @default): base (width, height, currentGraphicsMode, windowTitle, @default)
+        public RouteViewer(int width, int height, GraphicsMode currentGraphicsMode, string windowTitle, GameWindowFlags @default): base (width, height, currentGraphicsMode, windowTitle, @default, DisplayDevice.Default, 4, 1, GraphicsContextFlags.ForwardCompatible)
         {
             try
             {
