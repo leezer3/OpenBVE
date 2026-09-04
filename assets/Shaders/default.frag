@@ -96,7 +96,7 @@ float interleavedGradientNoise(vec2 p) {
 
 // Vogel disk - uniform disk distribution via golden angle
 vec2 vogelDiskSample(int i, int n, float phi) {
-    float r = sqrt(float(i) + 0.5) / sqrt(float(n));
+    float r = sqrt((float(i) + 0.5) / float(n));
     float theta = float(i) * SHADOW_GOLDEN_ANGLE + phi;
     return vec2(cos(theta), sin(theta)) * r;
 }
