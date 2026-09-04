@@ -595,7 +595,7 @@ namespace RouteViewer
                 }
             };
             this.trackBarSunAzimuth.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            tlpShadows.Controls.Add(panelAzimuth, 0, 10);
+            tlpShadows.Controls.Add(panelAzimuth, 0, 11);
             tlpShadows.SetColumnSpan(panelAzimuth, 2);
             var panelElevation = new System.Windows.Forms.TableLayoutPanel
             {
@@ -614,7 +614,7 @@ namespace RouteViewer
                 }
             };
             this.trackBarSunElevation.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            tlpShadows.Controls.Add(panelElevation, 0, 12);
+            tlpShadows.Controls.Add(panelElevation, 0, 13);
             tlpShadows.SetColumnSpan(panelElevation, 2);
             this.tabPageShadows.Controls.Add(tlpShadows);
             this.tabPageShadows.Location = new System.Drawing.Point(4, 22);
