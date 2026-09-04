@@ -186,6 +186,7 @@ namespace OpenBve {
             this.labelShadowResolution = new System.Windows.Forms.Label();
             this.comboboxShadowResolution = new System.Windows.Forms.ComboBox();
             this.checkboxShadowFilterCascades = new System.Windows.Forms.CheckBox();
+            this.checkboxShadowSmooth = new System.Windows.Forms.CheckBox();
             this.labelShadowDistance = new System.Windows.Forms.Label();
             this.comboboxShadowDistance = new System.Windows.Forms.ComboBox();
             this.labelShadowCascades = new System.Windows.Forms.Label();
@@ -197,6 +198,8 @@ namespace OpenBve {
             this.updownShadowBias = new System.Windows.Forms.NumericUpDown();
             this.labelShadowNormalBias = new System.Windows.Forms.Label();
             this.updownShadowNormalBias = new System.Windows.Forms.NumericUpDown();
+            this.labelShadowSoftness = new System.Windows.Forms.Label();
+            this.comboboxShadowFilterRadius = new System.Windows.Forms.ComboBox();
             this.buttonOptionsPrevious = new System.Windows.Forms.Button();
             this.buttonOptionsNext = new System.Windows.Forms.Button();
             this.panelOptionsPage3 = new System.Windows.Forms.Panel();
@@ -2676,11 +2679,14 @@ namespace OpenBve {
             this.groupboxShadows.Controls.Add(this.updownShadowBias);
             this.groupboxShadows.Controls.Add(this.labelShadowNormalBias);
             this.groupboxShadows.Controls.Add(this.updownShadowNormalBias);
+            this.groupboxShadows.Controls.Add(this.checkboxShadowSmooth);
+            this.groupboxShadows.Controls.Add(this.labelShadowSoftness);
+            this.groupboxShadows.Controls.Add(this.comboboxShadowFilterRadius);
             this.groupboxShadows.Controls.Add(this.checkboxShadowFilterCascades);
             this.groupboxShadows.ForeColor = System.Drawing.Color.Black;
             this.groupboxShadows.Location = new System.Drawing.Point(330, 0);
             this.groupboxShadows.Name = "groupboxShadows";
-            this.groupboxShadows.Size = new System.Drawing.Size(321, 240);
+            this.groupboxShadows.Size = new System.Drawing.Size(321, 260);
             this.groupboxShadows.TabIndex = 30;
             this.groupboxShadows.TabStop = false;
             this.groupboxShadows.Text = "Shadows";
@@ -2692,7 +2698,7 @@ namespace OpenBve {
             this.groupboxCamera.Controls.Add(this.labelCameraTransitionSpeed);
             this.groupboxCamera.Controls.Add(this.updownCameraTransitionSpeed);
             this.groupboxCamera.ForeColor = System.Drawing.Color.Black;
-            this.groupboxCamera.Location = new System.Drawing.Point(330, 245);
+            this.groupboxCamera.Location = new System.Drawing.Point(330, 265);
             this.groupboxCamera.Name = "groupboxCamera";
             this.groupboxCamera.Size = new System.Drawing.Size(321, 120);
             this.groupboxCamera.TabIndex = 22;
@@ -2781,10 +2787,30 @@ namespace OpenBve {
             this.comboboxShadowResolution.TabIndex = 1;
             this.comboboxShadowResolution.SelectedIndexChanged += new System.EventHandler(this.comboboxShadowResolution_SelectedIndexChanged);
             // 
+            // checkboxShadowSmooth
+            // 
+            this.checkboxShadowSmooth.AutoSize = true;
+            this.checkboxShadowSmooth.Location = new System.Drawing.Point(8, 195);
+            this.checkboxShadowSmooth.Name = "checkboxShadowSmooth";
+            this.checkboxShadowSmooth.Size = new System.Drawing.Size(110, 17);
+            this.checkboxShadowSmooth.TabIndex = 13;
+            this.checkboxShadowSmooth.Text = "Smooth Shadow";
+            this.checkboxShadowSmooth.UseVisualStyleBackColor = true;
+            this.checkboxShadowSmooth.CheckedChanged += new System.EventHandler(this.checkboxShadowSmooth_CheckedChanged);
+            // 
+            // labelShadowSoftness
+            // 
+            this.labelShadowSoftness.AutoSize = true;
+            this.labelShadowSoftness.Location = new System.Drawing.Point(8, 220);
+            this.labelShadowSoftness.Name = "labelShadowSoftness";
+            this.labelShadowSoftness.Size = new System.Drawing.Size(50, 13);
+            this.labelShadowSoftness.TabIndex = 15;
+            this.labelShadowSoftness.Text = "Smooth Radius";
+            // 
             // checkboxShadowFilterCascades
             // 
             this.checkboxShadowFilterCascades.AutoSize = true;
-            this.checkboxShadowFilterCascades.Location = new System.Drawing.Point(8, 215);
+            this.checkboxShadowFilterCascades.Location = new System.Drawing.Point(8, 245);
             this.checkboxShadowFilterCascades.Name = "checkboxShadowFilterCascades";
             this.checkboxShadowFilterCascades.Size = new System.Drawing.Size(150, 17);
             this.checkboxShadowFilterCascades.TabIndex = 14;
@@ -2931,6 +2957,20 @@ namespace OpenBve {
             0,
             0});
             this.updownShadowNormalBias.ValueChanged += new System.EventHandler(this.updownShadowNormalBias_ValueChanged);
+            // 
+            // comboboxShadowFilterRadius
+            // 
+            this.comboboxShadowFilterRadius.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboboxShadowFilterRadius.FormattingEnabled = true;
+            this.comboboxShadowFilterRadius.Items.AddRange(new object[] {
+            "Low",
+            "Medium",
+            "High"});
+            this.comboboxShadowFilterRadius.Location = new System.Drawing.Point(120, 220);
+            this.comboboxShadowFilterRadius.Name = "comboboxShadowFilterRadius";
+            this.comboboxShadowFilterRadius.Size = new System.Drawing.Size(113, 21);
+            this.comboboxShadowFilterRadius.TabIndex = 12;
+            this.comboboxShadowFilterRadius.SelectedIndexChanged += new System.EventHandler(this.comboboxShadowFilterRadius_SelectedIndexChanged);
             // 
             // buttonOptionsPrevious
             // 
@@ -6600,6 +6640,7 @@ namespace OpenBve {
         private System.Windows.Forms.Panel panelOptionsRight;
         private System.Windows.Forms.Label labelShadowResolution;
         private System.Windows.Forms.ComboBox comboboxShadowResolution;
+        private System.Windows.Forms.CheckBox checkboxShadowSmooth;
         private System.Windows.Forms.CheckBox checkboxShadowFilterCascades;
         private System.Windows.Forms.Label labelShadowDistance;
         private System.Windows.Forms.ComboBox comboboxShadowDistance;
@@ -6612,6 +6653,9 @@ namespace OpenBve {
         private System.Windows.Forms.NumericUpDown updownShadowBias;
         private System.Windows.Forms.Label labelShadowNormalBias;
         private System.Windows.Forms.NumericUpDown updownShadowNormalBias;
+        private System.Windows.Forms.Label labelShadowSoftness;
+        private System.Windows.Forms.Label labelShadowSmooth;
+        private System.Windows.Forms.ComboBox comboboxShadowFilterRadius;
         private System.Windows.Forms.GroupBox groupboxShadows;
         private System.Windows.Forms.ComboBox comboboxVSync;
         private System.Windows.Forms.Label labelVSync;
