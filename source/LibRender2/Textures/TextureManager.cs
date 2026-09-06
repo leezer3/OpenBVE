@@ -546,8 +546,10 @@ namespace LibRender2.Textures
 								OpenTK.Graphics.OpenGL.PixelFormat.Red,
 								PixelType.UnsignedByte, textureBytes);
 
-							// small cheat: Use GL_RED (6403) to swizzle our R channel when called by the shader
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleRgba, new[] { 6403, 6403, 6403, 1});
+							// Replicate the single red channel into RGB and force alpha to 1 (opaque).
+							// TEXTURE_SWIZZLE_* only accepts the symbolic values ZERO/ONE/RED/GREEN/BLUE/ALPHA
+							// (see the glTexParameter reference); All.Red is 0x1903 (was hardcoded as 6403) and All.One is 1.
+							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleRgba, new[] { (int)All.Red, (int)All.Red, (int)All.Red, (int)All.One });
 							break;
 						case PixelFormat.GrayscaleAlpha:
 							// Opaque use: alpha channel is discarded, upload the gray bytes via the Red channel
@@ -563,7 +565,7 @@ namespace LibRender2.Textures
 									texture.Width, texture.Height, 0,
 									OpenTK.Graphics.OpenGL.PixelFormat.Red,
 									PixelType.UnsignedByte, gray);
-								GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleRgba, new[] { 6403, 6403, 6403, 1});
+								GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleRgba, new[] { (int)All.Red, (int)All.Red, (int)All.Red, (int)All.One });
 								break;
 							}
 							case PixelFormat.RGB:
