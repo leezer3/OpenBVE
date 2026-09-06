@@ -442,7 +442,7 @@ namespace LibRender2
 			whitePixel = new Texture(new Texture(1, 1, PixelFormat.RGBAlpha, new byte[] {255, 255, 255, 255}, (OpenBveApi.Colors.Color24[])null));
 			nullDepthMap = GL.GenTexture();
 			GL.BindTexture(TextureTarget.Texture2D, nullDepthMap);
-			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent16, 1, 1, 0, OpenTK.Graphics.OpenGL.PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
+			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent16, 1, 1, 0, OpenTK.Graphics.OpenGL.PixelFormat.DepthComponent, PixelType.UnsignedShort, IntPtr.Zero);
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureCompareMode, (int)TextureCompareMode.CompareRefToTexture);
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
