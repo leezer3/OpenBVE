@@ -235,9 +235,14 @@ namespace OpenBve {
 					g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 					g.Clear(Color.Transparent);
 					g.FillRectangle(Brushes.White, new RectangleF(xOffset, 0, w, actualHeight));
-					Font f = new Font(FontFamily.GenericSansSerif, 13.0f, GraphicsUnit.Pixel);
-					Font fs = new Font(FontFamily.GenericSansSerif, 11.0f, GraphicsUnit.Pixel);
-					Font fss = new Font(FontFamily.GenericSansSerif, 9.0f, GraphicsUnit.Pixel);
+					FontFamily fontFamily = Program.Renderer.Fonts.uiFont;
+					if (fontFamily == null)
+					{
+						fontFamily = FontFamily.GenericSansSerif;
+					}
+					Font f = new Font(fontFamily, 13.0f, GraphicsUnit.Pixel);
+					Font fs = new Font(fontFamily, 11.0f, GraphicsUnit.Pixel);
+					Font fss = new Font(fontFamily, 9.0f, GraphicsUnit.Pixel);
 					// draw timetable
 					string t;
 					// description
