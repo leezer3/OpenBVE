@@ -456,6 +456,15 @@ namespace LibRender2.Textures
 					handle.Transparency = texture.GetTransparencyType();
 					// Fetch the pixel data once; the getter may lazily re-decode released instances, which must not happen per access
 					byte[] textureBytes = texture.Bytes;
+					if (texture.Width <= 0 || texture.Height <= 0 || textureBytes == null || textureBytes.Length == 0)
+					{
+						// Nothing valid to upload: release the half-created GL texture and get out
+						// before GenerateMipmap below can raise GL_INVALID_OPERATION on it
+						GL.BindTexture(TextureTarget.Texture2D, 0);
+						GL.DeleteTexture(names[0]);
+						handle.OpenGlTextures[(int)wrap].Name = 0;
+						return false;
+					}
 					switch (Interpolation)
 					{
 						case InterpolationMode.NearestNeighbor:
@@ -507,8 +516,6 @@ namespace LibRender2.Textures
 						GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, AnisotropicFilteringLevel);
 					}
 					
-					bool noLuminanceChannel = currentHost.Platform == HostPlatform.AppleOSX || renderer.currentOptions.ForceForwardsCompatibleContext;
-					
 					if (handle.Transparency == TextureTransparencyType.Opaque)
 					{
 						switch (texture.PixelFormat)
@@ -528,22 +535,37 @@ namespace LibRender2.Textures
 									GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb8, texture.Width, texture.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Rgb, PixelType.UnsignedByte, expanded);
 									break;
 								}
-							case PixelFormat.Grayscale:
-								// send as is to the luminance channel [NOTE: deprecated in GL4, so use Red channel instead]
-								// n.b. Make sure to set the unpack alignment as otherwise we corrupt textures where stride > width
+						case PixelFormat.Grayscale:
+							// LUMINANCE was removed from GL core profiles (3.1+), and our shaders are
+							// #version 410 core, so always upload via the Red channel with a swizzle
+							// n.b. Make sure to set the unpack alignment as otherwise we corrupt textures where stride > width
+							GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
+							GL.TexImage2D(TextureTarget.Texture2D, 0,
+								PixelInternalFormat.R8,
+								texture.Width, texture.Height, 0,
+								OpenTK.Graphics.OpenGL.PixelFormat.Red,
+								PixelType.UnsignedByte, textureBytes);
+
+							// small cheat: Use GL_RED (6403) to swizzle our R channel when called by the shader
+							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleRgba, new[] { 6403, 6403, 6403, 1});
+							break;
+						case PixelFormat.GrayscaleAlpha:
+							// Opaque use: alpha channel is discarded, upload the gray bytes via the Red channel
+							{
+								byte[] gray = new byte[texture.Width * texture.Height];
+								for (int p = 0; p < gray.Length; p++)
+								{
+									gray[p] = textureBytes[2 * p];
+								}
 								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
 								GL.TexImage2D(TextureTarget.Texture2D, 0,
-									noLuminanceChannel ? PixelInternalFormat.R8 : PixelInternalFormat.Luminance,
+									PixelInternalFormat.R8,
 									texture.Width, texture.Height, 0,
-									noLuminanceChannel ? OpenTK.Graphics.OpenGL.PixelFormat.Red : OpenTK.Graphics.OpenGL.PixelFormat.Luminance,
-									PixelType.UnsignedByte, textureBytes);
-								
-								if (noLuminanceChannel)
-								{
-									// small cheat: Use GL_RED (6403) to swizzle our R channel when called by the shader
-									GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleRgba, new[] { 6403, 6403, 6403, 1});
-								}
+									OpenTK.Graphics.OpenGL.PixelFormat.Red,
+									PixelType.UnsignedByte, gray);
+								GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleRgba, new[] { 6403, 6403, 6403, 1});
 								break;
+							}
 							case PixelFormat.RGB:
 								// send as is
 								// n.b. Make sure to set the unpack alignment as otherwise we corrupt textures where stride > width
@@ -566,6 +588,12 @@ namespace LibRender2.Textures
 									OpenTK.Graphics.OpenGL.PixelFormat.Rgba,
 									PixelType.UnsignedByte, textureBytes);
 								break;
+							default:
+								// Unknown / invalid format: must not reach GenerateMipmap with no level-0 image
+								GL.BindTexture(TextureTarget.Texture2D, 0);
+								GL.DeleteTexture(names[0]);
+								handle.OpenGlTextures[(int)wrap].Name = 0;
+								return false;
 						}
 					}
 					else
@@ -586,45 +614,65 @@ namespace LibRender2.Textures
 								GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, texture.Width, texture.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, expanded);
 								break;
 							}
-						case PixelFormat.GrayscaleAlpha:
-							// NOTE: LuminanceAlpha is deprecated in GL4, so just upconvert to RGBA
-							if (noLuminanceChannel)
+					case PixelFormat.GrayscaleAlpha:
+						// NOTE: LuminanceAlpha was removed from GL core profiles (3.1+), so always upconvert to RGBA
+						{
+							int stride = (4 * (texture.Width + 1) >> 2) << 2;
+							byte[] newBytes = new byte[stride * texture.Height];
+							int i = 0, j = 0;
+
+							for (int y = 0; y < texture.Height; y++)
 							{
-								int stride = (4 * (texture.Width + 1) >> 2) << 2;
-								byte[] newBytes = new byte[stride * texture.Height];
-								int i = 0, j = 0;
-
-								for (int y = 0; y < texture.Height; y++)
+								for (int x = 0; x < texture.Width; x++)
 								{
-									for (int x = 0; x < texture.Width; x++)
-									{
-										newBytes[j + 0] = textureBytes[i + 0];
-										newBytes[j + 1] = textureBytes[i + 0];
-										newBytes[j + 2] = textureBytes[i + 0];
-										newBytes[j + 3] = textureBytes[i + 1];
-										i += 2;
-										j += 4;
-									}
+									newBytes[j + 0] = textureBytes[i + 0];
+									newBytes[j + 1] = textureBytes[i + 0];
+									newBytes[j + 2] = textureBytes[i + 0];
+									newBytes[j + 3] = textureBytes[i + 1];
+									i += 2;
+									j += 4;
+								}
 
-									j += stride - 4 * texture.Width;
+								j += stride - 4 * texture.Width;
+							}
+							GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
+							GL.TexImage2D(TextureTarget.Texture2D, 0,
+								PixelInternalFormat.Rgba8,
+								texture.Width, texture.Height, 0,
+								OpenTK.Graphics.OpenGL.PixelFormat.Rgba,
+								PixelType.UnsignedByte, newBytes);
+						}
+						break;
+						case PixelFormat.Grayscale:
+							// Transparent use of a gray image: expand to RGBA, fully opaque
+							{
+								byte[] expanded = new byte[texture.Width * texture.Height * 4];
+								for (int p = 0; p < texture.Width * texture.Height; p++)
+								{
+									expanded[p * 4] = textureBytes[p];
+									expanded[p * 4 + 1] = textureBytes[p];
+									expanded[p * 4 + 2] = textureBytes[p];
+									expanded[p * 4 + 3] = 255;
 								}
 								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
-								GL.TexImage2D(TextureTarget.Texture2D, 0,
-									PixelInternalFormat.Rgba8,
-									texture.Width, texture.Height, 0,
-									OpenTK.Graphics.OpenGL.PixelFormat.Rgba,
-									PixelType.UnsignedByte, newBytes);
+								GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, texture.Width, texture.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, expanded);
+								break;
 							}
-							else
+						case PixelFormat.RGB:
+							// Transparent use of an RGB image: expand to RGBA, fully opaque
 							{
-								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
-								GL.TexImage2D(TextureTarget.Texture2D, 0,
-									PixelInternalFormat.LuminanceAlpha,
-									texture.Width, texture.Height, 0,
-									OpenTK.Graphics.OpenGL.PixelFormat.LuminanceAlpha,
-									PixelType.UnsignedByte, textureBytes);
+								byte[] expanded = new byte[texture.Width * texture.Height * 4];
+								for (int p = 0; p < texture.Width * texture.Height; p++)
+								{
+									expanded[p * 4] = textureBytes[p * 3];
+									expanded[p * 4 + 1] = textureBytes[p * 3 + 1];
+									expanded[p * 4 + 2] = textureBytes[p * 3 + 2];
+									expanded[p * 4 + 3] = 255;
+								}
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
+								GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, texture.Width, texture.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, expanded);
+								break;
 							}
-							break;
 							case PixelFormat.RGBAlpha:
 								/*
 								* The texture uses its alpha channel, so send the bitmap data
@@ -638,6 +686,12 @@ namespace LibRender2.Textures
 									OpenTK.Graphics.OpenGL.PixelFormat.Rgba,
 									PixelType.UnsignedByte, textureBytes);
 								break;
+							default:
+								// Unknown / invalid format: must not reach GenerateMipmap with no level-0 image
+								GL.BindTexture(TextureTarget.Texture2D, 0);
+								GL.DeleteTexture(names[0]);
+								handle.OpenGlTextures[(int)wrap].Name = 0;
+								return false;
 						}
 						
 					}
