@@ -49,9 +49,9 @@ namespace OpenBveApi.Textures {
 		/// <remarks>Only set for textures registered from a path; allows the texture cache to be pre-seeded without re-reading and re-decoding the file.</remarks>
 		public readonly Texture DecodedTexture;
 
-		/// <summary>Gets the color of the given pixel</summary>
-		/// <param name="pix">The pixel index</param>
-		/// <param name="frame">The frame</param>
+		
+		/// <summary>Gets the raw texture bytes for the selected frame index</summary>
+		/// <param name="frame">The frame index</param>
 		private byte[] GetBytesForFrame(int frame)
 		{
 			if (Origin is StreamingGifOrigin sgo) return sgo.GetFrameBytes(frame) ?? MyBytes[0];
@@ -59,6 +59,11 @@ namespace OpenBveApi.Textures {
 			if (frame < MyBytes.Length) return MyBytes[frame];
 			return MyBytes[0];
 		}
+
+
+		/// <summary>Gets the color of the given pixel</summary>
+		/// <param name="pix">The pixel index</param>
+		/// <param name="frame">The frame</param>
 		public Color24 GetPixel(int pix, int frame = 0)
 		{
 			if (pix > Size.X * Size.Y)
@@ -325,6 +330,11 @@ namespace OpenBveApi.Textures {
 				{
 					Origin.GetTexture(out Texture t);
 					return t.Bytes;
+				}
+
+				if (MyBytes == null)
+				{
+					return null;
 				}
 				if (MultipleFrames == false)
 				{
