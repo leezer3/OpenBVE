@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
@@ -10,7 +10,7 @@ namespace LibRender2.Text
 	{
 		// --- members ---
 		/// <summary>The underlying font.</summary>
-		private readonly Font Font;
+		public readonly Font Font;
 		/// <summary>The size of the underlying font in pixels.</summary>
 		public readonly float FontSize;
 		/// <summary>The 4352 tables containing 256 character each to make up 1114112 code points (U+0000...U+10FFFF).</summary>

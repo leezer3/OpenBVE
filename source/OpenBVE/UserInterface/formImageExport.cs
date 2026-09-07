@@ -34,12 +34,12 @@ namespace OpenBve
 				{
 					if (IsMap)
 					{
-						Image map = Illustrations.CreateRouteMap((int)numericUpDownWidth.Value, (int)numericUpDownHeight.Value, false, out _, fontFamily: Program.Renderer.Fonts.uiFont);
+						Image map = Illustrations.CreateRouteMap((int)numericUpDownWidth.Value, (int)numericUpDownHeight.Value, false, out _, font: Program.Renderer.Fonts.NormalFont.Font);
 						map.Save(finalPath);
 					}
 					else 
 					{
-						Image gradient = Illustrations.CreateRouteGradientProfile((int)numericUpDownWidth.Value, (int)numericUpDownHeight.Value, false, fontFamily: Program.Renderer.Fonts.uiFont);
+						Image gradient = Illustrations.CreateRouteGradientProfile((int)numericUpDownWidth.Value, (int)numericUpDownHeight.Value, false, font: Program.Renderer.Fonts.NormalFont.Font);
 						gradient.Save(finalPath);
 					}
 				}

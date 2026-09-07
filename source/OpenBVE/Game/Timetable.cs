@@ -235,7 +235,7 @@ namespace OpenBve {
 					g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 					g.Clear(Color.Transparent);
 					g.FillRectangle(Brushes.White, new RectangleF(xOffset, 0, w, actualHeight));
-					FontFamily fontFamily = Program.Renderer.Fonts.uiFont;
+					FontFamily fontFamily = Program.Renderer.Fonts.NormalFont.Font.FontFamily;
 					if (fontFamily == null)
 					{
 						fontFamily = FontFamily.GenericSansSerif;

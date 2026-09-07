@@ -77,7 +77,7 @@ namespace OpenBve {
 			Program.CurrentRoute.Information.TrainFolder = trainFolder;
 			Program.CurrentRoute.Information.FilesNotFound = null;
 			Program.CurrentRoute.Information.ErrorsAndWarnings = null;
-			Program.CurrentRoute.Information.FontFamily = Program.Renderer.Fonts.uiFont; 
+			Program.CurrentRoute.Information.Font = Program.Renderer.Fonts.NormalFont.Font; 
 			Loader = new Thread(LoadThreaded) {IsBackground = true};
 			Loader.Start();
 		}

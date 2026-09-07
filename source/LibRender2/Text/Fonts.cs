@@ -25,7 +25,6 @@ namespace LibRender2.Text
 		/// <summary>Represents the largest sans serif font.</summary>
 		public readonly OpenGlFont EvenLargerFont;
 
-		public readonly FontFamily uiFont;
 
 		private static HostInterface currentHost;
 
@@ -79,13 +78,12 @@ namespace LibRender2.Text
 		public Fonts(HostInterface host, BaseRenderer renderer, string fontName)
 		{
 			currentHost = host;
-			uiFont = FontFamily.GenericSansSerif;
+			FontFamily uiFont = FontFamily.GenericSansSerif;
 			if (!string.IsNullOrEmpty(fontName))
 			{
 				try
 				{
 					FontFamily newFont = new FontFamily(fontName);
-					uiFont = newFont;
 				}
 				catch
 				{

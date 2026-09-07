@@ -109,7 +109,7 @@ namespace RouteManager2
 		/// <param name="switchPositions">The list of switch positions on the map</param>
 		/// <param name="follower">The TrackFollower used for drawing</param>
 		/// <param name="drawRadius">The draw radius</param>
-		public static Bitmap CreateRouteMap(int Width, int Height, bool inGame, out Dictionary<Guid, Vector2> switchPositions, TrackFollower follower = null, int drawRadius = 500, FontFamily fontFamily = null)
+		public static Bitmap CreateRouteMap(int Width, int Height, bool inGame, out Dictionary<Guid, Vector2> switchPositions, TrackFollower follower = null, int drawRadius = 500, Font font = null)
 		{
 			switchPositions = null;
 			if (CurrentRoute.Tracks[0].Elements == null)
@@ -117,10 +117,12 @@ namespace RouteManager2
 				//Usually caused by selecting another route before preview has finished
 				return new Bitmap(1,1);
 			}
+
+			FontFamily fontFamily = FontFamily.GenericSansSerif;
 			// Font check
-			if (fontFamily == null)
+			if (font != null)
 			{
-				fontFamily = FontFamily.GenericSansSerif;
+				fontFamily = font.FontFamily;
 			}
 			int firstUsedElement, lastUsedElement;
 			if (follower != null)
@@ -468,7 +470,7 @@ namespace RouteManager2
 		/// <param name="Width">The width of the bitmap to create.</param>
 		/// <param name="Height">The height of the bitmap to create.</param>
 		/// <param name="inGame"><c>true</c> = bitmap for in-game overlay | <c>false</c> = for standard window.</param>
-		public static Bitmap CreateRouteGradientProfile(int Width, int Height, bool inGame, FontFamily fontFamily = null)
+		public static Bitmap CreateRouteGradientProfile(int Width, int Height, bool inGame, Font font = null)
 		{
 			if (CurrentRoute.Tracks[0].Elements == null)
 			{
@@ -481,10 +483,13 @@ namespace RouteManager2
 				// NOTE: Will throw the generic error message on routes shorter than 900m with no stations
 				throw new InvalidDataException(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","route_corrupt_nostations"}));
 			}
+
+			FontFamily fontFamily = FontFamily.GenericSansSerif;
+
 			// Font check
-			if (fontFamily == null)
+			if (font != null)
 			{
-				fontFamily = FontFamily.GenericSansSerif;
+				fontFamily = font.FontFamily;
 			}
 			// Track elements are assumed to be all of the same length, and this length
 			// is used as measure unit, rather than computing the incremental track length
