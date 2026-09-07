@@ -1303,9 +1303,9 @@ namespace OpenBve
 
 					lock (BaseRenderer.GdiPlusLock)
 					{
-						pictureboxRouteMap.Image = Illustrations.CreateRouteMap(pictureboxRouteMap.Width, pictureboxRouteMap.Height, false, out _);
+						pictureboxRouteMap.Image = Illustrations.CreateRouteMap(pictureboxRouteMap.Width, pictureboxRouteMap.Height, false, out _, font: Program.Renderer.Fonts.NormalFont.Font);
 						pictureboxRouteGradient.Image = Illustrations.CreateRouteGradientProfile(pictureboxRouteGradient.Width,
-							pictureboxRouteGradient.Height, false);
+							pictureboxRouteGradient.Height, false, font: Program.Renderer.Fonts.NormalFont.Font);
 					}
 
 					// image
