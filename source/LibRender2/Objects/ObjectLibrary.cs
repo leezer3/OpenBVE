@@ -52,11 +52,15 @@ namespace LibRender2.Objects
 
 		private bool AddObject(ObjectState state)
 		{
-			return state.Prototype != null && Objects.TryAdd(state, 0);
+			return state != null && state.Prototype != null && Objects.TryAdd(state, 0);
 		}
 
 		private void RemoveObject(ObjectState state)
 		{
+			if (state == null)
+			{
+				return;
+			}
 			lock (LockObject)
 			{
 				if (Objects.TryRemove(state, out _))

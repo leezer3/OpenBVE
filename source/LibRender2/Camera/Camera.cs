@@ -413,6 +413,10 @@ namespace LibRender2.Cameras
 								 * */
 								for (int j = 0; j < QuadTreeLeaf?.VisibleLeafNodes[i].Objects.Length; j++)
 								{
+									if (QuadTreeLeaf?.VisibleLeafNodes[i].Objects[j] == null)
+									{
+										continue;
+									}
 									Renderer.currentHost.HideObject(QuadTreeLeaf?.VisibleLeafNodes[i].Objects[j]);
 								}
 							}
