@@ -630,10 +630,18 @@
 		<FileName>325 Mail.csv</FileName>
 		<SignalSet>BritishRail.xml</SignalSet>
 	</Patch>
-		<Patch>
+	<Patch>
 		<Hash>8ABD02F3CF8CFDDD72870F8126A86125DF38217F343014727FA5409DC049BFCD</Hash>
 		<FileName>Cl87 Mail.csv</FileName>
 		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>41BDE505CD0AD1918C403B6E50260EF4B240720A83A2FB0742060214C10073E5</Hash>
+		<FileName>B&amp;K Rescue.csv</FileName>
+		<!-- Remove broken Railtype changes (in original) plus set Change Ends flag-->
+		<Expression Number="192">.railstart 10;29;4;1</Expression>
+		<Expression Number="305"></Expression>
+		<Expression Number="811">.Sta Birkhill;16.4300;C;;1;;;;20;;</Expression>
 	</Patch>
   </RoutePatches>
 </openBVE>

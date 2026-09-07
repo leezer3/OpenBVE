@@ -259,6 +259,18 @@
 		<FileName>JRnemuro9324.csv</FileName>
 		<IgnorePitchRoll>true</IgnorePitchRoll>
 	</Patch>
-	
+	<!-- JR Seto -->
+	<!-- Large number of fog commands used, with close to 255,255,255 values and 1km far distance. -->
+	<!-- To get the intended effect, viewing distance needs to be restricted to 600m (as otherwise distant scenery is white) -->
+	<Patch>
+		<Hash>8EC22492720136AEDEDF83D04ACF505957F3B56BD9F42BDF13654F966B7A2B06</Hash>
+		<FileName>JR Seto Osashi exp.csv</FileName>
+		<ViewingDistance>600</ViewingDistance>
+	</Patch>
+	<Patch>
+		<Hash>BEB68DF3F0BA1E7BC4BD4D57E7A9FBB7F591F72F1A7736C533BD0F4AD84634A1</Hash>
+		<FileName>JR Seto Osashi loc.csv</FileName>
+		<ViewingDistance>600</ViewingDistance>
+	</Patch>
   </RoutePatches>
 </openBVE>
