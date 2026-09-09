@@ -26,6 +26,7 @@
 		<Expression Number="298">.freeobj 0;47;0;0</Expression>
 		<Expression Number="301">.freeobj 0;47;0;0</Expression>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<InsufficientWallDikeArguments>true</InsufficientWallDikeArguments>
 	</Patch>
 	<Patch>
 		<Hash>64A20D1E8A55B9F54F4AE3C948B3E0F4E1B3701D94A551B27947834868ED799E</Hash>
@@ -34,6 +35,7 @@
 		<Expression Number="298">.freeobj 0;47;0;0</Expression>
 		<Expression Number="301">.freeobj 0;47;0;0</Expression>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<InsufficientWallDikeArguments>true</InsufficientWallDikeArguments>
 	</Patch>
 	<!-- ESR v1 -->
 	<Patch>
