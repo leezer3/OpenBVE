@@ -114,11 +114,5 @@
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
 	</Patch>
-	<Patch>
-		<Hash>EDB673ED7BC2B4B5F80F48AE11ED75A604E92C6BFCDF3C177B19DB4791C6A9B4</Hash>
-		<FileName>montserrat.RW</FileName>
-		<AccurateObjectDisposal>true</AccurateObjectDisposal>
-		<RailEndedObject>true</RailEndedObject>
-	</Patch>
   </RoutePatches>
 </openBVE>
