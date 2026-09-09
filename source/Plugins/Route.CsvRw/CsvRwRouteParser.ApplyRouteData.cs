@@ -886,6 +886,23 @@ namespace CsvRwRouteParser
 								Data.Blocks[i].Cracks[k].Create(railKey, RailTransformation, pos, Data.Blocks[i], Data.Blocks[i + 1], Data.Structure, railParameters);
 							}
 
+							if (EnabledHacks.RailEndedObject && railKey == 1)
+							{
+								/*
+								 * This one is *really* odd- if the rail key is 1
+								 * BVE2 seems to use the track transformation for FreeObjects,
+								 * not the rail transformation.
+								 *
+								 * I can find no mention of this behaviour in any documentation in my
+								 * archive.
+								 *
+								 * Only found a broken example of this on the Monserrat route,
+								 * and for the moment, I think this needs to be behind the
+								 * specific hack above. 
+								 */
+								RailTransformation = TrackTransformation;
+							}
+
 							// free objects
 							if (Data.Blocks[i].RailFreeObj.ContainsKey(railKey))
 							{
