@@ -335,7 +335,7 @@ namespace CsvRwRouteParser
 
 			if (firstClosingBracket != 0 && firstClosingBracket < Text.Length - 1)
 			{
-				if (!char.IsWhiteSpace(Text[firstClosingBracket + 1]) && Text[firstClosingBracket + 1] != '.' && Text[firstClosingBracket + 1] != ';')
+				if (!char.IsWhiteSpace(Text[firstClosingBracket + 1]) && Text[firstClosingBracket + 1] != '.' && Text[firstClosingBracket + 1] != ';' && Text[firstClosingBracket + 1] != '_')
 				{
 					Text = Text.Insert(firstClosingBracket + 1, " ");
 					i = firstClosingBracket;
