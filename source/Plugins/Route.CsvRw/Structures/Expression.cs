@@ -1,6 +1,7 @@
 using System;
 using OpenBveApi.Math;
 using System.Linq;
+using OpenBveApi;
 using OpenBveApi.Interface;
 
 namespace CsvRwRouteParser
@@ -260,7 +261,7 @@ namespace CsvRwRouteParser
 									}
 									if (Text.StartsWith(".timetable", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith(".marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith(".announce", StringComparison.InvariantCultureIgnoreCase) || Text.IndexOf(".Load", StringComparison.InvariantCultureIgnoreCase) != -1)
 									{
-										if (Text.Substring(i + 1, 5).ToLowerInvariant() == ".load" || Text.Substring(i + 1, 9).ToLowerInvariant() == ".day.load" || Text.Substring(i + 1, 11).ToLowerInvariant() == ".night.load")
+										if (Text.SafeSubstring(i + 1, 5).ToLowerInvariant() == ".load" || Text.SafeSubstring(i + 1, 9).ToLowerInvariant() == ".day.load" || Text.SafeSubstring(i + 1, 11).ToLowerInvariant() == ".night.load")
 										{
 											found = true;
 											firstClosingBracket = i;
