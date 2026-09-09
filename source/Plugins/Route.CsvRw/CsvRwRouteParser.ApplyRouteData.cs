@@ -769,6 +769,7 @@ namespace CsvRwRouteParser
 
 						ObjectCreationParameters railParameters = new ObjectCreationParameters(StartingDistance, EndingDistance);
 
+						bool freeObjPositionHack = false;
 						if (!PreviewOnly)
 						{
 							if (railKey > 0 && !Data.Blocks[i].Rails[railKey].RailStarted)
@@ -779,8 +780,16 @@ namespace CsvRwRouteParser
 									CurrentRoute.Tracks[railKey].Elements[n].Events.Add(new TrackEndEvent(Plugin.CurrentHost, Data.BlockInterval));
 								}
 
-								//In order to run on other tracks, we need to calculate the positions and stuff, so continue after here instead
-								continue;
+								
+								if (Plugin.CurrentOptions.EnableBveTsHacks && EnabledHacks.RailEndedObject)
+								{
+									freeObjPositionHack = true;
+								}
+								else
+								{
+									// In order to run on other tracks, we need to calculate the positions and stuff, so continue after here instead
+									continue;
+								}
 							}
 
 							if (railKey >= 0 && Data.Structure.RailObjects.ContainsKey(Data.Blocks[i].RailType[railKey]))
@@ -882,7 +891,26 @@ namespace CsvRwRouteParser
 							{
 								for (int k = 0; k < Data.Blocks[i].RailFreeObj[railKey].Count; k++)
 								{
-									Data.Blocks[i].RailFreeObj[railKey][k].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance);
+									if (freeObjPositionHack && i > 0)
+									{
+										// find last block in which rail was valid 
+										int blockSearch = i - 1;
+										while (blockSearch >= 0)
+										{
+											if (Data.Blocks[blockSearch].Rails[railKey].RailStarted)
+											{
+												Data.Blocks[i].RailFreeObj[railKey][k].CreateRailAligned(Data.Structure.FreeObjects, blockSearch * Data.BlockInterval, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance);
+												break;
+											}
+											blockSearch--;
+										}
+										
+									}
+									else
+									{
+										Data.Blocks[i].RailFreeObj[railKey][k].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance);
+									}
+									
 								}
 							}
 							
