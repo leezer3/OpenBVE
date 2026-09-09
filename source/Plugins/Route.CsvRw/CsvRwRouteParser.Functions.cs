@@ -177,11 +177,22 @@ namespace CsvRwRouteParser
 
 		private string[] SplitArguments(string ArgumentSequence)
 		{
+			char separator = Data.FileFormat == RoutefileFormat.RW ? ',' : ';';
+
+			if (Data.FileFormat == RoutefileFormat.RW)
+			{
+				int semiColon = ArgumentSequence.IndexOf(';');
+				if (semiColon != -1)
+				{
+					ArgumentSequence = ArgumentSequence.Substring(0, semiColon);
+				}
+			}
+
 			string[] Arguments;
 			{
 				int n = 0;
 				for (int k = 0; k < ArgumentSequence.Length; k++) {
-					if ((Data.FileFormat == RoutefileFormat.RW && ArgumentSequence[k] == ',') || ArgumentSequence[k] == ';') 
+					if (ArgumentSequence[k] == separator) 
 					{
 						n++;
 					}
@@ -189,7 +200,7 @@ namespace CsvRwRouteParser
 				Arguments = new string[n + 1];
 				int a = 0, h = 0;
 				for (int k = 0; k < ArgumentSequence.Length; k++) {
-					if ((Data.FileFormat == RoutefileFormat.RW && ArgumentSequence[k] == ',') || ArgumentSequence[k] == ';') 
+					if (ArgumentSequence[k] == separator) 
 					{
 						Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim();
 						a = k + 1; h++;
