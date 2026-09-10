@@ -649,5 +649,16 @@
 		<ReducedColorTransparency>true</ReducedColorTransparency>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
+	<!-- Edinburgh - Aberdeen v1.2-->
+	<Patch>
+		<Hash>E343E46938A7ACAAEC2F736867A1FAF1DB9BF9B4C69DBC7FBD7C7032AB28F794</Hash>
+		<FileName>Edin-Aberdeen-66.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>1E73BD564DE3B0BC111FB9F91CBE219F6C8ADD71FB5FE56DDB714E53212225CA</Hash>
+		<FileName>Edin-Carnoustie-150-2.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
   </RoutePatches>
 </openBVE>
