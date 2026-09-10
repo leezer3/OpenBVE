@@ -785,31 +785,35 @@ namespace Train.OpenBve
 				 */
 				double clipWidth = Math.Min(Width, panelTexture.Width - Left);
 				double clipHeight = Math.Min(Height, panelTexture.Height + SemiHeight - Top);
-				Texture temp = panelTexture.ApplyParameters(new TextureParameters(new TextureClipRegion(Math.Max(0, (int)Left)
-					, Math.Max(0, (int)(Top - SemiHeight)), (int)clipWidth, (int)clipHeight), Color24.Blue));
-				
-				temp.Origin.GetTexture(out Texture t);
-				switch (t.GetTransparencyType())
+				if (clipWidth > 1 && clipHeight > 1)
 				{
-					case TextureTransparencyType.Transparent:
-						// totally hidden
-						Texture = new Texture(1, 1, PixelFormat.RGBAlpha, new byte[] { 0, 0, 0, 0 }, new Color24[] { });
-						break;
-					case TextureTransparencyType.Partial:
-						if (IsNeedle)
-						{
-							// as needles rotate, we can't just apply a mask and have to hide the whole thing
-							Texture = new Texture(1, 1, PixelFormat.RGBAlpha, new byte[] { 0, 0, 0, 0 }, new Color24[] { });
-						}
-						else
-						{
-							Texture.Origin.GetTexture(out Texture tt);
-							Texture = tt.ApplyParameters(new TextureParameters(null, null, t));
-						}
-						
-						break;
-				}
+					Texture temp = panelTexture.ApplyParameters(new TextureParameters(new TextureClipRegion(Math.Max(0, (int)Left)
+						, Math.Max(0, (int)(Top - SemiHeight)), (int)clipWidth, (int)clipHeight), Color24.Blue));
 
+					temp.Origin.GetTexture(out Texture t);
+					switch (t.GetTransparencyType())
+					{
+						case TextureTransparencyType.Transparent:
+							// totally hidden
+							Texture = new Texture(1, 1, PixelFormat.RGBAlpha, new byte[] { 0, 0, 0, 0 },
+								new Color24[] { });
+							break;
+						case TextureTransparencyType.Partial:
+							if (IsNeedle)
+							{
+								// as needles rotate, we can't just apply a mask and have to hide the whole thing
+								Texture = new Texture(1, 1, PixelFormat.RGBAlpha, new byte[] { 0, 0, 0, 0 },
+									new Color24[] { });
+							}
+							else
+							{
+								Texture.Origin.GetTexture(out Texture tt);
+								Texture = tt.ApplyParameters(new TextureParameters(null, null, t));
+							}
+
+							break;
+					}
+				}
 			}
 
 
