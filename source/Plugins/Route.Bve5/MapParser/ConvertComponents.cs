@@ -39,6 +39,7 @@ namespace Route.Bve5
 	{
 		private static double lastLegacyCurvePosition = double.MinValue;
 		private static double lastLegacyGradientPosition = double.MinValue;
+		private static double lastLegacyCurveSecondDistance = double.MinValue;
 		private static void ConvertCurve(Statement Statement, RouteData RouteData)
 		{
 			{
@@ -100,6 +101,7 @@ namespace Route.Bve5
 							{
 								int firstIndex = RouteData.FindOrAddBlock(Math.Max(0, Statement.Distance - 10));
 								int secondIndex = RouteData.FindOrAddBlock(Statement.Distance + 15);
+								lastLegacyCurveSecondDistance = Statement.Distance + 15;
 								RouteData.Blocks[secondIndex].CurrentTrackState.CurveRadius = Radius;
 								RouteData.Blocks[secondIndex].CurrentTrackState.CurveCant = Math.Abs(Cant) * Math.Sign(Radius);
 								RouteData.Blocks[firstIndex].Rails["0"].CurveInterpolateStart = true;
@@ -114,6 +116,20 @@ namespace Route.Bve5
 								RouteData.Blocks[Index].CurrentTrackState.CurveCant = Math.Abs(Cant) * Math.Sign(Radius);
 								RouteData.Blocks[Index].Rails["0"].CurveInterpolateStart = true;
 								RouteData.Blocks[Index].Rails["0"].CurveTransitionEnd = true;
+								if (lastLegacyCurveSecondDistance > Statement.Distance)
+								{
+									int SecondIndex = RouteData.FindOrAddBlock(lastLegacyCurveSecondDistance);
+									for (int i = 0; i < SecondIndex; i++)
+									{
+										// second curve command has been issued within the interpolate distance- change immediately
+										RouteData.Blocks[SecondIndex].CurrentTrackState.CurveRadius = Radius;
+										RouteData.Blocks[SecondIndex].CurrentTrackState.CurveCant = Math.Abs(Cant) * Math.Sign(Radius);
+										RouteData.Blocks[SecondIndex].Rails["0"].CurveInterpolateStart = true;
+										RouteData.Blocks[SecondIndex].Rails["0"].CurveTransitionEnd = true;
+									}
+								}
+								
+
 							}
 
 							if (Statement.ElementName == MapElementName.Legacy)
