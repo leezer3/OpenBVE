@@ -99,15 +99,8 @@ vec4 getLightResult()
 
 vec3 transformVector(vec3 initialVector, int matrixIndex)
 {
-	float X = (initialVector.x * modelMatricies[matrixIndex][0].x) + (initialVector.y * modelMatricies[matrixIndex][1].x) + (initialVector.z * modelMatricies[matrixIndex][2].x);
-	float Y = (initialVector.x * modelMatricies[matrixIndex][0].y) + (initialVector.y * modelMatricies[matrixIndex][1].y) + (initialVector.z * modelMatricies[matrixIndex][2].y);
-	float Z = (initialVector.x * modelMatricies[matrixIndex][0].z) + (initialVector.y * modelMatricies[matrixIndex][1].z) + (initialVector.z * modelMatricies[matrixIndex][2].z);
-	// ignoreW per DirectX
-
-	X += 1 * modelMatricies[matrixIndex][3].x;
-	Y += 1 * modelMatricies[matrixIndex][3].y;
-	Z += 1 * modelMatricies[matrixIndex][3].z;
-	return vec3(X, Y, Z);
+	// ignoreW per DirectX by casting vec4 result to vec3
+	return vec3(modelMatricies[matrixIndex] * vec4(initialVector, 1.0));
 }
 
 void main()
@@ -115,91 +108,26 @@ void main()
 	vec3 pos = vec3(iPosition);
 	oColor = iColor;
 
-	if(iMatrixChain.x != 0)
-	{	
-		// unpack packed matrix indicies
-		int m0 = (iMatrixChain.x & (0xff << 24)) >> 24;
-		int m1 = (iMatrixChain.x >> 16) & 0xff;
-		int m2 = (iMatrixChain.x & 0xff00) >> 8;
-		int m3 = (iMatrixChain.x & 0xff);
-        
-		if(m0 >=0 && m0 < 255)
-		{	
-			pos = transformVector(pos, m0);
-		}
-		
-		if(m1 >=0 && m1 < 255)
+	// Unpack matrix indices from iMatrixChain (packed as 4 bytes per int component)
+	// and sequentially transform the vertex position.
+	for (int i = 0; i < 3; ++i)
+	{
+		int chain = iMatrixChain[i];
+		// Skip empty (0) and default static/unanimated (-1) matrix chain components
+		if (chain != 0 && chain != -1)
 		{
-			pos = transformVector(pos, m1);
-		}
-		
-		if(m2 >=0 && m2 < 255)
-		{
-			pos = transformVector(pos, m2);
-		}
+			// Extract individual matrix index bytes (0-254)
+			int m0 = (chain >> 24) & 0xff;
+			int m1 = (chain >> 16) & 0xff;
+			int m2 = (chain >> 8) & 0xff;
+			int m3 = chain & 0xff;
 
-		if(m3 >=0 && m3 < 255)
-		{
-			pos = transformVector(pos, m3);
-		}		
-	}
-	
-	if(iMatrixChain.y != 0)
-	{	
-		// unpack packed matrix indicies
-		int m0 = (iMatrixChain.y & (0xff << 24)) >> 24;
-		int m1 = (iMatrixChain.y >> 16) & 0xff;
-		int m2 = (iMatrixChain.y & 0xff00) >> 8;
-		int m3 = (iMatrixChain.y & 0xff);
-        
-		if(m0 >=0 && m0 < 255)
-		{	
-			pos = transformVector(pos, m0);
+			// Transform using active bone matrix
+			if (m0 >= 0 && m0 < 255) pos = transformVector(pos, m0);
+			if (m1 >= 0 && m1 < 255) pos = transformVector(pos, m1);
+			if (m2 >= 0 && m2 < 255) pos = transformVector(pos, m2);
+			if (m3 >= 0 && m3 < 255) pos = transformVector(pos, m3);
 		}
-		
-		if(m1 >=0 && m1 < 255)
-		{
-			pos = transformVector(pos, m1);
-		}
-		
-		if(m2 >=0 && m2 < 255)
-		{
-			pos = transformVector(pos, m2);
-		}
-
-		if(m3 >=0 && m3 < 255)
-		{
-			pos = transformVector(pos, m3);
-		}		
-	}
-
-	if(iMatrixChain.z != 0)
-	{	
-		// unpack packed matrix indicies
-		int m0 = (iMatrixChain.z & (0xff << 24)) >> 24;
-		int m1 = (iMatrixChain.z >> 16) & 0xff;
-		int m2 = (iMatrixChain.z & 0xff00) >> 8;
-		int m3 = (iMatrixChain.z & 0xff);
-        
-		if(m0 >=0 && m0 < 255)
-		{	
-			pos = transformVector(pos, m0);
-		}
-		
-		if(m1 >=0 && m1 < 255)
-		{
-			pos = transformVector(pos, m1);
-		}
-		
-		if(m2 >=0 && m2 < 255)
-		{
-			pos = transformVector(pos, m2);
-		}
-
-		if(m3 >=0 && m3 < 255)
-		{
-			pos = transformVector(pos, m3);
-		}		
 	}
 	
 	pos.z = -pos.z;
