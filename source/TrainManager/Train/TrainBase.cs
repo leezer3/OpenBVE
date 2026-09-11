@@ -33,7 +33,7 @@ namespace TrainManager.Trains
 		/// <summary>Contains information on the specifications of the train</summary>
 		public TrainSpecs Specs;
 		/// <summary>The cab handles</summary>
-		public CabHandles Handles;
+		public CabHandles Handles => Cars[DriverCar].Handles;
 		/// <summary>Holds the safety systems for the train</summary>
 		public TrainSafetySystems SafetySystems;
 		/// <summary>Holds the cars</summary>
@@ -152,11 +152,9 @@ namespace TrainManager.Trains
 			Specs.DoorCloseMode = DoorMode.AutomaticManualOverride;
 			Specs.PantographState = PantographState.Lowered;
 			DriverBody = new DriverBody(this);
-			Handles.Reverser = new ReverserHandle(this);
-			Handles.EmergencyBrake = new EmergencyHandle(this);
 		}
 
-		/// <summary>Called once when the simulation loads to initalize the train</summary>
+		/// <summary>Called once when the simulation loads to initialize the train</summary>
 		public virtual void Initialize()
 		{
 			for (int i = 0; i < Cars.Length; i++)

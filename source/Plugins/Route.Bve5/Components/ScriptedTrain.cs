@@ -186,7 +186,6 @@ namespace Route.Bve5
 
 				TrainManager.Trains.ScriptedTrain Train = new TrainManager.Trains.ScriptedTrain(TrainState.Pending);
 				Train.Cars = new CarBase[OtherTrain.CarObjects.Count];
-				Train.Handles.Reverser = new ReverserHandle(Train);
 
 				for (int i = 0; i < Train.Cars.Length; i++)
 				{
