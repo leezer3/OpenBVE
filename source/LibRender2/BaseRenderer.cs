@@ -1373,6 +1373,11 @@ namespace LibRender2
 					break;
 			}
 
+			if ((face.Flags & FaceFlags.DisableDepthWrite) != 0)
+			{
+				GL.DepthMask(false);
+			}
+
 			// blend factor
 			float distanceFactor;
 			if (material.GlowAttenuationData != 0)
@@ -1511,6 +1516,7 @@ namespace LibRender2
 				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 			}
 			lastObjectState = state;
+			GL.DepthMask(true);
 		}
 
 		/// <summary>Sets the current MouseCursor</summary>
