@@ -643,5 +643,22 @@
 		<Expression Number="305"></Expression>
 		<Expression Number="811">.Sta Birkhill;16.4300;C;;1;;;;20;;</Expression>
 	</Patch>
+	<Patch>
+		<Hash>77FF1D93CCEC1E33AF54F413B003F47DD5A3574F03B6539BD5541E6B71FE30F6</Hash>
+		<FileName>somdor.rw</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<!-- Edinburgh - Aberdeen v1.2-->
+	<Patch>
+		<Hash>E343E46938A7ACAAEC2F736867A1FAF1DB9BF9B4C69DBC7FBD7C7032AB28F794</Hash>
+		<FileName>Edin-Aberdeen-66.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
+	<Patch>
+		<Hash>1E73BD564DE3B0BC111FB9F91CBE219F6C8ADD71FB5FE56DDB714E53212225CA</Hash>
+		<FileName>Edin-Carnoustie-150-2.csv</FileName>
+		<SignalSet>BritishRail.xml</SignalSet>
+	</Patch>
   </RoutePatches>
 </openBVE>

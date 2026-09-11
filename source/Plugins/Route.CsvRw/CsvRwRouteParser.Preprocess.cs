@@ -13,7 +13,7 @@ namespace CsvRwRouteParser
 		private void PreprocessSplitIntoExpressions(string FileName, List<string> Lines, out IList<Expression> Expressions, bool AllowRwRouteDescription, double trackPositionOffset = 0.0) {
 			// use a high initial capacity to try and minimize churn
 			Expressions = new List<Expression>(20000); 
-			// full-line rw comments
+			// RW comments
 			if (Data.FileFormat == RoutefileFormat.RW) {
 				for (int i = 0; i < Lines.Count; i++) {
 					int Level = 0;
@@ -26,7 +26,7 @@ namespace CsvRwRouteParser
 								Level--;
 								break;
 							case ';':
-								if (Level == 0)
+								if (Level == 0 || Plugin.CurrentOptions.EnableBveTsHacks)
 								{
 									Lines[i] = Lines[i].Substring(0, j).TrimEnd();
 									j = Lines[i].Length;

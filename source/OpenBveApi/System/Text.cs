@@ -75,6 +75,18 @@ namespace OpenBveApi
 			return Builder.ToString();
 		}
 
+		/// <summary>Provides an exception free implimentation of string.Substring, returning less characters rather than an exception</summary>
+		public static string SafeSubstring(this string Text, int StartIndex, int Length)
+		{
+			if (StartIndex > Text.Length)
+			{
+				return string.Empty;
+			}
+
+			Length = System.Math.Min(Length, Text.Length - StartIndex);
+			return Text.Substring(StartIndex, Length);
+		}
+
 		/// <summary>Provides an escaped copy of a string</summary>
 		public static string Escape(this string text)
 		{

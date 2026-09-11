@@ -39,7 +39,7 @@ namespace Object.CsvB3d
 	{
 		internal static StaticObject ReadObject(string fileName, Encoding textEncoding)
 		{
-			CSVB3DFile<CSVB3DSection, CSVB3DKey> objectFile = new CSVB3DFile<CSVB3DSection, CSVB3DKey>(fileName, Plugin.currentHost);
+			CSVB3DFile<CSVB3DSection, CSVB3DKey> objectFile = new CSVB3DFile<CSVB3DSection, CSVB3DKey>(fileName, Plugin.currentHost, textEncoding);
 			string basePath = Path.GetDirectoryName(fileName);
 
 			StaticObject staticObject = new StaticObject(Plugin.currentHost);

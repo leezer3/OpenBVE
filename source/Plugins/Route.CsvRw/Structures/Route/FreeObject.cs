@@ -26,6 +26,14 @@ namespace CsvRwRouteParser
 			Roll = roll;
 		}
 
+		internal void CreateRailAligned(ObjectDictionary FreeObjects, double TrackPositionOverride, Vector3 WorldPosition, Transformation RailTransformation, double StartingDistance, double EndingDistance)
+		{
+			double dz = TrackPositionOverride - StartingDistance;
+			WorldPosition += Position.X * RailTransformation.X + Position.Y * RailTransformation.Y + dz * RailTransformation.Z;
+			FreeObjects.TryGetValue(Type, out UnifiedObject obj);
+			obj?.CreateObject(WorldPosition, RailTransformation, new Transformation(Yaw, Pitch, Roll), new ObjectCreationParameters(TrackPositionOverride, StartingDistance, EndingDistance));
+		}
+
 		internal void CreateRailAligned(ObjectDictionary FreeObjects, Vector3 WorldPosition, Transformation RailTransformation, double StartingDistance, double EndingDistance)
 		{
 			double dz = TrackPosition - StartingDistance;

@@ -222,6 +222,16 @@
 		<FileName>l-ﾃｴSlJoﾃｩﾃ嘘.csv</FileName>
 		<Expression Number="38">Texture.Background(1) gaku2\Back_Mt1.bmp</Expression>
 	</Patch>
+	<Patch>
+		<Hash>7C44D073DAF29776DAC50683B1272083443D1F0C69808D33590DB8C93E47EE48</Hash>
+		<FileName>Tangumi - noc.rw</FileName>
+		<InsufficientWallDikeArguments>true</InsufficientWallDikeArguments>
+	</Patch>
+	<Patch>
+		<Hash>23EBB924673CABF3450C785742D26E874C71F122E7B45287F6D819CF2D6074F4</Hash>
+		<FileName>Tanigumi - ráno.rw</FileName>
+		<InsufficientWallDikeArguments>true</InsufficientWallDikeArguments>
+	</Patch>
 	<!-- Minobu -->
 	<Patch>
 		<Hash>EE1F5FED84EE4EBD0469883BAEB7C8991486DE29557D93AE76530D0EAE2D84B6</Hash>

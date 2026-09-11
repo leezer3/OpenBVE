@@ -206,9 +206,9 @@ namespace Formats.OpenBve
 	}
 	public class CSVB3DFile <T1, T2> : CSVB3DBlock<T1, T2> where T1 : struct, Enum where T2 : struct, Enum
 	{
-		public CSVB3DFile(string myFile, HostInterface currentHost) : base(myFile, currentHost)
+		public CSVB3DFile(string myFile, HostInterface currentHost, System.Text.Encoding Encoding) : base(myFile, currentHost)
 		{
-			List<string> Lines = File.ReadAllLines(myFile).ToList();
+			List<string> Lines = File.ReadAllLines(myFile, Encoding).ToList();
 
 			CSVB3DFileSection<T1, T2> currentSection = null;
 
