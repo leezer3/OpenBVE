@@ -189,23 +189,27 @@ namespace OpenBve.Graphics
 				Fog.Enabled = false;
 			}
 
-            // world layer
-            // opaque face
-            //Setup the shader for rendering the scene
-            if (OptionLighting)
-            {
-	            DefaultShader.SetIsLight(true);
-	            DefaultShader.SetLightPosition(TransformedLightPosition);
-	            DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
-	            DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
-	            DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
-	            DefaultShader.SetLightModel(Lighting.LightModel);
-            }
-            Fog.Set();
-            DefaultShader.SetTexture(0);
-            DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
-
-            ResetOpenGlState();
+			// world layer
+			// opaque face
+			//Setup the shader for rendering the scene
+			if (OptionLighting)
+			{
+				DefaultShader.SetIsLight(true);
+				DefaultShader.SetLightPosition(TransformedLightPosition);
+				DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
+				DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
+				DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
+				DefaultShader.SetLightModel(Lighting.LightModel);
+				UpdateActiveLights(DefaultShader);
+			}
+			else
+			{
+				DefaultShader.SetDynamicLights(new List<SceneLight>(), CurrentViewMatrix, 0);
+			}
+			Fog.Set();
+			DefaultShader.SetTexture(0);
+			DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
+			ResetOpenGlState();
 			List<FaceState> opaqueFaces, alphaFaces, overlayOpaqueFaces, overlayAlphaFaces;
 			lock (VisibleObjects.LockObject)
 			{
@@ -454,6 +458,7 @@ namespace OpenBve.Graphics
 			OptionLighting = false;
 			Touch.RenderScene();
 			
+			DrawLightVisuals();
 			// render overlays
 			ResetOpenGlState();
 			UnsetAlphaFunc();
