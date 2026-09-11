@@ -387,13 +387,15 @@ namespace OpenBve {
 			comboboxVSync.Items.Add("");
 			comboboxVSync.Items.Add("");
 			comboboxVSync.SelectedIndex = Interface.CurrentOptions.VerticalSynchronization ? 1 : 0;
-			// Map FPSLimit value to combo index: 0=Unlimited, 1=30, 2=60, 3=120, 4=240
+			// Map FPSLimit value to combo index: 0=Unlimited, 1=30, 2=45, 3=60, 4=75, 5=120, 6=240
 			switch (Interface.CurrentOptions.FPSLimit)
 			{
 				case 30: comboBoxFPSLimit.SelectedIndex = 1; break;
-				case 60: comboBoxFPSLimit.SelectedIndex = 2; break;
-				case 120: comboBoxFPSLimit.SelectedIndex = 3; break;
-				case 240: comboBoxFPSLimit.SelectedIndex = 4; break;
+				case 45: comboBoxFPSLimit.SelectedIndex = 2; break;
+				case 60: comboBoxFPSLimit.SelectedIndex = 3; break;
+				case 75: comboBoxFPSLimit.SelectedIndex = 4; break;
+				case 120: comboBoxFPSLimit.SelectedIndex = 5; break;
+				case 240: comboBoxFPSLimit.SelectedIndex = 6; break;
 				default: comboBoxFPSLimit.SelectedIndex = 0; break;
 			}
 			UpdateFPSLimitEnabled();
@@ -1243,7 +1245,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.FullscreenMode = radiobuttonFullscreen.Checked;
 			Interface.CurrentOptions.VerticalSynchronization = comboboxVSync.SelectedIndex == 1;
 			// Map combo index to FPSLimit value
-			int[] fpsPresets = { 0, 30, 60, 120, 240 };
+			int[] fpsPresets = { 0, 30, 45, 60, 75, 120, 240 };
 			Interface.CurrentOptions.FPSLimit = comboBoxFPSLimit.SelectedIndex >= 0 ? fpsPresets[comboBoxFPSLimit.SelectedIndex] : 0;
 			Interface.CurrentOptions.WindowWidth = (int)Math.Round(updownWindowWidth.Value);
 			Interface.CurrentOptions.WindowHeight = (int)Math.Round(updownWindowHeight.Value);

@@ -53,6 +53,7 @@ namespace RouteViewer
         //This renders the frame
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+	        FrameLimiter.StartFrame();
 			Program.MouseMovement();
 			Program.Renderer.FrameRate = RenderFrequency;
 
@@ -83,8 +84,10 @@ namespace RouteViewer
             Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight, Program.CurrentRoute.LightDefinitions);
             Program.Renderer.RenderScene(TimeElapsed);
             MessageManager.UpdateMessages(TimeElapsed);
-            SwapBuffers();
-            
+	        SwapBuffers();
+	        // Applies the FPS limit; a hard cap of 1000fps applies when unlimited is selected,
+	        // although no pacing is performed above around 330fps as sleep granularity makes it impractical
+	        FrameLimiter.ApplyLimit(Interface.CurrentOptions.FPSLimit);
         }
 
         protected override void OnResize(EventArgs e)
@@ -146,6 +149,7 @@ namespace RouteViewer
 				Loading.Cancel = true;
 			}
 			Program.Renderer.DeInitialize();
+			FrameLimiter.RestoreTimerResolution();
 			if (Program.CurrentHost.MonoRuntime)
 			{
 				// Mono often fails to close the main window properly
