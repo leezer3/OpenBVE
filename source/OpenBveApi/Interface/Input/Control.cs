@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Input;
 
 namespace OpenBveApi.Interface
@@ -14,6 +14,8 @@ namespace OpenBveApi.Interface
 		public ControlMethod Method;
 		/// <summary>Any keyboard modifiers used</summary>
 		public KeyboardModifier Modifier;
+		/// <summary>The required press order of the modifiers (0 = any order, otherwise a one-based lexicographic rank)</summary>
+		public int ModifierOrder;
 		/// <summary>The GUID of the device which activates this control</summary>
 		public Guid Device;
 		/// <summary>The joystick component which activates this control (if joystick)</summary>
@@ -40,7 +42,12 @@ namespace OpenBveApi.Interface
 			switch (Method)
 			{
 				case ControlMethod.Keyboard:
-					s += Key + ", " + (int)Modifier + ", " + Option;
+					s += Key + ", " + (int)Modifier;
+					if (ModifierOrder != 0)
+					{
+						s += ", " + ModifierOrder;
+					}
+					s += ", " + Option;
 					break;
 				case ControlMethod.Joystick:
 					s += Device + ", " + Component + ", " + Element;
@@ -57,6 +64,13 @@ namespace OpenBveApi.Interface
 						s += ", " + Direction;
 					}
 					s += ", " + Option;
+					break;
+				case ControlMethod.Mouse:
+					s += Element + ", " + Option;
+					if (Modifier != KeyboardModifier.None)
+					{
+						s += ", " + (int)Modifier;
+					}
 					break;
 			}
 			return s;

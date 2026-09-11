@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using LibRender2.Cameras;
 using LibRender2.Overlays;
 using OpenBveApi.Interface;
@@ -9,6 +9,17 @@ namespace OpenBve
 {
 	internal static partial class MainLoop
 	{
+		/// <summary>The boost applied to camera rotation when driven by the mouse scroll wheel</summary>
+		private const double ScrollRotateBoost = 10.0;
+		/// <summary>The boost applied to timetable scrolling when driven by the mouse scroll wheel</summary>
+		private const double ScrollTimetableBoost = 5.0;
+
+		/// <summary>Checks whether the control is bound to the mouse scroll wheel</summary>
+		private static bool IsMouseScroll(Control Control)
+		{
+			return Control.Method == ControlMethod.Mouse && (Control.Element == MouseElement.ScrollUp || Control.Element == MouseElement.ScrollDown);
+		}
+
 		private static void ProcessAnalogControl(double TimeElapsed, ref Control Control)
 		{
 			// analog control
@@ -217,7 +228,12 @@ namespace OpenBve
 				case Translations.Command.CameraMoveRight:
 				case Translations.Command.CameraMoveUp:
 				case Translations.Command.CameraMoveDown:
-					Program.Renderer.Camera.Move(Control.Command, Control.AnalogState);
+					double moveFactor = Control.AnalogState;
+					if (IsMouseScroll(Control))
+					{
+						moveFactor *= Interface.CurrentOptions.ZoomScrollSpeed;
+					}
+					Program.Renderer.Camera.Move(Control.Command, moveFactor);
 					break;
 				case Translations.Command.CameraRotateLeft:
 				case Translations.Command.CameraRotateRight:
@@ -225,13 +241,23 @@ namespace OpenBve
 				case Translations.Command.CameraRotateDown:
 				case Translations.Command.CameraRotateCCW:
 				case Translations.Command.CameraRotateCW:
-					Program.Renderer.Camera.Rotate(Control.Command, Control.AnalogState);
+					double rotateFactor = Control.AnalogState;
+					if (IsMouseScroll(Control))
+					{
+						rotateFactor *= ScrollRotateBoost;
+					}
+					Program.Renderer.Camera.Rotate(Control.Command, rotateFactor);
 					break;
 				case Translations.Command.CameraZoomIn:
 					// camera zoom in
 					if (TimeElapsed > 0.0)
 					{
-						Program.Renderer.Camera.AlignmentDirection.Zoom = -CameraProperties.ZoomTopSpeed * Control.AnalogState;
+						double factor = Control.AnalogState;
+						if (IsMouseScroll(Control))
+						{
+							factor *= Interface.CurrentOptions.ZoomScrollSpeed;
+						}
+						Program.Renderer.Camera.AlignmentDirection.Zoom = -CameraProperties.ZoomTopSpeed * factor;
 					}
 
 					break;
@@ -239,7 +265,12 @@ namespace OpenBve
 					// camera zoom out
 					if (TimeElapsed > 0.0)
 					{
-						Program.Renderer.Camera.AlignmentDirection.Zoom = CameraProperties.ZoomTopSpeed * Control.AnalogState;
+						double factor = Control.AnalogState;
+						if (IsMouseScroll(Control))
+						{
+							factor *= Interface.CurrentOptions.ZoomScrollSpeed;
+						}
+						Program.Renderer.Camera.AlignmentDirection.Zoom = CameraProperties.ZoomTopSpeed * factor;
 					}
 
 					break;
@@ -248,15 +279,20 @@ namespace OpenBve
 					if (TimeElapsed > 0.0)
 					{
 						const double scrollSpeed = 250.0;
+						double timetableFactor = Control.AnalogState;
+						if (IsMouseScroll(Control))
+						{
+							timetableFactor *= ScrollTimetableBoost;
+						}
 						switch (Program.Renderer.CurrentTimetable)
 						{
 							case DisplayedTimetable.Default:
-								Timetable.DefaultTimetablePosition += scrollSpeed * Control.AnalogState * TimeElapsed;
+								Timetable.DefaultTimetablePosition += scrollSpeed * timetableFactor * TimeElapsed;
 								if (Timetable.DefaultTimetablePosition > 0.0)
 									Timetable.DefaultTimetablePosition = 0.0;
 								break;
 							case DisplayedTimetable.Custom:
-								Timetable.CustomTimetablePosition += scrollSpeed * Control.AnalogState * TimeElapsed;
+								Timetable.CustomTimetablePosition += scrollSpeed * timetableFactor * TimeElapsed;
 								if (Timetable.CustomTimetablePosition > 0.0)
 									Timetable.CustomTimetablePosition = 0.0;
 								break;
@@ -269,10 +305,15 @@ namespace OpenBve
 					if (TimeElapsed > 0.0)
 					{
 						const double scrollSpeed = 250.0;
+						double timetableFactor = Control.AnalogState;
+						if (IsMouseScroll(Control))
+						{
+							timetableFactor *= ScrollTimetableBoost;
+						}
 						switch (Program.Renderer.CurrentTimetable)
 						{
 							case DisplayedTimetable.Default:
-								Timetable.DefaultTimetablePosition -= scrollSpeed * Control.AnalogState * TimeElapsed;
+								Timetable.DefaultTimetablePosition -= scrollSpeed * timetableFactor * TimeElapsed;
 								double max;
 								if (Timetable.DefaultTimetableTexture != null)
 								{
@@ -291,7 +332,7 @@ namespace OpenBve
 
 								break;
 							case DisplayedTimetable.Custom:
-								Timetable.CustomTimetablePosition -= scrollSpeed * Control.AnalogState * TimeElapsed;
+								Timetable.CustomTimetablePosition -= scrollSpeed * timetableFactor * TimeElapsed;
 								Texture texture = Timetable.CurrentCustomTimetableDaytimeTexture ?? Timetable.CurrentCustomTimetableNighttimeTexture;
 								if (texture != null)
 								{

@@ -321,6 +321,10 @@ namespace OpenBveApi.Math {
 		/// <returns>The multiplied vector</returns>
 		public static Vector3 operator *(Vector3 v, Transformation t)
 		{
+			if (t == null)
+			{
+				return v;
+			}
 			v = t.X * v.X + t.Y * v.Y + t.Z * v.Z;
 			return v;
 		}
@@ -497,6 +501,10 @@ namespace OpenBveApi.Math {
 		/// <param name="transformation">The transformation</param>
 		public void Rotate(Transformation transformation)
 		{
+			if (transformation == null)
+			{
+				return;
+			}
 			double x = transformation.X.X * X + transformation.Y.X * Y + transformation.Z.X * Z;
 			double y = transformation.X.Y * X + transformation.Y.Y * Y + transformation.Z.Y * Z;
 			double z = transformation.X.Z * X + transformation.Y.Z * Y + transformation.Z.Z * Z;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -191,7 +191,21 @@ namespace OpenBve
 										Controls[Length].Key = (OpenBveApi.Input.Key)CurrentKey;
 										Controls[Length].Direction = 0;
 										Controls[Length].Modifier = (KeyboardModifier) Modifiers;
-										if (Terms.Length >= 5 && int.TryParse(Terms[4], NumberStyles.Integer, Culture, out int Option))
+										if (Terms.Length >= 6)
+										{
+											// Format including the required modifier press order: key, modifiers, order, option
+											int Order;
+											if (!int.TryParse(Terms[4], NumberStyles.Integer, Culture, out Order) || Order < 0)
+											{
+												Order = 0;
+											}
+											Controls[Length].ModifierOrder = Order;
+											if (int.TryParse(Terms[5], NumberStyles.Integer, Culture, out int Option))
+											{
+												Controls[Length].Option = Option;
+											}
+										}
+										else if (Terms.Length >= 5 && int.TryParse(Terms[4], NumberStyles.Integer, Culture, out int Option))
 										{
 											Controls[Length].Option = Option;
 										}
@@ -330,6 +344,25 @@ namespace OpenBve
 										}
 									}
 
+								}
+							}
+							else if (Method == ControlMethod.Mouse & Terms.Length >= 3)
+							{
+								if (int.TryParse(Terms[2], out int CurrentButton))
+								{
+									Controls[Length].Method = Method;
+									Controls[Length].Element = CurrentButton;
+									Controls[Length].Modifier = KeyboardModifier.None;
+									Controls[Length].Option = 0;
+									if (Terms.Length >= 4 && int.TryParse(Terms[3], NumberStyles.Integer, Culture, out int Option))
+									{
+										Controls[Length].Option = Option;
+									}
+									if (Terms.Length >= 5 && int.TryParse(Terms[4], NumberStyles.Integer, Culture, out int Modifiers))
+									{
+										Controls[Length].Modifier = (KeyboardModifier) Modifiers;
+									}
+									Valid = true;
 								}
 							}
 
