@@ -69,6 +69,7 @@
     <Compile Include="Structures\Expression.cs" />
     <Compile Include="CsvRwRouteParser.Functions.cs" />
     <Compile Include="CsvRwRouteParser.ObjectDictionary.cs" />
+    <Compile Include="CsvRwRouteParser.ObjectLoader.cs" />
     <Compile Include="CsvRwRouteParser.Preprocess.cs" />
     <Compile Include="CsvRwRouteParser.PreprocessOptions.cs" />
     <Compile Include="CsvRwRouteParser.RouteData.cs" />
