@@ -626,7 +626,7 @@ namespace RouteViewer
 
 					if (Program.JumpToPositionEnabled)
 					{
-						Vector2 jumpToPositionPos = new Vector2(4, Interface.LogMessages.Count == 0 ? 80 : 100);
+						Vector2 jumpToPositionPos = new Vector2(4, Interface.GetLogSnapshot().Count == 0 ? 80 : 100);
 						OpenGlString.Draw(Fonts.SmallFont, "Jump to track position:", jumpToPositionPos, TextAlignment.TopLeft, Color128.White, true);
 						jumpToPositionPos.Y += 20;
 
@@ -716,12 +716,13 @@ namespace RouteViewer
 						OpenGlString.Draw(Fonts.SmallFont, s, new Vector2((int)x, 60), TextAlignment.TopLeft, Color128.White, true);
 					}
 
-					if (Interface.LogMessages.Count == 1)
+					var logSnapshot = Interface.GetLogSnapshot();
+					if (logSnapshot.Count == 1)
 					{
 						keys = new[] { new[] { "F9" } };
 						Keys.Render(4, 72, 24, Fonts.SmallFont, keys);
 
-						if (Interface.LogMessages[0].Type != MessageType.Information)
+						if (logSnapshot[0].Type != MessageType.Information)
 						{
 							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 error message recently generated.", new Vector2(32 * scaleFactor, 72), TextAlignment.TopLeft, Color128.Red, true);
 						}
@@ -731,18 +732,18 @@ namespace RouteViewer
 							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 message recently generated.", new Vector2(32 * scaleFactor, 72), TextAlignment.TopLeft, Color128.White, true);
 						}
 					}
-					else if (Interface.LogMessages.Count > 1)
+					else if (logSnapshot.Count > 1)
 					{
 						Keys.Render(4, 72, 24, Fonts.SmallFont, new[] { new[] { "F9" } });
-						bool error = Interface.LogMessages.Any(m => m.Type != MessageType.Information);
+						bool error = logSnapshot.Any(m => m.Type != MessageType.Information);
 
 						if (error)
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count} error messages recently generated.", new Vector2(32 * scaleFactor, 72), TextAlignment.TopLeft, Color128.Red, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {logSnapshot.Count} error messages recently generated.", new Vector2(32 * scaleFactor, 72), TextAlignment.TopLeft, Color128.Red, true);
 						}
 						else
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count} messages recently generated.", new Vector2(32 * scaleFactor, 72), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {logSnapshot.Count} messages recently generated.", new Vector2(32 * scaleFactor, 72), TextAlignment.TopLeft, Color128.White, true);
 						}
 					}
 

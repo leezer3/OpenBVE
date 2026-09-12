@@ -669,7 +669,7 @@ namespace RouteViewer
 						return;
 					}
 
-					if (Interface.LogMessages.Count != 0)
+					if (Interface.GetLogSnapshot().Count != 0)
 					{
 						formMessages.ShowMessages();
 						Application.DoEvents();

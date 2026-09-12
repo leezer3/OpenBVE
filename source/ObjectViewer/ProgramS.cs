@@ -323,23 +323,8 @@ namespace ObjectViewer {
 		    LightingRelative = -1.0;
 			
 			// Prune cache to allow actual reloading of modified files
-			var staticKeysToRemove = new List<ValueTuple<string, bool, DateTime>>();
-			foreach (var key in CurrentHost.StaticObjectCache.Keys)
-			{
-				try
-				{
-					if (!System.IO.File.Exists(key.Item1) || System.IO.File.GetLastWriteTime(key.Item1) != key.Item3)
-					{
-						staticKeysToRemove.Add(key);
-					}
-				}
-				catch { staticKeysToRemove.Add(key); }
-			}
-			foreach (var key in staticKeysToRemove)
-			{
-				CurrentHost.StaticObjectCache.Remove(key);
-			}
-			CurrentHost.AnimatedObjectCollectionCache.Clear();
+			CurrentHost.PruneStaleStaticObjects();
+			CurrentHost.ClearAnimatedObjectCache();
 			// Let TextureManager check for texture changes
 			Renderer.TextureManager.UnloadAllTextures(true);
 
@@ -618,7 +603,7 @@ namespace ObjectViewer {
 						Game.Menu.PushMenu(MenuType.ErrorList);
 						return;
 		            }
-					if (Interface.LogMessages.Count != 0)
+					if (Interface.GetLogSnapshot().Count != 0)
 	                {
 	                    formMessages.ShowMessages();
                         Application.DoEvents();
@@ -630,8 +615,7 @@ namespace ObjectViewer {
                 Game.Reset();
 				// Pressing delete means unload current loaded objects, so release everything instead of preserving.
 				Renderer.TextureManager.UnloadAllTextures(false);
-				CurrentHost.StaticObjectCache.Clear();
-				CurrentHost.AnimatedObjectCollectionCache.Clear();
+				CurrentHost.ClearObjectCaches();
 	            Files.Clear();
 				// One full collect so the freed LOH buffers leave RAM immediately.
 				GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
