@@ -168,9 +168,12 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Clears the error log</summary>
 		public void ClearErrors()
 		{
-			MissingFiles.Clear();
-			FailedObjects.Clear();
-			FailedTextures.Clear();
+			lock (cacheLock)
+			{
+				MissingFiles.Clear();
+				FailedObjects.Clear();
+				FailedTextures.Clear();
+			}
 
 		}
 
@@ -356,15 +359,24 @@ namespace OpenBveApi.Hosts {
 		{
 			ValueTuple<string, bool, DateTime> key = ValueTuple.Create(Path.ToLowerInvariant(), false, File.GetLastWriteTime(Path));
 
-			if (StaticObjectCache.TryGetValue(key, out var staticObject))
+			StaticObject protoStatic = null;
+			AnimatedObjectCollection protoAnimated = null;
+			string animatedKey = Path.ToLowerInvariant();
+			lock (cacheLock)
 			{
-				Object = staticObject.Clone();
+				if (!StaticObjectCache.TryGetValue(key, out protoStatic))
+				{
+					AnimatedObjectCollectionCache.TryGetValue(animatedKey, out protoAnimated);
+				}
+			}
+			if (protoStatic != null)
+			{
+				Object = protoStatic.Clone();
 				return true;
 			}
-
-			if (AnimatedObjectCollectionCache.TryGetValue(Path.ToLowerInvariant(), out var animatedObject))
+			if (protoAnimated != null)
 			{
-				Object = animatedObject.Clone();
+				Object = protoAnimated.Clone();
 				return true;
 			}
 
@@ -384,14 +396,86 @@ namespace OpenBveApi.Hosts {
 		{
 			ValueTuple<string, bool, DateTime> key = ValueTuple.Create(Path.ToLowerInvariant(), PreserveVertices, File.GetLastWriteTime(Path));
 
-			if (StaticObjectCache.TryGetValue(key, out var staticObject))
+			StaticObject proto = null;
+			lock (cacheLock)
 			{
-				Object = (StaticObject)staticObject.Clone();
+				StaticObjectCache.TryGetValue(key, out proto);
+			}
+			if (proto != null)
+			{
+				Object = (StaticObject)proto.Clone();
 				return true;
 			}
 
 			Object = null;
 			return false;
+		}
+
+		protected void StoreStaticObject(ValueTuple<string, bool, DateTime> key, StaticObject obj)
+		{
+			lock (cacheLock)
+			{
+				StaticObjectCache[key] = obj;
+			}
+		}
+
+		protected void StoreAnimatedObject(string lowerPath, AnimatedObjectCollection obj)
+		{
+			lock (cacheLock)
+			{
+				AnimatedObjectCollectionCache[lowerPath] = obj;
+			}
+		}
+
+		protected bool ReportFailure(HashSet<string> set, string path)
+		{
+			lock (cacheLock)
+			{
+				return set.Add(path);
+			}
+		}
+
+		protected bool ReportMissingFile(string path)
+		{
+			lock (cacheLock)
+			{
+				return MissingFiles.Add(path);
+			}
+		}
+
+		/// <summary>Clears all cached objects (route reload).</summary>
+		public void ClearObjectCaches()
+		{
+			lock (cacheLock)
+			{
+				AnimatedObjectCollectionCache.Clear();
+				StaticObjectCache.Clear();
+			}
+		}
+
+		/// <summary>Removes stale static-object entries whose source file changed or vanished.</summary>
+		public void PruneStaleStaticObjects()
+		{
+			lock (cacheLock)
+			{
+				List<ValueTuple<string, bool, DateTime>> keys = StaticObjectCache.Keys.ToList();
+				for (int i = 0; i < keys.Count; i++)
+				{
+					if (!System.IO.File.Exists(keys[i].Item1) || System.IO.File.GetLastWriteTime(keys[i].Item1) != keys[i].Item3)
+					{
+						StaticObjectCache.Remove(keys[i]);
+					}
+				}
+			}
+		}
+
+		/// <summary>Clears only the animated-object cache.</summary>
+		public void ClearAnimatedObjectCache()
+		{
+			lock (cacheLock)
+			{
+				AnimatedObjectCollectionCache.Clear();
+			}
 		}
 
 		/// <summary>Executes a function script in the host application</summary>
@@ -612,6 +696,7 @@ namespace OpenBveApi.Hosts {
 		/// Dictionary of StaticObject with Path and PreserveVertices as keys.
 		/// </summary>
 		public readonly Dictionary<ValueTuple<string, bool, DateTime>, StaticObject> StaticObjectCache;
+		private readonly object cacheLock = new object();
 
 		/// <summary>
 		/// Dictionary of AnimatedObjectCollection with Path as key.
@@ -731,6 +816,9 @@ namespace OpenBveApi.Hosts {
 
 		/// <summary>Time spent applying route data by the route plugin (ms)</summary>
 		public long PluginApplyTime;
+
+		/// <summary>Time spent parallel-loading route objects by the route plugin (ms)</summary>
+		public long PluginObjectLoadTime;
 
 		/// <summary>Number of texture decode requests handled by the host</summary>
 		public long TextureDecodeCalls;
