@@ -88,6 +88,9 @@ namespace RouteViewer
 				Builder.AppendLine("shadowstrength = " + ShadowStrength.ToString("0.00", Culture));
 				Builder.AppendLine("shadowbias = " + ShadowBias.ToString("0.000000", Culture));
 				Builder.AppendLine("shadownormalbias = " + ShadowNormalBias.ToString("0.00", Culture));
+				Builder.AppendLine("shadowfiltercascades = " + (ShadowFilterCascades ? "true" : "false"));
+				Builder.AppendLine("shadowsmooth = " + (ShadowSmooth ? "true" : "false"));
+				Builder.AppendLine("shadowfilterradius = " + ShadowFilterRadius.ToString(Culture));
 				Builder.AppendLine("lightazimuth = " + LightAzimuth.ToString(Culture));
 				Builder.AppendLine("lightelevation = " + LightElevation.ToString(Culture));
 				Builder.AppendLine();
@@ -185,6 +188,17 @@ namespace RouteViewer
 							block.TryGetValue(OptionsKey.ShadowStrength, ref Interface.CurrentOptions.ShadowStrength, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.ShadowBias, ref Interface.CurrentOptions.ShadowBias);
 							block.TryGetValue(OptionsKey.ShadowNormalBias, ref Interface.CurrentOptions.ShadowNormalBias);
+							if (block.GetValue(OptionsKey.ShadowFilterCascades, out string sfcVal))
+							{
+								Interface.CurrentOptions.ShadowFilterCascades = sfcVal.Trim().Equals("true", StringComparison.OrdinalIgnoreCase) || sfcVal.Trim() == "1";
+							}
+							if (block.GetValue(OptionsKey.ShadowSmooth, out string smoothVal))
+							{
+								Interface.CurrentOptions.ShadowSmooth = smoothVal.Trim().Equals("true", StringComparison.OrdinalIgnoreCase) || smoothVal.Trim() == "1";
+							}
+							block.TryGetValue(OptionsKey.ShadowFilterRadius, ref Interface.CurrentOptions.ShadowFilterRadius);
+							if (Interface.CurrentOptions.ShadowFilterRadius < 0.5) Interface.CurrentOptions.ShadowFilterRadius = 0.5;
+							if (Interface.CurrentOptions.ShadowFilterRadius > 3.0) Interface.CurrentOptions.ShadowFilterRadius = 3.0;
 							block.TryGetValue(OptionsKey.LightAzimuth, ref Interface.CurrentOptions.LightAzimuth);
 							block.TryGetValue(OptionsKey.LightElevation, ref Interface.CurrentOptions.LightElevation);
 							break;

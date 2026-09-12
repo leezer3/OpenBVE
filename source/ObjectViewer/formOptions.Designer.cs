@@ -90,6 +90,11 @@ namespace ObjectViewer
             this.numericUpDownShadowBias = new System.Windows.Forms.NumericUpDown();
             this.labelShadowNormalBias = new System.Windows.Forms.Label();
             this.numericUpDownShadowNormalBias = new System.Windows.Forms.NumericUpDown();
+            this.checkBoxShadowSmooth = new System.Windows.Forms.CheckBox();
+            this.labelShadowSmooth = new System.Windows.Forms.Label();
+            this.labelShadowFilterRadius = new System.Windows.Forms.Label();
+            this.panelShadowSmooth = new System.Windows.Forms.FlowLayoutPanel();
+            this.comboBoxShadowFilterRadius = new System.Windows.Forms.ComboBox();
             this.labelShadowFilterCascades = new System.Windows.Forms.Label();
             this.checkBoxShadowFilterCascades = new System.Windows.Forms.CheckBox();
             this.labelVSync = new System.Windows.Forms.Label();
@@ -503,12 +508,16 @@ namespace ObjectViewer
                     { this.numericUpDownShadowBias, 1, 4 },
                     { this.labelShadowNormalBias, 0, 5 },
                     { this.numericUpDownShadowNormalBias, 1, 5 },
-                    { this.labelShadowFilterCascades, 0, 6 },
-                    { this.checkBoxShadowFilterCascades, 1, 6 },
+                    { this.labelShadowSmooth, 0, 6 },
+                    { this.checkBoxShadowSmooth, 1, 6 },
+                    { this.labelShadowFilterRadius, 0, 7 },
+                    { this.comboBoxShadowFilterRadius, 1, 7 },
+                    { this.labelShadowFilterCascades, 0, 8 },
+                    { this.checkBoxShadowFilterCascades, 1, 8 },
                     // Sun Direction
-                    { this.labelSunDirection, 0, 7 },
-                    { this.labelSunAzimuth, 0, 8 },
-                    { this.labelSunElevation, 0, 10 }
+                    { this.labelSunDirection, 0, 9 },
+                    { this.labelSunAzimuth, 0, 10 },
+                    { this.labelSunElevation, 0, 12 }
                 }
             };
             tlpShadows.SetColumnSpan(this.labelSunDirection, 2);
@@ -531,7 +540,7 @@ namespace ObjectViewer
                 }
             };
             this.trackBarSunAzimuth.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            tlpShadows.Controls.Add(azimuthPanel, 0, 9);
+            tlpShadows.Controls.Add(azimuthPanel, 0, 11);
             tlpShadows.SetColumnSpan(azimuthPanel, 2);
             var elevationPanel = new System.Windows.Forms.TableLayoutPanel
             {
@@ -550,7 +559,7 @@ namespace ObjectViewer
                 }
             };
             this.trackBarSunElevation.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            tlpShadows.Controls.Add(elevationPanel, 0, 11);
+            tlpShadows.Controls.Add(elevationPanel, 0, 13);
             tlpShadows.SetColumnSpan(elevationPanel, 2);
             this.tabPageShadows.Controls.Add(tlpShadows);
             this.tabPageShadows.AutoScroll = true;
@@ -999,22 +1008,65 @@ namespace ObjectViewer
             this.toolTip1.SetToolTip(this.labelFPSLimit, "Cap the maximum frames per second.\nDisabled when VSync is ON.");
             this.toolTip1.SetToolTip(this.comboBoxFPSLimit, "Select FPS cap. 'Unlimited' = no limit.\nDisabled when VSync is ON (monitor refresh rate is used instead).");
             // 
+            // labelShadowSmooth
+            // 
+            this.labelShadowSmooth.AutoSize = true;
+            this.labelShadowSmooth.Location = new System.Drawing.Point(6, 193);
+            this.labelShadowSmooth.Name = "labelShadowSmooth";
+            this.labelShadowSmooth.Size = new System.Drawing.Size(79, 13);
+            this.labelShadowSmooth.TabIndex = 54;
+            this.labelShadowSmooth.Text = "Smooth shadow";
+            // 
+            // checkBoxShadowSmooth
+            // 
+            this.checkBoxShadowSmooth.AutoSize = true;
+            this.checkBoxShadowSmooth.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.checkBoxShadowSmooth.Location = new System.Drawing.Point(160, 193);
+            this.checkBoxShadowSmooth.Name = "checkBoxShadowSmooth";
+            this.checkBoxShadowSmooth.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxShadowSmooth.TabIndex = 55;
+            this.checkBoxShadowSmooth.Text = "";
+            this.checkBoxShadowSmooth.UseVisualStyleBackColor = true;
+            // 
+            // comboBoxShadowFilterRadius
+            // 
+            this.comboBoxShadowFilterRadius.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxShadowFilterRadius.Dock = System.Windows.Forms.DockStyle.None;
+            this.comboBoxShadowFilterRadius.FormattingEnabled = true;
+            this.comboBoxShadowFilterRadius.Items.AddRange(new object[] {
+            "Low",
+            "Medium",
+            "High"});
+            this.comboBoxShadowFilterRadius.Location = new System.Drawing.Point(160, 215);
+            this.comboBoxShadowFilterRadius.Name = "comboBoxShadowFilterRadius";
+            this.comboBoxShadowFilterRadius.Size = new System.Drawing.Size(120, 21);
+            this.comboBoxShadowFilterRadius.TabIndex = 56;
+            // 
+            // labelShadowFilterRadius
+            // 
+            this.labelShadowFilterRadius.AutoSize = true;
+            this.labelShadowFilterRadius.Location = new System.Drawing.Point(6, 215);
+            this.labelShadowFilterRadius.Name = "labelShadowFilterRadius";
+            this.labelShadowFilterRadius.Size = new System.Drawing.Size(52, 13);
+            this.labelShadowFilterRadius.TabIndex = 57;
+            this.labelShadowFilterRadius.Text = "Smooth Radius";
+            // 
             // labelShadowFilterCascades
             // 
             this.labelShadowFilterCascades.AutoSize = true;
-            this.labelShadowFilterCascades.Location = new System.Drawing.Point(6, 190);
+            this.labelShadowFilterCascades.Location = new System.Drawing.Point(6, 232);
             this.labelShadowFilterCascades.Name = "labelShadowFilterCascades";
             this.labelShadowFilterCascades.Size = new System.Drawing.Size(126, 13);
-            this.labelShadowFilterCascades.TabIndex = 54;
+            this.labelShadowFilterCascades.TabIndex = 58;
             this.labelShadowFilterCascades.Text = "Per-cascade culling:";
             // 
             // checkBoxShadowFilterCascades
             // 
             this.checkBoxShadowFilterCascades.AutoSize = true;
-            this.checkBoxShadowFilterCascades.Location = new System.Drawing.Point(160, 190);
+            this.checkBoxShadowFilterCascades.Location = new System.Drawing.Point(160, 232);
             this.checkBoxShadowFilterCascades.Name = "checkBoxShadowFilterCascades";
             this.checkBoxShadowFilterCascades.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxShadowFilterCascades.TabIndex = 55;
+            this.checkBoxShadowFilterCascades.TabIndex = 59;
             this.checkBoxShadowFilterCascades.UseVisualStyleBackColor = true;
             // 
             // formOptions
@@ -1112,9 +1164,14 @@ namespace ObjectViewer
 		private System.Windows.Forms.NumericUpDown numericUpDownShadowBias;
 		private System.Windows.Forms.Label labelShadowNormalBias;
 		private System.Windows.Forms.NumericUpDown numericUpDownShadowNormalBias;
+		private System.Windows.Forms.CheckBox checkBoxShadowSmooth;
+		private System.Windows.Forms.Label labelShadowSmooth;
+		private System.Windows.Forms.FlowLayoutPanel panelShadowSmooth;
+		private System.Windows.Forms.ComboBox comboBoxShadowFilterRadius;
 		private System.Windows.Forms.CheckBox checkBoxAutoReload;
 		private System.Windows.Forms.Label labelAutoReloadChanged;
 		private System.Windows.Forms.Label labelShadowFilterCascades;
+		private System.Windows.Forms.Label labelShadowFilterRadius;
 		private System.Windows.Forms.CheckBox checkBoxShadowFilterCascades;
 		private System.Windows.Forms.Label labelVSync;
 		private System.Windows.Forms.ComboBox comboBoxVSync;

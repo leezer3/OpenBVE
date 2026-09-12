@@ -64,6 +64,9 @@ namespace ObjectViewer
 			numericUpDownShadowStrength.Value = (decimal)(Interface.CurrentOptions.ShadowStrength * 100.0);
 			numericUpDownShadowBias.Value = (decimal)Interface.CurrentOptions.ShadowBias;
 			numericUpDownShadowNormalBias.Value = (decimal)Interface.CurrentOptions.ShadowNormalBias;
+			if (Interface.CurrentOptions.ShadowFilterRadius < 1.25) comboBoxShadowFilterRadius.SelectedIndex = 0;
+			else if (Interface.CurrentOptions.ShadowFilterRadius < 2.0) comboBoxShadowFilterRadius.SelectedIndex = 1;
+			else comboBoxShadowFilterRadius.SelectedIndex = 2;
 
 
 			// Initialize sun direction sliders from current light position
@@ -71,7 +74,7 @@ namespace ObjectViewer
 
 			// Wire up shadow resolution change to enable/disable related controls
 			comboBoxShadowResolution.SelectedIndexChanged += comboBoxShadowResolution_SelectedIndexChanged;
-			UpdateShadowControlsEnabled();
+			checkBoxShadowSmooth.CheckedChanged += (s, e) => UpdateShadowControlsEnabled();
 
 			comboBoxLeft.DataSource = Enum.GetValues(typeof(Key));
 			comboBoxLeft.SelectedItem = Interface.CurrentOptions.CameraMoveLeft;
@@ -87,6 +90,8 @@ namespace ObjectViewer
 			comboBoxBackwards.SelectedItem = Interface.CurrentOptions.CameraMoveBackward;
 			checkBoxAutoReload.Checked = Interface.CurrentOptions.AutoReloadObjects;
 			checkBoxShadowFilterCascades.Checked = Interface.CurrentOptions.ShadowFilterCascades;
+			checkBoxShadowSmooth.Checked = Interface.CurrentOptions.ShadowSmooth;
+			UpdateShadowControlsEnabled();
 
 			// VSync and FPS Limit
 			comboBoxVSync.SelectedIndex = Interface.CurrentOptions.VerticalSynchronization ? 1 : 0;
@@ -121,6 +126,8 @@ namespace ObjectViewer
 			numericUpDownShadowNormalBias.Enabled = enabled;
 			numericUpDownShadowNormalBias.ReadOnly = !enabled;
 			
+			checkBoxShadowSmooth.Enabled = enabled;
+			comboBoxShadowFilterRadius.Enabled = enabled && checkBoxShadowSmooth.Checked;
 			checkBoxShadowFilterCascades.Enabled = enabled;
 		}
 
@@ -312,6 +319,8 @@ namespace ObjectViewer
 			Interface.CurrentOptions.ShadowBias = (double)numericUpDownShadowBias.Value;
 			Interface.CurrentOptions.ShadowNormalBias = (double)numericUpDownShadowNormalBias.Value;
 			Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
+			Interface.CurrentOptions.ShadowSmooth = checkBoxShadowSmooth.Checked;
+			Interface.CurrentOptions.ShadowFilterRadius = comboBoxShadowFilterRadius.SelectedIndex == 0 ? 1.0 : comboBoxShadowFilterRadius.SelectedIndex == 2 ? 2.5 : 1.5;
 			
 			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));
 			Program.RefreshObjects();
