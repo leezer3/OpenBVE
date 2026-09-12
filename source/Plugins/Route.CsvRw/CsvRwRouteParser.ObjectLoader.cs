@@ -43,9 +43,21 @@ namespace CsvRwRouteParser
 		public string TypeName;
 	}
 
+	/// <summary>A single deferred Cycle command, validated after objects are committed.</summary>
+	internal struct PendingCycle
+	{
+		public CycleCommand Command;
+		public string[] Arguments;
+		public int Index;
+		public int Line;
+		public int Column;
+		public string File;
+	}
+
 	internal partial class Parser
 	{
 		private readonly List<PendingObject> pendingObjects = new List<PendingObject>();
+		private readonly List<PendingCycle> pendingCycles = new List<PendingCycle>();
 
 		private void QueuePending(StructureTarget target, int index1, int index2, string path, bool isStatic, bool preserveVertices, string typeName)
 		{
@@ -59,6 +71,42 @@ namespace CsvRwRouteParser
 				PreserveVertices = preserveVertices,
 				TypeName = typeName
 			});
+		}
+
+		private void QueueCycle(CycleCommand command, string[] arguments, int index, Expression expression)
+		{
+			pendingCycles.Add(new PendingCycle
+			{
+				Command = command,
+				Arguments = (string[])arguments.Clone(),
+				Index = index,
+				Line = expression.Line,
+				Column = expression.Column,
+				File = expression.File
+			});
+		}
+
+		/// <summary>Replays deferred Cycle commands sequentially after objects are committed.</summary>
+		private void CommitPendingCycles(bool previewOnly)
+		{
+			try
+			{
+				for (int i = 0; i < pendingCycles.Count; i++)
+				{
+					if (Plugin.Cancel)
+					{
+						Plugin.IsLoading = false;
+						return;
+					}
+					PendingCycle cycle = pendingCycles[i];
+					Expression expression = new Expression(cycle.File, string.Empty, cycle.Line, cycle.Column, 0.0);
+					ParseCycleCommand(cycle.Command, cycle.Arguments, cycle.Index, expression, ref Data, previewOnly);
+				}
+			}
+			finally
+			{
+				pendingCycles.Clear();
+			}
 		}
 
 		/// <summary>Computes worker count from machine capability, reserving one thread for the loading screen on small machines.</summary>

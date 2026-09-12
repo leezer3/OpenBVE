@@ -374,7 +374,9 @@ namespace CsvRwRouteParser {
 								case "cycle":
 									if (Enum.TryParse(Command, true, out CycleCommand parsedCycleCommand))
 									{
-										ParseCycleCommand(parsedCycleCommand, Arguments, commandIndices[0], Expressions[j], ref Data, PreviewOnly);
+										// Deferred: Cycle validates indices against committed
+										// Structure dictionaries, replayed after the parallel load.
+										QueueCycle(parsedCycleCommand, Arguments, commandIndices[0], Expressions[j]);
 									}
 									else
 									{
@@ -404,6 +406,13 @@ namespace CsvRwRouteParser {
 			LoadAndCommitPendingObjects(Encoding, 0.15, 0.1833);
 			objectTimer.Stop();
 			Plugin.CurrentHost.PluginObjectLoadTime = objectTimer.ElapsedMilliseconds;
+			if (Plugin.Cancel)
+			{
+				Plugin.IsLoading = false;
+				return;
+			}
+			// Replay deferred Cycle commands now that Structure dictionaries are populated.
+			CommitPendingCycles(PreviewOnly);
 			if (Plugin.Cancel)
 			{
 				Plugin.IsLoading = false;
