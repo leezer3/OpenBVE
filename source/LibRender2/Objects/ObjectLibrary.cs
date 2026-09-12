@@ -244,18 +244,18 @@ namespace LibRender2.Objects
 		private Texture GetTransparencySourceTexture(Texture handle)
 		{
 			if (handle == null || handle.Origin == null) return null;
-			if (TextureManager.textureCache.TryGetValue(handle.Origin, out Texture cached)) return cached;
+			if (TextureManager.TryGetCachedTexture(handle.Origin, out Texture cached)) return cached;
 			Texture decoded = handle.DecodedTexture;
 			if (decoded != null && TextureManager.TextureFileUnchanged(handle.Origin))
 			{
-				TextureManager.textureCache[handle.Origin] = decoded;
+				TextureManager.StoreCachedTexture(handle.Origin, decoded);
 				return decoded;
 			}
 			Stopwatch sw = Stopwatch.StartNew();
 			handle.Origin.GetTexture(out Texture fresh);
 			sw.Stop();
 			TextureManager.TextureDecodeTime += sw.ElapsedMilliseconds;
-			TextureManager.textureCache[handle.Origin] = fresh;
+			TextureManager.StoreCachedTexture(handle.Origin, fresh);
 			return fresh;
 		}
 
