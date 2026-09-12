@@ -52,12 +52,13 @@ namespace ObjectViewer
 			}
 
 			// ReSharper restore EmptyGeneralCatchClause
-			for (int i = 0; i < Interface.LogMessages.Count; i++)
+			var snapshot = Interface.GetLogSnapshot();
+			for (int i = 0; i < snapshot.Count; i++)
 			{
 				string t = "Unknown";
 				string g = "information";
 
-				switch (Interface.LogMessages[i].Type)
+				switch (snapshot[i].Type)
 				{
 					case MessageType.Information:
 						t = "Information";
@@ -78,7 +79,7 @@ namespace ObjectViewer
 				}
 
 				ListViewItem a = Dialog.listviewMessages.Items.Add(t, g);
-				a.SubItems.Add(Interface.LogMessages[i].Text);
+				a.SubItems.Add(snapshot[i].Text);
 			}
 			Dialog.listviewMessages.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 			DialogResult Result = Dialog.ShowDialog();
@@ -105,9 +106,9 @@ namespace ObjectViewer
 			// prepare
 			System.Text.StringBuilder Builder = new System.Text.StringBuilder();
 
-			for (int i = 0; i < Interface.LogMessages.Count; i++)
+			foreach (var message in Interface.GetLogSnapshot())
 			{
-				Builder.AppendLine(Interface.LogMessages[i].Text);
+				Builder.AppendLine(message.Text);
 			}
 			// save
 			using (SaveFileDialog Dialog = new SaveFileDialog())
