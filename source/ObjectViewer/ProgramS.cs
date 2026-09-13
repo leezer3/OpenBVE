@@ -392,8 +392,50 @@ namespace ObjectViewer {
 
 					    if (!trainLoaded)
 					    {
-							//As we now attempt to load the train as a whole, the most likely outcome is that the train.dat file is MIA
-						    Interface.AddMessage(MessageType.Critical, false, "No plugin found capable of loading file " + currentFile + ".");
+						    // an exterior-only addon folder with extensions.cfg but no train.dat . fall back to
+						    // showing its referenced meshes as plain objects instead of failing.
+						    List<string> fallbackMeshes = new List<string>();
+						    string descriptorName = System.IO.Path.GetFileName(currentFile);
+						    if (descriptorName.Equals("extensions.cfg", StringComparison.InvariantCultureIgnoreCase)
+							    || descriptorName.Equals("train.dat", StringComparison.InvariantCultureIgnoreCase))
+						    {
+							    fallbackMeshes = CollectTrainObjectPaths(new List<string> { currentFile });
+						    }
+						    if (fallbackMeshes.Count != 0)
+						    {
+							    int shown = 0;
+							    foreach (string meshFile in fallbackMeshes)
+							    {
+								    if (CurrentHost.LoadObject(meshFile, Encoding.UTF8, out UnifiedObject fallbackObject))
+								    {
+									    fallbackObject.CreateObject(Vector3.Zero, new ObjectCreationParameters());
+									    shown++;
+								    }
+							    }
+							    string trainDatNote = string.Empty;
+							    try
+							    {
+								    string trainFolder = System.IO.Path.GetDirectoryName(currentFile);
+								    if (!string.IsNullOrEmpty(trainFolder) && System.IO.File.Exists(System.IO.Path.Combine(trainFolder, "train.dat")))
+								    {
+									    trainDatNote = " (train.dat is present but could not be loaded)";
+								    }
+								    else
+								    {
+									    trainDatNote = " (train.dat is missing in " + trainFolder + ")";
+								    }
+							    }
+							    catch
+							    {
+								    // best-effort note only
+							    }
+							    Interface.AddMessage(MessageType.Information, false, "No train.dat found in " + currentFile + trainDatNote + "; showing " + shown + " of " + fallbackMeshes.Count + " referenced meshes as static objects instead.");
+						    }
+						    else
+						    {
+							    //As we now attempt to load the train as a whole, the most likely outcome is that the train.dat file is MIA
+							    Interface.AddMessage(MessageType.Critical, false, "No plugin found capable of loading file " + currentFile + ".");
+						    }
 					    }
 				    }
 				    else
@@ -456,6 +498,127 @@ namespace ObjectViewer {
 		    LastReloadTime = DateTime.UtcNow;
 			UpdateWatchers();
 	    }
+
+		/// <summary>Checks whether a path is a BVE train descriptor (folder-based train load).</summary>
+		private static bool IsTrainDescriptor(string path)
+		{
+			string name = System.IO.Path.GetFileName(path);
+			return name.Equals("extensions.cfg", StringComparison.InvariantCultureIgnoreCase)
+				|| name.Equals("train.dat", StringComparison.InvariantCultureIgnoreCase);
+		}
+
+		/// <summary>Checks whether a path is a plain mesh file loadable as a static object.</summary>
+		private static bool IsAsyncCapable(string path)
+		{
+			return path.EndsWith(".b3d", StringComparison.InvariantCultureIgnoreCase)
+				|| path.EndsWith(".csv", StringComparison.InvariantCultureIgnoreCase);
+		}
+
+		/// <summary>Mesh extensions collected for the missing-train fallback.</summary>
+		private static readonly string[] WarmObjectExtensions = { ".b3d", ".csv", ".animated" };
+
+		/// <summary>Collects mesh paths for a train fallback: standalone b3d/csv files
+		/// plus object paths referenced by extensions.cfg files. Mirrors the parser's path
+		/// resolution (folder-relative, ';' comments stripped, File.Exists gate); anything
+		/// missed simply fails like before. Runs on the UI thread (fast text scan).</summary>
+		private static List<string> CollectTrainObjectPaths(List<string> snapshot)
+		{
+			HashSet<string> seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			List<string> paths = new List<string>();
+			foreach (string file in snapshot)
+			{
+				if (IsAsyncCapable(file) && seen.Add(file))
+				{
+					paths.Add(file);
+				}
+			}
+			foreach (string file in snapshot)
+			{
+				if (!IsTrainDescriptor(file))
+				{
+					continue;
+				}
+				string folder;
+				try
+				{
+					folder = System.IO.Path.GetDirectoryName(file);
+				}
+				catch
+				{
+					continue;
+				}
+				if (string.IsNullOrEmpty(folder))
+				{
+					continue;
+				}
+				string cfg = System.IO.Path.Combine(folder, "extensions.cfg");
+				if (!System.IO.File.Exists(cfg))
+				{
+					continue;
+				}
+				string[] lines;
+				try
+				{
+					lines = System.IO.File.ReadAllLines(cfg);
+				}
+				catch
+				{
+					continue;
+				}
+				foreach (string rawLine in lines)
+				{
+					string line = rawLine;
+					int comment = line.IndexOf(';');
+					if (comment >= 0)
+					{
+						line = line.Substring(0, comment);
+					}
+					line = line.Trim();
+					if (line.Length == 0 || (line.StartsWith("[") && line.EndsWith("]")))
+					{
+						continue;
+					}
+					int equals = line.IndexOf('=');
+					if (equals < 0)
+					{
+						continue;
+					}
+					string value = line.Substring(equals + 1).Trim().Trim('"');
+					if (value.Length == 0)
+					{
+						continue;
+					}
+					string ext = System.IO.Path.GetExtension(value);
+					bool warm = false;
+					foreach (string warmExt in WarmObjectExtensions)
+					{
+						if (ext.Equals(warmExt, StringComparison.InvariantCultureIgnoreCase))
+						{
+							warm = true;
+							break;
+						}
+					}
+					if (!warm)
+					{
+						continue;
+					}
+					string full;
+					try
+					{
+						full = System.IO.Path.IsPathRooted(value) ? value : System.IO.Path.Combine(folder, value);
+					}
+					catch
+					{
+						continue;
+					}
+					if (System.IO.File.Exists(full) && seen.Add(full))
+					{
+						paths.Add(full);
+					}
+				}
+			}
+			return paths;
+		}
 
         /// <summary>Checks if any of the loaded files have been updated externally.</summary>
         internal static void CheckFileChanges(double timeElapsed)
