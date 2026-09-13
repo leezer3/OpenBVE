@@ -50,9 +50,17 @@ namespace ObjectViewer
 				        Monitor.Pulse(currentJob);
 			        }
 		        }
-		        Program.Renderer.RenderThreadJobWaiting = false;
-	        }
-			double timeElapsed = RenderRealTimeElapsed;
+	        Program.Renderer.RenderThreadJobWaiting = false;
+        }
+		if (Program.IsLoading)
+		{
+			// Show the frozen frame + progress instead of the half-torn scene.
+			// (Render-thread jobs above are still pumped so worker GL requests complete.)
+			Program.DrawLoaderScreen();
+			RenderRealTimeElapsed = 0.0;
+			return;
+		}
+		double timeElapsed = RenderRealTimeElapsed;
 
 			// Use the OpenTK frame rate as this is much more accurate
 			// Also avoids running a calculation
@@ -285,10 +293,21 @@ namespace ObjectViewer
 
             Program.CheckFileChanges(RealTimeElapsed);
 
+			if (Program.IsLoading)
+			{
+				// A reload requested mid-load is coalesced; the loader consumes PendingReload on completion.
+				if (Program.ReloadRequested)
+				{
+					Program.ReloadRequested = false;
+					Program.PendingReload = true;
+				}
+				Program.PumpLoader();
+				return;
+			}
 			if (Program.ReloadRequested)
 			{
 				Program.ReloadRequested = false;
-				Program.RefreshObjects();
+				Program.RefreshObjectsAsync();
 			}
 		}
 
@@ -317,7 +336,7 @@ namespace ObjectViewer
 			Program.Renderer.InitializeVisibility();
 			Program.Renderer.UpdateVisibility(true);
             ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
-			Program.RefreshObjects();
+			Program.RefreshObjectsAsync();
 			if (Width == DisplayDevice.Default.Width && Height == DisplayDevice.Default.Height)
 			{
 				WindowState = WindowState.Maximized;
