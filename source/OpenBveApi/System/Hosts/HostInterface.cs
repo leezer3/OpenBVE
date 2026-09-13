@@ -836,5 +836,16 @@ namespace OpenBveApi.Hosts {
 			"nullrail",
 			"null_rail"
 		};
+		private static readonly object NullFilesLock = new object();
+
+		/// <summary>Checks whether an extension-stripped file name refers to a commonly used 'empty' file.</summary>
+		/// <param name="fileKey">The file name without extension (e.g. from GetFileNameWithoutExtension).</param>
+		public static bool IsNullFile(string fileKey)
+		{
+			lock (NullFilesLock)
+			{
+				return NullFiles.Contains(fileKey);
+			}
+		}
 	}
 }

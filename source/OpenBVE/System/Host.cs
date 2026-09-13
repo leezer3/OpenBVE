@@ -457,7 +457,7 @@ namespace OpenBve {
 				string nullKey = Path.GetFileNameWithoutExtension(path);
 				if (f.Length == 0)
 				{
-					bool reportZero = !NullFiles.Contains(nullKey) && ReportFailure(FailedObjects, path);
+					bool reportZero = !IsNullFile(nullKey) && ReportFailure(FailedObjects, path);
 					if (reportZero)
 					{
 						Interface.AddMessage(MessageType.Error, false, "Zero-byte object file encountered at " + path);
@@ -465,7 +465,7 @@ namespace OpenBve {
 				}
 				else
 				{
-					bool reportNoPlugin = !NullFiles.Contains(nullKey) && ReportFailure(FailedObjects, path);
+					bool reportNoPlugin = !IsNullFile(nullKey) && ReportFailure(FailedObjects, path);
 					if (reportNoPlugin)
 					{
 						Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);

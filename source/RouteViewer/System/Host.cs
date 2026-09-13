@@ -465,14 +465,14 @@ namespace RouteViewer
 				string nullKey = Path.GetFileNameWithoutExtension(path);
 				if (f.Length == 0)
 				{
-					if (!NullFiles.Contains(nullKey) && ReportFailure(FailedObjects, path))
+					if (!IsNullFile(nullKey) && ReportFailure(FailedObjects, path))
 					{
 						Interface.AddMessage(MessageType.Error, false, "Zero-byte object file encountered at " + path);
 					}
 				}
 				else
 				{
-					if (!NullFiles.Contains(nullKey) && ReportFailure(FailedObjects, path))
+					if (!IsNullFile(nullKey) && ReportFailure(FailedObjects, path))
 					{
 						Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
 					}
