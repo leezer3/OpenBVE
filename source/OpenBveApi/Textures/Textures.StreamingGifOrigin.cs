@@ -8,7 +8,8 @@ using OpenBveApi.Math;
 
 namespace OpenBveApi.Textures
 {
-	/// <summary>Streaming origin for large animated GIFs – desktop OpenGL keeps file bytes 36 MB instead of 1205 decoded frames 208 MB (single TexSubImage, not 1205 glGen)</summary>
+	/// <summary>Streaming origin for large animated GIFs</summary>
+	/// <remarks>Allows OpenGL to swap the decoded file bytes of the current frame in memory using GL.TexSubImage, rather than decoding all frames</remarks>
 	public class StreamingGifOrigin : TextureOrigin
 	{
 		private readonly string Path;
@@ -24,6 +25,14 @@ namespace OpenBveApi.Textures
 		private readonly object sync = new object();
 		private Func<int, byte[]> frameDecoder;
 
+		/// <summary>Creates a new StreamingGifOrigin</summary>
+		/// <param name="path">The on-disk path to the GIF texture</param>
+		/// <param name="fileBytes">The encoded bytes</param>
+		/// <param name="width">The width of the texture</param>
+		/// <param name="height">The height of the texture</param>
+		/// <param name="palette">The pallette of used colors</param>
+		/// <param name="frameCount">The total number of frames in the GIF</param>
+		/// <param name="interval">The frame interval</param>
 		public StreamingGifOrigin(string path, byte[] fileBytes, int width, int height, Color32[] palette, int frameCount, double interval)
 		{
 			Path = path;
@@ -37,9 +46,16 @@ namespace OpenBveApi.Textures
 		}
 		public void SetDecoder(Func<int, byte[]> decoder) => frameDecoder = decoder;
 
+		/// <summary>Gets the number of frames in the GIF</summary>
 		public int GetFrameCount() => FrameCount;
+
+		/// <summary>Gets the frame interval for the GIF</summary>
 		public double GetInterval() => Interval;
+
+		/// <summary>Gets the texture size of the GIF</summary>
 		public Vector2 GetSize() => Size;
+
+		/// <summary>Gets the used color pallette of the GIF</summary>
 		public Color32[] GetPalette() => Palette;
 
 		/// <summary>Create a copy of this origin with a modified palette (for transparency changes)</summary>
@@ -102,24 +118,37 @@ namespace OpenBveApi.Textures
 				{
 					return cachedBytes;
 				}
-				return null;
 			}
 		}
 
+		/// <inheritdoc/>
 		public override bool GetTexture(out Texture texture)
 		{
 			texture = new Texture(this);
 			return true;
 		}
 
+		/// <summary>Checks whether two StreamingGifOrigin are equal</summary>
+		/// <param name="a">The first StreamingGifOrigin</param>
+		/// <param name="b">The second StreamingGifOrigin</param>
+		/// <returns>Whether the two origins are equal</returns>
 		public static bool operator ==(StreamingGifOrigin a, StreamingGifOrigin b)
 		{
 			if (ReferenceEquals(a, b)) return true;
 			if (a is null || b is null) return false;
 			return a.Path == b.Path;
 		}
+
+		/// <summary>Checks whether two StreamingGifOrigin are unequal</summary>
+		/// <param name="a">The first StreamingGifOrigin</param>
+		/// <param name="b">The second StreamingGifOrigin</param>
+		/// <returns>Whether the two origins are unequal</returns>
 		public static bool operator !=(StreamingGifOrigin a, StreamingGifOrigin b) => !(a == b);
+		
+		/// <inheritdoc/>
 		public override bool Equals(object obj) => obj is StreamingGifOrigin o && Path == o.Path;
+
+		/// <inheritdoc/>
 		public override int GetHashCode() => Path?.GetHashCode() ?? 0;
 	}
 }

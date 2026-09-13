@@ -646,7 +646,7 @@ namespace Train.OpenBve
 				    if (File.Exists(panelFile))
 				    {
 					    FileSystem.AppendToLogFile("Loading train panel: " + panelFile);
-					    PanelCfgParser.ParsePanelConfig(train.TrainFolder, encoding, train.Cars[train.DriverCar]);
+					    PanelCfgParser.ParsePanelConfig(train.TrainFolder, train.Cars[train.DriverCar]);
 					    train.Cars[train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
 					    Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
 				    }

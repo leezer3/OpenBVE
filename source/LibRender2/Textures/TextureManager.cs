@@ -386,8 +386,7 @@ namespace LibRender2.Textures
 				 */
 				lock (TextureLookupLock)
 				{
-					Texture cachedTexture;
-					if (textureCache.TryGetValue(handle.Origin, out cachedTexture))
+					if (textureCache.TryGetValue(handle.Origin, out Texture cachedTexture))
 					{
 						// The cache value is the DecodedTexture (ByteArrayOrigin) created at registration – its Origin is not PathOrigin,
 						// so the original check (cachedPathOrigin != null) never succeeds for decoded GIFs and caused a second decode (2× memory).

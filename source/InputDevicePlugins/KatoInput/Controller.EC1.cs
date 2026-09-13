@@ -132,8 +132,6 @@ namespace KatoInput
 		/// <summary>Lists the controllers supported by this class.</summary>
 		internal static void GetControllers(Dictionary<Guid, Controller> controllerList)
 		{
-			Dictionary<Guid, Controller> controllers = new Dictionary<Guid, Controller>();
-
 			// Check the first 10 joysticks, should be enough
 			for (int i = 0; i < 10; i++)
 			{

@@ -45,9 +45,8 @@ namespace Train.OpenBve
 
 		/// <summary>Parses a BVE1 panel.cfg file</summary>
 		/// <param name="TrainPath">The on-disk path to the train</param>
-		/// <param name="Encoding">The train's text encoding</param>
 		/// <param name="Car">The car to add the panel to</param>
-		internal void ParsePanelConfig(string TrainPath, System.Text.Encoding Encoding, CarBase Car)
+		internal void ParsePanelConfig(string TrainPath, CarBase Car)
 		{
 			// read lines
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;

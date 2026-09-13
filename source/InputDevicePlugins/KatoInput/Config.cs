@@ -56,7 +56,7 @@ namespace KatoInput
 		internal KatoInputConfiguration Configuration;
 
 		/// <summary>The list of recognised controllers.</summary>
-		private Dictionary<Guid, Controller> controllers;
+		private readonly Dictionary<Guid, Controller> controllers;
 
 		/// <summary>The GUID of the selected controller.</summary>
 		private Guid selectedControllerGuid = Guid.Empty;

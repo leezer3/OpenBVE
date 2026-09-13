@@ -771,7 +771,6 @@ namespace OpenBve.Formats.MsTs
 				}
 
 				TextualBlock t = new TextualBlock("", true);
-				t.Token = KujuTokenID.Skip;
 				return t;
 			}
 
@@ -789,7 +788,6 @@ namespace OpenBve.Formats.MsTs
 					if (allowEmptyBlock)
 					{
 						TextualBlock t = new TextualBlock("", true);
-						t.Token = KujuTokenID.Skip;
 						return t;
 					}
 					throw new InvalidDataException("Unexpected extra closing bracket encountered.");
