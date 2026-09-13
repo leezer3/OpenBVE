@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -642,12 +643,12 @@ namespace OpenBve
 				Timetable.CreateTimetable();
 			}
 			//Check if any critical errors have occured during the route or train loading
-			for (int i = 0; i < Interface.LogMessages.Count; i++)
+			foreach (LogMessage logMessage in Interface.GetLogSnapshot())
 			{
-				if (Interface.LogMessages[i].Type == MessageType.Critical)
+				if (logMessage.Type == MessageType.Critical)
 				{
 					string currentError = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "errors", "critical_loading" });
-					currentError = currentError.Replace("[error]", Interface.LogMessages[i].Text);
+					currentError = currentError.Replace("[error]", logMessage.Text);
 					MessageBox.Show(currentError, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "program", "title" }), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					Close();
 				}
@@ -989,22 +990,23 @@ namespace OpenBve
 			}
 			
 			// warnings / errors
-			if (Interface.LogMessages.Count != 0)
+			List<LogMessage> logSnapshot = Interface.GetLogSnapshot();
+			if (logSnapshot.Count != 0)
 			{
 				int filesNotFound = 0;
 				int errors = 0;
 				int warnings = 0;
-				for (int i = 0; i < Interface.LogMessages.Count; i++)
+				for (int i = 0; i < logSnapshot.Count; i++)
 				{
-					if (Interface.LogMessages[i].FileNotFound)
+					if (logSnapshot[i].FileNotFound)
 					{
 						filesNotFound++;
 					}
-					else if (Interface.LogMessages[i].Type == MessageType.Error)
+					else if (logSnapshot[i].Type == MessageType.Error)
 					{
 						errors++;
 					}
-					else if (Interface.LogMessages[i].Type == MessageType.Warning)
+					else if (logSnapshot[i].Type == MessageType.Warning)
 					{
 						warnings++;
 					}

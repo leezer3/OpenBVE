@@ -199,10 +199,15 @@ namespace ObjectViewer
 								Instance.PushMenu(MenuType.Options);
 								break;
 							case MenuTag.ObjectFile:
+								if (Program.IsLoading)
+								{
+									Interface.AddMessage(MessageType.Information, false, "Still loading objects, ignoring file selection until the current load finishes.");
+									break;
+								}
 								currentFile = Path.CombineFile(SearchDirectory, menu.Items[menu.Selection].Text);
-								Program.Files.Add(currentFile);
+								Program.AddFile(currentFile);
 								Game.Reset();
-								Program.RefreshObjects();
+								Program.RefreshObjectsAsync();
 								Reset();
 								Renderer.CurrentInterface = InterfaceType.Normal;
 								Interface.CurrentOptions.ObjectSearchDirectory = SearchDirectory;

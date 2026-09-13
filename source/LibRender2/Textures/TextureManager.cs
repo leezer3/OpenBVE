@@ -45,6 +45,22 @@ namespace LibRender2.Textures
 
 		private static readonly object TextureLookupLock = new object();
 
+		internal static bool TryGetCachedTexture(TextureOrigin origin, out Texture cached)
+		{
+			lock (TextureLookupLock)
+			{
+				return textureCache.TryGetValue(origin, out cached);
+			}
+		}
+
+		internal static void StoreCachedTexture(TextureOrigin origin, Texture decoded)
+		{
+			lock (TextureLookupLock)
+			{
+				textureCache[origin] = decoded;
+			}
+		}
+
 		/// <summary>The number of currently registered textures.</summary>
 		public int RegisteredTexturesCount;
 
@@ -82,14 +98,11 @@ namespace LibRender2.Textures
 				handle = null;
 				return false;
 			}
-			/* BUG:
-			 * The registered textures count very occasional becomes greater than the array length (Texture loader crashes possibly?)
-			 * This then crashes when we attempt to itinerate the array, so reset it...
-			 */
-			if (RegisteredTexturesCount > RegisteredTextures.Length)
-			{
-				RegisteredTexturesCount = RegisteredTextures.Length;
-			}
+			/*
+			 * The unlocked fast-path check was removed: RegisteredTexturesCount
+			 * races with parallel registration, the locked double-check below
+			 * is the single source of truth.
+			 * */
 
 			/*
 			 * Check if the texture is already registered.
@@ -120,15 +133,46 @@ namespace LibRender2.Textures
 			}
 
 			/*
-			 * Register the texture and return the newly created handle.
+			 * Decode outside the lock (CPU-only, no GL). Index allocation and
+			 * table updates below stay under lock so parallel object loading
+			 * cannot corrupt RegisteredTextures or the lookup tables.
 			 * */
-			int idx = GetNextFreeTexture();
-			RegisteredTextures[idx] = new Texture(path, parameters, currentHost);
-			RegisteredTexturesCount++;
-			handle = RegisteredTextures[idx];
+			Texture decoded = new Texture(path, parameters, currentHost);
 
 			lock (TextureLookupLock)
 			{
+				// Double-check: another worker may have registered it while decoding.
+				if (RegisteredTextureLookup.TryGetValue(path, out List<Texture> raced))
+				{
+					for (int i = 0; i < raced.Count; i++)
+					{
+						try
+						{
+							PathOrigin source = raced[i].Origin as PathOrigin;
+
+							if (source != null && source.Parameters == parameters)
+							{
+								handle = raced[i];
+								return true;
+							}
+						}
+						catch
+						{
+							// ignored
+						}
+					}
+				}
+
+				if (RegisteredTexturesCount > RegisteredTextures.Length)
+				{
+					RegisteredTexturesCount = RegisteredTextures.Length;
+				}
+
+				int idx = GetNextFreeTexture();
+				RegisteredTextures[idx] = decoded;
+				RegisteredTexturesCount++;
+				handle = RegisteredTextures[idx];
+
 				/*
 				 * Pre-seed the texture cache with the decoded texture (not the handle).
 				 * The handle itself has no decoded bytes, so storing it would cause a null
@@ -159,11 +203,15 @@ namespace LibRender2.Textures
 		{
 			/*
 			 * Register the texture and return the newly created handle.
+			 * Locked: shares the index allocator with parallel path registration.
 			 * */
-			int idx = GetNextFreeTexture();
-			RegisteredTextures[idx] = new Texture(texture);
-			RegisteredTexturesCount++;
-			return RegisteredTextures[idx];
+			lock (TextureLookupLock)
+			{
+				int idx = GetNextFreeTexture();
+				RegisteredTextures[idx] = new Texture(texture);
+				RegisteredTexturesCount++;
+				return RegisteredTextures[idx];
+			}
 		}
 
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>
@@ -175,11 +223,15 @@ namespace LibRender2.Textures
 		{
 			/*
 			 * Register the texture and return the newly created handle.
+			 * Locked: shares the index allocator with parallel path registration.
 			 * */
-			int idx = GetNextFreeTexture();
-			RegisteredTextures[idx] = new Texture(bitmap, parameters);
-			RegisteredTexturesCount++;
-			return RegisteredTextures[idx];
+			lock (TextureLookupLock)
+			{
+				int idx = GetNextFreeTexture();
+				RegisteredTextures[idx] = new Texture(bitmap, parameters);
+				RegisteredTexturesCount++;
+				return RegisteredTextures[idx];
+			}
 		}
 
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>
@@ -190,11 +242,15 @@ namespace LibRender2.Textures
 		{
 			/*
 			 * Register the texture and return the newly created handle.
+			 * Locked: shares the index allocator with parallel path registration.
 			 * */
-			int idx = GetNextFreeTexture();
-			RegisteredTextures[idx] = new Texture(bitmap);
-			RegisteredTexturesCount++;
-			return RegisteredTextures[idx];
+			lock (TextureLookupLock)
+			{
+				int idx = GetNextFreeTexture();
+				RegisteredTextures[idx] = new Texture(bitmap);
+				RegisteredTexturesCount++;
+				return RegisteredTextures[idx];
+			}
 		}
 
 
@@ -228,7 +284,12 @@ namespace LibRender2.Textures
 			
 			if (handle.MultipleFrames)
 			{
-			if (!animatedTextures.TryGetValue(handle.Origin, out texture))
+				bool animatedHit;
+				lock (TextureLookupLock)
+				{
+					animatedHit = animatedTextures.TryGetValue(handle.Origin, out texture);
+				}
+				if (!animatedHit)
 			{
 				// Reuse register-time decode from textureCache where possible to avoid decoding the same large animated GIF twice (2× memory). See RegisterTexture pre-seed at line 136.
 				lock (TextureLookupLock)
@@ -271,7 +332,10 @@ namespace LibRender2.Textures
 						return false;
 					}
 				}
-				animatedTextures.Add(handle.Origin, texture);
+				lock (TextureLookupLock)
+				{
+					animatedTextures[handle.Origin] = texture;
+				}
 			}
 				
 				double elapsedTime = CPreciseTimer.GetElapsedTime(handle.LastAccess, currentTicks);
@@ -419,9 +483,12 @@ namespace LibRender2.Textures
 			{
 				// Reuse a live animated decode (e.g. after a reload dropped the register-time
 				// pre-seed from the texture cache) instead of decoding the same GIF twice.
-				if (animatedTextures.TryGetValue(handle.Origin, out Texture animatedTexture) && animatedTexture.MultipleFrames)
+				lock (TextureLookupLock)
 				{
-					texture = animatedTexture;
+					if (animatedTextures.TryGetValue(handle.Origin, out Texture animatedTexture) && animatedTexture.MultipleFrames)
+					{
+						texture = animatedTexture;
+					}
 				}
 			}
 			if (texture == null && handle.Origin is PathOrigin && TextureFileUnchanged(handle.Origin) && handle.DecodedTexture != null)
@@ -707,7 +774,10 @@ namespace LibRender2.Textures
 						// instead of re-decoding after a reload cleared everything.
 						if (handle.Origin != null)
 						{
-							animatedTextures[handle.Origin] = texture;
+							lock (TextureLookupLock)
+							{
+								animatedTextures[handle.Origin] = texture;
+							}
 						}
 					}
 					else
@@ -814,17 +884,20 @@ namespace LibRender2.Textures
 		/// <summary>Loads all registered textures.</summary>
 		public void LoadAllTextures()
 		{
-			for (int i = 0; i < RegisteredTexturesCount; i++)
+			lock (TextureLookupLock)
 			{
-				for (int j = 0; j < 4; j++)
+				for (int i = 0; i < RegisteredTexturesCount && i < RegisteredTextures.Length; i++)
 				{
-					if (RegisteredTextures[i] != null && RegisteredTextures[i].OpenGlTextures[j].Used)
+					for (int j = 0; j < 4; j++)
 					{
-						LoadTexture(ref RegisteredTextures[i], (OpenGlTextureWrapMode)j, CPreciseTimer.GetClockTicks(), renderer.currentOptions.Interpolation, renderer.currentOptions.AnisotropicFilteringLevel);
+						if (RegisteredTextures[i] != null && RegisteredTextures[i].OpenGlTextures[j].Used)
+						{
+							LoadTexture(ref RegisteredTextures[i], (OpenGlTextureWrapMode)j, CPreciseTimer.GetClockTicks(), renderer.currentOptions.Interpolation, renderer.currentOptions.AnisotropicFilteringLevel);
+						}
+
 					}
 
 				}
-
 			}
 		}
 
@@ -834,19 +907,25 @@ namespace LibRender2.Textures
 			// Always clear animated texture cache to prevent memory leak on reload:
 			// animatedTextures retains decoded frame data for every GIF ever loaded,
 			// doubling memory on each reload because old entries are never removed.
-			animatedTextures.Clear();
-
-			for (int i = 0; i < RegisteredTexturesCount; i++)
+			lock (TextureLookupLock)
 			{
-				/*
-				 * On a route reload, preserve textures whose source file is unchanged,
-				 * so that the first frame after the reload does not re-upload every texture.
-				 */
-				if (currentlyReloading && RegisteredTextures[i] != null && !RegisteredTextures[i].MultipleFrames && TextureFileUnchanged(RegisteredTextures[i].Origin))
+				animatedTextures.Clear();
+			}
+
+			lock (TextureLookupLock)
+			{
+				for (int i = 0; i < RegisteredTexturesCount && i < RegisteredTextures.Length; i++)
 				{
-					continue;
+					/*
+					 * On a route reload, preserve textures whose source file is unchanged,
+					 * so that the first frame after the reload does not re-upload every texture.
+					 */
+					if (currentlyReloading && RegisteredTextures[i] != null && !RegisteredTextures[i].MultipleFrames && TextureFileUnchanged(RegisteredTextures[i].Origin))
+					{
+						continue;
+					}
+					UnloadTexture(ref RegisteredTextures[i], currentlyReloading);
 				}
-				UnloadTexture(ref RegisteredTextures[i], currentlyReloading);
 			}
 			if (currentlyReloading)
 			{
@@ -939,23 +1018,29 @@ namespace LibRender2.Textures
 #endif
 			if (renderer.CurrentInterface == InterfaceType.Normal)
 			{
-				for (int i = 0; i < RegisteredTextures.Length; i++)
+				lock (TextureLookupLock)
 				{
-					if (RegisteredTextures[i] != null && RegisteredTextures[i].AvailableToUnload && (CPreciseTimer.GetClockTicks() - RegisteredTextures[i].LastAccess) > 20000)
+					for (int i = 0; i < RegisteredTextures.Length; i++)
 					{
-						UnloadTexture(ref RegisteredTextures[i]);
+						if (RegisteredTextures[i] != null && RegisteredTextures[i].AvailableToUnload && (CPreciseTimer.GetClockTicks() - RegisteredTextures[i].LastAccess) > 20000)
+						{
+							UnloadTexture(ref RegisteredTextures[i]);
+						}
 					}
 				}
 			}
 			else
 			{
 				//Don't unload textures if we are in a menu/ paused, as they may be required immediately after unpause
-				foreach (Texture Texture in RegisteredTextures)
+				lock (TextureLookupLock)
 				{
-					//Texture can be null in certain cases....
-					if (Texture != null)
+					foreach (Texture Texture in RegisteredTextures)
 					{
-						Texture.LastAccess = CPreciseTimer.GetClockTicks();
+						//Texture can be null in certain cases....
+						if (Texture != null)
+						{
+							Texture.LastAccess = CPreciseTimer.GetClockTicks();
+						}
 					}
 				}
 			}
@@ -968,7 +1053,10 @@ namespace LibRender2.Textures
 		/// <returns>The number of registered textures.</returns>
 		public int GetNumberOfRegisteredTextures()
 		{
-			return RegisteredTexturesCount;
+			lock (TextureLookupLock)
+			{
+				return RegisteredTexturesCount;
+			}
 		}
 
 		/// <summary>Gets the number of loaded textures.</summary>
@@ -977,14 +1065,15 @@ namespace LibRender2.Textures
 		{
 			int count = 0;
 
-			for (int i = 0; i < RegisteredTexturesCount; i++)
+			Texture[] snapshot = GetRegisteredSnapshot(out int registered);
+			for (int i = 0; i < registered && i < snapshot.Length; i++)
 			{
-				if (RegisteredTextures[i] == null || RegisteredTextures[i].MultipleFrames)
+				if (snapshot[i] == null || snapshot[i].MultipleFrames)
 				{
 					continue;
 				}
 
-				if (RegisteredTextures[i].OpenGlTextures.Any(t => t.Valid))
+				if (snapshot[i].OpenGlTextures.Any(t => t.Valid))
 				{
 					count++;
 				}
@@ -995,14 +1084,15 @@ namespace LibRender2.Textures
 		public int GetNumberOfLoadedAnimatedTextures()
 		{
 			int count = 0;
-			for (int i = 0; i < RegisteredTexturesCount; i++)
+			Texture[] snapshot = GetRegisteredSnapshot(out int registered);
+			for (int i = 0; i < registered && i < snapshot.Length; i++)
 			{
-				if (RegisteredTextures[i] == null || RegisteredTextures[i].MultipleFrames == false)
+				if (snapshot[i] == null || snapshot[i].MultipleFrames == false)
 				{
 					continue;
 				}
 
-				if (RegisteredTextures[i].OpenGlTextures.Any(t => t.Valid))
+				if (snapshot[i].OpenGlTextures.Any(t => t.Valid))
 				{
 					count++;
 				}
@@ -1013,23 +1103,31 @@ namespace LibRender2.Textures
 
 		/// <summary>Gets the next free texture, resizing the base textures array if appropriate</summary>
 		/// <returns>The index of the next free texture</returns>
-		public int GetNextFreeTexture()
+		private int GetNextFreeTexture()
 		{
+			// Caller must hold TextureLookupLock.
 			if (RegisteredTextures.Length == RegisteredTexturesCount)
 			{
 				Array.Resize(ref RegisteredTextures, RegisteredTextures.Length << 1);
 			}
 			else if (RegisteredTexturesCount > RegisteredTextures.Length)
 			{
-				/* BUG:
-				 * The registered textures count very occasional becomes greater than the array length (Texture loader crashes possibly?)
-				 * This then crashes when we attempt to itinerate the array, so reset it...
-				 */
 				RegisteredTexturesCount = RegisteredTextures.Length;
 				Array.Resize(ref RegisteredTextures, RegisteredTextures.Length << 1);
 			}
 
 			return RegisteredTexturesCount;
+		}
+
+		private Texture[] GetRegisteredSnapshot(out int count)
+		{
+			lock (TextureLookupLock)
+			{
+				count = RegisteredTexturesCount;
+				Texture[] copy = new Texture[RegisteredTextures.Length];
+				Array.Copy(RegisteredTextures, copy, RegisteredTextures.Length);
+				return copy;
+			}
 		}
 
 

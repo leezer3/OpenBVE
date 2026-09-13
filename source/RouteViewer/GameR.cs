@@ -41,7 +41,7 @@ namespace RouteViewer {
 			// train manager
 			Program.TrainManager.Trains = new List<TrainBase>();
 			// game
-			Interface.LogMessages.Clear();
+			Interface.ClearLog();
 			Program.CurrentHost.ClearErrors();
 			Program.CurrentRoute.Comment = "";
 			Program.CurrentRoute.Image = "";

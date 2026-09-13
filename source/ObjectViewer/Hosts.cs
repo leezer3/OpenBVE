@@ -31,7 +31,7 @@ namespace ObjectViewer {
 				case ProblemType.DirectoryNotFound:
 				case ProblemType.FileNotFound:
 				case ProblemType.PathNotFound:
-					if (!MissingFiles.Contains(text))
+					if (ReportMissingFile(text))
 					{
 						Interface.AddMessage(MessageType.Error, true, type + " : " + text);
 					}
@@ -104,6 +104,14 @@ namespace ObjectViewer {
 		/// <param name="texture">Receives the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool LoadTexture(string path, TextureParameters parameters, out Texture texture) {
+			System.Diagnostics.Stopwatch textureDecodeTimer = System.Diagnostics.Stopwatch.StartNew();
+			bool result = LoadTextureInternal(path, parameters, out texture);
+			System.Threading.Interlocked.Increment(ref TextureDecodeCalls);
+			System.Threading.Interlocked.Add(ref TextureDecodeMs, textureDecodeTimer.ElapsedMilliseconds);
+			return result;
+		}
+
+		private bool LoadTextureInternal(string path, TextureParameters parameters, out Texture texture) {
 			if (File.Exists(path) || Directory.Exists(path)) {
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
 					if (Program.CurrentHost.Plugins[i].Texture != null) {
@@ -115,9 +123,8 @@ namespace ObjectViewer {
 										texture = texture.ApplyParameters(parameters);
 										return true;
 									}
-									if(!FailedTextures.Contains(path))
+										if (ReportFailure(FailedTextures, path))
 									{
-										FailedTextures.Add(path);
 										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadTexture");
 									}
 									
@@ -134,17 +141,15 @@ namespace ObjectViewer {
 				FileInfo f = new FileInfo(path);
 				if (f.Length == 0)
 				{
-					if (!FailedTextures.Contains(path))
+					if (ReportFailure(FailedTextures, path))
 					{
-						FailedTextures.Add(path);
 						Interface.AddMessage(MessageType.Error, false, "Zero-byte texture file encountered at " + path);
 					}
 				}
 				else
 				{
-					if (!FailedTextures.Contains(path))
+					if (ReportFailure(FailedTextures, path))
 					{
-						FailedTextures.Add(path);
 						Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading texture " + path);
 					}
 				}
@@ -286,20 +291,19 @@ namespace ObjectViewer {
 
 										if (Object is StaticObject staticObject)
 										{
-											StaticObjectCache.Add(ValueTuple.Create(path.ToLowerInvariant(), false, File.GetLastWriteTime(path)), staticObject);
+											StoreStaticObject(ValueTuple.Create(path.ToLowerInvariant(), false, File.GetLastWriteTime(path)), staticObject);
 											return true;
 										}
 
 										if (Object is AnimatedObjectCollection aoc)
 										{
-											AnimatedObjectCollectionCache.Add(path.ToLowerInvariant(), aoc);
+											StoreAnimatedObject(path.ToLowerInvariant(), aoc);
 										}
 
 										return true;
 									}
-									if (!FailedObjects.Contains(path))
+									if (ReportFailure(FailedObjects, path))
 									{
-										FailedObjects.Add(path);
 										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");
 									}
 
@@ -318,19 +322,18 @@ namespace ObjectViewer {
 					}
 				}
 				FileInfo f = new FileInfo(path);
+				string nullKey = Path.GetFileNameWithoutExtension(path);
 				if (f.Length == 0)
 				{
-					if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path)) && !FailedObjects.Contains(path))
+					if (!IsNullFile(nullKey) && ReportFailure(FailedObjects, path))
 					{
-						FailedObjects.Add(path);
 						Interface.AddMessage(MessageType.Error, false, "Zero-byte object file encountered at " + path);
 					}
 				}
 				else
 				{
-					if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path)) && !FailedObjects.Contains(path))
+					if (!IsNullFile(nullKey) && ReportFailure(FailedObjects, path))
 					{
-						FailedObjects.Add(path);
 						Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
 					}
 				}

@@ -175,7 +175,7 @@ namespace CsvRwRouteParser {
 			int BlockIndex = 0;
 			CurrentRoute.Tracks[0].Direction = TrackDirection.Forwards;
 			CurrentRoute.Stations = new RouteStation[] { };
-			double progressFactor = Expressions.Count == 0 ? 0.3333 : 0.3333 / Expressions.Count;
+			double progressFactor = Expressions.Count == 0 ? 0.15 : 0.15 / Expressions.Count;
 			// process non-track namespaces
 			//Check for any special-cased fixes we might need
 			CheckForAvailablePatch(FileName, ref Data, ref Expressions, PreviewOnly);
@@ -374,7 +374,9 @@ namespace CsvRwRouteParser {
 								case "cycle":
 									if (Enum.TryParse(Command, true, out CycleCommand parsedCycleCommand))
 									{
-										ParseCycleCommand(parsedCycleCommand, Arguments, commandIndices[0], Expressions[j], ref Data, PreviewOnly);
+										// Deferred: Cycle validates indices against committed
+										// Structure dictionaries, replayed after the parallel load.
+										QueueCycle(parsedCycleCommand, Arguments, commandIndices[0], Expressions[j]);
 									}
 									else
 									{
@@ -397,9 +399,29 @@ namespace CsvRwRouteParser {
 
 			Data.Blocks[0].LightDefinition = new LightDefinition(Plugin.CurrentRoute.Atmosphere.AmbientLightColor, Plugin.CurrentRoute.Atmosphere.DiffuseLightColor, Plugin.CurrentRoute.Atmosphere.LightPosition, -1, -1);
 			Data.Blocks[0].DynamicLightDefinition = int.MaxValue;
+			// Parallel object load: all Structure.* paths collected above are decoded
+			// concurrently, then committed sequentially. Barrier: this call returns
+			// only after every object is ready, so 100% loading still means playable.
+			Stopwatch objectTimer = Stopwatch.StartNew();
+			LoadAndCommitPendingObjects(Encoding, 0.15, 0.1833);
+			objectTimer.Stop();
+			Plugin.CurrentHost.PluginObjectLoadTime = objectTimer.ElapsedMilliseconds;
+			if (Plugin.Cancel)
+			{
+				Plugin.IsLoading = false;
+				return;
+			}
+			// Replay deferred Cycle commands now that Structure dictionaries are populated.
+			CommitPendingCycles(PreviewOnly);
+			if (Plugin.Cancel)
+			{
+				Plugin.IsLoading = false;
+				return;
+			}
 			// process track namespace
+			double trackProgressFactor = Expressions.Count == 0 ? 0.3333 : 0.3333 / Expressions.Count;
 			for (int j = 0; j < Expressions.Count; j++) {
-				Plugin.CurrentProgress = 0.3333 + j * progressFactor;
+				Plugin.CurrentProgress = 0.3333 + j * trackProgressFactor;
 				if ((j & 255) == 0) {
 					System.Threading.Thread.Yield();
 					if (Plugin.Cancel)
