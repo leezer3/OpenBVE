@@ -104,6 +104,14 @@ namespace ObjectViewer {
 		/// <param name="texture">Receives the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool LoadTexture(string path, TextureParameters parameters, out Texture texture) {
+			System.Diagnostics.Stopwatch textureDecodeTimer = System.Diagnostics.Stopwatch.StartNew();
+			bool result = LoadTextureInternal(path, parameters, out texture);
+			System.Threading.Interlocked.Increment(ref TextureDecodeCalls);
+			System.Threading.Interlocked.Add(ref TextureDecodeMs, textureDecodeTimer.ElapsedMilliseconds);
+			return result;
+		}
+
+		private bool LoadTextureInternal(string path, TextureParameters parameters, out Texture texture) {
 			if (File.Exists(path) || Directory.Exists(path)) {
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
 					if (Program.CurrentHost.Plugins[i].Texture != null) {
@@ -317,14 +325,14 @@ namespace ObjectViewer {
 				string nullKey = Path.GetFileNameWithoutExtension(path);
 				if (f.Length == 0)
 				{
-					if (!NullFiles.Contains(nullKey) && ReportFailure(FailedObjects, path))
+					if (!IsNullFile(nullKey) && ReportFailure(FailedObjects, path))
 					{
 						Interface.AddMessage(MessageType.Error, false, "Zero-byte object file encountered at " + path);
 					}
 				}
 				else
 				{
-					if (!NullFiles.Contains(nullKey) && ReportFailure(FailedObjects, path))
+					if (!IsNullFile(nullKey) && ReportFailure(FailedObjects, path))
 					{
 						Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
 					}
