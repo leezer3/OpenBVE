@@ -86,6 +86,7 @@ namespace ObjectViewer
 			comboBoxBackwards.DataSource = Enum.GetValues(typeof(Key));
 			comboBoxBackwards.SelectedItem = Interface.CurrentOptions.CameraMoveBackward;
 			checkBoxAutoReload.Checked = Interface.CurrentOptions.AutoReloadObjects;
+			checkBoxProgressBar.Checked = Interface.CurrentOptions.LoadingProgressBar;
 			checkBoxShadowFilterCascades.Checked = Interface.CurrentOptions.ShadowFilterCascades;
 
 			// VSync and FPS Limit
@@ -273,6 +274,7 @@ namespace ObjectViewer
 				Interface.CurrentOptions.ViewingDistance = (int)Math.Ceiling(Interface.CurrentOptions.NearClipBase) + 1;
 			}
 			Interface.CurrentOptions.AutoReloadObjects = checkBoxAutoReload.Checked;
+			Interface.CurrentOptions.LoadingProgressBar = checkBoxProgressBar.Checked;
 
 			// VSync and FPS Limit
 			Interface.CurrentOptions.VerticalSynchronization = comboBoxVSync.SelectedIndex == 1;
@@ -314,7 +316,7 @@ namespace ObjectViewer
 			Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
 			
 			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));
-			Program.RefreshObjects();
+			Program.RefreshObjectsAsync();
 			DialogResult = DialogResult.OK;
 			Close();
 		}
