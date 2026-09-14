@@ -149,6 +149,11 @@ namespace Plugin
 			while (block.Position() < block.Length() - 5)
 			{
 				Block subBlock = block.ReadSubBlock();
+				if (subBlock == null)
+				{
+					// Unknown (e.g. application-defined template) data block: skipped by ReadSubBlock.
+					continue;
+				}
 				ParseSubBlock(subBlock, ref obj, ref builder, ref material);
 			}
 			builder.Apply(ref obj, false, false);
@@ -254,6 +259,11 @@ namespace Plugin
 						 */
 						//TemplateID[] validTokens = { TemplateID.Mesh , TemplateID.FrameTransformMatrix, TemplateID.Frame };
 						subBlock = block.ReadSubBlock();
+						if (subBlock == null)
+						{
+							// Unknown (e.g. application-defined template) data block: skipped by ReadSubBlock.
+							continue;
+						}
 						ParseSubBlock(subBlock, ref obj, ref builder, ref material);
 					}
 					currentLevel--;
@@ -315,6 +325,10 @@ namespace Plugin
 							if (block.Position() < block.Length() - 5)
 							{
 								subBlock = block.ReadSubBlock();
+								if (subBlock == null)
+								{
+									throw new Exception("nFaces was declared as zero, but unrecognised data remains in the block");
+								}
 								ParseSubBlock(subBlock, ref obj, ref builder, ref material);
 							}
 							goto NoFaces;
@@ -345,6 +359,11 @@ namespace Plugin
 					while (block.Position() < block.Length() - 5)
 					{
 						subBlock = block.ReadSubBlock();
+						if (subBlock == null)
+						{
+							// Unknown (e.g. application-defined template) data block: skipped by ReadSubBlock.
+							continue;
+						}
 						ParseSubBlock(subBlock, ref obj, ref builder, ref material);
 					}
 
