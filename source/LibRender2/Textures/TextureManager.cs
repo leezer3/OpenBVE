@@ -817,7 +817,8 @@ namespace LibRender2.Textures
 		/// <summary>Unloads the specified texture from OpenGL if loaded.</summary>
 		/// <param name="handle">The handle to the registered texture.</param>
 		/// <param name="preserveUnchangedCache">When true (route/object reload), decoded cache entries whose source file is unchanged are kept so the reloaded scene reuses them instead of decoding again.</param>
-		public static void UnloadTexture(ref Texture handle, bool preserveUnchangedCache = false)
+		/// <param name="releaseBytes">When true (route switch), handles are recreated hollow so decoded pixel bytes are also released; they re-decode from disk on demand.</param>
+		public static void UnloadTexture(ref Texture handle, bool preserveUnchangedCache = false, bool releaseBytes = false)
 		{
 			//Null check the texture handle, as otherwise this can cause OpenGL to throw a fit
 			if (handle == null)
@@ -878,6 +879,12 @@ namespace LibRender2.Textures
 						textureCache.Remove(handle.Origin);
 					}
 				}
+				if (releaseBytes)
+				{
+					// Drop decoded pixel bytes pinned by the handle itself
+					// (DecodedTexture is readonly and survives cache clears).
+					handle = new Texture(handle.Origin);
+				}
 			}
 		}
 
@@ -902,7 +909,9 @@ namespace LibRender2.Textures
 		}
 
 		/// <summary>Unloads all registered textures.</summary>
-		public void UnloadAllTextures(bool currentlyReloading)
+		/// <param name="currentlyReloading">When true, textures whose source file is unchanged are preserved.</param>
+		/// <param name="releaseBytes">When true, decoded pixel bytes are also released (route switch).</param>
+		public void UnloadAllTextures(bool currentlyReloading, bool releaseBytes = false)
 		{
 			// Always clear animated texture cache to prevent memory leak on reload:
 			// animatedTextures retains decoded frame data for every GIF ever loaded,
@@ -920,11 +929,11 @@ namespace LibRender2.Textures
 					 * On a route reload, preserve textures whose source file is unchanged,
 					 * so that the first frame after the reload does not re-upload every texture.
 					 */
-					if (currentlyReloading && RegisteredTextures[i] != null && !RegisteredTextures[i].MultipleFrames && TextureFileUnchanged(RegisteredTextures[i].Origin))
-					{
-						continue;
-					}
-					UnloadTexture(ref RegisteredTextures[i], currentlyReloading);
+				if (currentlyReloading && RegisteredTextures[i] != null && !RegisteredTextures[i].MultipleFrames && TextureFileUnchanged(RegisteredTextures[i].Origin))
+				{
+					continue;
+				}
+				UnloadTexture(ref RegisteredTextures[i], currentlyReloading, releaseBytes);
 				}
 			}
 			if (currentlyReloading)

@@ -63,8 +63,26 @@ namespace RouteViewer {
 		internal static void Load(string routeFile, Encoding routeEncoding, byte[] textureBytes)
 		{
 			Program.Renderer.GameWindow.TargetRenderFrequency = 0;
+			// Switching to a different route must fully release the previous route:
+			// object caches, decoded textures and sound buffers. Same-file reload
+			// keeps the partial reset so unchanged textures stay resident.
+			bool routeSwitch = CurrentRouteFile != null && !CurrentRouteFile.Equals(routeFile, StringComparison.OrdinalIgnoreCase);
 			// reset
 			Game.Reset();
+			if (routeSwitch)
+			{
+				// Ordered, synchronous teardown of the previous route before the
+				// new one starts loading: sounds stopped above, so drain queued
+				// loads, release buffers, caches and pixel bytes, then collect
+				// (twice across finalizers) so RAM actually drops.
+				Program.CurrentHost.ClearObjectCaches();
+				Program.Renderer.TextureManager.UnloadAllTextures(false, releaseBytes: true);
+				Program.Sounds.CancelPendingLoads();
+				Program.Sounds.UnloadAllBuffers();
+				GC.Collect();
+				GC.WaitForPendingFinalizers();
+				GC.Collect();
+			}
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString(), Interface.CurrentOptions.LoadingLogo, Interface.CurrentOptions.LoadingProgressBar);
 			if (textureBytes != null && textureBytes.Length > 0)
 			{

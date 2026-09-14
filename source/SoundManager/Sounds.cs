@@ -293,8 +293,16 @@ namespace SoundManager
 
 		// --- unloading buffers ---
 
+		/// <summary>Cancels queued sound loads that have not started.</summary>
+		public void CancelPendingLoads()
+		{
+			while (SoundLoaderQueue.TryDequeue(out _))
+			{
+			}
+		}
+
 		/// <summary>Unloads all sound buffers immediately.</summary>
-		internal void UnloadAllBuffers()
+		public void UnloadAllBuffers()
 		{
 			for (int i = 0; i < Buffers.Count; i++)
 			{
