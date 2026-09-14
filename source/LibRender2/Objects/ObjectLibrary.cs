@@ -244,7 +244,7 @@ namespace LibRender2.Objects
 		private Texture GetTransparencySourceTexture(Texture handle)
 		{
 			if (handle == null || handle.Origin == null) return null;
-			if (TextureManager.TryGetCachedTexture(handle.Origin, out Texture cached)) return cached;
+			if (TextureManager.TryGetCachedTexture(handle.Origin, out Texture cached) && cached != null) return cached;
 			Texture decoded = handle.DecodedTexture;
 			if (decoded != null && TextureManager.TextureFileUnchanged(handle.Origin))
 			{
@@ -252,9 +252,14 @@ namespace LibRender2.Objects
 				return decoded;
 			}
 			Stopwatch sw = Stopwatch.StartNew();
-			handle.Origin.GetTexture(out Texture fresh);
+			bool ok = handle.Origin.GetTexture(out Texture fresh);
 			sw.Stop();
 			TextureManager.TextureDecodeTime += sw.ElapsedMilliseconds;
+			if (!ok || fresh == null)
+			{
+				// Do not cache failures: a null value here caused NRE in TextureManager.LoadTextureInternal
+				return null;
+			}
 			TextureManager.StoreCachedTexture(handle.Origin, fresh);
 			return fresh;
 		}

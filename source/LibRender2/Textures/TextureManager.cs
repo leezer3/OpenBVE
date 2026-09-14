@@ -68,6 +68,7 @@ namespace LibRender2.Textures
 
 		internal static void StoreCachedTexture(TextureOrigin origin, Texture decoded)
 		{
+			if (origin == null || decoded == null) return;
 			lock (TextureLookupLock)
 			{
 				textureCache[origin] = decoded;
@@ -149,7 +150,7 @@ namespace LibRender2.Textures
 				 * The handle itself has no decoded bytes, so storing it would cause a null
 				 * reference when the transparency type is subsequently queried.
 				 * */
-				if (handle.PixelFormat != PixelFormat.Invalid && handle.DecodedTexture != null && !textureCache.ContainsKey(handle.Origin))
+				if (handle.Origin != null && handle.PixelFormat != PixelFormat.Invalid && handle.DecodedTexture != null && !textureCache.ContainsKey(handle.Origin))
 				{
 					textureCache.Add(handle.Origin, handle.DecodedTexture);
 				}
@@ -285,20 +286,33 @@ namespace LibRender2.Textures
 			
 			if (handle.MultipleFrames)
 			{
-				bool animatedHit;
-				lock (TextureLookupLock)
-				{
-					animatedHit = animatedTextures.TryGetValue(handle.Origin, out texture);
-				}
-				if (!animatedHit)
+			bool animatedHit = false;
+			if (handle.Origin != null)
 			{
-				// Reuse register-time decode from textureCache where possible to avoid decoding the same large animated GIF twice (2× memory). See RegisterTexture pre-seed at line 136.
 				lock (TextureLookupLock)
 				{
-						if (textureCache.TryGetValue(handle.Origin, out Texture cachedTexture) && cachedTexture.MultipleFrames)
+					animatedHit = animatedTextures.TryGetValue(handle.Origin, out texture) && texture != null;
+				}
+			}
+			if (!animatedHit)
+			{
+				texture = null;
+				// Reuse register-time decode from textureCache where possible to avoid decoding the same large animated GIF twice (2× memory). See RegisterTexture pre-seed at line 136.
+				// NOTE: textureCache may contain a null value cached by an older ObjectLibrary path (failed GetTexture); treat as a miss and purge it.
+				if (handle.Origin != null)
+				{
+					lock (TextureLookupLock)
+					{
+						if (textureCache.TryGetValue(handle.Origin, out Texture cachedTexture))
 						{
-							PathOrigin cachedPathOrigin = cachedTexture.Origin as PathOrigin;
-							PathOrigin handlePathOrigin = handle.Origin as PathOrigin;
+							if (cachedTexture == null)
+							{
+								textureCache.Remove(handle.Origin);
+							}
+							else if (cachedTexture.MultipleFrames)
+							{
+								PathOrigin cachedPathOrigin = cachedTexture.Origin as PathOrigin;
+								PathOrigin handlePathOrigin = handle.Origin as PathOrigin;
 							// PathOrigin equality is path-only, so check Parameters explicitly; ByteArrayOrigin path never hits here (handled below)
 							if (cachedPathOrigin != null && handlePathOrigin != null)
 							{
@@ -314,7 +328,9 @@ namespace LibRender2.Textures
 								texture = cachedTexture;
 							}
 						}
+						}
 					}
+				}
 				if (texture == null)
 				{
 					// Reuse the register-time decode when the on-disk file is unchanged (the caches
@@ -327,15 +343,18 @@ namespace LibRender2.Textures
 				}
 				if (texture == null)
 				{
-					if (!handle.Origin.GetTexture(out texture))
+					if (handle.Origin == null || !handle.Origin.GetTexture(out texture))
 					{
 						//Loading animated texture barfed
 						return false;
 					}
 				}
-				lock (TextureLookupLock)
+				if (handle.Origin != null && texture != null)
 				{
-					animatedTextures[handle.Origin] = texture;
+					lock (TextureLookupLock)
+					{
+						animatedTextures[handle.Origin] = texture;
+					}
 				}
 			}
 				
@@ -451,12 +470,17 @@ namespace LibRender2.Textures
 				 */
 				lock (TextureLookupLock)
 				{
-					if (textureCache.TryGetValue(handle.Origin, out Texture cachedTexture))
+					if (handle.Origin != null && textureCache.TryGetValue(handle.Origin, out Texture cachedTexture))
 					{
+						if (cachedTexture == null)
+						{
+							// Purged poisoned entry cached by a failed decode (e.g. missing texture on BVE5/BVE6 .txt route)
+							textureCache.Remove(handle.Origin);
+						}
 						// The cache value is the DecodedTexture (ByteArrayOrigin) created at registration – its Origin is not PathOrigin,
 						// so the original check (cachedPathOrigin != null) never succeeds for decoded GIFs and caused a second decode (2× memory).
 						// Reuse if the cached entry is animated (GIF video) or its ByteArrayOrigin, and parameters match (or both null).
-						if (cachedTexture.MultipleFrames)
+						else if (cachedTexture.MultipleFrames)
 						{
 							// Animated: reuse single copy to halve memory usage for large GIFs
 							texture = cachedTexture;
@@ -485,7 +509,7 @@ namespace LibRender2.Textures
 				// pre-seed from the texture cache) instead of decoding the same GIF twice.
 				lock (TextureLookupLock)
 				{
-					if (animatedTextures.TryGetValue(handle.Origin, out Texture animatedTexture) && animatedTexture.MultipleFrames)
+					if (animatedTextures.TryGetValue(handle.Origin, out Texture animatedTexture) && animatedTexture != null && animatedTexture.MultipleFrames)
 					{
 						texture = animatedTexture;
 					}
@@ -499,6 +523,11 @@ namespace LibRender2.Textures
 			}
 			if (texture == null)
 			{
+				if (handle.Origin == null)
+				{
+					handle.Ignore = true;
+					return false;
+				}
 				handle.Origin.GetTexture(out texture);
 			}
 			}
@@ -792,12 +821,20 @@ namespace LibRender2.Textures
 						Texture cachedTexture = null;
 						lock (TextureLookupLock)
 						{
-							if (textureCache.TryGetValue(handle.Origin, out cachedTexture))
+							if (handle.Origin != null && textureCache.TryGetValue(handle.Origin, out cachedTexture))
 							{
-								// Compute the transparency type whilst the data is still available,
-								// as otherwise a later query would have to re-decode the file from disk
-								cachedTexture.GetTransparencyType();
-								cachedTexture.ReleaseBytes();
+								if (cachedTexture == null)
+								{
+									textureCache.Remove(handle.Origin);
+									cachedTexture = null;
+								}
+								else
+								{
+									// Compute the transparency type whilst the data is still available,
+									// as otherwise a later query would have to re-decode the file from disk
+									cachedTexture.GetTransparencyType();
+									cachedTexture.ReleaseBytes();
+								}
 							}
 						}
 						if (handle.DecodedTexture != null && handle.DecodedTexture != cachedTexture)
