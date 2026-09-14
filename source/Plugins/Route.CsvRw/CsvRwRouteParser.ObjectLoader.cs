@@ -132,60 +132,49 @@ namespace CsvRwRouteParser
 
 			try
 			{
-				UnifiedObject[] results = new UnifiedObject[n];
+				// Dedupe by file: each unique file loads once, clones are handed out below.
+				List<PendingObject> uniqueObjects = new List<PendingObject>();
+				Dictionary<ValueTuple<string, bool, bool>, int> uniqueIndex = new Dictionary<ValueTuple<string, bool, bool>, int>();
+				int[] prototypeIndex = new int[n];
+				for (int i = 0; i < n; i++)
+				{
+					PendingObject pending = pendingObjects[i];
+					ValueTuple<string, bool, bool> key = ValueTuple.Create(pending.Path.ToLowerInvariant(), pending.IsStatic, pending.PreserveVertices);
+					if (!uniqueIndex.TryGetValue(key, out int u))
+					{
+						u = uniqueObjects.Count;
+						uniqueIndex.Add(key, u);
+						uniqueObjects.Add(pending);
+					}
+					prototypeIndex[i] = u;
+				}
+
+				int m = uniqueObjects.Count;
+				UnifiedObject[] prototypes = new UnifiedObject[m];
 				int dop = ComputeObjectLoadDop();
 				long done = 0;
-				long progressMax = 0;
-				object progressLock = new object();
 
-				System.Action reportOne = () =>
+				if (dop <= 1 || m < 2)
 				{
-					long count = Interlocked.Increment(ref done);
-					// Workers finish out of order; only advance the bar monotonically.
-					lock (progressLock)
+					for (int u = 0; u < m && !Plugin.Cancel; u++)
 					{
-						if (count > progressMax)
-						{
-							progressMax = count;
-							Plugin.CurrentProgress = progressBase + progressSpan * progressMax / n;
-						}
-					}
-				};
-
-				if (dop <= 1 || n < 2)
-				{
-					for (int i = 0; i < n; i++)
-					{
-						if (Plugin.Cancel)
-						{
-							Plugin.IsLoading = false;
-							return;
-						}
-						results[i] = LoadSinglePending(pendingObjects[i], encoding);
-						reportOne();
+						prototypes[u] = LoadSinglePending(uniqueObjects[u], encoding);
+						ReportLoadProgress(ref done, m, progressBase, progressSpan);
 					}
 				}
 				else
 				{
-					// Workers only call Host.LoadObject/LoadStaticObject (thread-safe).
-					// Built-in plugins must stay stateless per call; non-reentrant third-party plugins fall back to sequential loading.
+					// Workers handle distinct files via thread-safe host loads.
 					ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = dop };
-					try
+					Parallel.For(0, m, options, u =>
 					{
-						Parallel.For(0, n, options, i =>
+						if (Plugin.Cancel)
 						{
-							if (Plugin.Cancel)
-							{
-								return;
-							}
-							results[i] = LoadSinglePending(pendingObjects[i], encoding);
-							reportOne();
-						});
-					}
-					catch (OperationCanceledException)
-					{
-						// Cancelled via plugin flag; handled below.
-					}
+							return;
+						}
+						prototypes[u] = LoadSinglePending(uniqueObjects[u], encoding);
+						ReportLoadProgress(ref done, m, progressBase, progressSpan);
+					});
 				}
 
 				if (Plugin.Cancel)
@@ -194,20 +183,37 @@ namespace CsvRwRouteParser
 					return;
 				}
 
-				// Sequential commit in file order preserves "last declaration wins" duplicate semantics.
+				// Commit in file order; each occurrence gets its own clone.
 				for (int i = 0; i < n; i++)
 				{
-					if (results[i] == null)
+					UnifiedObject prototype = prototypes[prototypeIndex[i]];
+					if (prototype == null)
 					{
 						continue;
 					}
-					CommitPending(pendingObjects[i], results[i]);
+					UnifiedObject obj;
+					try
+					{
+						obj = prototype.Clone();
+					}
+					catch
+					{
+						continue;
+					}
+					CommitPending(pendingObjects[i], obj);
 				}
 			}
 			finally
 			{
 				pendingObjects.Clear();
 			}
+		}
+
+		/// <summary>Reports one completed load.</summary>
+		private void ReportLoadProgress(ref long done, int total, double progressBase, double progressSpan)
+		{
+			long count = Interlocked.Increment(ref done);
+			Plugin.CurrentProgress = progressBase + progressSpan * count / total;
 		}
 
 		private UnifiedObject LoadSinglePending(PendingObject pending, System.Text.Encoding encoding)

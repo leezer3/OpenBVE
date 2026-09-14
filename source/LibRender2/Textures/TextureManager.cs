@@ -45,6 +45,19 @@ namespace LibRender2.Textures
 
 		private static readonly object TextureLookupLock = new object();
 
+		/// <summary>Striped locks serializing same-path texture registration.</summary>
+		private static readonly object[] PathRegisterStripes = CreateStripes();
+
+		private static object[] CreateStripes()
+		{
+			object[] stripes = new object[256];
+			for (int i = 0; i < stripes.Length; i++)
+			{
+				stripes[i] = new object();
+			}
+			return stripes;
+		}
+
 		internal static bool TryGetCachedTexture(TextureOrigin origin, out Texture cached)
 		{
 			lock (TextureLookupLock)
@@ -98,69 +111,27 @@ namespace LibRender2.Textures
 				handle = null;
 				return false;
 			}
-			/*
-			 * The unlocked fast-path check was removed: RegisteredTexturesCount
-			 * races with parallel registration, the locked double-check below
-			 * is the single source of truth.
-			 * */
 
-			/*
-			 * Check if the texture is already registered.
-			 * If so, return the existing handle.
-			 * */
-			lock (TextureLookupLock)
+			// Serialize same-path registration: the decode below runs outside the
+			// global lookup lock, so without this every worker sharing a texture
+			// would decode it concurrently and discard all but one result.
+			// Stripes keep unrelated paths decoding in parallel.
+			object stripe = PathRegisterStripes[(uint)path.ToLowerInvariant().GetHashCode() % (uint)PathRegisterStripes.Length];
+			lock (stripe)
 			{
-				if (RegisteredTextureLookup.TryGetValue(path, out List<Texture> candidates))
+				if (TryFindRegisteredTexture(path, parameters, out handle))
 				{
-					for (int i = 0; i < candidates.Count; i++)
-					{
-						try
-						{
-							PathOrigin source = candidates[i].Origin as PathOrigin;
-
-							if (source != null && source.Parameters == parameters)
-							{
-								handle = candidates[i];
-								return true;
-							}
-						}
-						catch
-						{
-							// ignored
-						}
-					}
+					return true;
 				}
-			}
 
-			/*
-			 * Decode outside the lock (CPU-only, no GL). Index allocation and
-			 * table updates below stay under lock so parallel object loading
-			 * cannot corrupt RegisteredTextures or the lookup tables.
-			 * */
-			Texture decoded = new Texture(path, parameters, currentHost);
+				// Decode outside the global lock (CPU-only, no GL). Same-path
+				// workers wait on the stripe instead of decoding twice.
+				Texture decoded = new Texture(path, parameters, currentHost);
 
-			lock (TextureLookupLock)
-			{
-				// Double-check: another worker may have registered it while decoding.
-				if (RegisteredTextureLookup.TryGetValue(path, out List<Texture> raced))
+				// Double-check: a case-variant path may have registered it on another stripe.
+				if (TryFindRegisteredTexture(path, parameters, out handle))
 				{
-					for (int i = 0; i < raced.Count; i++)
-					{
-						try
-						{
-							PathOrigin source = raced[i].Origin as PathOrigin;
-
-							if (source != null && source.Parameters == parameters)
-							{
-								handle = raced[i];
-								return true;
-							}
-						}
-						catch
-						{
-							// ignored
-						}
-					}
+					return true;
 				}
 
 				if (RegisteredTexturesCount > RegisteredTextures.Length)
@@ -194,6 +165,36 @@ namespace LibRender2.Textures
 				list.Add(handle);
 			}
 			return true;
+		}
+
+		/// <summary>Finds an already-registered texture. Caller must hold the path stripe.</summary>
+		private static bool TryFindRegisteredTexture(string path, TextureParameters parameters, out Texture handle)
+		{
+			lock (TextureLookupLock)
+			{
+				if (RegisteredTextureLookup.TryGetValue(path, out List<Texture> candidates))
+				{
+					for (int i = 0; i < candidates.Count; i++)
+					{
+						try
+						{
+							PathOrigin source = candidates[i].Origin as PathOrigin;
+
+							if (source != null && source.Parameters == parameters)
+							{
+								handle = candidates[i];
+								return true;
+							}
+						}
+						catch
+						{
+							// ignored
+						}
+					}
+				}
+			}
+			handle = null;
+			return false;
 		}
 
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>
