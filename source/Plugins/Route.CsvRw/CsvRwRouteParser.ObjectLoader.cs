@@ -167,13 +167,8 @@ namespace CsvRwRouteParser
 				}
 				else
 				{
-					// Thread-safety note: workers only call Host.LoadObject/LoadStaticObject,
-					// whose shared state (object caches, failure sets, texture registration,
-					// log messages) is guarded by fine-grained locks. Built-in
-					// object plugins (CsvB3d/DirectX/Wavefront/Animated) are stateless per
-					// call (per-file locals, read-only shared config). Third-party native
-					// object plugins have no declared thread-safety contract; if one ever
-					// proves non-reentrant, gate it back to the sequential path above.
+					// Workers only call Host.LoadObject/LoadStaticObject (thread-safe).
+					// Built-in plugins must stay stateless per call; non-reentrant third-party plugins fall back to sequential loading.
 					ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = dop };
 					try
 					{

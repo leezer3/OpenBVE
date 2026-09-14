@@ -36,11 +36,10 @@ namespace Plugin
 {
 	internal class AssimpObjParser
 	{
-		private static string currentFolder;
-
 		internal static StaticObject ReadObject(string fileName)
 		{
-			currentFolder = Path.GetDirectoryName(fileName);
+			// Local folder: route objects load in parallel, so no static mutable state.
+			string currentFolder = Path.GetDirectoryName(fileName);
 			try
 			{
 				ObjFileParser parser = new ObjFileParser(System.IO.File.ReadAllLines(fileName), null, System.IO.Path.GetFileNameWithoutExtension(fileName), fileName);
