@@ -17,7 +17,7 @@ namespace Plugin
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
 		/// <returns>The collection of animated objects.</returns>
-		private static AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding)
+		private AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding)
 		{
 			AnimatedObjectCollection Result = new AnimatedObjectCollection(currentHost)
 			{
@@ -28,7 +28,7 @@ namespace Plugin
 			int SoundCount = 0;
 			// load file
 
-			ConfigFile<AnimatedSection, AnimatedKey> cfg = new ConfigFile<AnimatedSection, AnimatedKey>(File.ReadAllLines(FileName, Encoding), FileName, Plugin.currentHost);
+			ConfigFile<AnimatedSection, AnimatedKey> cfg = new ConfigFile<AnimatedSection, AnimatedKey>(File.ReadAllLines(FileName, Encoding), FileName, currentHost);
 
 			while (cfg.RemainingSubBlocks > 0)
 			{
@@ -286,7 +286,7 @@ namespace Plugin
 								}
 								else
 								{
-									Result.Objects[ObjectCount].States[k].Prototype = new StaticObject(Plugin.currentHost);
+									Result.Objects[ObjectCount].States[k].Prototype = new StaticObject(currentHost);
 								}
 							}
 						}
