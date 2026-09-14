@@ -512,6 +512,25 @@ namespace LibRender2
 		/// <summary>Deinitializes the renderer</summary>
 		public void DeInitialize()
 		{
+			// Flush all in-memory caches on shutdown (close window / process exit).
+			// Must run before GameWindow.Dispose() while the GL context is still alive.
+			try
+			{
+				TextureManager?.UnloadAllTextures(false);
+			}
+			catch
+			{
+				// Ignored - best effort cleanup during shutdown
+			}
+			try
+			{
+				currentHost?.ClearObjectCaches();
+				currentHost?.ClearErrors();
+			}
+			catch
+			{
+				// Ignored - best effort cleanup during shutdown
+			}
 			if (nullDepthMap != 0)
 			{
 				GL.DeleteTexture(nullDepthMap);

@@ -133,18 +133,17 @@ namespace RouteViewer
 	    {
 			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_rv.cfg"));
 			// Minor hack:
-			// If we are currently loading, catch the first close event, and terminate the loader threads
-			// before actually closing the game-window.
-			if (Loading.Cancel)
-			{
-				return;
-			}
-			Program.Renderer.VisibilityThreadShouldRun = false;
+			// If we are currently loading, catch the close event, and terminate the loader threads
+			// before actually closing the game-window. DeInitialize (which flushes caches)
+			// must only run on the final close, otherwise GL resources are disposed
+			// while the window / loader is still alive.
 			if (!Loading.Complete && Program.CurrentRouteFile != null)
 			{
 				e.Cancel = true;
 				Loading.Cancel = true;
+				return;
 			}
+			Program.Renderer.VisibilityThreadShouldRun = false;
 			Program.Renderer.DeInitialize();
 			if (Program.CurrentHost.MonoRuntime)
 			{
