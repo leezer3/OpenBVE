@@ -131,7 +131,9 @@ namespace CsvRwRouteParser {
 				CurrentRoute.Sections[0].CurrentAspect = 0;
 				CurrentRoute.Sections[0].StationIndex = -1;
 			}
-			Stopwatch parseTimer = Stopwatch.StartNew();
+		Stopwatch parseTimer = Stopwatch.StartNew();
+		try
+		{
 			ParseRouteForData(fileName, Encoding, ref Data, PreviewOnly);
 			if (Plugin.Cancel)
 			{
@@ -143,6 +145,13 @@ namespace CsvRwRouteParser {
 			ApplyRouteData(fileName, ref Data, PreviewOnly);
 			Plugin.CurrentHost.PluginApplyTime = applyTimer.ElapsedMilliseconds;
 		}
+		finally
+		{
+			// Working set fully consumed; release it so the parsed objects
+			// are not pinned after the load finishes.
+			Data = null;
+		}
+	}
 
 		private void ParseRouteForData(string FileName, System.Text.Encoding Encoding, ref RouteData Data, bool PreviewOnly) {
 			//Read the entire routefile into memory
