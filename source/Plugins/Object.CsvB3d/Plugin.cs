@@ -10,9 +10,9 @@ namespace Object.CsvB3d
 {
     public partial class Plugin : ObjectInterface
     {
-	    internal static HostInterface currentHost;
-	    internal static CompatabilityHacks enabledHacks;
-	    internal static string CompatibilityFolder;
+	    internal HostInterface currentHost;
+	    internal CompatabilityHacks enabledHacks;
+	    internal string CompatibilityFolder;
 
 	    public override string[] SupportedStaticObjectExtensions => new[] { ".b3d", ".csv" };
 
@@ -111,19 +111,22 @@ namespace Object.CsvB3d
 			return false;
 	    }
 
-	    public override bool LoadObject(string path, System.Text.Encoding textEncoding, out UnifiedObject unifiedObject)
+    public override bool LoadObject(string path, System.Text.Encoding textEncoding, out UnifiedObject unifiedObject)
+    {
+	    HostInterface host = currentHost;
+	    CompatabilityHacks hacks = enabledHacks;
+	    string compatibilityFolder = CompatibilityFolder;
+	    try
 	    {
-		    try
-		    {
-			    unifiedObject = NewParser.ReadObject(path, textEncoding);
-			    return true;
-		    }
-		    catch
-		    {
-			    unifiedObject = null;
-				currentHost.AddMessage(MessageType.Error, false, "An unexpected error occured whilst attempting to load the following object: " + path);
-		    }
-		    return false;
+		    unifiedObject = new NewParser(host, hacks, compatibilityFolder).ReadObject(path, textEncoding);
+		    return true;
 	    }
+	    catch
+	    {
+		    unifiedObject = null;
+			host.AddMessage(MessageType.Error, false, "An unexpected error occured whilst attempting to load the following object: " + path);
+	    }
+	    return false;
+    }
     }
 }
