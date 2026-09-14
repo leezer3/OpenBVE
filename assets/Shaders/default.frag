@@ -126,7 +126,10 @@ float GetCascadeShadowFactor(sampler2DShadow shadowMap, vec4 posLightSpace, floa
     float activeBias = bias * (1.0 + biasScale * normalBias);
 
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
-    float biasedDepth = projCoords.z - activeBias;
+    // Auto: scale bias with filter radius so wide Vogel disk doesn't re-introduce acne.
+    // Sharp (0.5 texel) -> 1.0x, High (~1.2 texel di 1024/150m/3 casc) -> ~1.5x, max 3.0 -> ~2.9x
+    float radiusForBias = uShadowSmooth ? clamp(uShadowFilterRadius, 0.5, 3.0) : 0.5;
+    float biasedDepth = projCoords.z - activeBias * (1.0 + (radiusForBias - 0.5) * 0.75);
 
     if (uShadowSmooth) {
         // Smooth path: Vogel disk + IGN - rotated per-pixel to hide sampling pattern.
