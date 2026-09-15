@@ -39,12 +39,21 @@ namespace LibRender2.ShadowMapping
         /// <summary>Per-cascade depth bias for shadow acne prevention.</summary>
         public float[] CascadeBiases { get; private set; }
 
+        /// <summary>Per-cascade world-space texel size (world units per shadow-map texel).</summary>
+        /// <remarks>
+        /// Used by the vertex shader for true receiver-side normal offset
+        /// (Unity-style: offset = normalBiasTexels * texelWorldSize), which keeps
+        /// contact (no peter-panning) while curing slope acne.
+        /// </remarks>
+        public float[] TexelWorldSizes { get; private set; }
+
         public CascadedShadowCaster(int cascadeCount = 3)
         {
             CascadeCount = cascadeCount;
             LightSpaceMatrices = new Matrix4D[cascadeCount];
             SplitDistances = new float[cascadeCount];
             CascadeBiases = new float[cascadeCount];
+            TexelWorldSizes = new float[cascadeCount];
 
             for (int i = 0; i < cascadeCount; i++)
             {
@@ -134,8 +143,11 @@ namespace LibRender2.ShadowMapping
 
                 lightView = Matrix4D.LookAt(snappedCenter, snappedCenter + ld, up);
                 
-                // Push the near plane backward towards the sun to capture all shadow casters
-                double zNear = -2000.0;
+                // Tight ortho depth range around the cascade sphere.
+                // Old code used zNear=-2000 (2km+ range), wasting 24-bit depth precision
+                // and forcing a larger bias (=> peter-panning) to cure acne.
+                // Symmetric range still catches tall occluders within DepthMargin.
+                double zNear = -(radius + DepthMargin);
                 double zFar = radius + DepthMargin;
 
                 Matrix4D.CreateOrthographic(orthoSize * 2.0, orthoSize * 2.0, zNear, zFar, out Matrix4D lightProj);
@@ -149,6 +161,7 @@ namespace LibRender2.ShadowMapping
                 double depthRange = zFar - zNear;
                 double baseBias = texelWorldSize / depthRange;
                 CascadeBiases[i] = (float)baseBias;
+                TexelWorldSizes[i] = (float)texelWorldSize;
             }
         }
 
