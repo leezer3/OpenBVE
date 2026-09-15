@@ -314,6 +314,11 @@ namespace LibRender2.ShadowMapping
 			Map.BindAllCascadesForReading(TextureUnit.Texture4);
 
 			int cascadeCount = Caster.CascadeCount;
+			// Normal bias is in Unity-style texel units (typical 0.3-1.0). Clamp so a stale
+			// config (old 2.0x multiplier default) can't detach shadows catastrophically.
+			float normalBiasTexels = (float)renderer.currentOptions.ShadowNormalBias;
+			if (normalBiasTexels < 0.0f) normalBiasTexels = 0.0f;
+			if (normalBiasTexels > 4.0f) normalBiasTexels = 4.0f;
 			for (int i = 0; i < cascadeCount; i++)
 			{
 				shader.SetCascadeLightSpaceMatrix(i, Caster.LightSpaceMatrices[i]);
@@ -321,12 +326,14 @@ namespace LibRender2.ShadowMapping
 				// Split distance = the view-space Z where this cascade ends.
 				shader.SetShadowSplitDistance(i, (float)Caster.SplitDistances[i]);
 				shader.SetCascadeBias(i, Caster.CascadeBiases[i] + (float)renderer.currentOptions.ShadowBias);
-				shader.SetNormalBias(i, (float)renderer.currentOptions.ShadowNormalBias);
+				shader.SetNormalBias(i, normalBiasTexels);
+				shader.SetTexelWorldSize(i, Caster.TexelWorldSizes[i]);
 			}
 
 			for (int i = cascadeCount; i < 4; i++)
 			{
 				shader.SetShadowSplitDistance(i, 0.0f);
+				shader.SetTexelWorldSize(i, cascadeCount > 0 ? Caster.TexelWorldSizes[cascadeCount - 1] : 0.05f);
 			}
 			shader.SetShadowCascadeCount(cascadeCount);
 		}
