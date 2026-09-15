@@ -182,13 +182,11 @@ namespace ObjectViewer {
 			GameMenu.Instance = new GameMenu();
 			// initialize camera
 			Renderer.GraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);
-	        Renderer.GameWindow = new ObjectViewer(Renderer.Screen.Width, Renderer.Screen.Height, Renderer.GraphicsMode, "Object Viewer", GameWindowFlags.Default)
-	        {
-		        Visible = true,
-		        TargetUpdateFrequency = 0,
-		        TargetRenderFrequency = 0,
-		        Title = "Object Viewer"
-	        };
+	        Renderer.GameWindow = ObjectViewer.Create(Renderer.Screen.Width, Renderer.Screen.Height, Renderer.GraphicsMode, "Object Viewer");
+	        Renderer.GameWindow.Visible = true;
+	        Renderer.GameWindow.TargetUpdateFrequency = 0;
+	        Renderer.GameWindow.TargetRenderFrequency = 0;
+	        Renderer.GameWindow.Title = "Object Viewer";
 	        Renderer.GameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? VSyncMode.On : VSyncMode.Off;
 	        if (Interface.CurrentOptions.FPSLimit > 0)
 	        {

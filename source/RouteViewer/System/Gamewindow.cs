@@ -1,6 +1,7 @@
 using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Hosts;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenTK;
 using OpenTK.Graphics;
@@ -18,22 +19,44 @@ namespace RouteViewer
         //Deliberately specify the default constructor with various overrides
         public RouteViewer(int width, int height, GraphicsMode currentGraphicsMode, string windowTitle, GameWindowFlags @default): base (width, height, currentGraphicsMode, windowTitle, @default)
         {
+            Init();
+        }
+
+        public RouteViewer(int width, int height, GraphicsMode currentGraphicsMode, string windowTitle, GameWindowFlags @default, GraphicsContextFlags flags): base(width, height, currentGraphicsMode, windowTitle, @default, DisplayDevice.Default, 3, 3, flags)
+        {
+            if (IsApple64)
+            {
+	            Interface.CurrentOptions.ForceForwardsCompatibleContext = true;
+            }
+            Init();
+        }
+
+        private static bool IsApple64 => Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4;
+
+        private void Init()
+        {
             try
             {
-                System.Drawing.Icon ico = new System.Drawing.Icon("data\\icon.ico");
-                Icon = ico;
+                Icon = new System.Drawing.Icon("data\\icon.ico");
             }
             catch
             {
 				// Ignored- Just an icon
             }
 
-            if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+            if (IsApple64)
             {
 	            // attempted workaround for massive CPU usage when idle
 	            TargetRenderFrequency = 5.0;
 			}
-			
+        }
+
+        // OS-X needs an explicit GL3 forward-compatible context, otherwise it falls back to GL 2.1 and the 410 shaders fail
+        public static RouteViewer Create(int width, int height, GraphicsMode mode, string title)
+        {
+            return IsApple64 || Interface.CurrentOptions.ForceForwardsCompatibleContext
+	            ? new RouteViewer(width, height, mode, title, GameWindowFlags.Default, GraphicsContextFlags.ForwardCompatible)
+	            : new RouteViewer(width, height, mode, title, GameWindowFlags.Default);
         }
 
         //Default Properties
