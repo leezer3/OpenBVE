@@ -188,6 +188,8 @@ namespace RouteViewer
 							block.TryGetValue(OptionsKey.ShadowStrength, ref Interface.CurrentOptions.ShadowStrength, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.ShadowBias, ref Interface.CurrentOptions.ShadowBias);
 							block.TryGetValue(OptionsKey.ShadowNormalBias, ref Interface.CurrentOptions.ShadowNormalBias);
+							if (Interface.CurrentOptions.ShadowNormalBias < 0.0) Interface.CurrentOptions.ShadowNormalBias = 0.0;
+							if (Interface.CurrentOptions.ShadowNormalBias > 4.0) Interface.CurrentOptions.ShadowNormalBias = 4.0;
 							if (block.GetValue(OptionsKey.ShadowFilterCascades, out string sfcVal))
 							{
 								Interface.CurrentOptions.ShadowFilterCascades = sfcVal.Trim().Equals("true", StringComparison.OrdinalIgnoreCase) || sfcVal.Trim() == "1";
