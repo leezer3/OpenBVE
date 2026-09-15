@@ -63,6 +63,10 @@ namespace LibRender2.Shaders
 		private readonly int uShadowNormalBias1Location;
 		private readonly int uShadowNormalBias2Location;
 		private readonly int uShadowNormalBias3Location;
+		private readonly int uShadowTexelWorldSize0Location;
+		private readonly int uShadowTexelWorldSize1Location;
+		private readonly int uShadowTexelWorldSize2Location;
+		private readonly int uShadowTexelWorldSize3Location;
 		private readonly int uLightSpaceMatrix0Location;
 		private readonly int uLightSpaceMatrix1Location;
 		private readonly int uLightSpaceMatrix2Location;
@@ -101,6 +105,10 @@ namespace LibRender2.Shaders
 			uShadowNormalBias1Location = GL.GetUniformLocation(Handle, "uShadowNormalBias1");
 			uShadowNormalBias2Location = GL.GetUniformLocation(Handle, "uShadowNormalBias2");
 			uShadowNormalBias3Location = GL.GetUniformLocation(Handle, "uShadowNormalBias3");
+			uShadowTexelWorldSize0Location = GL.GetUniformLocation(Handle, "uShadowTexelWorldSize0");
+			uShadowTexelWorldSize1Location = GL.GetUniformLocation(Handle, "uShadowTexelWorldSize1");
+			uShadowTexelWorldSize2Location = GL.GetUniformLocation(Handle, "uShadowTexelWorldSize2");
+			uShadowTexelWorldSize3Location = GL.GetUniformLocation(Handle, "uShadowTexelWorldSize3");
 			uLightSpaceMatrix0Location = GL.GetUniformLocation(Handle, "uLightSpaceMatrix0");
 			uLightSpaceMatrix1Location = GL.GetUniformLocation(Handle, "uLightSpaceMatrix1");
 			uLightSpaceMatrix2Location = GL.GetUniformLocation(Handle, "uLightSpaceMatrix2");
@@ -121,6 +129,10 @@ namespace LibRender2.Shaders
 			GL.ProgramUniform1(Handle, uShadowEnabledLocation, 0);
 			GL.ProgramUniform1(Handle, uShadowCascadeCountLocation, 0);
 			GL.ProgramUniform1(Handle, uShadowStrengthLocation, 1.0f);
+			if (uShadowTexelWorldSize0Location != -1) GL.ProgramUniform1(Handle, uShadowTexelWorldSize0Location, 0.05f);
+			if (uShadowTexelWorldSize1Location != -1) GL.ProgramUniform1(Handle, uShadowTexelWorldSize1Location, 0.05f);
+			if (uShadowTexelWorldSize2Location != -1) GL.ProgramUniform1(Handle, uShadowTexelWorldSize2Location, 0.05f);
+			if (uShadowTexelWorldSize3Location != -1) GL.ProgramUniform1(Handle, uShadowTexelWorldSize3Location, 0.05f);
 			if (uShadowSmoothLocation != -1) GL.ProgramUniform1(Handle, uShadowSmoothLocation, 1);
 			if (uShadowFilterRadiusLocation != -1) GL.ProgramUniform1(Handle, uShadowFilterRadiusLocation, 1.5f);
 		}
@@ -508,6 +520,21 @@ namespace LibRender2.Shaders
 				default: return;
 			}
 			GL.ProgramUniform1(Handle, loc, bias);
+		}
+
+		/// <summary>Sets per-cascade world-space texel size for true normal offset in the vertex shader.</summary>
+		public void SetTexelWorldSize(int cascade, float worldSize)
+		{
+			int loc;
+			switch (cascade)
+			{
+				case 0: loc = uShadowTexelWorldSize0Location; break;
+				case 1: loc = uShadowTexelWorldSize1Location; break;
+				case 2: loc = uShadowTexelWorldSize2Location; break;
+				case 3: loc = uShadowTexelWorldSize3Location; break;
+				default: return;
+			}
+			if (loc != -1) GL.ProgramUniform1(Handle, loc, worldSize);
 		}
 
 		public void SetShadowCascadeCount(int count)
