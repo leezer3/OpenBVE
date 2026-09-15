@@ -532,6 +532,7 @@ namespace OpenBve
 							if (CurrentOptions.ShadowBias > 1.0) CurrentOptions.ShadowBias = 1.0;
 							block.TryGetValue(OptionsKey.ShadowNormalBias, ref CurrentOptions.ShadowNormalBias);
 							if (CurrentOptions.ShadowNormalBias < 0.0) CurrentOptions.ShadowNormalBias = 0.0;
+							if (CurrentOptions.ShadowNormalBias > 4.0) CurrentOptions.ShadowNormalBias = 4.0;
 							block.GetValue(OptionsKey.ShadowFilterCascades, out Interface.CurrentOptions.ShadowFilterCascades);
 							if (block.GetValue(OptionsKey.ShadowSmooth, out string smoothVal))
 							{

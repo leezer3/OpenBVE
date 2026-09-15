@@ -852,10 +852,10 @@ namespace RouteViewer
             this.numericUpDownShadowNormalBias.Size = new System.Drawing.Size(120, 20);
             this.numericUpDownShadowNormalBias.TabIndex = 46;
             this.numericUpDownShadowNormalBias.Value = new decimal(new int[] {
-            2,
+            80,
             0,
             0,
-            0});
+            131072});
             // 
             // labelShadowSmooth
             // 

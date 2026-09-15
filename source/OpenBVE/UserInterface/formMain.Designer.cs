@@ -2952,10 +2952,10 @@ namespace OpenBve {
             this.updownShadowNormalBias.Size = new System.Drawing.Size(120, 20);
             this.updownShadowNormalBias.TabIndex = 11;
             this.updownShadowNormalBias.Value = new decimal(new int[] {
-            2,
+            80,
             0,
             0,
-            0});
+            131072});
             this.updownShadowNormalBias.ValueChanged += new System.EventHandler(this.updownShadowNormalBias_ValueChanged);
             // 
             // comboboxShadowFilterRadius
