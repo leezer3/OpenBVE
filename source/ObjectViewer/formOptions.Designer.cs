@@ -774,7 +774,7 @@ namespace ObjectViewer
             this.numericUpDownShadowNormalBias.Name = "numericUpDownShadowNormalBias";
             this.numericUpDownShadowNormalBias.Size = new System.Drawing.Size(120, 20);
             this.numericUpDownShadowNormalBias.TabIndex = 53;
-            this.numericUpDownShadowNormalBias.Value = new decimal(new int[] { 2, 0, 0, 0 });
+            this.numericUpDownShadowNormalBias.Value = new decimal(new int[] { 80, 0, 0, 131072 });
             // 
             // tabPageKeys
             // 
