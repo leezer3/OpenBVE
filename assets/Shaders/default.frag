@@ -105,6 +105,9 @@ vec2 vogelDiskSample(int i, int n, float phi) {
 /// When uShadowSmooth is true: 5-tap Vogel disk + IGN rotation (soft, no banding).
 /// Each tap is hardware PCF bilinear (2x2) -> 5 taps effectively cover a smooth disk.
 /// When false: 4-tap tight grid (0.5 texel) for sharp, pixel-perfect shadows.
+/// bias is ~1 texel of depth (auto per-cascade + user). normalBias is now Unity-style
+/// texels (typ. 0.3-1.0); slope acne is mostly handled by the vertex normal offset,
+/// so the depth-side slope term stays small to avoid peter-panning.
 float GetCascadeShadowFactor(sampler2DShadow shadowMap, vec4 posLightSpace, float bias, float normalBias)
 {
     vec3 projCoords = posLightSpace.xyz / posLightSpace.w;
@@ -118,18 +121,21 @@ float GetCascadeShadowFactor(sampler2DShadow shadowMap, vec4 posLightSpace, floa
         return 1.0;
     }
 
-    // Compute slope-scaled Z-bias dynamically based on the exact texel size fraction passed from C#.
+    // Slope-scaled Z-bias, deliberately small: 1 texel base + up to +1.5 texel at grazing.
+    // Capped so a stale config can't push shadows off their caster.
     vec3 normal = normalize(vNormal);
     vec3 lightDir = normalize(uLight.position);
-    float biasScale = clamp(1.0 - dot(normal, lightDir), 0.0, 1.0);
-    // Multiply the base Z-bias by a slope factor to perfectly cure acne on thin meshes
-    float activeBias = bias * (1.0 + biasScale * normalBias);
+    float slope = clamp(1.0 - dot(normal, lightDir), 0.0, 1.0);
+    float slopeScale = min(max(normalBias, 0.0), 1.5);
+    float activeBias = bias * (1.0 + slope * slopeScale);
 
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
-    // Auto: scale bias with filter radius so wide Vogel disk doesn't re-introduce acne.
-    // Sharp (0.5 texel) -> 1.0x, High (~1.2 texel di 1024/150m/3 casc) -> ~1.5x, max 3.0 -> ~2.9x
+    // Soft kernel spreads taps in UV; depth only needs a small guard, not full scaling.
+    // Sharp (0.5 texel) -> 1.0x, max 3.0 -> ~1.6x (was ~2.9x, caused detachment in soft mode).
     float radiusForBias = uShadowSmooth ? clamp(uShadowFilterRadius, 0.5, 3.0) : 0.5;
-    float biasedDepth = projCoords.z - activeBias * (1.0 + (radiusForBias - 0.5) * 0.75);
+    float biasedDepth = projCoords.z - activeBias * (1.0 + (radiusForBias - 0.5) * 0.25);
+    // Hard clamp: never push more than ~4 texels of depth + epsilon.
+    biasedDepth = max(biasedDepth, projCoords.z - (bias * 4.0 + 0.00002));
 
     if (uShadowSmooth) {
         // Smooth path: Vogel disk + IGN - rotated per-pixel to hide sampling pattern.
