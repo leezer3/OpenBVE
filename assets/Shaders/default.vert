@@ -59,6 +59,17 @@ uniform mat4 uLightSpaceMatrix0;  // Cascade 0 (near)
 uniform mat4 uLightSpaceMatrix1;  // Cascade 1 (mid)
 uniform mat4 uLightSpaceMatrix2;  // Cascade 2 (far)
 uniform mat4 uLightSpaceMatrix3;  // Cascade 3 (extra far)
+// True normal bias (Unity-style, texel units, shared with fragment shader)
+// + per-cascade world texel size. Vertex offsets the receiver along its
+// world normal BEFORE light-space transform, so contact stays tight.
+uniform float uShadowNormalBias0;
+uniform float uShadowNormalBias1;
+uniform float uShadowNormalBias2;
+uniform float uShadowNormalBias3;
+uniform float uShadowTexelWorldSize0;
+uniform float uShadowTexelWorldSize1;
+uniform float uShadowTexelWorldSize2;
+uniform float uShadowTexelWorldSize3;
 uniform mat4 uModelMatrix;
 
 
@@ -216,11 +227,21 @@ void main()
 		// Compute world space (relative to camera) accurately from the view position.
 		// OpenBVE does not bind uModelMatrix for regular mesh rendering.
 		vec4 worldPos4 = inverse(uCurrentViewMatrix) * oViewPos;
-		
-		vPosLightSpace0 = uLightSpaceMatrix0 * worldPos4;
-		vPosLightSpace1 = uLightSpaceMatrix1 * worldPos4;
-		vPosLightSpace2 = uLightSpaceMatrix2 * worldPos4;
-		vPosLightSpace3 = uLightSpaceMatrix3 * worldPos4;
+
+		// Receiver-side normal offset: push along world normal toward the light side
+		// by (texels * worldTexelSize). Front faces move closer to the light (=> lit,
+		// no acne), contact point barely shifts (=> no peter-panning).
+		// View->world rotation is orthonormal, so transpose == inverse.
+		vec3 worldNormal = normalize(transpose(mat3(uCurrentViewMatrix)) * vNormal);
+		vec4 wp0 = vec4(worldPos4.xyz + worldNormal * (uShadowNormalBias0 * uShadowTexelWorldSize0), 1.0);
+		vec4 wp1 = vec4(worldPos4.xyz + worldNormal * (uShadowNormalBias1 * uShadowTexelWorldSize1), 1.0);
+		vec4 wp2 = vec4(worldPos4.xyz + worldNormal * (uShadowNormalBias2 * uShadowTexelWorldSize2), 1.0);
+		vec4 wp3 = vec4(worldPos4.xyz + worldNormal * (uShadowNormalBias3 * uShadowTexelWorldSize3), 1.0);
+
+		vPosLightSpace0 = uLightSpaceMatrix0 * wp0;
+		vPosLightSpace1 = uLightSpaceMatrix1 * wp1;
+		vPosLightSpace2 = uLightSpaceMatrix2 * wp2;
+		vPosLightSpace3 = uLightSpaceMatrix3 * wp3;
 	}
 	else
 	{
