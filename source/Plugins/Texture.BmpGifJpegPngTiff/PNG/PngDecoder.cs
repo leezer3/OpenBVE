@@ -607,8 +607,24 @@ namespace Plugin.PNG
 														break;
                                                     default:
                                                         {
-                                                            int start = Width * BytesPerPixel * pixelY + pixelX * BytesPerPixel;
-                                                            Buffer.BlockCopy(data, rowStartByte + j * BytesPerPixel, pixelBuffer, start, BytesPerPixel);
+                                                            if (BytesPerPixel == 8)
+                                                            {
+                                                                // 16-bit RGBA in an Adam7-interlaced image: keep each channel's
+                                                                // high byte (big-endian), as in the non-interlaced path.
+                                                                // Output is W*H*4, so a raw 8-byte copy overruns it and
+                                                                // fails the texture.
+                                                                int src = rowStartByte + j * 8;
+                                                                int start = (Width * pixelY + pixelX) * 4;
+                                                                pixelBuffer[start] = data[src];
+                                                                pixelBuffer[start + 1] = data[src + 2];
+                                                                pixelBuffer[start + 2] = data[src + 4];
+                                                                pixelBuffer[start + 3] = data[src + 6];
+                                                            }
+                                                            else
+                                                            {
+                                                                int start = Width * BytesPerPixel * pixelY + pixelX * BytesPerPixel;
+                                                                Buffer.BlockCopy(data, rowStartByte + j * BytesPerPixel, pixelBuffer, start, BytesPerPixel);
+                                                            }
                                                             currentByte += BytesPerPixel;
                                                             break;
                                                         }

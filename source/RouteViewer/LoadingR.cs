@@ -7,6 +7,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -63,8 +64,29 @@ namespace RouteViewer {
 		internal static void Load(string routeFile, Encoding routeEncoding, byte[] textureBytes)
 		{
 			Program.Renderer.GameWindow.TargetRenderFrequency = 0;
+			// Switching to a different route must fully release the previous route:
+			// object caches, decoded textures and sound buffers. Same-file reload
+			// keeps the partial reset so unchanged textures stay resident.
+			bool routeSwitch = CurrentRouteFile != null && !CurrentRouteFile.Equals(routeFile, StringComparison.OrdinalIgnoreCase);
 			// reset
 			Game.Reset();
+			if (routeSwitch)
+			{
+				// Ordered, synchronous teardown of the previous route before the
+				// new one starts loading: sounds stopped above, so drain queued
+				// loads, release buffers, caches and pixel bytes, then collect
+				// (compacting LOH, twice across finalizers) so RAM actually drops.
+				LogSwitchMemory("before", CurrentRouteFile, routeFile);
+				Program.CurrentHost.ClearObjectCaches();
+				Program.Renderer.TextureManager.UnloadAllTextures(false, releaseBytes: true);
+				Program.Sounds.CancelPendingLoads();
+				Program.Sounds.UnloadAllBuffers();
+				GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+				GC.Collect();
+				GC.WaitForPendingFinalizers();
+				GC.Collect();
+				LogSwitchMemory("after", CurrentRouteFile, routeFile);
+			}
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString(), Interface.CurrentOptions.LoadingLogo, Interface.CurrentOptions.LoadingProgressBar);
 			if (textureBytes != null && textureBytes.Length > 0)
 			{
@@ -82,8 +104,25 @@ namespace RouteViewer {
 		}
 		
 		// load threaded
-		private static async Task LoadThreaded()
+		private static void LogSwitchMemory(string stage, string oldFile, string newFile)
 		{
+			try
+			{
+				long managed = GC.GetTotalMemory(false);
+				Program.FileSystem.AppendToLogFile(
+					"Route switch " + stage + ": " + oldFile + " -> " + newFile +
+					" managed=" + (managed / 1048576) + "MB" +
+					" staticCache=" + Program.CurrentHost.StaticObjectCache.Count +
+					" animatedCache=" + Program.CurrentHost.AnimatedObjectCollectionCache.Count +
+					" textures=" + Program.Renderer.TextureManager.RegisteredTexturesCount);
+			}
+			catch
+			{
+				// Diagnostics must never break loading.
+			}
+		}
+
+		private static async Task LoadThreaded()		{
 			try
 			{
 				await Task.Run(() => LoadEverythingThreaded());

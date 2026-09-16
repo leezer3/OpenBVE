@@ -40,9 +40,16 @@ namespace Plugin
 	{
 		internal static StaticObject ReadObject(string fileName, Encoding encoding)
 		{
-			rootMatrix = Matrix4D.NoTransformation;
-			currentFolder = Path.GetDirectoryName(fileName);
-			currentFile = fileName;
+			// Per-file parser instance: all mutable parse state is instance state,
+			// as route Structure objects are now loaded in parallel (see CsvRwRouteParser.ObjectLoader).
+			// Static state here previously mixed currentFolder / currentFile / materials across threads,
+			// producing errors like texture not found".
+			var parser = new NewXParser
+			{
+				rootMatrix = Matrix4D.NoTransformation,
+				currentFolder = Path.GetDirectoryName(fileName),
+				currentFile = fileName
+			};
 			byte[] Data = File.ReadAllBytes(fileName);
 			
 			if (Data.Length < 16 || Data[0] != 120 | Data[1] != 111 | Data[2] != 102 | Data[3] != 32)
@@ -99,7 +106,7 @@ namespace Plugin
 				}
 				string Content = Builder.ToString();
 				Content = Content.Substring(17).Trim();
-				return LoadTextualX(Content);
+				return parser.LoadTextualX(Content);
 			}
 
 			byte[] newData;
@@ -108,7 +115,7 @@ namespace Plugin
 				//Uncompressed binary, so skip the header
 				newData = new byte[Data.Length - 16];
 				Array.Copy(Data, 16, newData, 0, Data.Length - 16);
-				return LoadBinaryX(newData, floatingPointSize);
+				return parser.LoadBinaryX(newData, floatingPointSize);
 			}
 
 			if (Data[8] == 116 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112)
@@ -116,7 +123,7 @@ namespace Plugin
 				// compressed textual flavor
 				newData = MSZip.Decompress(Data);
 				string Text = encoding.GetString(newData);
-				return LoadTextualX(Text);
+				return parser.LoadTextualX(Text);
 			}
 
 			if (Data[8] == 98 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112)
@@ -124,7 +131,7 @@ namespace Plugin
 				//Compressed binary
 				//16 bytes of header, then 8 bytes of padding, followed by the actual compressed data
 				byte[] uncompressedData = MSZip.Decompress(Data);
-				return LoadBinaryX(uncompressedData, floatingPointSize);
+				return parser.LoadBinaryX(uncompressedData, floatingPointSize);
 			}
 
 			// unsupported flavor
@@ -132,7 +139,7 @@ namespace Plugin
 			return null;
 		}
 		
-		private static StaticObject LoadTextualX(string Text)
+		private StaticObject LoadTextualX(string Text)
 		{
 			Text = Text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
 			StaticObject obj = new StaticObject(Plugin.CurrentHost);
@@ -142,6 +149,11 @@ namespace Plugin
 			while (block.Position() < block.Length() - 5)
 			{
 				Block subBlock = block.ReadSubBlock();
+				if (subBlock == null)
+				{
+					// Unknown (e.g. application-defined template) data block: skipped by ReadSubBlock.
+					continue;
+				}
 				ParseSubBlock(subBlock, ref obj, ref builder, ref material);
 			}
 			builder.Apply(ref obj, false, false);
@@ -156,18 +168,18 @@ namespace Plugin
 			return obj;
 		}
 
-		private static string currentFolder;
-		private static string currentFile;
+		private string currentFolder;
+		private string currentFile;
 
-		private static Matrix4D rootMatrix;
-		private static int currentLevel = 0;
-		private static int transformStart = 0;
-		private static VertexElement[] vertexElements;
-		private static bool currentMaterialUsed;
+		private Matrix4D rootMatrix;
+		private int currentLevel = 0;
+		private int transformStart = 0;
+		private VertexElement[] vertexElements;
+		private bool currentMaterialUsed;
 
-		private static readonly Dictionary<string, Material> rootMaterials = new Dictionary<string, Material>();
+		private readonly Dictionary<string, Material> rootMaterials = new Dictionary<string, Material>();
 
-		private static void ParseSubBlock(Block block, ref StaticObject obj, ref MeshBuilder builder, ref Material material)
+		private void ParseSubBlock(Block block, ref StaticObject obj, ref MeshBuilder builder, ref Material material)
 		{
 			Block subBlock;
 			switch (block.Token)
@@ -247,6 +259,11 @@ namespace Plugin
 						 */
 						//TemplateID[] validTokens = { TemplateID.Mesh , TemplateID.FrameTransformMatrix, TemplateID.Frame };
 						subBlock = block.ReadSubBlock();
+						if (subBlock == null)
+						{
+							// Unknown (e.g. application-defined template) data block: skipped by ReadSubBlock.
+							continue;
+						}
 						ParseSubBlock(subBlock, ref obj, ref builder, ref material);
 					}
 					currentLevel--;
@@ -308,6 +325,10 @@ namespace Plugin
 							if (block.Position() < block.Length() - 5)
 							{
 								subBlock = block.ReadSubBlock();
+								if (subBlock == null)
+								{
+									throw new Exception("nFaces was declared as zero, but unrecognised data remains in the block");
+								}
 								ParseSubBlock(subBlock, ref obj, ref builder, ref material);
 							}
 							goto NoFaces;
@@ -338,6 +359,11 @@ namespace Plugin
 					while (block.Position() < block.Length() - 5)
 					{
 						subBlock = block.ReadSubBlock();
+						if (subBlock == null)
+						{
+							// Unknown (e.g. application-defined template) data block: skipped by ReadSubBlock.
+							continue;
+						}
 						ParseSubBlock(subBlock, ref obj, ref builder, ref material);
 					}
 
@@ -719,7 +745,7 @@ namespace Plugin
 			}
 		}
 
-		private static StaticObject LoadBinaryX(byte[] objectBytes, int floatingPointSize)
+		private StaticObject LoadBinaryX(byte[] objectBytes, int floatingPointSize)
 		{
 			Block block = new BinaryBlock(objectBytes, floatingPointSize);
 			StaticObject obj = new StaticObject(Plugin.CurrentHost);

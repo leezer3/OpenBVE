@@ -186,7 +186,7 @@ namespace RouteViewer
 				Renderer.Screen.Height = 768;
 			}
 			Renderer.CameraTrackFollower = new TrackFollower(CurrentHost);
-			Renderer.GameWindow = new RouteViewer(Renderer.Screen.Width, Renderer.Screen.Height, Renderer.GraphicsMode, "Route Viewer", GameWindowFlags.Default);
+			Renderer.GameWindow = RouteViewer.Create(Renderer.Screen.Width, Renderer.Screen.Height, Renderer.GraphicsMode, "Route Viewer");
 			Renderer.GameWindow.Visible = true;
 			Renderer.GameWindow.TargetUpdateFrequency = 0;
 			Renderer.GameWindow.TargetRenderFrequency = 0;
@@ -669,7 +669,7 @@ namespace RouteViewer
 						return;
 					}
 
-					if (Interface.LogMessages.Count != 0)
+					if (Interface.GetLogSnapshot().Count != 0)
 					{
 						formMessages.ShowMessages();
 						Application.DoEvents();

@@ -37,6 +37,9 @@ namespace ObjectViewer
 
 		internal Color32 TextColor;
 
+		/// <summary>Whether the loading screen shows the decode progress bar</summary>
+		internal bool LoadingProgressBar = true;
+
 		/// <summary>
 		/// The mode of optimization to be performed on an object
 		/// </summary>
@@ -88,6 +91,7 @@ namespace ObjectViewer
 				Builder.AppendLine("windowHeight = " + Program.Renderer.Screen.Height.ToString(Culture));
 				Builder.AppendLine("nearclipbase = " + NearClipBase.ToString(Culture));
 				Builder.AppendLine("autoReloadObjects = " + (AutoReloadObjects ? "true" : "false"));
+				Builder.AppendLine("showprogressbar = " + (LoadingProgressBar ? "true" : "false"));
 				Builder.AppendLine("backgroundColor = " + BackgroundColor);
 				Builder.AppendLine("textColor = " + TextColor);
 				Builder.AppendLine();
@@ -193,6 +197,7 @@ namespace ObjectViewer
 							}
 
 							block.GetValue(OptionsKey.AutoReloadObjects, out Interface.CurrentOptions.AutoReloadObjects);
+							block.GetValue(OptionsKey.ShowProgressBar, out Interface.CurrentOptions.LoadingProgressBar);
 							block.GetColor24(OptionsKey.BackgroundColor, out Interface.CurrentOptions.BackgroundColor);
 							block.GetColor32(OptionsKey.TextColor, out Interface.CurrentOptions.TextColor);
 							break;

@@ -8,24 +8,13 @@ namespace Plugin
 {
 	public partial class Plugin : ObjectInterface
 	{
-		private static HostInterface currentHost;
-
-		private static string currentSoundFolder;
+		private HostInterface currentHost;
 
 		public override string[] SupportedAnimatedObjectExtensions => new[] { ".animated" };
 
 		public override void Load(HostInterface host, FileSystem fileSystem)
 		{
 			currentHost = host;
-		}
-
-		public override void SetObjectParser(object parserType)
-		{
-			if (parserType is string)
-			{
-				//HACK: This avoids creating yet another method or override
-				currentSoundFolder = (string) parserType;
-			}
 		}
 
 		public override bool CanLoadObject(string path)

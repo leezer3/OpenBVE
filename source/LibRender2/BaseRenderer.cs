@@ -512,6 +512,25 @@ namespace LibRender2
 		/// <summary>Deinitializes the renderer</summary>
 		public void DeInitialize()
 		{
+			// Flush all in-memory caches on shutdown (close window / process exit).
+			// Must run before GameWindow.Dispose() while the GL context is still alive.
+			try
+			{
+				TextureManager?.UnloadAllTextures(false);
+			}
+			catch
+			{
+				// Ignored - best effort cleanup during shutdown
+			}
+			try
+			{
+				currentHost?.ClearObjectCaches();
+				currentHost?.ClearErrors();
+			}
+			catch
+			{
+				// Ignored - best effort cleanup during shutdown
+			}
 			if (nullDepthMap != 0)
 			{
 				GL.DeleteTexture(nullDepthMap);
@@ -622,15 +641,8 @@ namespace LibRender2
 
 		public void Reset()
 		{
-			currentHost.AnimatedObjectCollectionCache.Clear();
-			List<ValueTuple<string, bool, DateTime>> keys = currentHost.StaticObjectCache.Keys.ToList();
-			for (int i = 0; i < keys.Count; i++)
-			{
-				if (!File.Exists(keys[i].Item1) || File.GetLastWriteTime(keys[i].Item1) != keys[i].Item3)
-				{
-					currentHost.StaticObjectCache.Remove(keys[i]);
-				}
-			}
+			currentHost.ClearAnimatedObjectCache();
+			currentHost.PruneStaleStaticObjects();
 			TextureManager.UnloadAllTextures(true);
 			VisibleObjects.Clear();
 		}

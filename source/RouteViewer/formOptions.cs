@@ -270,7 +270,7 @@ namespace RouteViewer
 			{
 				Interface.CurrentOptions.CurrentXParser = xParser;
 				Interface.CurrentOptions.CurrentObjParser = objParser;
-				Program.CurrentHost.StaticObjectCache.Clear(); // as a different parser may interpret differently
+				Program.CurrentHost.ClearObjectCaches(); // as a different parser may interpret differently
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 				{
 					if (Program.CurrentHost.Plugins[i].Object != null)

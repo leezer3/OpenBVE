@@ -70,6 +70,8 @@ namespace ObjectViewer
             this.CloseButton = new System.Windows.Forms.Button();
             this.labelAutoReloadChanged = new System.Windows.Forms.Label();
             this.checkBoxAutoReload = new System.Windows.Forms.CheckBox();
+            this.labelProgressBar = new System.Windows.Forms.Label();
+            this.checkBoxProgressBar = new System.Windows.Forms.CheckBox();
             this.tabPageShadows = new System.Windows.Forms.TabPage();
             this.comboBoxShadowResolution = new System.Windows.Forms.ComboBox();
             this.labelShadowResolution = new System.Windows.Forms.Label();
@@ -171,7 +173,9 @@ namespace ObjectViewer
                     { this.labelNearClip, 0, 14 },
                     { this.nearClip, 1, 14 },
                     { this.labelAutoReloadChanged, 0, 15 },
-                    { this.checkBoxAutoReload, 1, 15 }
+                    { this.checkBoxAutoReload, 1, 15 },
+                    { this.labelProgressBar, 0, 16 },
+                    { this.checkBoxProgressBar, 1, 16 }
                 }
             };
             tlpOptions.SetColumnSpan(this.labelInterpolationSettings, 2);
@@ -947,6 +951,25 @@ namespace ObjectViewer
             this.checkBoxAutoReload.TabIndex = 49;
             this.checkBoxAutoReload.UseVisualStyleBackColor = true;
             // 
+            // labelProgressBar
+            // 
+            this.labelProgressBar.AutoSize = true;
+            this.labelProgressBar.Location = new System.Drawing.Point(10, 376);
+            this.labelProgressBar.Name = "labelProgressBar";
+            this.labelProgressBar.Size = new System.Drawing.Size(145, 13);
+            this.labelProgressBar.TabIndex = 50;
+            this.labelProgressBar.Text = "Show Loading Progress Bar:";
+            // 
+            // checkBoxProgressBar
+            // 
+            this.checkBoxProgressBar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.checkBoxProgressBar.AutoSize = true;
+            this.checkBoxProgressBar.Location = new System.Drawing.Point(265, 376);
+            this.checkBoxProgressBar.Name = "checkBoxProgressBar";
+            this.checkBoxProgressBar.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxProgressBar.TabIndex = 51;
+            this.checkBoxProgressBar.UseVisualStyleBackColor = true;
+            // 
             // labelVSync
             // 
             this.labelVSync.AutoSize = true;
@@ -1113,6 +1136,8 @@ namespace ObjectViewer
 		private System.Windows.Forms.Label labelShadowNormalBias;
 		private System.Windows.Forms.NumericUpDown numericUpDownShadowNormalBias;
 		private System.Windows.Forms.CheckBox checkBoxAutoReload;
+		private System.Windows.Forms.Label labelProgressBar;
+		private System.Windows.Forms.CheckBox checkBoxProgressBar;
 		private System.Windows.Forms.Label labelAutoReloadChanged;
 		private System.Windows.Forms.Label labelShadowFilterCascades;
 		private System.Windows.Forms.CheckBox checkBoxShadowFilterCascades;
