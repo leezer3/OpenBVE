@@ -19,8 +19,6 @@ namespace Plugin
 			currentHost = host;
 		}
 
-		private int retryCounter = 0;
-
 		public override bool CanLoadObject(string path)
 		{
 			if (string.IsNullOrEmpty(path))
@@ -28,24 +26,28 @@ namespace Plugin
 				return false;
 			}
 
-			try
+			// Probe readability, retrying transient locks once.
+			for (int attempt = 0; ; attempt++)
 			{
-				using (FileStream fs = new FileStream(path, FileMode.Open))
+				try
 				{
-					// ignore- used to catch no access exceptions etc.
+					using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+					{
+						// Probe only- catches no access exceptions etc.
+					}
+					break;
 				}
-			}
-			catch
-			{
-				if (retryCounter == 0)
+				catch
 				{
-					Thread.Sleep(100);
-					retryCounter++;
-					return CanLoadObject(path);
+					if (attempt == 0)
+					{
+						Thread.Sleep(100);
+						continue;
+					}
+					break;
 				}
 			}
 
-			retryCounter = 0;
 			if (path.ToLowerInvariant().EndsWith(".animated", StringComparison.InvariantCultureIgnoreCase))
 			{
 				return true;
@@ -56,20 +58,35 @@ namespace Plugin
 
 		public override bool LoadObject(string path, Encoding textEncoding, out UnifiedObject unifiedObject)
 		{
-			try
+			// Retry transient file locks.
+			const int maxAttempts = 5;
+			for (int attempt = 0; ; attempt++)
 			{
-				unifiedObject = ReadObject(path, textEncoding);
-				if (unifiedObject == null)
+				try
 				{
+					unifiedObject = ReadObject(path, textEncoding);
+					if (unifiedObject == null)
+					{
+						return false;
+					}
+					return true;
+				}
+				catch (IOException ex) when (IsFileLocked(ex) && attempt + 1 < maxAttempts)
+				{
+					Thread.Sleep(100);
+				}
+				catch
+				{
+					unifiedObject = null;
 					return false;
 				}
-				return true;
 			}
-			catch
-			{
-				unifiedObject = null;
-				return false;
-			}
+		}
+
+		private static bool IsFileLocked(IOException ex)
+		{
+			int code = ex.HResult & 0xFFFF;
+			return code == 32 || code == 33; // ERROR_SHARING_VIOLATION / ERROR_LOCK_VIOLATION
 		}
 	}
 }
