@@ -644,14 +644,14 @@ namespace Formats.OpenBve
 		}
 
 		/// <summary>Reads the specified FunctionScript from the block, preserving the prior value if not present</summary>
-		public virtual bool GetFunctionScript(T2 key, out AnimationScript function)
+		public virtual bool GetFunctionScript(T2 key, out AnimationScript function, int totalStates = 0)
 	    {
 		    function = null;
 		    return false;
 	    }
 
 	    /// <summary>Reads the specified FunctionScript from the block, preserving the prior value if not present</summary>
-	    public virtual bool GetFunctionScript(T2[] keys, string absolutePath, out AnimationScript function)
+	    public virtual bool GetFunctionScript(T2[] keys, string absolutePath, out AnimationScript function, int totalStates = 0)
 	    {
 		    function = null;
 		    return false;

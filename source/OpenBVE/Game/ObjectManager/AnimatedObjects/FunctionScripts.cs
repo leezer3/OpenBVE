@@ -2347,6 +2347,31 @@ namespace OpenBve {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					case Instructions.TrackNumber:
+						Function.Stack[s] = 0.0;
+						if (Train != null)
+						{
+							if (Train.Cars.Length > 0)
+							{
+								Function.Stack[s] = Train.Cars[0].FrontAxle.Follower.TrackIndex;
+							}
+						}
+						s++; break;
+					case Instructions.TrackNumberIndex:
+						Function.Stack[s - 1] = 0.0;
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].FrontAxle.Follower.TrackIndex;
+							}
+						}
+						break;
+					case Instructions.TotalStates:
+						Function.Stack[s] = Function.TotalStates;
+						s++; break;
 					// default
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i] + " was encountered in ExecuteFunctionScript.");

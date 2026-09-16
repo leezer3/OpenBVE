@@ -235,14 +235,14 @@ namespace Formats.OpenBve
 			}
 		}
 
-		public override bool GetFunctionScript(T2 key, out AnimationScript function)
+		public override bool GetFunctionScript(T2 key, out AnimationScript function, int totalStates = 0)
 		{
 			if (keyValuePairs.TryRemove(key, out var script))
 			{
 				try
 				{
 					bool isInfix = key.ToString().IndexOf("RPN", StringComparison.Ordinal) == -1;
-					function = new FunctionScript(currentHost, script.Value, isInfix);
+					function = new FunctionScript(currentHost, script.Value, isInfix, totalStates);
 					return true;
 				}
 				catch
@@ -257,7 +257,7 @@ namespace Formats.OpenBve
 			return false;
 		}
 
-		public override bool GetFunctionScript(T2[] keys, string absolutePath, out AnimationScript function)
+		public override bool GetFunctionScript(T2[] keys, string absolutePath, out AnimationScript function, int totalStates = 0)
 		{
 
 			foreach (T2 key in keys)
@@ -288,7 +288,7 @@ namespace Formats.OpenBve
 						try
 						{
 							bool isInfix = key.ToString().IndexOf("RPN", StringComparison.Ordinal) == -1;
-							function = new FunctionScript(currentHost, script.Value, isInfix);
+							function = new FunctionScript(currentHost, script.Value, isInfix, totalStates);
 							return true;
 						}
 						catch

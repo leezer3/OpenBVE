@@ -155,7 +155,7 @@ namespace Plugin
 							Block.GetFunctionScript(new[] { AnimatedKey.TranslateXFunction, AnimatedKey.TranslateXFunctionRPN, AnimatedKey.TranslateXScript }, Folder, out Result.Objects[ObjectCount].TranslateXFunction);
 							Block.GetFunctionScript(new[] { AnimatedKey.TranslateYFunction, AnimatedKey.TranslateYFunctionRPN, AnimatedKey.TranslateYScript }, Folder, out Result.Objects[ObjectCount].TranslateYFunction);
 							Block.GetFunctionScript(new[] { AnimatedKey.TranslateZFunction, AnimatedKey.TranslateZFunctionRPN, AnimatedKey.TranslateZScript }, Folder, out Result.Objects[ObjectCount].TranslateZFunction);
-							Block.GetFunctionScript(new[] { AnimatedKey.StateFunction, AnimatedKey.StateFunctionRPN, AnimatedKey.StateScript }, Folder, out Result.Objects[ObjectCount].StateFunction);
+							Block.GetFunctionScript(new[] { AnimatedKey.StateFunction, AnimatedKey.StateFunctionRPN, AnimatedKey.StateScript }, Folder, out Result.Objects[ObjectCount].StateFunction, stateFiles.Length);
 							Block.GetFunctionScript(new[] { AnimatedKey.TextureShiftXFunction, AnimatedKey.TextureShiftXFunctionRPN, AnimatedKey.TextureShiftXScript }, Folder, out Result.Objects[ObjectCount].TextureShiftXFunction);
 							Block.GetFunctionScript(new[] { AnimatedKey.TextureShiftYFunction, AnimatedKey.TextureShiftYFunctionRPN, AnimatedKey.TextureShiftYScript }, Folder, out Result.Objects[ObjectCount].TextureShiftYFunction);
 							// n.b. For unknown reasons, the ScaleFunction never had a RPN listing in the animated file. Michelle listed these as obsolete, and I've seen *one* use of them. As they're not really supposed to be used
@@ -196,7 +196,7 @@ namespace Plugin
 									case "timetable":
 										currentHost.AddObjectForCustomTimeTable(Result.Objects[ObjectCount]);
 										Result.Objects[ObjectCount].isTimeTableObject = true;
-										Result.Objects[ObjectCount].StateFunction = new FunctionScript(currentHost, "timetable", true);
+										Result.Objects[ObjectCount].StateFunction = new FunctionScript(currentHost, "timetable", true, stateFiles.Length);
 										break;
 									default:
 										currentHost.AddMessage(MessageType.Error, false, "Unknown texture override type " + textureOverride + " in Section " + Block.Key + " in File " + FileName);
