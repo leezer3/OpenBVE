@@ -378,6 +378,21 @@ namespace Object.CsvB3d
 								currentMeshBuilder.CurrentMaterial.Flags |= MaterialFlags.NoShadow;
 							}
 							break;
+						case CSVB3DKey.CrossFading:
+							subBlock.GetNextBool(out bool crossFadingEnabled);
+							foreach (Material material in currentMeshBuilder.Materials)
+							{
+
+								if (crossFadingEnabled)
+								{
+									material.Flags |= MaterialFlags.CrossFadeTexture;
+								}
+								else
+								{
+									material.Flags &= ~MaterialFlags.CrossFadeTexture;
+								}
+							}
+							break;
 						default:
 							subBlock.SkipNextValue();
 							break;
