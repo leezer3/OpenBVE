@@ -385,6 +385,12 @@ namespace ObjectViewer {
 
     internal static void RefreshObjects(bool autoReload = false, bool quietTiming = false)
     {
+    List<string> filesToRefresh = SnapshotFiles();
+    if (filesToRefresh.Count == 0)
+    {
+	    // Nothing to load.
+	    return;
+    }
     if (!quietTiming)
 	    {
 		    loadTimer = System.Diagnostics.Stopwatch.StartNew();
@@ -400,7 +406,6 @@ namespace ObjectViewer {
 			Renderer.Reset();
 		    Game.Reset();
 			formTrain.Instance?.DisableUI();
-			List<string> filesToRefresh = SnapshotFiles();
 			foreach (string currentFile in filesToRefresh)
 			{
 			    try
@@ -576,14 +581,14 @@ namespace ObjectViewer {
 		    Interface.AddMessage(MessageType.Information, false, "Still loading objects, ignoring reload until the current load finishes.");
 		    return;
 	    }
-    loadTimer = System.Diagnostics.Stopwatch.StartNew();
-    ResetLoadMetrics();
     List<string> snapshot = SnapshotFiles();
     if (snapshot.Count == 0)
     {
-	    RefreshObjects(autoReload);
+	    // Nothing to load.
 	    return;
     }
+    loadTimer = System.Diagnostics.Stopwatch.StartNew();
+    ResetLoadMetrics();
     bool hasTrainDesc = snapshot.Any(IsTrainDescriptor);
     bool hasOutOfScope = snapshot.Any(path => !IsTrainDescriptor(path) && !IsAsyncCapable(path));
     if (hasOutOfScope)
@@ -1180,19 +1185,9 @@ namespace ObjectViewer {
 			}
 		}
 
-        /// <summary>Checks if any of the loaded files have been updated externally.</summary>
+        /// <summary>Reloads objects if a loaded file changed on disk.</summary>
         internal static void CheckFileChanges(double timeElapsed)
         {
-            if (IsLoading)
-            {
-	            // Coalesce into a single follow-up reload once the current load finishes,
-	            // but only when auto-reload is actually armed and something is loaded.
-	            if (Interface.CurrentOptions.AutoReloadObjects && FileCount != 0)
-	            {
-		            PendingReload = true;
-	            }
-	            return;
-            }
             if (Interface.CurrentOptions.AutoReloadObjects == false || FileCount == 0 || (reloadCheckTimer += timeElapsed) < 0.5)
             {
                 return;
@@ -1205,15 +1200,22 @@ namespace ObjectViewer {
 				try
 	            {
 		            DateTime time = System.IO.File.GetLastWriteTimeUtc(currentFile);
-		            if ((DateTime.Now - time).TotalSeconds < 5 || time.Year == 1601)
+		            if ((DateTime.UtcNow - time).TotalSeconds < 5 || time.Year == 1601)
 		            {
-			            // file is held open for constant write (within last 5s)
-						// file no longer exists (returns 01/01/1601)
+			            // Skip files being written or deleted.
 			            continue;
 		            }
-		            if (System.IO.File.GetLastWriteTimeUtc(currentFile) > LastReloadTime)
+		            if (time > LastReloadTime)
 		            {
-			            RefreshObjectsAsync();
+			            if (IsLoading)
+			            {
+				            // Defer reload until the current load finishes.
+				            PendingReload = true;
+			            }
+			            else
+			            {
+				            RefreshObjectsAsync();
+			            }
 			            return;
 		            }
 				}
