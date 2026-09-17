@@ -133,8 +133,9 @@ namespace OpenBve
 
 			// Cap the render rate only, leaving the update rate uncapped.
 			// Setting the update rate too caused train shaking and dropped input device plugin events (issue #957)
+			// FPS Limit is disabled when VSync is ON (monitor refresh rate is used instead)
 			Program.Renderer.GameWindow.TargetUpdateFrequency = 0;
-			Program.Renderer.GameWindow.TargetRenderFrequency = Interface.CurrentOptions.FPSLimit > 0 ? Interface.CurrentOptions.FPSLimit : 0;
+			Program.Renderer.GameWindow.TargetRenderFrequency = !Interface.CurrentOptions.VerticalSynchronization && Interface.CurrentOptions.FPSLimit > 0 ? Interface.CurrentOptions.FPSLimit : 0;
 			Program.Renderer.GameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? VSyncMode.On : VSyncMode.Off;
 			
 		}

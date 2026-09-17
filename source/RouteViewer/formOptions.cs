@@ -327,7 +327,11 @@ namespace RouteViewer
 			int[] fpsPresets = { 0, 30, 60, 120, 240 };
 			Interface.CurrentOptions.FPSLimit = comboBoxFPSLimit.SelectedIndex >= 0 ? fpsPresets[comboBoxFPSLimit.SelectedIndex] : 0;
 			Program.Renderer.GameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? OpenTK.VSyncMode.On : OpenTK.VSyncMode.Off;
-			Program.Renderer.GameWindow.TargetRenderFrequency = Interface.CurrentOptions.FPSLimit > 0 ? Interface.CurrentOptions.FPSLimit : 0;
+			// FPS Limit is disabled when VSync is ON (monitor refresh rate is used instead).
+			// TargetRenderFrequency must stay 0 in that case: combining VSync ON with a
+			// non-zero target causes the OpenTK loop to spin and keeps CPU load high,
+			// even though the stored FPSLimit value is preserved for when VSync is turned off again.
+			Program.Renderer.GameWindow.TargetRenderFrequency = !Interface.CurrentOptions.VerticalSynchronization && Interface.CurrentOptions.FPSLimit > 0 ? Interface.CurrentOptions.FPSLimit : 0;
 
             // Sun direction is already updated in real-time via slider events
 
