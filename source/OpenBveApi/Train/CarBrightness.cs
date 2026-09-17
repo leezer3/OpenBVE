@@ -26,10 +26,16 @@
 		/// <returns>The current brightness value</returns>
 		public float CurrentBrightness(double CabBrightness, double mu)
 		{
-			float b = (float) (Car.Brightness.NextTrackPosition - Car.Brightness.PreviousTrackPosition);
-			//1.0f represents a route brightness value of 255
-			//0.0f represents a route brightness value of 0
-			if (b != 0.0f)
+			// NOTE:
+			// 1.0f represents a route brightness value of 255
+			// 0.0f represents a route brightness value of 0
+
+            float b = (float) (Car.Brightness.NextTrackPosition - Car.Brightness.PreviousTrackPosition);
+			
+			// if previous brightness position is less than 0,
+			// triggering axle has moved beyond bounds of route
+			// thus do no interpolation
+			if (b != 0.0f && Car.Brightness.PreviousTrackPosition > 0)
 			{
 				b = (float) (Car.FrontAxle.Follower.TrackPosition - Car.Brightness.PreviousTrackPosition) / b;
 				if (b < 0.0f) b = 0.0f;
@@ -46,8 +52,7 @@
 			//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
 			double frontDNB = System.Math.Min(CabBrightness, ccb);
 			b = (float) (Car.Brightness.NextTrackPosition - Car.Brightness.PreviousTrackPosition);
-			//1.0f represents a route brightness value of 255
-			//0.0f represents a route brightness value of 0
+
 			if (b != 0.0f)
 			{
 				b = (float) (Car.RearAxle.Follower.TrackPosition - Car.Brightness.PreviousTrackPosition) / b;
