@@ -121,7 +121,7 @@ namespace ObjectViewer.Trains
 						IsAirBrake = train.Handles.Brake is AirBrakeHandle,
 						BrakeNotches = train.Handles.Brake.MaximumNotch,
 						HasHoldBrake = train.Handles.HasHoldBrake,
-						HasConstSpeed = train.Handles.HasHoldBrake,
+						HasConstSpeed = train.Handles.HasHoldBrake
 					};
 
 					if (train.Handles.HasLocoBrake)
@@ -197,7 +197,7 @@ namespace ObjectViewer.Trains
 					}
 
 					EnablePluginSimulation = false;
-					PluginManager.CurrentPlugin.Panel = new int[0];
+					PluginManager.CurrentPlugin.Panel = Array.Empty<int>();
 				}
 
 				RequiredApply = false;

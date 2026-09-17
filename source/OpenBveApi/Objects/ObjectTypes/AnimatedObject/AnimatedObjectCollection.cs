@@ -9,8 +9,7 @@ namespace OpenBveApi.Objects
 	/// <summary>The AnimatedObjectCollection is a simple container class containing one or more animated objects</summary>
 	public class AnimatedObjectCollection : UnifiedObject
 	{
-
-		private readonly HostInterface currentHost;
+		internal readonly HostInterface currentHost;
 
 		/// <summary>The objects that this collection contains</summary>
 		public AnimatedObject[] Objects;

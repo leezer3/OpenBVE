@@ -85,8 +85,7 @@ namespace OpenBveApi.Packages
 			{
 				if (this.MinimumVersion == null)
 					return string.Empty;
-				else
-					return this.MinimumVersion.ToString();
+				return this.MinimumVersion.ToString();
 			}
 			set
 			{

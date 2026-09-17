@@ -76,12 +76,8 @@ namespace OpenBveApi
 		 */
 		/// <summary>The minimum number of vertices for basic optimisation to be performed on an object</summary>
 		public int ObjectOptimizationBasicThreshold;
-		/// <summary>The minimum number of vertices for full optimisation to be performed on an object</summary>
-		public int ObjectOptimizationFullThreshold;
 		/// <summary>The maximum number of sounds playing at any one time</summary>
 		public int SoundNumber;
-		/// <summary>Whether to use the new rendering method.</summary>
-		public bool IsUseNewRenderer;
 		/// <summary>Shadow map resolution per cascade. Off disables shadows.</summary>
 		public ShadowMapResolution ShadowResolution = ShadowMapResolution.Off;
 		/// <summary>Maximum distance from the camera at which shadows appear.</summary>

@@ -31,10 +31,7 @@ namespace ObjectViewer.Graphics
 		// options
 		internal bool OptionCoordinateSystem = false;
 		internal bool OptionInterface = true;
-
-		// background color
-		internal const int MaxBackgroundColor = 4;
-
+		
 		private Cube redAxisVAO;
 		private Cube greenAxisVAO;
 		private Cube blueAxisVAO;
@@ -235,11 +232,12 @@ namespace ObjectViewer.Graphics
 						errorPos = 64;
 					}
 					
-					if (Interface.LogMessages.Count == 1)
+					var logSnapshot = Interface.GetLogSnapshot();
+					if (logSnapshot.Count == 1)
 					{
 						Keys.Render(4, errorPos, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
 
-						if (Interface.LogMessages[0].Type != MessageType.Information)
+						if (logSnapshot[0].Type != MessageType.Information)
 						{
 							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 error message recently generated.", new Vector2(32 * scaleFactor, errorPos), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
 						}
@@ -249,25 +247,25 @@ namespace ObjectViewer.Graphics
 							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 message recently generated.", new Vector2(32 * scaleFactor, errorPos), TextAlignment.TopLeft, Interface.CurrentOptions.TextColor);
 						}
 					}
-					else if (Interface.LogMessages.Count > 1)
+					else if (logSnapshot.Count > 1)
 					{
 						Keys.Render(4, errorPos, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
-						bool error = Interface.LogMessages.Any(x => x.Type != MessageType.Information);
+						bool error = logSnapshot.Any(x => x.Type != MessageType.Information);
 
 						if (error)
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} error messages recently generated.", new Vector2(32 * scaleFactor, errorPos), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {logSnapshot.Count.ToString(culture)} error messages recently generated.", new Vector2(32 * scaleFactor, errorPos), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
 						}
 						else
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} messages recently generated.", new Vector2(32 * scaleFactor, errorPos), TextAlignment.TopLeft, Interface.CurrentOptions.TextColor);
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {logSnapshot.Count.ToString(culture)} messages recently generated.", new Vector2(32 * scaleFactor, errorPos), TextAlignment.TopLeft, Interface.CurrentOptions.TextColor);
 						}
 					}
 				}
 				else
 				{
 					OpenGlString.Draw(Fonts.SmallFont, $"Position: {Camera.AbsolutePosition.X.ToString("0.00", culture)}, {Camera.AbsolutePosition.Y.ToString("0.00", culture)}, {Camera.AbsolutePosition.Z.ToString("0.00", culture)}", new Vector2((int)(0.5 * Screen.Width - 88), 4), TextAlignment.TopLeft, Interface.CurrentOptions.TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, $"Renderer: New (GL 4)", new Vector2((int)(0.5 * Screen.Width - 88), 24), TextAlignment.TopLeft, Color128.White);
+					OpenGlString.Draw(Fonts.SmallFont, "Renderer: New (GL 4)", new Vector2((int)(0.5 * Screen.Width - 88), 24), TextAlignment.TopLeft, Color128.White);
 
 					int errorPos;
 					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
@@ -282,7 +280,7 @@ namespace ObjectViewer.Graphics
 					else
 					{
 						OpenGlString.Draw(Fonts.SmallFont, $"Position: {Camera.AbsolutePosition.X.ToString("0.00", culture)}, {Camera.AbsolutePosition.Y.ToString("0.00", culture)}, {Camera.AbsolutePosition.Z.ToString("0.00", culture)}", new Vector2((int)(0.5 * Screen.Width - 88), 4), TextAlignment.TopLeft, Interface.CurrentOptions.TextColor);
-						OpenGlString.Draw(Fonts.SmallFont, $"Renderer: New (GL 4)", new Vector2((int)(0.5 * Screen.Width - 88), 24), TextAlignment.TopLeft, Color128.White);
+						OpenGlString.Draw(Fonts.SmallFont, "Renderer: New (GL 4)", new Vector2((int)(0.5 * Screen.Width - 88), 24), TextAlignment.TopLeft, Color128.White);
 						keys = new[] { new[] { "F5" }, new[] { "F7" }, new[] { "del" }, new[] { "F8" }, new[] { "F10" } };
 						Keys.Render(4, 4, 24, Fonts.SmallFont, keys);
 						OpenGlString.Draw(Fonts.SmallFont, "Reload the currently open objects", new Vector2(32 * scaleFactor, 4), TextAlignment.TopLeft, Interface.CurrentOptions.TextColor);
@@ -316,11 +314,12 @@ namespace ObjectViewer.Graphics
 					keys = new[] { new[] { null, "8", "9" }, new[] { "4", "5", "6" }, new[] { null, "2", "3" } };
 					Keys.Render(Screen.Width - 60, Screen.Height - 60, 16, Fonts.SmallFont, keys);
 
-					if (Interface.LogMessages.Count == 1)
+					var logSnapshot2 = Interface.GetLogSnapshot();
+					if (logSnapshot2.Count == 1)
 					{
 						Keys.Render(4, errorPos, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
 
-						if (Interface.LogMessages[0].Type != MessageType.Information)
+						if (logSnapshot2[0].Type != MessageType.Information)
 						{
 							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 error message recently generated.", new Vector2(32 * scaleFactor, errorPos), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
 						}
@@ -330,18 +329,18 @@ namespace ObjectViewer.Graphics
 							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 message recently generated.", new Vector2(32 * scaleFactor, errorPos), TextAlignment.TopLeft, Interface.CurrentOptions.TextColor);
 						}
 					}
-					else if (Interface.LogMessages.Count > 1)
+					else if (logSnapshot2.Count > 1)
 					{
 						Keys.Render(4, errorPos, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
-						bool error = Interface.LogMessages.Any(x => x.Type != MessageType.Information);
+						bool error = logSnapshot2.Any(x => x.Type != MessageType.Information);
 
 						if (error)
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} error messages recently generated.", new Vector2(32 * scaleFactor, errorPos), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {logSnapshot2.Count.ToString(culture)} error messages recently generated.", new Vector2(32 * scaleFactor, errorPos), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
 						}
 						else
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} messages recently generated.", new Vector2(32 * scaleFactor, errorPos), TextAlignment.TopLeft, Interface.CurrentOptions.TextColor);
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {logSnapshot2.Count.ToString(culture)} messages recently generated.", new Vector2(32 * scaleFactor, errorPos), TextAlignment.TopLeft, Interface.CurrentOptions.TextColor);
 						}
 					}
 

@@ -58,7 +58,7 @@ namespace RouteManager2.SignalManager
 					expr += " ?";
 				}
 				aoc.Objects[0].StateFunction = new FunctionScript(currentHost, expr, false);
-				aoc.Objects[0].RefreshRate = 1.0 + 0.01 * new Random().NextDouble();
+				aoc.Objects[0].RefreshRate = 1.0 + 0.01 * currentHost.Random.NextDouble();
 				aoc.CreateObject(wpos, railTransformation, localTransformation, new ObjectCreationParameters(trackPosition, startingDistance, endingDistance, 1.0, sectionIndex));
 			}
 		}

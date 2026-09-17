@@ -38,6 +38,7 @@ namespace CsvRwRouteParser
 				EnabledHacks.CylinderHack = patch.CylinderHack;
 				EnabledHacks.DisableSemiTransparentFaces = patch.DisableSemiTransparentFaces;
 				EnabledHacks.InsufficientWallDikeArguments = patch.InsufficientWallDikeArguments;
+				EnabledHacks.RailEndedObject = patch.RailEndedObject;
 				Plugin.CurrentOptions.ObjectDisposalMode = patch.AccurateObjectDisposal ? ObjectDisposalMode.Accurate : ObjectDisposalMode.Legacy;
 
 				for (int i = 0; i < patch.ExpressionFixes.Count; i++)
@@ -166,5 +167,7 @@ namespace CsvRwRouteParser
 		internal bool AdhesionHack = false;
 		/// <summary>Whether walls / dikes with insufficient arguments are allowed</summary>
 		internal bool InsufficientWallDikeArguments;
+		/// <summary>Whether the RailEnded object behaviour is reproduced</summary>
+		internal bool RailEndedObject;
 	}
 }

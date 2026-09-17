@@ -27,7 +27,7 @@ namespace SoundManager
 		/// <summary>Updates the sound component. Should be called every frame.</summary>
 		/// <param name="timeElapsed">The time in seconds that elapsed since the last call to this function.</param>
 		/// <param name="model">The sound model.</param>
-		public void Update(double timeElapsed, SoundModels model)
+		public void Update(double timeElapsed)
 		{
 			//The time elapsed is used to work out the clamp factor
 			//If this is zero, or above 0.5, then this causes sounds bugs

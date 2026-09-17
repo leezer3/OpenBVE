@@ -17,7 +17,7 @@ namespace Plugin
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
 		/// <returns>The collection of animated objects.</returns>
-		private static AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding)
+		private AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding)
 		{
 			AnimatedObjectCollection Result = new AnimatedObjectCollection(currentHost)
 			{
@@ -28,7 +28,7 @@ namespace Plugin
 			int SoundCount = 0;
 			// load file
 
-			ConfigFile<AnimatedSection, AnimatedKey> cfg = new ConfigFile<AnimatedSection, AnimatedKey>(File.ReadAllLines(FileName, Encoding), FileName, Plugin.currentHost);
+			ConfigFile<AnimatedSection, AnimatedKey> cfg = new ConfigFile<AnimatedSection, AnimatedKey>(File.ReadAllLines(FileName, Encoding), FileName, currentHost);
 
 			while (cfg.RemainingSubBlocks > 0)
 			{
@@ -155,7 +155,7 @@ namespace Plugin
 							Block.GetFunctionScript(new[] { AnimatedKey.TranslateXFunction, AnimatedKey.TranslateXFunctionRPN, AnimatedKey.TranslateXScript }, Folder, out Result.Objects[ObjectCount].TranslateXFunction);
 							Block.GetFunctionScript(new[] { AnimatedKey.TranslateYFunction, AnimatedKey.TranslateYFunctionRPN, AnimatedKey.TranslateYScript }, Folder, out Result.Objects[ObjectCount].TranslateYFunction);
 							Block.GetFunctionScript(new[] { AnimatedKey.TranslateZFunction, AnimatedKey.TranslateZFunctionRPN, AnimatedKey.TranslateZScript }, Folder, out Result.Objects[ObjectCount].TranslateZFunction);
-							Block.GetFunctionScript(new[] { AnimatedKey.StateFunction, AnimatedKey.StateFunctionRPN, AnimatedKey.StateScript }, Folder, out Result.Objects[ObjectCount].StateFunction);
+							Block.GetFunctionScript(new[] { AnimatedKey.StateFunction, AnimatedKey.StateFunctionRPN, AnimatedKey.StateScript }, Folder, out Result.Objects[ObjectCount].StateFunction, stateFiles.Length);
 							Block.GetFunctionScript(new[] { AnimatedKey.TextureShiftXFunction, AnimatedKey.TextureShiftXFunctionRPN, AnimatedKey.TextureShiftXScript }, Folder, out Result.Objects[ObjectCount].TextureShiftXFunction);
 							Block.GetFunctionScript(new[] { AnimatedKey.TextureShiftYFunction, AnimatedKey.TextureShiftYFunctionRPN, AnimatedKey.TextureShiftYScript }, Folder, out Result.Objects[ObjectCount].TextureShiftYFunction);
 							// n.b. For unknown reasons, the ScaleFunction never had a RPN listing in the animated file. Michelle listed these as obsolete, and I've seen *one* use of them. As they're not really supposed to be used
@@ -195,7 +195,8 @@ namespace Plugin
 										break;
 									case "timetable":
 										currentHost.AddObjectForCustomTimeTable(Result.Objects[ObjectCount]);
-										Result.Objects[ObjectCount].StateFunction = new FunctionScript(currentHost, "timetable", true);
+										Result.Objects[ObjectCount].isTimeTableObject = true;
+										Result.Objects[ObjectCount].StateFunction = new FunctionScript(currentHost, "timetable", true, stateFiles.Length);
 										break;
 									default:
 										currentHost.AddMessage(MessageType.Error, false, "Unknown texture override type " + textureOverride + " in Section " + Block.Key + " in File " + FileName);
@@ -285,7 +286,7 @@ namespace Plugin
 								}
 								else
 								{
-									Result.Objects[ObjectCount].States[k].Prototype = new StaticObject(Plugin.currentHost);
+									Result.Objects[ObjectCount].States[k].Prototype = new StaticObject(currentHost);
 								}
 							}
 						}

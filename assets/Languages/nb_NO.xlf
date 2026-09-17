@@ -1354,6 +1354,12 @@
 						<source>Enabled</source>
 						<target>Påslått</target>
 					</trans-unit>
+					<trans-unit id="display_fpslimit">
+						<source>FPS Limit:</source>
+					</trans-unit>
+					<trans-unit id="display_fpslimit_unlimited">
+						<source>Unlimited</source>
+					</trans-unit>
 					<trans-unit id="display_window">
 						<source>Window mode</source>
 						<target>Vindusmodus</target>
@@ -1575,10 +1581,6 @@
 					<trans-unit id="advanced_load_advance">
 						<source>Load in advance</source>
 						<target>Last in råd</target>
-					</trans-unit>
-					<trans-unit id="advanced_is_use_new_renderer">
-						<source>Enable the new renderer</source>
-						<target>Slå på den nye rendereren</target>
 					</trans-unit>
 					<trans-unit id="advanced_timefactor">
 						<source>Accelerated Time Factor</source>

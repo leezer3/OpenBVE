@@ -20,8 +20,10 @@ namespace OpenBveApi.Routes
 		/// <param name="staticObject">The object to use for the background</param>
 		/// <param name="backgroundImageDistance">The user-selected viewing distance</param>
 		/// <param name="createCylinderCaps">Whether to auto-generate cylinder caps</param>
-		public BackgroundObject(StaticObject staticObject, double backgroundImageDistance, bool createCylinderCaps = false)
+		/// <param name="fogDistance">The fog distance</param>
+		public BackgroundObject(StaticObject staticObject, double backgroundImageDistance, bool createCylinderCaps = false, double fogDistance = 600)
 		{
+			FogDistance = fogDistance;
 			BackgroundImageDistance = backgroundImageDistance;
 			if (createCylinderCaps)
 			{
@@ -60,9 +62,9 @@ namespace OpenBveApi.Routes
 			{
 				if (staticObject.Mesh.Faces[i].Vertices.Length >= 3)
 				{
-					Vector4 v0 = new Vector4(staticObject.Mesh.Vertices[staticObject.Mesh.Faces[i].Vertices[0].Index].Coordinates, 1.0);
-					Vector4 v1 = new Vector4(staticObject.Mesh.Vertices[staticObject.Mesh.Faces[i].Vertices[1].Index].Coordinates, 1.0);
-					Vector4 v2 = new Vector4(staticObject.Mesh.Vertices[staticObject.Mesh.Faces[i].Vertices[2].Index].Coordinates, 1.0);
+					Vector4 v0 = new Vector4(staticObject.Mesh.Vertices[staticObject.Mesh.Faces[i].Vertices[0]].Coordinates, 1.0);
+					Vector4 v1 = new Vector4(staticObject.Mesh.Vertices[staticObject.Mesh.Faces[i].Vertices[1]].Coordinates, 1.0);
+					Vector4 v2 = new Vector4(staticObject.Mesh.Vertices[staticObject.Mesh.Faces[i].Vertices[2]].Coordinates, 1.0);
 					Vector4 w1 = v1 - v0;
 					Vector4 w2 = v2 - v0;
 					v0.Z *= -1.0;
@@ -108,9 +110,10 @@ namespace OpenBveApi.Routes
 		/// <summary>Creates a new background object from an animated object collection</summary>
 		/// <param name="animatedObject">The animated object collection to use for the background</param>
 		/// <param name="backgroundImageDistance">The user-selected viewing distance</param>
-		/// <param name="host">The host interface, used to register the dynamic object states</param>
-		public BackgroundObject(AnimatedObjectCollection animatedObject, double backgroundImageDistance, HostInterface host)
+		/// <param name="fogDistance">The fog distance</param>
+		public BackgroundObject(AnimatedObjectCollection animatedObject, double backgroundImageDistance, double fogDistance = 600)
 		{
+			FogDistance = fogDistance;
 			BackgroundImageDistance = backgroundImageDistance;
 			AnimatedObjectCollection animatedObjectCollection = (AnimatedObjectCollection)animatedObject.Clone();
 			//Register the internal dynamic object states so their VAOs are created
@@ -120,7 +123,7 @@ namespace OpenBveApi.Routes
 				{
 					continue;
 				}
-				host.CreateDynamicObject(ref obj.internalObject);
+				animatedObject.currentHost.CreateDynamicObject(ref obj.internalObject);
 				obj.internalObject.Prototype = obj.States[0].Prototype;
 				obj.CurrentState = 0;
 				foreach (ObjectState state in obj.States)

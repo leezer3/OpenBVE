@@ -57,7 +57,7 @@ namespace TrainManager.MsTsSounds
 						}
 						break;
 					case KujuTokenID.RandomSelection:
-						BufferIndex = TrainManagerBase.RandomNumberGenerator.Next(0, Buffers.Length - 1);
+						BufferIndex = TrainManagerBase.currentHost.Random.Next(0, Buffers.Length - 1);
 						break;
 				}
 				return Buffers[BufferIndex];

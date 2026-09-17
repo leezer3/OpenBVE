@@ -19,7 +19,7 @@ namespace ObjectViewer {
 		{
 			Program.TrainManager.Trains = new List<TrainBase>();
 			TrainManager.PlayerTrain = null;
-			Interface.LogMessages.Clear();
+			Interface.ClearLog();
 			Program.CurrentHost.ClearErrors();
 			Program.Renderer.Reset();
 			Program.Renderer.InitializeVisibility();
@@ -35,9 +35,29 @@ namespace ObjectViewer {
 	internal static class Interface {
 
 		internal static readonly List<LogMessage> LogMessages = new List<LogMessage>();
+		internal static readonly object LogLock = new object();
 
 		internal static void AddMessage(MessageType Type, bool FileNotFound, string Text) {
-			LogMessages.Add(new LogMessage(Type, FileNotFound, Text));
+			lock (LogLock)
+			{
+				LogMessages.Add(new LogMessage(Type, FileNotFound, Text));
+			}
+		}
+
+		internal static List<LogMessage> GetLogSnapshot()
+		{
+			lock (LogLock)
+			{
+				return new List<LogMessage>(LogMessages);
+			}
+		}
+
+		internal static void ClearLog()
+		{
+			lock (LogLock)
+			{
+				LogMessages.Clear();
+			}
 		}
 		
 		/// <summary>The current options in use</summary>

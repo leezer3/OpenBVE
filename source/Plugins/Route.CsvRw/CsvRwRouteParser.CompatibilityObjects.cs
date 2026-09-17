@@ -1,4 +1,4 @@
-﻿using Formats.OpenBve;
+using Formats.OpenBve;
 using Formats.OpenBve.XML;
 using OpenBveApi;
 using OpenBveApi.Interface;
@@ -139,8 +139,26 @@ namespace CsvRwRouteParser
 						return true;
 					}
 				}
-
-
+				// Seneca v2
+				if (fileName.StartsWith(@"seneca\", StringComparison.InvariantCultureIgnoreCase))
+				{
+					fn = "seneca2\\" + fileName.Substring(7);
+					try
+					{
+						//Catch completely malformed path references
+						n = Path.CombineFile(objectPath, fn);
+					}
+					catch
+					{
+						return false;
+					}
+					if (System.IO.File.Exists(n))
+					{
+						fileName = n;
+						//The object exists, and does not require a compatibility object
+						return true;
+					}
+				}
 			}
 			//We haven't found the object on-disk, so check the compatibility objects to see if a replacement is available
 			for (int i = 0; i < CompatibilityObjects.AvailableReplacements.Length; i++)

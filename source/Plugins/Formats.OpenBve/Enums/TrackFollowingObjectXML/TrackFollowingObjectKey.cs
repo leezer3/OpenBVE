@@ -26,6 +26,6 @@
 		StopTime,
 		Doors,
 		Direction,
-		PassingSpeed,
+		PassingSpeed
 	}
 }

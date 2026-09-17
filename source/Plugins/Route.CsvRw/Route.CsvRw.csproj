@@ -55,7 +55,6 @@
     <Compile Include="CsvRwRouteParser.ApplyRouteData.cs" />
     <Compile Include="CsvRwRouteParser.CompatibilityObjects.cs" />
     <Compile Include="CsvRwRouteParser.cs" />
-    <Compile Include="DuplicateKeyComparer.cs" />
     <Compile Include="Namespaces\NonTrack\Control.Commands.cs" />
     <Compile Include="Namespaces\NonTrack\Cycle.Commands.cs" />
     <Compile Include="Namespaces\NonTrack\Options.Commands.cs" />
@@ -70,6 +69,7 @@
     <Compile Include="Structures\Expression.cs" />
     <Compile Include="CsvRwRouteParser.Functions.cs" />
     <Compile Include="CsvRwRouteParser.ObjectDictionary.cs" />
+    <Compile Include="CsvRwRouteParser.ObjectLoader.cs" />
     <Compile Include="CsvRwRouteParser.Preprocess.cs" />
     <Compile Include="CsvRwRouteParser.PreprocessOptions.cs" />
     <Compile Include="CsvRwRouteParser.RouteData.cs" />
@@ -85,6 +85,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Structures\Miscellaneous\PointOfInterest.cs" />
     <Compile Include="Structures\Miscellaneous\Sound.cs" />
+    <Compile Include="Structures\RoutefileFormat.cs" />
     <Compile Include="Structures\Route\Crack.cs" />
     <Compile Include="Structures\Route\Form.cs" />
     <Compile Include="Structures\Route\FreeObject.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Structures\Signals\SignalData.BVE4.cs" />
     <Compile Include="Structures\Signals\Transponder.cs" />
     <Compile Include="Structures\StructureData.cs" />
+    <Compile Include="Structures\Tracks\RailSound.cs" />
     <Compile Include="Structures\Tracks\Switch.cs" />
     <Compile Include="Structures\Trains\Brightness.cs" />
     <Compile Include="Structures\Trains\DestinationEvent.cs" />
@@ -133,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
@@ -140,5 +143,12 @@
       <OutputFiles Include="$(TargetDir)$(TargetName).*" />
     </ItemGroup>
     <Move SourceFiles="@(OutputFiles)" DestinationFolder="$(TargetDir)Data\Plugins\" />
+  </Target>
+  <Import Project="..\..\..\packages\Microsoft.NETFramework.ReferenceAssemblies.net48.1.0.3\build\Microsoft.NETFramework.ReferenceAssemblies.net48.targets" Condition="Exists('..\..\..\packages\Microsoft.NETFramework.ReferenceAssemblies.net48.1.0.3\build\Microsoft.NETFramework.ReferenceAssemblies.net48.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\packages\Microsoft.NETFramework.ReferenceAssemblies.net48.1.0.3\build\Microsoft.NETFramework.ReferenceAssemblies.net48.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.NETFramework.ReferenceAssemblies.net48.1.0.3\build\Microsoft.NETFramework.ReferenceAssemblies.net48.targets'))" />
   </Target>
 </Project>

@@ -264,6 +264,13 @@ namespace OpenBveApi.Colors {
 		{
 			return $"#{BitConverter.ToString(new[] { R, G, B }).Replace("-", string.Empty)}";
 		}
+
+		/// <summary>Returns whether the color is a dark color</summary>
+		public bool IsDark()
+		{
+			double val = (R + G + B) / 3.0;
+			return val < 128;
+		}
 	}
 	
 	

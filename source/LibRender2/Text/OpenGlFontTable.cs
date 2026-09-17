@@ -132,7 +132,7 @@ namespace LibRender2.Text
 				System.Runtime.InteropServices.Marshal.Copy(data.Scan0, myBytes, 0, data.Stride * data.Height);
 				bitmap.UnlockBits(data);
 			}
-			Texture = new Texture(bitmap.Width, bitmap.Height, OpenBveApi.Textures.PixelFormat.RGBAlpha, myBytes, null);
+			Texture = new Texture(bitmap.Width, bitmap.Height, OpenBveApi.Textures.PixelFormat.RGBAlpha, myBytes, (OpenBveApi.Colors.Color24[])null);
 			bitmap.Dispose();
 		}
 

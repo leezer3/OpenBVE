@@ -25,8 +25,6 @@ namespace CsvRwRouteParser
 		internal double Accuracy;
 		/// <summary>The adhesion multiplier applying to the rail</summary>
 		internal double AdhesionMultiplier;
-		/// <summary>The starting track position</summary>
-		internal double StartingTrackPosition;
 		/// <summary>The power supplies available</summary>
 		internal Dictionary<PowerSupplyTypes, PowerSupply> PowerSupplies;
 

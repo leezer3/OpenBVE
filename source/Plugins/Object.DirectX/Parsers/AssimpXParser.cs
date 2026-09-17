@@ -35,16 +35,24 @@ namespace Plugin
 {
 	internal class AssimpXParser
 	{
-		private static string currentFolder;
-		private static string currentFile;
-		private static Matrix4D rootMatrix;
+		private string currentFolder;
+		private string currentFile;
+		private Matrix4D rootMatrix;
 
 		internal static StaticObject ReadObject(string fileName)
 		{
-			currentFolder = Path.GetDirectoryName(fileName);
-			currentFile = fileName;
-			rootMatrix = Matrix4D.NoTransformation;
+			// Per-file instance: route Structure objects load in parallel, so no static mutable state.
+			var parser = new AssimpXParser
+			{
+				currentFolder = Path.GetDirectoryName(fileName),
+				currentFile = fileName,
+				rootMatrix = Matrix4D.NoTransformation
+			};
+			return parser.ReadObjectInner(fileName);
+		}
 
+		private StaticObject ReadObjectInner(string fileName)
+		{
 #if !DEBUG
 			try
 			{
@@ -119,7 +127,7 @@ namespace Plugin
 				}
 
 				builder.Apply(ref obj, false, false);
-				obj.Mesh.CreateNormals();
+				obj.Mesh.FinalizeMesh();
 				if (rootMatrix != Matrix4D.NoTransformation)
 				{
 					for (int i = 0; i < obj.Mesh.Vertices.Length; i++)
@@ -160,7 +168,7 @@ namespace Plugin
 			
 		}
 
-		private static void  MeshBuilder(ref StaticObject obj, ref MeshBuilder builder, AssimpNET.X.Mesh mesh)
+		private void MeshBuilder(ref StaticObject obj, ref MeshBuilder builder, AssimpNET.X.Mesh mesh)
 		{
 			if (builder.Vertices.Count != 0)
 			{
@@ -326,7 +334,7 @@ namespace Plugin
 			}
 		}
 
-		private static void ChildrenNode(ref StaticObject obj, ref MeshBuilder builder, Node child)
+		private void ChildrenNode(ref StaticObject obj, ref MeshBuilder builder, Node child)
 		{
 			foreach (var mesh in child.Meshes)
 			{

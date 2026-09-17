@@ -28,7 +28,7 @@ namespace TrainManager.Cargo
 			Ratio = ratio;
 			double area = baseCar.Width * baseCar.Length;
 			const double passengersPerArea = 1.0; //Nominal 1 passenger per meter of interior space
-			double randomFactor = 0.9 + 0.2 * TrainManagerBase.RandomNumberGenerator.NextDouble();
+			double randomFactor = 0.9 + 0.2 * TrainManagerBase.currentHost.Random.NextDouble();
 			double passengers = Math.Round(randomFactor * Ratio * passengersPerArea * area);
 			const double massPerPassenger = 70.0; //70kg mass per passenger
 			passengerMass = passengers * massPerPassenger;

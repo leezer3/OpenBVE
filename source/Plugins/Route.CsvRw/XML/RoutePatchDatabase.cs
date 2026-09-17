@@ -63,6 +63,7 @@ namespace CsvRwRouteParser
 			patchBlock.GetValue(PatchDatabaseKey.DelayedAnimatedUpdates, out currentPatch.DelayedAnimatedUpdates);
 			patchBlock.GetValue(PatchDatabaseKey.AdhesionHack, out currentPatch.AdhesionHack);
 			patchBlock.GetValue(PatchDatabaseKey.InsufficientWallDikeArguments, out currentPatch.InsufficientWallDikeArguments);
+			patchBlock.GetValue(PatchDatabaseKey.RailEndedObject, out currentPatch.RailEndedObject);
 			if (patchBlock.GetEnumValue(PatchDatabaseKey.XParser, out XParsers parser))
 			{
 				currentPatch.XParser = parser;

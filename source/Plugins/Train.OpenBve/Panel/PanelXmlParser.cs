@@ -1713,7 +1713,7 @@ namespace Train.OpenBve
 							string currentDropFile = !Path.IsPathRooted(daytimeDropFiles[l]) ? Path.CombineFile(Train.TrainFolder, daytimeDropFiles[l]) : daytimeDropFiles[l];
 							if (!File.Exists(currentDropFile))
 							{
-								currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\Drop" + Plugin.RandomNumberGenerator.Next(1, 4) + ".png");
+								currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\Drop" + Plugin.CurrentHost.Random.Next(1, 4) + ".png");
 								TransparentColor = Color24.Blue;
 							}
 
@@ -1727,7 +1727,7 @@ namespace Train.OpenBve
 							string currentDropFile = !Path.IsPathRooted(nighttimeDropFiles[l]) ? Path.CombineFile(Train.TrainFolder, nighttimeDropFiles[l]) : nighttimeDropFiles[l];
 							if (!File.Exists(currentDropFile))
 							{
-								currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Night\\Drop" + Plugin.RandomNumberGenerator.Next(1, 4) + ".png");
+								currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Night\\Drop" + Plugin.CurrentHost.Random.Next(1, 4) + ".png");
 								TransparentColor = Color24.Blue;
 							}
 
@@ -1742,8 +1742,8 @@ namespace Train.OpenBve
 						// Create drops
 						for (int drop = 0; drop < numberOfDrops; drop++)
 						{
-							int DropTexture = Plugin.RandomNumberGenerator.Next(daytimeDrops.Count);
-							double currentDropY = Plugin.RandomNumberGenerator.NextDouble() * (bottomRight.Y - topLeft.Y) + topLeft.Y;
+							int DropTexture = Plugin.CurrentHost.Random.Next(daytimeDrops.Count);
+							double currentDropY = Plugin.CurrentHost.Random.NextDouble() * (bottomRight.Y - topLeft.Y) + topLeft.Y;
 							int panelDropIndex = Plugin.Panel2CfgParser.CreateElement(ref Train.Cars[Car].CarSections[CarSectionType.Interior].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White);
 							string f = drop + " raindrop";
 							try

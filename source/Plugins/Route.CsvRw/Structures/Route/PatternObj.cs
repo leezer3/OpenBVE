@@ -70,7 +70,6 @@ namespace CsvRwRouteParser
 				tf.UpdateAbsolute(tPos, true, false);
 				Vector3 startingPos = tf.WorldPosition;
 
-				List<GeneralEvent> e = Plugin.CurrentRoute.Tracks[RailIndex].Elements[tf.LastTrackElement].Events;
 				tf.UpdateRelative(Span, true, false);
 
 				Vector3 nextElementPos = tf.WorldPosition;
@@ -100,7 +99,6 @@ namespace CsvRwRouteParser
 
 				Transformation transform = new Transformation(d, u, s);
 
-				Vector3 v = new Vector3(Position.X, Position.Y, 0);
 				p += Position.X * transform.X + Position.Y * transform.Y + 0 * transform.Z;
 
 				currentObject.CreateObject(p, new Transformation(d, u, s), new ObjectCreationParameters(tPos, tPos + 100));

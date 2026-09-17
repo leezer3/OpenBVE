@@ -122,9 +122,9 @@ namespace AssimpNET.Obj
 		//! Object name
 		public readonly string ObjName;
 		//! Transformation matrix, stored in OpenGL format
-#pragma warning disable 169, IDE0051
+#pragma warning disable 169
 		public Matrix4D Transformation;
-#pragma warning restore 169, IDE0051
+#pragma warning restore 169
 		//! All sub-objects referenced by this object
 		public readonly List<WavefrontObject> SubObjects = new List<WavefrontObject>();
 		/// Assigned meshes

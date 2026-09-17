@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
@@ -41,7 +42,7 @@ namespace ObjectViewer.Trains
 
 		internal NearestTrainStatus()
 		{
-			PluginStates = new PluginState[0];
+			PluginStates = Array.Empty<PluginState>();
 		}
 
 		/// <summary>
@@ -109,7 +110,7 @@ namespace ObjectViewer.Trains
 			}
 			else
 			{
-				PluginManager.CurrentPlugin.Panel = new int[0];
+				PluginManager.CurrentPlugin.Panel = Array.Empty<int>();
 			}
 		}
 

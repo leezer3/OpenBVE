@@ -38,8 +38,7 @@ namespace CsvRwRouteParser
 					Plugin.CurrentHost.LoadObject(objectPath, System.Text.Encoding.Default, out UnifiedObject obj);
 					if (obj is AnimatedObjectCollection animatedObject)
 					{
-						BackgroundObject bo = new BackgroundObject(animatedObject, Plugin.CurrentOptions.ViewingDistance, Plugin.CurrentHost);
-						bo.FogDistance = FogDistance;
+						BackgroundObject bo = new BackgroundObject(animatedObject, Plugin.CurrentOptions.ViewingDistance, FogDistance);
 						return bo;
 					}
 					o = (StaticObject)obj;
@@ -62,8 +61,7 @@ namespace CsvRwRouteParser
 				}
 				else if (o != null)
 				{
-					BackgroundObject bo = new BackgroundObject(o, Plugin.CurrentOptions.ViewingDistance);
-					bo.FogDistance = FogDistance;
+					BackgroundObject bo = new BackgroundObject(o, Plugin.CurrentOptions.ViewingDistance, false, FogDistance);
 					return bo;
 				}
 			}

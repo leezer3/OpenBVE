@@ -194,17 +194,17 @@ namespace Train.MsTs
 					case 0:
 						currentCar.CarSections.Add(CarSectionType.Interior, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, currentCar));
 						CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Vector2.Null, panelSize, new Vector2(0.5, 0.5), 0.0, cabViews[0].Position, tDay, tNight, new Color32(255, 255, 255, 255));
-						currentCar.CarSections[CarSectionType.Interior].ViewDirection = new Transformation(cabViews[0].Direction.Y.ToRadians(), -cabViews[0].Direction.X.ToRadians(), -cabViews[0].Direction.Z.ToRadians());
+						currentCar.CarSections[CarSectionType.Interior].ViewDirection = new Vector3(cabViews[0].Direction.X.ToRadians(), cabViews[0].Direction.Y.ToRadians(), cabViews[0].Direction.Z.ToRadians());
 						break;
 					case 1:
 						currentCar.CarSections.Add(CarSectionType.HeadOutLeft, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, currentCar));
 						CreateElement(ref currentCar.CarSections[CarSectionType.HeadOutLeft].Groups[0], Vector2.Null, panelSize, new Vector2(0.5, 0.5), 0.0, cabViews[1].Position, tDay, tNight, new Color32(255, 255, 255, 255));
-						currentCar.CarSections[CarSectionType.HeadOutLeft].ViewDirection = new Transformation(cabViews[1].Direction.Y.ToRadians(), -cabViews[1].Direction.X.ToRadians(), -cabViews[1].Direction.Z.ToRadians());
+						currentCar.CarSections[CarSectionType.HeadOutLeft].ViewDirection = new Vector3(cabViews[1].Direction.X.ToRadians(), cabViews[1].Direction.Y.ToRadians(), cabViews[1].Direction.Z.ToRadians());
 						break;
 					case 2:
 						currentCar.CarSections.Add(CarSectionType.HeadOutRight, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, currentCar));
 						CreateElement(ref currentCar.CarSections[CarSectionType.HeadOutRight].Groups[0], Vector2.Null, panelSize, new Vector2(0.5, 0.5), 0.0, cabViews[2].Position, tDay, tNight, new Color32(255, 255, 255, 255));
-						currentCar.CarSections[CarSectionType.HeadOutRight].ViewDirection = new Transformation(cabViews[2].Direction.Y.ToRadians(), -cabViews[2].Direction.X.ToRadians(), -cabViews[2].Direction.Z.ToRadians());
+						currentCar.CarSections[CarSectionType.HeadOutRight].ViewDirection = new Vector3(cabViews[2].Direction.X.ToRadians(), cabViews[2].Direction.Y.ToRadians(), cabViews[2].Direction.Z.ToRadians());
 						break;
 				}
 			}
@@ -248,9 +248,14 @@ namespace Train.MsTs
 
 					break;
 				case KujuTokenID.Direction:
+					/*
+					 * WARNING:
+					 * Y,X,Z format
+					 * Values also need to be negated to get to GL format
+					 */
+					currentCabView.Direction.Y = -block.ReadSingle();
 					currentCabView.Direction.X = block.ReadSingle();
-					currentCabView.Direction.Y = block.ReadSingle();
-					currentCabView.Direction.Z = block.ReadSingle();
+					currentCabView.Direction.Z = -block.ReadSingle();
 					break;
 				case KujuTokenID.Position:
 					currentCabView.Position.X = block.ReadSingle();
@@ -610,10 +615,7 @@ namespace Train.MsTs
 				int n = Group.Elements.Length - 1;
 				int j = Group.Elements[n].States.Length;
 				Array.Resize(ref Group.Elements[n].States, j + 1);
-				Group.Elements[n].States[j] = new ObjectState(staticObject)
-				{
-					Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z),
-				};
+				Group.Elements[n].States[j] = new ObjectState(staticObject, Matrix4D.CreateTranslation(o.X, o.Y, -o.Z));
 				return n;
 			}
 			else
@@ -621,8 +623,7 @@ namespace Train.MsTs
 				int n = Group.Elements.Length;
 				Array.Resize(ref Group.Elements, n + 1);
 				Group.Elements[n] = new AnimatedObject(Plugin.CurrentHost);
-				Group.Elements[n].States = new[] { new ObjectState(staticObject) };
-				Group.Elements[n].States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
+				Group.Elements[n].States = new[] { new ObjectState(staticObject, Matrix4D.CreateTranslation(o.X, o.Y, -o.Z)) };
 				Plugin.CurrentHost.CreateDynamicObject(ref Group.Elements[n].internalObject);
 				return n;
 			}

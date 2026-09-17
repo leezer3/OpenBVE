@@ -17,6 +17,8 @@ namespace ObjectViewer
 	{
 		private ObjectOptimizationMode objectOptimizationMode;
 
+		internal int FPSLimit;
+
 		internal string ObjectSearchDirectory;
 
 		internal Key CameraMoveLeft;
@@ -35,6 +37,9 @@ namespace ObjectViewer
 
 		internal Color32 TextColor;
 
+		/// <summary>Whether the loading screen shows the decode progress bar</summary>
+		internal bool LoadingProgressBar = true;
+
 		/// <summary>
 		/// The mode of optimization to be performed on an object
 		/// </summary>
@@ -49,15 +54,12 @@ namespace ObjectViewer
 				{
 					case ObjectOptimizationMode.None:
 						ObjectOptimizationBasicThreshold = 0;
-						ObjectOptimizationFullThreshold = 0;
 						break;
 					case ObjectOptimizationMode.Low:
 						ObjectOptimizationBasicThreshold = 1000;
-						ObjectOptimizationFullThreshold = 250;
 						break;
 					case ObjectOptimizationMode.High:
 						ObjectOptimizationBasicThreshold = 10000;
-						ObjectOptimizationFullThreshold = 1000;
 						break;
 				}
 			}
@@ -65,6 +67,8 @@ namespace ObjectViewer
 
 		internal Options()
 		{
+			VerticalSynchronization = true;
+			FPSLimit = 0;
 			ObjectOptimizationMode = ObjectOptimizationMode.Low;
 			// Shadow settings use synced base defaults
 		}
@@ -81,10 +85,13 @@ namespace ObjectViewer
 				Builder.AppendLine("; Object Viewer specific options file");
 				Builder.AppendLine();
 				Builder.AppendLine("[display]");
+				Builder.AppendLine("vsync = " + (VerticalSynchronization ? "true" : "false"));
+				Builder.AppendLine("fpslimit = " + FPSLimit.ToString(Culture));
 				Builder.AppendLine("windowWidth = " + Program.Renderer.Screen.Width.ToString(Culture));
 				Builder.AppendLine("windowHeight = " + Program.Renderer.Screen.Height.ToString(Culture));
 				Builder.AppendLine("nearclipbase = " + NearClipBase.ToString(Culture));
 				Builder.AppendLine("autoReloadObjects = " + (AutoReloadObjects ? "true" : "false"));
+				Builder.AppendLine("showprogressbar = " + (LoadingProgressBar ? "true" : "false"));
 				Builder.AppendLine("backgroundColor = " + BackgroundColor);
 				Builder.AppendLine("textColor = " + TextColor);
 				Builder.AppendLine();
@@ -125,6 +132,11 @@ namespace ObjectViewer
 				MessageBox.Show("An error occured whilst saving the options to disk." + Environment.NewLine +
 								"Please ensure you have write permission.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
+		}
+
+		private static Key ResetIfUnknown(Key key, Key defaultKey)
+		{
+			return key == Key.Unknown ? defaultKey : key;
 		}
 
 		internal static void LoadOptions()
@@ -172,6 +184,12 @@ namespace ObjectViewer
 							block.TryGetValue(OptionsKey.WindowWidth, ref Interface.CurrentOptions.WindowWidth, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.WindowHeight, ref Interface.CurrentOptions.WindowHeight, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.NearClipBase, ref Interface.CurrentOptions.NearClipBase, NumberRange.Positive);
+							block.GetValue(OptionsKey.VSync, out Interface.CurrentOptions.VerticalSynchronization);
+							block.GetValue(OptionsKey.FPSLimit, out Interface.CurrentOptions.FPSLimit);
+							if (Interface.CurrentOptions.FPSLimit < 0)
+							{
+								Interface.CurrentOptions.FPSLimit = 0;
+							}
 							// ensure viewing distance is greater than the near clipping plane to avoid rendering issues
 							if (Interface.CurrentOptions.ViewingDistance <= Interface.CurrentOptions.NearClipBase)
 							{
@@ -179,6 +197,7 @@ namespace ObjectViewer
 							}
 
 							block.GetValue(OptionsKey.AutoReloadObjects, out Interface.CurrentOptions.AutoReloadObjects);
+							block.GetValue(OptionsKey.ShowProgressBar, out Interface.CurrentOptions.LoadingProgressBar);
 							block.GetColor24(OptionsKey.BackgroundColor, out Interface.CurrentOptions.BackgroundColor);
 							block.GetColor32(OptionsKey.TextColor, out Interface.CurrentOptions.TextColor);
 							break;
@@ -219,6 +238,13 @@ namespace ObjectViewer
 							block.GetEnumValue(OptionsKey.Down, out Interface.CurrentOptions.CameraMoveDown);
 							block.GetEnumValue(OptionsKey.Forward, out Interface.CurrentOptions.CameraMoveForward);
 							block.GetEnumValue(OptionsKey.Backward, out Interface.CurrentOptions.CameraMoveBackward);
+							// Reset any invalid or unknown camera keys back to their defaults
+							Interface.CurrentOptions.CameraMoveLeft = ResetIfUnknown(Interface.CurrentOptions.CameraMoveLeft, Key.A);
+							Interface.CurrentOptions.CameraMoveRight = ResetIfUnknown(Interface.CurrentOptions.CameraMoveRight, Key.D);
+							Interface.CurrentOptions.CameraMoveUp = ResetIfUnknown(Interface.CurrentOptions.CameraMoveUp, Key.W);
+							Interface.CurrentOptions.CameraMoveDown = ResetIfUnknown(Interface.CurrentOptions.CameraMoveDown, Key.S);
+							Interface.CurrentOptions.CameraMoveForward = ResetIfUnknown(Interface.CurrentOptions.CameraMoveForward, Key.Q);
+							Interface.CurrentOptions.CameraMoveBackward = ResetIfUnknown(Interface.CurrentOptions.CameraMoveBackward, Key.E);
 							break;
 
 					}

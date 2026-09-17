@@ -86,7 +86,21 @@ namespace ObjectViewer
 			comboBoxBackwards.DataSource = Enum.GetValues(typeof(Key));
 			comboBoxBackwards.SelectedItem = Interface.CurrentOptions.CameraMoveBackward;
 			checkBoxAutoReload.Checked = Interface.CurrentOptions.AutoReloadObjects;
+			checkBoxProgressBar.Checked = Interface.CurrentOptions.LoadingProgressBar;
 			checkBoxShadowFilterCascades.Checked = Interface.CurrentOptions.ShadowFilterCascades;
+
+			// VSync and FPS Limit
+			comboBoxVSync.SelectedIndex = Interface.CurrentOptions.VerticalSynchronization ? 1 : 0;
+			// Map FPSLimit value to combo index: 0=Unlimited, 1=30, 2=60, 3=120, 4=240
+			switch (Interface.CurrentOptions.FPSLimit)
+			{
+				case 30: comboBoxFPSLimit.SelectedIndex = 1; break;
+				case 60: comboBoxFPSLimit.SelectedIndex = 2; break;
+				case 120: comboBoxFPSLimit.SelectedIndex = 3; break;
+				case 240: comboBoxFPSLimit.SelectedIndex = 4; break;
+				default: comboBoxFPSLimit.SelectedIndex = 0; break;
+			}
+			UpdateFPSLimitEnabled();
 		}
 
 		private void InitializeSunSliders()
@@ -126,10 +140,22 @@ namespace ObjectViewer
 
 			// Convert spherical to direction vector (matching DirectionalLight docs)
 			float x = (float)(-Math.Cos(elevationRad) * Math.Sin(azimuthRad));
-			float y = (float)(Math.Sin(elevationRad));
+			float y = (float)Math.Sin(elevationRad);
 			float z = (float)(-Math.Cos(elevationRad) * Math.Cos(azimuthRad));
 
 			Program.Renderer.Lighting.OptionLightPosition = new Vector3(x, y, z);
+		}
+
+		private void UpdateFPSLimitEnabled()
+		{
+			bool vsyncEnabled = comboBoxVSync.SelectedIndex == 1;
+			comboBoxFPSLimit.Enabled = !vsyncEnabled;
+			labelFPSLimit.ForeColor = vsyncEnabled ? System.Drawing.SystemColors.GrayText : System.Drawing.SystemColors.ControlText;
+		}
+
+		private void comboBoxVSync_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			UpdateFPSLimitEnabled();
 		}
 
 		private void trackBarSunAzimuth_Scroll(object sender, EventArgs e)
@@ -222,7 +248,7 @@ namespace ObjectViewer
 			{
 				Interface.CurrentOptions.CurrentXParser = xParser;
 				Interface.CurrentOptions.CurrentObjParser = objParser;
-				Program.CurrentHost.StaticObjectCache.Clear(); // as a different parser may interpret differently
+				Program.CurrentHost.ClearObjectCaches(); // as a different parser may interpret differently
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 				{
 					if (Program.CurrentHost.Plugins[i].Object != null)
@@ -248,6 +274,15 @@ namespace ObjectViewer
 				Interface.CurrentOptions.ViewingDistance = (int)Math.Ceiling(Interface.CurrentOptions.NearClipBase) + 1;
 			}
 			Interface.CurrentOptions.AutoReloadObjects = checkBoxAutoReload.Checked;
+			Interface.CurrentOptions.LoadingProgressBar = checkBoxProgressBar.Checked;
+
+			// VSync and FPS Limit
+			Interface.CurrentOptions.VerticalSynchronization = comboBoxVSync.SelectedIndex == 1;
+			// Map combo index to FPSLimit value
+			int[] fpsPresets = { 0, 30, 60, 120, 240 };
+			Interface.CurrentOptions.FPSLimit = comboBoxFPSLimit.SelectedIndex >= 0 ? fpsPresets[comboBoxFPSLimit.SelectedIndex] : 0;
+			Program.Renderer.GameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? OpenTK.VSyncMode.On : OpenTK.VSyncMode.Off;
+			Program.Renderer.GameWindow.TargetRenderFrequency = Interface.CurrentOptions.FPSLimit > 0 ? Interface.CurrentOptions.FPSLimit : 0;
 
 			// Saving shadow settings
 			switch (comboBoxShadowResolution.SelectedIndex)
@@ -281,7 +316,7 @@ namespace ObjectViewer
 			Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
 			
 			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));
-			Program.RefreshObjects();
+			Program.RefreshObjectsAsync();
 			DialogResult = DialogResult.OK;
 			Close();
 		}

@@ -387,7 +387,7 @@ namespace Plugin
 				}
 			}
 			meshBuilder.Apply(ref parsedObject);
-			parsedObject.Mesh.CreateNormals();
+			parsedObject.Mesh.FinalizeMesh();
 			return parsedObject;
 		}
 

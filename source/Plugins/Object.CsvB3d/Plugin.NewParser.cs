@@ -25,6 +25,7 @@
 using Formats.OpenBve;
 using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -37,13 +38,24 @@ namespace Object.CsvB3d
 {
 	internal partial class NewParser
 	{
-		internal static StaticObject ReadObject(string fileName, Encoding textEncoding)
+		private readonly HostInterface currentHost;
+		private readonly OpenBveApi.Objects.CompatabilityHacks enabledHacks;
+		private readonly string compatibilityFolder;
+
+		internal NewParser(HostInterface currentHost, OpenBveApi.Objects.CompatabilityHacks enabledHacks, string compatibilityFolder)
 		{
-			CSVB3DFile<CSVB3DSection, CSVB3DKey> objectFile = new CSVB3DFile<CSVB3DSection, CSVB3DKey>(fileName, Plugin.currentHost);
+			this.currentHost = currentHost;
+			this.enabledHacks = enabledHacks;
+			this.compatibilityFolder = compatibilityFolder;
+		}
+
+		internal StaticObject ReadObject(string fileName, Encoding textEncoding)
+		{
+			CSVB3DFile<CSVB3DSection, CSVB3DKey> objectFile = new CSVB3DFile<CSVB3DSection, CSVB3DKey>(fileName, currentHost, textEncoding);
 			string basePath = Path.GetDirectoryName(fileName);
 
-			StaticObject staticObject = new StaticObject(Plugin.currentHost);
-			MeshBuilder currentMeshBuilder = new MeshBuilder(Plugin.currentHost);
+			StaticObject staticObject = new StaticObject(currentHost);
+			MeshBuilder currentMeshBuilder = new MeshBuilder(currentHost);
 			List<Vector3> currentNormals = new List<Vector3>();
 			Color32? lastTransparentColor = null;
 			currentMeshBuilder.Materials[0].Color = Color32.White;
@@ -59,9 +71,9 @@ namespace Object.CsvB3d
 					 * This allows Translate, Rotate etc. commands to be placed after the Texture section
 					 * See also https://github.com/leezer3/OpenBVE/issues/448
 					 */
-					currentMeshBuilder.Apply(ref staticObject, Plugin.enabledHacks.BveTsHacks);
+					currentMeshBuilder.Apply(ref staticObject, enabledHacks.BveTsHacks);
 					currentNormals.Clear();
-					currentMeshBuilder = new MeshBuilder(Plugin.currentHost);
+					currentMeshBuilder = new MeshBuilder(currentHost);
 				}
 
 				while (subBlock.RemainingDataValues > 0)
@@ -75,16 +87,16 @@ namespace Object.CsvB3d
 							break;
 						case CSVB3DKey.Face:
 						case CSVB3DKey.Face2:
-							if (subBlock.TryGetNextVertexIndexArray(out int[] faceVertices, Plugin.enabledHacks.BveTsHacks))
+							if (subBlock.TryGetNextVertexIndexArray(out int[] faceVertices, enabledHacks.BveTsHacks))
 							{
 								CheckForFaceHacks(fileName, currentMeshBuilder, staticObject, key == CSVB3DKey.Face2, ref faceVertices);
 								MeshFace f = new MeshFace(faceVertices.Length);
-								bool valid = true;
+								bool valid = faceVertices.Length > 0;
 								for (int j = 0; j < faceVertices.Length; j++)
 								{
 									if (faceVertices[j] >= currentMeshBuilder.Vertices.Count)
 									{
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "VertexIndex " + faceVertices[j] + " does not reference an existing vertex at Line " + subBlock.CurrentLine + " in file " + fileName);
+										currentHost.AddMessage(MessageType.Error, false, "VertexIndex " + faceVertices[j] + " does not reference an existing vertex at Line " + subBlock.CurrentLine + " in file " + fileName);
 										valid = false;
 									}
 									f.Vertices[j].Index = faceVertices[j];
@@ -94,7 +106,7 @@ namespace Object.CsvB3d
 									}
 								}
 
-								if (currentMeshBuilder.isCylinder && Plugin.enabledHacks.BveTsHacks && Plugin.enabledHacks.CylinderHack)
+								if (currentMeshBuilder.isCylinder && enabledHacks.BveTsHacks && enabledHacks.CylinderHack)
 								{
 									int l = f.Vertices.Length;
 									(f.Vertices[l - 2], f.Vertices[l - 1]) = (f.Vertices[l - 1], f.Vertices[l - 2]);
@@ -104,6 +116,7 @@ namespace Object.CsvB3d
 								{
 									f.Flags |= FaceFlags.Face2Mask;
 								}
+								f.Material = (ushort)(currentMeshBuilder.Materials.Length - 1);
 
 								if (valid)
 								{
@@ -121,8 +134,10 @@ namespace Object.CsvB3d
 								{
 									CheckForColorHacks(fileName, currentMeshBuilder, staticObject, ref c);
 								}
-
+								// https://github.com/leezer3/OpenBVE/issues/1397 : Color commands should not apply to following faces in a MeshBuilder
 								currentMeshBuilder.ApplyColor(c, key == CSVB3DKey.EmissiveColor || key == CSVB3DKey.EmissiveColorAll);
+								Array.Resize(ref currentMeshBuilder.Materials, currentMeshBuilder.Materials.Length + 1);
+								currentMeshBuilder.Materials[currentMeshBuilder.Materials.Length - 1] = new Material();
 								if (key == CSVB3DKey.ColorAll || key == CSVB3DKey.EmissiveColorAll)
 								{
 									staticObject.ApplyColor(c, key == CSVB3DKey.EmissiveColorAll);
@@ -152,8 +167,8 @@ namespace Object.CsvB3d
 								int numFaces = (int)cylinderProps[0];
 								if (numFaces < 2)
 								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "NumberOfFaces is expected to be at least 2 in " + subBlock.CurrentCommand + " at line " + subBlock.CurrentLine + " in file " + fileName);
-									if (Plugin.enabledHacks.BveTsHacks)
+									currentHost.AddMessage(MessageType.Error, false, "NumberOfFaces is expected to be at least 2 in " + subBlock.CurrentCommand + " at line " + subBlock.CurrentLine + " in file " + fileName);
+									if (enabledHacks.BveTsHacks)
 									{
 										// A cylinder with zero (or an empty) face count crashes BVE2 / BVE4
 										// With one face, it's just not shown
@@ -184,7 +199,7 @@ namespace Object.CsvB3d
 
 								if (Math.Abs(rotationVector.X) > 1 || Math.Abs(rotationVector.Y) > 1 || Math.Abs(rotationVector.Z) > 1)
 								{
-									Plugin.currentHost.AddMessage(MessageType.Warning, false, "Potentially incorrect rotational direction vector in " + subBlock.CurrentCommand + "- Angle should be the *last* argument at line " + subBlock.CurrentLine + " in file " + fileName);
+									currentHost.AddMessage(MessageType.Warning, false, "Potentially incorrect rotational direction vector in " + subBlock.CurrentCommand + "- Angle should be the *last* argument at line " + subBlock.CurrentLine + " in file " + fileName);
 								}
 
 								if (rotateProps[3] != 0.0)
@@ -207,19 +222,19 @@ namespace Object.CsvB3d
 								if (scaleVector.X == 0)
 								{
 									scaleVector.X = 1.0;
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "X is required to be different to zero in " + subBlock.CurrentCommand + " at line " + subBlock.CurrentLine + " in file " + fileName);
+									currentHost.AddMessage(MessageType.Error, false, "X is required to be different to zero in " + subBlock.CurrentCommand + " at line " + subBlock.CurrentLine + " in file " + fileName);
 								}
 
 								if (scaleVector.Y == 0)
 								{
 									scaleVector.Y = 1.0;
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is required to be different to zero in " + subBlock.CurrentCommand + " at line " + subBlock.CurrentLine + " in file " + fileName);
+									currentHost.AddMessage(MessageType.Error, false, "Y is required to be different to zero in " + subBlock.CurrentCommand + " at line " + subBlock.CurrentLine + " in file " + fileName);
 								}
 
 								if (scaleVector.Z == 0)
 								{
 									scaleVector.Z = 1.0;
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Z is required to be different to zero in " + subBlock.CurrentCommand + " at line " + subBlock.CurrentLine + " in file " + fileName);
+									currentHost.AddMessage(MessageType.Error, false, "Z is required to be different to zero in " + subBlock.CurrentCommand + " at line " + subBlock.CurrentLine + " in file " + fileName);
 								}
 
 								currentMeshBuilder.ApplyScale(scaleVector);
@@ -255,19 +270,23 @@ namespace Object.CsvB3d
 						case CSVB3DKey.Load:
 							if (subBlock.GetNextTexturePath(basePath, out string tDay, out string tNight))
 							{
-								currentMeshBuilder.Materials[0].DaytimeTexture = tDay;
-								currentMeshBuilder.Materials[0].NighttimeTexture = tNight;
-								if (!string.IsNullOrWhiteSpace(tDay) && !string.IsNullOrWhiteSpace(tNight) && Plugin.enabledHacks.BveTsHacks)
+								foreach (Material meshMaterial in currentMeshBuilder.Materials)
 								{
-									// https://github.com/leezer3/OpenBVE/wiki/Errata#lighting-behaviour-with-a-defined-daytime-and-nighttime-texture
-									currentMeshBuilder.Materials[0].Flags |= MaterialFlags.DisableLighting;
+									meshMaterial.DaytimeTexture = tDay;
+									meshMaterial.NighttimeTexture = tNight;
+									if (!string.IsNullOrWhiteSpace(tDay) && !string.IsNullOrWhiteSpace(tNight) && enabledHacks.BveTsHacks)
+									{
+										// https://github.com/leezer3/OpenBVE/wiki/Errata#lighting-behaviour-with-a-defined-daytime-and-nighttime-texture
+										meshMaterial.Flags |= MaterialFlags.DisableLighting;
+									}
 								}
+								
 							}
 							else
 							{
 								if (CheckForTextureHacks(fileName, ref tDay))
 								{
-									currentMeshBuilder.Materials[0].DaytimeTexture = tDay;
+									currentMeshBuilder.CurrentMaterial.DaytimeTexture = tDay;
 								}
 							}
 
@@ -275,7 +294,7 @@ namespace Object.CsvB3d
 						case CSVB3DKey.LoadLightMap:
 							if (subBlock.GetNextPath(basePath, out string lightMap))
 							{
-								currentMeshBuilder.Materials[0].LightMap = lightMap;
+								currentMeshBuilder.CurrentMaterial.LightMap = lightMap;
 							}
 							break;
 						case CSVB3DKey.Coordinates:
@@ -283,7 +302,7 @@ namespace Object.CsvB3d
 							{
 								if (idx >= currentMeshBuilder.Vertices.Count)
 								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "VertexIndex " + idx + " does not reference an existing vertex in command " + subBlock.CurrentCommand + " at line " + subBlock.CurrentLine + " in file " + fileName);
+									currentHost.AddMessage(MessageType.Error, false, "VertexIndex " + idx + " does not reference an existing vertex in command " + subBlock.CurrentCommand + " at line " + subBlock.CurrentLine + " in file " + fileName);
 									break;
 								}
 
@@ -300,7 +319,7 @@ namespace Object.CsvB3d
 						case CSVB3DKey.Transparent:
 							if (!subBlock.GetNextColor32(out c))
 							{
-								if (lastTransparentColor != null && Plugin.enabledHacks.BveTsHacks)
+								if (lastTransparentColor != null && enabledHacks.BveTsHacks)
 								{
 									// BVE2 / BVE4 use the *last* transparent color if none is set
 									c = (Color24)lastTransparentColor;
@@ -311,45 +330,67 @@ namespace Object.CsvB3d
 								}
 							}
 
-							currentMeshBuilder.Materials[0].TransparentColor = (Color24)c;
-							currentMeshBuilder.Materials[0].Flags |= MaterialFlags.TransparentColor;
+							foreach (Material meshMaterial in currentMeshBuilder.Materials)
+							{
+								meshMaterial.TransparentColor = (Color24)c;
+								meshMaterial.Flags |= MaterialFlags.TransparentColor;
+							}
+							
 							lastTransparentColor = c;
 							break;
 						case CSVB3DKey.BlendMode:
 							if (subBlock.GetBlendMode(out MeshMaterialBlendMode blendMode, out double glowHalfDistance, out GlowAttenuationMode glowMode))
 							{
-								currentMeshBuilder.Materials[0].BlendMode = blendMode;
-								currentMeshBuilder.Materials[0].GlowAttenuationData = Glow.GetAttenuationData(glowHalfDistance, glowMode);
+								foreach (Material meshMaterial in currentMeshBuilder.Materials)
+								{
+									meshMaterial.BlendMode = blendMode;
+									meshMaterial.GlowAttenuationData = Glow.GetAttenuationData(glowHalfDistance, glowMode);
+								}
 							}
 							break;
 						case CSVB3DKey.WrapMode:
 							if (subBlock.GetNextEnumValue(out OpenGlTextureWrapMode wrapMode))
 							{
-								currentMeshBuilder.Materials[0].WrapMode = wrapMode;
+								currentMeshBuilder.CurrentMaterial.WrapMode = wrapMode;
 							}
 							break;
 						case CSVB3DKey.Text:
 							if (subBlock.GetNextRawValue(out string text))
 							{
-								currentMeshBuilder.Materials[0].Text = text;
+								currentMeshBuilder.CurrentMaterial.Text = text;
 							}
 							break;
 						case CSVB3DKey.TextColor:
 							if (subBlock.GetNextColor32(out c))
 							{
-								currentMeshBuilder.Materials[0].TextColor = c;
+								currentMeshBuilder.CurrentMaterial.TextColor = c;
 							}
 							break;
 						case CSVB3DKey.TextPadding:
 							if (subBlock.GetNextVector2(out Vector2 textPadding))
 							{
-								currentMeshBuilder.Materials[0].TextPadding = textPadding;
+								currentMeshBuilder.CurrentMaterial.TextPadding = textPadding;
 							}
 							break;
 						case CSVB3DKey.DisableShadowCasting:
 							if (subBlock.GetNextBool(out bool disableShadowCasting) && disableShadowCasting)
 							{
-								currentMeshBuilder.Materials[0].Flags |= MaterialFlags.NoShadow;
+								currentMeshBuilder.CurrentMaterial.Flags |= MaterialFlags.NoShadow;
+							}
+							break;
+						case CSVB3DKey.CrossFading:
+							subBlock.GetNextBool(out bool crossFadingEnabled);
+							foreach (Material material in currentMeshBuilder.Materials)
+							{
+
+								if (crossFadingEnabled)
+								{
+									material.Flags |= MaterialFlags.CrossFadeTexture;
+								}
+								else
+								{
+									material.Flags &= ~MaterialFlags.CrossFadeTexture;
+								}
 							}
 							break;
 						default:
@@ -357,11 +398,9 @@ namespace Object.CsvB3d
 							break;
 					}
 				}
-
-
 			}
-			currentMeshBuilder.Apply(ref staticObject, Plugin.enabledHacks.BveTsHacks);
-			staticObject.Mesh.CreateNormals();
+			currentMeshBuilder.Apply(ref staticObject, enabledHacks.BveTsHacks);
+			staticObject.Mesh.FinalizeMesh();
 			return staticObject;
 		}
 	}

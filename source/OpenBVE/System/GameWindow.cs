@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -266,7 +267,7 @@ namespace OpenBve
 				Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight, Program.CurrentRoute.LightDefinitions);
 			}
 			Program.Renderer.RenderScene(TimeElapsed, RealTimeElapsed);
-			Program.Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
+			Program.Sounds.Update(TimeElapsed);
 			Program.Renderer.GameWindow.SwapBuffers();
 			Game.UpdateBlackBox();
 			// pause/menu
@@ -299,6 +300,11 @@ namespace OpenBve
 			if (Interface.CurrentOptions.UnloadUnusedTextures)
 			{
 				Program.Renderer.TextureManager.UnloadUnusedTextures(TimeElapsed);
+			}
+			if (!textureStatsLogged && simulationSetup && Environment.TickCount - setupTickCount > 10000)
+			{
+				textureStatsLogged = true;
+				Program.FileSystem.AppendToLogFile("Texture stats @10s: decodes " + Program.CurrentHost.TextureDecodeCalls + " calls / " + Program.CurrentHost.TextureDecodeMs + " ms | uploads " + LibRender2.Textures.TextureManager.UploadCount + " calls / " + LibRender2.Textures.TextureManager.UploadMs + " ms | GC gen0/1/2: " + GC.CollectionCount(0) + "/" + GC.CollectionCount(1) + "/" + GC.CollectionCount(2));
 			}
 			// finish
 			try
@@ -421,12 +427,20 @@ namespace OpenBve
 			}
 			Program.Renderer.Screen.Minimized = false;
 			Screen.WindowResize(Width,Height);
-			if (Program.Renderer.CurrentInterface == InterfaceType.SwitchChangeMap)
+			switch (Program.Renderer.CurrentInterface)
 			{
-				// call the show method again to trigger resize
-				Game.SwitchChangeDialog.Show();
+				case InterfaceType.SwitchChangeMap:
+					// call the show method again to trigger resize
+					Game.SwitchChangeDialog.Show();
+					break;
+				case InterfaceType.Menu:
+				case InterfaceType.GLMainMenu:
+					Game.Menu.OnResize();
+					break;
 			}
-			Game.Menu.OnResize();
+
+			Program.Renderer.Rectangle.Update();
+			Program.Renderer.OpenGlString.Update();
 		}
 
 		[DllImport("user32.dll")]
@@ -467,6 +481,7 @@ namespace OpenBve
 			Program.Renderer.MotionBlur.Initialize(Interface.CurrentOptions.MotionBlur);
 			if (string.IsNullOrEmpty(MainLoop.currentResult.RouteFile))
 			{
+				GameMenu.LogoPictureBox.Texture = Program.Renderer.ProgramLogo;
 				Game.Menu.PushMenu(MenuType.GameStart);
 				Loading.Complete = true;
 				Program.Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
@@ -628,12 +643,12 @@ namespace OpenBve
 				Timetable.CreateTimetable();
 			}
 			//Check if any critical errors have occured during the route or train loading
-			for (int i = 0; i < Interface.LogMessages.Count; i++)
+			foreach (LogMessage logMessage in Interface.GetLogSnapshot())
 			{
-				if (Interface.LogMessages[i].Type == MessageType.Critical)
+				if (logMessage.Type == MessageType.Critical)
 				{
 					string currentError = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "errors", "critical_loading" });
-					currentError = currentError.Replace("[error]", Interface.LogMessages[i].Text);
+					currentError = currentError.Replace("[error]", logMessage.Text);
 					MessageBox.Show(currentError, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "program", "title" }), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					Close();
 				}
@@ -975,22 +990,23 @@ namespace OpenBve
 			}
 			
 			// warnings / errors
-			if (Interface.LogMessages.Count != 0)
+			List<LogMessage> logSnapshot = Interface.GetLogSnapshot();
+			if (logSnapshot.Count != 0)
 			{
 				int filesNotFound = 0;
 				int errors = 0;
 				int warnings = 0;
-				for (int i = 0; i < Interface.LogMessages.Count; i++)
+				for (int i = 0; i < logSnapshot.Count; i++)
 				{
-					if (Interface.LogMessages[i].FileNotFound)
+					if (logSnapshot[i].FileNotFound)
 					{
 						filesNotFound++;
 					}
-					else if (Interface.LogMessages[i].Type == MessageType.Error)
+					else if (logSnapshot[i].Type == MessageType.Error)
 					{
 						errors++;
 					}
-					else if (Interface.LogMessages[i].Type == MessageType.Warning)
+					else if (logSnapshot[i].Type == MessageType.Warning)
 					{
 						warnings++;
 					}
@@ -1132,10 +1148,14 @@ namespace OpenBve
 			simulationSetup = true;
 			Program.FileSystem.AppendToLogFile(@"--------------------", false);
 			Program.FileSystem.AppendToLogFile(@"Loading complete, starting simulation.");
+			Program.FileSystem.AppendToLogFile("Texture stats @load: decodes " + Program.CurrentHost.TextureDecodeCalls + " calls / " + Program.CurrentHost.TextureDecodeMs + " ms | uploads " + LibRender2.Textures.TextureManager.UploadCount + " calls / " + LibRender2.Textures.TextureManager.UploadMs + " ms | GC gen0/1/2: " + GC.CollectionCount(0) + "/" + GC.CollectionCount(1) + "/" + GC.CollectionCount(2));
+			setupTickCount = Environment.TickCount;
 			Program.FileSystem.AppendToLogFile(@"--------------------", false);
 		}
 
 		private bool simulationSetup = false;
+		private int setupTickCount;
+		private bool textureStatsLogged;
 
 		public void LoadingScreenLoop()
 		{

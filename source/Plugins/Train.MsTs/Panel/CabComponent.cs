@@ -182,14 +182,16 @@ namespace Train.MsTs
 					Size.Y *= rH;
 					if (DaytimeTexture.Width > 0 && DaytimeTexture.Height > 0)
 					{
-						Texture[] textures = new Texture[TotalFrames];
+						Texture[] dayTextures = new Texture[TotalFrames];
+						Texture[] nightTextures = new Texture[TotalFrames];
 						int row = 0;
 						int column = 0;
 						int frameWidth = DaytimeTexture.Width / HorizontalFrames;
 						int frameHeight = DaytimeTexture.Height / VerticalFrames;
 						for (int k = 0; k < TotalFrames; k++)
 						{
-							Plugin.CurrentHost.RegisterTexture(DaytimeTexture, new TextureParameters(new TextureClipRegion(column * frameWidth, row * frameHeight, frameWidth, frameHeight), null), out textures[k]);
+							dayTextures[k] = TryGetTexture(Type, false, DaytimeTexture, frameWidth, frameHeight, column, row);
+							nightTextures[k] = TryGetTexture(Type, false, NightTimeTexture, frameWidth, frameHeight, column, row);
 							if (column < HorizontalFrames - 1)
 							{
 								column++;
@@ -202,14 +204,13 @@ namespace Train.MsTs
 						}
 
 						elementIndex = -1;
-						for (int k = 0; k < textures.Length; k++)
+						for (int k = 0; k < dayTextures.Length; k++)
 						{
 								
-							int l = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Position, Size, new Vector2(0.5, 0.5), componentLayer * CabviewFileParser.StackDistance, PanelPosition, textures[k], null, Color32.White, k != 0);
+							int l = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Position, Size, new Vector2(0.5, 0.5), componentLayer * CabviewFileParser.StackDistance, PanelPosition, dayTextures[k], nightTextures[k], Color32.White, k != 0);
 							if (k == 0) elementIndex = l;
 						}
 
-						f = CabviewFileParser.GetStackLanguageFromSubject(currentCar, panelSubject, Units);
 						switch (panelSubject)
 						{
 							case PanelSubject.Engine_Brake:
@@ -219,9 +220,12 @@ namespace Train.MsTs
 							case PanelSubject.Blower:
 							case PanelSubject.Cutoff:
 							case PanelSubject.Regulator:
+							case PanelSubject.Firehole:
+							case PanelSubject.Whistle:
 								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, FrameMappings);
 								break;
 							default:
+								f = CabviewFileParser.GetStackLanguageFromSubject(currentCar, panelSubject, Units);
 								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].StateFunction = new FunctionScript(Plugin.CurrentHost, f, false);
 								break;
 						}
@@ -246,12 +250,9 @@ namespace Train.MsTs
 						int frameHeight = DaytimeTexture.Height / VerticalFrames;
 						for (int k = 0; k < TotalFrames; k++)
 						{
-							Plugin.CurrentHost.RegisterTexture(DaytimeTexture, new TextureParameters(new TextureClipRegion(column * frameWidth, row * frameHeight, frameWidth, frameHeight), null), out dayTextures[k]);
-							if (NightTimeTexture != null)
-							{
-								Plugin.CurrentHost.RegisterTexture(NightTimeTexture, new TextureParameters(new TextureClipRegion(column * frameWidth, row * frameHeight, frameWidth, frameHeight), null), out nightTextures[k]);
-							}
-							
+							dayTextures[k] = TryGetTexture(Type, false, DaytimeTexture, frameWidth, frameHeight, column, row);
+							nightTextures[k] = TryGetTexture(Type, false, NightTimeTexture, frameWidth, frameHeight, column, row);
+
 							if (column < HorizontalFrames - 1)
 							{
 								column++;
@@ -270,7 +271,6 @@ namespace Train.MsTs
 							if (k == 0) elementIndex = l;
 						}
 
-						f = CabviewFileParser.GetStackLanguageFromSubject(currentCar, panelSubject, Units);
 						switch (panelSubject)
 						{
 							case PanelSubject.Direction:
@@ -293,9 +293,13 @@ namespace Train.MsTs
 							case PanelSubject.Water_Injector2:
 							case PanelSubject.Dynamic_Brake_Display:
 							case PanelSubject.Dynamic_Brake:
+							case PanelSubject.Doors_Display:
+							case PanelSubject.Whistle:
+							case PanelSubject.Reset:
 								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, FrameMappings);
 								break;
 							default:
+								f = CabviewFileParser.GetStackLanguageFromSubject(currentCar, panelSubject, Units);
 								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].StateFunction = new FunctionScript(Plugin.CurrentHost, f, false);
 								break;
 						}
@@ -386,26 +390,9 @@ namespace Train.MsTs
 						int frameHeight = DaytimeTexture.Height / VerticalFrames;
 						for (int k = 0; k < TotalFrames; k++)
 						{
-							if (column * frameWidth + frameWidth <= DaytimeTexture.Width && row * frameHeight + frameHeight <= DaytimeTexture.Height)
-							{
-								Plugin.CurrentHost.RegisterTexture(DaytimeTexture, new TextureParameters(new TextureClipRegion(column * frameWidth, row * frameHeight, frameWidth, frameHeight), null), out dayTextures[k]);
-							}
-							else
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS CVF Parser: Frame was outside the bounds of the DaytimeTexture for CabSignalDisplay.");
-							}
+							dayTextures[k] = TryGetTexture(Type, false, DaytimeTexture, frameWidth, frameHeight, column, row);
+							nightTextures[k] = TryGetTexture(Type, false, NightTimeTexture, frameWidth, frameHeight, column, row);
 
-							if (NightTimeTexture != null)
-							{
-								if (column * frameWidth + frameWidth <= NightTimeTexture.Width && row * frameHeight + frameHeight <= NightTimeTexture.Height)
-								{
-									Plugin.CurrentHost.RegisterTexture(NightTimeTexture, new TextureParameters(new TextureClipRegion(column * frameWidth, row * frameHeight, frameWidth, frameHeight), null), out nightTextures[k]);
-								}
-								else
-								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS CVF Parser: Frame was outside the bounds of the NightTimeTexture for CabSignalDisplay.");
-								}
-							}
 							if (column < HorizontalFrames - 1)
 							{
 								column++;
@@ -588,8 +575,6 @@ namespace Train.MsTs
 								break;
 							}
 						}
-						
-
 					}
 					break;
 				case KujuTokenID.DirIncrease:
@@ -663,7 +648,7 @@ namespace Train.MsTs
 							texturePath = OpenBveApi.Path.CombineFile(textureDirectory, fileName);
 							if (File.Exists(texturePath))
 							{
-								Plugin.CurrentHost.RegisterTexture(texturePath, new TextureParameters(null, null), out NightTimeTexture);
+								Plugin.CurrentHost.RegisterTexture(texturePath, new TextureParameters(null, null), out NightTimeTexture, true);
 							}
 						}
 						catch
@@ -677,10 +662,8 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.Position:
-					Position.X = block.ReadSingle();
-					Position.Y = block.ReadSingle();
-					Size.X = block.ReadSingle();
-					Size.Y = block.ReadSingle();
+					Position = block.ReadVector2();
+					Size = block.ReadVector2();
 					break;
 				case KujuTokenID.Type:
 					panelSubject = block.ReadEnumValue(default(PanelSubject));
@@ -700,7 +683,7 @@ namespace Train.MsTs
 						if (block.Length() - block.Position() > 3)
 						{
 							Block subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
-							PositiveColors[0] = new Tuple<double, Color24>(0, new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16()));
+							PositiveColors[0] = new Tuple<double, Color24>(0, subBlock.ReadColorRgb());
 						}
 					}
 					else
@@ -714,9 +697,7 @@ namespace Train.MsTs
 								Block subBlock = block.ReadSubBlock(new[] { KujuTokenID.ControlColour, KujuTokenID.SwitchVal });
 								if (subBlock.Token == KujuTokenID.ControlColour)
 								{
-									Color24 color = new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(),
-										(byte)subBlock.ReadInt16());
-									PositiveColors[i] = new Tuple<double, Color24>(value, color);
+									PositiveColors[i] = new Tuple<double, Color24>(value, subBlock.ReadColorRgb());
 								}
 								else
 								{
@@ -740,7 +721,7 @@ namespace Train.MsTs
 						if (block.Length() - block.Position() > 3)
 						{
 							Block subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
-							NegativeColors[0] = new Tuple<double, Color24>(double.NegativeInfinity, new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16()));
+							NegativeColors[0] = new Tuple<double, Color24>(double.NegativeInfinity, subBlock.ReadColorRgb());
 						}
 					}
 					else
@@ -754,9 +735,7 @@ namespace Train.MsTs
 								Block subBlock = block.ReadSubBlock(new[] { KujuTokenID.ControlColour, KujuTokenID.SwitchVal });
 								if (subBlock.Token == KujuTokenID.ControlColour)
 								{
-									Color24 color = new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(),
-										(byte)subBlock.ReadInt16());
-									NegativeColors[i] = new Tuple<double, Color24>(value, color);
+									NegativeColors[i] = new Tuple<double, Color24>(value, subBlock.ReadColorRgb());
 								}
 								else
 								{
@@ -768,18 +747,36 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.ControlColour:
-					ControlColor = new Color24((byte)block.ReadInt16(), (byte)block.ReadInt16(), (byte)block.ReadInt16());
+					ControlColor = block.ReadColorRgb();
 					break;
 				case KujuTokenID.Accuracy:
 					Accuracy = block.ReadInt16();
 					break;
 				case KujuTokenID.Area:
-					AreaPosition.X = block.ReadInt16();
-					AreaPosition.Y = block.ReadInt16();
-					AreaSize.X = block.ReadInt16();
-					AreaSize.Y = block.ReadInt16();
+					AreaPosition = block.ReadVector2();
+					AreaSize = block.ReadVector2();
 					break;
 			}
+		}
+
+		private Texture TryGetTexture(CabComponentType component, bool nightTime, Texture baseTexture, int frameWidth, int frameHeight, int column, int row)
+		{
+			if (baseTexture == null)
+			{
+				return null;
+			}
+
+			Texture t = null;
+			if (column * frameWidth + frameWidth <= baseTexture.Width && row * frameHeight + frameHeight <= baseTexture.Height)
+			{
+				Plugin.CurrentHost.RegisterTexture(baseTexture, new TextureParameters(new TextureClipRegion(column * frameWidth, row * frameHeight, frameWidth, frameHeight), null), out t);
+			}
+			else
+			{
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS CVF Parser: Frame was outside the bounds of the " +  (nightTime ? "NightTimeTexture" : "DaytimeTexture") + " for " + component);
+			}
+
+			return t;
 		}
 
 		internal CabComponent(Block block, Vector3 panelPosition)

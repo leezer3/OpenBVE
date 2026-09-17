@@ -56,6 +56,8 @@ namespace TrainManager.SafetySystems
 		public bool LoopingAlert;
 		/// <summary>Whether the alarm is to loop</summary>
 		public bool LoopingAlarm;
+		/// <summary>Whether the reset is currently pressed</summary>
+		public bool ResetPressed;
 
 		protected AbstractSafetySystem(CarBase car)
 		{

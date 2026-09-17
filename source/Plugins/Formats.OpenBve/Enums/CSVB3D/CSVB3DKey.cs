@@ -1,4 +1,4 @@
-﻿namespace Formats.OpenBve
+namespace Formats.OpenBve
 {
 	public enum CSVB3DKey
 	{
@@ -99,7 +99,7 @@
 		/// <summary>Whether normals are to be mirrored</summary>
 		MirrorNormals,
 		/// <summary>Unused by OpenBVE</summary>
-		GenerateNormals,
+		GenerateNormals
 		
 	}
 }

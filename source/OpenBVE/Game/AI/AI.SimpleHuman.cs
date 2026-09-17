@@ -49,7 +49,7 @@ namespace OpenBve
 				TimeLastProcessed = 0.0;
 				CurrentInterval = 1.0;
 				BrakeMode = false;
-				PersonalitySpeedFactor = 0.90 + 0.10 * Program.RandomNumberGenerator.NextDouble();
+				PersonalitySpeedFactor = 0.90 + 0.10 * Program.CurrentHost.Random.NextDouble();
 				CurrentSpeedFactor = PersonalitySpeedFactor;
 				PowerNotchAtWhichWheelSlipIsObserved = Train.Handles.Power.MaximumNotch + 1;
 				if (Train.Station >= 0 & Train.StationState == TrainStopState.Boarding)
@@ -83,15 +83,15 @@ namespace OpenBve
 				AIResponse response = Train.Plugin.UpdateAI(timeElapsed);
 				if (response == AIResponse.Short)
 				{
-					CurrentInterval = 0.2 + 0.1 * Program.RandomNumberGenerator.NextDouble();
+					CurrentInterval = 0.2 + 0.1 * Program.CurrentHost.Random.NextDouble();
 				}
 				else if (response == AIResponse.Medium)
 				{
-					CurrentInterval = 0.4 + 0.2 * Program.RandomNumberGenerator.NextDouble();
+					CurrentInterval = 0.4 + 0.2 * Program.CurrentHost.Random.NextDouble();
 				}
 				else if (response == AIResponse.Long)
 				{
-					CurrentInterval = 0.8 + 0.4 * Program.RandomNumberGenerator.NextDouble();
+					CurrentInterval = 0.8 + 0.4 * Program.CurrentHost.Random.NextDouble();
 				}
 				return response;
 			}
@@ -209,6 +209,7 @@ namespace OpenBve
 				Train.Handles.HoldBrake.ApplyState(false);
 				foreach (CarBase car in Train.Cars)
 				{
+					// operate traction model specific AI
 					if (car.TractionModel.Components.TryGetTypedValue(EngineComponent.Pantograph, out Pantograph pantograph) && pantograph.State == PantographState.Lowered)
 					{
 						pantograph.Raise();
@@ -232,6 +233,25 @@ namespace OpenBve
 								// gear change up
 								gearbox.GearUp();
 							}
+						}
+					}
+				}
+
+				if (Train.SafetySystems.Headlights != null)
+				{
+					if (Program.Renderer.Lighting.OptionAmbientColor.IsDark() || Program.Renderer.Lighting.OptionDiffuseColor.IsDark())
+					{
+						// if our lighting is dark, turn headlights to max
+						if (Train.SafetySystems.Headlights.CurrentState < Train.SafetySystems.Headlights.NumberOfStates)
+						{
+							Train.SafetySystems.Headlights.ChangeState();
+						}
+					}
+					else
+					{
+						if (Train.SafetySystems.Headlights.CurrentState != 0)
+						{
+							Train.SafetySystems.Headlights.ChangeState();
 						}
 					}
 				}
@@ -1403,7 +1423,7 @@ namespace OpenBve
 			{
 				if (doorOpenAttempted == false)
 				{
-					doorWaitingTimer = Program.RandomNumberGenerator.Next(0, 5);
+					doorWaitingTimer = Program.CurrentHost.Random.Next(0, 5);
 					doorOpenAttempted = true;
 				}
 				if (doorWaitingTimer < 0)

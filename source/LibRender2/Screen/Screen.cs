@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using OpenBveApi.Hosts;
 using OpenTK;
 
 namespace LibRender2.Screens
@@ -18,19 +19,34 @@ namespace LibRender2.Screens
 		/// <summary>Holds the available screen resolutions</summary>
 		public readonly List<ScreenResolution> AvailableResolutions;
 
-		internal Screen()
+		internal Screen(BaseRenderer renderer)
 		{
-			//Find all resolutions our screen is capable of displaying, but don't store HZ info etc.
-			AvailableResolutions = new List<ScreenResolution>();
-			ScreenResolution lastResolution = new ScreenResolution(0,0);
-			for (int i = 0; i < DisplayDevice.Default.AvailableResolutions.Count; i++)
+			/*
+			 * TrainEditor2 uses a GLControl
+			 * On the Linux SLD2 backend, this crashes when attempting to get the list of supported screen resolutions
+			 * As we don't care about fullscreen here, just ignore
+			 */
+			if (renderer.currentHost.Application != HostApplication.TrainEditor2 && renderer.currentHost.Application != HostApplication.TrainEditor)
 			{
-				if (DisplayDevice.Default.AvailableResolutions[i].Width != lastResolution.Width || DisplayDevice.Default.AvailableResolutions[i].Height != lastResolution.Height)
+				//Find all resolutions our screen is capable of displaying, but don't store HZ info etc.
+				AvailableResolutions = new List<ScreenResolution>();
+				ScreenResolution lastResolution = new ScreenResolution(0, 0);
+				for (int i = 0; i < DisplayDevice.Default.AvailableResolutions.Count; i++)
 				{
-					lastResolution = new ScreenResolution(DisplayDevice.Default.AvailableResolutions[i].Width, DisplayDevice.Default.AvailableResolutions[i].Height);
-					AvailableResolutions.Add(lastResolution);
+					if (DisplayDevice.Default.AvailableResolutions[i].Width != lastResolution.Width || DisplayDevice.Default.AvailableResolutions[i].Height != lastResolution.Height)
+					{
+						lastResolution = new ScreenResolution(DisplayDevice.Default.AvailableResolutions[i].Width, DisplayDevice.Default.AvailableResolutions[i].Height);
+						AvailableResolutions.Add(lastResolution);
+					}
 				}
 			}
+			else
+			{
+				// Default TE size
+				Width = 568;
+				Height = 593;
+			}
+			
 		}
 	}
 }

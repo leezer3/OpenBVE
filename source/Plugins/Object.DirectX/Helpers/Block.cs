@@ -408,9 +408,13 @@ namespace OpenBve.Formats.DirectX
 				s = s.Substring(0, ws).Trim();
 			}
 
-			if (!Enum.TryParse(s, true, out TemplateID currentToken))
+			TemplateID currentToken;
+			bool recognisedToken = Enum.TryParse(s, true, out currentToken);
+			if (!recognisedToken)
 			{
-				throw new Exception("Unrecognised token " + s);
+				// Unknown (e.g. app-defined template) data block: consume it and return
+				// null so the caller skips it. Custom templates are legal in X files
+				// (3ds Max KeyValuePair metadata); throwing made such objects unloadable.
 			}
 			
 			int level = 0;
@@ -426,6 +430,10 @@ namespace OpenBve.Formats.DirectX
 					currentPosition++;
 					if (level == 0)
 					{
+						if (!recognisedToken)
+						{
+							return null;
+						}
 						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(), currentToken);
 					}
 

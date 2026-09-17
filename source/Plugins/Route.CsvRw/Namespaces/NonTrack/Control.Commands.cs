@@ -20,7 +20,6 @@
 		/// <summary>Inserts a random number</summary>
 		Rnd,
 		/// <summary>Inserts the text stored in the matching Sub directive</summary>
-		Sub,
-
+		Sub
 	}
 }

@@ -15,9 +15,11 @@ namespace OpenBveApi.Textures {
 		/// <summary>The pixel format of the texture.</summary>
 		public readonly PixelFormat PixelFormat;
 		/// <summary>The texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</summary>
-		private readonly byte[][] MyBytes;
+		private byte[][] MyBytes;
 		/// <summary>The restricted color palette for this texture, or a null reference if the texture was 24/ 32 bit originally</summary>
 		public readonly Color24[] Palette;
+		/// <summary>The palette for indexed (Paletted) textures as 32-bit colors (includes alpha)</summary>
+		public readonly Color32[] Palette32;
 		/// <summary>Whether the texture is invalid and should be ignored</summary>
 		/// <remarks>Set when loading the texture fails unexpectedly</remarks>
 		public bool Ignore;
@@ -43,6 +45,21 @@ namespace OpenBveApi.Textures {
 		public int TotalFrames;
 		/// <summary>Whether this texture uses the compatible transparency mode (Matches to the nearest color in a restricted palette)</summary>
 		public bool CompatibleTransparencyMode;
+		/// <summary>The decoded texture, or a null reference if this texture could not be decoded.</summary>
+		/// <remarks>Only set for textures registered from a path; allows the texture cache to be pre-seeded without re-reading and re-decoding the file.</remarks>
+		public readonly Texture DecodedTexture;
+
+		
+		/// <summary>Gets the raw texture bytes for the selected frame index</summary>
+		/// <param name="frame">The frame index</param>
+		private byte[] GetBytesForFrame(int frame)
+		{
+			if (Origin is StreamingGifOrigin sgo) return sgo.GetFrameBytes(frame) ?? MyBytes[0];
+			if (MyBytes == null) return null;
+			if (frame < MyBytes.Length) return MyBytes[frame];
+			return MyBytes[0];
+		}
+
 
 		/// <summary>Gets the color of the given pixel</summary>
 		/// <param name="pix">The pixel index</param>
@@ -55,20 +72,28 @@ namespace OpenBveApi.Textures {
 			}
 
 			int firstByte;
+			byte[] fBytes = GetBytesForFrame(frame);
 			switch (PixelFormat)
 			{
 				case PixelFormat.Grayscale:
 					firstByte = pix;
-					return new Color24(MyBytes[frame][firstByte], MyBytes[frame][firstByte], MyBytes[frame][firstByte]);
+					return new Color24(fBytes[firstByte], fBytes[firstByte], fBytes[firstByte]);
 				case PixelFormat.GrayscaleAlpha:
 					firstByte = 2 * pix;
-					return new Color24(MyBytes[frame][firstByte], MyBytes[frame][firstByte], MyBytes[frame][firstByte]);
+					return new Color24(fBytes[firstByte], fBytes[firstByte], fBytes[firstByte]);
 				case PixelFormat.RGB:
 					firstByte = 3 * pix;
-					return new Color24(MyBytes[frame][firstByte], MyBytes[frame][firstByte + 1], MyBytes[frame][firstByte + 2]);
+					return new Color24(fBytes[firstByte], fBytes[firstByte + 1], fBytes[firstByte + 2]);
 				case PixelFormat.RGBAlpha:
 					firstByte = 4 * pix;
-					return new Color24(MyBytes[frame][firstByte], MyBytes[frame][firstByte + 1], MyBytes[frame][firstByte + 2]);
+					return new Color24(fBytes[firstByte], fBytes[firstByte + 1], fBytes[firstByte + 2]);
+				case PixelFormat.Paletted:
+					{
+						int idx = fBytes[pix] & 0xFF;
+						if (Palette32 != null && idx < Palette32.Length) return new Color24(Palette32[idx].R, Palette32[idx].G, Palette32[idx].B);
+						if (Palette != null && idx < Palette.Length) return Palette[idx];
+						return Color24.Black;
+					}
 				default:
 					throw new Exception("Unable to get a pixel value with invalid data.");
 			}
@@ -86,9 +111,15 @@ namespace OpenBveApi.Textures {
 				case PixelFormat.RGB:
 					return 255;
 				case PixelFormat.GrayscaleAlpha:
-					return MyBytes[frame][2 * pix + 1];
+					return GetBytesForFrame(frame)[2 * pix + 1];
 				case PixelFormat.RGBAlpha:
-					return MyBytes[frame][4 * pix + 3];
+					return GetBytesForFrame(frame)[4 * pix + 3];
+				case PixelFormat.Paletted:
+					{
+						int idx = GetBytesForFrame(frame)[pix] & 0xFF;
+						if (Palette32 != null && idx < Palette32.Length) return Palette32[idx].A;
+						return 255;
+					}
 				default:
 					return 255;
 			}
@@ -110,11 +141,11 @@ namespace OpenBveApi.Textures {
 				throw new ArgumentNullException(nameof(bytes));
 			}
 
-			if (bytes.Length != width * height * (int)pixelFormat)
+			if (bytes.Length != width * height * pixelFormat.BytesPerPixel())
 			{
 				throw new ArgumentException("The data bytes are not of the expected length.");
 			}
-			this.Origin = new ByteArrayOrigin(width, height, bytes);
+			this.Origin = new ByteArrayOrigin(width, height, pixelFormat, bytes);
 			this.MyOpenGlTextures = new OpenGlTexture[1][];
 			this.MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 			this.Size.X = width;
@@ -123,6 +154,26 @@ namespace OpenBveApi.Textures {
 			this.MyBytes = new byte[1][];
 			this.MyBytes[0] = bytes;
 			this.Palette = palette;
+			this.Palette32 = palette != null ? Array.ConvertAll(palette, c => new Color32(c.R, c.G, c.B, 255)) : null;
+		}
+
+		/// <summary>Creates a new paletted texture with 32-bit palette (with alpha)</summary>
+		public Texture(int width, int height, PixelFormat pixelFormat, byte[] bytes, Color32[] palette32)
+		{
+			if (bytes == null) throw new ArgumentNullException(nameof(bytes));
+			if (pixelFormat != PixelFormat.Paletted) throw new ArgumentException("Palette32 constructor requires Paletted format");
+			if (bytes.Length != width * height * pixelFormat.BytesPerPixel())
+				throw new ArgumentException("The data bytes are not of the expected length.");
+			this.Origin = new ByteArrayOrigin(width, height, pixelFormat, bytes, palette32);
+			this.MyOpenGlTextures = new OpenGlTexture[1][];
+			this.MyOpenGlTextures[0] = new[] { new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture() };
+			this.Size.X = width;
+			this.Size.Y = height;
+			this.PixelFormat = pixelFormat;
+			this.MyBytes = new byte[1][];
+			this.MyBytes[0] = bytes;
+			this.Palette32 = palette32;
+			this.Palette = palette32 != null ? Array.ConvertAll(palette32, c => new Color24(c.R, c.G, c.B)) : null;
 		}
 
 		/// <summary>Creates a new instance of this class.</summary>
@@ -141,25 +192,46 @@ namespace OpenBveApi.Textures {
 				throw new ArgumentNullException(nameof(bytes));
 			}
 
-			if (bytes[0].Length != width * height * (int)pixelFormat)
+			if (bytes[0].Length != width * height * pixelFormat.BytesPerPixel())
 			{
 				throw new ArgumentException("The data bytes are not of the expected length.");
 			}
 
-			Origin = new ByteArrayOrigin(width, height, bytes, frameInterval);
+			Origin = new ByteArrayOrigin(width, height, pixelFormat, bytes, frameInterval);
 			Size.X = width;
 			Size.Y = height;
 			PixelFormat = pixelFormat;
 			MyBytes = bytes;
 			Palette = null;
+			Palette32 = null;
 			MultipleFrames = true;
 			FrameInterval = frameInterval;
 			TotalFrames = bytes.Length;
-			MyOpenGlTextures = new OpenGlTexture[bytes.Length][];
-			for (int i = 0; i < bytes.Length; i++)
-			{
-				MyOpenGlTextures[i] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
-			}
+			// Single GL name for all frames – TexSubImage2D updates in place to avoid GL leak
+			MyOpenGlTextures = new OpenGlTexture[1][];
+			MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+		}
+
+		/// <summary>Creates a new paletted animated texture</summary>
+		public Texture(int width, int height, PixelFormat pixelFormat, byte[][] bytes, Color32[] palette32, double frameInterval)
+		{
+			if (bytes == null) throw new ArgumentNullException(nameof(bytes));
+			if (pixelFormat != PixelFormat.Paletted) throw new ArgumentException("Palette32 constructor requires Paletted format");
+			if (bytes[0].Length != width * height * pixelFormat.BytesPerPixel())
+				throw new ArgumentException("The data bytes are not of the expected length.");
+			Origin = new ByteArrayOrigin(width, height, pixelFormat, bytes, palette32, frameInterval);
+			Size.X = width;
+			Size.Y = height;
+			PixelFormat = pixelFormat;
+			MyBytes = bytes;
+			Palette32 = palette32;
+			Palette = palette32 != null ? Array.ConvertAll(palette32, c => new Color24(c.R, c.G, c.B)) : null;
+			MultipleFrames = true;
+			FrameInterval = frameInterval;
+			TotalFrames = bytes.Length;
+			// Single GL name for all frames – TexSubImage2D updates in place to avoid GL leak
+			MyOpenGlTextures = new OpenGlTexture[1][];
+			MyOpenGlTextures[0] = new[] { new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture() };
 		}
 
 		/// <summary>Creates a new texture.</summary>
@@ -172,7 +244,7 @@ namespace OpenBveApi.Textures {
 			PixelFormat = Origin.GetTexture(out Texture t) ? t.PixelFormat : PixelFormat.Invalid;
 			MyOpenGlTextures = new OpenGlTexture[1][];
 			MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
-			
+			DecodedTexture = PixelFormat == PixelFormat.Invalid ? null : t;
 		}
 
 		/// <summary>Creates a new texture.</summary>
@@ -212,6 +284,23 @@ namespace OpenBveApi.Textures {
 			MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 		}
 
+		/// <summary>Streaming GIF – desktop OpenGL (not browser) keeps file bytes 36 MB instead of 1205×172k 208 MB, decodes on demand via TexSubImage</summary>
+		public Texture(StreamingGifOrigin origin)
+		{
+			Origin = origin;
+			Size = origin.GetSize();
+			PixelFormat = PixelFormat.Paletted;
+			Palette32 = origin.GetPalette();
+			Palette = Palette32 != null ? Array.ConvertAll(Palette32, c => new Color24(c.R, c.G, c.B)) : null;
+			MultipleFrames = true;
+			TotalFrames = origin.GetFrameCount();
+			FrameInterval = origin.GetInterval();
+			MyBytes = new byte[1][];
+			MyBytes[0] = origin.GetFrameBytes(0) ?? new byte[(int)Size.X * (int)Size.Y];
+			MyOpenGlTextures = new OpenGlTexture[1][];
+			MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+		}
+
 		/// <summary>Gets the width of the texture in pixels.</summary>
 		public int Width
 		{
@@ -233,15 +322,26 @@ namespace OpenBveApi.Textures {
 		{
 			get
 			{
+				if (Origin is StreamingGifOrigin sgo && MultipleFrames)
+				{
+					return sgo.GetFrameBytes(CurrentFrame) ?? MyBytes[0];
+				}
 				if (MyBytes == null && Origin != null)
 				{
 					Origin.GetTexture(out Texture t);
 					return t.Bytes;
 				}
+
+				if (MyBytes == null)
+				{
+					return null;
+				}
 				if (MultipleFrames == false)
 				{
 					return MyBytes[0];
 				}
+				// Streaming: MyBytes holds 1 entry but TotalFrames clamped to avoid Out of range
+				if (MyBytes.Length == 1 && TotalFrames > 1) return MyBytes[0];
 				return MyBytes[CurrentFrame];
 			}
 		}
@@ -252,10 +352,12 @@ namespace OpenBveApi.Textures {
 		{
 			get
 			{
+				if (Origin is StreamingGifOrigin) return MyOpenGlTextures[0]; // single GL name + TexSubImage
 				if (MultipleFrames == false)
 				{
 					return MyOpenGlTextures[0];
 				}
+				if (MyOpenGlTextures.Length == 1) return MyOpenGlTextures[0];
 				return MyOpenGlTextures[CurrentFrame];
 			}
 		}
@@ -273,6 +375,11 @@ namespace OpenBveApi.Textures {
 			if (a.Origin != b.Origin) return false;
 			if (a.Size != b.Size) return false;
 			if (a.PixelFormat != b.PixelFormat) return false;
+			if (a.MyBytes == null || b.MyBytes == null)
+			{
+				// The CPU-side data of one instance has been released after uploading to OpenGL, so fall back to reference equality
+				return false;
+			}
 			if (a.MyBytes.Length != b.MyBytes.Length) return false;
 			for (int i = 0; i < a.MyBytes.Length; i++)
 			{
@@ -294,9 +401,10 @@ namespace OpenBveApi.Textures {
 			if (a.Origin != b.Origin) return true;
 			if (a.Size != b.Size) return true;
 			if (a.PixelFormat != b.PixelFormat) return true;
-			if (a.MyBytes == null)
+			if (a.MyBytes == null || b.MyBytes == null)
 			{
-				return b.MyBytes != null;
+				// The CPU-side data of one instance has been released after uploading to OpenGL, so fall back to reference equality
+				return true;
 			}
 			if (a.MyBytes.Length != b.MyBytes.Length) return true;
 			for (int i = 0; i < a.MyBytes.Length; i++)
@@ -331,6 +439,14 @@ namespace OpenBveApi.Textures {
 		}
 
 		// --- functions ---
+		/// <summary>Releases the retained CPU-side pixel data of this texture.</summary>
+		/// <remarks>Once released, the data is lazily re-decoded from the origin if required again.
+		/// Must not be used on multi-frame (animated) textures, whose frames are re-uploaded individually.</remarks>
+		public void ReleaseBytes()
+		{
+			MyBytes = null;
+		}
+
 		/// <summary>Applies the specified parameters onto this texture.</summary>
 		/// <param name="parameters">The parameters, or a null reference.</param>
 		/// <returns>The texture with the parameters applied.</returns>
@@ -354,15 +470,58 @@ namespace OpenBveApi.Textures {
 			knownTransparencyType = true;
 			switch (PixelFormat)
 			{
+				case PixelFormat.Paletted:
+				if (Palette32 != null)
+				{
+					bool hasTransparent = false, hasOpaque = false, hasAlpha = false;
+					// scan used indices vs palette alpha
+					byte[] indices = null;
+					if (Origin is StreamingGifOrigin sgo2) indices = sgo2.GetFrameBytes(CurrentFrame);
+					else if (MyBytes != null) indices = CurrentFrame < MyBytes.Length ? MyBytes[CurrentFrame] : MyBytes[0];
+					if (indices == null)
+					{
+						if (Origin == null || !Origin.GetTexture(out Texture released) || released == null) return TextureTransparencyType.Opaque;
+						return released.GetTransparencyType();
+					}
+					bool[] used = new bool[256];
+					for (int i = 0; i < indices.Length; i++) used[indices[i] & 0xFF] = true;
+					for (int i = 0; i < 256; i++)
+					{
+						if (!used[i]) continue;
+						byte a = i < Palette32.Length ? Palette32[i].A : (byte)255;
+						if (a == 0) hasTransparent = true;
+						else if (a == 255) hasOpaque = true;
+						else hasAlpha = true;
+					}
+					if (hasAlpha) { transparencyType = TextureTransparencyType.Alpha; return transparencyType; }
+					if (hasTransparent && hasOpaque) { transparencyType = TextureTransparencyType.Partial; return transparencyType; }
+					if (hasTransparent && !hasOpaque) { transparencyType = TextureTransparencyType.Transparent; return transparencyType; }
+				}
+				transparencyType = TextureTransparencyType.Opaque;
+				break;
 				case PixelFormat.RGB:
 					transparencyType = TextureTransparencyType.Opaque;
 					break;
 				case PixelFormat.RGBAlpha:
 					transparencyType = TextureTransparencyType.Opaque;
-					for (int i = 3; i < this.MyBytes[CurrentFrame].Length; i += 4)
+					byte[] frameBytes = MyBytes?[CurrentFrame];
+					if (frameBytes == null)
+					{
+						/*
+						 * The CPU-side copy has been released after uploading to OpenGL.
+						 * Obtain the data from the origin instead; the scan is then performed
+						 * on the returned texture, which also caches the result there.
+						 */
+						if (Origin == null || !Origin.GetTexture(out Texture released) || released == null)
+						{
+							return transparencyType;
+						}
+						return released.GetTransparencyType();
+					}
+					for (int i = 3; i < frameBytes.Length; i += 4)
 					{
 
-						switch (MyBytes[CurrentFrame][i])
+						switch (frameBytes[i])
 						{
 							case 0:
 								if (i == 3)
@@ -404,7 +563,7 @@ namespace OpenBveApi.Textures {
 		{
 			for (int frame = 0; frame < MyBytes.Length; frame++)
 			{
-				for (int i = 0; i < MyBytes.Length; i += 4)
+				for (int i = 0; i < MyBytes[frame].Length; i += 4)
 				{
 					if (MyBytes[frame][i] != 0 | MyBytes[frame][i + 1] != 0 | MyBytes[frame][i + 2] != 0)
 					{

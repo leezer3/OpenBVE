@@ -73,7 +73,7 @@ namespace RouteViewer
 								{
 									potentialFiles = Directory.GetFiles(SearchDirectory);
 									// n.b. sort order of returned files is not guaranteed, so case invariant sort
-									Array.Sort(potentialFiles, (x, y) => String.Compare(x, y, StringComparison.InvariantCultureIgnoreCase));
+									Array.Sort(potentialFiles, (x, y) => string.Compare(x, y, StringComparison.InvariantCultureIgnoreCase));
 									directoryList = Directory.GetDirectories(SearchDirectory);
 								}
 								catch
@@ -90,7 +90,7 @@ namespace RouteViewer
 								{
 									potentialFiles = Directory.GetFiles(SearchDirectory);
 									// n.b. sort order of returned files is not guaranteed, so case invariant sort
-									Array.Sort(potentialFiles, (x, y) => String.Compare(x, y, StringComparison.InvariantCultureIgnoreCase));
+									Array.Sort(potentialFiles, (x, y) => string.Compare(x, y, StringComparison.InvariantCultureIgnoreCase));
 									directoryList = Directory.GetDirectories(SearchDirectory);
 								}
 								catch
@@ -162,13 +162,14 @@ namespace RouteViewer
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.ErrorList:
-						Items = new MenuEntry[Interface.LogMessages.Count + 2];
-						Items[0] = Interface.LogMessages.Count == 0 ? new MenuCaption(menu, "No current errors / warnings.") : new MenuCaption(menu, Interface.LogMessages.Count + " total errors / warnings.");
+						var errorSnapshot = Interface.GetLogSnapshot();
+						Items = new MenuEntry[errorSnapshot.Count + 2];
+						Items[0] = errorSnapshot.Count == 0 ? new MenuCaption(menu, "No current errors / warnings.") : new MenuCaption(menu, errorSnapshot.Count + " total errors / warnings.");
 
-						for (int j = 0; j < Interface.LogMessages.Count; j++)
+						for (int j = 0; j < errorSnapshot.Count; j++)
 						{
-							Items[j + 1] = new MenuErrorDisplay(menu, Interface.LogMessages[j].Text);
-							switch (Interface.LogMessages[j].Type)
+							Items[j + 1] = new MenuErrorDisplay(menu, errorSnapshot[j].Text);
+							switch (errorSnapshot[j].Type)
 							{
 								case MessageType.Information:
 									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_information.png"), TextureParameters.NoChange, out Items[j + 1].Icon);

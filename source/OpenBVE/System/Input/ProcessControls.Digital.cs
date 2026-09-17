@@ -592,6 +592,11 @@ namespace OpenBve
 							if (TrainManager.PlayerTrain.Cars[d].Horns.Length > j)
 							{
 								TrainManager.PlayerTrain.Cars[d].Horns[j].Play();
+								if (j == 1 && TrainManager.PlayerTrain.Specs.HornTriggersBell)
+								{
+									// MSTS allows the horn to also simultaneously trigger the bell (US trains)
+									TrainManager.PlayerTrain.Cars[d].Horns[3].Play();
+								}
 								TrainManager.PlayerTrain.Plugin?.HornBlow(j == 0 ? HornTypes.Primary : j == 1 ? HornTypes.Secondary : HornTypes.Music);
 							}
 						}
@@ -1026,7 +1031,7 @@ namespace OpenBve
 					case Translations.Command.MiscMute:
 						// mute
 						Program.Sounds.GlobalMute = !Program.Sounds.GlobalMute;
-						Program.Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
+						Program.Sounds.Update(TimeElapsed);
 						break;
 					case Translations.Command.RouteInformation:
 						Game.RouteInfoOverlay.ProcessCommand(Translations.Command.RouteInformation);
@@ -1084,6 +1089,12 @@ namespace OpenBve
 				{
 					SafetySystem system = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].SafetySystems.ElementAt(i).Key;
 					TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].SafetySystems[system].ControlUp(Control.Command);
+				}
+
+				for (int i = 0; i < TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.Components.Count; i++)
+				{
+					EngineComponent component = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.Components.ElementAt(i).Key;
+					TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.Components[component].ControlUp(Control.Command);
 				}
 				TrainManager.PlayerTrain.Handles.ControlUp(Control);
 

@@ -40,8 +40,6 @@ namespace OpenBve
 			internal double KeyRepeatDelay;
 			/// <summary>The interval at which a held down key will repeat after the initial delay</summary>
 			internal double KeyRepeatInterval;
-			/// <summary>The current sound model</summary>
-			internal SoundModels SoundModel;
 			/// <summary>The range outside of which sounds will be inaudible</summary>
 			internal SoundRange SoundRange;
 			/// <summary>Whether warning messages are to be shown</summary>
@@ -143,13 +141,11 @@ namespace OpenBve
 				JoystickAxisThreshold = 0.0;
 				KeyRepeatDelay = 0.5;
 				KeyRepeatInterval = 0.1;
-				SoundModel = SoundModels.Inverse;
 				SoundRange = SoundRange.Low;
 				SoundNumber = 16;
 				ShowWarningMessages = true;
 				ShowErrorMessages = true;
 				ObjectOptimizationBasicThreshold = 10000;
-				ObjectOptimizationFullThreshold = 1000;
 				ObjectOptimizationVertexCulling = false;
 				RouteFolder = "";
 				TrainFolder = "";
@@ -328,7 +324,6 @@ namespace OpenBve
 				Builder.AppendLine();
 				Builder.AppendLine("[objectOptimization]");
 				Builder.AppendLine("basicThreshold = " + ObjectOptimizationBasicThreshold.ToString(Culture));
-				Builder.AppendLine("fullThreshold = " + ObjectOptimizationFullThreshold.ToString(Culture));
 				Builder.AppendLine("vertexCulling = " + ObjectOptimizationVertexCulling.ToString(Culture));
 				Builder.AppendLine();
 				Builder.AppendLine("[simulation]");
@@ -356,7 +351,6 @@ namespace OpenBve
 				Builder.AppendLine("raildrivermph = " + (RailDriverMPH ? "true" : "false"));
 				Builder.AppendLine();
 				Builder.AppendLine("[sound]");
-				Builder.AppendLine("model = " + SoundModel);
 				Builder.AppendLine("range = " + SoundRange);
 				Builder.AppendLine("number = " + SoundNumber.ToString(Culture));
 				Builder.AppendLine();
@@ -548,7 +542,6 @@ namespace OpenBve
 						case OptionsSection.ObjectOptimization:
 						{
 							block.GetValue(OptionsKey.BasicThreshold, out CurrentOptions.ObjectOptimizationBasicThreshold);
-							block.GetValue(OptionsKey.FullThreshold, out CurrentOptions.ObjectOptimizationFullThreshold);
 							block.GetValue(OptionsKey.VertexCulling, out CurrentOptions.ObjectOptimizationVertexCulling);
 							break;
 						}
@@ -582,7 +575,6 @@ namespace OpenBve
 							block.GetValue(OptionsKey.CursorHideDelay, out CurrentOptions.CursorHideDelay);
 							break;
 						case OptionsSection.Sound:
-							block.GetEnumValue(OptionsKey.Model, out CurrentOptions.SoundModel);
 							block.GetEnumValue(OptionsKey.Range, out CurrentOptions.SoundRange);
 							block.GetValue(OptionsKey.Number, out CurrentOptions.SoundNumber);
 							if (CurrentOptions.SoundNumber < 16) CurrentOptions.SoundNumber = 16;

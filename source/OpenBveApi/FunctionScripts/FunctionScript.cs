@@ -25,6 +25,8 @@ namespace OpenBveApi.FunctionScripting
 		public double Minimum { get; set; } = double.NaN;
 		/// <summary>We caught an exception on the last execution of the script, so further execution has been stopped</summary> 
 		private bool exceptionCaught;
+		/// <summary>The total number of states</summary>
+		public readonly int TotalStates;
 
 		/// <summary>Performs the function script, and returns the current result</summary>
 		public double ExecuteScript(AbstractTrain Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
@@ -117,9 +119,11 @@ namespace OpenBveApi.FunctionScripting
 		/// <param name="Host">A reference to the base application host interface</param>
 		/// <param name="Expression">The function string</param>
 		/// <param name="Infix">Whether this is in Infix notation (TRUE) or Postfix notation (FALSE)</param>
-		public FunctionScript(HostInterface Host, string Expression, bool Infix)
+		/// <param name="States">The total number of states</param>
+		public FunctionScript(HostInterface Host, string Expression, bool Infix, int States = 1)
 		{
 			currentHost = Host;
+			TotalStates = States;
 			if (Infix)
 			{
 				//If in infix format, we must convert to postfix first
@@ -1095,6 +1099,21 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.BoilerPressureOfCar;
 							n++; break;
+						case "railnumber":
+						case "tracknumber":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.TrackNumber;
+							n++; s++; if (s >= m) m = s; break;
+						case "railnumberindex":
+						case "tracknumberindex":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.TrackNumberIndex;
+							n++; break;
+						case "totalstates":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.TotalStates;
+							n++; s++; if (s >= m) m = s; break;
 						// default
 						default:
 							throw new System.IO.InvalidDataException("Unknown command " + Arguments[i] + " encountered in function script " + Expression);

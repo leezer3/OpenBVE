@@ -83,5 +83,8 @@ namespace OpenBveApi.Objects
 		public bool AggressiveRwBrackets;
 		/// <summary> Whether a wall / dike with insufficient arguments is accepted</summary>
 		public bool InsufficientWallDikeArguments;
+		/// <summary>Whether the RailEnded object behaviour is reproduced</summary>
+		/// <remarks>If an object is placed on an ended Rail in BVE2, it actually appears at the start of the last valid block</remarks>
+		public bool RailEndedObject;
 	}
 }

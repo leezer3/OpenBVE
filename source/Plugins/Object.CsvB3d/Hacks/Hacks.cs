@@ -34,9 +34,9 @@ namespace Object.CsvB3d
 	internal partial class NewParser
 	{
 		/// <summary>Checks for any applicable Face hacks</summary>
-		internal static void CheckForFaceHacks(string fileName, MeshBuilder currentMeshBuilder, StaticObject staticObject, bool isFace2, ref int[] indicies)
+		internal void CheckForFaceHacks(string fileName, MeshBuilder currentMeshBuilder, StaticObject staticObject, bool isFace2, ref int[] indicies)
 		{
-			if (Plugin.enabledHacks.BveTsHacks == false)
+			if (enabledHacks.BveTsHacks == false)
 			{
 				return;
 			}
@@ -212,7 +212,7 @@ namespace Object.CsvB3d
 				int[] faceVertexIndices = new int[indicies.Length];
 				for (int v = 0; v < currentFace.Vertices.Length; v++)
 				{
-					faceVertexIndices[v] = currentFace.Vertices[v].Index;
+					faceVertexIndices[v] = currentFace.Vertices[v];
 				}
 
 				Array.Sort(faceVertexIndices);
@@ -223,14 +223,14 @@ namespace Object.CsvB3d
 			}
 		}
 
-		internal static void CheckForColorHacks(string fileName, MeshBuilder currentMeshBuilder, StaticObject staticObject, ref Color32 c)
+		internal void CheckForColorHacks(string fileName, MeshBuilder currentMeshBuilder, StaticObject staticObject, ref Color32 c)
 		{
-			if (Plugin.enabledHacks.BveTsHacks == false)
+			if (enabledHacks.BveTsHacks == false)
 			{
 				return;
 			}
 
-			if (c.A == 0 && Plugin.enabledHacks.DisableSemiTransparentFaces)
+			if (c.A == 0 && enabledHacks.DisableSemiTransparentFaces)
 			{
 				/*
 				 * BVE2 didn't support semi-transparent faces at all
@@ -249,9 +249,9 @@ namespace Object.CsvB3d
 			}
 		}
 
-		internal static bool CheckForTextureHacks(string fileName, ref string textureFile)
+		internal bool CheckForTextureHacks(string fileName, ref string textureFile)
 		{
-			if (Plugin.enabledHacks.BveTsHacks == false)
+			if (enabledHacks.BveTsHacks == false)
 			{
 				return true;
 			}
@@ -260,7 +260,7 @@ namespace Object.CsvB3d
 			if (m.Success)
 			{
 				string s = "Signals\\Static\\" + m.Groups[0].Value.Replace(".bmp", ".png");
-				textureFile = Path.CombineFile(Plugin.CompatibilityFolder, s);
+				textureFile = Path.CombineFile(compatibilityFolder, s);
 				return true;
 			}
 

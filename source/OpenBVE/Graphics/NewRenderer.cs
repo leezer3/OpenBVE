@@ -43,21 +43,13 @@ namespace OpenBve.Graphics
 		public override void Initialize()
 		{
 			base.Initialize();
-			try
+			if (pickingShader == null)
 			{
-				if (pickingShader == null)
-				{
-					pickingShader = new Shader(this, "default", "picking", true);
-				}
+				pickingShader = new Shader(this, "default", "picking", true);
+			}
 
-				pickingShader.Activate();
-				pickingShader.Deactivate();
-			}
-			catch
-			{
-				Interface.AddMessage(MessageType.Error, false, "Initializing the touch shader failed- Falling back to legacy openGL.");
-				Interface.CurrentOptions.IsUseNewRenderer = false;
-			}
+			pickingShader.Activate();
+			pickingShader.Deactivate();
 
             events = new Events(this);
 			overlays = new Overlays(this);

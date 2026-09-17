@@ -45,7 +45,7 @@ namespace Formats.OpenBve.XML
 		public XMLFile(XDocument currentXML, string fileName, string rootPath, HostInterface currentHost) : base(-1, default, fileName, currentHost)
 		{
 			string path = Path.GetDirectoryName(fileName);
-			IEnumerable<XElement> DocumentNodes = currentXML.XPathSelectElements(rootPath);
+			IEnumerable<XElement> DocumentNodes = currentXML.XPathSelectElements(rootPath).ToList();
 			if (DocumentNodes.Any())
 			{
 				foreach (XElement rootNode in DocumentNodes)

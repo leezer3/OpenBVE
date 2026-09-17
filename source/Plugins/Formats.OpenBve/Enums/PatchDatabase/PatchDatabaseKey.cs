@@ -28,6 +28,7 @@
 		Incompatible,
 		DelayedAnimatedUpdates,
 		AdhesionHack,
-		InsufficientWallDikeArguments
+		InsufficientWallDikeArguments,
+		RailEndedObject
 	}
 }

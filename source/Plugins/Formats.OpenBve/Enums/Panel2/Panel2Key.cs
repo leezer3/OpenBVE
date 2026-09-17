@@ -70,6 +70,6 @@ namespace Formats.OpenBve
 		DigitalGauge,
 		LinearGauge,
 		Timetable,
-		Touch,
+		Touch
 	}
 }

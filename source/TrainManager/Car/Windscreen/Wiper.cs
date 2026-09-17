@@ -233,7 +233,7 @@ namespace TrainManager.Car
 			{
 				Windscreen.RainDrops[dropToRemove].Visible = false;
 				Windscreen.RainDrops[dropToRemove].IsSnowFlake = false;
-				Windscreen.RainDrops[dropToRemove].RemainingLife = 0.5 * TrainManagerBase.RandomNumberGenerator.NextDouble() * Windscreen.DropLife;
+				Windscreen.RainDrops[dropToRemove].RemainingLife = 0.5 * TrainManagerBase.currentHost.Random.NextDouble() * Windscreen.DropLife;
 				Windscreen.currentDrops--;
 			}
 		}

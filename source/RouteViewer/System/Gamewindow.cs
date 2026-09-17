@@ -1,6 +1,7 @@
 using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Hosts;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenTK;
 using OpenTK.Graphics;
@@ -18,22 +19,44 @@ namespace RouteViewer
         //Deliberately specify the default constructor with various overrides
         public RouteViewer(int width, int height, GraphicsMode currentGraphicsMode, string windowTitle, GameWindowFlags @default): base (width, height, currentGraphicsMode, windowTitle, @default)
         {
+            Init();
+        }
+
+        public RouteViewer(int width, int height, GraphicsMode currentGraphicsMode, string windowTitle, GameWindowFlags @default, GraphicsContextFlags flags): base(width, height, currentGraphicsMode, windowTitle, @default, DisplayDevice.Default, 3, 3, flags)
+        {
+            if (IsApple64)
+            {
+	            Interface.CurrentOptions.ForceForwardsCompatibleContext = true;
+            }
+            Init();
+        }
+
+        private static bool IsApple64 => Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4;
+
+        private void Init()
+        {
             try
             {
-                System.Drawing.Icon ico = new System.Drawing.Icon("data\\icon.ico");
-                Icon = ico;
+                Icon = new System.Drawing.Icon("data\\icon.ico");
             }
             catch
             {
 				// Ignored- Just an icon
             }
 
-            if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+            if (IsApple64)
             {
 	            // attempted workaround for massive CPU usage when idle
 	            TargetRenderFrequency = 5.0;
 			}
-			
+        }
+
+        // OS-X needs an explicit GL3 forward-compatible context, otherwise it falls back to GL 2.1 and the 410 shaders fail
+        public static RouteViewer Create(int width, int height, GraphicsMode mode, string title)
+        {
+            return IsApple64 || Interface.CurrentOptions.ForceForwardsCompatibleContext
+	            ? new RouteViewer(width, height, mode, title, GameWindowFlags.Default, GraphicsContextFlags.ForwardCompatible)
+	            : new RouteViewer(width, height, mode, title, GameWindowFlags.Default);
         }
 
         //Default Properties
@@ -78,7 +101,7 @@ namespace RouteViewer
 	            Game.SecondsSinceMidnight = 3600 * d.Hour + 60 * d.Minute + d.Second + 0.001 * d.Millisecond;
 	            ObjectManager.UpdateAnimatedWorldObjects(TimeElapsed, false);
 	            World.UpdateAbsoluteCamera(TimeElapsed);
-	            Program.Sounds.Update(TimeElapsed, SoundModels.Linear);
+	            Program.Sounds.Update(TimeElapsed);
             }
             Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight, Program.CurrentRoute.LightDefinitions);
             Program.Renderer.RenderScene(TimeElapsed);
@@ -92,7 +115,9 @@ namespace RouteViewer
 	        Program.Renderer.Screen.Width = Width;
 	        Program.Renderer.Screen.Height = Height;
 	        Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-        }
+			Program.Renderer.Rectangle.Update();
+			Program.Renderer.OpenGlString.Update();
+		}
 
         protected override void OnLoad(EventArgs e)
         {
@@ -131,18 +156,17 @@ namespace RouteViewer
 	    {
 			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_rv.cfg"));
 			// Minor hack:
-			// If we are currently loading, catch the first close event, and terminate the loader threads
-			// before actually closing the game-window.
-			if (Loading.Cancel)
-			{
-				return;
-			}
-			Program.Renderer.VisibilityThreadShouldRun = false;
+			// If we are currently loading, catch the close event, and terminate the loader threads
+			// before actually closing the game-window. DeInitialize (which flushes caches)
+			// must only run on the final close, otherwise GL resources are disposed
+			// while the window / loader is still alive.
 			if (!Loading.Complete && Program.CurrentRouteFile != null)
 			{
 				e.Cancel = true;
 				Loading.Cancel = true;
+				return;
 			}
+			Program.Renderer.VisibilityThreadShouldRun = false;
 			Program.Renderer.DeInitialize();
 			if (Program.CurrentHost.MonoRuntime)
 			{

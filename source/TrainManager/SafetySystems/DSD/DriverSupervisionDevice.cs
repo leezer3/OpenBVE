@@ -167,6 +167,11 @@ namespace TrainManager.SafetySystems
 					}
 					break;
 			}
+
+			if (controlDown == Translations.Command.DriverSupervision)
+			{
+				ResetPressed = true;
+			}
 		}
 
 		public override void ControlUp(Translations.Command controlUp)
@@ -198,6 +203,11 @@ namespace TrainManager.SafetySystems
 						AttemptReset(controlUp);
 					}
 					break;
+			}
+
+			if (controlUp == Translations.Command.DriverSupervision)
+			{
+				ResetPressed = false;
 			}
 		}
 	}

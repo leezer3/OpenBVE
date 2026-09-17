@@ -46,9 +46,6 @@ namespace OpenBve {
 		/// <summary>If the program is to be restarted, this contains the command-line arguments that should be passed to the process, or a null reference otherwise.</summary>
 		internal static string RestartArguments;
 
-		/// <summary>The random number generator used by this program.</summary>
-		internal static readonly Random RandomNumberGenerator = new Random();
-
 		internal static JoystickManager Joysticks;
 
 		internal static NewRenderer Renderer;

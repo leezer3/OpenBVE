@@ -40,19 +40,19 @@ namespace OpenBve.Graphics.Renderers
         private void ShowObject(ObjectState state)
         {
             touchableObject.Add(state);
-            VAOExtensions.CreateVAO(state.Prototype.Mesh, state.Prototype.Dynamic, renderer.pickingShader.VertexLayout, renderer);
+            VAOExtensions.CreateOrUpdateVAO(state.Prototype.Mesh, state.Prototype.Dynamic, renderer.pickingShader.VertexLayout, renderer);
         }
 
         private void PreRender()
         {
             touchableObject.Clear();
 
-            CarBase Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
-
-			if (!Loading.SimulationSetup)
+            if (!Loading.SimulationSetup || TrainManager.PlayerTrain == null)
             {
                 return;
             }
+
+            CarBase Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 
             if (renderer.Camera.CurrentMode != CameraViewMode.Interior && renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead || !Car.CarSections.ContainsKey(CarSectionType.Interior))
             {

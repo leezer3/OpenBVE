@@ -18,7 +18,7 @@ namespace TrainManager.Trains
 				return;
 			}
 
-			if (TrainManagerBase.RandomNumberGenerator.Next(0, 100) <= stopRequest.Probability)
+			if (TrainManagerBase.currentHost.Random.Next(0, 100) <= stopRequest.Probability)
 			{
 				//We have hit our probability roll
 				if (TrainManagerBase.CurrentRoute.Stations[stopRequest.StationIndex].StopMode == StationStopMode.AllRequestStop || (IsPlayerTrain && TrainManagerBase.CurrentRoute.Stations[stopRequest.StationIndex].StopMode == StationStopMode.PlayerRequestStop))
