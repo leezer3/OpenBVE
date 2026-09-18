@@ -538,6 +538,7 @@ namespace OpenBve {
 			checkboxCameraInteriorTransition.Checked = Interface.CurrentOptions.CameraInteriorTransition;
 			checkboxCameraExteriorTransition.Checked = Interface.CurrentOptions.CameraExteriorTransition;
 			updownCameraTransitionSpeed.Value = (decimal)Interface.CurrentOptions.CameraTransitionSpeed;
+			updownZoomScrollSpeed.Value = (decimal)Interface.CurrentOptions.ZoomScrollSpeed;
 			ListInputDevicePlugins();
 			if (Program.CurrentHost.MonoRuntime)
 			{
@@ -794,6 +795,7 @@ namespace OpenBve {
 			checkboxCameraInteriorTransition.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","camera_interior_transition"});
 			checkboxCameraExteriorTransition.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","camera_exterior_transition"});
 			labelCameraTransitionSpeed.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","camera_transition_duration"});
+			labelZoomScrollSpeed.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","camera_zoom_scroll_speed"});
 			checkboxToppling.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation_toppling"});
 			checkboxCollisions.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation_collisions"});
 			checkboxDerailments.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation_derailments"});
@@ -1008,6 +1010,20 @@ namespace OpenBve {
 			
 			checkboxKeyboardAlt.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_keyboard_modifiers_alt"});
 			radiobuttonJoystick.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_joystick"});
+			radiobuttonMouse.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_mouse"});
+			labelMouseButton.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_mouse_button"});
+			labelMouseModifier.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_keyboard_modifiers"});
+			checkboxMouseShift.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_keyboard_modifiers_shift"});
+			checkboxMouseCtrl.Location = new Point(checkboxMouseShift.Location.X + (checkboxMouseShift.Text.Length + 5) * 5, checkboxMouseCtrl.Location.Y);
+			checkboxMouseCtrl.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_keyboard_modifiers_ctrl"});
+			checkboxMouseAlt.Location = new Point(checkboxMouseCtrl.Location.X + (checkboxMouseCtrl.Text.Length + 5) * 5, checkboxMouseAlt.Location.Y);
+			checkboxMouseAlt.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_keyboard_modifiers_alt"});
+			comboboxMouseButton.Items.Clear();
+			comboboxMouseButton.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_left"}));
+			comboboxMouseButton.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_middle"}));
+			comboboxMouseButton.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_right"}));
+			comboboxMouseButton.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_scrollup"}));
+			comboboxMouseButton.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_mouse_scrolldown"}));
 			labelJoystickAssignmentCaption.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_joystick_assignment"});
 			textboxJoystickGrab.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_keyboard_assignment_grab"});
 			groupboxJoysticks.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","attached"});
