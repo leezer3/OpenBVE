@@ -1,4 +1,4 @@
-﻿// ReSharper disable InconsistentNaming
+// ReSharper disable InconsistentNaming
 namespace Plugin
 {
 	/// <summary>The available keys found in an animated file</summary>
@@ -63,6 +63,20 @@ namespace Plugin
 		ScaleYScript,
 		ScaleZFunction,
 		ScaleZScript,
-		StateScript
+		StateScript,
+		Type,
+		Direction,
+		Color,
+		Range,
+		Visual,
+		Power,
+		Exposure,
+		Normalize,
+		SoftFalloff,
+		Angle,
+		Softness,
+		ShowCone,
+		Shadow,
+		Size
 	}
 }
