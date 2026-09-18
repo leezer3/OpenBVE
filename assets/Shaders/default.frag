@@ -32,6 +32,8 @@ in vec4 oLightResult;
 uniform bool              uShadowEnabled;
 uniform float             uShadowStrength;
 uniform int               uShadowCascadeCount;
+uniform bool              uShadowSmooth;
+uniform float             uShadowFilterRadius;
 
 uniform sampler2DShadow   uShadowMap0;
 uniform sampler2DShadow   uShadowMap1;
@@ -83,7 +85,29 @@ uniform float uFogDensity;
 uniform bool uFogIsLinear;
 out vec4 fragColor;
 
+const float SHADOW_GOLDEN_ANGLE = 2.399963229728653; // golden angle in radians
+const float SHADOW_TWO_PI = 6.28318530718;
+
+// Interleaved Gradient Noise (Jimenez 2014) - per-pixel rotation without texture
+float interleavedGradientNoise(vec2 p) {
+    vec3 magic = vec3(0.06711056, 0.00583715, 52.9829189);
+    return fract(magic.z * fract(dot(p, magic.xy)));
+}
+
+// Vogel disk - uniform disk distribution via golden angle
+vec2 vogelDiskSample(int i, int n, float phi) {
+    float r = sqrt((float(i) + 0.5) / float(n));
+    float theta = float(i) * SHADOW_GOLDEN_ANGLE + phi;
+    return vec2(cos(theta), sin(theta)) * r;
+}
+
 /// Samples a single cascade using hardware PCF.
+/// When uShadowSmooth is true: 5-tap Vogel disk + IGN rotation (soft, no banding).
+/// Each tap is hardware PCF bilinear (2x2) -> 5 taps effectively cover a smooth disk.
+/// When false: 4-tap tight grid (0.5 texel) for sharp, pixel-perfect shadows.
+/// bias is ~1 texel of depth (auto per-cascade + user). normalBias is now Unity-style
+/// texels (typ. 0.3-1.0); slope acne is mostly handled by the vertex normal offset,
+/// so the depth-side slope term stays small to avoid peter-panning.
 float GetCascadeShadowFactor(sampler2DShadow shadowMap, vec4 posLightSpace, float bias, float normalBias)
 {
     vec3 projCoords = posLightSpace.xyz / posLightSpace.w;
@@ -97,28 +121,45 @@ float GetCascadeShadowFactor(sampler2DShadow shadowMap, vec4 posLightSpace, floa
         return 1.0;
     }
 
-    // Compute slope-scaled Z-bias dynamically based on the exact texel size fraction passed from C#.
+    // Slope-scaled Z-bias, deliberately small: 1 texel base + up to +1.5 texel at grazing.
+    // Capped so a stale config can't push shadows off their caster.
     vec3 normal = normalize(vNormal);
     vec3 lightDir = normalize(uLight.position);
-    float biasScale = clamp(1.0 - dot(normal, lightDir), 0.0, 1.0);
-    // Multiply the base Z-bias by a slope factor to perfectly cure acne on thin meshes
-    float activeBias = bias * (1.0 + biasScale * normalBias); 
+    float slope = clamp(1.0 - dot(normal, lightDir), 0.0, 1.0);
+    float slopeScale = min(max(normalBias, 0.0), 1.5);
+    float activeBias = bias * (1.0 + slope * slopeScale);
 
-    float currentDepth = projCoords.z - activeBias;
-
-    // Tight 4-tap rotated grid PCF for sharper shadows.
-    // Each tap is bilinear-averaged by the hardware sampler2DShadow.
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
-    float shadow = 0.0;
-    
-    // Rotated grid offsets at a tight 0.5 texels
-    shadow += texture(shadowMap, vec3(projCoords.xy + vec2(-0.5, -0.5) * texelSize, currentDepth));
-    shadow += texture(shadowMap, vec3(projCoords.xy + vec2( 0.5, -0.5) * texelSize, currentDepth));
-    shadow += texture(shadowMap, vec3(projCoords.xy + vec2(-0.5,  0.5) * texelSize, currentDepth));
-    shadow += texture(shadowMap, vec3(projCoords.xy + vec2( 0.5,  0.5) * texelSize, currentDepth));
-    shadow *= 0.25;
+    // Soft kernel spreads taps in UV; depth only needs a small guard, not full scaling.
+    // Sharp (0.5 texel) -> 1.0x, max 3.0 -> ~1.6x (was ~2.9x, caused detachment in soft mode).
+    float radiusForBias = uShadowSmooth ? clamp(uShadowFilterRadius, 0.5, 3.0) : 0.5;
+    float biasedDepth = projCoords.z - activeBias * (1.0 + (radiusForBias - 0.5) * 0.25);
+    // Hard clamp: never push more than ~4 texels of depth + epsilon.
+    biasedDepth = max(biasedDepth, projCoords.z - (bias * 4.0 + 0.00002));
 
-    return shadow;
+    if (uShadowSmooth) {
+        // Smooth path: Vogel disk + IGN - rotated per-pixel to hide sampling pattern.
+        // radius in texels: 1.5 = soft but detailed (exposed via uShadowFilterRadius, tune 1.0-2.5).
+        float radiusScaled = clamp(uShadowFilterRadius, 0.5, 3.0);
+        float phi = interleavedGradientNoise(gl_FragCoord.xy) * SHADOW_TWO_PI;
+        float shadow = 0.0;
+        // 5 taps, constant loop bounds -> driver will unroll; each tap is HW PCF bilinear.
+        for (int i = 0; i < 5; ++i) {
+            vec2 offset = vogelDiskSample(i, 5, phi) * texelSize * radiusScaled;
+            shadow += texture(shadowMap, vec3(projCoords.xy + offset, biasedDepth));
+        }
+        shadow *= 0.2;
+        return shadow;
+    } else {
+        // Sharp path: tight 4-tap grid at 0.5 texels, hardware PCF per tap.
+        float shadow = 0.0;
+        shadow += texture(shadowMap, vec3(projCoords.xy + vec2(-0.5, -0.5) * texelSize, biasedDepth));
+        shadow += texture(shadowMap, vec3(projCoords.xy + vec2( 0.5, -0.5) * texelSize, biasedDepth));
+        shadow += texture(shadowMap, vec3(projCoords.xy + vec2(-0.5,  0.5) * texelSize, biasedDepth));
+        shadow += texture(shadowMap, vec3(projCoords.xy + vec2( 0.5,  0.5) * texelSize, biasedDepth));
+        shadow *= 0.25;
+        return shadow;
+    }
 }
 
 /// Helper to sample a cascade by index.

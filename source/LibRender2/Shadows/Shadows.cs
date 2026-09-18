@@ -291,11 +291,34 @@ namespace LibRender2.ShadowMapping
 			shader.Activate();
 			shader.SetShadowEnabled(true);
 			shader.SetShadowStrength((float)renderer.currentOptions.ShadowStrength);
+			shader.SetShadowSmooth(renderer.currentOptions.ShadowSmooth);
+			// Auto-scale filter radius by cascade count, shadow distance and resolution
+			// keeps softness perceptually consistent: far distance / few cascades / high res → slightly larger texel radius
+			double baseRadius = renderer.currentOptions.ShadowFilterRadius;
+			double shadowDist = renderer.currentOptions.ShadowDrawDistance == ShadowDistance.ViewingDistance
+				? renderer.currentOptions.ViewingDistance
+				: (double)(int)renderer.currentOptions.ShadowDrawDistance;
+			int optCascadeCount = Math.Max(1, (int)renderer.currentOptions.ShadowCascades);
+			int res = Math.Max(512, (int)renderer.currentOptions.ShadowResolution);
+			double refDistPerCascade = 100.0; // Medium 300 / 3 cascades
+			double actualDistPerCascade = shadowDist / optCascadeCount;
+			double distFactor = Math.Sqrt(actualDistPerCascade / refDistPerCascade);
+			distFactor = Math.Max(0.7, Math.Min(1.8, distFactor));
+			double resFactor = Math.Sqrt((double)res / 2048.0);
+			resFactor = Math.Max(0.7, Math.Min(1.4, resFactor));
+			double effectiveRadius = baseRadius * distFactor * resFactor;
+			effectiveRadius = Math.Max(0.5, Math.Min(3.0, effectiveRadius));
+			shader.SetShadowFilterRadius((float)effectiveRadius);
 			shader.SetCurrentViewMatrix(renderer.CurrentViewMatrix);
 
 			Map.BindAllCascadesForReading(TextureUnit.Texture4);
 
 			int cascadeCount = Caster.CascadeCount;
+			// Normal bias is in Unity-style texel units (typical 0.3-1.0). Clamp so a stale
+			// config (old 2.0x multiplier default) can't detach shadows catastrophically.
+			float normalBiasTexels = (float)renderer.currentOptions.ShadowNormalBias;
+			if (normalBiasTexels < 0.0f) normalBiasTexels = 0.0f;
+			if (normalBiasTexels > 4.0f) normalBiasTexels = 4.0f;
 			for (int i = 0; i < cascadeCount; i++)
 			{
 				shader.SetCascadeLightSpaceMatrix(i, Caster.LightSpaceMatrices[i]);
@@ -303,12 +326,14 @@ namespace LibRender2.ShadowMapping
 				// Split distance = the view-space Z where this cascade ends.
 				shader.SetShadowSplitDistance(i, (float)Caster.SplitDistances[i]);
 				shader.SetCascadeBias(i, Caster.CascadeBiases[i] + (float)renderer.currentOptions.ShadowBias);
-				shader.SetNormalBias(i, (float)renderer.currentOptions.ShadowNormalBias);
+				shader.SetNormalBias(i, normalBiasTexels);
+				shader.SetTexelWorldSize(i, Caster.TexelWorldSizes[i]);
 			}
 
 			for (int i = cascadeCount; i < 4; i++)
 			{
 				shader.SetShadowSplitDistance(i, 0.0f);
+				shader.SetTexelWorldSize(i, cascadeCount > 0 ? Caster.TexelWorldSizes[cascadeCount - 1] : 0.05f);
 			}
 			shader.SetShadowCascadeCount(cascadeCount);
 		}
