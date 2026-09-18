@@ -112,7 +112,7 @@
       <HintPath>..\..\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK, Version=3.3.3.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OpenTK-OpenBVE.1.0.6\lib\net20\OpenTK.dll</HintPath>
+      <HintPath>..\..\packages\OpenTK-OpenBVE.1.0.7\lib\net20\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="PIEHid32Net">
       <HintPath>..\..\dependencies\PIEHid32Net.dll</HintPath>
@@ -356,6 +356,7 @@
       <DependentUpon>formMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="..\..\assets\Controls\Default.controls" />
+    <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
