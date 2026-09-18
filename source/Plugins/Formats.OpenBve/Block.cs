@@ -750,6 +750,20 @@ namespace Formats.OpenBve
 			return false;
 		}
 
+		/// <summary>Unconditionally gets the next value as a string</summary>
+		public virtual void GetNextValue(out T2 valueType, out string value)
+		{
+			if (keyValuePairs.Count > 0)
+			{
+				valueType = keyValuePairs.Keys.First();
+
+				keyValuePairs.TryRemove(valueType, out KeyValuePair<int, string> v);
+				value = v.Value;
+			}
+			valueType = default;
+			value = string.Empty;
+		}
+
 		/// <summary>Reads the specified Enum value from the block</summary>
 		public virtual bool GetEnumValue<T3>(T2 key, out T3 enumValue, out Color32 color) where T3 : struct, Enum
 		{
