@@ -65,6 +65,7 @@ namespace ObjectViewer
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+	        FrameLimiter.StartFrame();
 	        if (Program.Renderer.RenderThreadJobWaiting)
 	        {
 		        while (!Program.Renderer.RenderThreadJobs.IsEmpty)
@@ -297,6 +298,9 @@ namespace ObjectViewer
             Program.Renderer.Lighting.Initialize();
             Program.Renderer.RenderScene(timeElapsed);
             SwapBuffers();
+			// Applies the FPS limit; a hard cap of 1000fps applies when unlimited is selected,
+			// although no pacing is performed above around 330fps as sleep granularity makes it impractical
+			FrameLimiter.ApplyLimit(Interface.CurrentOptions.FPSLimit);
 
 			RenderRealTimeElapsed = 0.0;
         }
@@ -374,6 +378,7 @@ namespace ObjectViewer
 	        Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));
 			Program.Renderer.VisibilityThreadShouldRun = false;
 			Program.Renderer.DeInitialize();
+			FrameLimiter.RestoreTimerResolution();
 			if (Program.CurrentHost.MonoRuntime)
 			{
 				Environment.Exit(0);

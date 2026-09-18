@@ -131,10 +131,11 @@ namespace OpenBve
 				return;
 			}
 
-			// Cap the render rate only, leaving the update rate uncapped.
-			// Setting the update rate too caused train shaking and dropped input device plugin events (issue #957)
+			// Cap the render rate via our own sleep-based limiter in OpenBVEGame.OnRenderFrame,
+			// as OpenTK's TargetRenderFrequency uses a spin-wait which causes very high power consumption.
+			// Setting the update rate caused train shaking and dropped input device plugin events (issue #957)
 			Program.Renderer.GameWindow.TargetUpdateFrequency = 0;
-			Program.Renderer.GameWindow.TargetRenderFrequency = Interface.CurrentOptions.FPSLimit > 0 ? Interface.CurrentOptions.FPSLimit : 0;
+			Program.Renderer.GameWindow.TargetRenderFrequency = 0;
 			Program.Renderer.GameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? VSyncMode.On : VSyncMode.Off;
 			
 		}
