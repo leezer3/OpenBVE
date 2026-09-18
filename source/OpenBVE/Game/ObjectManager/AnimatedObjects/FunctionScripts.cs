@@ -404,6 +404,40 @@ namespace OpenBve {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					case Instructions.TrainMotorDeceleration:
+						Function.Stack[s] = 0.0;
+						if (Train != null)
+						{
+
+							for (int j = 0; j < Train.Cars.Length; j++)
+							{
+								if (Train.Cars[j].TractionModel.ProvidesPower)
+								{
+									Function.Stack[s] = Train.Cars[j].CarBrake.motorDeceleration;
+									break;
+								}
+							}
+						}
+						s++; break;
+					case Instructions.TrainMotorDecelerationOfCar:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].CarBrake.motorDeceleration;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						break;
 					case Instructions.PlayerTrainDistance:
 						double playerDist = double.MaxValue;
 						for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
@@ -2366,6 +2400,35 @@ namespace OpenBve {
 							if (j >= 0 & j < Train.Cars.Length)
 							{
 								Function.Stack[s - 1] = Train.Cars[j].FrontAxle.Follower.TrackIndex;
+							}
+						}
+						break;
+					case Instructions.TrainCarMass:
+						if (Train != null)
+						{
+							Function.Stack[s] = Train.Cars[CarIndex].CurrentMass;
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.TrainCarMassIndex:
+						if (Train == null)
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						else
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].CurrentMass;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
 							}
 						}
 						break;

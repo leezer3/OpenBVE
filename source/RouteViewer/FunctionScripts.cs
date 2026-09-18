@@ -1192,6 +1192,8 @@ namespace RouteViewer {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					case Instructions.TrainMotorDecelerationOfCar:
+					case Instructions.TrainMotorDeceleration:
 					case Instructions.WheelRadiusOfCar:
 					case Instructions.EngineRPM:
 					case Instructions.EngineRPMCar:
@@ -1242,6 +1244,25 @@ namespace RouteViewer {
 							if (j >= 0 & j < Train.Cars.Length)
 							{
 								Function.Stack[s - 1] = Train.Cars[j].FrontAxle.Follower.TrackIndex;
+							}
+						}
+						break;
+					case Instructions.TrainCarMassIndex:
+						if (Train == null)
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						else
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].CurrentMass;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
 							}
 						}
 						break;
