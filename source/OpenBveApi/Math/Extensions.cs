@@ -38,5 +38,24 @@
 		    }
 		    return System.Math.Tan(X);
 	    }
+
+	    /// <summary>Returns <param>value</param> clamped to the inclusive range of min and max.</summary>
+	    /// <param name="value">The value to clamp</param>
+	    /// <param name="min">The minimum value</param>
+	    /// <param name="max">The maximum value</param>
+	    /// <returns>The clamped value</returns>
+	    public static double Clamp(this double value, double min, double max)
+	    {
+		    if (value > max)
+		    {
+			    return max;
+		    }
+
+		    if (value < min)
+		    {
+			    return min;
+		    }
+			return value;
+	    }
 	}
 }

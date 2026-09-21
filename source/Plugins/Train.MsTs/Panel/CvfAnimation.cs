@@ -425,7 +425,7 @@ namespace Train.MsTs
 					int cylinderCocksState = 0;
 					if (tractionModel.Components.TryGetTypedValue(EngineComponent.CylinderCocks, out CylinderCocks cylinderCocks))
 					{
-						cylinderCocksState = cylinderCocks.Opened ? 1 : 0;
+						cylinderCocksState = cylinderCocks.Active ? 1 : 0;
 					}
 					lastResult = cylinderCocksState;
 					break;
