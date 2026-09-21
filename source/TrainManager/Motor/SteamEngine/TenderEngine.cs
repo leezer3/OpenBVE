@@ -22,15 +22,17 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using OpenBveApi.Motor;
-using System.Linq;
 using OpenBveApi;
+using OpenBveApi.Motor;
+using System;
+using System.Linq;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Motor;
 using TrainManager.Power;
 using TrainManager.Trains;
 
-namespace TrainManager.Motor
+namespace TrainManager.SteamEngine
 {
 	public class TenderEngine : TractionModel
 	{
@@ -48,6 +50,21 @@ namespace TrainManager.Motor
 			for (int i = 0; i < Components.Count; i++)
 			{
 				Components.ElementAt(i).Value.Update(timeElapsed);
+			}
+
+			Message = string.Empty;
+
+			if (Components.TryGetTypedValue(EngineComponent.Boiler, out Boiler b))
+			{
+				Message = "Boiler Pressure: " + Math.Round(b.CurrentPressure, 2);
+			}
+			if (Components.TryGetTypedValue(EngineComponent.SteamInjector1, out Injector inj1) && inj1.Active)
+			{
+				Message += " Injector 1 Flow Rate: " + Math.Round(inj1.WaterFlowRate, 2);
+			}
+			if (Components.TryGetTypedValue(EngineComponent.SteamInjector1, out Injector inj2) && inj2.Active)
+			{
+				Message += " Injector 2 Flow Rate: " + Math.Round(inj2.WaterFlowRate, 2);
 			}
 		}
 
@@ -75,13 +92,13 @@ namespace TrainManager.Motor
 
 				if (Components.TryGetTypedValue(EngineComponent.CylinderCocks, out CylinderCocks c))
 				{
-					if (c.Opened)
+					if (c.Active)
 					{
 						power *= c.PowerModifier;
 					}
 				}
 
-				Message[0] = @"Power " + power;
+				//Message[0] = @"Power " + power;
 				return (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
 			}
 		}
