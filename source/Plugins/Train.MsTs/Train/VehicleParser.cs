@@ -243,12 +243,13 @@ namespace Train.MsTs
 							currentCar.TractionModel = new TankEngine(currentCar, new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) }, MaxFuelLevel, MaxWaterLevel);
 						}
 
-						currentCar.TractionModel.Components.Add(EngineComponent.CylinderCocks, new CylinderCocks(currentCar.TractionModel, cylinderCocksAutomatic, CylinderCocksPowerModifier));
+						currentCar.TractionModel.Components.Add(EngineComponent.CylinderCocks, new CylinderCocks(currentCar.TractionModel, SteamProperties.cylinderCocksAutomatic, CylinderCocksPowerModifier));
 						currentCar.TractionModel.Components.Add(EngineComponent.Blowers, new Blowers(currentCar.TractionModel));
-						currentCar.TractionModel.Components.Add(EngineComponent.Boiler, new Boiler(currentCar.TractionModel, BoilerLength, MaxBoilerOutput, StartingBoilerWater, StartingBoilerPressure));
-						currentCar.TractionModel.Components.Add(EngineComponent.SteamInjector1, injectorType1 == 0 ? (AbstractComponent)new LiveSteamInjector(currentCar.TractionModel, injectorDiameter1) : new ExhaustSteamInjector(currentCar.TractionModel, injectorDiameter1));
-						currentCar.TractionModel.Components.Add(EngineComponent.SteamInjector2, injectorType2 == 0 ? (AbstractComponent)new LiveSteamInjector(currentCar.TractionModel, injectorDiameter1) : new ExhaustSteamInjector(currentCar.TractionModel, injectorDiameter1));
-						currentCar.TractionModel.Components.Add(EngineComponent.Firebox, new Firebox(currentCar.TractionModel, MaxFireMass, Math.Min(MaxFireMass, StartingFireMass), IdealFireMass, Math.Max(StartingFireTemp, 500)));
+						currentCar.TractionModel.Components.Add(EngineComponent.Boiler, SteamProperties.Boiler.Create(currentCar.TractionModel));
+						currentCar.TractionModel.Components.Add(EngineComponent.SafetyValve, new SafetyValve(currentCar.TractionModel, SteamProperties.Boiler.SafetyValvePressureDifference, SteamProperties.Boiler.SafetyValveSteamUsage));
+						currentCar.TractionModel.Components.Add(EngineComponent.SteamInjector1, SteamProperties.Injectors[0].Create(currentCar.TractionModel));
+						currentCar.TractionModel.Components.Add(EngineComponent.SteamInjector2, SteamProperties.Injectors[1].Create(currentCar.TractionModel));
+						currentCar.TractionModel.Components.Add(EngineComponent.Firebox, new Firebox(currentCar.TractionModel, SteamProperties.MaxFireMass, Math.Min(SteamProperties.MaxFireMass, SteamProperties.StartingFireMass), SteamProperties.IdealFireMass, Math.Max(SteamProperties.StartingFireTemp, 500)));
 						break;
 					case EngineType.NoEngine:
 						currentCar.TractionModel = new BVETrailerCar(currentCar);
@@ -592,27 +593,18 @@ namespace Train.MsTs
 		private UnitOfPressure brakeSystemDefaultUnits = UnitOfPressure.PoundsPerSquareInch;
 		private double MaxWaterLevel = -1;
 		private double MaxFuelLevel = -1;
-		private double BoilerLength = 5;
-		private double MaxBoilerOutput = 32000;
-		private int injectorType1;
-		private double injectorDiameter1;
-		private int injectorType2;
-		private double injectorDiameter2;
-		private double MaxFireMass;
-		private double IdealFireMass;
-		private double StartingFireTemp;
-		private double StartingFireMass;
-		private double StartingBoilerWater;
-		private double StartingBoilerPressure;
+
 		private double CylinderCocksPowerModifier = 0.9;
 		/// <summary>The maximum expanded size of a particle</summary>
 		internal double ExhaustMaxMagnitude;
 		/// <summary>The rate of particle emissions at idle</summary>
 		internal double ExhaustInitialRate;
-		/// <summary>The rate of particle emissions at maximum power</summary>SmokeMaxMagnitude`
+		/// <summary>The rate of particle emissions at maximum power</summary>
 		internal double ExhaustMaxRate;
 
-		private bool cylinderCocksAutomatic = false;
+		internal SteamEngineProperties SteamProperties = new SteamEngineProperties();
+
+		
 
 		private double GetMaxDieselCapacity(int carIndex)
 		{
@@ -1374,11 +1366,11 @@ namespace Train.MsTs
 							// Fire condition
 							// Coal quality
 							// NOTE: Max fuel / water levels are set by MaxTenderCoalMass and MaxTenderWaterMass
-							StartingFireTemp = block.ReadSingle();
-							StartingFireMass = block.ReadSingle();
-							StartingBoilerWater = block.ReadSingle();
-							StartingBoilerWater /= 2.205; // convert to L
-							StartingBoilerPressure = block.ReadSingle();
+							SteamProperties.StartingFireTemp = block.ReadSingle();
+							SteamProperties.StartingFireMass = block.ReadSingle();
+							SteamProperties.Boiler.StartingWater = block.ReadSingle();
+							SteamProperties.Boiler.StartingWater /= 2.205; // convert to L
+							SteamProperties.Boiler.StartingPressure = block.ReadSingle();
 							break;
 						case EngineType.Electric:
 							// Not present
@@ -1393,20 +1385,46 @@ namespace Train.MsTs
 					MaxWaterLevel = block.ReadSingle(UnitOfWeight.Kilograms, UnitOfWeight.Pounds);
 					break;
 				case KujuTokenID.BoilerLength:
-					BoilerLength = block.ReadSingle(UnitOfLength.Meter);
+					SteamProperties.Boiler.Length = block.ReadSingle(UnitOfLength.Meter);
 					break;
 				case KujuTokenID.MaxBoilerOutput:
 					// pounds of steam / hr
 					// assume for the minute that 1lb of steam == 1lb of water
-					MaxBoilerOutput = block.ReadSingle(VolumetricUnit.LbPerHour);
+					SteamProperties.Boiler.MaxOutput = block.ReadSingle(VolumetricUnit.LbPerHour);
 					// convert this to KG first, then divide by 3600 to give output per second
-					MaxBoilerOutput = MaxBoilerOutput / 2.205 / 3600;
+					SteamProperties.Boiler.MaxOutput = SteamProperties.Boiler.MaxOutput / 2.205 / 3600;
+					break;
+				case KujuTokenID.MaxBoilerPressure:
+					SteamProperties.Boiler.MaxPressure = block.ReadSingle(UnitOfPressure.PoundsPerSquareInch);
+					break;
+				case KujuTokenID.SafetyValvePressureDifference:
+					SteamProperties.Boiler.SafetyValvePressureDifference = block.ReadSingle();
+					break;
+				case KujuTokenID.SafetyValvesSteamUsage:
+					SteamProperties.Boiler.SafetyValveSteamUsage = block.ReadSingle(VolumetricUnit.LbPerHour);
+					SteamProperties.Boiler.SafetyValveSteamUsage = SteamProperties.Boiler.SafetyValveSteamUsage / 2.205 / 3600;
 					break;
 				case KujuTokenID.InjectorTypes:
 					try
 					{
-						injectorType1 = block.ReadInt16();
-						injectorType2 = block.ReadInt16();
+						int type0 = block.ReadUInt16();
+						if (type0 > 1)
+						{
+							Plugin.CurrentHost.AddMessage("MSTS Vehicle Parser: Invalid type for Injector 1");
+						}
+						else
+						{
+							SteamProperties.Injectors[0].Type = type0;
+						}
+						int type1 = block.ReadUInt16();
+						if (type1 > 1)
+						{
+							Plugin.CurrentHost.AddMessage("MSTS Vehicle Parser: Invalid type for Injector 1");
+						}
+						else
+						{
+							SteamProperties.Injectors[1].Type = type1;
+						}
 					}
 					catch
 					{
@@ -1416,36 +1434,55 @@ namespace Train.MsTs
 				case KujuTokenID.InjectorSizes:
 					try
 					{
-						injectorDiameter1 = block.ReadSingle(UnitOfLength.Millimeter);
-						injectorDiameter2 = block.ReadSingle(UnitOfLength.Millimeter);
+						SteamProperties.Injectors[0].Diameter = block.ReadSingle(UnitOfLength.Millimeter);
+						SteamProperties.Injectors[1].Diameter = block.ReadSingle(UnitOfLength.Millimeter);
 					}
 					catch
 					{
 						// ignored
 					}
+
 					// clamp at original MSTS values of 5 - 15
-					if (injectorDiameter1 < 5)
+					SteamProperties.Injectors[0].Diameter = SteamProperties.Injectors[0].Diameter.Clamp(5, 15);
+					SteamProperties.Injectors[1].Diameter = SteamProperties.Injectors[1].Diameter.Clamp(5, 15);
+					break;
+				case KujuTokenID.InjectorLimits1:
+					try
 					{
-						injectorDiameter1 = 5;
+						SteamProperties.Injectors[0].MinPressure = block.ReadSingle(UnitOfPressure.PoundsPerSquareInch);
+						SteamProperties.Injectors[0].MinWater = block.ReadSingle();
+						SteamProperties.Injectors[0].MaxWater = block.ReadSingle();
 					}
-					if (injectorDiameter1 > 15)
+					catch
 					{
-						injectorDiameter1 = 15;
+						// ignored
 					}
-					if (injectorDiameter2 < 5)
+					// clamp values
+					SteamProperties.Injectors[0].MinPressure = Math.Max(0, SteamProperties.Injectors[0].MinPressure);
+					SteamProperties.Injectors[0].MinWater = SteamProperties.Injectors[0].MinWater.Clamp(0, 1);
+					SteamProperties.Injectors[0].MaxWater = SteamProperties.Injectors[0].MaxWater.Clamp(0, 1);
+					break;
+				case KujuTokenID.InjectorLimits2:
+					try
 					{
-						injectorDiameter2 = 5;
+						SteamProperties.Injectors[1].MinPressure = block.ReadSingle(UnitOfPressure.PoundsPerSquareInch);
+						SteamProperties.Injectors[1].MinWater = block.ReadSingle();
+						SteamProperties.Injectors[1].MaxWater = block.ReadSingle();
 					}
-					if (injectorDiameter2 > 15)
+					catch
 					{
-						injectorDiameter2 = 15;
+						// ignored
 					}
+					// clamp values
+					SteamProperties.Injectors[1].MinPressure = Math.Max(0, SteamProperties.Injectors[1].MinPressure);
+					SteamProperties.Injectors[1].MinWater = SteamProperties.Injectors[0].MinWater.Clamp(0, 1);
+					SteamProperties.Injectors[1].MaxWater = SteamProperties.Injectors[0].MaxWater.Clamp(0, 1);
 					break;
 				case KujuTokenID.MaxFireMass:
-					MaxFireMass = block.ReadSingle(UnitOfWeight.Kilograms);
+					SteamProperties.MaxFireMass = block.ReadSingle(UnitOfWeight.Kilograms);
 					break;
 				case KujuTokenID.IdealFireMass:
-					IdealFireMass = block.ReadSingle(UnitOfWeight.Kilograms);
+					SteamProperties.IdealFireMass = block.ReadSingle(UnitOfWeight.Kilograms);
 					break;
 				case KujuTokenID.PassengerCapacity:
 					double numPassengers = block.ReadSingle();
@@ -1474,7 +1511,7 @@ namespace Train.MsTs
 				case KujuTokenID.SteamCylinderCocksOperation:
 					if (block.ReadString().ToLowerInvariant() == "automatic")
 					{
-						cylinderCocksAutomatic = true;
+						SteamProperties.cylinderCocksAutomatic = true;
 					}
 					break;
 				case KujuTokenID.CylinderCocksPowerEfficiency:

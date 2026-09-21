@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
 using OpenBveApi;
 using OpenBveApi.Motor;
 using System.Linq;
@@ -60,6 +61,21 @@ namespace TrainManager.Motor
 			{
 				Components.ElementAt(i).Value.Update(timeElapsed);
 			}
+
+			Message = string.Empty;
+
+			if (Components.TryGetTypedValue(EngineComponent.Boiler, out Boiler b))
+			{
+				Message = "Boiler Pressure: " + Math.Round(b.CurrentPressure, 2);
+			}
+			if (Components.TryGetTypedValue(EngineComponent.SteamInjector1, out Injector inj1) && inj1.Active)
+			{
+				Message += " Injector 1 Flow Rate: " + Math.Round(inj1.WaterFlowRate, 2);
+			}
+			if (Components.TryGetTypedValue(EngineComponent.SteamInjector1, out Injector inj2) && inj2.Active)
+			{
+				Message += " Injector 2 Flow Rate: " + Math.Round(inj2.WaterFlowRate, 2);
+			}
 		}
 
 		// TODO: PLACEHOLDER VALUES
@@ -86,13 +102,13 @@ namespace TrainManager.Motor
 
 				if (Components.TryGetTypedValue(EngineComponent.CylinderCocks, out CylinderCocks c))
 				{
-					if (c.Opened)
+					if (c.Active)
 					{
 						power *= c.PowerModifier;
 					}
 				}
 
-				Message = @"Power " + power;
+				//Message = @"Power " + power;
 				return (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
 			}
 		}

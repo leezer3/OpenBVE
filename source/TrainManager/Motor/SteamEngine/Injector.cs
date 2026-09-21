@@ -20,29 +20,42 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Motor;
 
 namespace TrainManager.Motor
 {
-	public class LiveSteamInjector : AbstractComponent
+
+	public abstract class Injector : AbstractComponent
 	{
 		/// <summary>The diameter of the injector cone</summary>
-		private readonly double Diameter;
+		internal readonly double Diameter;
 
 		/// <summary>The minimum boiler pressure at which the injector can operate</summary>
-		private readonly double minimumBoilerPressure;
+		internal readonly double minimumBoilerPressure;
 
-		private readonly double minimumBoilerWaterLevel;
+		internal readonly double minimumBoilerWaterLevel;
 
-		private readonly double maximumBoilerWaterLevel;
+		internal readonly double maximumBoilerWaterLevel;
 
-		public bool Active;
-
-		public LiveSteamInjector(TractionModel engine, double coneDiameter) : base(engine)
+		protected Injector(TractionModel engine, double coneDiameter, double minBoilerPressure, double minWaterLevel, double maxWaterLevel) : base (engine)
 		{
 			Diameter = coneDiameter;
+			minimumBoilerPressure = minBoilerPressure;
+			minimumBoilerWaterLevel = minWaterLevel;
+			maximumBoilerWaterLevel = maxWaterLevel;
+		}
+
+		/// <summary>The current water flow rate in L / s</summary>
+		public double WaterFlowRate;
+	}
+	public class LiveSteamInjector : Injector
+	{
+
+		public LiveSteamInjector(TractionModel engine, double coneDiameter, double minBoilerPressure, double minWaterLevel, double maxWaterLevel) : base(engine, coneDiameter, minBoilerPressure, minWaterLevel, maxWaterLevel)
+		{
 		}
 
 
@@ -51,11 +64,31 @@ namespace TrainManager.Motor
 			if (Active && baseEngine.Components.TryGetTypedValue(EngineComponent.Boiler, out Boiler boiler))
 			{
 				if (boiler.CurrentPressure < minimumBoilerPressure || boiler.WaterLevel < minimumBoilerWaterLevel ||
-				    boiler.WaterLevel > maximumBoilerWaterLevel)
+				    boiler.WaterLevel > Boiler.Volume * maximumBoilerWaterLevel)
 				{
 					// Can't inject if below minimum pressure in the boiler, or above max water level
+					WaterFlowRate = 0;
 					return;
 				}
+
+				// https://web.archive.org/web/20260903094113/https://www.firgelliauto.com/blogs/mechanisms/standard-injector
+				// feed water delivery rate
+				// ṁw = K × At × √(2 × ρs × Ps) × (hs − hd) / (hd − hw)
+
+				// first calculate steam mass jet flow
+				// ṁs = K × At × √(2 × ρs × Ps)
+				double bp = boiler.CurrentPressure * 703.0695796402; // psi to kg/m3
+				double steamMassFlow = SteamTable.DischargeCoefficient * 1.96 * Math.Pow(Diameter, -5) * Math.Sqrt(2 * bp * SteamTable.GetSteamDensity(boiler.CurrentPressure));
+				// apply enthalpy balance
+				// ṁw = ṁs × (hs − hd) / (hd − hw)
+				WaterFlowRate = steamMassFlow * (SteamTable.SteamEnthalpyNominal - SteamTable.InjectorWaterEnthalpyNominal) / (SteamTable.GetSteamEnthalpy(boiler.CurrentPressure) - SteamTable.InjectorWaterEnthalpyNominal);
+
+				boiler.WaterLevel += WaterFlowRate * timeElapsed;
+				boiler.CurrentSteamMass -= steamMassFlow * timeElapsed;
+			}
+			else
+			{
+				WaterFlowRate = 0;
 			}
 		}
 
@@ -68,23 +101,10 @@ namespace TrainManager.Motor
 		}
 	}
 
-	public class ExhaustSteamInjector : AbstractComponent
+	public class ExhaustSteamInjector : Injector
 	{
-		/// <summary>The diameter of the injector cone</summary>
-		public readonly double Diameter;
-
-		/// <summary>The minimum boiler pressure at which the injector can operate</summary>
-		private readonly double minimumBoilerPressure;
-
-		private readonly double minimumBoilerWaterLevel;
-
-		private readonly double maximumBoilerWaterLevel;
-
-		public bool Active;
-
-		public ExhaustSteamInjector(TractionModel engine, double coneDiameter) : base(engine)
+		public ExhaustSteamInjector(TractionModel engine, double coneDiameter, double minBoilerPressure, double minWaterLevel, double maxWaterLevel) : base(engine, coneDiameter, minBoilerPressure, minWaterLevel, maxWaterLevel)
 		{
-			Diameter = coneDiameter;
 		}
 
 
@@ -96,8 +116,31 @@ namespace TrainManager.Motor
 				    boiler.WaterLevel > maximumBoilerWaterLevel || Diameter == 0)
 				{
 					// Can't inject if below minimum pressure in the boiler, or above max water level
+					WaterFlowRate = 0;
 					return;
 				}
+
+				// https://web.archive.org/web/20260903094113/https://www.firgelliauto.com/blogs/mechanisms/standard-injector
+				// feed water delivery rate
+				// ṁw = K × At × √(2 × ρs × Ps) × (hs − hd) / (hd − hw)
+
+				// first calculate steam mass jet flow
+				// ṁs = K × At × √(2 × ρs × Ps)
+				double bp = boiler.CurrentPressure * 703.0695796402; // psi to kg/m3
+				double steamMassFlow = SteamTable.DischargeCoefficient * 1.96 * Math.Pow(Diameter, -5) * Math.Sqrt(2 * bp * SteamTable.GetSteamDensity(boiler.CurrentPressure));
+
+				// Cylinders not yet implimented
+				// steamMassFlow should be Min of Cylinders.SteamMassFlow and steamMassFlow
+
+				// apply enthalpy balance
+				// ṁw = ṁs × (hs − hd) / (hd − hw)
+				WaterFlowRate = steamMassFlow * (SteamTable.SteamEnthalpyNominal - SteamTable.InjectorWaterEnthalpyNominal) / (SteamTable.GetSteamEnthalpy(boiler.CurrentPressure) - SteamTable.InjectorWaterEnthalpyNominal);
+
+				boiler.WaterLevel += WaterFlowRate * timeElapsed;
+			}
+			else
+			{
+				WaterFlowRate = 0;
 			}
 		}
 

@@ -30,11 +30,12 @@ namespace TrainManager.Motor
     {
 		/// <summary>Holds a reference to the base engine</summary>
 	    internal TractionModel baseEngine;
-
+		/// <summary>Whether the component operates automatically</summary>
 	    public readonly bool Automatic;
-
-
-	    protected AbstractComponent(TractionModel engine, bool automaticOperation)
+		/// <summary>Whether the component is currently operating / active</summary>
+	    public bool Active;
+		
+		protected AbstractComponent(TractionModel engine, bool automaticOperation)
 	    {
 			baseEngine = engine;
 			Automatic = automaticOperation;

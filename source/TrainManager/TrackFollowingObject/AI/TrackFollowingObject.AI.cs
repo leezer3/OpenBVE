@@ -170,12 +170,12 @@ namespace TrainManager.Trains
 
 				if (Car.TractionModel.Components.TryGetTypedValue(EngineComponent.CylinderCocks, out CylinderCocks c) && !c.Automatic)
 				{
-					if (Car.CurrentSpeed == 0 && c.Opened == false)
+					if (Car.CurrentSpeed == 0 && c.Active == false)
 					{
 						c.ControlDown(Translations.Command.CylinderCocks);
 					}
 
-					if (Car.CurrentSpeed > 5 && c.Opened)
+					if (Car.CurrentSpeed > 5 && c.Active)
 					{
 						c.ControlDown(Translations.Command.CylinderCocks);
 					}
