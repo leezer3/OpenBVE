@@ -2286,7 +2286,7 @@ namespace OpenBve {
 							{
 								if (Train.Cars[j].TractionModel.Components.TryGetTypedValue(EngineComponent.CylinderCocks, out CylinderCocks cc))
 								{
-									Function.Stack[s - 1] = cc.Opened ? 1 : 0;
+									Function.Stack[s - 1] = cc.Active ? 1 : 0;
 								}
 								else
 								{
