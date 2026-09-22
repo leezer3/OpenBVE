@@ -134,9 +134,17 @@ namespace ObjectViewer
 			}
 		}
 
-		private static Key ResetIfUnknown(Key key, Key defaultKey)
+		/// <summary>Reads a camera key: Disabled stays disabled, Unknown / missing / invalid fall back to default</summary>
+		private static Key GetCameraKey(Block<OptionsSection, OptionsKey> block, OptionsKey option, Key fallback)
 		{
-			return key == Key.Unknown ? defaultKey : key;
+			if (!block.GetValue(option, out string raw))
+				return fallback;
+			raw = raw.Trim();
+			if (Enum.TryParse(raw, true, out Key key) && key != Key.Unknown && key != Key.LastKey)
+				return key;
+			if (!raw.Equals("unknown", StringComparison.OrdinalIgnoreCase))
+				Program.CurrentHost.AddMessage(OpenBveApi.Interface.MessageType.Error, false, "Value " + raw + " is invalid in " + option + " in " + block.Key + " in file " + block.FileName);
+			return fallback;
 		}
 
 		internal static void LoadOptions()
@@ -232,19 +240,12 @@ namespace ObjectViewer
 							}
 							break;
 						case OptionsSection.Keys:
-							block.GetEnumValue(OptionsKey.Left, out Interface.CurrentOptions.CameraMoveLeft);
-							block.GetEnumValue(OptionsKey.Right, out Interface.CurrentOptions.CameraMoveRight);
-							block.GetEnumValue(OptionsKey.Up, out Interface.CurrentOptions.CameraMoveUp);
-							block.GetEnumValue(OptionsKey.Down, out Interface.CurrentOptions.CameraMoveDown);
-							block.GetEnumValue(OptionsKey.Forward, out Interface.CurrentOptions.CameraMoveForward);
-							block.GetEnumValue(OptionsKey.Backward, out Interface.CurrentOptions.CameraMoveBackward);
-							// Reset any invalid or unknown camera keys back to their defaults
-							Interface.CurrentOptions.CameraMoveLeft = ResetIfUnknown(Interface.CurrentOptions.CameraMoveLeft, Key.A);
-							Interface.CurrentOptions.CameraMoveRight = ResetIfUnknown(Interface.CurrentOptions.CameraMoveRight, Key.D);
-							Interface.CurrentOptions.CameraMoveUp = ResetIfUnknown(Interface.CurrentOptions.CameraMoveUp, Key.W);
-							Interface.CurrentOptions.CameraMoveDown = ResetIfUnknown(Interface.CurrentOptions.CameraMoveDown, Key.S);
-							Interface.CurrentOptions.CameraMoveForward = ResetIfUnknown(Interface.CurrentOptions.CameraMoveForward, Key.Q);
-							Interface.CurrentOptions.CameraMoveBackward = ResetIfUnknown(Interface.CurrentOptions.CameraMoveBackward, Key.E);
+							Interface.CurrentOptions.CameraMoveLeft = GetCameraKey(block, OptionsKey.Left, Key.A);
+							Interface.CurrentOptions.CameraMoveRight = GetCameraKey(block, OptionsKey.Right, Key.D);
+							Interface.CurrentOptions.CameraMoveUp = GetCameraKey(block, OptionsKey.Up, Key.W);
+							Interface.CurrentOptions.CameraMoveDown = GetCameraKey(block, OptionsKey.Down, Key.S);
+							Interface.CurrentOptions.CameraMoveForward = GetCameraKey(block, OptionsKey.Forward, Key.Q);
+							Interface.CurrentOptions.CameraMoveBackward = GetCameraKey(block, OptionsKey.Backward, Key.E);
 							break;
 
 					}

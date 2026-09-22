@@ -181,7 +181,23 @@ namespace OpenBve
 									return;
 								}
 
-								if (Enum.TryParse(Terms[2], true, out Key CurrentKey))
+								if (Terms[2].Equals("Disabled", StringComparison.OrdinalIgnoreCase) &&
+									int.TryParse(Terms[3], NumberStyles.Integer, Culture, out int DisabledModifiers))
+								{
+									Controls[Length].Method = Method;
+									Controls[Length].Device = Guid.Empty;
+									Controls[Length].Component = JoystickComponent.Invalid;
+									Controls[Length].Key = OpenBveApi.Input.Key.Disabled;
+									Controls[Length].Direction = 0;
+									Controls[Length].Modifier = (KeyboardModifier)DisabledModifiers;
+									if (Terms.Length >= 5 && int.TryParse(Terms[4], NumberStyles.Integer, Culture, out int DisabledOption))
+									{
+										Controls[Length].Option = DisabledOption;
+									}
+
+									Valid = true;
+								}
+								else if (Enum.TryParse(Terms[2], true, out Key CurrentKey))
 								{
 									if (int.TryParse(Terms[3], NumberStyles.Integer, Culture, out int Modifiers))
 									{
