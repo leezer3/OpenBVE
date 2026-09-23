@@ -74,10 +74,5 @@ namespace TrainEditor2.Systems
 		{
 			Program.SoundApi.StopSound(SoundSource as SoundSource);
 		}
-
-		public override AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile)
-		{
-			throw new NotImplementedException();
-		}
 	}
 }

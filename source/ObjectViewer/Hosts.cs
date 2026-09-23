@@ -407,11 +407,6 @@ namespace ObjectViewer {
 			set => Program.CurrentRoute.Tracks = value;
 		}
 
-		public override AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile)
-		{
-			throw new NotImplementedException();
-		}
-
 		// ReSharper disable once CoVariantArrayConversion
 		public override IEnumerable<AbstractTrain> Trains => Program.TrainManager.Trains;
 

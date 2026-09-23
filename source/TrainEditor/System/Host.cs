@@ -9,9 +9,5 @@ namespace TrainEditor
 	internal class Host : HostInterface
 	{
 		public Host() : base(HostApplication.TrainEditor) { }
-		public override AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile)
-		{
-			throw new NotImplementedException();
-		}
 	}
 }

@@ -683,7 +683,10 @@ namespace OpenBveApi.Hosts {
 		/// <param name="objectPath">The path to the object directory</param>
 		/// /// <param name="tfoFile">The TFO parameters file</param>
 		/// <returns>The track following object</returns>
-		public abstract AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile);
+		public virtual AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile)
+		{
+			return null;
+		}
 
 		/// <summary>The list of available content loading plugins</summary>
 		public ContentLoadingPlugin[] Plugins;

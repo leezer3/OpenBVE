@@ -8,10 +8,5 @@ namespace CarXmlConvertor
 	internal class Host : HostInterface
 	{
 		public Host() : base(HostApplication.CarXMLConvertor) { }
-
-		public override AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile)
-		{
-			throw new System.NotImplementedException();
-		}
 	}
 }
