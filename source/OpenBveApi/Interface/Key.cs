@@ -381,7 +381,8 @@ namespace OpenBveApi.Input
         /// <summary>The Command key.</summary>
         /// <remarks>Valid on OS-X only</remarks>
         Command,
-        /// <summary>Disabled / unbound key - does nothing.</summary>
-        Disabled,
+        /// <summary>Disabled / unbound key</summary>
+        /// <remarks>Does nothing</remarks>
+        Disabled = int.MaxValue,
     }
 }
