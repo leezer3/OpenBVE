@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Windows.Forms;
 using LibRender2.Viewports;
 using ObjectViewer.Graphics;
@@ -73,18 +74,12 @@ namespace ObjectViewer
 			comboBoxShadowResolution.SelectedIndexChanged += comboBoxShadowResolution_SelectedIndexChanged;
 			UpdateShadowControlsEnabled();
 
-			comboBoxLeft.DataSource = Enum.GetValues(typeof(Key));
-			comboBoxLeft.SelectedItem = Interface.CurrentOptions.CameraMoveLeft;
-			comboBoxRight.DataSource = Enum.GetValues(typeof(Key));
-			comboBoxRight.SelectedItem = Interface.CurrentOptions.CameraMoveRight;
-			comboBoxUp.DataSource = Enum.GetValues(typeof(Key));
-			comboBoxUp.SelectedItem = Interface.CurrentOptions.CameraMoveUp;
-			comboBoxDown.DataSource = Enum.GetValues(typeof(Key));
-			comboBoxDown.SelectedItem = Interface.CurrentOptions.CameraMoveDown;
-			comboBoxForwards.DataSource = Enum.GetValues(typeof(Key));
-			comboBoxForwards.SelectedItem = Interface.CurrentOptions.CameraMoveForward;
-			comboBoxBackwards.DataSource = Enum.GetValues(typeof(Key));
-			comboBoxBackwards.SelectedItem = Interface.CurrentOptions.CameraMoveBackward;
+			BindKey(comboBoxLeft, Interface.CurrentOptions.CameraMoveLeft, Key.A);
+			BindKey(comboBoxRight, Interface.CurrentOptions.CameraMoveRight, Key.D);
+			BindKey(comboBoxUp, Interface.CurrentOptions.CameraMoveUp, Key.W);
+			BindKey(comboBoxDown, Interface.CurrentOptions.CameraMoveDown, Key.S);
+			BindKey(comboBoxForwards, Interface.CurrentOptions.CameraMoveForward, Key.Q);
+			BindKey(comboBoxBackwards, Interface.CurrentOptions.CameraMoveBackward, Key.E);
 			checkBoxAutoReload.Checked = Interface.CurrentOptions.AutoReloadObjects;
 			checkBoxProgressBar.Checked = Interface.CurrentOptions.LoadingProgressBar;
 			checkBoxShadowFilterCascades.Checked = Interface.CurrentOptions.ShadowFilterCascades;
@@ -168,6 +163,13 @@ namespace ObjectViewer
 		{
 			labelSunElevationValue.Text = trackBarSunElevation.Value + "\u00b0";
 			UpdateSunDirection();
+		}
+
+		private static void BindKey(ComboBox box, Key value, Key fallback)
+		{
+			box.DropDownStyle = ComboBoxStyle.DropDownList;
+			box.DataSource = new[] { Key.Disabled }.Concat(Enum.GetValues(typeof(Key)).Cast<Key>().Where(k => k != Key.LastKey && k != Key.Disabled).Distinct().ToList()).ToList();
+			box.SelectedItem = box.Items.Contains(value) ? value : fallback;
 		}
 
 		internal static DialogResult ShowOptions()
