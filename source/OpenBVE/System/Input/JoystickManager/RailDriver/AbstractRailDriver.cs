@@ -57,21 +57,21 @@ namespace OpenBve.Input
 											case "index":
 												if (!NumberFormats.TryParseIntVb6(n.InnerText, out idx))
 												{
-													Program.FileSystem.AppendToLogFile(@"Invalid index in RailDriver calibration file");
+													Program.CurrentHost.FileSystem.AppendToLogFile(@"Invalid index in RailDriver calibration file");
 												}
 
 												break;
 											case "minimum":
 												if (!NumberFormats.TryParseIntVb6(n.InnerText, out lMin))
 												{
-													Program.FileSystem.AppendToLogFile(@"Invalid minimum in RailDriver calibration file");
+													Program.CurrentHost.FileSystem.AppendToLogFile(@"Invalid minimum in RailDriver calibration file");
 												}
 
 												break;
 											case "maximum":
 												if (!NumberFormats.TryParseIntVb6(n.InnerText, out lMax))
 												{
-													Program.FileSystem.AppendToLogFile(@"Invalid minimum in RailDriver calibration file");
+													Program.CurrentHost.FileSystem.AppendToLogFile(@"Invalid minimum in RailDriver calibration file");
 												}
 
 												break;

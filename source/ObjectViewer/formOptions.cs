@@ -317,7 +317,7 @@ namespace ObjectViewer
 			Interface.CurrentOptions.ShadowNormalBias = (double)numericUpDownShadowNormalBias.Value;
 			Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
 			
-			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));
+			Interface.CurrentOptions.Save(Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));
 			Program.RefreshObjectsAsync();
 			DialogResult = DialogResult.OK;
 			Close();

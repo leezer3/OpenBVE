@@ -95,6 +95,9 @@ namespace OpenBveApi.Hosts {
 			}
 		}
 
+		/// <summary>Information about the file system organization.</summary>
+		public FileSystem.FileSystem FileSystem;
+
 		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 		private struct UName
 		{
@@ -134,9 +137,18 @@ namespace OpenBveApi.Hosts {
 		private static extern string GetWineVersion();
 
 		/// <summary>The base host interface constructor</summary>
-		protected HostInterface(HostApplication host)
+		protected HostInterface(HostApplication host, string[] args = null)
 		{
 			Application = host;
+			try
+			{
+				FileSystem = OpenBveApi.FileSystem.FileSystem.FromCommandLineArgs(args, this);
+			}
+			catch
+			{ 
+				// ignored
+			}
+			
 			StaticObjectCache = new Dictionary<ValueTuple<string, bool, DateTime>, StaticObject>();
 			AnimatedObjectCollectionCache = new Dictionary<string, AnimatedObjectCollection>();
 			MissingFiles = new HashSet<string>();

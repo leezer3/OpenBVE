@@ -422,7 +422,7 @@ namespace OpenBve
 		internal static void LoadOptions()
 		{
 			CurrentOptions = new Options();
-			string OptionsDir = Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
+			string OptionsDir = Path.CombineDirectory(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0");
 			if (!Directory.Exists(OptionsDir))
 			{
 				Directory.CreateDirectory(OptionsDir);
@@ -432,7 +432,7 @@ namespace OpenBve
 			if (!File.Exists(configFile))
 			{
 				//Attempt to load and upgrade a prior configuration file
-				configFile = Path.CombineFile(Program.FileSystem.SettingsFolder, "options.cfg");
+				configFile = Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "options.cfg");
 			}
 
 			if (File.Exists(configFile))

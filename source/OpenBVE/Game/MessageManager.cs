@@ -26,7 +26,7 @@ namespace OpenBve
 		{
 			if (TrainManagerBase.PlayerTrain == null)
 			{
-				Program.FileSystem.AppendToLogFile(Text);
+				Program.CurrentHost.FileSystem.AppendToLogFile(Text);
 				return;
 			}
 			if (Interface.CurrentOptions.GameMode <= Mode)

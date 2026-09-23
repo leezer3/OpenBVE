@@ -519,7 +519,7 @@ namespace TrainEditor2.Views
 			toolStripMenuItemInfo.PerformClick();
 
 			Translations.CurrentLanguageCode = Interface.CurrentOptions.LanguageCode;
-			string folder = Program.FileSystem.GetDataFolder("Languages");
+			string folder = Program.CurrentHost.FileSystem.GetDataFolder("Languages");
 			Translations.LoadLanguageFiles(folder);
 			Translations.ListLanguages(toolStripComboBoxLanguage.ComboBox);
 			app.CurrentLanguageCode.ForceNotify();
@@ -965,7 +965,7 @@ namespace TrainEditor2.Views
 			if (ShowSaveDialog())
 			{
 				Program.Renderer.DeInitialize();
-				Interface.CurrentOptions.Save(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_te2.cfg"));
+				Interface.CurrentOptions.Save(OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0/options_te2.cfg"));
 			}
 			else
 			{

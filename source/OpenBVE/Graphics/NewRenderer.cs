@@ -58,7 +58,7 @@ namespace OpenBve.Graphics
 			ObjectsSortedByEnd = new int[] { };
 			
 			
-			Program.FileSystem.AppendToLogFile("Renderer initialised successfully.");
+			Program.CurrentHost.FileSystem.AppendToLogFile("Renderer initialised successfully.");
 		}
 		
 		protected override void UpdateViewport(int width, int height)
@@ -473,7 +473,7 @@ namespace OpenBve.Graphics
 			OptionLighting = true;
 		}
 
-		public NewRenderer(HostInterface currentHost, BaseOptions CurrentOptions, FileSystem fileSystem) : base(currentHost, CurrentOptions, fileSystem)
+		public NewRenderer(HostInterface currentHost, BaseOptions CurrentOptions) : base(currentHost, CurrentOptions)
 		{
 		}
 	}

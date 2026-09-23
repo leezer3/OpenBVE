@@ -1,6 +1,5 @@
 using LibRender2;
 using OpenBveApi;
-using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Trains;
 using TrainManager;
@@ -12,7 +11,7 @@ namespace OpenBve
 	public class TrainManager : TrainManagerBase
 	{
 		/// <inheritdoc/>
-		public TrainManager(HostInterface host, BaseRenderer renderer, BaseOptions options, FileSystem fileSystem) : base(host, renderer, options, fileSystem)
+		public TrainManager(HostInterface host, BaseRenderer renderer, BaseOptions options) : base(host, renderer, options)
 		{
 		}
 		

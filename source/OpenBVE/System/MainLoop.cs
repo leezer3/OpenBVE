@@ -35,19 +35,19 @@ namespace OpenBve
 		{
 			Program.Sounds.Initialize(Interface.CurrentOptions.SoundRange);
 
-			Program.FileSystem.AppendToLogFile(@"Attached Joysticks:", false);
-			Program.FileSystem.AppendToLogFile(@"--------------------", false);
+			Program.CurrentHost.FileSystem.AppendToLogFile(@"Attached Joysticks:", false);
+			Program.CurrentHost.FileSystem.AppendToLogFile(@"--------------------", false);
 			for (int i = 0; i < Program.Joysticks.AttachedJoysticks.Count; i++)
 			{
 				Guid key = Program.Joysticks.AttachedJoysticks.ElementAt(i).Key;
-				Program.FileSystem.AppendToLogFile(Program.Joysticks.AttachedJoysticks[key].ToString(), false);
+				Program.CurrentHost.FileSystem.AppendToLogFile(Program.Joysticks.AttachedJoysticks[key].ToString(), false);
 			}
-			Program.FileSystem.AppendToLogFile(@"--------------------", false);
+			Program.CurrentHost.FileSystem.AppendToLogFile(@"--------------------", false);
 
-			Program.FileSystem.AppendToLogFile("Detected Platform: " + Program.CurrentHost.Platform);
-			Program.FileSystem.AppendToLogFile("Backend: " + (Interface.CurrentOptions.PreferNativeBackend ? "Native" : "SDL2"));
-			Program.FileSystem.AppendToLogFile("User Interface Size: " + Interface.CurrentOptions.UserInterfaceFolder);
-			Program.FileSystem.AppendToLogFile("User Interface Scale Factor: " + Interface.CurrentOptions.UserInterfaceScaleFactor);
+			Program.CurrentHost.FileSystem.AppendToLogFile("Detected Platform: " + Program.CurrentHost.Platform);
+			Program.CurrentHost.FileSystem.AppendToLogFile("Backend: " + (Interface.CurrentOptions.PreferNativeBackend ? "Native" : "SDL2"));
+			Program.CurrentHost.FileSystem.AppendToLogFile("User Interface Size: " + Interface.CurrentOptions.UserInterfaceFolder);
+			Program.CurrentHost.FileSystem.AppendToLogFile("User Interface Scale Factor: " + Interface.CurrentOptions.UserInterfaceScaleFactor);
 			if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 			{
 				Tolk.Load();
@@ -55,11 +55,11 @@ namespace OpenBve
 				if (!string.IsNullOrEmpty(name))
 				{
 					Interface.CurrentOptions.ScreenReaderAvailable = true;
-					Program.FileSystem.AppendToLogFile("Supported screen reader driver " + name + " initialised.");
+					Program.CurrentHost.FileSystem.AppendToLogFile("Supported screen reader driver " + name + " initialised.");
 				}
 				else
 				{
-					Program.FileSystem.AppendToLogFile("No supported screen reader found.");
+					Program.CurrentHost.FileSystem.AppendToLogFile("No supported screen reader found.");
 				}
 			}
 			
@@ -95,14 +95,14 @@ namespace OpenBve
 				}
 			}
 
-			Program.FileSystem.AppendToLogFile("Using openGL 4 (new) renderer");
+			Program.CurrentHost.FileSystem.AppendToLogFile("Using openGL 4 (new) renderer");
 			if (Interface.CurrentOptions.FullscreenMode)
 			{
-				Program.FileSystem.AppendToLogFile("Initialising full-screen game window of size " + Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight);
+				Program.CurrentHost.FileSystem.AppendToLogFile("Initialising full-screen game window of size " + Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight);
 			}
 			else
 			{
-				Program.FileSystem.AppendToLogFile("Initialising game window of size " + Interface.CurrentOptions.WindowWidth + " x " + Interface.CurrentOptions.WindowHeight);
+				Program.CurrentHost.FileSystem.AppendToLogFile("Initialising game window of size " + Interface.CurrentOptions.WindowWidth + " x " + Interface.CurrentOptions.WindowHeight);
 			}
 			Screen.Initialize();
 			currentResult = result;

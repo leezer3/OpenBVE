@@ -44,7 +44,7 @@ namespace OpenBve
 		private const int SelectionNone = -1;
 
 		private double lastTimeElapsed;
-		private static readonly string currentDatabaseFile = Path.CombineFile(Program.FileSystem.PackageDatabaseFolder, "packages.xml");
+		private static readonly string currentDatabaseFile = Path.CombineFile(Program.CurrentHost.FileSystem.PackageDatabaseFolder, "packages.xml");
 
 		/********************
 			MENU SYSTEM FIELDS
@@ -392,9 +392,9 @@ namespace OpenBve
 							case MenuTag.MenuBack:              // BACK TO PREVIOUS MENU
 								if (Menus[CurrMenu].Type == MenuType.Options)
 								{
-									Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg"));
+									Interface.CurrentOptions.Save(Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0/options.cfg"));
 									HUD.LoadHUD();
-									Program.FileSystem.SaveCurrentFileSystemConfiguration();
+									Program.CurrentHost.FileSystem.SaveCurrentFileSystemConfiguration();
 									// re-position our stuff in case of screen resolution change
 									
 								}
@@ -423,7 +423,7 @@ namespace OpenBve
 								Program.Renderer.CurrentInterface = InterfaceType.Normal;
 								break;
 							case MenuTag.Packages:
-								if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out _))
+								if (Database.LoadDatabase(Program.CurrentHost.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out _))
 								{
 									Instance.PushMenu(MenuType.Packages);
 								}
@@ -435,7 +435,7 @@ namespace OpenBve
 								packagePreview = true;
 								Instance.PushMenu(MenuType.PackageInstall);
 								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"});
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\package.png"), TextureParameters.NoChange, out routePictureBox.Texture);
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\package.png"), TextureParameters.NoChange, out routePictureBox.Texture);
 								break;
 							case MenuTag.PackageUninstall:
 								currentOperation = PackageOperation.Uninstalling;
@@ -448,7 +448,7 @@ namespace OpenBve
 								}
 								Instance.PushMenu(MenuType.UninstallRoute);
 								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"});
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), TextureParameters.NoChange, out routePictureBox.Texture);
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\please_select.png"), TextureParameters.NoChange, out routePictureBox.Texture);
 								break;
 							case MenuTag.UninstallTrain:
 								if (Database.currentDatabase.InstalledTrains.Count == 0)
@@ -457,7 +457,7 @@ namespace OpenBve
 								}
 								Instance.PushMenu(MenuType.UninstallTrain);
 								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"});
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), TextureParameters.NoChange, out routePictureBox.Texture);
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\please_select.png"), TextureParameters.NoChange, out routePictureBox.Texture);
 								break;
 							case MenuTag.UninstallOther:
 								if (Database.currentDatabase.InstalledOther.Count == 0)
@@ -466,7 +466,7 @@ namespace OpenBve
 								}
 								Instance.PushMenu(MenuType.UninstallOther);
 								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"});
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), TextureParameters.NoChange, out routePictureBox.Texture);
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\please_select.png"), TextureParameters.NoChange, out routePictureBox.Texture);
 								break;
 							case MenuTag.File:
 								if (currentOperation == PackageOperation.Installing)
@@ -499,7 +499,7 @@ namespace OpenBve
 								}
 								else
 								{
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\package.png"), TextureParameters.NoChange, out routePictureBox.Texture);		
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\package.png"), TextureParameters.NoChange, out routePictureBox.Texture);		
 								}
 								break;
 							case MenuTag.Options:
@@ -511,7 +511,7 @@ namespace OpenBve
 							case MenuTag.RouteList:				// TO ROUTE LIST MENU
 								Instance.PushMenu(MenuType.RouteList);
 								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","route_please_select"});
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), TextureParameters.NoChange, out routePictureBox.Texture);	
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\please_select.png"), TextureParameters.NoChange, out routePictureBox.Texture);	
 								break;
 							case MenuTag.Directory:		// SHOWS THE LIST OF FILES IN THE SELECTED DIR
 								SearchDirectory = SearchDirectory == string.Empty ? menu.Items[menu.Selection].Text : Path.CombineDirectory(SearchDirectory, menu.Items[menu.Selection].Text);
@@ -568,7 +568,7 @@ namespace OpenBve
 											}
 											else
 											{
-												Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\train_unknown.png"), TextureParameters.NoChange, out routePictureBox.Texture);
+												Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\train_unknown.png"), TextureParameters.NoChange, out routePictureBox.Texture);
 											}
 										}
 									}
@@ -612,7 +612,7 @@ namespace OpenBve
 										break;
 									case MenuType.ControlReset:
 										Interface.CurrentControls = null;
-										var File = Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default.controls");
+										var File = Path.CombineFile(Program.CurrentHost.FileSystem.GetDataFolder("Controls"), "Default.controls");
 										Interface.LoadControls(File, out Interface.CurrentControls);
 										Instance.PopMenu();
 										break;
@@ -622,10 +622,10 @@ namespace OpenBve
 								switch (menu.Type)
 								{
 									case MenuType.TrainDefault:
-										SearchDirectory = Program.FileSystem.InitialTrainFolder;
+										SearchDirectory = Program.CurrentHost.FileSystem.InitialTrainFolder;
 										Instance.PushMenu(MenuType.TrainList);
 										routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_choose"});
-										Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), TextureParameters.NoChange, out routePictureBox.Texture);
+										Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\please_select.png"), TextureParameters.NoChange, out routePictureBox.Texture);
 										break;
 									case MenuType.ControlReset:
 										Instance.PopMenu();
@@ -643,11 +643,11 @@ namespace OpenBve
 								Program.CurrentHost.AddMessage(MessageType.Information, false, "Switch " + switchToToggle + " changed from Track " + oldTrack + " to " + Program.CurrentRoute.Switches[switchToToggle].CurrentlySetTrack);
 								if (Program.CurrentRoute.Switches[switchToToggle].CurrentlySetTrack == Program.CurrentRoute.Switches[switchToToggle].LeftTrack)
 								{
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "In-Game\\Switch-L.png"), TextureParameters.NoChange, out switchSettingPictureBox.Texture);
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "In-Game\\Switch-L.png"), TextureParameters.NoChange, out switchSettingPictureBox.Texture);
 								}
 								else
 								{
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "In-Game\\Switch-R.png"), TextureParameters.NoChange, out switchSettingPictureBox.Texture);
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "In-Game\\Switch-R.png"), TextureParameters.NoChange, out switchSettingPictureBox.Texture);
 								}
 
 								menu.Items[2].Text = "Current Setting: " + Program.CurrentRoute.Switches[switchToToggle].CurrentlySetTrack;
@@ -695,7 +695,7 @@ namespace OpenBve
 							case MenuTag.ViewLog:
 								try
 								{
-									var file = Path.CombineFile(Program.FileSystem.SettingsFolder, "log.txt");
+									var file = Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "log.txt");
 
 									if (File.Exists(file))
 									{

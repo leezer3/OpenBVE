@@ -19,9 +19,6 @@ namespace TrainEditor2
 		/// <summary>The host API used by this program.</summary>
 		internal static Host CurrentHost;
 
-		/// <summary>Information about the file system organization.</summary>
-		internal static FileSystem FileSystem;
-
 		internal static NewRenderer Renderer;
 
 		internal static SoundApi SoundApi;
@@ -38,16 +35,6 @@ namespace TrainEditor2
 
 			CurrentHost = new Host();
 
-			try
-			{
-				FileSystem = FileSystem.FromCommandLineArgs(new string[0], CurrentHost);
-				FileSystem.CreateFileSystem();
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"errors","filesystem_invalid"}) + Environment.NewLine + Environment.NewLine + ex.Message, Translations.GetInterfaceString(HostApplication.TrainEditor2, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
-				return;
-			}
 
 			//Switch between SDL2 and native backends; use native backend by default
 			var options = new ToolkitOptions();
@@ -68,19 +55,19 @@ namespace TrainEditor2
 
 			Interface.LoadOptions();
 
-			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
+			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions);
 
 			SoundApi = new SoundApi(CurrentHost);
 			SoundApi.Initialize(SoundRange.Medium);
 
-			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, null, Renderer))
+			if (!CurrentHost.LoadPlugins(Interface.CurrentOptions, out string error, null, Renderer))
 			{
 				SoundApi.DeInitialize();
 				MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 			
-			TrainManager = new Simulation.TrainManager.TrainManager(CurrentHost, null, null, FileSystem);
+			TrainManager = new Simulation.TrainManager.TrainManager(CurrentHost, null, null);
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new FormEditor());
@@ -88,7 +75,7 @@ namespace TrainEditor2
 			CurrentHost.UnloadPlugins(out error);
 			SoundApi.DeInitialize();
 
-			Interface.CurrentOptions.Save(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_te2.cfg"));
+			Interface.CurrentOptions.Save(OpenBveApi.Path.CombineFile(CurrentHost.FileSystem.SettingsFolder, "1.5.0/options_te2.cfg"));
 		}
 	}
 }

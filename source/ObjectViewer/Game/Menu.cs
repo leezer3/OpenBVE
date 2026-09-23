@@ -167,7 +167,7 @@ namespace ObjectViewer
 							case MenuTag.ObjectList:             // TO OBJECT LIST MENU
 								Instance.PushMenu(MenuType.ObjectList);
 								fileTextBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "errors", "route_please_select" });
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), TextureParameters.NoChange, out filePictureBox.Texture);
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\please_select.png"), TextureParameters.NoChange, out filePictureBox.Texture);
 								break;
 							case MenuTag.ErrorList:
 								Instance.PushMenu(MenuType.ErrorList);

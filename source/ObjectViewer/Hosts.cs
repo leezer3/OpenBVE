@@ -429,7 +429,7 @@ namespace ObjectViewer {
 			return TrainManagerBase.PlayerTrain;
 		}
 
-		public Host() : base(HostApplication.ObjectViewer)
+		public Host(string[] args) : base(HostApplication.ObjectViewer, args)
 		{
 		}
 	}

@@ -22,7 +22,7 @@ namespace RouteViewer
 			        SmallImageList = new ImageList()
 		        }
 	        };
-	        string Folder = Program.FileSystem.GetDataFolder("Menu");
+	        string Folder = Program.CurrentHost.FileSystem.GetDataFolder("Menu");
 
 	        try
 	        {

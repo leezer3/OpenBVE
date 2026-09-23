@@ -7,7 +7,6 @@
 
 using LibRender2;
 using OpenBveApi;
-using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using TrainManager;
 
@@ -15,7 +14,7 @@ namespace RouteViewer {
 
 	internal class TrainManager : TrainManagerBase {
 
-		public TrainManager(HostInterface host, BaseRenderer renderer, BaseOptions options, FileSystem fileSystem) : base(host, renderer, options, fileSystem)
+		public TrainManager(HostInterface host, BaseRenderer renderer, BaseOptions options) : base(host, renderer, options)
 		{
 		}
 	}

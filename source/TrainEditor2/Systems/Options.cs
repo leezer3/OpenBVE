@@ -46,7 +46,7 @@ namespace TrainEditor2.Systems
 
 		internal static void LoadOptions()
 		{
-			string optionsFolder = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
+			string optionsFolder = OpenBveApi.Path.CombineDirectory(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0");
 
 			if (!Directory.Exists(optionsFolder))
 			{
@@ -89,7 +89,7 @@ namespace TrainEditor2.Systems
 				languageCode = "en-US";
 			}
 
-			string fileName = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Languages"), languageCode + ".cfg");
+			string fileName = OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.GetDataFolder("Languages"), languageCode + ".cfg");
 
 			if (File.Exists(fileName))
 			{
@@ -104,7 +104,7 @@ namespace TrainEditor2.Systems
 					if (i > 0)
 					{
 						languageCode = languageCode.Substring(0, i);
-						fileName = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Languages"), languageCode + ".cfg");
+						fileName = OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.GetDataFolder("Languages"), languageCode + ".cfg");
 
 						if (File.Exists(fileName))
 						{

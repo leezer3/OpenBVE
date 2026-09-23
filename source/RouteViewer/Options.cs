@@ -116,7 +116,7 @@ namespace RouteViewer
 		internal static void LoadOptions()
 		{
 			Interface.CurrentOptions = new Options();
-			string optionsFolder = Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
+			string optionsFolder = Path.CombineDirectory(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0");
 			if (!Directory.Exists(optionsFolder))
 			{
 				Directory.CreateDirectory(optionsFolder);
@@ -132,7 +132,7 @@ namespace RouteViewer
 				{
 					//If no route viewer specific configuration file exists, then try the main OpenBVE configuration file
 					//Write out to a new Route Viewer specific file though
-					configFile = Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
+					configFile = Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0/options.cfg");
 				}
 			}
 

@@ -33,7 +33,7 @@ namespace RouteViewer
 							routeWorkerThread.DoWork += routeWorkerThread_doWork;
 							routeWorkerThread.RunWorkerCompleted += routeWorkerThread_completed;
 							//Load texture
-							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), TextureParameters.NoChange, out routePictureBox.Texture);
+							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\loading.png"), TextureParameters.NoChange, out routePictureBox.Texture);
 						}
 						Items = new MenuEntry[4];
 						Items[0] = new MenuCommand(menu, "Open Route File", MenuTag.RouteList, 0);
@@ -42,7 +42,7 @@ namespace RouteViewer
 						Items[3] = new MenuCommand(menu, "Close", MenuTag.BackToSim, 0);
 						if (string.IsNullOrEmpty(SearchDirectory))
 						{
-							SearchDirectory = Program.FileSystem.InitialRouteFolder;
+							SearchDirectory = Program.CurrentHost.FileSystem.InitialRouteFolder;
 						}
 						Align = TextAlignment.TopLeft;
 						break;
@@ -114,11 +114,11 @@ namespace RouteViewer
 							Items[totalEntries] = new MenuCommand(menu, directoryInfo.Name, MenuTag.Directory, 0);
 							if (drives)
 							{
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_disk.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_disk.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
 							}
 							else
 							{
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_folder.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_folder.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
 							}
 
 							totalEntries++;
@@ -134,7 +134,7 @@ namespace RouteViewer
 							if (fileName.ToLowerInvariant().EndsWith(".csv") || fileName.ToLowerInvariant().EndsWith(".rw"))
 							{
 								Items[totalEntries] = new MenuCommand(menu, fileName, MenuTag.RouteFile, 0);
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_route.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_route.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
 								totalEntries++;
 							}
 						}
@@ -172,13 +172,13 @@ namespace RouteViewer
 							switch (errorSnapshot[j].Type)
 							{
 								case MessageType.Information:
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_information.png"), TextureParameters.NoChange, out Items[j + 1].Icon);
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_information.png"), TextureParameters.NoChange, out Items[j + 1].Icon);
 									break;
 								case MessageType.Warning:
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_warning.png"), TextureParameters.NoChange, out Items[j + 1].Icon);
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_warning.png"), TextureParameters.NoChange, out Items[j + 1].Icon);
 									break;
 								case MessageType.Error:
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_error.png"), TextureParameters.NoChange, out Items[j + 1].Icon);
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_error.png"), TextureParameters.NoChange, out Items[j + 1].Icon);
 									break;
 							}
 						}

@@ -38,7 +38,7 @@ namespace OpenBve
 
 		private void LoadCompatibilitySignalSets()
 		{
-			string[] possibleFiles = Directory.GetFiles(Path.CombineDirectory(Program.FileSystem.GetDataFolder("Compatibility"), "Signals"), "*.xml");
+			string[] possibleFiles = Directory.GetFiles(Path.CombineDirectory(Program.CurrentHost.FileSystem.GetDataFolder("Compatibility"), "Signals"), "*.xml");
 			for (int i = 0; i < possibleFiles.Length; i++)
 			{
 				XmlDocument currentXML = new XmlDocument();
@@ -172,7 +172,7 @@ namespace OpenBve
 				{
 					listView.Items.Clear();
 					
-					if (!packages || routeFolder != Program.FileSystem.RouteInstallationDirectory)
+					if (!packages || routeFolder != Program.CurrentHost.FileSystem.RouteInstallationDirectory)
 					{
 						// Show parent if applicable
 						try
@@ -277,7 +277,7 @@ namespace OpenBve
 										continue;
 									}
 
-									if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
+									if (!Program.CurrentHost.LoadPlugins(Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 									{
 										throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 									}
@@ -296,7 +296,7 @@ namespace OpenBve
 									{
 										continue;
 									}
-									if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
+									if (!Program.CurrentHost.LoadPlugins(Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 									{
 										throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 									}
@@ -661,7 +661,7 @@ namespace OpenBve
 		private void PopulateTrainList(string selectedFolder, ListView listView, bool packages)
 		{
 			// error ignored in this case, background thread
-			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
+			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 			{
 				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 			}
@@ -691,7 +691,7 @@ namespace OpenBve
 				else if (Directory.Exists(selectedFolder))
 				{
 					listView.Items.Clear();
-					if (!packages || selectedFolder != Program.FileSystem.TrainInstallationDirectory)
+					if (!packages || selectedFolder != Program.CurrentHost.FileSystem.TrainInstallationDirectory)
 					{
 						// parent
 						try
@@ -843,7 +843,7 @@ namespace OpenBve
 		}
 		private void listviewTrainFolders_DoubleClick(object sender, EventArgs e)
 		{
-			if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
+			if (!Program.CurrentHost.LoadPlugins(Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 			{
 				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 			}
@@ -901,7 +901,7 @@ namespace OpenBve
 
 		private void listViewTrainPackages_DoubleClick(object sender, EventArgs e)
 		{
-			if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
+			if (!Program.CurrentHost.LoadPlugins(Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 			{
 				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 			}
@@ -1024,7 +1024,7 @@ namespace OpenBve
 		// train recently
 		private void listviewTrainRecently_SelectedIndexChanged(object sender, EventArgs e) {
 			if (listviewTrainRecently.SelectedItems.Count == 1) {
-				if (!(listviewTrainRecently.SelectedItems[0].Tag is string t) || !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
+				if (!(listviewTrainRecently.SelectedItems[0].Tag is string t) || !Program.CurrentHost.LoadPlugins(Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 				{
 					return;
 				}
@@ -1252,7 +1252,7 @@ namespace OpenBve
 
 		private void PreviewLoadRoute(LaunchParameters result)
 		{
-			if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
+			if (!Program.CurrentHost.LoadPlugins(Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 			{
 				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 			}
@@ -1269,7 +1269,7 @@ namespace OpenBve
 
 			// ReSharper disable once RedundantCast
 			object route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
-			string railwayFolder = Program.FileSystem.GetRailwayFolder(result.RouteFile, Application.StartupPath);
+			string railwayFolder = Program.CurrentHost.FileSystem.GetRailwayFolder(result.RouteFile, Application.StartupPath);
 			string objectFolder = Path.CombineDirectory(railwayFolder, "Object");
 			string soundFolder = Path.CombineDirectory(railwayFolder, "Sound");
 
@@ -1473,7 +1473,7 @@ namespace OpenBve
 		{
 			lock (previewLock)
 			{
-				if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
+				if (!Program.CurrentHost.LoadPlugins(Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 				{
 					throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 				}

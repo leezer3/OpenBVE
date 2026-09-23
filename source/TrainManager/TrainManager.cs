@@ -17,7 +17,6 @@ namespace TrainManager
 		internal static HostInterface currentHost;
 		internal static BaseRenderer Renderer;
 		public static CurrentRoute CurrentRoute;
-		internal static FileSystem FileSystem;
 		public static bool Toppling;
 		public static bool Derailments;
 
@@ -32,12 +31,11 @@ namespace TrainManager
 		/// <summary>Stores the plugin error message string, or a null reference if no error encountered</summary>
 		public static string PluginError;
 
-		protected TrainManagerBase(HostInterface host, BaseRenderer renderer, BaseOptions Options, FileSystem fileSystem)
+		protected TrainManagerBase(HostInterface host, BaseRenderer renderer, BaseOptions Options)
 		{
 			currentHost = host;
 			Renderer = renderer;
 			CurrentOptions = Options;
-			FileSystem = fileSystem;
 		}
 
 		/// <summary>Un-derails all trains within the simulation</summary>

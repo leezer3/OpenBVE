@@ -45,7 +45,7 @@ namespace LibRender2.ShadowMapping
 			{
 				Dispose();
 				Enabled = false;
-				renderer.fileSystem.AppendToLogFile("[CSM] Shadows disabled by user setting.");
+				renderer.currentHost.FileSystem.AppendToLogFile("[CSM] Shadows disabled by user setting.");
 				return;
 			}
 
@@ -82,11 +82,11 @@ namespace LibRender2.ShadowMapping
 				}
 
 				Enabled = true;
-				renderer.fileSystem.AppendToLogFile($"[CSM] Initialized: {cascadeCount} cascades, {resolution}×{resolution}, distance={shadowDistance}m, strength={Strength:P0}");
+				renderer.currentHost.FileSystem.AppendToLogFile($"[CSM] Initialized: {cascadeCount} cascades, {resolution}×{resolution}, distance={shadowDistance}m, strength={Strength:P0}");
 			}
 			catch (Exception ex)
 			{
-				renderer.fileSystem.AppendToLogFile($"[CSM] Init failed: {ex.Message}");
+				renderer.currentHost.FileSystem.AppendToLogFile($"[CSM] Init failed: {ex.Message}");
 				Enabled = false;
 				GL.GetError();
 			}

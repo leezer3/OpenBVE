@@ -42,7 +42,7 @@ namespace OpenBve.Graphics.Renderers
 
 		private void Init()
 		{
-			string Folder = Path.CombineDirectory(Program.FileSystem.GetDataFolder(), "RouteViewer");
+			string Folder = Path.CombineDirectory(Program.CurrentHost.FileSystem.GetDataFolder(), "RouteViewer");
 			renderer.TextureManager.RegisterTexture(Path.CombineFile(Folder, "background.png"), out BackgroundChangeTexture);
 			renderer.TextureManager.RegisterTexture(Path.CombineFile(Folder, "brightness.png"), out BrightnessChangeTexture);
 			renderer.TextureManager.RegisterTexture(Path.CombineFile(Folder, "transponder.png"), out TransponderTexture);

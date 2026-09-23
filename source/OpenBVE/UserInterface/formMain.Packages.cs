@@ -40,7 +40,7 @@ namespace OpenBve
 				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","database_save_error"}));
 			}
 
-			if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out string[] errorMessage))
+			if (Database.LoadDatabase(Program.CurrentHost.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out string[] errorMessage))
 			{
 				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true, false, false);
 				comboBoxPackageType.SelectedIndex = 0;
@@ -267,7 +267,7 @@ namespace OpenBve
 			ResetInstallerPanels();
 		}
 
-		private static readonly string currentDatabaseFile = OpenBveApi.Path.CombineFile(Program.FileSystem.PackageDatabaseFolder, "packages.xml");
+		private static readonly string currentDatabaseFile = OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.PackageDatabaseFolder, "packages.xml");
 
 		private void buttonProceedAnyway_Click(object sender, EventArgs e)
 		{
@@ -299,20 +299,20 @@ namespace OpenBve
 				switch (currentPackage.PackageType)
 				{
 					case PackageType.Route:
-						ExtractionDirectory = Program.FileSystem.RouteInstallationDirectory;
+						ExtractionDirectory = Program.CurrentHost.FileSystem.RouteInstallationDirectory;
 						break;
 					case PackageType.Train:
-						ExtractionDirectory = Program.FileSystem.TrainInstallationDirectory;
+						ExtractionDirectory = Program.CurrentHost.FileSystem.TrainInstallationDirectory;
 						break;
 					case PackageType.Loksim3D:
-						ExtractionDirectory = Program.FileSystem.LoksimPackageInstallationDirectory;
+						ExtractionDirectory = Program.CurrentHost.FileSystem.LoksimPackageInstallationDirectory;
 						break;
 					default:
-						ExtractionDirectory = Program.FileSystem.OtherInstallationDirectory;
+						ExtractionDirectory = Program.CurrentHost.FileSystem.OtherInstallationDirectory;
 						break;
 				}
 				string PackageFiles = "";
-				Manipulation.ExtractPackage(currentPackage, ExtractionDirectory, Program.FileSystem.PackageDatabaseFolder, ref PackageFiles);
+				Manipulation.ExtractPackage(currentPackage, ExtractionDirectory, Program.CurrentHost.FileSystem.PackageDatabaseFolder, ref PackageFiles);
 				if (ProblemEncountered == false && PackageFiles != string.Empty)
 				{
 					textBoxFilesInstalled.Invoke((MethodInvoker) delegate
@@ -554,19 +554,19 @@ namespace OpenBve
 				panelDependancyError.Show();
 				return;
 			}
-			if (Manipulation.UninstallPackage(packageToUninstall, Program.FileSystem.PackageDatabaseFolder, ref uninstallResults))
+			if (Manipulation.UninstallPackage(packageToUninstall, Program.CurrentHost.FileSystem.PackageDatabaseFolder, ref uninstallResults))
 			{
 				Packages.Remove(packageToUninstall);
 				switch (packageToUninstall.PackageType)
 				{
 					case PackageType.Other:
-						DatabaseFunctions.CleanDirectory(Program.FileSystem.OtherInstallationDirectory, ref uninstallResults);
+						DatabaseFunctions.CleanDirectory(Program.CurrentHost.FileSystem.OtherInstallationDirectory, ref uninstallResults);
 						break;
 					case PackageType.Route:
-						DatabaseFunctions.CleanDirectory(Program.FileSystem.RouteInstallationDirectory, ref uninstallResults);
+						DatabaseFunctions.CleanDirectory(Program.CurrentHost.FileSystem.RouteInstallationDirectory, ref uninstallResults);
 						break;
 					case PackageType.Train:
-						DatabaseFunctions.CleanDirectory(Program.FileSystem.TrainInstallationDirectory, ref uninstallResults);
+						DatabaseFunctions.CleanDirectory(Program.CurrentHost.FileSystem.TrainInstallationDirectory, ref uninstallResults);
 						break;
 				}
 				labelUninstallSuccess.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","uninstall_success"});
@@ -1550,7 +1550,7 @@ namespace OpenBve
 			{
 				//Reinstall
 				string result = string.Empty;
-				Manipulation.UninstallPackage(currentPackage, Program.FileSystem.PackageDatabaseFolder, ref result);
+				Manipulation.UninstallPackage(currentPackage, Program.CurrentHost.FileSystem.PackageDatabaseFolder, ref result);
 				switch (currentPackage.PackageType)
 				{
 					case PackageType.Route:

@@ -332,7 +332,7 @@ namespace RouteViewer
             // Sun direction is already updated in real-time via slider events
 
 
-			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_rv.cfg"));
+			Interface.CurrentOptions.Save(Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0/options_rv.cfg"));
 			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 			{
 				if (Program.CurrentHost.Plugins[i].Object != null)

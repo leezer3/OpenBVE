@@ -69,7 +69,7 @@ namespace OpenBve
 							Manipulation.ProblemReport += OnWorkerReportsProblem;
 							Manipulation.OperationCompleted += OnPackageOperationCompleted;
 							//Load texture
-							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), TextureParameters.NoChange, out routePictureBox.Texture);
+							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\loading.png"), TextureParameters.NoChange, out routePictureBox.Texture);
 							// n.b. only cycling between two images at the minute, so use the same method
 							nextImageButton.OnClick += nextImageButton_Click;
 							previousImageButton.OnClick += nextImageButton_Click;
@@ -90,7 +90,7 @@ namespace OpenBve
 						{
 							Array.Resize(ref Items, Items.Length - 3);
 						}
-						SearchDirectory = Program.FileSystem.InitialRouteFolder;
+						SearchDirectory = Program.CurrentHost.FileSystem.InitialRouteFolder;
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.Packages:
@@ -179,11 +179,11 @@ namespace OpenBve
 							Items[totalEntries] = new MenuCommand(menu, directoryInfo.Name, MenuTag.Directory, 0);
 							if (drives)
 							{
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_disk.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_disk.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
 							}
 							else
 							{
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_folder.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);	
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_folder.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);	
 							}
 							
 							totalEntries++;
@@ -328,11 +328,11 @@ namespace OpenBve
 							Items[totalEntries] = new MenuCommand(menu, directoryInfo.Name, MenuTag.Directory, 0);
 							if (drives)
 							{
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_disk.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_disk.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
 							}
 							else
 							{
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_folder.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);	
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_folder.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);	
 							}
 							
 							totalEntries++;
@@ -359,7 +359,7 @@ namespace OpenBve
 									if (Program.CurrentHost.Plugins[k].Route != null && Program.CurrentHost.Plugins[k].Route.CanLoadRoute(potentialFiles[j]))
 									{
 										Items[totalEntries] = new MenuCommand(menu, fileName, MenuTag.RouteFile, 0);
-										Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_route.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
+										Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_route.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
 										totalEntries++;
 										break;
 									}
@@ -421,17 +421,17 @@ namespace OpenBve
 								Items[totalEntries] = new MenuCommand(menu, directoryInfo.Name, MenuTag.Directory, 0);
 								if (drives)
 								{
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_disk.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_disk.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
 								}
 								else
 								{
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_folder.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);	
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_folder.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);	
 								}
 							}
 							else
 							{
 								Items[totalEntries] = new MenuCommand(menu, directoryInfo.Name, MenuTag.TrainDirectory, 0);
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_train.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);	
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_train.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);	
 							}
 							totalEntries++;
 						}
@@ -586,7 +586,7 @@ namespace OpenBve
 						else
 						{
 							PreviousSearchDirectory = SearchDirectory;
-							SearchDirectory = Program.FileSystem.InitialTrainFolder;
+							SearchDirectory = Program.CurrentHost.FileSystem.InitialTrainFolder;
 							//Default train not found or not valid
 							Instance.PushMenu(MenuType.TrainList);
 						}

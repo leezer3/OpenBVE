@@ -52,8 +52,6 @@ namespace LibRender2
 
 		/// <summary>The callback to the host application</summary>
 		internal HostInterface currentHost;
-		/// <summary>The host filesystem</summary>
-		internal FileSystem fileSystem;
 
 		/// <summary>Holds a reference to the current options</summary>
 		internal BaseOptions currentOptions;
@@ -308,15 +306,15 @@ namespace LibRender2
 				{
 					if (Screen.Width > 1024)
 					{
-						currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("In-game"), "logo_1024.png"), TextureParameters.NoChange, out _programLogo, true);
+						currentHost.RegisterTexture(Path.CombineFile(currentHost.FileSystem.GetDataFolder("In-game"), "logo_1024.png"), TextureParameters.NoChange, out _programLogo, true);
 					}
 					else if (Screen.Width > 512)
 					{
-						currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("In-game"), "logo_512.png"), TextureParameters.NoChange, out _programLogo, true);
+						currentHost.RegisterTexture(Path.CombineFile(currentHost.FileSystem.GetDataFolder("In-game"), "logo_512.png"), TextureParameters.NoChange, out _programLogo, true);
 					}
 					else
 					{
-						currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("In-game"), "logo_256.png"), TextureParameters.NoChange, out _programLogo, true);
+						currentHost.RegisterTexture(Path.CombineFile(currentHost.FileSystem.GetDataFolder("In-game"), "logo_256.png"), TextureParameters.NoChange, out _programLogo, true);
 					}
 				}
 				catch
@@ -359,11 +357,10 @@ namespace LibRender2
 
 		public Dictionary<Texture, HashSet<Vector3>> CubesToDraw = new Dictionary<Texture, HashSet<Vector3>>();
 		
-		protected BaseRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem)
+		protected BaseRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions)
 		{
 			currentHost = CurrentHost;
 			currentOptions = CurrentOptions;
-			fileSystem = FileSystem;
 			Screen = new Screen(this);
 			Camera = new CameraProperties(this);
 			Lighting = new Lighting(this);
@@ -481,12 +478,12 @@ namespace LibRender2
 				}
 			}
 			// icons for use in GL menus
-			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "keyboard.png"), TextureParameters.NoChange, out KeyboardTexture);
-			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "gamepad.png"), TextureParameters.NoChange, out GamepadTexture);
-			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "xbox.png"), TextureParameters.NoChange, out XInputTexture);
-			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "zuki.png"), TextureParameters.NoChange, out MasconTexture);
-			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "joystick.png"), TextureParameters.NoChange, out JoystickTexture);
-			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "raildriver.png"), TextureParameters.NoChange, out RailDriverTexture);
+			currentHost.RegisterTexture(Path.CombineFile(currentHost.FileSystem.GetDataFolder("Menu"), "keyboard.png"), TextureParameters.NoChange, out KeyboardTexture);
+			currentHost.RegisterTexture(Path.CombineFile(currentHost.FileSystem.GetDataFolder("Menu"), "gamepad.png"), TextureParameters.NoChange, out GamepadTexture);
+			currentHost.RegisterTexture(Path.CombineFile(currentHost.FileSystem.GetDataFolder("Menu"), "xbox.png"), TextureParameters.NoChange, out XInputTexture);
+			currentHost.RegisterTexture(Path.CombineFile(currentHost.FileSystem.GetDataFolder("Menu"), "zuki.png"), TextureParameters.NoChange, out MasconTexture);
+			currentHost.RegisterTexture(Path.CombineFile(currentHost.FileSystem.GetDataFolder("Menu"), "joystick.png"), TextureParameters.NoChange, out JoystickTexture);
+			currentHost.RegisterTexture(Path.CombineFile(currentHost.FileSystem.GetDataFolder("Menu"), "raildriver.png"), TextureParameters.NoChange, out RailDriverTexture);
 
 			Lighting.Initialize();
 			Shadows.Initialize();
@@ -505,7 +502,7 @@ namespace LibRender2
 		/// </summary>
 		public void ReloadShadowSettings()
 		{
-			fileSystem.AppendToLogFile("[CSM] Reloading shadow settings from options...");
+			currentHost.FileSystem.AppendToLogFile("[CSM] Reloading shadow settings from options...");
 			InitializeShadows();
 		}
 

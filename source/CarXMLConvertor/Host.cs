@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Hosts;
+﻿using System;
+using OpenBveApi.Hosts;
 using OpenBveApi.Trains;
 
 namespace CarXmlConvertor

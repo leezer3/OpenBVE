@@ -38,7 +38,6 @@ namespace RouteViewer
 	internal static class Program {
 
 		// system
-		internal static FileSystem FileSystem = null;
 		internal static string CurrentRouteFile = null;
 		internal static bool CurrentlyLoading = false;
 		internal static bool JumpToPositionEnabled = false;
@@ -74,10 +73,8 @@ namespace RouteViewer
 		[STAThread]
 		internal static void Main(string[] args)
 		{
-			CurrentHost = new Host();
+			CurrentHost = new Host(args);
 			// file system
-			FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
-			FileSystem.CreateFileSystem();
 			Sounds = new Sounds(CurrentHost);
 			Options.LoadOptions();
 			// n.b. Init the toolkit before the renderer
@@ -95,10 +92,10 @@ namespace RouteViewer
 
 			Toolkit.Init(options);
 
-			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
+			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions);
 			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
-			TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
-			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, TrainManager, Renderer))
+			TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions);
+			if (!CurrentHost.LoadPlugins(Interface.CurrentOptions, out string error, TrainManager, Renderer))
 			{
 				MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
@@ -175,7 +172,7 @@ namespace RouteViewer
 				SetProcessDPIAware();
 			}
 
-			string folder = FileSystem.GetDataFolder("Languages");
+			string folder = CurrentHost.FileSystem.GetDataFolder("Languages");
 			Translations.LoadLanguageFiles(folder);
 			// application
 			Renderer.GraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);

@@ -37,7 +37,7 @@ namespace OpenBve
 				
 				Builder.Append("\n");
 			}
-			string File = FileOrNull ?? OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/controls.cfg");
+			string File = FileOrNull ?? OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0/controls.cfg");
 			System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
 		}
 
@@ -76,16 +76,16 @@ namespace OpenBve
 			
 			if (FileOrNull == null)
 			{
-				File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/controls.cfg");
+				File = OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0/controls.cfg");
 				if (!System.IO.File.Exists(File))
 				{
-					File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "controls.cfg");
+					File = OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "controls.cfg");
 				}
 
 				if (!System.IO.File.Exists(File))
 				{
 					//Load the default key assignments if the user settings don't exist
-					File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default.controls");
+					File = OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.GetDataFolder("Controls"), "Default.controls");
 					if (!System.IO.File.Exists(File))
 					{
 						Program.ShowMessageBox(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","warning"}) + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_missing"}),
@@ -153,7 +153,7 @@ namespace OpenBve
 										Program.ShowMessageBox(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_oldversion"}) + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_reset"}), Application.ProductName);
 									}
 
-									var DefaultControls = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls");
+									var DefaultControls = OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls");
 									if (System.IO.File.Exists(DefaultControls))
 									{
 										if (ControlsReset == false)

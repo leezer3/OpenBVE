@@ -20,7 +20,7 @@ namespace OpenBve
 		/// <summary>Loads the black-box logs from the previous simulation run</summary>
 		internal static void LoadLogs()
 		{
-			string BlackBoxFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "logs.bin");
+			string BlackBoxFile = OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "logs.bin");
 			if (File.Exists(BlackBoxFile))
 			{
 				try
@@ -102,7 +102,7 @@ namespace OpenBve
 				return;
 			}
 			lastLogSaveTime = Program.CurrentRoute.SecondsSinceMidnight;
-			string BlackBoxFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "logs.bin");
+			string BlackBoxFile = OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "logs.bin");
 			try
 			{
 				using (FileStream Stream = new FileStream(BlackBoxFile, FileMode.Create, FileAccess.Write))

@@ -14,7 +14,7 @@ namespace OpenBve {
 			{
 				LogMessages.Add(new LogMessage(messageType, fileNotFound, messageText));
 			}
-			Program.FileSystem.AppendToLogFile(messageText);
+			Program.CurrentHost.FileSystem.AppendToLogFile(messageText);
 			
 		}
 
