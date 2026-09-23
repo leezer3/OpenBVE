@@ -76,7 +76,9 @@ namespace RouteViewer
 			CurrentHost = new Host(args);
 			// file system
 			Sounds = new Sounds(CurrentHost);
-			Options.LoadOptions();
+			Interface.CurrentOptions = new Options();
+			Interface.CurrentOptions.Load();
+
 			// n.b. Init the toolkit before the renderer
 			ToolkitOptions options = new ToolkitOptions
 			{

@@ -77,7 +77,9 @@ namespace ObjectViewer {
 		    CurrentHost = new Host(args);
 			
 	        CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
-	        Options.LoadOptions();
+	        Interface.CurrentOptions = new Options();
+			Interface.CurrentOptions.Load();
+
 			// n.b. Init the toolkit before the renderer
 	        ToolkitOptions options = new ToolkitOptions
 	        {

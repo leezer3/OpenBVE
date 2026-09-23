@@ -414,247 +414,245 @@ namespace OpenBve
 					Program.ShowMessageBox(@"Failed to write to the Options folder.", Application.ProductName);
 				}
 			}
-		}
 
-		/// <summary>The current game options</summary>
-		internal static Options CurrentOptions;
-		/// <summary>Loads the options file from disk</summary>
-		internal static void LoadOptions()
-		{
-			CurrentOptions = new Options();
-			string OptionsDir = Path.CombineDirectory(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0");
-			if (!Directory.Exists(OptionsDir))
+			public override void Load()
 			{
-				Directory.CreateDirectory(OptionsDir);
-			}
-			
-			string configFile = Path.CombineFile(OptionsDir, "options.cfg");
-			if (!File.Exists(configFile))
-			{
-				//Attempt to load and upgrade a prior configuration file
-				configFile = Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "options.cfg");
-			}
-
-			if (File.Exists(configFile))
-			{
-				ConfigFile<OptionsSection, OptionsKey> cfg = new ConfigFile<OptionsSection, OptionsKey>(File.ReadAllLines(configFile, new UTF8Encoding()), configFile, Program.CurrentHost);
-
-				while (cfg.RemainingSubBlocks > 0)
+				string OptionsDir = Path.CombineDirectory(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0");
+				if (!Directory.Exists(OptionsDir))
 				{
-					Block<OptionsSection, OptionsKey> block = cfg.ReadNextBlock();
-					switch (block.Key)
+					Directory.CreateDirectory(OptionsDir);
+				}
+
+				string configFile = Path.CombineFile(OptionsDir, "options.cfg");
+				if (!File.Exists(configFile))
+				{
+					//Attempt to load and upgrade a prior configuration file
+					configFile = Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "options.cfg");
+				}
+
+				if (File.Exists(configFile))
+				{
+					ConfigFile<OptionsSection, OptionsKey> cfg = new ConfigFile<OptionsSection, OptionsKey>(File.ReadAllLines(configFile, new UTF8Encoding()), configFile, Program.CurrentHost);
+
+					while (cfg.RemainingSubBlocks > 0)
 					{
-						case OptionsSection.Language:
-							block.TryGetValue(OptionsKey.Code, ref CurrentOptions.LanguageCode);
-							break;
-						case OptionsSection.Interface:
-							block.TryGetValue(OptionsKey.Folder, ref CurrentOptions.UserInterfaceFolder);
-							block.GetEnumValue(OptionsKey.TimetableMode, out CurrentOptions.TimeTableStyle);
-							block.GetValue(OptionsKey.KioskMode, out Interface.CurrentOptions.KioskMode);
-							block.TryGetValue(OptionsKey.KioskModeTimer, ref CurrentOptions.KioskModeTimer, NumberRange.NonNegative);
-							if (CurrentOptions.KioskModeTimer > 1000 || CurrentOptions.KioskModeTimer == 0)
-							{
-								CurrentOptions.KioskModeTimer = 300;
-							}
-
-							block.GetValue(OptionsKey.Accessibility, out Interface.CurrentOptions.Accessibility);
-							block.TryGetValue(OptionsKey.Font, ref CurrentOptions.Font);
-							block.GetValue(OptionsKey.DailyBuildUpdates, out Interface.CurrentOptions.DailyBuildUpdates);
-							break;
-						case OptionsSection.Display:
+						Block<OptionsSection, OptionsKey> block = cfg.ReadNextBlock();
+						switch (block.Key)
 						{
-							block.GetValue(OptionsKey.PreferNativeBackend, out CurrentOptions.PreferNativeBackend);
-							block.GetValue(OptionsKey.Mode, out string m);
-							CurrentOptions.FullscreenMode = string.Compare(m, "fullscreen", StringComparison.OrdinalIgnoreCase) == 0;
-							block.TryGetValue(OptionsKey.WindowWidth, ref Interface.CurrentOptions.WindowWidth, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.WindowHeight, ref Interface.CurrentOptions.WindowHeight, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.FullScreenWidth, ref Interface.CurrentOptions.FullscreenWidth, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.FullScreenHeight, ref CurrentOptions.FullscreenHeight, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.FullScreenBits, ref CurrentOptions.FullscreenBits, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.MainMenuWidth, ref CurrentOptions.MainMenuWidth, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.MainMenuHeight, ref CurrentOptions.MainMenuHeight, NumberRange.Positive);
-							block.GetValue(OptionsKey.VSync, out Interface.CurrentOptions.VerticalSynchronization);
-							block.GetValue(OptionsKey.LoadInAdvance, out Interface.CurrentOptions.LoadInAdvance);
-							block.GetValue(OptionsKey.UnloadTextures, out CurrentOptions.UnloadUnusedTextures);
-							block.GetValue(OptionsKey.ForwardsCompatibleContext, out CurrentOptions.ForceForwardsCompatibleContext);
-							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.QuadLeafSize, ref Interface.CurrentOptions.QuadTreeLeafSize, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.NearClipScenery, ref Interface.CurrentOptions.NearClipScenery, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.NearClipCab, ref Interface.CurrentOptions.NearClipCab, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.NearClipBase, ref Interface.CurrentOptions.NearClipBase, NumberRange.Positive);
-							// ensure viewing distance is greater than the near clipping plane to avoid rendering issues
-							double maxNearClip = Math.Max(Interface.CurrentOptions.NearClipScenery, Math.Max(Interface.CurrentOptions.NearClipCab, Interface.CurrentOptions.NearClipBase));
+							case OptionsSection.Language:
+								block.TryGetValue(OptionsKey.Code, ref LanguageCode);
+								break;
+							case OptionsSection.Interface:
+								block.TryGetValue(OptionsKey.Folder, ref UserInterfaceFolder);
+								block.GetEnumValue(OptionsKey.TimetableMode, out TimeTableStyle);
+								block.GetValue(OptionsKey.KioskMode, out KioskMode);
+								block.TryGetValue(OptionsKey.KioskModeTimer, ref KioskModeTimer, NumberRange.NonNegative);
+								if (KioskModeTimer > 1000 || KioskModeTimer == 0)
+								{
+									KioskModeTimer = 300;
+								}
 
-							if (Interface.CurrentOptions.ViewingDistance <= maxNearClip)
-							{
-								Interface.CurrentOptions.ViewingDistance = (int)Math.Ceiling(maxNearClip) + 1;
-							}
+								block.GetValue(OptionsKey.Accessibility, out Accessibility);
+								block.TryGetValue(OptionsKey.Font, ref Font);
+								block.GetValue(OptionsKey.DailyBuildUpdates, out DailyBuildUpdates);
+								break;
+							case OptionsSection.Display:
+								{
+									block.GetValue(OptionsKey.PreferNativeBackend, out PreferNativeBackend);
+									block.GetValue(OptionsKey.Mode, out string m);
+									FullscreenMode = string.Compare(m, "fullscreen", StringComparison.OrdinalIgnoreCase) == 0;
+									block.TryGetValue(OptionsKey.WindowWidth, ref WindowWidth, NumberRange.Positive);
+									block.TryGetValue(OptionsKey.WindowHeight, ref WindowHeight, NumberRange.Positive);
+									block.TryGetValue(OptionsKey.FullScreenWidth, ref FullscreenWidth, NumberRange.Positive);
+									block.TryGetValue(OptionsKey.FullScreenHeight, ref FullscreenHeight, NumberRange.Positive);
+									block.TryGetValue(OptionsKey.FullScreenBits, ref FullscreenBits, NumberRange.Positive);
+									block.TryGetValue(OptionsKey.MainMenuWidth, ref MainMenuWidth, NumberRange.Positive);
+									block.TryGetValue(OptionsKey.MainMenuHeight, ref MainMenuHeight, NumberRange.Positive);
+									block.GetValue(OptionsKey.VSync, out VerticalSynchronization);
+									block.GetValue(OptionsKey.LoadInAdvance, out LoadInAdvance);
+									block.GetValue(OptionsKey.UnloadTextures, out UnloadUnusedTextures);
+									block.GetValue(OptionsKey.ForwardsCompatibleContext, out ForceForwardsCompatibleContext);
+									block.TryGetValue(OptionsKey.ViewingDistance, ref ViewingDistance, NumberRange.Positive);
+									block.TryGetValue(OptionsKey.QuadLeafSize, ref QuadTreeLeafSize, NumberRange.Positive);
+									block.TryGetValue(OptionsKey.NearClipScenery, ref NearClipScenery, NumberRange.Positive);
+									block.TryGetValue(OptionsKey.NearClipCab, ref NearClipCab, NumberRange.Positive);
+									block.TryGetValue(OptionsKey.NearClipBase, ref NearClipBase, NumberRange.Positive);
+									// ensure viewing distance is greater than the near clipping plane to avoid rendering issues
+									double maxNearClip = Math.Max(NearClipScenery, Math.Max(NearClipCab, NearClipBase));
 
-							block.TryGetValue(OptionsKey.UIScaleFactor, ref CurrentOptions.UserInterfaceScaleFactor);
-							block.GetValue(OptionsKey.CameraInteriorTransition, out CurrentOptions.CameraInteriorTransition);
-							block.GetValue(OptionsKey.CameraExteriorTransition, out CurrentOptions.CameraExteriorTransition);
-							block.TryGetValue(OptionsKey.CameraTransitionSpeed, ref CurrentOptions.CameraTransitionSpeed, NumberRange.Positive);
-							if (CurrentOptions.CameraTransitionSpeed == 0)
-							{
-								CurrentOptions.CameraTransitionSpeed = 0.4;
-							}
-							break;
+									if (ViewingDistance <= maxNearClip)
+									{
+										ViewingDistance = (int)Math.Ceiling(maxNearClip) + 1;
+									}
+
+									block.TryGetValue(OptionsKey.UIScaleFactor, ref UserInterfaceScaleFactor);
+									block.GetValue(OptionsKey.CameraInteriorTransition, out CameraInteriorTransition);
+									block.GetValue(OptionsKey.CameraExteriorTransition, out CameraExteriorTransition);
+									block.TryGetValue(OptionsKey.CameraTransitionSpeed, ref CameraTransitionSpeed, NumberRange.Positive);
+									if (CameraTransitionSpeed == 0)
+									{
+										CameraTransitionSpeed = 0.4;
+									}
+									break;
+								}
+							case OptionsSection.Quality:
+								{
+									block.GetEnumValue(OptionsKey.Interpolation, out Interpolation);
+									block.TryGetValue(OptionsKey.AnisotropicFilteringMaximum, ref AnisotropicFilteringMaximum);
+									block.TryGetValue(OptionsKey.AnisotropicFilteringLevel, ref AnisotropicFilteringLevel);
+									block.TryGetValue(OptionsKey.AntiAliasingLevel, ref AntiAliasingLevel);
+									block.GetEnumValue(OptionsKey.TransparencyMode, out TransparencyMode);
+									block.GetValue(OptionsKey.OldTransparencyMode, out OldTransparencyMode);
+									block.TryGetValue(OptionsKey.ViewingDistance, ref ViewingDistance, NumberRange.Positive);
+									block.TryGetValue(OptionsKey.QuadLeafSize, ref QuadTreeLeafSize, NumberRange.Positive);
+									block.TryGetValue(OptionsKey.NearClipScenery, ref NearClipScenery, NumberRange.Positive);
+									block.TryGetValue(OptionsKey.NearClipCab, ref NearClipCab, NumberRange.Positive);
+									block.TryGetValue(OptionsKey.NearClipBase, ref NearClipBase, NumberRange.Positive);
+									// ensure viewing distance is greater than the near clipping plane to avoid rendering issues
+									double maxNearClip = Math.Max(NearClipScenery, Math.Max(NearClipCab, NearClipBase));
+
+									if (ViewingDistance <= maxNearClip)
+									{
+										ViewingDistance = (int)Math.Ceiling(maxNearClip) + 1;
+									}
+									block.GetEnumValue(OptionsKey.MotionBlur, out MotionBlur);
+									block.TryGetEnumValue(OptionsKey.ShadowResolution, ref ShadowResolution);
+									block.TryGetEnumValue(OptionsKey.ShadowDrawDistance, ref ShadowDrawDistance);
+									block.TryGetEnumValue(OptionsKey.ShadowCascades, ref ShadowCascades);
+									block.TryGetValue(OptionsKey.ShadowStrength, ref ShadowStrength);
+									block.TryGetValue(OptionsKey.ShadowBias, ref ShadowBias);
+									if (ShadowBias < 0.0) ShadowBias = 0.0;
+									if (ShadowBias > 1.0) ShadowBias = 1.0;
+									block.TryGetValue(OptionsKey.ShadowNormalBias, ref ShadowNormalBias);
+									if (ShadowNormalBias < 0.0) ShadowNormalBias = 0.0;
+									block.GetValue(OptionsKey.ShadowFilterCascades, out ShadowFilterCascades);
+									block.GetValue(OptionsKey.FPSLimit, out FPSLimit);
+									if (FPSLimit < 0)
+									{
+										FPSLimit = 0; // n.b. 0 is unlimited
+									}
+
+									break;
+								}
+							case OptionsSection.ObjectOptimization:
+								{
+									block.GetValue(OptionsKey.BasicThreshold, out ObjectOptimizationBasicThreshold);
+									block.GetValue(OptionsKey.VertexCulling, out ObjectOptimizationVertexCulling);
+									break;
+								}
+							case OptionsSection.Simulation:
+								block.GetValue(OptionsKey.Toppling, out Toppling);
+								block.GetValue(OptionsKey.Collisions, out Collisions);
+								block.GetValue(OptionsKey.Derailments, out Derailments);
+								block.GetValue(OptionsKey.LoadingSway, out LoadingSway);
+								block.GetValue(OptionsKey.BlackBox, out BlackBox);
+								block.GetEnumValue(OptionsKey.Mode, out GameMode);
+								block.GetValue(OptionsKey.AcceleratedTimeFactor, out TimeAccelerationFactor);
+								if (TimeAccelerationFactor <= 0)
+								{
+									TimeAccelerationFactor = 5;
+								}
+
+								block.GetValue(OptionsKey.EnableBVETSHacks, out EnableBveTsHacks);
+								block.GetValue(OptionsKey.EnableBVE5ScriptedTrain, out EnableBve5ScriptedTrain);
+								break;
+							case OptionsSection.Controls:
+								block.GetValue(OptionsKey.UseJoysticks, out UseJoysticks);
+								block.GetValue(OptionsKey.JoystickAxisEB, out AllowAxisEB);
+								block.GetValue(OptionsKey.JoystickAxisThreshold, out JoystickAxisThreshold);
+								block.GetValue(OptionsKey.KeyRepeatDelay, out int delay);
+								if (delay <= 500) delay = 500;
+								KeyRepeatDelay = delay * 0.001;
+								block.GetValue(OptionsKey.KeyRepeatDelay, out int interval);
+								if (interval <= 500) interval = 500;
+								KeyRepeatInterval = interval * 0.001;
+								block.GetValue(OptionsKey.RailDriverMPH, out RailDriverMPH);
+								block.GetValue(OptionsKey.CursorHideDelay, out CursorHideDelay);
+								break;
+							case OptionsSection.Sound:
+								block.GetEnumValue(OptionsKey.Range, out SoundRange);
+								block.GetValue(OptionsKey.Number, out SoundNumber);
+								if (SoundNumber < 16) SoundNumber = 16;
+								break;
+							case OptionsSection.Verbosity:
+								block.GetValue(OptionsKey.ShowWarningMessages, out ShowWarningMessages);
+								block.GetValue(OptionsKey.ShowErrorMessages, out ShowErrorMessages);
+								block.GetValue(OptionsKey.DebugLog, out GenerateDebugLogging);
+								break;
+							case OptionsSection.Folders:
+								block.GetValue(OptionsKey.Route, out RouteFolder);
+								block.GetValue(OptionsKey.Train, out TrainFolder);
+								break;
+							case OptionsSection.Packages:
+								block.GetEnumValue(OptionsKey.Compression, out packageCompressionType);
+								break;
+							case OptionsSection.RecentlyUsedRoutes:
+								Array.Resize(ref RecentlyUsedRoutes, block.RemainingDataValues);
+								int num = 0;
+								while (block.RemainingDataValues > 0)
+								{
+									block.GetNextRawValue(out RecentlyUsedRoutes[num]);
+									num++;
+								}
+
+								break;
+							case OptionsSection.RecentlyUsedTrains:
+								Array.Resize(ref RecentlyUsedTrains, block.RemainingDataValues);
+								num = 0;
+								while (num < RecentlyUsedTrains.Length)
+								{
+									block.GetNextRawValue(out RecentlyUsedTrains[num]);
+									num++;
+								}
+
+								break;
+							case OptionsSection.RouteEncodings:
+								Array.Resize(ref RouteEncodings, block.RemainingDataValues);
+								num = 0;
+								while (num < RouteEncodings.Length)
+								{
+									block.GetIndexedEncoding(out RouteEncodings[num].Codepage, out RouteEncodings[num].Value);
+									num++;
+								}
+
+								break;
+							case OptionsSection.TrainEncodings:
+								Array.Resize(ref TrainEncodings, block.RemainingDataValues);
+								num = 0;
+								while (num < TrainEncodings.Length)
+								{
+									block.GetIndexedEncoding(out TrainEncodings[num].Codepage, out TrainEncodings[num].Value);
+									num++;
+								}
+
+								break;
+							case OptionsSection.EnableInputDevicePlugins:
+								Array.Resize(ref EnabledInputDevicePlugins, block.RemainingDataValues);
+								num = 0;
+								while (num < EnabledInputDevicePlugins.Length)
+								{
+									block.GetNextRawValue(out EnabledInputDevicePlugins[num]);
+									num++;
+								}
+
+								break;
+							case OptionsSection.Parsers:
+								block.GetEnumValue(OptionsKey.XObject, out CurrentXParser);
+								block.GetEnumValue(OptionsKey.ObjObject, out CurrentObjParser);
+								block.GetValue(OptionsKey.GDIPlus, out UseGDIDecoders);
+								break;
+							case OptionsSection.Touch:
+								block.TryGetValue(OptionsKey.Cursor, ref CursorFileName);
+								block.GetValue(OptionsKey.Panel2Extended, out Panel2ExtendedMode);
+								block.GetValue(OptionsKey.Panel2ExtendedMinSize, out Panel2ExtendedMinSize);
+								break;
 						}
-						case OptionsSection.Quality:
-						{
-							block.GetEnumValue(OptionsKey.Interpolation, out Interface.CurrentOptions.Interpolation);
-							block.TryGetValue(OptionsKey.AnisotropicFilteringMaximum, ref CurrentOptions.AnisotropicFilteringMaximum);
-							block.TryGetValue(OptionsKey.AnisotropicFilteringLevel, ref Interface.CurrentOptions.AnisotropicFilteringLevel);
-							block.TryGetValue(OptionsKey.AntiAliasingLevel, ref Interface.CurrentOptions.AntiAliasingLevel);
-							block.GetEnumValue(OptionsKey.TransparencyMode, out Interface.CurrentOptions.TransparencyMode);
-							block.GetValue(OptionsKey.OldTransparencyMode, out CurrentOptions.OldTransparencyMode);
-							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.QuadLeafSize, ref Interface.CurrentOptions.QuadTreeLeafSize, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.NearClipScenery, ref Interface.CurrentOptions.NearClipScenery, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.NearClipCab, ref Interface.CurrentOptions.NearClipCab, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.NearClipBase, ref Interface.CurrentOptions.NearClipBase, NumberRange.Positive);
-							// ensure viewing distance is greater than the near clipping plane to avoid rendering issues
-							double maxNearClip = Math.Max(Interface.CurrentOptions.NearClipScenery, Math.Max(Interface.CurrentOptions.NearClipCab, Interface.CurrentOptions.NearClipBase));
-
-							if (Interface.CurrentOptions.ViewingDistance <= maxNearClip)
-							{
-								Interface.CurrentOptions.ViewingDistance = (int)Math.Ceiling(maxNearClip) + 1;
-							}
-							block.GetEnumValue(OptionsKey.MotionBlur, out CurrentOptions.MotionBlur);
-							block.TryGetEnumValue(OptionsKey.ShadowResolution, ref Interface.CurrentOptions.ShadowResolution);
-							block.TryGetEnumValue(OptionsKey.ShadowDrawDistance, ref Interface.CurrentOptions.ShadowDrawDistance);
-							block.TryGetEnumValue(OptionsKey.ShadowCascades, ref Interface.CurrentOptions.ShadowCascades);
-							block.TryGetValue(OptionsKey.ShadowStrength, ref CurrentOptions.ShadowStrength);
-							block.TryGetValue(OptionsKey.ShadowBias, ref CurrentOptions.ShadowBias);
-							if (CurrentOptions.ShadowBias < 0.0) CurrentOptions.ShadowBias = 0.0;
-							if (CurrentOptions.ShadowBias > 1.0) CurrentOptions.ShadowBias = 1.0;
-							block.TryGetValue(OptionsKey.ShadowNormalBias, ref CurrentOptions.ShadowNormalBias);
-							if (CurrentOptions.ShadowNormalBias < 0.0) CurrentOptions.ShadowNormalBias = 0.0;
-							block.GetValue(OptionsKey.ShadowFilterCascades, out Interface.CurrentOptions.ShadowFilterCascades);
-							block.GetValue(OptionsKey.FPSLimit, out CurrentOptions.FPSLimit);
-							if (CurrentOptions.FPSLimit < 0)
-							{
-								CurrentOptions.FPSLimit = 0; // n.b. 0 is unlimited
-							}
-
-							break;
-						}
-						case OptionsSection.ObjectOptimization:
-						{
-							block.GetValue(OptionsKey.BasicThreshold, out CurrentOptions.ObjectOptimizationBasicThreshold);
-							block.GetValue(OptionsKey.VertexCulling, out CurrentOptions.ObjectOptimizationVertexCulling);
-							break;
-						}
-						case OptionsSection.Simulation:
-							block.GetValue(OptionsKey.Toppling, out CurrentOptions.Toppling);
-							block.GetValue(OptionsKey.Collisions, out CurrentOptions.Collisions);
-							block.GetValue(OptionsKey.Derailments, out CurrentOptions.Derailments);
-							block.GetValue(OptionsKey.LoadingSway, out CurrentOptions.LoadingSway);
-							block.GetValue(OptionsKey.BlackBox, out CurrentOptions.BlackBox);
-							block.GetEnumValue(OptionsKey.Mode, out CurrentOptions.GameMode);
-							block.GetValue(OptionsKey.AcceleratedTimeFactor, out CurrentOptions.TimeAccelerationFactor);
-							if (CurrentOptions.TimeAccelerationFactor <= 0)
-							{
-								CurrentOptions.TimeAccelerationFactor = 5;
-							}
-
-							block.GetValue(OptionsKey.EnableBVETSHacks, out CurrentOptions.EnableBveTsHacks);
-							block.GetValue(OptionsKey.EnableBVE5ScriptedTrain, out CurrentOptions.EnableBve5ScriptedTrain);
-							break;
-						case OptionsSection.Controls:
-							block.GetValue(OptionsKey.UseJoysticks, out CurrentOptions.UseJoysticks);
-							block.GetValue(OptionsKey.JoystickAxisEB, out CurrentOptions.AllowAxisEB);
-							block.GetValue(OptionsKey.JoystickAxisThreshold, out CurrentOptions.JoystickAxisThreshold);
-							block.GetValue(OptionsKey.KeyRepeatDelay, out int delay);
-							if (delay <= 500) delay = 500;
-							CurrentOptions.KeyRepeatDelay = delay * 0.001;
-							block.GetValue(OptionsKey.KeyRepeatDelay, out int interval);
-							if (interval <= 500) interval = 500;
-							CurrentOptions.KeyRepeatInterval = interval * 0.001;
-							block.GetValue(OptionsKey.RailDriverMPH, out CurrentOptions.RailDriverMPH);
-							block.GetValue(OptionsKey.CursorHideDelay, out CurrentOptions.CursorHideDelay);
-							break;
-						case OptionsSection.Sound:
-							block.GetEnumValue(OptionsKey.Range, out CurrentOptions.SoundRange);
-							block.GetValue(OptionsKey.Number, out CurrentOptions.SoundNumber);
-							if (CurrentOptions.SoundNumber < 16) CurrentOptions.SoundNumber = 16;
-							break;
-						case OptionsSection.Verbosity:
-							block.GetValue(OptionsKey.ShowWarningMessages, out CurrentOptions.ShowWarningMessages);
-							block.GetValue(OptionsKey.ShowErrorMessages, out CurrentOptions.ShowErrorMessages);
-							block.GetValue(OptionsKey.DebugLog, out CurrentOptions.GenerateDebugLogging);
-							break;
-						case OptionsSection.Folders:
-							block.GetValue(OptionsKey.Route, out CurrentOptions.RouteFolder);
-							block.GetValue(OptionsKey.Train, out CurrentOptions.TrainFolder);
-							break;
-						case OptionsSection.Packages:
-							block.GetEnumValue(OptionsKey.Compression, out CurrentOptions.packageCompressionType);
-							break;
-						case OptionsSection.RecentlyUsedRoutes:
-							Array.Resize(ref CurrentOptions.RecentlyUsedRoutes, block.RemainingDataValues);
-							int num = 0;
-							while (block.RemainingDataValues > 0)
-							{
-								block.GetNextRawValue(out CurrentOptions.RecentlyUsedRoutes[num]);
-								num++;
-							}
-
-							break;
-						case OptionsSection.RecentlyUsedTrains:
-							Array.Resize(ref CurrentOptions.RecentlyUsedTrains, block.RemainingDataValues);
-							num = 0;
-							while (num < CurrentOptions.RecentlyUsedTrains.Length)
-							{
-								block.GetNextRawValue(out CurrentOptions.RecentlyUsedTrains[num]);
-								num++;
-							}
-
-							break;
-						case OptionsSection.RouteEncodings:
-							Array.Resize(ref CurrentOptions.RouteEncodings, block.RemainingDataValues);
-							num = 0;
-							while (num < CurrentOptions.RouteEncodings.Length)
-							{
-								block.GetIndexedEncoding(out CurrentOptions.RouteEncodings[num].Codepage, out CurrentOptions.RouteEncodings[num].Value);
-								num++;
-							}
-
-							break;
-						case OptionsSection.TrainEncodings:
-							Array.Resize(ref CurrentOptions.TrainEncodings, block.RemainingDataValues);
-							num = 0;
-							while (num < CurrentOptions.TrainEncodings.Length)
-							{
-								block.GetIndexedEncoding(out CurrentOptions.TrainEncodings[num].Codepage, out CurrentOptions.TrainEncodings[num].Value);
-								num++;
-							}
-
-							break;
-						case OptionsSection.EnableInputDevicePlugins:
-							Array.Resize(ref CurrentOptions.EnabledInputDevicePlugins, block.RemainingDataValues);
-							num = 0;
-							while (num < CurrentOptions.EnabledInputDevicePlugins.Length)
-							{
-								block.GetNextRawValue(out CurrentOptions.EnabledInputDevicePlugins[num]);
-								num++;
-							}
-
-							break;
-						case OptionsSection.Parsers:
-							block.GetEnumValue(OptionsKey.XObject, out Interface.CurrentOptions.CurrentXParser);
-							block.GetEnumValue(OptionsKey.ObjObject, out Interface.CurrentOptions.CurrentObjParser);
-							block.GetValue(OptionsKey.GDIPlus, out Interface.CurrentOptions.UseGDIDecoders);
-							break;
-						case OptionsSection.Touch:
-							block.TryGetValue(OptionsKey.Cursor, ref CurrentOptions.CursorFileName);
-							block.GetValue(OptionsKey.Panel2Extended, out CurrentOptions.Panel2ExtendedMode);
-							block.GetValue(OptionsKey.Panel2ExtendedMinSize, out CurrentOptions.Panel2ExtendedMinSize);
-							break;
 					}
 				}
 			}
 		}
-		
+
+		/// <summary>The current game options</summary>
+		internal static Options CurrentOptions;		
 	}
 }

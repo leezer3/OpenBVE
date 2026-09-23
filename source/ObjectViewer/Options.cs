@@ -70,6 +70,13 @@ namespace ObjectViewer
 			VerticalSynchronization = true;
 			FPSLimit = 0;
 			ObjectOptimizationMode = ObjectOptimizationMode.Low;
+			ViewingDistance = 1000; // fixed
+			CameraMoveLeft = Key.A;
+			CameraMoveRight = Key.D;
+			CameraMoveUp = Key.W;
+			CameraMoveDown = Key.S;
+			CameraMoveForward = Key.Q;
+			CameraMoveBackward = Key.E;
 			// Shadow settings use synced base defaults
 		}
 
@@ -134,31 +141,8 @@ namespace ObjectViewer
 			}
 		}
 
-		/// <summary>Reads a camera key: Disabled stays disabled, Unknown / missing / invalid fall back to default</summary>
-		private static Key GetCameraKey(Block<OptionsSection, OptionsKey> block, OptionsKey option, Key fallback)
+		public override void Load()
 		{
-			if (!block.GetValue(option, out string raw))
-				return fallback;
-			raw = raw.Trim();
-			if (Enum.TryParse(raw, true, out Key key) && key != Key.Unknown && key != Key.LastKey)
-				return key;
-			if (!raw.Equals("unknown", StringComparison.OrdinalIgnoreCase))
-				Program.CurrentHost.AddMessage(OpenBveApi.Interface.MessageType.Error, false, "Value " + raw + " is invalid in " + option + " in " + block.Key + " in file " + block.FileName);
-			return fallback;
-		}
-
-		internal static void LoadOptions()
-		{
-			Interface.CurrentOptions = new Options
-			{
-				ViewingDistance = 1000, // fixed
-				CameraMoveLeft = Key.A,
-				CameraMoveRight = Key.D,
-				CameraMoveUp = Key.W,
-				CameraMoveDown = Key.S,
-				CameraMoveForward = Key.Q,
-				CameraMoveBackward = Key.E
-			};
 			string optionsFolder = Path.CombineDirectory(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0");
 			if (!Directory.Exists(optionsFolder))
 			{
@@ -189,68 +173,81 @@ namespace ObjectViewer
 					switch (block.Key)
 					{
 						case OptionsSection.Display:
-							block.TryGetValue(OptionsKey.WindowWidth, ref Interface.CurrentOptions.WindowWidth, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.WindowHeight, ref Interface.CurrentOptions.WindowHeight, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.NearClipBase, ref Interface.CurrentOptions.NearClipBase, NumberRange.Positive);
-							block.GetValue(OptionsKey.VSync, out Interface.CurrentOptions.VerticalSynchronization);
-							block.GetValue(OptionsKey.FPSLimit, out Interface.CurrentOptions.FPSLimit);
-							if (Interface.CurrentOptions.FPSLimit < 0)
+							block.TryGetValue(OptionsKey.WindowWidth, ref WindowWidth, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.WindowHeight, ref WindowHeight, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.NearClipBase, ref NearClipBase, NumberRange.Positive);
+							block.GetValue(OptionsKey.VSync, out VerticalSynchronization);
+							block.GetValue(OptionsKey.FPSLimit, out FPSLimit);
+							if (FPSLimit < 0)
 							{
-								Interface.CurrentOptions.FPSLimit = 0;
+								FPSLimit = 0;
 							}
 							// ensure viewing distance is greater than the near clipping plane to avoid rendering issues
-							if (Interface.CurrentOptions.ViewingDistance <= Interface.CurrentOptions.NearClipBase)
+							if (ViewingDistance <= NearClipBase)
 							{
-								Interface.CurrentOptions.ViewingDistance = (int)Math.Ceiling(Interface.CurrentOptions.NearClipBase) + 1;
+								ViewingDistance = (int)Math.Ceiling(NearClipBase) + 1;
 							}
 
-							block.GetValue(OptionsKey.AutoReloadObjects, out Interface.CurrentOptions.AutoReloadObjects);
-							block.GetValue(OptionsKey.ShowProgressBar, out Interface.CurrentOptions.LoadingProgressBar);
-							block.GetColor24(OptionsKey.BackgroundColor, out Interface.CurrentOptions.BackgroundColor);
-							block.GetColor32(OptionsKey.TextColor, out Interface.CurrentOptions.TextColor);
+							block.GetValue(OptionsKey.AutoReloadObjects, out AutoReloadObjects);
+							block.GetValue(OptionsKey.ShowProgressBar, out LoadingProgressBar);
+							block.GetColor24(OptionsKey.BackgroundColor, out BackgroundColor);
+							block.GetColor32(OptionsKey.TextColor, out TextColor);
 							break;
 						case OptionsSection.Quality:
-							block.GetEnumValue(OptionsKey.Interpolation, out Interface.CurrentOptions.Interpolation);
-							block.TryGetValue(OptionsKey.AnisotropicFilteringLevel, ref Interface.CurrentOptions.AnisotropicFilteringLevel);
-							block.TryGetValue(OptionsKey.AntiAliasingLevel, ref Interface.CurrentOptions.AntiAliasingLevel);
-							block.GetEnumValue(OptionsKey.TransparencyMode, out Interface.CurrentOptions.TransparencyMode);
-							block.TryGetEnumValue(OptionsKey.ShadowResolution, ref Interface.CurrentOptions.ShadowResolution);
-							block.TryGetEnumValue(OptionsKey.ShadowDrawDistance, ref Interface.CurrentOptions.ShadowDrawDistance);
-							block.TryGetEnumValue(OptionsKey.ShadowCascades, ref Interface.CurrentOptions.ShadowCascades);
-							block.TryGetValue(OptionsKey.ShadowStrength, ref Interface.CurrentOptions.ShadowStrength, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.ShadowBias, ref Interface.CurrentOptions.ShadowBias);
-							block.TryGetValue(OptionsKey.ShadowNormalBias, ref Interface.CurrentOptions.ShadowNormalBias);
-							block.TryGetValue(OptionsKey.LightAzimuth, ref Interface.CurrentOptions.LightAzimuth);
-							block.TryGetValue(OptionsKey.LightElevation, ref Interface.CurrentOptions.LightElevation);
+							block.GetEnumValue(OptionsKey.Interpolation, out Interpolation);
+							block.TryGetValue(OptionsKey.AnisotropicFilteringLevel, ref AnisotropicFilteringLevel);
+							block.TryGetValue(OptionsKey.AntiAliasingLevel, ref AntiAliasingLevel);
+							block.GetEnumValue(OptionsKey.TransparencyMode, out TransparencyMode);
+							block.TryGetEnumValue(OptionsKey.ShadowResolution, ref ShadowResolution);
+							block.TryGetEnumValue(OptionsKey.ShadowDrawDistance, ref ShadowDrawDistance);
+							block.TryGetEnumValue(OptionsKey.ShadowCascades, ref ShadowCascades);
+							block.TryGetValue(OptionsKey.ShadowStrength, ref ShadowStrength, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.ShadowBias, ref ShadowBias);
+							block.TryGetValue(OptionsKey.ShadowNormalBias, ref ShadowNormalBias);
+							block.TryGetValue(OptionsKey.LightAzimuth, ref LightAzimuth);
+							block.TryGetValue(OptionsKey.LightElevation, ref LightElevation);
 							break;
 						case OptionsSection.Parsers:
-							block.GetEnumValue(OptionsKey.XObject, out Interface.CurrentOptions.CurrentXParser);
-							block.GetEnumValue(OptionsKey.ObjObject, out Interface.CurrentOptions.CurrentObjParser);
-							block.GetValue(OptionsKey.GDIPlus, out Interface.CurrentOptions.UseGDIDecoders);
+							block.GetEnumValue(OptionsKey.XObject, out CurrentXParser);
+							block.GetEnumValue(OptionsKey.ObjObject, out CurrentObjParser);
+							block.GetValue(OptionsKey.GDIPlus, out UseGDIDecoders);
 							break;
 						case OptionsSection.ObjectOptimization:
 							block.GetEnumValue(OptionsKey.Mode, out ObjectOptimizationMode mode);
-							Interface.CurrentOptions.ObjectOptimizationMode = mode; // can't set an accessor value directly
+							ObjectOptimizationMode = mode; // can't set an accessor value directly
 							break;
 						case OptionsSection.Folders:
 							block.GetValue(OptionsKey.ObjectSearch, out string folder);
 							if (Directory.Exists(folder))
 							{
-								Interface.CurrentOptions.ObjectSearchDirectory = folder;
+								ObjectSearchDirectory = folder;
 							}
 							break;
 						case OptionsSection.Keys:
-							Interface.CurrentOptions.CameraMoveLeft = GetCameraKey(block, OptionsKey.Left, Key.A);
-							Interface.CurrentOptions.CameraMoveRight = GetCameraKey(block, OptionsKey.Right, Key.D);
-							Interface.CurrentOptions.CameraMoveUp = GetCameraKey(block, OptionsKey.Up, Key.W);
-							Interface.CurrentOptions.CameraMoveDown = GetCameraKey(block, OptionsKey.Down, Key.S);
-							Interface.CurrentOptions.CameraMoveForward = GetCameraKey(block, OptionsKey.Forward, Key.Q);
-							Interface.CurrentOptions.CameraMoveBackward = GetCameraKey(block, OptionsKey.Backward, Key.E);
+							CameraMoveLeft = GetCameraKey(block, OptionsKey.Left, Key.A);
+							CameraMoveRight = GetCameraKey(block, OptionsKey.Right, Key.D);
+							CameraMoveUp = GetCameraKey(block, OptionsKey.Up, Key.W);
+							CameraMoveDown = GetCameraKey(block, OptionsKey.Down, Key.S);
+							CameraMoveForward = GetCameraKey(block, OptionsKey.Forward, Key.Q);
+							CameraMoveBackward = GetCameraKey(block, OptionsKey.Backward, Key.E);
 							break;
 
 					}
 				}
 			}
+		}
+
+		/// <summary>Reads a camera key: Disabled stays disabled, Unknown / missing / invalid fall back to default</summary>
+		private static Key GetCameraKey(Block<OptionsSection, OptionsKey> block, OptionsKey option, Key fallback)
+		{
+			if (!block.GetValue(option, out string raw))
+				return fallback;
+			raw = raw.Trim();
+			if (Enum.TryParse(raw, true, out Key key) && key != Key.Unknown && key != Key.LastKey)
+				return key;
+			if (!raw.Equals("unknown", StringComparison.OrdinalIgnoreCase))
+				Program.CurrentHost.AddMessage(OpenBveApi.Interface.MessageType.Error, false, "Value " + raw + " is invalid in " + option + " in " + block.Key + " in file " + block.FileName);
+			return fallback;
 		}
 	}
 }

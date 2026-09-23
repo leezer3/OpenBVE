@@ -113,9 +113,8 @@ namespace RouteViewer
 			}
 		}
 
-		internal static void LoadOptions()
+		public override void Load()
 		{
-			Interface.CurrentOptions = new Options();
 			string optionsFolder = Path.CombineDirectory(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0");
 			if (!Directory.Exists(optionsFolder))
 			{
@@ -146,67 +145,67 @@ namespace RouteViewer
 					switch (block.Key)
 					{
 						case OptionsSection.Display:
-							block.TryGetValue(OptionsKey.WindowWidth, ref Interface.CurrentOptions.WindowWidth, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.WindowHeight, ref Interface.CurrentOptions.WindowHeight, NumberRange.Positive);
-							block.GetValue(OptionsKey.VSync, out Interface.CurrentOptions.VerticalSynchronization);
-							block.GetValue(OptionsKey.FPSLimit, out Interface.CurrentOptions.FPSLimit);
-							if (Interface.CurrentOptions.FPSLimit < 0)
+							block.TryGetValue(OptionsKey.WindowWidth, ref WindowWidth, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.WindowHeight, ref WindowHeight, NumberRange.Positive);
+							block.GetValue(OptionsKey.VSync, out VerticalSynchronization);
+							block.GetValue(OptionsKey.FPSLimit, out FPSLimit);
+							if (FPSLimit < 0)
 							{
-								Interface.CurrentOptions.FPSLimit = 0;
+								FPSLimit = 0;
 							}
-							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.QuadLeafSize, ref Interface.CurrentOptions.QuadTreeLeafSize, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.NearClipBase, ref Interface.CurrentOptions.NearClipBase, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.ViewingDistance, ref ViewingDistance, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.QuadLeafSize, ref QuadTreeLeafSize, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.NearClipBase, ref NearClipBase, NumberRange.Positive);
 							// ensure viewing distance is greater than the near clipping plane to avoid rendering issues
-							if (Interface.CurrentOptions.ViewingDistance <= Interface.CurrentOptions.NearClipBase)
+							if (ViewingDistance <= NearClipBase)
 
 							{
-								Interface.CurrentOptions.ViewingDistance = (int)Math.Ceiling(Interface.CurrentOptions.NearClipBase) + 1;
+								ViewingDistance = (int)Math.Ceiling(NearClipBase) + 1;
 							}
 
 							break;
 						case OptionsSection.Quality:
-							block.GetEnumValue(OptionsKey.Interpolation, out Interface.CurrentOptions.Interpolation);
-							block.TryGetValue(OptionsKey.AnisotropicFilteringLevel, ref Interface.CurrentOptions.AnisotropicFilteringLevel);
-							block.TryGetValue(OptionsKey.AntiAliasingLevel, ref Interface.CurrentOptions.AntiAliasingLevel);
-							block.GetEnumValue(OptionsKey.TransparencyMode, out Interface.CurrentOptions.TransparencyMode);
-							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.QuadLeafSize, ref Interface.CurrentOptions.QuadTreeLeafSize, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.NearClipBase, ref Interface.CurrentOptions.NearClipBase, NumberRange.Positive);
+							block.GetEnumValue(OptionsKey.Interpolation, out Interpolation);
+							block.TryGetValue(OptionsKey.AnisotropicFilteringLevel, ref AnisotropicFilteringLevel);
+							block.TryGetValue(OptionsKey.AntiAliasingLevel, ref AntiAliasingLevel);
+							block.GetEnumValue(OptionsKey.TransparencyMode, out TransparencyMode);
+							block.TryGetValue(OptionsKey.ViewingDistance, ref ViewingDistance, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.QuadLeafSize, ref QuadTreeLeafSize, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.NearClipBase, ref NearClipBase, NumberRange.Positive);
 							// ensure viewing distance is greater than the near clipping plane to avoid rendering issues
-							if (Interface.CurrentOptions.ViewingDistance <= Interface.CurrentOptions.NearClipBase)
+							if (ViewingDistance <= NearClipBase)
 
 							{
-								Interface.CurrentOptions.ViewingDistance = (int)Math.Ceiling(Interface.CurrentOptions.NearClipBase) + 1;
+								ViewingDistance = (int)Math.Ceiling(NearClipBase) + 1;
 							}
-							block.TryGetEnumValue(OptionsKey.ShadowResolution, ref Interface.CurrentOptions.ShadowResolution);
-							block.TryGetEnumValue(OptionsKey.ShadowDrawDistance, ref Interface.CurrentOptions.ShadowDrawDistance);
-							block.TryGetEnumValue(OptionsKey.ShadowCascades, ref Interface.CurrentOptions.ShadowCascades);
-							block.TryGetValue(OptionsKey.ShadowStrength, ref Interface.CurrentOptions.ShadowStrength, NumberRange.Positive);
-							block.TryGetValue(OptionsKey.ShadowBias, ref Interface.CurrentOptions.ShadowBias);
-							block.TryGetValue(OptionsKey.ShadowNormalBias, ref Interface.CurrentOptions.ShadowNormalBias);
-							block.TryGetValue(OptionsKey.LightAzimuth, ref Interface.CurrentOptions.LightAzimuth);
-							block.TryGetValue(OptionsKey.LightElevation, ref Interface.CurrentOptions.LightElevation);
+							block.TryGetEnumValue(OptionsKey.ShadowResolution, ref ShadowResolution);
+							block.TryGetEnumValue(OptionsKey.ShadowDrawDistance, ref ShadowDrawDistance);
+							block.TryGetEnumValue(OptionsKey.ShadowCascades, ref ShadowCascades);
+							block.TryGetValue(OptionsKey.ShadowStrength, ref ShadowStrength, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.ShadowBias, ref ShadowBias);
+							block.TryGetValue(OptionsKey.ShadowNormalBias, ref ShadowNormalBias);
+							block.TryGetValue(OptionsKey.LightAzimuth, ref LightAzimuth);
+							block.TryGetValue(OptionsKey.LightElevation, ref LightElevation);
 							break;
 						case OptionsSection.Loading:
-							block.GetValue(OptionsKey.ShowLogo, out Interface.CurrentOptions.LoadingLogo);
-							block.GetValue(OptionsKey.ShowProgressBar, out Interface.CurrentOptions.LoadingProgressBar);
-							block.GetValue(OptionsKey.ShowBackground, out Interface.CurrentOptions.LoadingBackground);
+							block.GetValue(OptionsKey.ShowLogo, out LoadingLogo);
+							block.GetValue(OptionsKey.ShowProgressBar, out LoadingProgressBar);
+							block.GetValue(OptionsKey.ShowBackground, out LoadingBackground);
 							break;
 					case OptionsSection.Parsers:
-						block.GetEnumValue(OptionsKey.XObject, out Interface.CurrentOptions.CurrentXParser);
-						block.GetEnumValue(OptionsKey.ObjObject, out Interface.CurrentOptions.CurrentObjParser);
-						block.GetValue(OptionsKey.GDIPlus, out Interface.CurrentOptions.UseGDIDecoders);
+						block.GetEnumValue(OptionsKey.XObject, out CurrentXParser);
+						block.GetEnumValue(OptionsKey.ObjObject, out CurrentObjParser);
+						block.GetValue(OptionsKey.GDIPlus, out UseGDIDecoders);
 						break;
 					case OptionsSection.ObjectOptimization:
 						block.GetEnumValue(OptionsKey.Mode, out ObjectOptimizationMode mode);
-						Interface.CurrentOptions.ObjectOptimizationMode = mode;
+						ObjectOptimizationMode = mode;
 						break;
 					case OptionsSection.Folders:
 							block.GetValue(OptionsKey.RouteSearch, out string folder);
 							if (Directory.Exists(folder))
 							{
-								Interface.CurrentOptions.RouteSearchDirectory = folder;
+								RouteSearchDirectory = folder;
 							}
 							break;
 					}

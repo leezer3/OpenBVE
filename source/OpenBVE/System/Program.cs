@@ -62,7 +62,8 @@ namespace OpenBve {
 			CurrentHost = new Host(args);
 			try
 			{
-				Interface.LoadOptions();
+				Interface.CurrentOptions = new Interface.Options();
+				Interface.CurrentOptions.Load();
 			}
 			catch
 			{

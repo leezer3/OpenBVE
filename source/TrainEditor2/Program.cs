@@ -53,7 +53,8 @@ namespace TrainEditor2
 			
 			Toolkit.Init(options);
 
-			Interface.LoadOptions();
+			Interface.CurrentOptions = new Interface.Options();
+			Interface.CurrentOptions.Load();
 
 			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions);
 

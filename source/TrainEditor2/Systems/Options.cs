@@ -39,84 +39,83 @@ namespace TrainEditor2.Systems
 					MessageBox.Show($@"An error occured whilst saving the options to disk.{Environment.NewLine}Please check you have write permission.");
 				}
 			}
+
+			public override void Load()
+			{
+				string optionsFolder = OpenBveApi.Path.CombineDirectory(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0");
+
+				if (!Directory.Exists(optionsFolder))
+				{
+					Directory.CreateDirectory(optionsFolder);
+				}
+
+				string configFile = OpenBveApi.Path.CombineFile(optionsFolder, "options_te2.cfg");
+
+				if (!File.Exists(configFile))
+				{
+					//If no route viewer specific configuration file exists, then try the main OpenBVE configuration file
+					//Write out to a new RouteViewer specific file though
+					configFile = OpenBveApi.Path.CombineFile(optionsFolder, "options.cfg");
+				}
+
+				if (File.Exists(configFile))
+				{
+					ConfigFile<OptionsSection, OptionsKey> cfg = new ConfigFile<OptionsSection, OptionsKey>(File.ReadAllLines(configFile, new UTF8Encoding()), configFile, Program.CurrentHost);
+					while (cfg.RemainingSubBlocks > 0)
+					{
+						if (cfg.ReadBlock(OptionsSection.Language, out var block))
+						{
+							block.TryGetValue(OptionsKey.Code, ref LanguageCode);
+						}
+						else
+						{
+							cfg.ReadNextBlock();
+						}
+					}
+
+					return;
+				}
+
+				// file not found
+				string languageCode = CultureInfo.CurrentUICulture.Name;
+
+				if (string.IsNullOrEmpty(languageCode))
+				{
+					languageCode = "en-US";
+				}
+
+				string fileName = OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.GetDataFolder("Languages"), languageCode + ".cfg");
+
+				if (File.Exists(fileName))
+				{
+					LanguageCode = languageCode;
+				}
+				else
+				{
+					try
+					{
+						int i = languageCode.IndexOf("-", StringComparison.Ordinal);
+
+						if (i > 0)
+						{
+							languageCode = languageCode.Substring(0, i);
+							fileName = OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.GetDataFolder("Languages"), languageCode + ".cfg");
+
+							if (File.Exists(fileName))
+							{
+								LanguageCode = languageCode;
+							}
+						}
+					}
+					catch
+					{
+						LanguageCode = "en-US";
+					}
+				}
+			}
 		}
 
 		/// <summary>The current game options</summary>
 		internal static Options CurrentOptions;
-
-		internal static void LoadOptions()
-		{
-			string optionsFolder = OpenBveApi.Path.CombineDirectory(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0");
-
-			if (!Directory.Exists(optionsFolder))
-			{
-				Directory.CreateDirectory(optionsFolder);
-			}
-
-			CurrentOptions = new Options();
-			string configFile = OpenBveApi.Path.CombineFile(optionsFolder, "options_te2.cfg");
-
-			if (!File.Exists(configFile))
-			{
-				//If no route viewer specific configuration file exists, then try the main OpenBVE configuration file
-				//Write out to a new RouteViewer specific file though
-				configFile = OpenBveApi.Path.CombineFile(optionsFolder, "options.cfg");
-			}
-
-			if (File.Exists(configFile))
-			{
-				ConfigFile<OptionsSection, OptionsKey> cfg = new ConfigFile<OptionsSection, OptionsKey>(File.ReadAllLines(configFile, new UTF8Encoding()), configFile, Program.CurrentHost);
-				while (cfg.RemainingSubBlocks > 0)
-				{
-					if (cfg.ReadBlock(OptionsSection.Language, out var block))
-					{
-						block.TryGetValue(OptionsKey.Code, ref CurrentOptions.LanguageCode);
-					}
-					else
-					{
-						cfg.ReadNextBlock();
-					}
-				}
-
-				return;
-			}
-
-			// file not found
-			string languageCode = CultureInfo.CurrentUICulture.Name;
-
-			if (string.IsNullOrEmpty(languageCode))
-			{
-				languageCode = "en-US";
-			}
-
-			string fileName = OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.GetDataFolder("Languages"), languageCode + ".cfg");
-
-			if (File.Exists(fileName))
-			{
-				CurrentOptions.LanguageCode = languageCode;
-			}
-			else
-			{
-				try
-				{
-					int i = languageCode.IndexOf("-", StringComparison.Ordinal);
-
-					if (i > 0)
-					{
-						languageCode = languageCode.Substring(0, i);
-						fileName = OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.GetDataFolder("Languages"), languageCode + ".cfg");
-
-						if (File.Exists(fileName))
-						{
-							CurrentOptions.LanguageCode = languageCode;
-						}
-					}
-				}
-				catch
-				{
-					CurrentOptions.LanguageCode = "en-US";
-				}
-			}
-		}
 	}
 }
