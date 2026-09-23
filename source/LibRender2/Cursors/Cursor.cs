@@ -154,7 +154,7 @@ namespace LibRender2
 					CursorList.Add(new MouseCursor(Renderer, "nk.png", Image));
 				}
 			}
-			Renderer.currentOptions.CursorFileName = "nk.png";
+			Renderer.currentHost.Options.CursorFileName = "nk.png";
 		}
 	}
 }

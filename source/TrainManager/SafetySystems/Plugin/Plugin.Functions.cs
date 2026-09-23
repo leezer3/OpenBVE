@@ -172,7 +172,7 @@ namespace TrainManager.Trains
 			 * Prepare initialization data for the plugin.
 			 * */
 
-			InitializationModes mode = (InitializationModes) TrainManagerBase.CurrentOptions.TrainStart;
+			InitializationModes mode = (InitializationModes) TrainManagerBase.currentHost.Options.TrainStart;
 			/*
 			 * Check if the plugin is a .NET plugin.
 			 * */

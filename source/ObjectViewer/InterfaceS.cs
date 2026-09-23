@@ -59,8 +59,8 @@ namespace ObjectViewer {
 				LogMessages.Clear();
 			}
 		}
-		
+
 		/// <summary>The current options in use</summary>
-		internal static Options CurrentOptions;
+		internal static Options CurrentOptions => Program.CurrentHost.Options as Options;
 	}
 }

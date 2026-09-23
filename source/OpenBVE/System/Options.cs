@@ -10,6 +10,7 @@ using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
+using OpenTK.Graphics.ES20;
 using SoundManager;
 using CompressionType = OpenBveApi.Packages.CompressionType;
 using Path = OpenBveApi.Path;
@@ -653,6 +654,6 @@ namespace OpenBve
 		}
 
 		/// <summary>The current game options</summary>
-		internal static Options CurrentOptions;		
+		internal static Options CurrentOptions => Program.CurrentHost.Options as Options;		
 	}
 }

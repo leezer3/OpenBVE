@@ -39,7 +39,7 @@ namespace LibRender2.ShadowMapping
 		/// </summary>
 		public void Initialize()
 		{
-			var opts = renderer.currentOptions;
+			var opts = renderer.currentHost.Options;
 
 			if (opts.ShadowResolution == ShadowMapResolution.Off)
 			{
@@ -120,9 +120,9 @@ namespace LibRender2.ShadowMapping
 			// NOTE: We pass renderer.CurrentViewMatrix here which reflects the camera's rotation.
 			// The Caster will use this to align the shadow frustums with the view direction.
 			Caster.Resolution = Map.Resolution;
-			if (renderer.currentOptions.ShadowDrawDistance == ShadowDistance.ViewingDistance)
+			if (renderer.currentHost.Options.ShadowDrawDistance == ShadowDistance.ViewingDistance)
 			{
-				Caster.ShadowDistance = renderer.currentOptions.ViewingDistance;
+				Caster.ShadowDistance = renderer.currentHost.Options.ViewingDistance;
 			}
 			Caster.Update(lightDir, renderer.CurrentViewMatrix, renderer.CurrentProjectionMatrix, 0.1, renderer.Camera.VerticalViewingAngle, renderer.Screen.AspectRatio);
 
@@ -157,7 +157,7 @@ namespace LibRender2.ShadowMapping
 					 * Distant objects don't need to be rendered into near-field high-res shadow maps.
 					 * We use a safety margin (150m) to catch long shadows from tall objects.
 					 */
-					double maxDistance = renderer.currentOptions.ShadowFilterCascades ? Caster.SplitDistances[i] + 150.0 : double.MaxValue;
+					double maxDistance = renderer.currentHost.Options.ShadowFilterCascades ? Caster.SplitDistances[i] + 150.0 : double.MaxValue;
 					double maxDistanceSquared = maxDistance * maxDistance;
 
 					RenderFacesFiltered(renderer.VisibleObjects.OpaqueFaces, ref lastVAO, maxDistanceSquared);
@@ -290,7 +290,7 @@ namespace LibRender2.ShadowMapping
 
 			shader.Activate();
 			shader.SetShadowEnabled(true);
-			shader.SetShadowStrength((float)renderer.currentOptions.ShadowStrength);
+			shader.SetShadowStrength((float)renderer.currentHost.Options.ShadowStrength);
 			shader.SetCurrentViewMatrix(renderer.CurrentViewMatrix);
 
 			Map.BindAllCascadesForReading(TextureUnit.Texture4);
@@ -302,8 +302,8 @@ namespace LibRender2.ShadowMapping
 				shader.SetCascadeShadowMapUnit(i, 4 + i);
 				// Split distance = the view-space Z where this cascade ends.
 				shader.SetShadowSplitDistance(i, (float)Caster.SplitDistances[i]);
-				shader.SetCascadeBias(i, Caster.CascadeBiases[i] + (float)renderer.currentOptions.ShadowBias);
-				shader.SetNormalBias(i, (float)renderer.currentOptions.ShadowNormalBias);
+				shader.SetCascadeBias(i, Caster.CascadeBiases[i] + (float)renderer.currentHost.Options.ShadowBias);
+				shader.SetNormalBias(i, (float)renderer.currentHost.Options.ShadowNormalBias);
 			}
 
 			for (int i = cascadeCount; i < 4; i++)

@@ -72,7 +72,7 @@ namespace TrainManager.Handles
 
 			if (a == (int)Driver) return;
 
-			if (!TrainManagerBase.CurrentOptions.Accessibility) return;
+			if (!TrainManagerBase.currentHost.Options.Accessibility) return;
 			TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, 10.0, null);
 		}
 

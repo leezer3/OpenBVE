@@ -449,7 +449,7 @@ namespace TrainManager.Trains
 						 * If the player has opened the doors somewhere else (lineside?)
 						 * then passengers should not be boarding
 						 */
-						if (doorState != TrainDoorState.AllClosed && TrainManagerBase.CurrentOptions.LoadingSway)
+						if (doorState != TrainDoorState.AllClosed && TrainManagerBase.currentHost.Options.LoadingSway)
 						{
 							// passengers boarding
 							for (int j = 0; j < Cars.Length; j++)

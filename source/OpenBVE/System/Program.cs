@@ -62,8 +62,8 @@ namespace OpenBve {
 			CurrentHost = new Host(args);
 			try
 			{
-				Interface.CurrentOptions = new Interface.Options();
-				Interface.CurrentOptions.Load();
+				CurrentHost.Options = new Interface.Options();
+				CurrentHost.Options.Load();
 			}
 			catch
 			{
@@ -133,7 +133,7 @@ namespace OpenBve {
 				Joysticks.RefreshJoysticks();
 			}
 			
-			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions);
+			Renderer = new NewRenderer(CurrentHost);
 			Sounds = new Sounds(CurrentHost);
 			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			
@@ -148,7 +148,7 @@ namespace OpenBve {
 
 
 			
-			TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions);
+			TrainManager = new TrainManager(CurrentHost, Renderer);
 			
 			// --- load language ---
 			string folder = CurrentHost.FileSystem.GetDataFolder("Languages");

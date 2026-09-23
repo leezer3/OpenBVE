@@ -6,12 +6,9 @@ using LibRender2.Screens;
 using LibRender2.Shaders;
 using LibRender2.Viewports;
 using OpenBve.Graphics.Renderers;
-using OpenBveApi;
 using OpenBveApi.Colors;
-using OpenBveApi.FileSystem;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
-using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
@@ -473,7 +470,7 @@ namespace OpenBve.Graphics
 			OptionLighting = true;
 		}
 
-		public NewRenderer(HostInterface currentHost, BaseOptions CurrentOptions) : base(currentHost, CurrentOptions)
+		public NewRenderer(HostInterface currentHost) : base(currentHost)
 		{
 		}
 	}

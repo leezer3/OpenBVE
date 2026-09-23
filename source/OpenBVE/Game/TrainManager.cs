@@ -11,7 +11,7 @@ namespace OpenBve
 	public class TrainManager : TrainManagerBase
 	{
 		/// <inheritdoc/>
-		public TrainManager(HostInterface host, BaseRenderer renderer, BaseOptions options) : base(host, renderer, options)
+		public TrainManager(HostInterface host, BaseRenderer renderer) : base(host, renderer)
 		{
 		}
 		

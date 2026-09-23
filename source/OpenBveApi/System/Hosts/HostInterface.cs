@@ -98,6 +98,9 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Information about the file system organization.</summary>
 		public FileSystem.FileSystem FileSystem;
 
+		/// <summary> Holds the current options</summary>
+		public BaseOptions Options;
+
 		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 		private struct UName
 		{
@@ -167,7 +170,7 @@ namespace OpenBveApi.Hosts {
 			}
 		}
 
-		/// <summary></summary>
+		/// <summary>The host application</summary>
 		public readonly HostApplication Application;
 
 		/// <summary>Reports a problem to the host application.</summary>

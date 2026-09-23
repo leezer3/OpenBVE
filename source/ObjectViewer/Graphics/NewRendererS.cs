@@ -363,10 +363,10 @@ namespace ObjectViewer.Graphics
 			PopMatrix(MatrixMode.Modelview);
 		}
 
-		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions) : base(CurrentHost, CurrentOptions)
+		public NewRenderer(HostInterface CurrentHost) : base(CurrentHost)
 		{
-			Screen.Width = CurrentOptions.WindowWidth;
-			Screen.Height = CurrentOptions.WindowHeight;
+			Screen.Width = CurrentHost.Options.WindowWidth;
+			Screen.Height = CurrentHost.Options.WindowHeight;
 			CameraTrackFollower = new TrackFollower(CurrentHost);
 		}
 	}

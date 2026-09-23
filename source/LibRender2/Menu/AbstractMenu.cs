@@ -85,9 +85,6 @@ namespace LibRender2.Menu
 
 		/// <summary>Holds a reference to the base renderer</summary>
 		public readonly BaseRenderer Renderer;
-
-		/// <summary>Holds a reference to the options</summary>
-		public readonly BaseOptions CurrentOptions;
 		
 		/// <summary>The index of the current menu within the stack</summary>
 		public int CurrMenu = -1;
@@ -114,10 +111,9 @@ namespace LibRender2.Menu
 		public Key MenuBackKey;
 
 		/// <summary>Creates a new menu instance</summary>
-		protected AbstractMenu(BaseRenderer renderer, BaseOptions currentOptions)
+		protected AbstractMenu(BaseRenderer renderer)
 		{
 			Renderer = renderer;
-			CurrentOptions = currentOptions;
 		}
 
 		/// <summary>Initializes the menu system upon first use</summary>

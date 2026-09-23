@@ -12,7 +12,6 @@ using ObjectViewer.Graphics;
 using ObjectViewer.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
-using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -76,9 +75,9 @@ namespace ObjectViewer {
 	    {
 		    CurrentHost = new Host(args);
 			
-	        CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
-	        Interface.CurrentOptions = new Options();
-			Interface.CurrentOptions.Load();
+	        
+	        CurrentHost.Options = new Options();
+	        CurrentHost.Options.Load();
 
 			// n.b. Init the toolkit before the renderer
 	        ToolkitOptions options = new ToolkitOptions
@@ -95,7 +94,8 @@ namespace ObjectViewer {
 
 	        Toolkit.Init(options);
 
-			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions);
+			Renderer = new NewRenderer(CurrentHost);
+			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			// Apply persistent sun direction
 			double azimuthRad = Interface.CurrentOptions.LightAzimuth * Math.PI / 180.0;
 			double elevationRad = Interface.CurrentOptions.LightElevation * Math.PI / 180.0;
@@ -105,7 +105,7 @@ namespace ObjectViewer {
 			Renderer.Lighting.OptionLightPosition = new Vector3(lx, ly, lz);
 	        
 	        
-	        TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions);
+	        TrainManager = new TrainManager(CurrentHost, Renderer);
 	        if (Renderer.Screen.Width == 0 || Renderer.Screen.Height == 0)
 	        {
 		        Renderer.Screen.Width = 960;

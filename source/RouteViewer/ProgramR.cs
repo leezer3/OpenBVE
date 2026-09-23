@@ -76,8 +76,8 @@ namespace RouteViewer
 			CurrentHost = new Host(args);
 			// file system
 			Sounds = new Sounds(CurrentHost);
-			Interface.CurrentOptions = new Options();
-			Interface.CurrentOptions.Load();
+			CurrentHost.Options = new Options();
+			CurrentHost.Options.Load();
 
 			// n.b. Init the toolkit before the renderer
 			ToolkitOptions options = new ToolkitOptions
@@ -94,9 +94,9 @@ namespace RouteViewer
 
 			Toolkit.Init(options);
 
-			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions);
+			Renderer = new NewRenderer(CurrentHost);
 			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
-			TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions);
+			TrainManager = new TrainManager(CurrentHost, Renderer);
 			if (!CurrentHost.LoadPlugins(Interface.CurrentOptions, out string error, TrainManager, Renderer))
 			{
 				MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);

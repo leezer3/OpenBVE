@@ -34,7 +34,7 @@ namespace RouteViewer
 		/// <summary>Returns the current menu instance (If applicable)</summary>
 		public static GameMenu Instance;
 
-		internal GameMenu() : base(Program.Renderer, Interface.CurrentOptions)
+		internal GameMenu() : base(Program.Renderer)
 		{
 		}
 

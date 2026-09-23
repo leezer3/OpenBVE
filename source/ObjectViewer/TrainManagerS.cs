@@ -6,7 +6,6 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using LibRender2;
-using OpenBveApi;
 using OpenBveApi.Hosts;
 using TrainManager;
 
@@ -14,7 +13,7 @@ namespace ObjectViewer
 {
 	internal class TrainManager : TrainManagerBase
 	{
-		public TrainManager(HostInterface host, BaseRenderer renderer, BaseOptions options) : base(host, renderer, options)
+		public TrainManager(HostInterface host, BaseRenderer renderer) : base(host, renderer)
 		{
 		}
 	}

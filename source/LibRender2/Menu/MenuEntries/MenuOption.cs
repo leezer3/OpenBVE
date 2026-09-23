@@ -71,19 +71,19 @@ namespace LibRender2.Menu
 
 					break;
 				case OptionType.AutoReloadObjects:
-					CurrentlySelectedOption = BaseMenu.CurrentOptions.AutoReloadObjects ? 0 : 1;
+					CurrentlySelectedOption = BaseMenu.Renderer.currentHost.Options.AutoReloadObjects ? 0 : 1;
 					return;
 				case OptionType.FullScreen:
-					CurrentlySelectedOption = BaseMenu.CurrentOptions.FullscreenMode ? 0 : 1;
+					CurrentlySelectedOption = BaseMenu.Renderer.currentHost.Options.FullscreenMode ? 0 : 1;
 					return;
 				case OptionType.Interpolation:
-					CurrentlySelectedOption = (int)BaseMenu.CurrentOptions.Interpolation;
+					CurrentlySelectedOption = (int)BaseMenu.Renderer.currentHost.Options.Interpolation;
 					return;
 				case OptionType.AnisotropicLevel:
 					for (int i = 0; i < Entries.Length; i++)
 					{
 						int level = int.Parse(entries[i] as string ?? string.Empty, NumberStyles.Integer);
-						if (level == BaseMenu.CurrentOptions.AnisotropicFilteringLevel)
+						if (level == BaseMenu.Renderer.currentHost.Options.AnisotropicFilteringLevel)
 						{
 							CurrentlySelectedOption = i;
 							return;
@@ -94,7 +94,7 @@ namespace LibRender2.Menu
 					for (int i = 0; i < Entries.Length; i++)
 					{
 						int level = int.Parse(entries[i] as string ?? string.Empty, NumberStyles.Integer);
-						if (level == BaseMenu.CurrentOptions.AntiAliasingLevel)
+						if (level == BaseMenu.Renderer.currentHost.Options.AntiAliasingLevel)
 						{
 							CurrentlySelectedOption = i;
 							return;
@@ -102,7 +102,7 @@ namespace LibRender2.Menu
 					}
 					break;
 				case OptionType.ViewingDistance:
-					switch (BaseMenu.CurrentOptions.ViewingDistance)
+					switch (BaseMenu.Renderer.currentHost.Options.ViewingDistance)
 					{
 						case 400:
 							CurrentlySelectedOption = 0;
@@ -125,10 +125,10 @@ namespace LibRender2.Menu
 					}
 					return;
 				case OptionType.UIScaleFactor:
-					CurrentlySelectedOption = BaseMenu.CurrentOptions.UserInterfaceScaleFactor - 1;
+					CurrentlySelectedOption = BaseMenu.Renderer.currentHost.Options.UserInterfaceScaleFactor - 1;
 					return;
 				case OptionType.NumberOfSounds:
-					switch (BaseMenu.CurrentOptions.SoundNumber)
+					switch (BaseMenu.Renderer.currentHost.Options.SoundNumber)
 					{
 						case 16:
 							CurrentlySelectedOption = 0;
@@ -144,13 +144,13 @@ namespace LibRender2.Menu
 							break;
 						default:
 							// n.b. This resets the sound number if edited manually in the file
-							BaseMenu.CurrentOptions.SoundNumber = 16;
+							BaseMenu.Renderer.currentHost.Options.SoundNumber = 16;
 							CurrentlySelectedOption = 0;
 							break;
 					}
 					return;
 				case OptionType.ShadowQuality:
-					switch (BaseMenu.CurrentOptions.ShadowResolution)
+					switch (BaseMenu.Renderer.currentHost.Options.ShadowResolution)
 					{
 						case ShadowMapResolution.Off:
 							CurrentlySelectedOption = 0;
@@ -170,7 +170,7 @@ namespace LibRender2.Menu
 					}
 					return;
 				case OptionType.ShadowFilterCascades:
-					CurrentlySelectedOption = BaseMenu.CurrentOptions.ShadowFilterCascades ? 0 : 1;
+					CurrentlySelectedOption = BaseMenu.Renderer.currentHost.Options.ShadowFilterCascades ? 0 : 1;
 					return;
 			}
 			CurrentlySelectedOption = 0;
@@ -197,7 +197,7 @@ namespace LibRender2.Menu
 						return;
 					}
 					BaseMenu.Renderer.SetWindowSize((int)(res.Width * BaseMenu.Renderer.ScaleFactor.X), (int)(res.Height * BaseMenu.Renderer.ScaleFactor.Y));
-					if (BaseMenu.CurrentOptions.FullscreenMode)
+					if (BaseMenu.Renderer.currentHost.Options.FullscreenMode)
 					{
 						IList<DisplayResolution> resolutions = DisplayDevice.Default.AvailableResolutions;
 						foreach (DisplayResolution currentResolution in resolutions)
@@ -213,8 +213,8 @@ namespace LibRender2.Menu
 									DisplayDevice.Default.ChangeResolution(currentResolution);
 									BaseMenu.Renderer.SetWindowState(WindowState.Fullscreen);
 									BaseMenu.Renderer.SetWindowSize((int)(currentResolution.Width * BaseMenu.Renderer.ScaleFactor.X), (int)(currentResolution.Height * BaseMenu.Renderer.ScaleFactor.Y));
-									BaseMenu.CurrentOptions.FullscreenWidth = currentResolution.Width;
-									BaseMenu.CurrentOptions.FullscreenHeight = currentResolution.Height;
+									BaseMenu.Renderer.currentHost.Options.FullscreenWidth = currentResolution.Width;
+									BaseMenu.Renderer.currentHost.Options.FullscreenHeight = currentResolution.Height;
 									return;
 								}
 								catch
@@ -226,14 +226,14 @@ namespace LibRender2.Menu
 					}
 					else
 					{
-						BaseMenu.CurrentOptions.WindowWidth = res.Width;
-						BaseMenu.CurrentOptions.WindowHeight = res.Height;
+						BaseMenu.Renderer.currentHost.Options.WindowWidth = res.Width;
+						BaseMenu.Renderer.currentHost.Options.WindowHeight = res.Height;
 					}
 					BaseMenu.ComputePosition();
 					break;
 				case OptionType.FullScreen:
-					BaseMenu.CurrentOptions.FullscreenMode = !BaseMenu.CurrentOptions.FullscreenMode;
-					if (!BaseMenu.CurrentOptions.FullscreenMode)
+					BaseMenu.Renderer.currentHost.Options.FullscreenMode = !BaseMenu.Renderer.currentHost.Options.FullscreenMode;
+					if (!BaseMenu.Renderer.currentHost.Options.FullscreenMode)
 					{
 						BaseMenu.Renderer.SetWindowState(WindowState.Normal);
 						DisplayDevice.Default.RestoreResolution();
@@ -266,61 +266,61 @@ namespace LibRender2.Menu
 					BaseMenu.ComputePosition();
 					break;
 				case OptionType.Interpolation:
-					BaseMenu.CurrentOptions.Interpolation = (InterpolationMode)CurrentlySelectedOption;
+					BaseMenu.Renderer.currentHost.Options.Interpolation = (InterpolationMode)CurrentlySelectedOption;
 					break;
 				case OptionType.AutoReloadObjects:
-					BaseMenu.CurrentOptions.AutoReloadObjects = !BaseMenu.CurrentOptions.AutoReloadObjects;
+					BaseMenu.Renderer.currentHost.Options.AutoReloadObjects = !BaseMenu.Renderer.currentHost.Options.AutoReloadObjects;
 					break;
 				//HACK: We can't store plain ints due to to boxing, so store strings and parse instead
 				case OptionType.AnisotropicLevel:
-					BaseMenu.CurrentOptions.AnisotropicFilteringLevel = int.Parse((string)CurrentOption, NumberStyles.Integer);
+					BaseMenu.Renderer.currentHost.Options.AnisotropicFilteringLevel = int.Parse((string)CurrentOption, NumberStyles.Integer);
 					break;
 				case OptionType.AntialiasingLevel:
-					BaseMenu.CurrentOptions.AntiAliasingLevel = int.Parse((string)CurrentOption, NumberStyles.Integer);
+					BaseMenu.Renderer.currentHost.Options.AntiAliasingLevel = int.Parse((string)CurrentOption, NumberStyles.Integer);
 					break;
 				case OptionType.ViewingDistance:
-					BaseMenu.CurrentOptions.ViewingDistance = int.Parse((string)CurrentOption, NumberStyles.Integer);
+					BaseMenu.Renderer.currentHost.Options.ViewingDistance = int.Parse((string)CurrentOption, NumberStyles.Integer);
 					break;
 				case OptionType.UIScaleFactor:
 					string currentOption = (string)CurrentOption;
 					currentOption = currentOption.Trim('x');
-					BaseMenu.CurrentOptions.UserInterfaceScaleFactor = int.Parse(currentOption, NumberStyles.Integer);
+					BaseMenu.Renderer.currentHost.Options.UserInterfaceScaleFactor = int.Parse(currentOption, NumberStyles.Integer);
 					break;
 				case OptionType.NumberOfSounds:
-					BaseMenu.CurrentOptions.SoundNumber = int.Parse((string)CurrentOption, NumberStyles.Integer);
+					BaseMenu.Renderer.currentHost.Options.SoundNumber = int.Parse((string)CurrentOption, NumberStyles.Integer);
 					break;
 				case OptionType.ShadowQuality:
 					// if finer control is wanted, edit the options file (GL menu options are hacky at best)
 					switch (CurrentlySelectedOption)
 					{
 						case 0:
-							BaseMenu.CurrentOptions.ShadowResolution = ShadowMapResolution.Off;
+							BaseMenu.Renderer.currentHost.Options.ShadowResolution = ShadowMapResolution.Off;
 							break;
 						case 1:
-							BaseMenu.CurrentOptions.ShadowResolution = ShadowMapResolution.Low;
-							BaseMenu.CurrentOptions.ShadowDrawDistance = ShadowDistance.Medium;
-							BaseMenu.CurrentOptions.ShadowCascades = ShadowCascadeCount.Two;
+							BaseMenu.Renderer.currentHost.Options.ShadowResolution = ShadowMapResolution.Low;
+							BaseMenu.Renderer.currentHost.Options.ShadowDrawDistance = ShadowDistance.Medium;
+							BaseMenu.Renderer.currentHost.Options.ShadowCascades = ShadowCascadeCount.Two;
 							break;
 						case 2:
-							BaseMenu.CurrentOptions.ShadowResolution = ShadowMapResolution.Medium;
-							BaseMenu.CurrentOptions.ShadowDrawDistance = ShadowDistance.Far;
-							BaseMenu.CurrentOptions.ShadowCascades = ShadowCascadeCount.Three;
+							BaseMenu.Renderer.currentHost.Options.ShadowResolution = ShadowMapResolution.Medium;
+							BaseMenu.Renderer.currentHost.Options.ShadowDrawDistance = ShadowDistance.Far;
+							BaseMenu.Renderer.currentHost.Options.ShadowCascades = ShadowCascadeCount.Three;
 							break;
 						case 3:
-							BaseMenu.CurrentOptions.ShadowResolution = ShadowMapResolution.High;
-							BaseMenu.CurrentOptions.ShadowDrawDistance = ShadowDistance.VeryFar;
-							BaseMenu.CurrentOptions.ShadowCascades = ShadowCascadeCount.Four;
+							BaseMenu.Renderer.currentHost.Options.ShadowResolution = ShadowMapResolution.High;
+							BaseMenu.Renderer.currentHost.Options.ShadowDrawDistance = ShadowDistance.VeryFar;
+							BaseMenu.Renderer.currentHost.Options.ShadowCascades = ShadowCascadeCount.Four;
 							break;
 						case 4:
-							BaseMenu.CurrentOptions.ShadowResolution = ShadowMapResolution.Ultra;
-							BaseMenu.CurrentOptions.ShadowDrawDistance = ShadowDistance.ViewingDistance;
-							BaseMenu.CurrentOptions.ShadowCascades = ShadowCascadeCount.Four;
+							BaseMenu.Renderer.currentHost.Options.ShadowResolution = ShadowMapResolution.Ultra;
+							BaseMenu.Renderer.currentHost.Options.ShadowDrawDistance = ShadowDistance.ViewingDistance;
+							BaseMenu.Renderer.currentHost.Options.ShadowCascades = ShadowCascadeCount.Four;
 							break;
 					}
 					BaseMenu.Renderer.InitializeShadows();
 					break;
 				case OptionType.ShadowFilterCascades:
-					BaseMenu.CurrentOptions.ShadowFilterCascades = !BaseMenu.CurrentOptions.ShadowFilterCascades;
+					BaseMenu.Renderer.currentHost.Options.ShadowFilterCascades = !BaseMenu.Renderer.currentHost.Options.ShadowFilterCascades;
 					break;
 
 			}

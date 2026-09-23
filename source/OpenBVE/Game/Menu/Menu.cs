@@ -60,7 +60,7 @@ namespace OpenBve
 			MENU SYSTEM SINGLETON C'TOR
 		*********************/
 
-		private GameMenu() : base(Program.Renderer, Interface.CurrentOptions)
+		private GameMenu() : base(Program.Renderer)
 		{
 		}
 

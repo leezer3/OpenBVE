@@ -56,7 +56,7 @@ namespace TrainEditor2
 			Interface.CurrentOptions = new Interface.Options();
 			Interface.CurrentOptions.Load();
 
-			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions);
+			Renderer = new NewRenderer(CurrentHost);
 
 			SoundApi = new SoundApi(CurrentHost);
 			SoundApi.Initialize(SoundRange.Medium);
@@ -68,7 +68,7 @@ namespace TrainEditor2
 				return;
 			}
 			
-			TrainManager = new Simulation.TrainManager.TrainManager(CurrentHost, null, null);
+			TrainManager = new Simulation.TrainManager.TrainManager(CurrentHost, null);
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new FormEditor());

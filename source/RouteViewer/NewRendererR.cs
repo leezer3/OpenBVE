@@ -813,7 +813,7 @@ namespace RouteViewer
 			return s;
 		}
 
-		public NewRenderer(HostInterface currentHost, BaseOptions CurrentOptions) : base(currentHost, CurrentOptions)
+		public NewRenderer(HostInterface currentHost) : base(currentHost)
 		{
 			Screen.Width = Interface.CurrentOptions.WindowWidth;
 			Screen.Height = Interface.CurrentOptions.WindowHeight;

@@ -22,9 +22,7 @@ using LibRender2.ShadowMapping;
 using LibRender2.Text;
 using LibRender2.Textures;
 using LibRender2.Viewports;
-using OpenBveApi;
 using OpenBveApi.Colors;
-using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -52,9 +50,6 @@ namespace LibRender2
 
 		/// <summary>The callback to the host application</summary>
 		internal HostInterface currentHost;
-
-		/// <summary>Holds a reference to the current options</summary>
-		internal BaseOptions currentOptions;
 
 		public List<ObjectState> StaticObjectStates;
 		public List<ObjectState> DynamicObjectStates;
@@ -357,10 +352,9 @@ namespace LibRender2
 
 		public Dictionary<Texture, HashSet<Vector3>> CubesToDraw = new Dictionary<Texture, HashSet<Vector3>>();
 		
-		protected BaseRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions)
+		protected BaseRenderer(HostInterface CurrentHost)
 		{
 			currentHost = CurrentHost;
-			currentOptions = CurrentOptions;
 			Screen = new Screen(this);
 			Camera = new CameraProperties(this);
 			Lighting = new Lighting(this);
@@ -369,7 +363,7 @@ namespace LibRender2
 
 			projectionMatrixList = new List<Matrix4D>();
 			viewMatrixList = new List<Matrix4D>();
-			Fonts = new Fonts(currentHost, this, CurrentOptions.Font);
+			Fonts = new Fonts(currentHost, this, CurrentHost.Options.Font);
 			VisibilityThread = new Thread(RunVisibiliityThread);
 			VisibilityThread.Start();
 			RenderThreadJobs = new ConcurrentQueue<ThreadStart>();
@@ -444,12 +438,12 @@ namespace LibRender2
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
 			GL.BindTexture(TextureTarget.Texture2D, 0);
-			GL.ClearColor(currentOptions.ClearColor.R * inv255, currentOptions.ClearColor.G * inv255, currentOptions.ClearColor.B * inv255, 1.0f);
+			GL.ClearColor(currentHost.Options.ClearColor.R * inv255, currentHost.Options.ClearColor.G * inv255, currentHost.Options.ClearColor.B * inv255, 1.0f);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthFunc(DepthFunction.Lequal);
 			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-			if (currentOptions.ForceForwardsCompatibleContext == false)
+			if (currentHost.Options.ForceForwardsCompatibleContext == false)
 			{
 				// not valid with a forwards compatible context, so don't generate spurious error
 				GL.Hint(HintTarget.FogHint, HintMode.Fastest);
@@ -794,13 +788,13 @@ namespace LibRender2
 			ObjectsSortedByStartPointer = 0;
 			ObjectsSortedByEndPointer = 0;
 			
-			if (currentOptions.ObjectDisposalMode == ObjectDisposalMode.QuadTree)
+			if (currentHost.Options.ObjectDisposalMode == ObjectDisposalMode.QuadTree)
 			{
 				foreach (ObjectState state in StaticObjectStates)
 				{
 					VisibleObjects.quadTree.Add(state, Orientation3.Default);
 				}
-				VisibleObjects.quadTree.Initialize(currentOptions.QuadTreeLeafSize);
+				VisibleObjects.quadTree.Initialize(currentHost.Options.QuadTreeLeafSize);
 				UpdateQuadTreeVisibility();
 			}
 			else
@@ -847,7 +841,7 @@ namespace LibRender2
 
 		private void UpdateVisibility(double trackPosition)
 		{
-			if (currentOptions.ObjectDisposalMode == ObjectDisposalMode.QuadTree)
+			if (currentHost.Options.ObjectDisposalMode == ObjectDisposalMode.QuadTree)
 			{
 				UpdateQuadTreeVisibility();
 			}
@@ -1049,7 +1043,7 @@ namespace LibRender2
 			{
 				// Calling GL.GetString in this manner seems to be crashing the OS-X driver (No idea, but probably OpenTK....)
 				// As we only support newer Intel Macs, 16x AF is safe
-				currentOptions.AnisotropicFilteringMaximum = 16;
+				currentHost.Options.AnisotropicFilteringMaximum = 16;
 				return;
 			}
 			
@@ -1061,17 +1055,17 @@ namespace LibRender2
 				if (error == ErrorCode.InvalidEnum)
 				{
 					// Doing this on a forward compatible GL context fails with invalid enum
-					currentOptions.AnisotropicFilteringMaximum = 16;
+					currentHost.Options.AnisotropicFilteringMaximum = 16;
 					return;
 				}
 			}
 			catch
 			{
-				currentOptions.AnisotropicFilteringMaximum = 0;
-				currentOptions.AnisotropicFilteringLevel = 0;
+				currentHost.Options.AnisotropicFilteringMaximum = 0;
+				currentHost.Options.AnisotropicFilteringLevel = 0;
 				return;
 			}
-			currentOptions.AnisotropicFilteringMaximum = 0;
+			currentHost.Options.AnisotropicFilteringMaximum = 0;
 
 			foreach (string extension in Extensions)
 			{
@@ -1080,26 +1074,26 @@ namespace LibRender2
 					float n = GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt);
 					int MaxAF = (int)Math.Round(n);
 
-					if (MaxAF != currentOptions.AnisotropicFilteringMaximum)
+					if (MaxAF != currentHost.Options.AnisotropicFilteringMaximum)
 					{
-						currentOptions.AnisotropicFilteringMaximum = (int)Math.Round(n);
+						currentHost.Options.AnisotropicFilteringMaximum = (int)Math.Round(n);
 					}
 					break;
 				}
 			}
 
-			if (currentOptions.AnisotropicFilteringMaximum <= 0)
+			if (currentHost.Options.AnisotropicFilteringMaximum <= 0)
 			{
-				currentOptions.AnisotropicFilteringMaximum = 0;
-				currentOptions.AnisotropicFilteringLevel = 0;
+				currentHost.Options.AnisotropicFilteringMaximum = 0;
+				currentHost.Options.AnisotropicFilteringLevel = 0;
 			}
-			else if (currentOptions.AnisotropicFilteringLevel == 0 & currentOptions.AnisotropicFilteringMaximum > 0)
+			else if (currentHost.Options.AnisotropicFilteringLevel == 0 & currentHost.Options.AnisotropicFilteringMaximum > 0)
 			{
-				currentOptions.AnisotropicFilteringLevel = currentOptions.AnisotropicFilteringMaximum;
+				currentHost.Options.AnisotropicFilteringLevel = currentHost.Options.AnisotropicFilteringMaximum;
 			}
-			else if (currentOptions.AnisotropicFilteringLevel > currentOptions.AnisotropicFilteringMaximum)
+			else if (currentHost.Options.AnisotropicFilteringLevel > currentHost.Options.AnisotropicFilteringMaximum)
 			{
-				currentOptions.AnisotropicFilteringLevel = currentOptions.AnisotropicFilteringMaximum;
+				currentHost.Options.AnisotropicFilteringLevel = currentHost.Options.AnisotropicFilteringMaximum;
 			}
 		}
 		
@@ -1128,8 +1122,8 @@ namespace LibRender2
 
 			Screen.AspectRatio = Screen.Width / (double)Screen.Height;
 			Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Camera.VerticalViewingAngle) * Screen.AspectRatio);
-			double nearClip = Math.Max(0.01, currentOptions.NearClipBase);
-			CurrentProjectionMatrix = Matrix4D.CreatePerspectiveFieldOfView(Camera.VerticalViewingAngle, Screen.AspectRatio, nearClip, currentOptions.ViewingDistance);
+			double nearClip = Math.Max(0.01, currentHost.Options.NearClipBase);
+			CurrentProjectionMatrix = Matrix4D.CreatePerspectiveFieldOfView(Camera.VerticalViewingAngle, Screen.AspectRatio, nearClip, currentHost.Options.ViewingDistance);
 		}
 
 		public void ResetShader(Shader shader)

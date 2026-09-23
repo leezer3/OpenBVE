@@ -15,7 +15,7 @@ namespace TrainEditor2.Graphics
 			GL.Disable(EnableCap.CullFace);
 		}
 
-		public NewRenderer(HostInterface currentHost, BaseOptions CurrentOptions) : base(currentHost, CurrentOptions)
+		public NewRenderer(HostInterface currentHost) : base(currentHost)
 		{
 		}
 	}
