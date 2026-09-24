@@ -44,6 +44,30 @@ namespace Route.Bve5
 	internal static partial class Bve5ScenarioParser
 	{
 		internal static Plugin plugin;
+
+		private static double GetTrackCoordinateAtDistance(RouteData Data, string RailKey, double Distance)
+		{
+			IList<Block> Blocks = Data.Blocks;
+			if (Blocks.Count == 0)
+			{
+				return 0.0;
+			}
+
+			if (Distance <= Blocks[0].StartingDistance)
+			{
+				return Blocks[0].Rails[RailKey].Position.X;
+			}
+
+			int BlockIndex = Data.sortedBlocks.FindBlockIndex(Distance);
+			if (BlockIndex >= Blocks.Count - 1)
+			{
+				return Blocks[Blocks.Count - 1].Rails[RailKey].Position.X;
+			}
+
+			int NextBlockIndex = BlockIndex + 1;
+			return GetTrackCoordinate(Blocks[BlockIndex].StartingDistance, Blocks[BlockIndex].Rails[RailKey].Position.X, Blocks[NextBlockIndex].StartingDistance, Blocks[NextBlockIndex].Rails[RailKey].Position.X, Blocks[BlockIndex].Rails[RailKey].RadiusH, Distance);
+		}
+
 		private static void ApplyRouteData(string FileName, bool PreviewOnly, RouteData Data)
 		{
 			Plugin.CurrentOptions.UnitOfSpeed = "km/h";
@@ -334,15 +358,8 @@ namespace Route.Bve5
 						{
 							if (Data.Blocks[i].Cracks[k].PrimaryRail == railKey)
 							{
-								double nextStartingDistance = StartingDistance + BlockInterval;
 								string p = Data.Blocks[i].Cracks[k].PrimaryRail;
-								double px0 = Data.Blocks[i].Rails[p].Position.X;
-								double pRadiusH = Data.Blocks[i].Rails[p].RadiusH;
-								double px1 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[p].Position.X : px0;
 								string s = Data.Blocks[i].Cracks[k].SecondaryRail;
-								double sx0 = Data.Blocks[i].Rails[s].Position.X;
-								double sRadiusH = Data.Blocks[i].Rails[s].RadiusH;
-								double sx1 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[s].Position.X : sx0;
 
 								Vector3 wpos;
 								Transformation railTransformation;
@@ -353,10 +370,10 @@ namespace Route.Bve5
 									continue;
 								}
 
-								double pInterpolateX0 = GetTrackCoordinate(StartingDistance, px0, nextStartingDistance, px1, pRadiusH, Data.Blocks[i].Cracks[k].TrackPosition);
-								double pInterpolateX1 = GetTrackCoordinate(StartingDistance, px0, nextStartingDistance, px1, pRadiusH, Data.Blocks[i].Cracks[k].TrackPosition + InterpolateInterval);
-								double sInterpolateX0 = GetTrackCoordinate(StartingDistance, sx0, nextStartingDistance, sx1, sRadiusH, Data.Blocks[i].Cracks[k].TrackPosition);
-								double sInterpolateX1 = GetTrackCoordinate(StartingDistance, sx0, nextStartingDistance, sx1, sRadiusH, Data.Blocks[i].Cracks[k].TrackPosition + InterpolateInterval);
+								double pInterpolateX0 = GetTrackCoordinateAtDistance(Data, p, Data.Blocks[i].Cracks[k].TrackPosition);
+								double pInterpolateX1 = GetTrackCoordinateAtDistance(Data, p, Data.Blocks[i].Cracks[k].TrackPosition + Data.Blocks[i].Cracks[k].Span);
+								double sInterpolateX0 = GetTrackCoordinateAtDistance(Data, s, Data.Blocks[i].Cracks[k].TrackPosition);
+								double sInterpolateX1 = GetTrackCoordinateAtDistance(Data, s, Data.Blocks[i].Cracks[k].TrackPosition + Data.Blocks[i].Cracks[k].Span);
 								double d0 = sInterpolateX0 - pInterpolateX0;
 								double d1 = sInterpolateX1 - pInterpolateX1;
 
