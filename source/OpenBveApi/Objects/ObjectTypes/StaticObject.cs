@@ -669,22 +669,12 @@ namespace OpenBveApi.Objects
 			if (currentHost.Platform != HostPlatform.AppleOSX)
 			{
 				/*
-				 * HACK:
 				 * A forwards compatible GL3 context (required on OS-X) only supports tris
-				 * and thus an optimized object (decomposed into tris) in all circumstances
-				 *
-				 * When in viewers, skip optimisation if above the threshold to allow
-				 * faster reload speeds.
-				 *
-				 * When in-game, force optimisation at all times for best possible performance
-				 * even though this may have an effect on load-times
+				 * and thus an optimized object (decomposed into tris) in all circumstances.
+				 * Apply the same optimization in viewers and in the game; the previous
+				 * viewer-only early return prevented the selected optimization mode from
+				 * being applied to large .x meshes.
 				 */
-
-				if (m >= f / 500 && f >= faceThreshold && f < 20000 && currentHost.Application != HostApplication.OpenBve)
-				{
-					return;
-				}
-				
 			}
 
 			if (Mesh.Vertices.Length > 10000)
