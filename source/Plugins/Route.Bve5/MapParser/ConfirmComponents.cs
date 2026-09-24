@@ -30,6 +30,7 @@ using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 using OpenBveApi.Sounds;
 
 namespace Route.Bve5
@@ -495,7 +496,13 @@ namespace Route.Bve5
 						if (RouteData.TrackKeyList.Contains(TrackKeys[0], StringComparer.OrdinalIgnoreCase) && RouteData.TrackKeyList.Contains(TrackKeys[1]))
 						{
 							int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-							Blocks[BlockIndex].Cracks.Add(new Crack(Statement.Key, Statement.Distance, TrackKeys[0], TrackKeys[1]));
+							double Span = InterpolateInterval;
+							if (RouteData.Objects[Statement.Key] is StaticObject staticObject && staticObject.TryGetDeformationSpan(out double objectSpan))
+							{
+								Span = objectSpan;
+							}
+
+							Blocks[BlockIndex].Cracks.Add(new Crack(Statement.Key, Statement.Distance, TrackKeys[0], TrackKeys[1], Span));
 						}
 					}
 						break;
