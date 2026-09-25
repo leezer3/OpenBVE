@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using LibRender2;
-using OpenBveApi;
-using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Trains;
 using RouteManager2;
@@ -17,7 +14,6 @@ namespace TrainManager
 		internal static HostInterface currentHost;
 		internal static BaseRenderer Renderer;
 		public static CurrentRoute CurrentRoute;
-		internal static FileSystem FileSystem;
 		public static bool Toppling;
 		public static bool Derailments;
 
@@ -27,17 +23,13 @@ namespace TrainManager
 		public static TrainBase PlayerTrain = null;
 		/// <summary>The list of TrackFollowingObject available on other tracks in the simulation.</summary>
 		public List<AbstractTrain> TFOs = new List<AbstractTrain>();
-		/// <summary>Stores a reference to the current options</summary>
-		internal static BaseOptions CurrentOptions;
 		/// <summary>Stores the plugin error message string, or a null reference if no error encountered</summary>
 		public static string PluginError;
 
-		protected TrainManagerBase(HostInterface host, BaseRenderer renderer, BaseOptions Options, FileSystem fileSystem)
+		protected TrainManagerBase(HostInterface host, BaseRenderer renderer)
 		{
 			currentHost = host;
 			Renderer = renderer;
-			CurrentOptions = Options;
-			FileSystem = fileSystem;
 		}
 
 		/// <summary>Un-derails all trains within the simulation</summary>

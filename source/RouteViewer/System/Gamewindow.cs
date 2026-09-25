@@ -154,7 +154,7 @@ namespace RouteViewer
 
 	    protected override void OnClosing(CancelEventArgs e)
 	    {
-			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_rv.cfg"));
+			Interface.CurrentOptions.Save(Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0/options_rv.cfg"));
 			// Minor hack:
 			// If we are currently loading, catch the close event, and terminate the loader threads
 			// before actually closing the game-window. DeInitialize (which flushes caches)

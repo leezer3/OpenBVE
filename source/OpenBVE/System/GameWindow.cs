@@ -54,7 +54,7 @@ namespace OpenBve
 		//We need to explicitly specify the default constructor
 		public OpenBVEGame(int width, int height, GraphicsMode currentGraphicsMode, GameWindowFlags @default): base(width, height, currentGraphicsMode, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), @default)
 		{
-			Program.FileSystem.AppendToLogFile("Creating game window with standard context.");
+			Program.CurrentHost.FileSystem.AppendToLogFile("Creating game window with standard context.");
 			if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 			{
 				return;
@@ -73,7 +73,7 @@ namespace OpenBve
 
 		public OpenBVEGame(int width, int height, GraphicsMode currentGraphicsMode, GameWindowFlags @default, GraphicsContextFlags flags): base(width, height, currentGraphicsMode, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), @default, DisplayDevice.Default, 3,3, flags)
 		{
-			Program.FileSystem.AppendToLogFile("Creating game window with forwards-compatible context.");
+			Program.CurrentHost.FileSystem.AppendToLogFile("Creating game window with forwards-compatible context.");
 			if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 			{
 				Interface.CurrentOptions.ForceForwardsCompatibleContext = true;
@@ -304,7 +304,7 @@ namespace OpenBve
 			if (!textureStatsLogged && simulationSetup && Environment.TickCount - setupTickCount > 10000)
 			{
 				textureStatsLogged = true;
-				Program.FileSystem.AppendToLogFile("Texture stats @10s: decodes " + Program.CurrentHost.TextureDecodeCalls + " calls / " + Program.CurrentHost.TextureDecodeMs + " ms | uploads " + LibRender2.Textures.TextureManager.UploadCount + " calls / " + LibRender2.Textures.TextureManager.UploadMs + " ms | GC gen0/1/2: " + GC.CollectionCount(0) + "/" + GC.CollectionCount(1) + "/" + GC.CollectionCount(2));
+				Program.CurrentHost.FileSystem.AppendToLogFile("Texture stats @10s: decodes " + Program.CurrentHost.TextureDecodeCalls + " calls / " + Program.CurrentHost.TextureDecodeMs + " ms | uploads " + LibRender2.Textures.TextureManager.UploadCount + " calls / " + LibRender2.Textures.TextureManager.UploadMs + " ms | GC gen0/1/2: " + GC.CollectionCount(0) + "/" + GC.CollectionCount(1) + "/" + GC.CollectionCount(2));
 			}
 			// finish
 			try
@@ -470,13 +470,13 @@ namespace OpenBve
 					Bounds = new Rectangle(0, 0, w, h);
 				}
 			}
-			Program.FileSystem.AppendToLogFile("Game window initialised successfully.");
+			Program.CurrentHost.FileSystem.AppendToLogFile("Game window initialised successfully.");
 			//Initialise the loader thread queues
 			Program.Renderer.Initialize();
 			Program.Renderer.DetermineMaxAFLevel();
-			Interface.CurrentOptions.Save(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg"));
+			Interface.CurrentOptions.Save(OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0/options.cfg"));
 			HUD.LoadHUD();
-			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString());
+			Program.Renderer.Loading.InitLoading(Program.CurrentHost.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString());
 			Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 			Program.Renderer.MotionBlur.Initialize(Interface.CurrentOptions.MotionBlur);
 			if (string.IsNullOrEmpty(MainLoop.currentResult.RouteFile))
@@ -1139,18 +1139,18 @@ namespace OpenBve
 					{
 						// Either using ~900mb at the first station or 1.5gb + with all textures loaded is likely to cause critical OOM errors with the 32-bit process memory limit
 						// Turn on UnloadUnusedTextures to try and mitigate
-						Program.FileSystem.AppendToLogFile("Automatically enabling UnloadUnusedTextures due to memory pressure.");
+						Program.CurrentHost.FileSystem.AppendToLogFile("Automatically enabling UnloadUnusedTextures due to memory pressure.");
 						Interface.CurrentOptions.UnloadUnusedTextures = true;
 					}
 				}
 			}
 
 			simulationSetup = true;
-			Program.FileSystem.AppendToLogFile(@"--------------------", false);
-			Program.FileSystem.AppendToLogFile(@"Loading complete, starting simulation.");
-			Program.FileSystem.AppendToLogFile("Texture stats @load: decodes " + Program.CurrentHost.TextureDecodeCalls + " calls / " + Program.CurrentHost.TextureDecodeMs + " ms | uploads " + LibRender2.Textures.TextureManager.UploadCount + " calls / " + LibRender2.Textures.TextureManager.UploadMs + " ms | GC gen0/1/2: " + GC.CollectionCount(0) + "/" + GC.CollectionCount(1) + "/" + GC.CollectionCount(2));
+			Program.CurrentHost.FileSystem.AppendToLogFile(@"--------------------", false);
+			Program.CurrentHost.FileSystem.AppendToLogFile(@"Loading complete, starting simulation.");
+			Program.CurrentHost.FileSystem.AppendToLogFile("Texture stats @load: decodes " + Program.CurrentHost.TextureDecodeCalls + " calls / " + Program.CurrentHost.TextureDecodeMs + " ms | uploads " + LibRender2.Textures.TextureManager.UploadCount + " calls / " + LibRender2.Textures.TextureManager.UploadMs + " ms | GC gen0/1/2: " + GC.CollectionCount(0) + "/" + GC.CollectionCount(1) + "/" + GC.CollectionCount(2));
 			setupTickCount = Environment.TickCount;
-			Program.FileSystem.AppendToLogFile(@"--------------------", false);
+			Program.CurrentHost.FileSystem.AppendToLogFile(@"--------------------", false);
 		}
 
 		private bool simulationSetup = false;

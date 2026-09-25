@@ -4,7 +4,7 @@ using OpenBveApi;
 using OpenBveApi.Interface;
 
 namespace OpenBve {
-	internal static partial class Interface {
+	public static partial class Interface {
 		internal static List<LogMessage> LogMessages = new List<LogMessage>();
 		internal static readonly object LogLock = new object();
 		internal static void AddMessage(MessageType messageType, bool fileNotFound, string messageText) {
@@ -14,7 +14,7 @@ namespace OpenBve {
 			{
 				LogMessages.Add(new LogMessage(messageType, fileNotFound, messageText));
 			}
-			Program.FileSystem.AppendToLogFile(messageText);
+			Program.CurrentHost.FileSystem.AppendToLogFile(messageText);
 			
 		}
 

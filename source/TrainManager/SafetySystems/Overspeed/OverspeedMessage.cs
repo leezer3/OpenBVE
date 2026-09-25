@@ -27,7 +27,7 @@ namespace TrainManager.SafetySystems
 			}
 			if (baseCar.CurrentSpeed > baseCar.baseTrain.CurrentRouteLimit)
 			{
-				if (!currentlyOverspeed || previousRouteLimit != baseCar.baseTrain.CurrentRouteLimit || TrainManagerBase.CurrentOptions.GameMode == GameMode.Arcade)
+				if (!currentlyOverspeed || previousRouteLimit != baseCar.baseTrain.CurrentRouteLimit || TrainManagerBase.currentHost.Options.GameMode == GameMode.Arcade)
 				{
 					/*
 					 * HACK: If the limit has changed, or we are in arcade mode, notify the player
@@ -42,7 +42,7 @@ namespace TrainManager.SafetySystems
 				currentlyOverspeed = false;
 			}
 
-			if (TrainManagerBase.CurrentOptions.Accessibility)
+			if (TrainManagerBase.currentHost.Options.Accessibility)
 			{
 				if (previousRouteLimit != baseCar.baseTrain.CurrentRouteLimit)
 				{

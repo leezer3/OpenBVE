@@ -95,6 +95,12 @@ namespace OpenBveApi.Hosts {
 			}
 		}
 
+		/// <summary>Information about the file system organization.</summary>
+		public FileSystem.FileSystem FileSystem;
+
+		/// <summary> Holds the current options</summary>
+		public BaseOptions Options;
+
 		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 		private struct UName
 		{
@@ -134,9 +140,18 @@ namespace OpenBveApi.Hosts {
 		private static extern string GetWineVersion();
 
 		/// <summary>The base host interface constructor</summary>
-		protected HostInterface(HostApplication host)
+		protected HostInterface(HostApplication host, string[] args = null)
 		{
 			Application = host;
+			try
+			{
+				FileSystem = OpenBveApi.FileSystem.FileSystem.FromCommandLineArgs(args, this);
+			}
+			catch
+			{ 
+				// ignored
+			}
+			
 			StaticObjectCache = new Dictionary<ValueTuple<string, bool, DateTime>, StaticObject>();
 			AnimatedObjectCollectionCache = new Dictionary<string, AnimatedObjectCollection>();
 			MissingFiles = new HashSet<string>();
@@ -155,7 +170,7 @@ namespace OpenBveApi.Hosts {
 			}
 		}
 
-		/// <summary></summary>
+		/// <summary>The host application</summary>
 		public readonly HostApplication Application;
 
 		/// <summary>Reports a problem to the host application.</summary>
@@ -668,7 +683,10 @@ namespace OpenBveApi.Hosts {
 		/// <param name="objectPath">The path to the object directory</param>
 		/// /// <param name="tfoFile">The TFO parameters file</param>
 		/// <returns>The track following object</returns>
-		public abstract AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile);
+		public virtual AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile)
+		{
+			return null;
+		}
 
 		/// <summary>The list of available content loading plugins</summary>
 		public ContentLoadingPlugin[] Plugins;

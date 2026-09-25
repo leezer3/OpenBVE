@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenBveApi.Interface;
 using OpenTK.Input;
 
 namespace OpenBve.Input
@@ -17,13 +18,13 @@ namespace OpenBve.Input
 		/// <summary>Gets the number of RailDriver controllers connected</summary>
 		internal virtual int RailDriverCount => 0;
 
-		internal ButtonState GetButton(Guid Device, int Button)
+		internal bool GetButton(Guid Device, int Button)
 		{
 			if (AttachedJoysticks.ContainsKey(Device))
 			{
 				return AttachedJoysticks[Device].GetButton(Button);
 			}
-			return ButtonState.Released;
+			return false;
 		}
 
 		internal double GetAxis(Guid Device, int Axis)
@@ -35,13 +36,14 @@ namespace OpenBve.Input
 			return 0.0;
 		}
 
-		internal JoystickHatState GetHat(Guid Device, int Hat)
+		internal JoystickHatPosition GetHat(Guid Device, int Hat)
 		{
 			if (AttachedJoysticks.ContainsKey(Device))
 			{
 				return AttachedJoysticks[Device].GetHat(Hat);
 			}
-			return new JoystickHatState();
+
+			return JoystickHatPosition.Centered;
 		}
 	}
 }

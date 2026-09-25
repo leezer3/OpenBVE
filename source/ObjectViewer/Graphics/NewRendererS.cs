@@ -10,7 +10,6 @@ using LibRender2.Screens;
 using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Colors;
-using OpenBveApi.FileSystem;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -364,10 +363,10 @@ namespace ObjectViewer.Graphics
 			PopMatrix(MatrixMode.Modelview);
 		}
 
-		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)
+		public NewRenderer(HostInterface CurrentHost) : base(CurrentHost)
 		{
-			Screen.Width = CurrentOptions.WindowWidth;
-			Screen.Height = CurrentOptions.WindowHeight;
+			Screen.Width = CurrentHost.Options.WindowWidth;
+			Screen.Height = CurrentHost.Options.WindowHeight;
 			CameraTrackFollower = new TrackFollower(CurrentHost);
 		}
 	}

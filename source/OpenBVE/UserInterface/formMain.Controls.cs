@@ -481,7 +481,7 @@ namespace OpenBve {
 		{
 			try
 			{
-				Interface.LoadControls(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default.controls"), out Interface.CurrentControls);
+				Interface.LoadControls(OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.GetDataFolder("Controls"), "Default.controls"), out Interface.CurrentControls);
 				for (int i = 0; i < listviewControls.SelectedItems.Count; i++)
 				{
 					listviewControls.SelectedItems[i].Selected = false;
@@ -695,42 +695,42 @@ namespace OpenBve {
 						string t = "H" + (j + 1).ToString(Culture);
 						SizeF s = e.Graphics.MeasureString(t, f);
 						e.Graphics.DrawString(t, f, Brushes.Black, u + 0.5f * (g - s.Width), v + 0.5f * (g - s.Height));
-						JoystickHatState aa = Program.Joysticks.AttachedJoysticks[guid].GetHat(j);
-						if (aa.Position != HatPosition.Centered)
+						JoystickHatPosition aa = Program.Joysticks.AttachedJoysticks[guid].GetHat(j);
+						if (aa != JoystickHatPosition.Centered)
 						{
 							double rx = 0.0;
 							double ry = 0.0;
-							switch (aa.Position)
+							switch (aa)
 							{
-								case HatPosition.Up:
+								case JoystickHatPosition.Up:
 									rx = 0.0;
 									ry = -1.0;
 									break;
-								case HatPosition.Down:
+								case JoystickHatPosition.Down:
 									rx = 0.0;
 									ry = 1.0;
 									break;
-								case HatPosition.Left:
+								case JoystickHatPosition.Left:
 									rx = -1.0;
 									ry = 0.0;
 									break;
-								case HatPosition.Right:
+								case JoystickHatPosition.Right:
 									rx = 1.0;
 									ry = 0.0;
 									break;
-								case HatPosition.UpLeft:
+								case JoystickHatPosition.UpLeft:
 									rx = -1.0;
 									ry = -1.0;
 									break;
-								case HatPosition.UpRight:
+								case JoystickHatPosition.UpRight:
 									rx = 1.0;
 									ry = -1.0;
 									break;
-								case HatPosition.DownLeft:
+								case JoystickHatPosition.DownLeft:
 									rx = -1.0;
 									ry = 1.0;
 									break;
-								case HatPosition.DownRight:
+								case JoystickHatPosition.DownRight:
 									rx = 1.0;
 									ry = 1.0;
 									break;
@@ -803,7 +803,7 @@ namespace OpenBve {
 					g = 0.5f * (pictureboxJoysticks.ClientRectangle.Height - v - 10.0f);
 					for (int j = 0; j < Program.Joysticks.AttachedJoysticks[guid].ButtonCount(); j++)
 					{
-						bool q = Program.Joysticks.AttachedJoysticks[guid].GetButton(j) != 0;
+						bool q = Program.Joysticks.AttachedJoysticks[guid].GetButton(j);
 						float dv = (j & 1) * (g + 8.0f);
 						if (q) e.Graphics.FillRectangle(Brushes.Firebrick, u, v + dv, g, g);
 						if (device == i & component == JoystickComponent.Button & element == j)

@@ -1214,7 +1214,7 @@ namespace TrainManager.Car
 			double wheelSlipAccelerationBrakeRear = 0.0;
 			if (!Derailed)
 			{
-				if (TrainManagerBase.CurrentOptions.AdhesionHack)
+				if (TrainManagerBase.currentHost.Options.AdhesionHack)
 				{
 					wheelSlipAccelerationMotorFront = double.MaxValue;
 					wheelSlipAccelerationMotorRear = double.MaxValue;

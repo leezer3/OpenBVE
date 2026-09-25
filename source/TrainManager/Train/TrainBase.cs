@@ -141,7 +141,7 @@ namespace TrainManager.Trains
 		{
 			State = state;
 			Type = type;
-			Destination = TrainManagerBase.CurrentOptions.InitialDestination;
+			Destination = TrainManagerBase.currentHost.Options.InitialDestination;
 			Station = -1;
 			RouteLimits = new[] { double.PositiveInfinity };
 			CurrentRouteLimit = double.PositiveInfinity;
@@ -340,7 +340,7 @@ namespace TrainManager.Trains
 							State = TrainState.Available;
 							for (int j = 0; j < Cars.Length; j++)
 							{
-								if (j == DriverCar && IsPlayerTrain && TrainManagerBase.CurrentOptions.InitialViewpoint == 0)
+								if (j == DriverCar && IsPlayerTrain && TrainManagerBase.currentHost.Options.InitialViewpoint == 0)
 								{
 									Cars[j].ChangeCarSection(CarSectionType.Interior);
 								}
@@ -354,7 +354,7 @@ namespace TrainManager.Trains
 									 * but we have no control over external factors....
 									 */
 									Cars[j].ChangeCarSection(CarSectionType.Exterior);
-									if (IsPlayerTrain && TrainManagerBase.CurrentOptions.InitialViewpoint == 0)
+									if (IsPlayerTrain && TrainManagerBase.currentHost.Options.InitialViewpoint == 0)
 									{
 										Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
 									}
@@ -372,7 +372,7 @@ namespace TrainManager.Trains
 				{
 					// available train
 					UpdatePhysicsAndControls(timeElapsed);
-					if (TrainManagerBase.CurrentOptions.Accessibility)
+					if (TrainManagerBase.currentHost.Options.Accessibility)
 					{
 						Section nextSection = TrainManagerBase.CurrentRoute.NextSection(FrontCarTrackPosition);
 						if (nextSection != null)
@@ -403,7 +403,7 @@ namespace TrainManager.Trains
 						}
 					}
 
-					if (TrainManagerBase.CurrentOptions.GameMode == GameMode.Arcade)
+					if (TrainManagerBase.currentHost.Options.GameMode == GameMode.Arcade)
 					{
 						if (CurrentSectionLimit == 0.0)
 						{
@@ -555,9 +555,9 @@ namespace TrainManager.Trains
 					if (IsPlayerTrain)
 					{
 						string s = Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"message","signal_proceed"});
-						double a = (3.6 * CurrentSectionLimit) * TrainManagerBase.CurrentOptions.SpeedConversionFactor;
+						double a = (3.6 * CurrentSectionLimit) * TrainManagerBase.currentHost.Options.SpeedConversionFactor;
 						s = s.Replace("[speed]", a.ToString("0", CultureInfo.InvariantCulture));
-						s = s.Replace("[unit]", TrainManagerBase.CurrentOptions.UnitOfSpeed);
+						s = s.Replace("[unit]", TrainManagerBase.currentHost.Options.UnitOfSpeed);
 						TrainManagerBase.currentHost.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, 5.0, null);
 					}
 				}
@@ -785,7 +785,7 @@ namespace TrainManager.Trains
 
 					for (int k = i; k <= j; k++)
 					{
-						if (TrainManagerBase.CurrentOptions.Derailments && Math.Abs(v - NewSpeeds[k]) > 0.5 * CriticalCollisionSpeedDifference)
+						if (TrainManagerBase.currentHost.Options.Derailments && Math.Abs(v - NewSpeeds[k]) > 0.5 * CriticalCollisionSpeedDifference)
 						{
 							Derail(k, timeElapsed);
 						}
@@ -862,7 +862,7 @@ namespace TrainManager.Trains
 			}
 			Cars[carIndex].Run.Stop();
 
-			if (TrainManagerBase.CurrentOptions.GenerateDebugLogging)
+			if (TrainManagerBase.currentHost.Options.GenerateDebugLogging)
 			{
 				TrainManagerBase.currentHost.AddMessage(MessageType.Information, false, "Car " + carIndex + " derailed. Current simulation time: " + TrainManagerBase.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + elapsedTime);
 			}
@@ -882,7 +882,7 @@ namespace TrainManager.Trains
 				c.Run.Stop();
 				c.Derailed = true;
 				this.Derailed = true;
-				if (TrainManagerBase.CurrentOptions.GenerateDebugLogging)
+				if (TrainManagerBase.currentHost.Options.GenerateDebugLogging)
 				{
 					TrainManagerBase.currentHost.AddMessage(MessageType.Information, false, "Car " + c.Index + " derailed. Current simulation time: " + TrainManagerBase.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + elapsedTime);
 				}
@@ -982,7 +982,7 @@ namespace TrainManager.Trains
 			{
 				if (IsPlayerTrain)
 				{
-					Plugin?.BeginJump((InitializationModes) TrainManagerBase.CurrentOptions.TrainStart);
+					Plugin?.BeginJump((InitializationModes) TrainManagerBase.currentHost.Options.TrainStart);
 				}
 
 				for (int h = 0; h < Cars.Length; h++)

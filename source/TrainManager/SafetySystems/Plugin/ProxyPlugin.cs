@@ -184,7 +184,7 @@ namespace TrainManager.SafetySystems {
 				{
 
 					TrainManagerBase.currentHost.AddMessage("The train plugin " + PluginTitle + " has been unloaded due to an error. Some train features may no longer work.");
-					TrainManagerBase.FileSystem.AppendToLogFile(lastError);
+					TrainManagerBase.currentHost.FileSystem.AppendToLogFile(lastError);
 					lastError = string.Empty;
 				}
 				return;

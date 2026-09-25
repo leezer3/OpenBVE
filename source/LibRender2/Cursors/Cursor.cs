@@ -39,7 +39,7 @@ namespace LibRender2
 				}
 				else
 				{
-					Bitmap Plus = new Bitmap(OpenBveApi.Path.CombineFile(Renderer.fileSystem.GetDataFolder(), "Cursors\\Symbols\\plus.png"));
+					Bitmap Plus = new Bitmap(OpenBveApi.Path.CombineFile(Renderer.currentHost.FileSystem.GetDataFolder(), "Cursors\\Symbols\\plus.png"));
 					using (Graphics g = Graphics.FromImage(Plus))
 					{
 						g.DrawImage(image, 0.0f, 0.0f, image.Width, image.Height);
@@ -64,7 +64,7 @@ namespace LibRender2
 				}
 				else
 				{
-					Bitmap Minus = new Bitmap(OpenBveApi.Path.CombineFile(Renderer.fileSystem.GetDataFolder(), "Cursors\\Symbols\\minus.png"));
+					Bitmap Minus = new Bitmap(OpenBveApi.Path.CombineFile(Renderer.currentHost.FileSystem.GetDataFolder(), "Cursors\\Symbols\\minus.png"));
 					using (Graphics g = Graphics.FromImage(Minus))
 					{
 						g.DrawImage(image, 0.0f, 0.0f, image.Width, image.Height);
@@ -154,7 +154,7 @@ namespace LibRender2
 					CursorList.Add(new MouseCursor(Renderer, "nk.png", Image));
 				}
 			}
-			Renderer.currentOptions.CursorFileName = "nk.png";
+			Renderer.currentHost.Options.CursorFileName = "nk.png";
 		}
 	}
 }

@@ -38,7 +38,7 @@ namespace LibRender2.Primitives
 			set
 			{
 				_text = value;
-				Size = Font.MeasureString(Text) * 1.5 * Renderer.currentOptions.UserInterfaceScaleFactor;
+				Size = Font.MeasureString(Text) * 1.5 * Renderer.currentHost.Options.UserInterfaceScaleFactor;
 			}
 		}
 

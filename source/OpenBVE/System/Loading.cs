@@ -92,10 +92,10 @@ namespace OpenBve {
 				return string.Empty;
 			}
 
-			if (Directory.Exists(Program.FileSystem.MSTSDirectory) && Interface.CurrentOptions.TrainName.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
+			if (Directory.Exists(Program.CurrentHost.FileSystem.MSTSDirectory) && Interface.CurrentOptions.TrainName.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
 			{
 				// potential MSTS consist
-				string consistDirectory = Path.CombineDirectory(Program.FileSystem.MSTSDirectory, "TRAINS\\Consists");
+				string consistDirectory = Path.CombineDirectory(Program.CurrentHost.FileSystem.MSTSDirectory, "TRAINS\\Consists");
 				string consistFile = Path.CombineFile(consistDirectory, Interface.CurrentOptions.TrainName);
 				if (File.Exists(consistFile))
 				{
@@ -243,7 +243,7 @@ namespace OpenBve {
 		}
 		private static void LoadEverythingThreaded() {
 			
-			string railwayFolder = Program.FileSystem.GetRailwayFolder(CurrentRouteFile, Application.StartupPath);
+			string railwayFolder = Program.CurrentHost.FileSystem.GetRailwayFolder(CurrentRouteFile, Application.StartupPath);
 			string objectFolder = Path.CombineDirectory(railwayFolder, "Object");
 			string soundFolder = Path.CombineDirectory(railwayFolder, "Sound");
 			Game.Reset(true);
@@ -251,10 +251,10 @@ namespace OpenBve {
 			// screen
 
 			bool loaded = false;
-			Program.FileSystem.AppendToLogFile("INFO: " + Program.CurrentHost.AvailableRoutePluginCount + " Route loading plugins available.");
-			Program.FileSystem.AppendToLogFile("INFO: " + Program.CurrentHost.AvailableObjectPluginCount + " Object loading plugins available.");
-			Program.FileSystem.AppendToLogFile("INFO: " + Program.CurrentHost.AvailableRoutePluginCount + " Sound loading plugins available.");
-			Program.FileSystem.AppendToLogFile("Load in Advance is " + (Interface.CurrentOptions.LoadInAdvance ? "enabled" : "disabled"));
+			Program.CurrentHost.FileSystem.AppendToLogFile("INFO: " + Program.CurrentHost.AvailableRoutePluginCount + " Route loading plugins available.");
+			Program.CurrentHost.FileSystem.AppendToLogFile("INFO: " + Program.CurrentHost.AvailableObjectPluginCount + " Object loading plugins available.");
+			Program.CurrentHost.FileSystem.AppendToLogFile("INFO: " + Program.CurrentHost.AvailableRoutePluginCount + " Sound loading plugins available.");
+			Program.CurrentHost.FileSystem.AppendToLogFile("Load in Advance is " + (Interface.CurrentOptions.LoadInAdvance ? "enabled" : "disabled"));
 			
 			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 			{
@@ -314,9 +314,9 @@ namespace OpenBve {
 			if (Program.CurrentRoute.Stations.Length == 1)
 			{
 				//Log the fact that only a single station is present, as this is probably not right
-				Program.FileSystem.AppendToLogFile("The processed route file only contains a single station.");
+				Program.CurrentHost.FileSystem.AppendToLogFile("The processed route file only contains a single station.");
 			}
-			Program.FileSystem.AppendToLogFile("Route file loaded successfully.");
+			Program.CurrentHost.FileSystem.AppendToLogFile("Route file loaded successfully.");
 			// initialize trains
 			Thread.Sleep(1); if (Cancel) return;
 			Program.TrainManager.Trains = new List<TrainBase>

@@ -20,7 +20,7 @@ namespace OpenBve
 			InitializeComponent();
 			try
 			{
-				string File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder(), "icon.ico");
+				string File = OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.GetDataFolder(), "icon.ico");
 				Icon = new Icon(File);
 			}
 			catch
@@ -45,7 +45,7 @@ namespace OpenBve
 		{
 			try
 			{ 
-				string file = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "log.txt");
+				string file = OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "log.txt");
 				if(File.Exists(file))
 				{
 					if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
@@ -73,7 +73,7 @@ namespace OpenBve
 		{
 			try
 			{
-				DirectoryInfo directory = new DirectoryInfo(Program.FileSystem.SettingsFolder);
+				DirectoryInfo directory = new DirectoryInfo(Program.CurrentHost.FileSystem.SettingsFolder);
 				FileInfo file = directory.GetFiles("OpenBVE Crash*.log").OrderByDescending(f => f.LastWriteTime).First();
 				if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 				{
@@ -101,7 +101,7 @@ namespace OpenBve
 					using (var zipWriter = WriterFactory.OpenWriter(ProblemReport, ArchiveType.Zip, new WriterOptions(CompressionType.LZMA)))
 					{
 						//Add log file to the archive
-						var file = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "log.txt");
+						var file = OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "log.txt");
 						if (File.Exists(file))
 						{
 							zipWriter.Write("log.txt", file);
@@ -110,7 +110,7 @@ namespace OpenBve
 						FileInfo crashLog = null;
 						try
 						{
-							var directory = new DirectoryInfo(Program.FileSystem.SettingsFolder);
+							var directory = new DirectoryInfo(Program.CurrentHost.FileSystem.SettingsFolder);
 							crashLog = directory.GetFiles("OpenBVE Crash*.log").OrderByDescending(f => f.LastWriteTime).First();
 						}
 						catch
@@ -125,7 +125,7 @@ namespace OpenBve
 						MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(textBoxProblemDescription.Text));
 						zipWriter.Write("Problem Description.txt", ms);
 						//Finally add the package database to the archive- Again, this isn't necessarily helpful, but we may well want to see it
-						var packageDatabase = new DirectoryInfo(Program.FileSystem.PackageDatabaseFolder);
+						var packageDatabase = new DirectoryInfo(Program.CurrentHost.FileSystem.PackageDatabaseFolder);
 						if(packageDatabase.Exists) {
 							FileInfo[] databaseFiles = packageDatabase.GetFiles("*.xml", SearchOption.AllDirectories);
 							foreach (var currentFile in databaseFiles) {

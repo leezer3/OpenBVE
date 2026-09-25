@@ -56,11 +56,11 @@ namespace TrainManager.Trains
 						double fj = Cars[k].CurrentMass * f;
 						double vi = v * fi;
 						double vj = v * fj;
-						if (vi > CriticalCollisionSpeedDifference && TrainManagerBase.CurrentOptions.Derailments)
+						if (vi > CriticalCollisionSpeedDifference && TrainManagerBase.currentHost.Options.Derailments)
 						{
 							Derail(k, timeElapsed);
 						}
-						else if (vj > Trains[j].CriticalCollisionSpeedDifference && TrainManagerBase.CurrentOptions.Derailments)
+						else if (vj > Trains[j].CriticalCollisionSpeedDifference && TrainManagerBase.currentHost.Options.Derailments)
 						{
 							Trains[j].Derail(0, timeElapsed);
 						}
@@ -90,7 +90,7 @@ namespace TrainManager.Trains
 							{
 								d -= 0.0001;
 								Cars[h].MoveDueToCollision(-d);
-								if (TrainManagerBase.CurrentOptions.Derailments)
+								if (TrainManagerBase.currentHost.Options.Derailments)
 								{
 									f = 2.0 / (Cars[h + 1].CurrentMass + Cars[h].CurrentMass);
 									fi = Cars[h + 1].CurrentMass * f;
@@ -118,7 +118,7 @@ namespace TrainManager.Trains
 							{
 								d -= 0.0001;
 								Trains[j].Cars[h].MoveDueToCollision(d);
-								if (TrainManagerBase.CurrentOptions.Derailments)
+								if (TrainManagerBase.currentHost.Options.Derailments)
 								{
 									f = 2.0 / (Trains[j].Cars[h - 1].CurrentMass + Trains[j].Cars[h].CurrentMass);
 									fi = Trains[j].Cars[h - 1].CurrentMass * f;
@@ -163,11 +163,11 @@ namespace TrainManager.Trains
 						double fj = Cars[0].CurrentMass * f;
 						double vi = v * fi;
 						double vj = v * fj;
-						if (vi > CriticalCollisionSpeedDifference && TrainManagerBase.CurrentOptions.Derailments)
+						if (vi > CriticalCollisionSpeedDifference && TrainManagerBase.currentHost.Options.Derailments)
 						{
 							Trains[j].Derail(0, timeElapsed);
 						}
-						else if (vj > Trains[j].CriticalCollisionSpeedDifference && TrainManagerBase.CurrentOptions.Derailments)
+						else if (vj > Trains[j].CriticalCollisionSpeedDifference && TrainManagerBase.currentHost.Options.Derailments)
 						{
 							Trains[j].Derail(k, timeElapsed);
 						}
@@ -197,7 +197,7 @@ namespace TrainManager.Trains
 							{
 								d -= 0.0001;
 								Cars[h].MoveDueToCollision(d);
-								if (TrainManagerBase.CurrentOptions.Derailments)
+								if (TrainManagerBase.currentHost.Options.Derailments)
 								{
 									f = 2.0 / (Cars[h - 1].CurrentMass + Cars[h].CurrentMass);
 									fi = Cars[h - 1].CurrentMass * f;
@@ -224,7 +224,7 @@ namespace TrainManager.Trains
 							{
 								d -= 0.0001;
 								Trains[j].Cars[h].MoveDueToCollision(-d);
-								if (TrainManagerBase.CurrentOptions.Derailments)
+								if (TrainManagerBase.currentHost.Options.Derailments)
 								{
 									f = 2.0 / (Trains[j].Cars[h + 1].CurrentMass + Trains[j].Cars[h].CurrentMass);
 									fi = Trains[j].Cars[h + 1].CurrentMass * f;
@@ -277,7 +277,7 @@ namespace TrainManager.Trains
 
 						// front
 						Cars[0].UpdateTrackFollowers(-da, false, false);
-						if (TrainManagerBase.CurrentOptions.Derailments && Math.Abs(Cars[0].CurrentSpeed) > CriticalCollisionSpeedDifference)
+						if (TrainManagerBase.currentHost.Options.Derailments && Math.Abs(Cars[0].CurrentSpeed) > CriticalCollisionSpeedDifference)
 						{
 							Derail(0, timeElapsed);
 						}
@@ -292,7 +292,7 @@ namespace TrainManager.Trains
 							{
 								d -= 0.0001;
 								Cars[h].UpdateTrackFollowers(d, false, false);
-								if (TrainManagerBase.CurrentOptions.Derailments && Math.Abs(Cars[h].CurrentSpeed) > CriticalCollisionSpeedDifference)
+								if (TrainManagerBase.currentHost.Options.Derailments && Math.Abs(Cars[h].CurrentSpeed) > CriticalCollisionSpeedDifference)
 								{
 									Derail(h, timeElapsed);
 								}
@@ -311,7 +311,7 @@ namespace TrainManager.Trains
 						}
 
 						Cars[c].UpdateTrackFollowers(db, false, false);
-						if (TrainManagerBase.CurrentOptions.Derailments && Math.Abs(Cars[c].CurrentSpeed) > CriticalCollisionSpeedDifference)
+						if (TrainManagerBase.currentHost.Options.Derailments && Math.Abs(Cars[c].CurrentSpeed) > CriticalCollisionSpeedDifference)
 						{
 							Derail(c, timeElapsed);
 						}
@@ -326,7 +326,7 @@ namespace TrainManager.Trains
 							{
 								d -= 0.0001;
 								Cars[h].UpdateTrackFollowers(-d, false, false);
-								if (TrainManagerBase.CurrentOptions.Derailments && Math.Abs(Cars[h].CurrentSpeed) > CriticalCollisionSpeedDifference)
+								if (TrainManagerBase.currentHost.Options.Derailments && Math.Abs(Cars[h].CurrentSpeed) > CriticalCollisionSpeedDifference)
 								{
 									Derail(h, timeElapsed);
 								}

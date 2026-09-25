@@ -205,7 +205,7 @@ namespace OpenBve
 					if (!Directory.Exists(tmpPath) && value.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
 					{
 						// potential MSTS consist
-						string consistDirectory = Path.CombineDirectory(Program.FileSystem.MSTSDirectory, "TRAINS\\Consists");
+						string consistDirectory = Path.CombineDirectory(Program.CurrentHost.FileSystem.MSTSDirectory, "TRAINS\\Consists");
 						string consistFile = Path.CombineFile(consistDirectory, value);
 						if (File.Exists(consistFile))
 						{
@@ -216,12 +216,12 @@ namespace OpenBve
 
 					if (string.IsNullOrEmpty(trainDirectory) && !Directory.Exists(tmpPath))
 					{
-						tmpPath = Path.CombineFile(Program.FileSystem.InitialTrainFolder, value);
+						tmpPath = Path.CombineFile(Program.CurrentHost.FileSystem.InitialTrainFolder, value);
 					}
 
 					if (string.IsNullOrEmpty(trainDirectory) && !Directory.Exists(tmpPath))
 					{
-						tmpPath = Path.CombineFile(Program.FileSystem.TrainInstallationDirectory, value);
+						tmpPath = Path.CombineFile(Program.CurrentHost.FileSystem.TrainInstallationDirectory, value);
 					}
 
 					if (string.IsNullOrEmpty(trainDirectory) && !Directory.Exists(tmpPath))

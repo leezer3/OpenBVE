@@ -57,21 +57,21 @@ namespace OpenBve.Input
 											case "index":
 												if (!NumberFormats.TryParseIntVb6(n.InnerText, out idx))
 												{
-													Program.FileSystem.AppendToLogFile(@"Invalid index in RailDriver calibration file");
+													Program.CurrentHost.FileSystem.AppendToLogFile(@"Invalid index in RailDriver calibration file");
 												}
 
 												break;
 											case "minimum":
 												if (!NumberFormats.TryParseIntVb6(n.InnerText, out lMin))
 												{
-													Program.FileSystem.AppendToLogFile(@"Invalid minimum in RailDriver calibration file");
+													Program.CurrentHost.FileSystem.AppendToLogFile(@"Invalid minimum in RailDriver calibration file");
 												}
 
 												break;
 											case "maximum":
 												if (!NumberFormats.TryParseIntVb6(n.InnerText, out lMax))
 												{
-													Program.FileSystem.AppendToLogFile(@"Invalid minimum in RailDriver calibration file");
+													Program.CurrentHost.FileSystem.AppendToLogFile(@"Invalid minimum in RailDriver calibration file");
 												}
 
 												break;
@@ -184,9 +184,9 @@ namespace OpenBve.Input
 
 		}
 
-		internal override ButtonState GetButton(int button)
+		internal override bool GetButton(int button)
 		{
-			return 1 == ((currentState[8 + (button / 8)] >> button % 8) & 1) ? ButtonState.Pressed : ButtonState.Released;
+			return 1 == ((currentState[8 + (button / 8)] >> button % 8) & 1);
 		}
 
 		internal override double GetAxis(int axis)
@@ -194,7 +194,7 @@ namespace OpenBve.Input
 			return ScaleValue(currentState[axis + 1], Calibration[axis].Minimum, Calibration[axis].Maximum) * 1.0f / (short.MaxValue + 0.5f);
 		}
 
-		internal override JoystickHatState GetHat(int Hat)
+		internal override JoystickHatPosition GetHat(int Hat)
 		{
 			throw new NotImplementedException();
 		}

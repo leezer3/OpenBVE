@@ -87,7 +87,7 @@ namespace RouteViewer {
 				GC.Collect();
 				LogSwitchMemory("after", CurrentRouteFile, routeFile);
 			}
-			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString(), Interface.CurrentOptions.LoadingLogo, Interface.CurrentOptions.LoadingProgressBar);
+			Program.Renderer.Loading.InitLoading(Program.CurrentHost.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString(), Interface.CurrentOptions.LoadingLogo, Interface.CurrentOptions.LoadingProgressBar);
 			if (textureBytes != null && textureBytes.Length > 0)
 			{
 				Texture t = new Texture(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, PixelFormat.RGBAlpha, textureBytes, (OpenBveApi.Colors.Color24[])null);
@@ -109,7 +109,7 @@ namespace RouteViewer {
 			try
 			{
 				long managed = GC.GetTotalMemory(false);
-				Program.FileSystem.AppendToLogFile(
+				Program.CurrentHost.FileSystem.AppendToLogFile(
 					"Route switch " + stage + ": " + oldFile + " -> " + newFile +
 					" managed=" + (managed / 1048576) + "MB" +
 					" staticCache=" + Program.CurrentHost.StaticObjectCache.Count +
@@ -151,7 +151,7 @@ namespace RouteViewer {
 		}
 
 		private static void LoadEverythingThreaded() {
-			string RailwayFolder = Program.FileSystem.GetRailwayFolder(CurrentRouteFile, Application.StartupPath);
+			string RailwayFolder = Program.CurrentHost.FileSystem.GetRailwayFolder(CurrentRouteFile, Application.StartupPath);
 			string ObjectFolder = Path.CombineDirectory(RailwayFolder, "Object");
 			string SoundFolder = Path.CombineDirectory(RailwayFolder, "Sound");
 			Program.Renderer.Camera.CurrentMode = CameraViewMode.Track;

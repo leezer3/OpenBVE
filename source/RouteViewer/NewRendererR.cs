@@ -55,7 +55,7 @@ namespace RouteViewer
 		{
 			base.Initialize();
 
-			string Folder = Path.CombineDirectory(Program.FileSystem.GetDataFolder(), "RouteViewer");
+			string Folder = Path.CombineDirectory(Program.CurrentHost.FileSystem.GetDataFolder(), "RouteViewer");
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "background.png"), out BackgroundChangeTexture);
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "brightness.png"), out BrightnessChangeTexture);
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "transponder.png"), out TransponderTexture);
@@ -813,7 +813,7 @@ namespace RouteViewer
 			return s;
 		}
 
-		public NewRenderer(HostInterface currentHost, BaseOptions CurrentOptions, FileSystem fileSystem) : base(currentHost, CurrentOptions, fileSystem)
+		public NewRenderer(HostInterface currentHost) : base(currentHost)
 		{
 			Screen.Width = Interface.CurrentOptions.WindowWidth;
 			Screen.Height = Interface.CurrentOptions.WindowHeight;

@@ -47,7 +47,7 @@ namespace LibRender2.Overlays
 				{
 					double w = MarkerTextures[i].Size.X == 0 ? MarkerTextures[i].Texture.Width : MarkerTextures[i].Size.X;
 					double h = MarkerTextures[i].Size.Y == 0 ? MarkerTextures[i].Texture.Height : MarkerTextures[i].Size.Y;
-					if (!Renderer.currentOptions.ForceForwardsCompatibleContext)
+					if (!Renderer.currentHost.Options.ForceForwardsCompatibleContext)
 					{
 						GL.Color4(1.0, 1.0, 1.0, 1.0);
 					}

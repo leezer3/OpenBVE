@@ -17,7 +17,7 @@ namespace OpenBve.Input
 				Calibration[i] = new AxisCalibration();
 			}
 
-			LoadCalibration(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "RailDriver.xml"));
+			LoadCalibration(OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "RailDriver.xml"));
 		}
 
 		internal override void Poll()

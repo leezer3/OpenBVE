@@ -1,5 +1,6 @@
 ﻿using OpenTK.Input;
 using System;
+using OpenBveApi.Interface;
 
 namespace OpenBve.Input
 {
@@ -24,9 +25,9 @@ namespace OpenBve.Input
 			Guid = Joystick.GetGuid(Handle);
 		}
 
-		internal override ButtonState GetButton(int button)
+		internal override bool GetButton(int button)
 		{
-			return state.GetButton(button);
+			return state.GetButton(button) == ButtonState.Pressed;
 		}
 
 		internal override double GetAxis(int axis)
@@ -34,9 +35,9 @@ namespace OpenBve.Input
 			return state.GetAxis(axis);
 		}
 
-		internal override JoystickHatState GetHat(int Hat)
+		internal override JoystickHatPosition GetHat(int Hat)
 		{
-			return state.GetHat((JoystickHat)Hat);
+			return (JoystickHatPosition)state.GetHat((JoystickHat)Hat).Position;
 		}
 
 		internal override int AxisCount()

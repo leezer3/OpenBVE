@@ -16,7 +16,7 @@ namespace TrainEditor2.Simulation.TrainManager
 		internal static List<RunElement> RunSounds = new List<RunElement>();
 		internal static List<MotorElement> MotorSounds = new List<MotorElement>();
 
-		public TrainManager(HostInterface host, BaseRenderer renderer, BaseOptions Options, FileSystem fileSystem) : base(host, renderer, Options, fileSystem)
+		public TrainManager(HostInterface host, BaseRenderer renderer) : base(host, renderer)
 		{
 		}
 	}

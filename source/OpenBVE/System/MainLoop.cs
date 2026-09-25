@@ -35,19 +35,19 @@ namespace OpenBve
 		{
 			Program.Sounds.Initialize(Interface.CurrentOptions.SoundRange);
 
-			Program.FileSystem.AppendToLogFile(@"Attached Joysticks:", false);
-			Program.FileSystem.AppendToLogFile(@"--------------------", false);
+			Program.CurrentHost.FileSystem.AppendToLogFile(@"Attached Joysticks:", false);
+			Program.CurrentHost.FileSystem.AppendToLogFile(@"--------------------", false);
 			for (int i = 0; i < Program.Joysticks.AttachedJoysticks.Count; i++)
 			{
 				Guid key = Program.Joysticks.AttachedJoysticks.ElementAt(i).Key;
-				Program.FileSystem.AppendToLogFile(Program.Joysticks.AttachedJoysticks[key].ToString(), false);
+				Program.CurrentHost.FileSystem.AppendToLogFile(Program.Joysticks.AttachedJoysticks[key].ToString(), false);
 			}
-			Program.FileSystem.AppendToLogFile(@"--------------------", false);
+			Program.CurrentHost.FileSystem.AppendToLogFile(@"--------------------", false);
 
-			Program.FileSystem.AppendToLogFile("Detected Platform: " + Program.CurrentHost.Platform);
-			Program.FileSystem.AppendToLogFile("Backend: " + (Interface.CurrentOptions.PreferNativeBackend ? "Native" : "SDL2"));
-			Program.FileSystem.AppendToLogFile("User Interface Size: " + Interface.CurrentOptions.UserInterfaceFolder);
-			Program.FileSystem.AppendToLogFile("User Interface Scale Factor: " + Interface.CurrentOptions.UserInterfaceScaleFactor);
+			Program.CurrentHost.FileSystem.AppendToLogFile("Detected Platform: " + Program.CurrentHost.Platform);
+			Program.CurrentHost.FileSystem.AppendToLogFile("Backend: " + (Interface.CurrentOptions.PreferNativeBackend ? "Native" : "SDL2"));
+			Program.CurrentHost.FileSystem.AppendToLogFile("User Interface Size: " + Interface.CurrentOptions.UserInterfaceFolder);
+			Program.CurrentHost.FileSystem.AppendToLogFile("User Interface Scale Factor: " + Interface.CurrentOptions.UserInterfaceScaleFactor);
 			if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 			{
 				Tolk.Load();
@@ -55,11 +55,11 @@ namespace OpenBve
 				if (!string.IsNullOrEmpty(name))
 				{
 					Interface.CurrentOptions.ScreenReaderAvailable = true;
-					Program.FileSystem.AppendToLogFile("Supported screen reader driver " + name + " initialised.");
+					Program.CurrentHost.FileSystem.AppendToLogFile("Supported screen reader driver " + name + " initialised.");
 				}
 				else
 				{
-					Program.FileSystem.AppendToLogFile("No supported screen reader found.");
+					Program.CurrentHost.FileSystem.AppendToLogFile("No supported screen reader found.");
 				}
 			}
 			
@@ -95,14 +95,14 @@ namespace OpenBve
 				}
 			}
 
-			Program.FileSystem.AppendToLogFile("Using openGL 4 (new) renderer");
+			Program.CurrentHost.FileSystem.AppendToLogFile("Using openGL 4 (new) renderer");
 			if (Interface.CurrentOptions.FullscreenMode)
 			{
-				Program.FileSystem.AppendToLogFile("Initialising full-screen game window of size " + Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight);
+				Program.CurrentHost.FileSystem.AppendToLogFile("Initialising full-screen game window of size " + Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight);
 			}
 			else
 			{
-				Program.FileSystem.AppendToLogFile("Initialising game window of size " + Interface.CurrentOptions.WindowWidth + " x " + Interface.CurrentOptions.WindowHeight);
+				Program.CurrentHost.FileSystem.AppendToLogFile("Initialising game window of size " + Interface.CurrentOptions.WindowWidth + " x " + Interface.CurrentOptions.WindowHeight);
 			}
 			Screen.Initialize();
 			currentResult = result;
@@ -290,7 +290,7 @@ namespace OpenBve
 						int buttons = Program.Joysticks.AttachedJoysticks[guid].ButtonCount();
 						for (int i = 0; i < buttons; i++)
 						{
-							if (Program.Joysticks.AttachedJoysticks[guid].GetButton(i) == ButtonState.Pressed)
+							if (Program.Joysticks.AttachedJoysticks[guid].GetButton(i))
 							{
 								Game.Menu.SetControlJoyCustomData(guid, JoystickComponent.Button, i, 1);
 								return;
@@ -299,10 +299,10 @@ namespace OpenBve
 						int hats = Program.Joysticks.AttachedJoysticks[guid].HatCount();
 						for (int i = 0; i < hats; i++)
 						{
-							JoystickHatState hat = Program.Joysticks.AttachedJoysticks[guid].GetHat(i);
-							if (hat.Position != HatPosition.Centered)
+							JoystickHatPosition hat = Program.Joysticks.AttachedJoysticks[guid].GetHat(i);
+							if (hat != JoystickHatPosition.Centered)
 							{
-								Game.Menu.SetControlJoyCustomData(guid, JoystickComponent.Hat, i, (int)hat.Position);
+								Game.Menu.SetControlJoyCustomData(guid, JoystickComponent.Hat, i, (int)hat);
 								return;
 							}
 						}
@@ -455,7 +455,7 @@ namespace OpenBve
 								TrainManager.PlayerTrain.Handles.Power.ResetSpring();
 								TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
 							}
-							if (buttonState == ButtonState.Pressed)
+							if (buttonState)
 							{
 								Interface.CurrentControls[i].AnalogState = 1.0;
 								Interface.CurrentControls[i].DigitalState = DigitalControlState.Pressed;
@@ -473,7 +473,7 @@ namespace OpenBve
 						break;
 					case JoystickComponent.Hat:
 						//Load the current state
-						var hatState = Program.Joysticks.GetHat(currentDevice, Interface.CurrentControls[i].Element).Position;
+						var hatState = Program.Joysticks.GetHat(currentDevice, Interface.CurrentControls[i].Element);
 						//Test if the state is the same as last frame
 						if (hatState.ToString() != Interface.CurrentControls[i].LastState)
 						{

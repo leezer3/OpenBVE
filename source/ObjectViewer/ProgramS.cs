@@ -12,7 +12,6 @@ using ObjectViewer.Graphics;
 using ObjectViewer.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
-using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -28,8 +27,6 @@ using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace ObjectViewer {
 	internal static class Program {
-		internal static FileSystem FileSystem = null;
-
 		// members
 	    private static readonly HashSet<string> Files = new HashSet<string>();
 		/// <summary>Guards all access to the loaded file set (UI, watcher and loader threads).</summary>
@@ -76,13 +73,12 @@ namespace ObjectViewer {
 		[STAThread]
 	    internal static void Main(string[] args)
 	    {
-		    CurrentHost = new Host();
-			// file system
-	        FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
-	        FileSystem.CreateFileSystem();
+		    CurrentHost = new Host(args);
+			
 	        
-	        CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
-	        Options.LoadOptions();
+	        CurrentHost.Options = new Options(CurrentHost);
+	        CurrentHost.Options.Load();
+
 			// n.b. Init the toolkit before the renderer
 	        ToolkitOptions options = new ToolkitOptions
 	        {
@@ -98,7 +94,8 @@ namespace ObjectViewer {
 
 	        Toolkit.Init(options);
 
-			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
+			Renderer = new NewRenderer(CurrentHost);
+			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			// Apply persistent sun direction
 			double azimuthRad = Interface.CurrentOptions.LightAzimuth * Math.PI / 180.0;
 			double elevationRad = Interface.CurrentOptions.LightElevation * Math.PI / 180.0;
@@ -108,13 +105,13 @@ namespace ObjectViewer {
 			Renderer.Lighting.OptionLightPosition = new Vector3(lx, ly, lz);
 	        
 	        
-	        TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
+	        TrainManager = new TrainManager(CurrentHost, Renderer);
 	        if (Renderer.Screen.Width == 0 || Renderer.Screen.Height == 0)
 	        {
 		        Renderer.Screen.Width = 960;
 		        Renderer.Screen.Height = 600;
 	        }
-	        if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, TrainManager, Renderer))
+	        if (!CurrentHost.LoadPlugins(Interface.CurrentOptions, out string error, TrainManager, Renderer))
 	        {
 		        MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		        return;
@@ -177,7 +174,7 @@ namespace ObjectViewer {
 
 	        
 	        // --- load language ---
-	        string folder = FileSystem.GetDataFolder("Languages");
+	        string folder = CurrentHost.FileSystem.GetDataFolder("Languages");
 	        Translations.LoadLanguageFiles(folder);
 			GameMenu.Instance = new GameMenu();
 			// initialize camera
@@ -845,7 +842,7 @@ namespace ObjectViewer {
 		/// <remarks>Must run on the render thread with the old scene still intact.</remarks>
 		private static void CaptureLoadingBackground()
 		{
-			Renderer.Loading.InitLoading(FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString(), true, Interface.CurrentOptions.LoadingProgressBar);
+			Renderer.Loading.InitLoading(CurrentHost.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString(), true, Interface.CurrentOptions.LoadingProgressBar);
 			if (Renderer.Screen.Width <= 0 || Renderer.Screen.Height <= 0)
 			{
 				// Minimized window: skip capture, the default logo backdrop applies.

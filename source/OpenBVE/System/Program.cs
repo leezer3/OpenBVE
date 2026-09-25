@@ -6,7 +6,6 @@ using OpenBve.Graphics;
 using OpenBve.Input;
 using OpenBveApi;
 using OpenTK;
-using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -39,9 +38,6 @@ namespace OpenBve {
 
 		/// <summary>The host API used by this program.</summary>
 		internal static Host CurrentHost;
-
-		/// <summary>Information about the file system organization.</summary>
-		internal static FileSystem FileSystem;
 		
 		/// <summary>If the program is to be restarted, this contains the command-line arguments that should be passed to the process, or a null reference otherwise.</summary>
 		internal static string RestartArguments;
@@ -63,12 +59,11 @@ namespace OpenBve {
 		[STAThread]
 		private static void Main(string[] args) {
 			// --- load options and controls ---
-			CurrentHost = new Host();
+			CurrentHost = new Host(args);
 			try
 			{
-				FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
-				FileSystem.CreateFileSystem();
-				Interface.LoadOptions();
+				CurrentHost.Options = new Interface.Options(CurrentHost);
+				CurrentHost.Options.Load();
 			}
 			catch
 			{
@@ -138,15 +133,7 @@ namespace OpenBve {
 				Joysticks.RefreshJoysticks();
 			}
 			
-			try {
-				FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
-				FileSystem.CreateFileSystem();
-			} catch (Exception ex) {
-				Program.ShowMessageBox(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","filesystem_invalid"}) + Environment.NewLine + Environment.NewLine + ex.Message, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}));
-				return;
-			}
-
-			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
+			Renderer = new NewRenderer(CurrentHost);
 			Sounds = new Sounds(CurrentHost);
 			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			
@@ -161,21 +148,21 @@ namespace OpenBve {
 
 
 			
-			TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
+			TrainManager = new TrainManager(CurrentHost, Renderer);
 			
 			// --- load language ---
-			string folder = Program.FileSystem.GetDataFolder("Languages");
+			string folder = CurrentHost.FileSystem.GetDataFolder("Languages");
 			Translations.LoadLanguageFiles(folder);
 			
-			folder = Program.FileSystem.GetDataFolder("Cursors");
+			folder = CurrentHost.FileSystem.GetDataFolder("Cursors");
 			LibRender2.AvailableCursors.LoadCursorImages(Program.Renderer, folder);
 			
 			Interface.LoadControls(null, out Interface.CurrentControls);
-			folder = Program.FileSystem.GetDataFolder("Controls");
+			folder = CurrentHost.FileSystem.GetDataFolder("Controls");
 			string file = Path.CombineFile(folder, "Default keyboard assignment.controls");
 			Interface.LoadControls(file, out Control[] controls);
 			Interface.AddControls(ref Interface.CurrentControls, controls);
-			InputDevicePlugin.LoadPlugins(Program.FileSystem);
+			InputDevicePlugin.LoadPlugins(CurrentHost.FileSystem);
 			
 			
 			// --- check whether route and train exist ---
@@ -193,7 +180,7 @@ namespace OpenBve {
 			// --- if a route was provided but no train, try to use the route default ---
 			if (result.RouteFile != null & result.TrainFolder == null)
 			{
-				if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, TrainManager, Renderer))
+				if (!CurrentHost.LoadPlugins(Interface.CurrentOptions, out string error, TrainManager, Renderer))
 				{
 					Program.ShowMessageBox(error, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "program", "title" }));
 					throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
@@ -360,20 +347,20 @@ namespace OpenBve {
 			// --- restart the program if necessary ---
 			if (RestartArguments != null) {
 				string arguments;
-				if (FileSystem.RestartArguments.Length != 0 & RestartArguments.Length != 0) {
-					arguments = FileSystem.RestartArguments + " " + RestartArguments;
+				if (CurrentHost.FileSystem.RestartArguments.Length != 0 & RestartArguments.Length != 0) {
+					arguments = CurrentHost.FileSystem.RestartArguments + " " + RestartArguments;
 				} else {
-					arguments = FileSystem.RestartArguments + RestartArguments;
+					arguments = CurrentHost.FileSystem.RestartArguments + RestartArguments;
 				}
 				try {
-					Process.Start(System.IO.File.Exists(FileSystem.RestartProcess) ? FileSystem.RestartProcess : Application.ExecutablePath, arguments);
+					Process.Start(System.IO.File.Exists(CurrentHost.FileSystem.RestartProcess) ? CurrentHost.FileSystem.RestartProcess : Application.ExecutablePath, arguments);
 					if (CurrentHost.MonoRuntime)
 					{
 						// Forcefully terminate the original process once the new one has triggered, otherwise we hang around...
 						Environment.Exit(0);
 					}
 				} catch (Exception ex) {
-					ShowMessageBox(ex.Message + @"\n\nProcess = " + FileSystem.RestartProcess + @"\nArguments = " + arguments, Application.ProductName);
+					ShowMessageBox(ex.Message + @"\n\nProcess = " + CurrentHost.FileSystem.RestartProcess + @"\nArguments = " + arguments, Application.ProductName);
 				}
 			}
 			else
@@ -387,7 +374,7 @@ namespace OpenBve {
 		/// <returns>Whether the initialization was successful.</returns>
 		private static bool Initialize()
 		{
-			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, TrainManager, Renderer)) {
+			if (!CurrentHost.LoadPlugins(Interface.CurrentOptions, out string error, TrainManager, Renderer)) {
 				Program.ShowMessageBox(error, @"OpenBVE");
 				return false;
 			}
@@ -403,7 +390,7 @@ namespace OpenBve {
 			Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = Interface.CurrentOptions.ViewingDistance;
 			// end HACK //
 			string programVersion = @"v" + Application.ProductVersion + OpenBve.Program.VersionSuffix;
-			FileSystem.ClearLogFile(programVersion);
+			CurrentHost.FileSystem.ClearLogFile(programVersion);
 			return true;
 		}
 		

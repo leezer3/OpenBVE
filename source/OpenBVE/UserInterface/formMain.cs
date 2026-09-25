@@ -93,7 +93,7 @@ namespace OpenBve {
 			// form icon
 			try
 			{
-				string File = Path.CombineFile(Program.FileSystem.GetDataFolder(), "icon.ico");
+				string File = Path.CombineFile(Program.CurrentHost.FileSystem.GetDataFolder(), "icon.ico");
 				Icon = new Icon(File);
 			}
 			catch
@@ -146,7 +146,7 @@ namespace OpenBve {
 				}
 			}
 			// icons and images
-			string MenuFolder = Program.FileSystem.GetDataFolder("Menu");
+			string MenuFolder = Program.CurrentHost.FileSystem.GetDataFolder("Menu");
 			Image ParentIcon = LoadImage(MenuFolder, "icon_parent.png");
 			Image FolderIcon = LoadImage(MenuFolder, "icon_folder.png");
 			Image DiskIcon = LoadImage(MenuFolder, "icon_disk.png");
@@ -167,8 +167,8 @@ namespace OpenBve {
 			ZukiImage = LoadImage(MenuFolder, "zuki.png");
 			Image Logo = LoadImage(MenuFolder, "logo.png");
 			if (Logo != null) pictureboxLogo.Image = Logo;
-			pictureboxRouteImage.ErrorImage = LoadImage(Program.FileSystem.GetDataFolder("Menu"),"error_route.png");
-			pictureboxTrainImage.ErrorImage = LoadImage(Program.FileSystem.GetDataFolder("Menu"), "error_train.png");
+			pictureboxRouteImage.ErrorImage = LoadImage(Program.CurrentHost.FileSystem.GetDataFolder("Menu"),"error_route.png");
+			pictureboxTrainImage.ErrorImage = LoadImage(Program.CurrentHost.FileSystem.GetDataFolder("Menu"), "error_train.png");
 			// route selection
 			listviewRouteFiles.SmallImageList = new ImageList { TransparentColor = Color.White };
 			listViewRoutePackages.SmallImageList = new ImageList { TransparentColor = Color.White };
@@ -228,8 +228,8 @@ namespace OpenBve {
 
 			}
 			listviewRouteRecently.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-			currentRoutePackageFolder = Program.FileSystem.RouteInstallationDirectory;
-			currentTrainPackageFolder = Program.FileSystem.TrainInstallationDirectory;
+			currentRoutePackageFolder = Program.CurrentHost.FileSystem.RouteInstallationDirectory;
+			currentTrainPackageFolder = Program.CurrentHost.FileSystem.TrainInstallationDirectory;
 			// train selection
 			listviewTrainFolders.SmallImageList = new ImageList { TransparentColor = Color.White };
 			listViewTrainPackages.SmallImageList = new ImageList { TransparentColor = Color.White };
@@ -274,14 +274,14 @@ namespace OpenBve {
 				textboxRouteFolder.Text = Interface.CurrentOptions.RouteFolder;
 			}
 			else {
-				textboxRouteFolder.Text = Program.FileSystem.InitialRouteFolder;
+				textboxRouteFolder.Text = Program.CurrentHost.FileSystem.InitialRouteFolder;
 			}
 			if (Interface.CurrentOptions.TrainFolder.Length != 0 && Directory.Exists(Interface.CurrentOptions.TrainFolder))
 			{
 				textboxTrainFolder.Text = Interface.CurrentOptions.TrainFolder;
 			}
 			else {
-				textboxTrainFolder.Text = Program.FileSystem.InitialTrainFolder;
+				textboxTrainFolder.Text = Program.CurrentHost.FileSystem.InitialTrainFolder;
 			}
 			// encodings
 			{
@@ -837,10 +837,10 @@ namespace OpenBve {
 			buttonSetRouteDirectory.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","package_choose"});
 			buttonTrainInstallationDirectory.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","package_choose"});
 			buttonOtherDirectory.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","package_choose"});
-			textBoxRouteDirectory.Text = Program.FileSystem.RouteInstallationDirectory;
-			textBoxTrainDirectory.Text = Program.FileSystem.TrainInstallationDirectory;
-			textBoxOtherDirectory.Text = Program.FileSystem.OtherInstallationDirectory;
-			textBoxMSTSTrainsetDirectory.Text = Program.FileSystem.MSTSDirectory;
+			textBoxRouteDirectory.Text = Program.CurrentHost.FileSystem.RouteInstallationDirectory;
+			textBoxTrainDirectory.Text = Program.CurrentHost.FileSystem.TrainInstallationDirectory;
+			textBoxOtherDirectory.Text = Program.CurrentHost.FileSystem.OtherInstallationDirectory;
+			textBoxMSTSTrainsetDirectory.Text = Program.CurrentHost.FileSystem.MSTSDirectory;
 			labelRouteInstallDirectory.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","package_route_directory"});
 			labelTrainInstallDirectory.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","package_train_directory"});
 			labelOtherInstallDirectory.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","package_other_directory"});
@@ -1469,7 +1469,7 @@ namespace OpenBve {
 					if (InputDevicePlugin.AvailablePluginInfos[i].Status != InputDevicePlugin.PluginInfo.PluginStatus.Enable) {
 						continue;
 					}
-					string pluginPath = Path.CombineFile(Program.FileSystem.GetDataFolder("InputDevicePlugins"), InputDevicePlugin.AvailablePluginInfos[i].FileName);
+					string pluginPath = Path.CombineFile(Program.CurrentHost.FileSystem.GetDataFolder("InputDevicePlugins"), InputDevicePlugin.AvailablePluginInfos[i].FileName);
 					if (File.Exists(pluginPath))
 					{
 						a.Add(InputDevicePlugin.AvailablePluginInfos[i].FileName);
@@ -1506,8 +1506,8 @@ namespace OpenBve {
 			try
 			{
 #endif
-				Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg"));
-				Program.FileSystem.SaveCurrentFileSystemConfiguration();
+				Interface.CurrentOptions.Save(Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0/options.cfg"));
+				Program.CurrentHost.FileSystem.SaveCurrentFileSystemConfiguration();
 #if !DEBUG
 			}
 			catch (Exception ex)
@@ -1737,7 +1737,7 @@ namespace OpenBve {
 			if (radioButtonPackages.Checked)
 			{
 				ResetInstallerPanels();
-				if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out string[] errorMessage))
+				if (Database.LoadDatabase(Program.CurrentHost.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out string[] errorMessage))
 				{
 					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true, false, false);
 				}
@@ -1900,7 +1900,7 @@ namespace OpenBve {
 					int buttons = Program.Joysticks.AttachedJoysticks[guid].ButtonCount();
 					for (int i = 0; i < buttons; i++)
 					{
-						if (Program.Joysticks.AttachedJoysticks[guid].GetButton(i) == ButtonState.Pressed)
+						if (Program.Joysticks.AttachedJoysticks[guid].GetButton(i))
 						{
 							if (railDriver)
 							{
@@ -1919,13 +1919,13 @@ namespace OpenBve {
 					int hats = Program.Joysticks.AttachedJoysticks[guid].HatCount();
 					for (int i = 0; i < hats; i++)
 					{
-						JoystickHatState hat = Program.Joysticks.AttachedJoysticks[guid].GetHat(i);
-						if (hat.Position != HatPosition.Centered)
+						JoystickHatPosition hat = Program.Joysticks.AttachedJoysticks[guid].GetHat(i);
+						if (hat != JoystickHatPosition.Centered)
 						{
 							Interface.CurrentControls[j].Device = guid;
 							Interface.CurrentControls[j].Component = JoystickComponent.Hat;
 							Interface.CurrentControls[j].Element = i;
-							Interface.CurrentControls[j].Direction = (int)hat.Position;
+							Interface.CurrentControls[j].Direction = (int)hat;
 							radiobuttonJoystick.Focus();
 							UpdateJoystickDetails();
 							UpdateControlListElement(listviewControls.Items[j], j, true);
@@ -1974,7 +1974,7 @@ namespace OpenBve {
 			{
 				if (!File.Exists(imageFile))
 				{
-					string menuFolder = Program.FileSystem.GetDataFolder("Menu");
+					string menuFolder = Program.CurrentHost.FileSystem.GetDataFolder("Menu");
 					imageFile = Path.CombineFile(menuFolder, imageFile);
 				}
 				if (File.Exists(imageFile))
@@ -2192,7 +2192,7 @@ namespace OpenBve {
 			{
 				if (folderSelectDialog.ShowDialog() == DialogResult.OK)
 				{
-					Program.FileSystem.RouteInstallationDirectory = folderSelectDialog.SelectedPath;
+					Program.CurrentHost.FileSystem.RouteInstallationDirectory = folderSelectDialog.SelectedPath;
 					textBoxRouteDirectory.Text = folderSelectDialog.SelectedPath;
 				}
 			}
@@ -2204,7 +2204,7 @@ namespace OpenBve {
 			{
 				if (folderSelectDialog.ShowDialog() == DialogResult.OK)
 				{
-					Program.FileSystem.TrainInstallationDirectory = folderSelectDialog.SelectedPath;
+					Program.CurrentHost.FileSystem.TrainInstallationDirectory = folderSelectDialog.SelectedPath;
 					textBoxTrainDirectory.Text = folderSelectDialog.SelectedPath;
 				}
 			}
@@ -2216,7 +2216,7 @@ namespace OpenBve {
 			{
 				if (folderSelectDialog.ShowDialog() == DialogResult.OK)
 				{
-					Program.FileSystem.OtherInstallationDirectory = folderSelectDialog.SelectedPath;
+					Program.CurrentHost.FileSystem.OtherInstallationDirectory = folderSelectDialog.SelectedPath;
 					textBoxOtherDirectory.Text = folderSelectDialog.SelectedPath;
 				}
 			}
@@ -2320,7 +2320,7 @@ namespace OpenBve {
 			{
 				if (folderSelectDialog.ShowDialog() == DialogResult.OK)
 				{
-					Program.FileSystem.MSTSDirectory = folderSelectDialog.SelectedPath;
+					Program.CurrentHost.FileSystem.MSTSDirectory = folderSelectDialog.SelectedPath;
 					textBoxMSTSTrainsetDirectory.Text = folderSelectDialog.SelectedPath;
 				}
 			}

@@ -6,12 +6,9 @@ using LibRender2.Screens;
 using LibRender2.Shaders;
 using LibRender2.Viewports;
 using OpenBve.Graphics.Renderers;
-using OpenBveApi;
 using OpenBveApi.Colors;
-using OpenBveApi.FileSystem;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
-using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
@@ -58,7 +55,7 @@ namespace OpenBve.Graphics
 			ObjectsSortedByEnd = new int[] { };
 			
 			
-			Program.FileSystem.AppendToLogFile("Renderer initialised successfully.");
+			Program.CurrentHost.FileSystem.AppendToLogFile("Renderer initialised successfully.");
 		}
 		
 		protected override void UpdateViewport(int width, int height)
@@ -473,7 +470,7 @@ namespace OpenBve.Graphics
 			OptionLighting = true;
 		}
 
-		public NewRenderer(HostInterface currentHost, BaseOptions CurrentOptions, FileSystem fileSystem) : base(currentHost, CurrentOptions, fileSystem)
+		public NewRenderer(HostInterface currentHost) : base(currentHost)
 		{
 		}
 	}

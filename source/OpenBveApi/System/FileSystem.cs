@@ -139,9 +139,14 @@ namespace OpenBveApi.FileSystem {
 		/// <param name="Host">The host program</param>
 		/// <returns>The file system information.</returns>
 		public static FileSystem FromCommandLineArgs(string[] args, HostInterface Host) {
-			foreach (string arg in args) {
-				if (arg.StartsWith("/filesystem=", StringComparison.OrdinalIgnoreCase)) {
-					return FromConfigurationFile(arg.Substring(12), Host);
+			if (args != null)
+			{
+				foreach (string arg in args)
+				{
+					if (arg.StartsWith("/filesystem=", StringComparison.OrdinalIgnoreCase))
+					{
+						return FromConfigurationFile(arg.Substring(12), Host);
+					}
 				}
 			}
 			string assemblyFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);

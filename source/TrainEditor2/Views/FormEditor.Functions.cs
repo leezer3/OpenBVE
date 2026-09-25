@@ -177,12 +177,12 @@ namespace TrainEditor2.Views
 
 		internal static Icon GetIcon()
 		{
-			return new Icon(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder(), "icon.ico"));
+			return new Icon(OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.GetDataFolder(), "icon.ico"));
 		}
 
 		private Bitmap GetImage(string path)
 		{
-			string folder = Program.FileSystem.GetDataFolder("TrainEditor2");
+			string folder = Program.CurrentHost.FileSystem.GetDataFolder("TrainEditor2");
 			Bitmap image = new Bitmap(OpenBveApi.Path.CombineFile(folder, path));
 			image.MakeTransparent();
 			return image;

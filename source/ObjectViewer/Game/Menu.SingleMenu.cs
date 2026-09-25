@@ -34,7 +34,7 @@ namespace ObjectViewer
 						Items[3] = new MenuCommand(menu, "Close", MenuTag.BackToSim, 0);
 						if (string.IsNullOrEmpty(SearchDirectory))
 						{
-							SearchDirectory = Program.FileSystem.InitialRouteFolder;
+							SearchDirectory = Program.CurrentHost.FileSystem.InitialRouteFolder;
 						}
 						Align = TextAlignment.TopLeft;
 						break;
@@ -105,11 +105,11 @@ namespace ObjectViewer
 							Items[totalEntries] = new MenuCommand(menu, directoryInfo.Name, MenuTag.Directory, 0);
 							if (drives)
 							{
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_disk.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_disk.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
 							}
 							else
 							{
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_folder.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_folder.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
 							}
 
 							totalEntries++;
@@ -129,17 +129,17 @@ namespace ObjectViewer
 								case ".b3d":
 								case ".animated":
 									Items[totalEntries] = new MenuCommand(menu, fileName, MenuTag.ObjectFile, 0);
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_object.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_object.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
 									totalEntries++;
 									break;
 								case ".obj":
 									Items[totalEntries] = new MenuCommand(menu, fileName, MenuTag.ObjectFile, 0);
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_wavefront.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_wavefront.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
 									totalEntries++;
 									break;
 								case ".x":
 									Items[totalEntries] = new MenuCommand(menu, fileName, MenuTag.ObjectFile, 0);
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_xobject.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_xobject.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
 									totalEntries++;
 									break;
 							}
@@ -180,13 +180,13 @@ namespace ObjectViewer
 							switch (errorSnapshot[j].Type)
 							{
 								case MessageType.Information:
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_information.png"), TextureParameters.NoChange, out Items[j + 1].Icon);
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_information.png"), TextureParameters.NoChange, out Items[j + 1].Icon);
 									break;
 								case MessageType.Warning:
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_warning.png"), TextureParameters.NoChange, out Items[j + 1].Icon);
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_warning.png"), TextureParameters.NoChange, out Items[j + 1].Icon);
 									break;
 								case MessageType.Error:
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_error.png"), TextureParameters.NoChange, out Items[j + 1].Icon);
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.CurrentHost.FileSystem.DataFolder, "Menu\\icon_error.png"), TextureParameters.NoChange, out Items[j + 1].Icon);
 									break;
 							}
 						}

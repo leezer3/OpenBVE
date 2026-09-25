@@ -245,7 +245,7 @@ namespace LibRender2.Smoke
 
 			if (ParticleTexture == null)
 			{
-				string compatibilityFolder = Path.CombineDirectory(Renderer.fileSystem.GetDataFolder(), "Compatibility");
+				string compatibilityFolder = Path.CombineDirectory(Renderer.currentHost.FileSystem.GetDataFolder(), "Compatibility");
 				if (ParticleType == ParticleType.Smoke)
 				{
 					Renderer.TextureManager.RegisterTexture(Path.CombineFile(compatibilityFolder, "smoke.png"), out ParticleTexture);

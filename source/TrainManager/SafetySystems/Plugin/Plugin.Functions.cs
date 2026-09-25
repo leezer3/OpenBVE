@@ -172,7 +172,7 @@ namespace TrainManager.Trains
 			 * Prepare initialization data for the plugin.
 			 * */
 
-			InitializationModes mode = (InitializationModes) TrainManagerBase.CurrentOptions.TrainStart;
+			InitializationModes mode = (InitializationModes) TrainManagerBase.currentHost.Options.TrainStart;
 			/*
 			 * Check if the plugin is a .NET plugin.
 			 * */
@@ -341,7 +341,7 @@ namespace TrainManager.Trains
 		/// <returns>Whether the plugin was loaded successfully.</returns>
 		public void LoadDefaultPlugin(string trainFolder)
 		{
-			string file = OpenBveApi.Path.CombineFile(TrainManagerBase.FileSystem.GetDataFolder("Plugins"), "OpenBveAts.dll");
+			string file = OpenBveApi.Path.CombineFile(TrainManagerBase.currentHost.FileSystem.GetDataFolder("Plugins"), "OpenBveAts.dll");
 			bool success = LoadPlugin(file, trainFolder);
 			if (success)
 			{

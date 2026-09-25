@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Hosts;
+﻿using System;
+using OpenBveApi.Hosts;
 using OpenBveApi.Trains;
 
 namespace CarXmlConvertor
@@ -7,10 +8,5 @@ namespace CarXmlConvertor
 	internal class Host : HostInterface
 	{
 		public Host() : base(HostApplication.CarXMLConvertor) { }
-
-		public override AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile)
-		{
-			throw new System.NotImplementedException();
-		}
 	}
 }

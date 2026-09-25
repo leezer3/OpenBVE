@@ -20,7 +20,7 @@ namespace OpenBve
             {
                 if (crashLog == null)
                 {
-                    var settingsFolder = Program.FileSystem != null ? Program.FileSystem.SettingsFolder : null;
+                    var settingsFolder = Program.CurrentHost.FileSystem != null ? Program.CurrentHost.FileSystem.SettingsFolder : null;
                     crashLog = string.IsNullOrEmpty(settingsFolder)
                         ? System.IO.Path.Combine(System.IO.Path.GetTempPath(), "OpenBVE Crash- " + DateTime.Now.ToString("yyyy.M.dd[HH.mm]") + ".log")
                         : OpenBveApi.Path.CombineFile(settingsFolder, "OpenBVE Crash- " + DateTime.Now.ToString("yyyy.M.dd[HH.mm]") + ".log");
@@ -105,7 +105,7 @@ namespace OpenBve
         /// <summary>This function logs an unhandled crash to disk</summary>
         internal static void LogCrash(string exceptionText)
         {
-			if (Program.FileSystem != null) Program.FileSystem.AppendToLogFile("WARNING: Program crashing. Creating CrashLog file: " + CrashLog);
+			if (Program.CurrentHost.FileSystem != null) Program.CurrentHost.FileSystem.AppendToLogFile("WARNING: Program crashing. Creating CrashLog file: " + CrashLog);
 			using (StreamWriter outputFile = new StreamWriter(CrashLog))
             {
                 //Basic information
@@ -212,7 +212,7 @@ namespace OpenBve
         /// <summary>This function logs an exception caught whilst loading a route/ train to disk</summary>
         internal static void LoadingCrash(string ExceptionText, bool Train)
         {
-			if (Program.FileSystem != null) Program.FileSystem.AppendToLogFile("WARNING: Program crashing. Creating CrashLog file: " + CrashLog);
+			if (Program.CurrentHost.FileSystem != null) Program.CurrentHost.FileSystem.AppendToLogFile("WARNING: Program crashing. Creating CrashLog file: " + CrashLog);
 			using (StreamWriter outputFile = new StreamWriter(CrashLog))
             {
                 //Basic information

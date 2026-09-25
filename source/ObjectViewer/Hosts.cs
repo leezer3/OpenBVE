@@ -407,11 +407,6 @@ namespace ObjectViewer {
 			set => Program.CurrentRoute.Tracks = value;
 		}
 
-		public override AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile)
-		{
-			throw new NotImplementedException();
-		}
-
 		// ReSharper disable once CoVariantArrayConversion
 		public override IEnumerable<AbstractTrain> Trains => Program.TrainManager.Trains;
 
@@ -429,7 +424,7 @@ namespace ObjectViewer {
 			return TrainManagerBase.PlayerTrain;
 		}
 
-		public Host() : base(HostApplication.ObjectViewer)
+		public Host(string[] args) : base(HostApplication.ObjectViewer, args)
 		{
 		}
 	}

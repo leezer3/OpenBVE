@@ -18,10 +18,10 @@ namespace OpenBve
 		/// <summary>Loads the current HUD</summary>
 		internal static void LoadHUD()
 		{
-			string uiFolder = Program.FileSystem.GetDataFolder("In-game", Interface.CurrentOptions.UserInterfaceFolder);
+			string uiFolder = Program.CurrentHost.FileSystem.GetDataFolder("In-game", Interface.CurrentOptions.UserInterfaceFolder);
 			string cfgFile = OpenBveApi.Path.CombineFile(uiFolder, "interface.cfg");
 			ConfigFile<HUDSection, HUDKey> cfg = new ConfigFile<HUDSection, HUDKey>(cfgFile, Program.CurrentHost);
-			Program.CurrentHost.RegisterSound(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("In-game"), "beep.wav"), 50, out var beep);
+			Program.CurrentHost.RegisterSound(OpenBveApi.Path.CombineFile(Program.CurrentHost.FileSystem.GetDataFolder("In-game"), "beep.wav"), 50, out var beep);
 			StationAdjustBeep = beep as SoundBuffer;
 			CurrentHudElements = new Element[16];
 			int Length = 0;

@@ -13,7 +13,7 @@ namespace RouteViewer {
 	internal static class Interface {
 		
 		/// <summary>The current options in use</summary>
-		internal static Options CurrentOptions;
+		internal static Options CurrentOptions => Program.CurrentHost.Options as Options;
 
 		internal static readonly List<LogMessage> LogMessages = new List<LogMessage>();
 		internal static readonly object LogLock = new object();

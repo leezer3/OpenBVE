@@ -17,14 +17,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
 namespace OpenBve {
 	/// <summary>Represents the host application.</summary>
 	internal class Host : HostInterface {
-		
+
 		/// <summary>Reports a problem to the host application.</summary>
 		/// <param name="type">The type of problem that is reported.</param>
 		/// <param name="text">The textual message that describes the problem.</param>
@@ -64,7 +63,7 @@ namespace OpenBve {
 			{
 				// This is most probably a buggy plugin or something, but log the trace
 				StackTrace trace = new StackTrace(true);
-				Program.FileSystem.AppendToLogFile("Attempted to add an unrecognised message type from " + trace);
+				Program.CurrentHost.FileSystem.AppendToLogFile("Attempted to add an unrecognised message type from " + trace);
 			}
 		}
 
@@ -754,7 +753,7 @@ namespace OpenBve {
 			return closestTrain;
 		}
 
-		public Host() : base(HostApplication.OpenBve)
+		public Host(string[] args) : base(HostApplication.OpenBve, args)
 		{
 		}
 	}

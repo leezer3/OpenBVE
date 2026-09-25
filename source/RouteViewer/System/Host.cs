@@ -623,7 +623,7 @@ namespace RouteViewer
 			return closestTrain;
 		}
 
-		public Host() : base(HostApplication.RouteViewer)
+		public Host(string[] args) : base(HostApplication.RouteViewer, args)
 		{
 		}
 	}
