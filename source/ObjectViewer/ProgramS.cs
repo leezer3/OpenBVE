@@ -188,10 +188,6 @@ namespace ObjectViewer {
 	        Renderer.GameWindow.TargetRenderFrequency = 0;
 	        Renderer.GameWindow.Title = "Object Viewer";
 	        Renderer.GameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? VSyncMode.On : VSyncMode.Off;
-	        if (Interface.CurrentOptions.FPSLimit > 0)
-	        {
-		        Renderer.GameWindow.TargetRenderFrequency = Interface.CurrentOptions.FPSLimit;
-	        }
 	        Renderer.GameWindow.Run();
 			// quit
 			Renderer.TextureManager.UnloadAllTextures(false);
