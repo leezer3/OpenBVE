@@ -13,6 +13,10 @@ namespace RouteViewer
 {
     public partial class FormOptions : Form
     {
+        private bool suppressSunEvents = false;
+        private int lastPreviewAzimuth = int.MinValue;
+        private int lastPreviewElevation = int.MinValue;
+
         public FormOptions()
         {
             InitializeComponent();
@@ -79,6 +83,8 @@ namespace RouteViewer
 
             // Initialize sun direction sliders from current light position
             InitializeSunSliders();
+            SetupSunRealtime();
+            SetupShadowRealtime();
 
             // Wire up shadow resolution change to enable/disable related controls
             comboBoxShadowResolution.SelectedIndexChanged += comboBoxShadowResolution_SelectedIndexChanged;
@@ -107,10 +113,124 @@ namespace RouteViewer
 
         private void InitializeSunSliders()
         {
+            suppressSunEvents = true;
+            // Initial position follows the route (live renderer state), not the persisted options.
+            // Memory-only sync; .cfg is written on OK only.
+            try
+            {
+                var livePos = Program.Renderer.Lighting.OptionLightPosition;
+                double len = Math.Sqrt(livePos.X * livePos.X + livePos.Y * livePos.Y + livePos.Z * livePos.Z);
+                if (len >= 1e-6)
+                {
+                    double ny = Math.Max(-1.0, Math.Min(1.0, livePos.Y / len));
+                    double elevation = Math.Asin(ny) * 180.0 / Math.PI;
+                    double azimuth = Math.Atan2(-livePos.X / len, -livePos.Z / len) * 180.0 / Math.PI;
+                    if (azimuth > 180.0) azimuth -= 360.0;
+                    if (azimuth < -180.0) azimuth += 360.0;
+                    Interface.CurrentOptions.LightAzimuth = Math.Max(-180.0, Math.Min(180.0, azimuth));
+                    Interface.CurrentOptions.LightElevation = Math.Max(-90.0, Math.Min(90.0, elevation));
+                }
+            }
+            catch
+            {
+                // Keep persisted options on failure
+            }
 			trackBarSunElevation.Value = Math.Max(trackBarSunElevation.Minimum, Math.Min((int)Interface.CurrentOptions.LightElevation, trackBarSunElevation.Maximum));
 			trackBarSunAzimuth.Value = Math.Max(trackBarSunAzimuth.Minimum, Math.Min((int)Interface.CurrentOptions.LightAzimuth, trackBarSunAzimuth.Maximum));
 			labelSunAzimuthValue.Text = trackBarSunAzimuth.Value + "\u00b0";
             labelSunElevationValue.Text = trackBarSunElevation.Value + "\u00b0";
+            lastPreviewAzimuth = trackBarSunAzimuth.Value;
+            lastPreviewElevation = trackBarSunElevation.Value;
+            suppressSunEvents = false;
+        }
+
+        private void SetupSunRealtime()
+        {
+            // ValueChanged covers drag, keyboard, mouse-wheel; Scroll covers live thumb drag on some themes
+            // NOTE: no .cfg write here — value is kept in memory (Interface.CurrentOptions +
+            // renderer lighting) and persisted to disk only on OK.
+            trackBarSunAzimuth.ValueChanged += SunSlider_Changed;
+            trackBarSunElevation.ValueChanged += SunSlider_Changed;
+        }
+
+        private void SunSlider_Changed(object sender, EventArgs e)
+        {
+            if (suppressSunEvents)
+            {
+                return;
+            }
+            OnSunSliderChanged();
+        }
+
+        private void OnSunSliderChanged()
+        {
+            labelSunAzimuthValue.Text = trackBarSunAzimuth.Value + "\u00b0";
+            labelSunElevationValue.Text = trackBarSunElevation.Value + "\u00b0";
+            // Skip duplicate preview when Scroll + ValueChanged fire for the same value
+            if (trackBarSunAzimuth.Value == lastPreviewAzimuth && trackBarSunElevation.Value == lastPreviewElevation)
+            {
+                return;
+            }
+            lastPreviewAzimuth = trackBarSunAzimuth.Value;
+            lastPreviewElevation = trackBarSunElevation.Value;
+            UpdateSunDirection();
+            TryPreviewSun();
+        }
+
+        private void TryPreviewSun()
+        {
+            try
+            {
+                if (Program.Renderer == null || Program.Renderer.GameWindow == null || Program.CurrentlyLoading)
+                {
+                    return;
+                }
+                if (!Program.Renderer.GameWindow.Exists || Program.Renderer.GameWindow.IsExiting)
+                {
+                    return;
+                }
+                Program.Renderer.RenderScene(0.0);
+                Program.Renderer.GameWindow.SwapBuffers();
+            }
+            catch
+            {
+                // Preview is best-effort; the OptionLightPosition is already updated
+            }
+        }
+
+        internal static Vector3 SunVectorFromOptions()
+        {
+            double azimuthRad = Interface.CurrentOptions.LightAzimuth * Math.PI / 180.0;
+            double elevationRad = Interface.CurrentOptions.LightElevation * Math.PI / 180.0;
+            float x = (float)(-Math.Cos(elevationRad) * Math.Sin(azimuthRad));
+            float y = (float)Math.Sin(elevationRad);
+            float z = (float)(-Math.Cos(elevationRad) * Math.Cos(azimuthRad));
+            return new Vector3(x, y, z);
+        }
+
+        internal static void ApplySunToRoute(Vector3 pos)
+        {
+            try
+            {
+                if (Program.CurrentRoute != null)
+                {
+                    if (Program.CurrentRoute.LightDefinitions != null)
+                    {
+                        for (int i = 0; i < Program.CurrentRoute.LightDefinitions.Length; i++)
+                        {
+                            Program.CurrentRoute.LightDefinitions[i].LightPosition = pos;
+                        }
+                    }
+                    if (Program.CurrentRoute.Atmosphere != null)
+                    {
+                        Program.CurrentRoute.Atmosphere.LightPosition = pos;
+                    }
+                }
+            }
+            catch
+            {
+                // Best-effort
+            }
         }
 
         private void UpdateShadowControlsEnabled()
@@ -124,14 +244,81 @@ namespace RouteViewer
             numericUpDownShadowNormalBias.Enabled = enabled;
             numericUpDownShadowNormalBias.ReadOnly = !enabled;
 
-            trackBarSunAzimuth.Enabled = enabled;
-            trackBarSunElevation.Enabled = enabled;
+            // Sun position is independent of shadows and must stay enabled for realtime preview
+            trackBarSunAzimuth.Enabled = true;
+            trackBarSunElevation.Enabled = true;
             checkBoxShadowFilterCascades.Enabled = enabled;
         }
 
         private void comboBoxShadowResolution_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateShadowControlsEnabled();
+            ApplyShadowSettingsRealtime(true);
+        }
+
+        private void SetupShadowRealtime()
+        {
+            // NOTE: memory + renderer only; .cfg is written on OK.
+            comboBoxShadowDistance.SelectedIndexChanged += ShadowMapSetting_Changed;
+            comboBoxShadowCascades.SelectedIndexChanged += ShadowMapSetting_Changed;
+            numericUpDownShadowStrength.ValueChanged += ShadowValue_Changed;
+            numericUpDownShadowBias.ValueChanged += ShadowValue_Changed;
+            numericUpDownShadowNormalBias.ValueChanged += ShadowValue_Changed;
+            checkBoxShadowFilterCascades.CheckedChanged += ShadowValue_Changed;
+        }
+
+        private void ShadowMapSetting_Changed(object sender, EventArgs e)
+        {
+            // Resolution / distance / cascade count reallocate GPU shadow maps
+            ApplyShadowSettingsRealtime(true);
+        }
+
+        private void ShadowValue_Changed(object sender, EventArgs e)
+        {
+            // Strength / bias / filtering are read live from options every frame
+            ApplyShadowSettingsRealtime(false);
+        }
+
+        private void ApplyShadowSettingsRealtime(bool reinitShadowMaps)
+        {
+            switch (comboBoxShadowResolution.SelectedIndex)
+            {
+                case 0: Interface.CurrentOptions.ShadowResolution = ShadowMapResolution.Off; break;
+                case 1: Interface.CurrentOptions.ShadowResolution = ShadowMapResolution.Low; break;
+                case 2: Interface.CurrentOptions.ShadowResolution = ShadowMapResolution.Medium; break;
+                case 3: Interface.CurrentOptions.ShadowResolution = ShadowMapResolution.High; break;
+                case 4: Interface.CurrentOptions.ShadowResolution = ShadowMapResolution.Ultra; break;
+            }
+            switch (comboBoxShadowDistance.SelectedIndex)
+            {
+                case 0: Interface.CurrentOptions.ShadowDrawDistance = ShadowDistance.Near; break;
+                case 1: Interface.CurrentOptions.ShadowDrawDistance = ShadowDistance.Medium; break;
+                case 2: Interface.CurrentOptions.ShadowDrawDistance = ShadowDistance.Far; break;
+                case 3: Interface.CurrentOptions.ShadowDrawDistance = ShadowDistance.VeryFar; break;
+                case 4: Interface.CurrentOptions.ShadowDrawDistance = ShadowDistance.ViewingDistance; break;
+            }
+            switch (comboBoxShadowCascades.SelectedIndex)
+            {
+                case 0: Interface.CurrentOptions.ShadowCascades = ShadowCascadeCount.Two; break;
+                case 1: Interface.CurrentOptions.ShadowCascades = ShadowCascadeCount.Three; break;
+                case 2: Interface.CurrentOptions.ShadowCascades = ShadowCascadeCount.Four; break;
+            }
+            Interface.CurrentOptions.ShadowStrength = (double)numericUpDownShadowStrength.Value / 100.0;
+            Interface.CurrentOptions.ShadowBias = (double)numericUpDownShadowBias.Value;
+            Interface.CurrentOptions.ShadowNormalBias = (double)numericUpDownShadowNormalBias.Value;
+            Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
+            if (reinitShadowMaps)
+            {
+                try
+                {
+                    Program.Renderer.ReloadShadowSettings();
+                }
+                catch
+                {
+                    // Best-effort; preview below still reflects lighting change
+                }
+            }
+            TryPreviewSun();
         }
 
         private void UpdateSunDirection()
@@ -139,15 +326,11 @@ namespace RouteViewer
             Interface.CurrentOptions.LightAzimuth = trackBarSunAzimuth.Value;
             Interface.CurrentOptions.LightElevation = trackBarSunElevation.Value;
 
-            double azimuthRad = Interface.CurrentOptions.LightAzimuth * Math.PI / 180.0;
-            double elevationRad = Interface.CurrentOptions.LightElevation * Math.PI / 180.0;
-
-            // Convert spherical to direction vector (matching DirectionalLight docs)
-            float x = (float)(-Math.Cos(elevationRad) * Math.Sin(azimuthRad));
-            float y = (float)Math.Sin(elevationRad);
-            float z = (float)(-Math.Cos(elevationRad) * Math.Cos(azimuthRad));
-
-            Program.Renderer.Lighting.OptionLightPosition = new Vector3(x, y, z);
+            Vector3 pos = SunVectorFromOptions();
+            Program.Renderer.Lighting.OptionLightPosition = pos;
+            // RouteViewer re-computes lighting every frame from LightDefinitions,
+            // so propagate the manual sun there too, otherwise the next frame overwrites the preview
+            ApplySunToRoute(pos);
         }
 
         private void UpdateFPSLimitEnabled()
@@ -164,14 +347,12 @@ namespace RouteViewer
 
         private void trackBarSunAzimuth_Scroll(object sender, EventArgs e)
         {
-            labelSunAzimuthValue.Text = trackBarSunAzimuth.Value + "\u00b0";
-            UpdateSunDirection();
+            SunSlider_Changed(sender, e);
         }
 
         private void trackBarSunElevation_Scroll(object sender, EventArgs e)
         {
-            labelSunElevationValue.Text = trackBarSunElevation.Value + "\u00b0";
-            UpdateSunDirection();
+            SunSlider_Changed(sender, e);
         }
 
         internal static DialogResult ShowOptions()
@@ -194,6 +375,11 @@ namespace RouteViewer
 
         private void button1_Click(object sender, EventArgs e)
         {
+            // Ensure latest slider values are in options before the full save below
+            // (this is the only place that writes options_rv.cfg)
+            Interface.CurrentOptions.LightAzimuth = trackBarSunAzimuth.Value;
+            Interface.CurrentOptions.LightElevation = trackBarSunElevation.Value;
+            UpdateSunDirection();
             ShadowMapResolution previousShadowResolution = Interface.CurrentOptions.ShadowResolution;
 	        ShadowDistance previousShadowDistance = Interface.CurrentOptions.ShadowDrawDistance;
 	        ShadowCascadeCount previousShadowCascades = Interface.CurrentOptions.ShadowCascades;

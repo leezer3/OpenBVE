@@ -15,6 +15,10 @@ namespace ObjectViewer
 {
 	public partial class formOptions : Form
 	{
+		private bool suppressSunEvents = false;
+		private int lastPreviewAzimuth = int.MinValue;
+		private int lastPreviewElevation = int.MinValue;
+
 		private formOptions()
 		{
 			InitializeComponent();
@@ -69,6 +73,8 @@ namespace ObjectViewer
 
 			// Initialize sun direction sliders from current light position
 			InitializeSunSliders();
+			SetupSunRealtime();
+			SetupShadowRealtime();
 
 			// Wire up shadow resolution change to enable/disable related controls
 			comboBoxShadowResolution.SelectedIndexChanged += comboBoxShadowResolution_SelectedIndexChanged;
@@ -100,10 +106,68 @@ namespace ObjectViewer
 
 		private void InitializeSunSliders()
 		{
+			suppressSunEvents = true;
 			trackBarSunElevation.Value = Math.Max(trackBarSunElevation.Minimum, Math.Min((int)Interface.CurrentOptions.LightElevation, trackBarSunElevation.Maximum));
 			trackBarSunAzimuth.Value = Math.Max(trackBarSunAzimuth.Minimum, Math.Min((int)Interface.CurrentOptions.LightAzimuth, trackBarSunAzimuth.Maximum));
 			labelSunAzimuthValue.Text = trackBarSunAzimuth.Value + "\u00b0";
 			labelSunElevationValue.Text = trackBarSunElevation.Value + "\u00b0";
+			lastPreviewAzimuth = trackBarSunAzimuth.Value;
+			lastPreviewElevation = trackBarSunElevation.Value;
+			suppressSunEvents = false;
+		}
+
+		private void SetupSunRealtime()
+		{
+			// ValueChanged covers drag, keyboard, mouse-wheel; Scroll covers live thumb drag on some themes
+			// NOTE: no .cfg write here — value is kept in memory (Interface.CurrentOptions +
+			// renderer lighting) and persisted to disk only on OK.
+			trackBarSunAzimuth.ValueChanged += SunSlider_Changed;
+			trackBarSunElevation.ValueChanged += SunSlider_Changed;
+		}
+
+		private void SunSlider_Changed(object sender, EventArgs e)
+		{
+			if (suppressSunEvents)
+			{
+				return;
+			}
+			OnSunSliderChanged();
+		}
+
+		private void OnSunSliderChanged()
+		{
+			labelSunAzimuthValue.Text = trackBarSunAzimuth.Value + "\u00b0";
+			labelSunElevationValue.Text = trackBarSunElevation.Value + "\u00b0";
+			// Skip duplicate preview when Scroll + ValueChanged fire for the same value
+			if (trackBarSunAzimuth.Value == lastPreviewAzimuth && trackBarSunElevation.Value == lastPreviewElevation)
+			{
+				return;
+			}
+			lastPreviewAzimuth = trackBarSunAzimuth.Value;
+			lastPreviewElevation = trackBarSunElevation.Value;
+			UpdateSunDirection();
+			TryPreviewSun();
+		}
+
+		private void TryPreviewSun()
+		{
+			try
+			{
+				if (Program.Renderer == null || Program.Renderer.GameWindow == null || Program.IsLoading)
+				{
+					return;
+				}
+				if (!Program.Renderer.GameWindow.Exists || Program.Renderer.GameWindow.IsExiting)
+				{
+					return;
+				}
+				Program.Renderer.RenderScene(0.0);
+				Program.Renderer.GameWindow.SwapBuffers();
+			}
+			catch
+			{
+				// Preview is best-effort; the OptionLightPosition is already updated
+			}
 		}
 
 		private void UpdateShadowControlsEnabled()
@@ -123,6 +187,72 @@ namespace ObjectViewer
 		private void comboBoxShadowResolution_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			UpdateShadowControlsEnabled();
+			ApplyShadowSettingsRealtime(true);
+		}
+
+		private void SetupShadowRealtime()
+		{
+			// NOTE: memory + renderer only; .cfg is written on OK.
+			comboBoxShadowDistance.SelectedIndexChanged += ShadowMapSetting_Changed;
+			comboBoxShadowCascades.SelectedIndexChanged += ShadowMapSetting_Changed;
+			numericUpDownShadowStrength.ValueChanged += ShadowValue_Changed;
+			numericUpDownShadowBias.ValueChanged += ShadowValue_Changed;
+			numericUpDownShadowNormalBias.ValueChanged += ShadowValue_Changed;
+			checkBoxShadowFilterCascades.CheckedChanged += ShadowValue_Changed;
+		}
+
+		private void ShadowMapSetting_Changed(object sender, EventArgs e)
+		{
+			// Resolution / distance / cascade count reallocate GPU shadow maps
+			ApplyShadowSettingsRealtime(true);
+		}
+
+		private void ShadowValue_Changed(object sender, EventArgs e)
+		{
+			// Strength / bias / filtering are read live from options every frame
+			ApplyShadowSettingsRealtime(false);
+		}
+
+		private void ApplyShadowSettingsRealtime(bool reinitShadowMaps)
+		{
+			switch (comboBoxShadowResolution.SelectedIndex)
+			{
+				case 0: Interface.CurrentOptions.ShadowResolution = ShadowMapResolution.Off; break;
+				case 1: Interface.CurrentOptions.ShadowResolution = ShadowMapResolution.Low; break;
+				case 2: Interface.CurrentOptions.ShadowResolution = ShadowMapResolution.Medium; break;
+				case 3: Interface.CurrentOptions.ShadowResolution = ShadowMapResolution.High; break;
+				case 4: Interface.CurrentOptions.ShadowResolution = ShadowMapResolution.Ultra; break;
+			}
+			switch (comboBoxShadowDistance.SelectedIndex)
+			{
+				case 0: Interface.CurrentOptions.ShadowDrawDistance = ShadowDistance.Near; break;
+				case 1: Interface.CurrentOptions.ShadowDrawDistance = ShadowDistance.Medium; break;
+				case 2: Interface.CurrentOptions.ShadowDrawDistance = ShadowDistance.Far; break;
+				case 3: Interface.CurrentOptions.ShadowDrawDistance = ShadowDistance.VeryFar; break;
+				case 4: Interface.CurrentOptions.ShadowDrawDistance = ShadowDistance.ViewingDistance; break;
+			}
+			switch (comboBoxShadowCascades.SelectedIndex)
+			{
+				case 0: Interface.CurrentOptions.ShadowCascades = ShadowCascadeCount.Two; break;
+				case 1: Interface.CurrentOptions.ShadowCascades = ShadowCascadeCount.Three; break;
+				case 2: Interface.CurrentOptions.ShadowCascades = ShadowCascadeCount.Four; break;
+			}
+			Interface.CurrentOptions.ShadowStrength = (double)numericUpDownShadowStrength.Value / 100.0;
+			Interface.CurrentOptions.ShadowBias = (double)numericUpDownShadowBias.Value;
+			Interface.CurrentOptions.ShadowNormalBias = (double)numericUpDownShadowNormalBias.Value;
+			Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
+			if (reinitShadowMaps)
+			{
+				try
+				{
+					Program.Renderer.ReloadShadowSettings();
+				}
+				catch
+				{
+					// Best-effort; preview below still reflects lighting change
+				}
+			}
+			TryPreviewSun();
 		}
 
 		private void UpdateSunDirection()
@@ -155,14 +285,12 @@ namespace ObjectViewer
 
 		private void trackBarSunAzimuth_Scroll(object sender, EventArgs e)
 		{
-			labelSunAzimuthValue.Text = trackBarSunAzimuth.Value + "\u00b0";
-			UpdateSunDirection();
+			SunSlider_Changed(sender, e);
 		}
 
 		private void trackBarSunElevation_Scroll(object sender, EventArgs e)
 		{
-			labelSunElevationValue.Text = trackBarSunElevation.Value + "\u00b0";
-			UpdateSunDirection();
+			SunSlider_Changed(sender, e);
 		}
 
 		private static void BindKey(ComboBox box, Key value, Key fallback)
@@ -181,6 +309,11 @@ namespace ObjectViewer
 
 		private void CloseButton_Click(object sender, EventArgs e)
 		{
+			// Ensure latest slider values are in options before the full save below
+			// (this is the only place that writes options_ov.cfg)
+			Interface.CurrentOptions.LightAzimuth = trackBarSunAzimuth.Value;
+			Interface.CurrentOptions.LightElevation = trackBarSunElevation.Value;
+			UpdateSunDirection();
 			int previousAntialiasingLevel = Interface.CurrentOptions.AntiAliasingLevel;
 
 			//Interpolation mode

@@ -97,6 +97,20 @@ namespace RouteViewer
 
 			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
 			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
+			// Apply persistent sun direction (same formula as options dialog)
+			try
+			{
+				double savedAzimuthRad = Interface.CurrentOptions.LightAzimuth * Math.PI / 180.0;
+				double savedElevationRad = Interface.CurrentOptions.LightElevation * Math.PI / 180.0;
+				float slx = (float)(-Math.Cos(savedElevationRad) * Math.Sin(savedAzimuthRad));
+				float sly = (float)Math.Sin(savedElevationRad);
+				float slz = (float)(-Math.Cos(savedElevationRad) * Math.Cos(savedAzimuthRad));
+				Renderer.Lighting.OptionLightPosition = new OpenBveApi.Math.Vector3(slx, sly, slz);
+			}
+			catch
+			{
+				// Keep default lighting on failure
+			}
 			TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
 			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, TrainManager, Renderer))
 			{
@@ -277,7 +291,46 @@ namespace RouteViewer
 			}
 
 			Renderer.CurrentInterface = InterfaceType.Normal;
+			if (result)
+			{
+				// Initial sun must follow the route file, not the persisted options.
+				// Sync in-memory options from the route so the dialog sliders open at the correct position.
+				// No .cfg write here. User slider moves remain a free in-memory override (see FormOptions).
+				SyncSunFromRoute();
+			}
 			return result;
+		}
+
+		/// <summary>Syncs in-memory sun options from the loaded route (route is the source of truth on load).</summary>
+		internal static void SyncSunFromRoute()
+		{
+			try
+			{
+				if (Renderer == null || Interface.CurrentOptions == null || CurrentRoute == null)
+				{
+					return;
+				}
+				// Reproduce exactly what the render loop will show: interpolate dynamic lighting
+				// at the route's current time; falls back to Atmosphere value when static.
+				Renderer.Lighting.UpdateLighting(CurrentRoute.SecondsSinceMidnight, CurrentRoute.LightDefinitions);
+				var pos = Renderer.Lighting.OptionLightPosition;
+				double len = Math.Sqrt(pos.X * pos.X + pos.Y * pos.Y + pos.Z * pos.Z);
+				if (len < 1e-6)
+				{
+					return;
+				}
+				double ny = Math.Max(-1.0, Math.Min(1.0, pos.Y / len));
+				double elevation = Math.Asin(ny) * 180.0 / Math.PI;
+				double azimuth = Math.Atan2(-pos.X / len, -pos.Z / len) * 180.0 / Math.PI;
+				if (azimuth > 180.0) azimuth -= 360.0;
+				if (azimuth < -180.0) azimuth += 360.0;
+				Interface.CurrentOptions.LightAzimuth = Math.Max(-180.0, Math.Min(180.0, azimuth));
+				Interface.CurrentOptions.LightElevation = Math.Max(-90.0, Math.Min(90.0, elevation));
+			}
+			catch
+			{
+				// Best-effort
+			}
 		}
 
 		// jump to station
