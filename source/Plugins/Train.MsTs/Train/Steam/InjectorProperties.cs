@@ -1,6 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
-//
-//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
+﻿//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -22,32 +20,30 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-namespace OpenBveApi.Motor
+
+using TrainManager.Motor;
+
+namespace Train.MsTs
 {
-	/// <summary>The types of engine component</summary>
-	public enum EngineComponent
+	internal struct InjectorProperties
 	{
-		/// <summary>A traction motor</summary>
-		TractionMotor,
-		/// <summary>A regenerative traction motor</summary>
-		RegenerativeTractionMotor,
-		/// <summary>A pantograph</summary>
-		Pantograph,
-		/// <summary>A gearbox</summary>
-		Gearbox,
-		/// <summary>Steam engine cylinder cocks</summary>
-		CylinderCocks,
-		/// <summary>Steam engine blowers</summary>
-		Blowers,
-		/// <summary>Steam engine boiler</summary>
-		Boiler,
-		/// <summary>Steam engine first injector</summary>
-		SteamInjector1,
-		/// <summary>Steam engine second injector</summary>
-		SteamInjector2,
-		/// <summary>Steam engine firebox</summary>
-		Firebox,
-		/// <summary>Steam engine boiler safety valve</summary>
-		SafetyValve
+		internal int Type;
+
+		internal double Diameter;
+
+		internal double MinPressure;
+
+		internal double MinWater;
+
+		internal double MaxWater;
+
+		internal AbstractComponent Create(TractionModel model)
+		{
+			if (Type == 0)
+			{
+				return new LiveSteamInjector(model, Diameter, MinPressure, MinPressure, MaxWater);
+			}
+			return new ExhaustSteamInjector(model, Diameter, MinPressure, MinPressure, MaxWater);
+		}
 	}
 }

@@ -86,7 +86,7 @@ namespace TrainManager.Motor
 
 				if (Components.TryGetTypedValue(EngineComponent.CylinderCocks, out CylinderCocks c))
 				{
-					if (c.Opened)
+					if (c.Active)
 					{
 						power *= c.PowerModifier;
 					}

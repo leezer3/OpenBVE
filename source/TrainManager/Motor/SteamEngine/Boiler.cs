@@ -32,15 +32,26 @@ namespace TrainManager.Motor
 		public readonly double MaxOutput;
 		/// <summary>The current boiler water level in Liters</summary>
 		public double WaterLevel;
+		/// <summary>The current volume of steam in the boiler in kg</summary>
+		public double CurrentSteamVolume;
 		/// <summary>The current boiler pressure in PSI</summary>
 		public double CurrentPressure;
+		/// <summary>The maximum achievable pressure</summary>
+		public readonly double MaxPressure;
+		/// <summary>The total internal boiler volume</summary>
+		/// <remarks>150 cubic feet</remarks>
+		public const double Volume = 4247.53;
 
-		public Boiler(TractionModel engine, double length, double maxOutput, double startingWaterLevel, double startingPressure) : base(engine)
+		public Boiler(TractionModel engine, double length, double maxPressure, double maxOutput, double startingWaterLevel, double startingPressure) : base(engine)
 		{
 			Length = length;
+			MaxPressure = maxPressure;
 			MaxOutput = maxOutput;
 			WaterLevel = startingWaterLevel;
 			CurrentPressure = startingPressure;
+			// calculate the starting steam volume in the boiler
+			double volumePerLiter = SteamTable.GetSteamVolume(CurrentPressure) * 1000;
+			CurrentSteamVolume = (Volume - WaterLevel) * volumePerLiter; // kgs
 		}
 
 		public override void Update(double timeElapsed)
@@ -49,14 +60,25 @@ namespace TrainManager.Motor
 			{
 				return;
 			}
-
+			
 			double steamGenerated = MaxOutput * firebox.HeatOutput;
 			// NOTE: MSTS steam simulation bug- boiler volume fixed at 150 cubic feet (See 'Manual 2.0e.doc')
 			// for the minute, we'll run with that as this is the most likely to produce 'expected' results
 			// 1lb / sqft = 0.00694 psi
-			CurrentPressure += steamGenerated / 150.0 * 0.00694 * 2.205;
-			// drop water level (convert from pounds)
-			WaterLevel -= steamGenerated;
+			if (CurrentPressure < MaxPressure)
+			{
+				CurrentSteamVolume += steamGenerated / 150.0 * 0.00694 * 2.205;
+				// drop water level (convert from pounds)
+				WaterLevel -= steamGenerated;
+				// boiler volume minus water volume gives the remaining steam space
+				double steamAvailableVolume = Volume - WaterLevel;
+				// actual used volume per kilo is therefore available remaining volume in L divide by current steam volume
+				// sure I've missed something somewhere, but the 1000 multiplier gives correct result...
+				double volumePerKilo = steamAvailableVolume / CurrentSteamVolume * 1000;
+				// pressure for one kilo is the same for all
+				CurrentPressure = SteamTable.GetPressure(volumePerKilo) * 14.5038; // convert to PSI
+			}
+			
 		}
 	}
 }
