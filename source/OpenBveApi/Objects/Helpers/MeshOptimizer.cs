@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace OpenBveApi.Objects
 {
@@ -14,7 +13,7 @@ namespace OpenBveApi.Objects
 			EliminateInvalidFaces(mesh, ref f);
 			EliminateUnusedMaterials(mesh, ref m, f);
 			EliminateDuplicateMaterials(mesh, ref m, f);
-			CullVertices(mesh, preserveVertices, vertexCulling);
+			CullVertices(mesh, f, preserveVertices, vertexCulling);
 			Triangulate(mesh, f);
 			Decompose(mesh, ref f);
 			MergeFaces(mesh, ref f);
@@ -148,39 +147,107 @@ namespace OpenBveApi.Objects
 			}
 		}
 
-		private static void CullVertices(Mesh mesh, bool preserveVertices, bool vertexCulling)
+		private static void CullVertices(Mesh mesh, int faceCount, bool preserveVertices, bool vertexCulling)
 		{
 			// Cull identical and unreferenced vertices based on the hidden vertexCulling option.
-			// Replaced old very slow OrderedDictionary implementation with generic Dictionary.
+			// Deduplication is a C# port of meshoptimizer's generateVertexRemap / remapVertexBuffer /
+			// remapIndexBuffer (MIT, see licenses/meshoptimizer.txt), adapted to compare vertices via
+			// VertexTemplate.GetHashCode / Equals instead of raw byte comparison.
 			if (!preserveVertices && vertexCulling)
 			{
-				Dictionary<VertexTemplate, int> uniqueVertices = new Dictionary<VertexTemplate, int>();
-				VertexTemplate[] newVertices = new VertexTemplate[mesh.Vertices.Length];
-				int count = 0;
-				// Iterate through all referenced vertices in the faces.
-				// This automatically ignores and culls unreferenced 'garbage' vertices in the original Mesh.Vertices array.
-				for (int i = 0; i < mesh.Faces.Length; i++)
+				VertexTemplate[] vertices = mesh.Vertices;
+				int[] remap = new int[vertices.Length];
+				for (int i = 0; i < remap.Length; i++)
 				{
-					for (int j = 0; j < mesh.Faces[i].Vertices.Length; j++)
+					remap[i] = -1;
+				}
+				int uniqueCount = GenerateVertexRemap(vertices, mesh.Faces, faceCount, remap);
+				// Compact the vertex buffer, dropping unreferenced 'garbage' vertices.
+				VertexTemplate[] newVertices = new VertexTemplate[uniqueCount];
+				for (int i = 0; i < vertices.Length; i++)
+				{
+					int newIndex = remap[i];
+					if (newIndex != -1)
 					{
-						int oldIndex = mesh.Faces[i].Vertices[j];
-						VertexTemplate vertex = mesh.Vertices[oldIndex];
-						// If the exact same vertex structure hasn't been cached yet, cache it and add it to our new array.
-						if (!uniqueVertices.TryGetValue(vertex, out int newIndex))
-						{
-							newIndex = count;
-							uniqueVertices.Add(vertex, newIndex);
-							newVertices[count] = vertex;
-							count++;
-						}
-						// Update the face to point to the new, deduplicated vertex index.
-						mesh.Faces[i].Vertices[j].Index = newIndex;
+						newVertices[newIndex] = vertices[i];
 					}
 				}
-				// Copy the unique vertices back into the mesh
-				mesh.Vertices = new VertexTemplate[count];
-				Array.Copy(newVertices, 0, mesh.Vertices, 0, count);
+				// Rewrite the live faces to point at the deduplicated vertices.
+				for (int i = 0; i < faceCount; i++)
+				{
+					MeshFaceVertex[] faceVertices = mesh.Faces[i].Vertices;
+					for (int j = 0; j < faceVertices.Length; j++)
+					{
+						faceVertices[j].Index = remap[faceVertices[j].Index];
+					}
+				}
+				mesh.Vertices = newVertices;
 			}
+		}
+
+		/// <summary>Builds a first-referenced-wins remap table over the vertices used by the live faces</summary>
+		/// <returns>The number of unique vertices</returns>
+		private static int GenerateVertexRemap(VertexTemplate[] vertices, MeshFace[] faces, int faceCount, int[] remap)
+		{
+			// Open-addressing hash table with triangular probing, cf. meshopt::hashLookup.
+			int buckets = 1;
+			while (buckets < vertices.Length + vertices.Length / 4)
+			{
+				buckets *= 2;
+			}
+			int[] table = new int[buckets];
+			for (int i = 0; i < buckets; i++)
+			{
+				table[i] = -1;
+			}
+			int mask = buckets - 1;
+			int nextVertex = 0;
+			for (int i = 0; i < faceCount; i++)
+			{
+				MeshFaceVertex[] faceVertices = faces[i].Vertices;
+				for (int j = 0; j < faceVertices.Length; j++)
+				{
+					int oldIndex = faceVertices[j].Index;
+					if (remap[oldIndex] != -1)
+					{
+						continue;
+					}
+					// MurmurHash3 fmix32 avalanche. VertexTemplate.GetHashCode has no bit diffusion
+					// (small integral floats hash with zero low bits), which power-of-two masking requires.
+					uint h;
+					unchecked
+					{
+						// NB: the int->uint bit reinterpretation must stay in unchecked scope:
+						// negative hash codes are common and throw in checked (Debug) builds.
+						h = (uint)vertices[oldIndex].GetHashCode();
+						h ^= h >> 16;
+						h *= 0x85ebca6b;
+						h ^= h >> 13;
+						h *= 0xc2b2ae35;
+						h ^= h >> 16;
+						h &= (uint)mask;
+					}
+					int bucket = (int)h;
+					for (int probe = 1; ; probe++)
+					{
+						int entry = table[bucket];
+						if (entry == -1)
+						{
+							table[bucket] = oldIndex;
+							remap[oldIndex] = nextVertex++;
+							break;
+						}
+						if (vertices[entry].Equals(vertices[oldIndex]))
+						{
+							remap[oldIndex] = remap[entry];
+							break;
+						}
+						// Hash collision, triangular probing.
+						bucket = (bucket + probe) & mask;
+					}
+				}
+			}
+			return nextVertex;
 		}
 
 		private static void Triangulate(Mesh mesh, int f)
