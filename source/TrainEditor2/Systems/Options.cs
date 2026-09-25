@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using OpenBveApi.Hosts;
 
 namespace TrainEditor2.Systems
 {
@@ -13,7 +14,7 @@ namespace TrainEditor2.Systems
 		internal class Options : BaseOptions
 		{
 			/// <summary>Creates a new instance of the options class with default values set</summary>
-			internal Options()
+			internal Options(HostInterface host) : base(host)
 			{
 				LanguageCode = "en-US";
 			}
@@ -42,7 +43,7 @@ namespace TrainEditor2.Systems
 
 			public override void Load()
 			{
-				string optionsFolder = OpenBveApi.Path.CombineDirectory(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0");
+				string optionsFolder = OpenBveApi.Path.CombineDirectory(CurrentHost.FileSystem.SettingsFolder, "1.5.0");
 
 				if (!Directory.Exists(optionsFolder))
 				{
@@ -60,7 +61,7 @@ namespace TrainEditor2.Systems
 
 				if (File.Exists(configFile))
 				{
-					ConfigFile<OptionsSection, OptionsKey> cfg = new ConfigFile<OptionsSection, OptionsKey>(File.ReadAllLines(configFile, new UTF8Encoding()), configFile, Program.CurrentHost);
+					ConfigFile<OptionsSection, OptionsKey> cfg = new ConfigFile<OptionsSection, OptionsKey>(File.ReadAllLines(configFile, new UTF8Encoding()), configFile, CurrentHost);
 					while (cfg.RemainingSubBlocks > 0)
 					{
 						if (cfg.ReadBlock(OptionsSection.Language, out var block))

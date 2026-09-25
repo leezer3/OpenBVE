@@ -6,7 +6,7 @@ using OpenBveApi.Interface;
 
 namespace OpenBve
 {
-	internal static partial class Interface
+	public static partial class Interface
 	{
 		/// <summary>Gets the formatted text for an in-game score event</summary>
 		/// <param name="textToken">The in-game score event</param>

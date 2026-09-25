@@ -11,7 +11,7 @@ using Control = OpenBveApi.Interface.Control;
 
 namespace OpenBve
 {
-	internal static partial class Interface
+	public static partial class Interface
 	{
 		/// <summary>The list of current in-game controls</summary>
 		internal static Control[] CurrentControls = { };

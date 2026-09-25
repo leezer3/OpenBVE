@@ -8,7 +8,7 @@ using OpenBveApi.Interface;
 
 namespace OpenBve
 {
-	internal static partial class Interface
+	public static partial class Interface
 	{
 		/// <summary>Magic bytes identifying this as an OpenBVE blackbox file</summary>
 		/// <remarks>openBVELOGS in UTF-8</remarks>

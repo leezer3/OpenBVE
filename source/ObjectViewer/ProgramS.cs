@@ -76,7 +76,7 @@ namespace ObjectViewer {
 		    CurrentHost = new Host(args);
 			
 	        
-	        CurrentHost.Options = new Options();
+	        CurrentHost.Options = new Options(CurrentHost);
 	        CurrentHost.Options.Load();
 
 			// n.b. Init the toolkit before the renderer

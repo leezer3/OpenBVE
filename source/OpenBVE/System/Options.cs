@@ -10,16 +10,15 @@ using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
-using OpenTK.Graphics.ES20;
 using SoundManager;
 using CompressionType = OpenBveApi.Packages.CompressionType;
 using Path = OpenBveApi.Path;
 
 namespace OpenBve
 {
-	internal partial class Interface
+	public partial class Interface
 	{
-		internal class Options : BaseOptions
+		public class Options : BaseOptions
 		{
 			/// <summary>The on disk folder in which user interface components are stored</summary>
 			internal string UserInterfaceFolder;
@@ -113,7 +112,7 @@ namespace OpenBve
 			internal double CameraTransitionSpeed;
 			
 			/// <summary>Creates a new instance of the options class with default values set</summary>
-			internal Options()
+			public Options(HostInterface host) : base(host) 
 			{
 				LanguageCode = "en-US";
 				FullscreenMode = false;
@@ -186,7 +185,8 @@ namespace OpenBve
 				CameraExteriorTransition = true;
 				CameraTransitionSpeed = 0.4;
 				CultureInfo currentCultureInfo = CultureInfo.CurrentCulture;
-				switch (Program.CurrentHost.Platform)
+
+				switch (CurrentHost.Platform)
 				{
 					case HostPlatform.AppleOSX:
 						// This gets us a much better Unicode glyph set on Apple
@@ -418,7 +418,7 @@ namespace OpenBve
 
 			public override void Load()
 			{
-				string OptionsDir = Path.CombineDirectory(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0");
+				string OptionsDir = Path.CombineDirectory(CurrentHost.FileSystem.SettingsFolder, "1.5.0");
 				if (!Directory.Exists(OptionsDir))
 				{
 					Directory.CreateDirectory(OptionsDir);
@@ -428,12 +428,12 @@ namespace OpenBve
 				if (!File.Exists(configFile))
 				{
 					//Attempt to load and upgrade a prior configuration file
-					configFile = Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "options.cfg");
+					configFile = Path.CombineFile(CurrentHost.FileSystem.SettingsFolder, "options.cfg");
 				}
 
 				if (File.Exists(configFile))
 				{
-					ConfigFile<OptionsSection, OptionsKey> cfg = new ConfigFile<OptionsSection, OptionsKey>(File.ReadAllLines(configFile, new UTF8Encoding()), configFile, Program.CurrentHost);
+					ConfigFile<OptionsSection, OptionsKey> cfg = new ConfigFile<OptionsSection, OptionsKey>(File.ReadAllLines(configFile, new UTF8Encoding()), configFile, CurrentHost);
 
 					while (cfg.RemainingSubBlocks > 0)
 					{

@@ -1,5 +1,6 @@
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
@@ -150,5 +151,12 @@ namespace OpenBveApi
 
 		/// <summary>Loads the options</summary>
 		public abstract void Load();
+
+		protected BaseOptions(HostInterface host)
+		{
+			CurrentHost = host;
+		}
+
+		public readonly HostInterface CurrentHost;
 	}
 }

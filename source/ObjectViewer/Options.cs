@@ -7,6 +7,7 @@ using Formats.OpenBve;
 using ObjectViewer.Graphics;
 using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.Hosts;
 using OpenBveApi.Input;
 using Path = OpenBveApi.Path;
 
@@ -65,7 +66,7 @@ namespace ObjectViewer
 			}
 		}
 
-		internal Options()
+		internal Options(HostInterface host) : base(host)
 		{
 			VerticalSynchronization = true;
 			FPSLimit = 0;
@@ -143,7 +144,7 @@ namespace ObjectViewer
 
 		public override void Load()
 		{
-			string optionsFolder = Path.CombineDirectory(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0");
+			string optionsFolder = Path.CombineDirectory(CurrentHost.FileSystem.SettingsFolder, "1.5.0");
 			if (!Directory.Exists(optionsFolder))
 			{
 				Directory.CreateDirectory(optionsFolder);
@@ -159,13 +160,13 @@ namespace ObjectViewer
 				{
 					//If no object viewer specific configuration file exists, then try the main OpenBVE configuration file
 					//Write out to a new viewer specific file though
-					configFile = Path.CombineFile(Program.CurrentHost.FileSystem.SettingsFolder, "1.5.0/options.cfg");
+					configFile = Path.CombineFile(CurrentHost.FileSystem.SettingsFolder, "1.5.0/options.cfg");
 				}
 			}
 
 			if (File.Exists(configFile))
 			{
-				ConfigFile<OptionsSection, OptionsKey> cfg = new ConfigFile<OptionsSection, OptionsKey>(File.ReadAllLines(configFile, new System.Text.UTF8Encoding()), configFile, Program.CurrentHost);
+				ConfigFile<OptionsSection, OptionsKey> cfg = new ConfigFile<OptionsSection, OptionsKey>(File.ReadAllLines(configFile, new System.Text.UTF8Encoding()), configFile, CurrentHost);
 
 				while (cfg.RemainingSubBlocks > 0)
 				{
