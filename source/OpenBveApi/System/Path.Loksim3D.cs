@@ -18,6 +18,7 @@ namespace OpenBveApi
 			/// <returns></returns>
 			public static string CombineFile(string absolute, string relative, string packageDirectory)
 			{
+				relative = relative.TrimStart('\\');
 				try
 				{
 					string file = Path.CombineFile(absolute, relative);
