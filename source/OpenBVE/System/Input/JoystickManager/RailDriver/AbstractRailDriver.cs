@@ -194,7 +194,7 @@ namespace OpenBve.Input
 			return ScaleValue(currentState[axis + 1], Calibration[axis].Minimum, Calibration[axis].Maximum) * 1.0f / (short.MaxValue + 0.5f);
 		}
 
-		internal override JoystickHatState GetHat(int Hat)
+		internal override JoystickHatPosition GetHat(int Hat)
 		{
 			throw new NotImplementedException();
 		}

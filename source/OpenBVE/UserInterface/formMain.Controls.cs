@@ -695,42 +695,42 @@ namespace OpenBve {
 						string t = "H" + (j + 1).ToString(Culture);
 						SizeF s = e.Graphics.MeasureString(t, f);
 						e.Graphics.DrawString(t, f, Brushes.Black, u + 0.5f * (g - s.Width), v + 0.5f * (g - s.Height));
-						JoystickHatState aa = Program.Joysticks.AttachedJoysticks[guid].GetHat(j);
-						if (aa.Position != HatPosition.Centered)
+						JoystickHatPosition aa = Program.Joysticks.AttachedJoysticks[guid].GetHat(j);
+						if (aa != JoystickHatPosition.Centered)
 						{
 							double rx = 0.0;
 							double ry = 0.0;
-							switch (aa.Position)
+							switch (aa)
 							{
-								case HatPosition.Up:
+								case JoystickHatPosition.Up:
 									rx = 0.0;
 									ry = -1.0;
 									break;
-								case HatPosition.Down:
+								case JoystickHatPosition.Down:
 									rx = 0.0;
 									ry = 1.0;
 									break;
-								case HatPosition.Left:
+								case JoystickHatPosition.Left:
 									rx = -1.0;
 									ry = 0.0;
 									break;
-								case HatPosition.Right:
+								case JoystickHatPosition.Right:
 									rx = 1.0;
 									ry = 0.0;
 									break;
-								case HatPosition.UpLeft:
+								case JoystickHatPosition.UpLeft:
 									rx = -1.0;
 									ry = -1.0;
 									break;
-								case HatPosition.UpRight:
+								case JoystickHatPosition.UpRight:
 									rx = 1.0;
 									ry = -1.0;
 									break;
-								case HatPosition.DownLeft:
+								case JoystickHatPosition.DownLeft:
 									rx = -1.0;
 									ry = 1.0;
 									break;
-								case HatPosition.DownRight:
+								case JoystickHatPosition.DownRight:
 									rx = 1.0;
 									ry = 1.0;
 									break;

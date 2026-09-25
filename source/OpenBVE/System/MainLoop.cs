@@ -299,10 +299,10 @@ namespace OpenBve
 						int hats = Program.Joysticks.AttachedJoysticks[guid].HatCount();
 						for (int i = 0; i < hats; i++)
 						{
-							JoystickHatState hat = Program.Joysticks.AttachedJoysticks[guid].GetHat(i);
-							if (hat.Position != HatPosition.Centered)
+							JoystickHatPosition hat = Program.Joysticks.AttachedJoysticks[guid].GetHat(i);
+							if (hat != JoystickHatPosition.Centered)
 							{
-								Game.Menu.SetControlJoyCustomData(guid, JoystickComponent.Hat, i, (int)hat.Position);
+								Game.Menu.SetControlJoyCustomData(guid, JoystickComponent.Hat, i, (int)hat);
 								return;
 							}
 						}
@@ -473,7 +473,7 @@ namespace OpenBve
 						break;
 					case JoystickComponent.Hat:
 						//Load the current state
-						var hatState = Program.Joysticks.GetHat(currentDevice, Interface.CurrentControls[i].Element).Position;
+						var hatState = Program.Joysticks.GetHat(currentDevice, Interface.CurrentControls[i].Element);
 						//Test if the state is the same as last frame
 						if (hatState.ToString() != Interface.CurrentControls[i].LastState)
 						{

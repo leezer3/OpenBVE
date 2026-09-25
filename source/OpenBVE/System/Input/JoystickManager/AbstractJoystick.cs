@@ -1,5 +1,6 @@
 ﻿using OpenTK.Input;
 using System;
+using OpenBveApi.Interface;
 
 namespace OpenBve.Input
 {
@@ -17,7 +18,7 @@ namespace OpenBve.Input
 		
 		internal abstract double GetAxis(int axis);
 		
-		internal abstract JoystickHatState GetHat(int Hat);
+		internal abstract JoystickHatPosition GetHat(int Hat);
 
 		internal abstract int AxisCount();
 

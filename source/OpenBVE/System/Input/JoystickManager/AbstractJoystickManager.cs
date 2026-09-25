@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenBveApi.Interface;
 using OpenTK.Input;
 
 namespace OpenBve.Input
@@ -35,13 +36,14 @@ namespace OpenBve.Input
 			return 0.0;
 		}
 
-		internal JoystickHatState GetHat(Guid Device, int Hat)
+		internal JoystickHatPosition GetHat(Guid Device, int Hat)
 		{
 			if (AttachedJoysticks.ContainsKey(Device))
 			{
 				return AttachedJoysticks[Device].GetHat(Hat);
 			}
-			return new JoystickHatState();
+
+			return JoystickHatPosition.Centered;
 		}
 	}
 }
