@@ -184,9 +184,9 @@ namespace OpenBve.Input
 
 		}
 
-		internal override ButtonState GetButton(int button)
+		internal override bool GetButton(int button)
 		{
-			return 1 == ((currentState[8 + (button / 8)] >> button % 8) & 1) ? ButtonState.Pressed : ButtonState.Released;
+			return 1 == ((currentState[8 + (button / 8)] >> button % 8) & 1);
 		}
 
 		internal override double GetAxis(int axis)

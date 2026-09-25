@@ -25,9 +25,9 @@ namespace OpenBve.Input
 			Guid = Joystick.GetGuid(Handle);
 		}
 
-		internal override ButtonState GetButton(int button)
+		internal override bool GetButton(int button)
 		{
-			return state.GetButton(button);
+			return state.GetButton(button) == ButtonState.Pressed;
 		}
 
 		internal override double GetAxis(int axis)

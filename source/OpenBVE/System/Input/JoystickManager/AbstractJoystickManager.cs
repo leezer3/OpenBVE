@@ -18,13 +18,13 @@ namespace OpenBve.Input
 		/// <summary>Gets the number of RailDriver controllers connected</summary>
 		internal virtual int RailDriverCount => 0;
 
-		internal ButtonState GetButton(Guid Device, int Button)
+		internal bool GetButton(Guid Device, int Button)
 		{
 			if (AttachedJoysticks.ContainsKey(Device))
 			{
 				return AttachedJoysticks[Device].GetButton(Button);
 			}
-			return ButtonState.Released;
+			return false;
 		}
 
 		internal double GetAxis(Guid Device, int Axis)

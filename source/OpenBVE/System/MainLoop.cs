@@ -290,7 +290,7 @@ namespace OpenBve
 						int buttons = Program.Joysticks.AttachedJoysticks[guid].ButtonCount();
 						for (int i = 0; i < buttons; i++)
 						{
-							if (Program.Joysticks.AttachedJoysticks[guid].GetButton(i) == ButtonState.Pressed)
+							if (Program.Joysticks.AttachedJoysticks[guid].GetButton(i))
 							{
 								Game.Menu.SetControlJoyCustomData(guid, JoystickComponent.Button, i, 1);
 								return;
@@ -455,7 +455,7 @@ namespace OpenBve
 								TrainManager.PlayerTrain.Handles.Power.ResetSpring();
 								TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
 							}
-							if (buttonState == ButtonState.Pressed)
+							if (buttonState)
 							{
 								Interface.CurrentControls[i].AnalogState = 1.0;
 								Interface.CurrentControls[i].DigitalState = DigitalControlState.Pressed;

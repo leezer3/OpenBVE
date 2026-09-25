@@ -1900,7 +1900,7 @@ namespace OpenBve {
 					int buttons = Program.Joysticks.AttachedJoysticks[guid].ButtonCount();
 					for (int i = 0; i < buttons; i++)
 					{
-						if (Program.Joysticks.AttachedJoysticks[guid].GetButton(i) == ButtonState.Pressed)
+						if (Program.Joysticks.AttachedJoysticks[guid].GetButton(i))
 						{
 							if (railDriver)
 							{
@@ -1919,13 +1919,13 @@ namespace OpenBve {
 					int hats = Program.Joysticks.AttachedJoysticks[guid].HatCount();
 					for (int i = 0; i < hats; i++)
 					{
-						JoystickHatState hat = Program.Joysticks.AttachedJoysticks[guid].GetHat(i);
-						if (hat.Position != HatPosition.Centered)
+						JoystickHatPosition hat = Program.Joysticks.AttachedJoysticks[guid].GetHat(i);
+						if (hat != JoystickHatPosition.Centered)
 						{
 							Interface.CurrentControls[j].Device = guid;
 							Interface.CurrentControls[j].Component = JoystickComponent.Hat;
 							Interface.CurrentControls[j].Element = i;
-							Interface.CurrentControls[j].Direction = (int)hat.Position;
+							Interface.CurrentControls[j].Direction = (int)hat;
 							radiobuttonJoystick.Focus();
 							UpdateJoystickDetails();
 							UpdateControlListElement(listviewControls.Items[j], j, true);

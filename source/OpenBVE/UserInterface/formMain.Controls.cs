@@ -803,7 +803,7 @@ namespace OpenBve {
 					g = 0.5f * (pictureboxJoysticks.ClientRectangle.Height - v - 10.0f);
 					for (int j = 0; j < Program.Joysticks.AttachedJoysticks[guid].ButtonCount(); j++)
 					{
-						bool q = Program.Joysticks.AttachedJoysticks[guid].GetButton(j) != 0;
+						bool q = Program.Joysticks.AttachedJoysticks[guid].GetButton(j);
 						float dv = (j & 1) * (g + 8.0f);
 						if (q) e.Graphics.FillRectangle(Brushes.Firebrick, u, v + dv, g, g);
 						if (device == i & component == JoystickComponent.Button & element == j)

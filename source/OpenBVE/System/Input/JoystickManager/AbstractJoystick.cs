@@ -1,5 +1,4 @@
-﻿using OpenTK.Input;
-using System;
+﻿using System;
 using OpenBveApi.Interface;
 
 namespace OpenBve.Input
@@ -14,7 +13,7 @@ namespace OpenBve.Input
 		
 		internal byte[] currentState = new byte[15];
 		
-		internal abstract ButtonState GetButton(int button);
+		internal abstract bool GetButton(int button);
 		
 		internal abstract double GetAxis(int axis);
 		
