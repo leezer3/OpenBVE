@@ -234,59 +234,27 @@ namespace RouteViewer
             checkBoxShadowFilterCascades.Enabled = enabled;
         }
 
-        private bool shadowDropDownOpen = false;
-
         private void comboBoxShadowResolution_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateShadowControlsEnabled();
-            ApplyShadowMapSizeOrDefer();
+            ApplyShadowMapSize();
         }
 
         private void SetupShadowRealtime()
         {
             // Memory-only; .cfg is written on OK. Resolution / distance /
-            // cascade count only flag the render thread (GPU realloc must run
-            // there); handlers below also best-effort present immediately.
-            // Strength / bias / filter are read live from options every frame,
-            // so they need no flag at all.
+            // cascade count only flag the render thread (GPU realloc runs
+            // there at most once per frame). Strength / bias / filter are
+            // read live from options every frame, so they need no flag at all.
+            // NOTE: no DropDown/DropDownClosed deferral on purpose — those
+            // events are unreliable on Mono, and a stuck deferral would leave
+            // size changes unapplied until OK.
             comboBoxShadowDistance.SelectedIndexChanged += ShadowMapSetting_Changed;
             comboBoxShadowCascades.SelectedIndexChanged += ShadowMapSetting_Changed;
             numericUpDownShadowStrength.ValueChanged += ShadowValue_Changed;
             numericUpDownShadowBias.ValueChanged += ShadowValue_Changed;
             numericUpDownShadowNormalBias.ValueChanged += ShadowValue_Changed;
             checkBoxShadowFilterCascades.CheckedChanged += ShadowValue_Changed;
-            // Defer the realloc while a size list is open: arrowing through
-            // the dropdown fires SelectedIndexChanged per step, and each
-            // realloc would stall this shared UI/render thread for a few ms.
-            comboBoxShadowResolution.DropDown += ShadowDropDown_Opened;
-            comboBoxShadowResolution.DropDownClosed += ShadowDropDown_Closed;
-            comboBoxShadowDistance.DropDown += ShadowDropDown_Opened;
-            comboBoxShadowDistance.DropDownClosed += ShadowDropDown_Closed;
-            comboBoxShadowCascades.DropDown += ShadowDropDown_Opened;
-            comboBoxShadowCascades.DropDownClosed += ShadowDropDown_Closed;
-        }
-
-        private void ShadowDropDown_Opened(object sender, EventArgs e)
-        {
-            shadowDropDownOpen = true;
-        }
-
-        private void ShadowDropDown_Closed(object sender, EventArgs e)
-        {
-            shadowDropDownOpen = false;
-            ApplyShadowMapSize();
-        }
-
-        /// <summary>Memory-only while a size list is open; single realloc on close.</summary>
-        private void ApplyShadowMapSizeOrDefer()
-        {
-            if (shadowDropDownOpen)
-            {
-                ReadShadowMapSize();
-                ReadShadowTweaks();
-                return;
-            }
-            ApplyShadowMapSize();
         }
 
         private void ShadowMapSetting_Changed(object sender, EventArgs e)
@@ -295,7 +263,7 @@ namespace RouteViewer
             {
                 return;
             }
-            ApplyShadowMapSizeOrDefer();
+            ApplyShadowMapSize();
         }
 
         private void ShadowValue_Changed(object sender, EventArgs e)
