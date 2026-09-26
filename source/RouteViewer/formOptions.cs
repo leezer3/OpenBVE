@@ -254,9 +254,8 @@ namespace RouteViewer
 
         private void SetupSunRealtime()
         {
-            // Memory-only: the sliders update Interface.CurrentOptions +
-            // renderer lighting. The running render loop picks that up on its
-            // next frame, so no GL calls are ever made from this dialog.
+            // Memory-only updates + PreviewDirty flag for the render loop,
+            // plus a best-effort immediate present (see TryPresentPreview).
             // (No .cfg write here; persisted to disk on OK only.)
             trackBarSunAzimuth.ValueChanged += SunSlider_Changed;
             trackBarSunElevation.ValueChanged += SunSlider_Changed;
@@ -271,8 +270,10 @@ namespace RouteViewer
             labelSunAzimuthValue.Text = trackBarSunAzimuth.Value + "\u00b0";
             labelSunElevationValue.Text = trackBarSunElevation.Value + "\u00b0";
             UpdateSunDirection();
-            // Paused loop renders on-demand: flag one preview frame.
+            // Paused loop renders on-demand: flag one preview frame, and
+            // best-effort present immediately (covers a blocked loop too).
             Program.PreviewDirty = true;
+            TryPresentPreview();
         }
 
         internal static Vector3 SunVectorFromOptions()
@@ -339,8 +340,9 @@ namespace RouteViewer
         {
             // Memory-only; .cfg is written on OK. Resolution / distance /
             // cascade count only flag the render thread (GPU realloc must run
-            // there, never on this dialog). Strength / bias / filter are
-            // read live from options every frame, so they need no flag at all.
+            // there); handlers below also best-effort present immediately.
+            // Strength / bias / filter are read live from options every frame,
+            // so they need no flag at all.
             comboBoxShadowDistance.SelectedIndexChanged += ShadowMapSetting_Changed;
             comboBoxShadowCascades.SelectedIndexChanged += ShadowMapSetting_Changed;
             numericUpDownShadowStrength.ValueChanged += ShadowValue_Changed;
@@ -449,6 +451,7 @@ namespace RouteViewer
             {
                 Program.ShadowSettingsDirty = true;
             }
+            TryPresentPreview();
         }
 
         private void ApplyShadowTweaks()
@@ -457,6 +460,32 @@ namespace RouteViewer
             // (Paused loop renders on-demand, so still flag one preview frame.)
             ReadShadowTweaks();
             Program.PreviewDirty = true;
+            TryPresentPreview();
+        }
+
+        private void TryPresentPreview()
+        {
+            // Best-effort immediate present, in addition to PreviewDirty.
+            // Same render thread owns the GL context here (UpdateGraphicsSettings
+            // already does RenderScene + SwapBuffers from this thread), so this
+            // is safe; any failure silently falls back to the flag path.
+            try
+            {
+                if (Program.Renderer == null || Program.Renderer.GameWindow == null || Program.CurrentlyLoading)
+                {
+                    return;
+                }
+                if (!Program.Renderer.GameWindow.Exists || Program.Renderer.GameWindow.IsExiting)
+                {
+                    return;
+                }
+                Program.Renderer.RenderScene(0.0);
+                Program.Renderer.GameWindow.SwapBuffers();
+            }
+            catch
+            {
+                // Best-effort; the render loop path still applies
+            }
         }
 
         private void UpdateSunDirection()
