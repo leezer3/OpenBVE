@@ -39,11 +39,13 @@ namespace OpenBveApi.Objects
 	    public double Brightness;
 		/// <summary>Whether shadow casting is disabled for this object </summary>
 		public bool DisableShadowCasting;
+		/// <summary>Whether shadow receiving is disabled for this object</summary>
+		public bool DisableShadowReceiving;
 		/// <summary>The section index the object is linked to</summary>
 		public int SectionIndex;
 
 		/// <summary>Creates a new ObjectCreationParameters</summary>
-	    public ObjectCreationParameters(double trackPosition, double accurateObjectDisposalZOffset, double startingDistance, double endingDistance, double brightness, int sectionIndex = -1, bool disableShadowCasting = false)
+	    public ObjectCreationParameters(double trackPosition, double accurateObjectDisposalZOffset, double startingDistance, double endingDistance, double brightness, int sectionIndex = -1, bool disableShadowCasting = false, bool disableShadowReceiving = false)
 	    {
 		    TrackPosition = trackPosition;
 		    AccurateObjectDisposalZOffset = accurateObjectDisposalZOffset;
@@ -52,6 +54,7 @@ namespace OpenBveApi.Objects
 			Brightness = brightness;
 			SectionIndex = sectionIndex;
 			DisableShadowCasting = disableShadowCasting;
+			DisableShadowReceiving = disableShadowReceiving;
 			
 	    }
 
@@ -76,7 +79,7 @@ namespace OpenBveApi.Objects
 		/// <summary>Returns a clone of the ObjectCreationParameters with DisableShadowCasting set</summary>
 		public ObjectCreationParameters WithoutShadow()
 		{
-			return new ObjectCreationParameters(TrackPosition, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, Brightness, -1, true);
+			return new ObjectCreationParameters(TrackPosition, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, Brightness, -1, true, DisableShadowReceiving);
 		}
 	}
 }
