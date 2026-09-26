@@ -731,7 +731,8 @@ namespace LibRender2
 				StartingDistance = startingDistance,
 				EndingDistance = endingDistance,
 				WorldPosition = Position,
-				DisableShadowCasting = Parameters.DisableShadowCasting
+				DisableShadowCasting = Parameters.DisableShadowCasting,
+				DisableShadowReceiving = Parameters.DisableShadowReceiving
 			});
 			
 			foreach (MeshFace face in Prototype.Mesh.Faces)
@@ -1339,7 +1340,7 @@ namespace LibRender2
 			}
 			
 			// lighting
-			shader.SetMaterialFlags(material.Flags);
+			shader.SetMaterialFlags(state.DisableShadowReceiving ? material.Flags | MaterialFlags.NoReceiveShadow : material.Flags);
 			if (OptionLighting)
 			{
 				if (material.Color != lastColor)
@@ -1507,7 +1508,7 @@ namespace LibRender2
 					lastVAO = normalsVao.handle;
 					normalsVao.DrawArrays(PrimitiveType.Lines, 0, normalsMesh.Vertices.Length > 0 ? normalsMesh.Faces.Sum(f => f.Vertices.Length) * 2 : 0);
 					shader.SetIsLight(OptionLighting);
-					shader.SetMaterialFlags(material.Flags);
+					shader.SetMaterialFlags(state.DisableShadowReceiving ? material.Flags | MaterialFlags.NoReceiveShadow : material.Flags);
 					shader.SetMaterialAmbient(material.Color);
 				}
 			}
