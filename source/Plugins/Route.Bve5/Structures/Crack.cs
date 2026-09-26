@@ -33,7 +33,7 @@ namespace Route.Bve5
 		/// <summary>The secondary rail for transforms</summary>
 		internal readonly string SecondaryRail;
 
-		internal Crack(string key, double trackPosition, string primaryRail, string secondaryRail) : base(trackPosition, key, ObjectTransformType.FollowsGradient, 5.0, Vector3.Zero)
+		internal Crack(string key, double trackPosition, string primaryRail, string secondaryRail, double span) : base(trackPosition, key, ObjectTransformType.FollowsGradient, span, Vector3.Zero)
 		{
 			PrimaryRail = primaryRail;
 			SecondaryRail = secondaryRail;
