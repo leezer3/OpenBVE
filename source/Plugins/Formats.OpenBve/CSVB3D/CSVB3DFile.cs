@@ -198,6 +198,13 @@ namespace Formats.OpenBve
 			return false;
 		}
 
+		/// <summary>Gets the next bool array from the block</summary>
+		public virtual bool TryGetNextBoolArray(out bool[] values)
+		{
+			values = Array.Empty<bool>();
+			return false;
+		}
+
 		/// <summary>Skips the next value</summary>
 		public virtual void SkipNextValue()
 		{
@@ -753,15 +760,61 @@ namespace Formats.OpenBve
 		public override bool GetNextBool(out bool booleanValue)
 		{
 			string[] value = Dequeue();
-			if (value.Length >= 1 ||  !NumberFormats.TryParseIntVb6(value[0], out int i))
+			if (value.Length < 1 || !TryParseBool(value[0], out booleanValue))
 			{
 				currentHost.AddMessage(MessageType.Error, false, "Invalid value for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
 				booleanValue = false;
 				return false;
 			}
 
-			booleanValue = i != 0;
 			return true;
+		}
+
+		public override bool TryGetNextBoolArray(out bool[] parsedValues)
+		{
+			string[] value = Dequeue();
+			// drop trailing empty entries (e.g. "ShadowOverride, 1, ")
+			int length = value.Length;
+			while (length > 0 && string.IsNullOrWhiteSpace(value[length - 1]))
+			{
+				length--;
+			}
+			parsedValues = new bool[length];
+			for (int i = 0; i < length; i++)
+			{
+				if (!TryParseBool(value[i], out parsedValues[i]))
+				{
+					currentHost.AddMessage(MessageType.Error, false, "The value at array index " + i + " is not a valid boolean (expected 1/0 or true/false) in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+					Array.Resize(ref parsedValues, i);
+					break;
+				}
+			}
+			return parsedValues.Length != 0;
+		}
+
+		private static bool TryParseBool(string text, out bool result)
+		{
+			if (!string.IsNullOrWhiteSpace(text))
+			{
+				string trimmed = text.Trim();
+				if (trimmed.Equals("true", StringComparison.OrdinalIgnoreCase))
+				{
+					result = true;
+					return true;
+				}
+				if (trimmed.Equals("false", StringComparison.OrdinalIgnoreCase))
+				{
+					result = false;
+					return true;
+				}
+				if (NumberFormats.TryParseIntVb6(trimmed, out int i))
+				{
+					result = i != 0;
+					return true;
+				}
+			}
+			result = false;
+			return false;
 		}
 
 		public override void SkipNextValue()

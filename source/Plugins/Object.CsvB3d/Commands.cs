@@ -66,6 +66,7 @@
 		ShearAll,
 		Mirror,
 		MirrorAll,
+		ShadowOverride,
 
 		// JUNK COMMANDS
 		GenerateNormals = 300, // required by legacy DirectX API, does nothing in OpenBVE

@@ -378,6 +378,33 @@ namespace Object.CsvB3d
 								currentMeshBuilder.CurrentMaterial.Flags |= MaterialFlags.NoShadow;
 							}
 							break;
+						case CSVB3DKey.ShadowOverride:
+							if (subBlock.TryGetNextBoolArray(out bool[] shadowValues))
+							{
+								bool castShadows = shadowValues[0];
+								// Single argument applies to both cast and receive for convenience
+								bool receiveShadows = shadowValues.Length >= 2 ? shadowValues[1] : shadowValues[0];
+								foreach (Material meshMaterial in currentMeshBuilder.Materials)
+								{
+									if (castShadows)
+									{
+										meshMaterial.Flags &= ~MaterialFlags.NoShadow;
+									}
+									else
+									{
+										meshMaterial.Flags |= MaterialFlags.NoShadow;
+									}
+									if (receiveShadows)
+									{
+										meshMaterial.Flags &= ~MaterialFlags.NoReceiveShadow;
+									}
+									else
+									{
+										meshMaterial.Flags |= MaterialFlags.NoReceiveShadow;
+									}
+								}
+							}
+							break;
 						case CSVB3DKey.CrossFading:
 							subBlock.GetNextBool(out bool crossFadingEnabled);
 							foreach (Material material in currentMeshBuilder.Materials)
