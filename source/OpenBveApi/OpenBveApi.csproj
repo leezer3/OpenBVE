@@ -143,6 +143,7 @@
     <Compile Include="Objects\Glow.cs" />
     <Compile Include="Objects\Helpers\Material.cs" />
     <Compile Include="Objects\Helpers\MeshBuilder.cs" />
+    <Compile Include="Objects\Helpers\MeshOptimizer.cs" />
     <Compile Include="Objects\Helpers\ModelExporter.cs" />
     <Compile Include="Objects\Helpers\ObjectCreationParameters.cs" />
     <Compile Include="Objects\Mesh.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="Objects\ObjectTypes\KeyframeAnimatedObject\KeyframeWorldObject.cs" />
     <Compile Include="Objects\ObjectTypes\KeyframeAnimatedObject\PivotPoint.cs" />
     <Compile Include="Objects\ObjectTypes\StaticObject.cs" />
+    <Compile Include="Objects\ObjectTypes\StaticObject.Optimization.cs" />
     <Compile Include="Objects\ObjectTypes\AnimatedObject\TrackFollowingObject.cs" />
     <Compile Include="Objects\ObjectTypes\UnifiedObject.cs" />
     <Compile Include="Objects\ObjectTypes\WorldObject.cs" />
