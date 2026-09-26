@@ -15,30 +15,9 @@ namespace RouteViewer
     {
         private bool suppressSunEvents = false;
         private bool suppressShadowEvents = false;
-        private bool committed = false;
-
-        // Snapshot of the live (memory) sun + shadow state at dialog open.
-        // The dialog mutates options live for realtime preview (.cfg is only
-        // written on OK), so closing without OK must restore these.
-        private double initialAzimuth;
-        private double initialElevation;
-        private ShadowMapResolution initialShadowResolution;
-        private ShadowDistance initialShadowDistance;
-        private ShadowCascadeCount initialShadowCascades;
-        private double initialShadowStrength;
-        private double initialShadowBias;
-        private double initialShadowNormalBias;
-        private bool initialShadowFilterCascades;
-        private Vector3 initialOptionLightPosition;
-        private Vector3[] initialLightDefinitionPositions;
-        private Vector3 initialAtmosphereLightPosition;
-        private bool hadAtmosphereLight;
 
         public FormOptions()
         {
-            // Must run before InitializeSunSliders(): that routine syncs the
-            // in-memory options from the live renderer (route truth).
-            CaptureSnapshot();
             TopMost = true;
             FormClosed += FormOptions_FormClosed;
             InitializeComponent();
@@ -135,88 +114,15 @@ namespace RouteViewer
             SetupShadowRealtime();
         }
 
-        /// <summary>Captures the live sun + shadow state so Cancel / X can restore it.</summary>
-        private void CaptureSnapshot()
-        {
-            initialAzimuth = Interface.CurrentOptions.LightAzimuth;
-            initialElevation = Interface.CurrentOptions.LightElevation;
-            initialShadowResolution = Interface.CurrentOptions.ShadowResolution;
-            initialShadowDistance = Interface.CurrentOptions.ShadowDrawDistance;
-            initialShadowCascades = Interface.CurrentOptions.ShadowCascades;
-            initialShadowStrength = Interface.CurrentOptions.ShadowStrength;
-            initialShadowBias = Interface.CurrentOptions.ShadowBias;
-            initialShadowNormalBias = Interface.CurrentOptions.ShadowNormalBias;
-            initialShadowFilterCascades = Interface.CurrentOptions.ShadowFilterCascades;
-            try
-            {
-                initialOptionLightPosition = Program.Renderer.Lighting.OptionLightPosition;
-                var defs = Program.CurrentRoute?.LightDefinitions;
-                if (defs != null)
-                {
-                    initialLightDefinitionPositions = new Vector3[defs.Length];
-                    for (int i = 0; i < defs.Length; i++)
-                    {
-                        initialLightDefinitionPositions[i] = defs[i].LightPosition;
-                    }
-                }
-                if (Program.CurrentRoute?.Atmosphere != null)
-                {
-                    initialAtmosphereLightPosition = Program.CurrentRoute.Atmosphere.LightPosition;
-                    hadAtmosphereLight = true;
-                }
-            }
-            catch
-            {
-                // Best-effort; restore below re-guards everything
-            }
-        }
 
-        /// <summary>Restores the snapshot (memory only; shadow realloc happens on the render thread).</summary>
-        private void RestoreSnapshot()
-        {
-            Interface.CurrentOptions.LightAzimuth = initialAzimuth;
-            Interface.CurrentOptions.LightElevation = initialElevation;
-            Interface.CurrentOptions.ShadowResolution = initialShadowResolution;
-            Interface.CurrentOptions.ShadowDrawDistance = initialShadowDistance;
-            Interface.CurrentOptions.ShadowCascades = initialShadowCascades;
-            Interface.CurrentOptions.ShadowStrength = initialShadowStrength;
-            Interface.CurrentOptions.ShadowBias = initialShadowBias;
-            Interface.CurrentOptions.ShadowNormalBias = initialShadowNormalBias;
-            Interface.CurrentOptions.ShadowFilterCascades = initialShadowFilterCascades;
-            try
-            {
-                if (Program.Renderer != null)
-                {
-                    Program.Renderer.Lighting.OptionLightPosition = initialOptionLightPosition;
-                }
-                var defs = Program.CurrentRoute?.LightDefinitions;
-                if (defs != null && initialLightDefinitionPositions != null && defs.Length == initialLightDefinitionPositions.Length)
-                {
-                    for (int i = 0; i < defs.Length; i++)
-                    {
-                        defs[i].LightPosition = initialLightDefinitionPositions[i];
-                    }
-                }
-                if (hadAtmosphereLight && Program.CurrentRoute?.Atmosphere != null)
-                {
-                    Program.CurrentRoute.Atmosphere.LightPosition = initialAtmosphereLightPosition;
-                }
-            }
-            catch
-            {
-                // Best-effort
-            }
-            Program.ShadowSettingsDirty = true;
-        }
 
         private void FormOptions_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (!committed)
-            {
-                RestoreSnapshot();
-            }
+            // Closing (X or OK) always keeps the live-tweaked sun + shadow
+            // values in memory. OK additionally writes .cfg and may trigger
+            // a deferred reload; X skips both.
             Program.OptionsDialog = null;
-            // Presents the kept / restored state and clears paused input.
+            // Presents the kept state and clears paused input.
             // (Must run after OptionsDialog is cleared so the loop resumes.)
             Program.ExitOptionsPause();
         }
@@ -729,13 +635,11 @@ namespace RouteViewer
 			{
 				// Deferred: the render loop runs the post-OK reload at the top
 				// of its next frame (never nested inside a WinForms dispatch).
-				committed = true;
 				Program.PendingOptionsCommit = true;
 			}
 			else
 			{
-				// No heavy reload needed, but the live values are kept.
-				committed = true;
+				// No heavy reload needed; the live values are already applied.
 			}
 			Close();
 
