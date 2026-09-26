@@ -32,6 +32,9 @@ namespace ObjectViewer
 		private double initialShadowNormalBias;
 		private bool initialShadowFilterCascades;
 		private Vector3 initialOptionLightPosition;
+		private bool initialShowGround;
+		private double initialGroundHeight;
+		private OpenBveApi.Colors.Color24 initialGroundColor;
 
 		private formOptions()
 		{
@@ -105,6 +108,9 @@ namespace ObjectViewer
 			checkBoxAutoReload.Checked = Interface.CurrentOptions.AutoReloadObjects;
 			checkBoxProgressBar.Checked = Interface.CurrentOptions.LoadingProgressBar;
 			checkBoxShadowFilterCascades.Checked = Interface.CurrentOptions.ShadowFilterCascades;
+			checkBoxShowGround.Checked = Interface.CurrentOptions.ShowGround;
+			numericUpDownGroundHeight.Value = Math.Max(numericUpDownGroundHeight.Minimum, Math.Min((decimal)Interface.CurrentOptions.GroundHeight, numericUpDownGroundHeight.Maximum));
+			buttonGroundColor.BackColor = Interface.CurrentOptions.GroundColor;
 
 			// VSync and FPS Limit
 			comboBoxVSync.SelectedIndex = Interface.CurrentOptions.VerticalSynchronization ? 1 : 0;
@@ -122,6 +128,7 @@ namespace ObjectViewer
 			// current options, so init itself never flags live changes.
 			SetupSunRealtime();
 			SetupShadowRealtime();
+			SetupGroundRealtime();
 		}
 
 		/// <summary>Captures the live sun + shadow state so Cancel / X can restore it.</summary>
@@ -136,6 +143,9 @@ namespace ObjectViewer
 			initialShadowBias = Interface.CurrentOptions.ShadowBias;
 			initialShadowNormalBias = Interface.CurrentOptions.ShadowNormalBias;
 			initialShadowFilterCascades = Interface.CurrentOptions.ShadowFilterCascades;
+			initialShowGround = Interface.CurrentOptions.ShowGround;
+			initialGroundHeight = Interface.CurrentOptions.GroundHeight;
+			initialGroundColor = Interface.CurrentOptions.GroundColor;
 			try
 			{
 				initialOptionLightPosition = Program.Renderer.Lighting.OptionLightPosition;
@@ -158,6 +168,17 @@ namespace ObjectViewer
 			Interface.CurrentOptions.ShadowBias = initialShadowBias;
 			Interface.CurrentOptions.ShadowNormalBias = initialShadowNormalBias;
 			Interface.CurrentOptions.ShadowFilterCascades = initialShadowFilterCascades;
+			Interface.CurrentOptions.ShowGround = initialShowGround;
+			Interface.CurrentOptions.GroundHeight = initialGroundHeight;
+			Interface.CurrentOptions.GroundColor = initialGroundColor;
+			try
+			{
+				Program.Renderer.RefreshGround();
+			}
+			catch
+			{
+				// Best-effort
+			}
 			try
 			{
 				if (Program.Renderer != null)
@@ -210,6 +231,57 @@ namespace ObjectViewer
 			labelSunAzimuthValue.Text = trackBarSunAzimuth.Value + "\u00b0";
 			labelSunElevationValue.Text = trackBarSunElevation.Value + "\u00b0";
 			UpdateSunDirection();
+		}
+
+		private void SetupGroundRealtime()
+		{
+			// Memory-only; .cfg is written on OK. The loop renders
+			// continuously, so the ground updates live on the next frame.
+			checkBoxShowGround.CheckedChanged += GroundSetting_Changed;
+			numericUpDownGroundHeight.ValueChanged += GroundSetting_Changed;
+			buttonGroundColor.Click += buttonGroundColor_Click;
+		}
+
+		private void GroundSetting_Changed(object sender, EventArgs e)
+		{
+			ApplyGroundRealtime();
+		}
+
+		private void buttonGroundColor_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				using (ColorDialog dialog = new ColorDialog())
+				{
+					dialog.FullOpen = true;
+					dialog.Color = buttonGroundColor.BackColor;
+					if (dialog.ShowDialog() == DialogResult.OK)
+					{
+						buttonGroundColor.BackColor = dialog.Color;
+						ApplyGroundRealtime();
+					}
+				}
+			}
+			catch
+			{
+				// ColorDialog is not available on every platform; the ground
+				// color can still be set via options_ov.cfg (groundcolor = #RRGGBB)
+			}
+		}
+
+		private void ApplyGroundRealtime()
+		{
+			Interface.CurrentOptions.ShowGround = checkBoxShowGround.Checked;
+			Interface.CurrentOptions.GroundHeight = (double)numericUpDownGroundHeight.Value;
+			Interface.CurrentOptions.GroundColor = new OpenBveApi.Colors.Color24(buttonGroundColor.BackColor.R, buttonGroundColor.BackColor.G, buttonGroundColor.BackColor.B);
+			try
+			{
+				Program.Renderer.RefreshGround();
+			}
+			catch
+			{
+				// Best-effort; the loop reads options live anyway
+			}
 		}
 
 		private void UpdateShadowControlsEnabled()
@@ -538,6 +610,17 @@ namespace ObjectViewer
 			}
 			Interface.CurrentOptions.AutoReloadObjects = checkBoxAutoReload.Checked;
 			Interface.CurrentOptions.LoadingProgressBar = checkBoxProgressBar.Checked;
+			Interface.CurrentOptions.ShowGround = checkBoxShowGround.Checked;
+			Interface.CurrentOptions.GroundHeight = (double)numericUpDownGroundHeight.Value;
+			Interface.CurrentOptions.GroundColor = new OpenBveApi.Colors.Color24(buttonGroundColor.BackColor.R, buttonGroundColor.BackColor.G, buttonGroundColor.BackColor.B);
+			try
+			{
+				Program.Renderer.RefreshGround();
+			}
+			catch
+			{
+				// Best-effort; the loop reads options live anyway
+			}
 
 			// VSync and FPS Limit
 			Interface.CurrentOptions.VerticalSynchronization = comboBoxVSync.SelectedIndex == 1;

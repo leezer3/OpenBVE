@@ -24,8 +24,10 @@
 
 
 using System.Linq;
+using LibRender2.Shaders;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenBveApi.World;
 using OpenTK.Graphics.OpenGL;
@@ -312,6 +314,54 @@ namespace LibRender2.Primitives
 		public void Draw(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, Vector3 Size, Vector3 Camera, Texture TextureIndex)
 		{
 			DrawRetained(defaultVAO, Position, Direction, Up, Side, Size, Camera, TextureIndex);
+        }
+
+		/// <summary>Draws a 3D cube with the currently bound shader, lighting and shadow state</summary>
+		/// <remarks>Unlike Draw, this does not reset the shader: the caller must have activated DefaultShader with lighting and shadow maps bound. Uses a default white material so the vertex colors render unmodified, mirroring RenderFace state handling.</remarks>
+		/// <param name="Position">The position in world-space</param>
+		/// <param name="Direction">The direction vector</param>
+		/// <param name="Up">The up vector</param>
+		/// <param name="Side">The side vector</param>
+		/// <param name="Size">A 3D vector describing the size of the cube</param>
+		/// <param name="Camera">The camera position</param>
+		public void DrawLit(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, Vector3 Size, Vector3 Camera)
+		{
+			Shader shader = renderer.DefaultShader;
+			shader.Activate();
+			// matrix
+			shader.SetCurrentModelViewMatrix(Matrix4D.Scale(Size) * (Matrix4D)new Transformation(Direction, Up, Side) * Matrix4D.CreateTranslation(Position.X - Camera.X, Position.Y - Camera.Y, -Position.Z + Camera.Z) * renderer.CurrentViewMatrix);
+			shader.SetCurrentTextureMatrix(Matrix4D.Identity);
+			shader.DisableTexturing();
+			// default white material so the vertex colors render unmodified
+			shader.SetMaterialFlags(MaterialFlags.None);
+			if (renderer.OptionLighting)
+			{
+				shader.SetMaterialAmbient(Color32.White);
+				shader.SetMaterialDiffuse(Color32.White);
+				shader.SetMaterialSpecular(Color32.White);
+				shader.SetMaterialShininess(1.0f);
+			}
+			else
+			{
+				shader.SetMaterialAmbient(Color32.White);
+			}
+			// keep the renderer's color cache in sync so following faces set their own state
+			renderer.lastColor = Color32.White;
+			// match the day/night brightness of a plain static face (no glow, no night texture)
+			float blendFactor = 1.0f - renderer.Lighting.OptionLightingResultingAmount;
+			if (blendFactor > 1.0f)
+			{
+				blendFactor = 1.0f;
+			}
+			if (blendFactor < 0.0f)
+			{
+				blendFactor = 0.0f;
+			}
+			shader.SetBrightness(1.0f - 0.7f * blendFactor);
+			shader.SetOpacity(1.0f);
+			// render polygon
+			defaultVAO.Bind();
+			defaultVAO.Draw(PrimitiveType.Triangles);
         }
 
 		/// <summary>Draws a 3D cube</summary>

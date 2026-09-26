@@ -37,6 +37,15 @@ namespace ObjectViewer
 
 		internal Color32 TextColor;
 
+		/// <summary>Whether the flat ground reference plane is shown</summary>
+		internal bool ShowGround;
+
+		/// <summary>Height of the ground plane in meters</summary>
+		internal double GroundHeight;
+
+		/// <summary>Color of the ground plane</summary>
+		internal Color24 GroundColor;
+
 		/// <summary>Whether the loading screen shows the decode progress bar</summary>
 		internal bool LoadingProgressBar = true;
 
@@ -70,6 +79,9 @@ namespace ObjectViewer
 			VerticalSynchronization = true;
 			FPSLimit = 0;
 			ObjectOptimizationMode = ObjectOptimizationMode.Low;
+			ShowGround = false;
+			GroundHeight = 0.0;
+			GroundColor = new Color24(128, 128, 128);
 			// Shadow settings use synced base defaults
 		}
 
@@ -94,6 +106,9 @@ namespace ObjectViewer
 				Builder.AppendLine("showprogressbar = " + (LoadingProgressBar ? "true" : "false"));
 				Builder.AppendLine("backgroundColor = " + BackgroundColor);
 				Builder.AppendLine("textColor = " + TextColor);
+				Builder.AppendLine("showground = " + (ShowGround ? "true" : "false"));
+				Builder.AppendLine("groundheight = " + GroundHeight.ToString(Culture));
+				Builder.AppendLine("groundcolor = " + GroundColor);
 				Builder.AppendLine();
 				Builder.AppendLine("[quality]");
 				Builder.AppendLine("interpolation = " + Interpolation);
@@ -208,6 +223,10 @@ namespace ObjectViewer
 							block.GetValue(OptionsKey.ShowProgressBar, out Interface.CurrentOptions.LoadingProgressBar);
 							block.GetColor24(OptionsKey.BackgroundColor, out Interface.CurrentOptions.BackgroundColor);
 							block.GetColor32(OptionsKey.TextColor, out Interface.CurrentOptions.TextColor);
+							block.GetValue(OptionsKey.ShowGround, out Interface.CurrentOptions.ShowGround);
+							block.TryGetValue(OptionsKey.GroundHeight, ref Interface.CurrentOptions.GroundHeight, NumberRange.Any);
+							Interface.CurrentOptions.GroundHeight = Math.Max(-100.0, Math.Min(100.0, Interface.CurrentOptions.GroundHeight));
+							block.GetColor24(OptionsKey.GroundColor, out Interface.CurrentOptions.GroundColor);
 							break;
 						case OptionsSection.Quality:
 							block.GetEnumValue(OptionsKey.Interpolation, out Interface.CurrentOptions.Interpolation);

@@ -99,6 +99,13 @@ namespace ObjectViewer
             this.labelFPSLimit = new System.Windows.Forms.Label();
             this.comboBoxFPSLimit = new System.Windows.Forms.ComboBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip();
+            this.labelGroundSettings = new System.Windows.Forms.Label();
+            this.labelShowGround = new System.Windows.Forms.Label();
+            this.checkBoxShowGround = new System.Windows.Forms.CheckBox();
+            this.labelGroundHeight = new System.Windows.Forms.Label();
+            this.numericUpDownGroundHeight = new System.Windows.Forms.NumericUpDown();
+            this.labelGroundColor = new System.Windows.Forms.Label();
+            this.buttonGroundColor = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPageOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AntialiasingLevel)).BeginInit();
@@ -112,6 +119,7 @@ namespace ObjectViewer
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowBias)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowNormalBias)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nearClip)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGroundHeight)).BeginInit();
             this.tabPageKeys.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -120,11 +128,11 @@ namespace ObjectViewer
             this.tabControl1.Controls.Add(this.tabPageOptions);
             this.tabControl1.Controls.Add(this.tabPageShadows);
             this.tabControl1.Controls.Add(this.tabPageKeys);
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Location = new System.Drawing.Point(1, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(348, 460);
+            this.tabControl1.Size = new System.Drawing.Size(348, 415);
             this.tabControl1.TabIndex = 26;
             // 
             // tabPageOptions
@@ -175,12 +183,21 @@ namespace ObjectViewer
                     { this.labelAutoReloadChanged, 0, 15 },
                     { this.checkBoxAutoReload, 1, 15 },
                     { this.labelProgressBar, 0, 16 },
-                    { this.checkBoxProgressBar, 1, 16 }
+                    { this.checkBoxProgressBar, 1, 16 },
+                    // Ground Settings
+                    { this.labelGroundSettings, 0, 17 },
+                    { this.labelShowGround, 0, 18 },
+                    { this.checkBoxShowGround, 1, 18 },
+                    { this.labelGroundHeight, 0, 19 },
+                    { this.numericUpDownGroundHeight, 1, 19 },
+                    { this.labelGroundColor, 0, 20 },
+                    { this.buttonGroundColor, 1, 20 }
                 }
             };
             tlpOptions.SetColumnSpan(this.labelInterpolationSettings, 2);
             tlpOptions.SetColumnSpan(this.labelResolutionSettings, 2);
             tlpOptions.SetColumnSpan(this.labelOtherSettings, 2);
+            tlpOptions.SetColumnSpan(this.labelGroundSettings, 2);
             this.tabPageOptions.Controls.Add(tlpOptions);
             this.tabPageOptions.AutoScroll = true;
             this.tabPageOptions.Location = new System.Drawing.Point(4, 22);
@@ -970,6 +987,87 @@ namespace ObjectViewer
             this.checkBoxProgressBar.TabIndex = 51;
             this.checkBoxProgressBar.UseVisualStyleBackColor = true;
             // 
+            // labelGroundSettings
+            // 
+            this.labelGroundSettings.AutoSize = true;
+            this.labelGroundSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelGroundSettings.Location = new System.Drawing.Point(93, 3);
+            this.labelGroundSettings.Name = "labelGroundSettings";
+            this.labelGroundSettings.Size = new System.Drawing.Size(48, 15);
+            this.labelGroundSettings.TabIndex = 60;
+            this.labelGroundSettings.Text = "Ground";
+            // 
+            // labelShowGround
+            // 
+            this.labelShowGround.AutoSize = true;
+            this.labelShowGround.Location = new System.Drawing.Point(10, 403);
+            this.labelShowGround.Name = "labelShowGround";
+            this.labelShowGround.Size = new System.Drawing.Size(76, 13);
+            this.labelShowGround.TabIndex = 61;
+            this.labelShowGround.Text = "Show Ground:";
+            // 
+            // checkBoxShowGround
+            // 
+            this.checkBoxShowGround.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.checkBoxShowGround.AutoSize = true;
+            this.checkBoxShowGround.Location = new System.Drawing.Point(265, 403);
+            this.checkBoxShowGround.Name = "checkBoxShowGround";
+            this.checkBoxShowGround.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxShowGround.TabIndex = 62;
+            this.checkBoxShowGround.UseVisualStyleBackColor = true;
+            // 
+            // labelGroundHeight
+            // 
+            this.labelGroundHeight.AutoSize = true;
+            this.labelGroundHeight.Location = new System.Drawing.Point(10, 429);
+            this.labelGroundHeight.Name = "labelGroundHeight";
+            this.labelGroundHeight.Size = new System.Drawing.Size(62, 13);
+            this.labelGroundHeight.TabIndex = 63;
+            this.labelGroundHeight.Text = "Height (m):";
+            // 
+            // numericUpDownGroundHeight
+            // 
+            this.numericUpDownGroundHeight.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numericUpDownGroundHeight.DecimalPlaces = 1;
+            this.numericUpDownGroundHeight.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.numericUpDownGroundHeight.Location = new System.Drawing.Point(265, 429);
+            this.numericUpDownGroundHeight.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownGroundHeight.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownGroundHeight.Name = "numericUpDownGroundHeight";
+            this.numericUpDownGroundHeight.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDownGroundHeight.TabIndex = 64;
+            // 
+            // labelGroundColor
+            // 
+            this.labelGroundColor.AutoSize = true;
+            this.labelGroundColor.Location = new System.Drawing.Point(10, 455);
+            this.labelGroundColor.Name = "labelGroundColor";
+            this.labelGroundColor.Size = new System.Drawing.Size(34, 13);
+            this.labelGroundColor.TabIndex = 65;
+            this.labelGroundColor.Text = "Color:";
+            // 
+            // buttonGroundColor
+            // 
+            this.buttonGroundColor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonGroundColor.Location = new System.Drawing.Point(265, 455);
+            this.buttonGroundColor.Name = "buttonGroundColor";
+            this.buttonGroundColor.Size = new System.Drawing.Size(120, 23);
+            this.buttonGroundColor.TabIndex = 66;
+            this.buttonGroundColor.Text = "Choose...";
+            this.buttonGroundColor.UseVisualStyleBackColor = false;
+            // 
             // labelVSync
             // 
             this.labelVSync.AutoSize = true;
@@ -1067,6 +1165,7 @@ namespace ObjectViewer
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowBias)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowNormalBias)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nearClip)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGroundHeight)).EndInit();
             this.tabPageKeys.ResumeLayout(false);
             this.tabPageKeys.PerformLayout();
             this.ResumeLayout(false);
@@ -1138,6 +1237,13 @@ namespace ObjectViewer
 		private System.Windows.Forms.CheckBox checkBoxAutoReload;
 		private System.Windows.Forms.Label labelProgressBar;
 		private System.Windows.Forms.CheckBox checkBoxProgressBar;
+		private System.Windows.Forms.Label labelGroundSettings;
+		private System.Windows.Forms.Label labelShowGround;
+		private System.Windows.Forms.CheckBox checkBoxShowGround;
+		private System.Windows.Forms.Label labelGroundHeight;
+		private System.Windows.Forms.NumericUpDown numericUpDownGroundHeight;
+		private System.Windows.Forms.Label labelGroundColor;
+		private System.Windows.Forms.Button buttonGroundColor;
 		private System.Windows.Forms.Label labelAutoReloadChanged;
 		private System.Windows.Forms.Label labelShadowFilterCascades;
 		private System.Windows.Forms.CheckBox checkBoxShadowFilterCascades;

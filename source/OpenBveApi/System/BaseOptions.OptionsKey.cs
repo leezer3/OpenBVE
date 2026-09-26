@@ -116,6 +116,10 @@ namespace OpenBveApi
 		Up,
 		Down,
 		Forward,
-		Backward
+		Backward,
+		// Object Viewer ground plane
+		ShowGround,
+		GroundHeight,
+		GroundColor
     }
 }
