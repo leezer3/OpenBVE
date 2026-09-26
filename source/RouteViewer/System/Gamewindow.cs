@@ -192,7 +192,30 @@ namespace RouteViewer
 
             Program.Renderer.Initialize();
             Program.Renderer.Lighting.Initialize();
-			Program.Sounds.Initialize(SoundRange.Low);
+			try
+			{
+				Program.Sounds.Initialize(SoundRange.Low);
+			}
+			catch (DllNotFoundException ex)
+			{
+				// Missing native audio library or a corrupt install
+				// (OpenTK.dll.config not deployed): report plainly instead of
+				// dying with a stack trace (mirrors OpenBVE/Program.cs).
+				if (ex.Message == "libopenal.so.1")
+				{
+					System.Windows.Forms.MessageBox.Show(@"openAL was not found on this system." + Environment.NewLine + @"Please install libopenal1 via your distribution's package management system.", @"OpenBVE", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+				}
+				else if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows)
+				{
+					System.Windows.Forms.MessageBox.Show(@"This installation of OpenBVE is corrupt (OpenTK.dll.config could not be found)." + Environment.NewLine + @"Please reinstall OpenBVE.", @"OpenBVE", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+				}
+				else
+				{
+					System.Windows.Forms.MessageBox.Show(@"The required system library " + ex.Message + @" was not found on this system.", @"OpenBVE", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+				}
+				Exit();
+				return;
+			}
 			Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
             if (Program.processCommandLineArgs)
             {
