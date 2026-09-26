@@ -35,6 +35,7 @@ namespace ObjectViewer.Graphics
 		private Cube redAxisVAO;
 		private Cube greenAxisVAO;
 		private Cube blueAxisVAO;
+		private Cube groundVAO;
 
 		public override void Initialize()
 		{
@@ -42,7 +43,22 @@ namespace ObjectViewer.Graphics
 			redAxisVAO = new Cube(this, Color128.Red);
 			greenAxisVAO = new Cube(this, Color128.Green);
 			blueAxisVAO = new Cube(this, Color128.Blue);
+			RefreshGround();
         }
+
+		/// <summary>Rebuilds the ground plane with the current options color. GL thread only.</summary>
+		internal void RefreshGround()
+		{
+			try
+			{
+				groundVAO = new Cube(this, new Color128(Interface.CurrentOptions.GroundColor));
+			}
+			catch
+			{
+				// Best-effort; the plane simply stays hidden until this succeeds
+				groundVAO = null;
+			}
+		}
 
 		internal void ApplyBackgroundColor()
 		{
@@ -104,7 +120,14 @@ namespace ObjectViewer.Graphics
             DefaultShader.SetTexture(0);
             DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
             ResetOpenGlState();
-			List<FaceState> opaqueFaces, alphaFaces;
+			            // Flat ground reference plane, lit and shadowed like any opaque face.
+            // Enabled flag and height are read live every frame; the color is
+            // baked into groundVAO and rebuilt via RefreshGround on change.
+            if (Interface.CurrentOptions.ShowGround && groundVAO != null)
+            {
+                groundVAO.DrawLit(new Vector3(0.0, Interface.CurrentOptions.GroundHeight, 0.0), Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(500.0, 0.05, 500.0), Camera.AbsolutePosition);
+            }
+List<FaceState> opaqueFaces, alphaFaces;
 			lock (VisibleObjects.LockObject)
 			{
 				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();

@@ -356,7 +356,9 @@
       <DependentUpon>formMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="..\..\assets\Controls\Default.controls" />
-    <None Include="OpenTK.dll.config" />
+    <None Include="OpenTK.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

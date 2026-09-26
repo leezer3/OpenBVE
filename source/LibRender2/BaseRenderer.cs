@@ -282,7 +282,7 @@ namespace LibRender2
 		/// <summary>Stores the most recently bound texture</summary>
 		public OpenGlTexture LastBoundTexture;
 
-		private Color32 lastColor;
+		internal Color32 lastColor;
 
 		/// <summary>Holds the handle of the last VAO bound by openGL</summary>
 		public int lastVAO;
