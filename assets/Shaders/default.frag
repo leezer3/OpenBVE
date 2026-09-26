@@ -85,12 +85,18 @@ uniform float uFogDensity;
 uniform bool uFogIsLinear;
 out vec4 fragColor;
 
-const float SHADOW_GOLDEN_ANGLE = 2.399963229728653; // golden angle in radians
 const float SHADOW_TWO_PI = 6.28318530718;
+const float SHADOW_MIN_RADIUS = 0.5;
+const float SHADOW_MAX_RADIUS = 3.0;
+const float SHADOW_MIN_BLEND = 5.0;
+const float SHADOW_MAX_BLEND = 25.0;
+const float SHADOW_BLEND_FRACTION = 0.1;
+const float SHADOW_BIAS_GUARD_TEXELS = 4.0;
+const float SHADOW_BIAS_EPSILON = 0.00002;
 
 // Interleaved Gradient Noise (Jimenez 2014) - per-pixel rotation without texture
 float interleavedGradientNoise(vec2 p) {
-    vec3 magic = vec3(0.06711056, 0.00583715, 52.9829189);
+    const vec3 magic = vec3(0.06711056, 0.00583715, 52.9829189);
     return fract(magic.z * fract(dot(p, magic.xy)));
 }
 
@@ -134,21 +140,21 @@ float GetCascadeShadowFactor(sampler2DShadow shadowMap, vec4 posLightSpace, floa
     vec3 normal = normalize(vNormal);
     vec3 lightDir = uLight.position; // pre-normalized on CPU in SetLightPosition
     float slope = clamp(1.0 - dot(normal, lightDir), 0.0, 1.0);
-    float slopeScale = min(max(normalBias, 0.0), 1.5);
+    float slopeScale = clamp(normalBias, 0.0, 1.5);
     float activeBias = bias * (1.0 + slope * slopeScale);
 
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+    // Single clamp, reused for both depth guard and UV spread.
     // Soft kernel spreads taps in UV; depth only needs a small guard, not full scaling.
     // Sharp (0.5 texel) -> 1.0x, max 3.0 -> ~1.6x (was ~2.9x, caused detachment in soft mode).
-    float radiusForBias = uShadowSmooth ? clamp(uShadowFilterRadius, 0.5, 3.0) : 0.5;
-    float biasedDepth = projCoords.z - activeBias * (1.0 + (radiusForBias - 0.5) * 0.25);
+    float radiusScaled = uShadowSmooth ? clamp(uShadowFilterRadius, SHADOW_MIN_RADIUS, SHADOW_MAX_RADIUS) : SHADOW_MIN_RADIUS;
+    float biasedDepth = projCoords.z - activeBias * (1.0 + (radiusScaled - SHADOW_MIN_RADIUS) * 0.25);
     // Hard clamp: never push more than ~4 texels of depth + epsilon.
-    biasedDepth = max(biasedDepth, projCoords.z - (bias * 4.0 + 0.00002));
+    biasedDepth = max(biasedDepth, projCoords.z - (bias * SHADOW_BIAS_GUARD_TEXELS + SHADOW_BIAS_EPSILON));
 
     if (uShadowSmooth) {
         // Smooth path: Vogel disk + IGN - rotated per-pixel to hide sampling pattern.
         // radius in texels: 1.5 = soft but detailed (exposed via uShadowFilterRadius, tune 1.0-2.5).
-        float radiusScaled = clamp(uShadowFilterRadius, 0.5, 3.0);
         float phi = interleavedGradientNoise(gl_FragCoord.xy) * SHADOW_TWO_PI;
         float cosPhi = cos(phi);
         float sinPhi = sin(phi);
@@ -196,11 +202,11 @@ float GetShadowSplitDistance(int idx)
 float CalculateShadowFactor()
 {
     if (!uShadowEnabled) return 1.0;
+    if (uShadowStrength <= 0.0) return 1.0; // strength 0 = no visible shadow, skip all fetches
     
     // Calculate view depth per-pixel for perspective correctness (crucial for large polygons like ground)
     float vViewDepth = abs(oViewPos.z);
 
-    float blendRange = 15.0;
     float shadow = 1.0;
     int cascadeCount = uShadowCascadeCount;
 
@@ -209,7 +215,7 @@ float CalculateShadowFactor()
         float splitDist = GetShadowSplitDistance(i);
         // Proportional blend: 10% of split distance, clamped. Fixed 15.0 was
         // too wide for near cascades and too narrow for far ones.
-        blendRange = clamp(splitDist * 0.1, 5.0, 25.0);
+        float blendRange = clamp(splitDist * SHADOW_BLEND_FRACTION, SHADOW_MIN_BLEND, SHADOW_MAX_BLEND);
 
         if (vViewDepth < splitDist)
         {
@@ -222,7 +228,7 @@ float CalculateShadowFactor()
                 if (vViewDepth > blendStart)
                 {
                     float nextShadow = SampleCascadeByIndex(i + 1);
-                    float t = (vViewDepth - blendStart) / blendRange;
+                    float t = smoothstep(blendStart, splitDist, vViewDepth);
                     shadow = mix(shadow, nextShadow, t);
                 }
             }
@@ -232,7 +238,7 @@ float CalculateShadowFactor()
                 float fadeStart = splitDist - blendRange * 2.0;
                 if (vViewDepth > fadeStart)
                 {
-                    float t = (vViewDepth - fadeStart) / (splitDist - fadeStart);
+                    float t = smoothstep(fadeStart, splitDist, vViewDepth);
                     shadow = mix(shadow, 1.0, t);
                 }
             }
