@@ -99,7 +99,9 @@ namespace Formats.OpenBve
 		/// <summary>Whether normals are to be mirrored</summary>
 		MirrorNormals,
 		/// <summary>Unused by OpenBVE</summary>
-		GenerateNormals
+		GenerateNormals,
+		/// <summary>Overrides shadow casting and receiving for all faces in the MeshBuilder</summary>
+		ShadowOverride
 		
 	}
 }

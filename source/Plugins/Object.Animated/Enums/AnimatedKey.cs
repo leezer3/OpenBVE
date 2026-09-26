@@ -63,6 +63,7 @@ namespace Plugin
 		ScaleYScript,
 		ScaleZFunction,
 		ScaleZScript,
-		StateScript
+		StateScript,
+		ShadowOverride
 	}
 }

@@ -145,6 +145,7 @@ float GetShadowSplitDistance(int idx)
 float CalculateShadowFactor()
 {
     if (!uShadowEnabled) return 1.0;
+    if ((uMaterialFlags & 128) != 0) return 1.0; // NoReceiveShadow
     
     // Calculate view depth per-pixel for perspective correctness (crucial for large polygons like ground)
     float vViewDepth = abs(oViewPos.z);

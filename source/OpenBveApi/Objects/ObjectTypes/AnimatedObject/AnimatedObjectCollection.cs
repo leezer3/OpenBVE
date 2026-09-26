@@ -56,6 +56,8 @@ namespace OpenBveApi.Objects
 			}
 
 			double p = Parameters.AccurateObjectDisposalZOffset;
+			bool origDisableShadowCasting = Parameters.DisableShadowCasting;
+			bool origDisableShadowReceiving = Parameters.DisableShadowReceiving;
 			if (anyfree)
 			{
 				for (int i = 0; i < Objects.Length; i++)
@@ -69,6 +71,8 @@ namespace OpenBveApi.Objects
 							mat *= Objects[i].States[0].Translation;
 							mat *= transformationMatrix;
 							Parameters.AccurateObjectDisposalZOffset = Objects[i].States[0].Translation.ExtractTranslation().Z * -1.0; //To calculate the Z-offset within the object, we want the untransformed co-ordinates, not the world co-ordinates
+							Parameters.DisableShadowCasting = origDisableShadowCasting || Objects[i].States[0].DisableShadowCasting;
+							Parameters.DisableShadowReceiving = origDisableShadowReceiving || Objects[i].States[0].DisableShadowReceiving;
 							currentHost.CreateStaticObject(Objects[i].States[0].Prototype, Position, LocalTransformation, mat, Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z), Parameters);
 						}
 						else
