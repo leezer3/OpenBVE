@@ -869,18 +869,18 @@ namespace OpenBveApi.Colors {
 		/// <param name="color">The solid color.</param>
 		/// <param name="a">The alpha component.</param>
 		public Color128(Color24 color, float a) {
-			this.R = color.R;
-			this.G = color.G;
-			this.B = color.B;
+			this.R = color.R / 255.0f;
+			this.G = color.G / 255.0f;
+			this.B = color.B / 255.0f;
 			this.A = a;
 		}
 		/// <summary>Creates a new color.</summary>
 		/// <param name="color">The solid color.</param>
 		/// <remarks>The alpha component is set to full opacity.</remarks>
 		public Color128(Color24 color) {
-			this.R = color.R;
-			this.G = color.G;
-			this.B = color.B;
+			this.R = color.R / 255.0f;
+			this.G = color.G / 255.0f;
+			this.B = color.B / 255.0f;
 			this.A = 1.0f;
 		}
 		// --- operators ---
