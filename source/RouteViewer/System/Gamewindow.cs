@@ -66,6 +66,35 @@ namespace RouteViewer
         {
 	        base.OnUpdateFrame(e);
 
+	        // Modeless options dialog pump (cross-platform realtime preview):
+	        // the dialog only writes plain memory. WinForms messages need
+	        // explicit pumping while the GameWindow loop owns the thread
+	        // (Mono/X11 has a separate event queue, so a modeless form would
+	        // otherwise freeze), and GPU shadow reallocs run here on the GL
+	        // thread, never inside a WinForms dispatch.
+	        if (Program.OptionsDialog != null && !Program.OptionsDialog.IsDisposed)
+	        {
+		        try
+		        {
+			        System.Windows.Forms.Application.DoEvents();
+		        }
+		        catch
+		        {
+			        // Best-effort; the dialog may be mid-close
+		        }
+	        }
+	        if (Program.PendingOptionsCommit)
+	        {
+		        Program.PendingOptionsCommit = false;
+		        Program.ApplyOptionsCommit();
+	        }
+	        else if (Program.ShadowSettingsDirty && !Program.CurrentlyLoading)
+	        {
+		        Program.ShadowSettingsDirty = false;
+		        Program.Renderer.ReloadShadowSettings();
+		        Program.PreviewDirty = true;
+	        }
+
 	        if (Loading.Complete && currentlyLoading)
 	        {
 		        currentlyLoading = false;
@@ -92,6 +121,31 @@ namespace RouteViewer
 	            }
 	            Program.Renderer.RenderThreadJobWaiting = false;
             }
+
+            // Paused (options dialog open): freeze animations, camera, sounds
+            // and route time; present a single frame only when the preview
+            // state changed. Input events are still processed so the window
+            // and dialog stay responsive.
+            if (Program.OptionsPaused)
+            {
+	            ProcessEvents();
+	            double PausedElapsed = CPreciseTimer.GetElapsedTime();
+	            MessageManager.UpdateMessages(PausedElapsed);
+	            if (Program.ShadowSettingsDirty && !Program.CurrentlyLoading)
+	            {
+		            Program.ShadowSettingsDirty = false;
+		            Program.Renderer.ReloadShadowSettings();
+		            Program.PreviewDirty = true;
+	            }
+	            if (Program.PreviewDirty)
+	            {
+		            Program.PreviewDirty = false;
+		            Program.Renderer.RenderScene(PausedElapsed);
+		            SwapBuffers();
+	            }
+	            return;
+            }
+
 			ProcessEvents();
             double TimeElapsed = CPreciseTimer.GetElapsedTime();
 
@@ -117,6 +171,8 @@ namespace RouteViewer
 	        Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 			Program.Renderer.Rectangle.Update();
 			Program.Renderer.OpenGlString.Update();
+			// A resize behind an open dialog must present itself (paused loop renders on-demand only).
+			Program.PreviewDirty = true;
 		}
 
         protected override void OnLoad(EventArgs e)
@@ -230,6 +286,7 @@ namespace RouteViewer
 				Program.Renderer.PopMatrix(MatrixMode.Projection);
 				// Reinitialize shadows after route loading completes
 				Program.Renderer.ReloadShadowSettings();
+				Program.ShadowSettingsDirty = false;
 			}
 			else
 			{

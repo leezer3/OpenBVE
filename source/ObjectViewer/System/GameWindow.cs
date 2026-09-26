@@ -317,6 +317,34 @@ namespace ObjectViewer
 			TotalTimeElapsedForInfo += RealTimeElapsed;
 			RenderRealTimeElapsed += RealTimeElapsed;
 
+			// Modeless options dialog pump (cross-platform realtime preview):
+			// the dialog only writes plain memory. WinForms messages need
+			// explicit pumping while the GameWindow loop owns the thread
+			// (Mono/X11 has a separate event queue, so a modeless form would
+			// otherwise freeze), and GPU shadow reallocs run here on the GL
+			// thread, never inside a WinForms dispatch.
+			if (Program.OptionsDialog != null && !Program.OptionsDialog.IsDisposed)
+			{
+				try
+				{
+					System.Windows.Forms.Application.DoEvents();
+				}
+				catch
+				{
+					// Best-effort; the dialog may be mid-close
+				}
+			}
+			if (Program.PendingOptionsCommit)
+			{
+				Program.PendingOptionsCommit = false;
+				Program.ApplyOptionsCommit();
+			}
+			else if (Program.ShadowSettingsDirty && !Program.IsLoading)
+			{
+				Program.ShadowSettingsDirty = false;
+				Program.Renderer.ReloadShadowSettings();
+			}
+
             Program.CheckFileChanges(RealTimeElapsed);
 
 			if (Program.IsLoading)

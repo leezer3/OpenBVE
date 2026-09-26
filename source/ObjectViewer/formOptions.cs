@@ -16,11 +16,29 @@ namespace ObjectViewer
 	public partial class formOptions : Form
 	{
 		private bool suppressSunEvents = false;
-		private int lastPreviewAzimuth = int.MinValue;
-		private int lastPreviewElevation = int.MinValue;
+		private bool suppressShadowEvents = false;
+		private bool committed = false;
+
+		// Snapshot of the live (memory) sun + shadow state at dialog open.
+		// The dialog mutates options live for realtime preview (.cfg is only
+		// written on OK), so closing without OK must restore these.
+		private double initialAzimuth;
+		private double initialElevation;
+		private ShadowMapResolution initialShadowResolution;
+		private ShadowDistance initialShadowDistance;
+		private ShadowCascadeCount initialShadowCascades;
+		private double initialShadowStrength;
+		private double initialShadowBias;
+		private double initialShadowNormalBias;
+		private bool initialShadowFilterCascades;
+		private Vector3 initialOptionLightPosition;
 
 		private formOptions()
 		{
+			// Must run before any control init that syncs live state.
+			CaptureSnapshot();
+			TopMost = true;
+			FormClosed += formOptions_FormClosed;
 			InitializeComponent();
 			InterpolationMode.SelectedIndex = (int) Interface.CurrentOptions.Interpolation;
 			AnisotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
@@ -73,8 +91,6 @@ namespace ObjectViewer
 
 			// Initialize sun direction sliders from current light position
 			InitializeSunSliders();
-			SetupSunRealtime();
-			SetupShadowRealtime();
 
 			// Wire up shadow resolution change to enable/disable related controls
 			comboBoxShadowResolution.SelectedIndexChanged += comboBoxShadowResolution_SelectedIndexChanged;
@@ -102,6 +118,67 @@ namespace ObjectViewer
 				default: comboBoxFPSLimit.SelectedIndex = 0; break;
 			}
 			UpdateFPSLimitEnabled();
+			// Wire realtime handlers last, after every control reflects the
+			// current options, so init itself never flags live changes.
+			SetupSunRealtime();
+			SetupShadowRealtime();
+		}
+
+		/// <summary>Captures the live sun + shadow state so Cancel / X can restore it.</summary>
+		private void CaptureSnapshot()
+		{
+			initialAzimuth = Interface.CurrentOptions.LightAzimuth;
+			initialElevation = Interface.CurrentOptions.LightElevation;
+			initialShadowResolution = Interface.CurrentOptions.ShadowResolution;
+			initialShadowDistance = Interface.CurrentOptions.ShadowDrawDistance;
+			initialShadowCascades = Interface.CurrentOptions.ShadowCascades;
+			initialShadowStrength = Interface.CurrentOptions.ShadowStrength;
+			initialShadowBias = Interface.CurrentOptions.ShadowBias;
+			initialShadowNormalBias = Interface.CurrentOptions.ShadowNormalBias;
+			initialShadowFilterCascades = Interface.CurrentOptions.ShadowFilterCascades;
+			try
+			{
+				initialOptionLightPosition = Program.Renderer.Lighting.OptionLightPosition;
+			}
+			catch
+			{
+				// Best-effort
+			}
+		}
+
+		/// <summary>Restores the snapshot (memory only; shadow realloc happens on the render thread).</summary>
+		private void RestoreSnapshot()
+		{
+			Interface.CurrentOptions.LightAzimuth = initialAzimuth;
+			Interface.CurrentOptions.LightElevation = initialElevation;
+			Interface.CurrentOptions.ShadowResolution = initialShadowResolution;
+			Interface.CurrentOptions.ShadowDrawDistance = initialShadowDistance;
+			Interface.CurrentOptions.ShadowCascades = initialShadowCascades;
+			Interface.CurrentOptions.ShadowStrength = initialShadowStrength;
+			Interface.CurrentOptions.ShadowBias = initialShadowBias;
+			Interface.CurrentOptions.ShadowNormalBias = initialShadowNormalBias;
+			Interface.CurrentOptions.ShadowFilterCascades = initialShadowFilterCascades;
+			try
+			{
+				if (Program.Renderer != null)
+				{
+					Program.Renderer.Lighting.OptionLightPosition = initialOptionLightPosition;
+				}
+			}
+			catch
+			{
+				// Best-effort
+			}
+			Program.ShadowSettingsDirty = true;
+		}
+
+		private void formOptions_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			if (!committed)
+			{
+				RestoreSnapshot();
+			}
+			Program.OptionsDialog = null;
 		}
 
 		private void InitializeSunSliders()
@@ -111,16 +188,15 @@ namespace ObjectViewer
 			trackBarSunAzimuth.Value = Math.Max(trackBarSunAzimuth.Minimum, Math.Min((int)Interface.CurrentOptions.LightAzimuth, trackBarSunAzimuth.Maximum));
 			labelSunAzimuthValue.Text = trackBarSunAzimuth.Value + "\u00b0";
 			labelSunElevationValue.Text = trackBarSunElevation.Value + "\u00b0";
-			lastPreviewAzimuth = trackBarSunAzimuth.Value;
-			lastPreviewElevation = trackBarSunElevation.Value;
 			suppressSunEvents = false;
 		}
 
 		private void SetupSunRealtime()
 		{
-			// ValueChanged covers drag, keyboard, mouse-wheel; Scroll covers live thumb drag on some themes
-			// NOTE: no .cfg write here — value is kept in memory (Interface.CurrentOptions +
-			// renderer lighting) and persisted to disk only on OK.
+			// Memory-only: the sliders update Interface.CurrentOptions +
+			// renderer lighting. The running render loop picks that up on its
+			// next frame, so no GL calls are ever made from this dialog.
+			// (No .cfg write here; persisted to disk on OK only.)
 			trackBarSunAzimuth.ValueChanged += SunSlider_Changed;
 			trackBarSunElevation.ValueChanged += SunSlider_Changed;
 		}
@@ -131,43 +207,9 @@ namespace ObjectViewer
 			{
 				return;
 			}
-			OnSunSliderChanged();
-		}
-
-		private void OnSunSliderChanged()
-		{
 			labelSunAzimuthValue.Text = trackBarSunAzimuth.Value + "\u00b0";
 			labelSunElevationValue.Text = trackBarSunElevation.Value + "\u00b0";
-			// Skip duplicate preview when Scroll + ValueChanged fire for the same value
-			if (trackBarSunAzimuth.Value == lastPreviewAzimuth && trackBarSunElevation.Value == lastPreviewElevation)
-			{
-				return;
-			}
-			lastPreviewAzimuth = trackBarSunAzimuth.Value;
-			lastPreviewElevation = trackBarSunElevation.Value;
 			UpdateSunDirection();
-			TryPreviewSun();
-		}
-
-		private void TryPreviewSun()
-		{
-			try
-			{
-				if (Program.Renderer == null || Program.Renderer.GameWindow == null || Program.IsLoading)
-				{
-					return;
-				}
-				if (!Program.Renderer.GameWindow.Exists || Program.Renderer.GameWindow.IsExiting)
-				{
-					return;
-				}
-				Program.Renderer.RenderScene(0.0);
-				Program.Renderer.GameWindow.SwapBuffers();
-			}
-			catch
-			{
-				// Preview is best-effort; the OptionLightPosition is already updated
-			}
 		}
 
 		private void UpdateShadowControlsEnabled()
@@ -184,36 +226,79 @@ namespace ObjectViewer
 			checkBoxShadowFilterCascades.Enabled = enabled;
 		}
 
+		private bool shadowDropDownOpen = false;
+
 		private void comboBoxShadowResolution_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			UpdateShadowControlsEnabled();
-			ApplyShadowSettingsRealtime(true);
+			ApplyShadowMapSizeOrDefer();
 		}
 
 		private void SetupShadowRealtime()
 		{
-			// NOTE: memory + renderer only; .cfg is written on OK.
+			// Memory-only; .cfg is written on OK. Resolution / distance /
+			// cascade count only flag the render thread (GPU realloc must run
+			// there, never on this dialog). Strength / bias / filter are
+			// read live from options every frame, so they need no flag at all.
 			comboBoxShadowDistance.SelectedIndexChanged += ShadowMapSetting_Changed;
 			comboBoxShadowCascades.SelectedIndexChanged += ShadowMapSetting_Changed;
 			numericUpDownShadowStrength.ValueChanged += ShadowValue_Changed;
 			numericUpDownShadowBias.ValueChanged += ShadowValue_Changed;
 			numericUpDownShadowNormalBias.ValueChanged += ShadowValue_Changed;
 			checkBoxShadowFilterCascades.CheckedChanged += ShadowValue_Changed;
+			// Defer the realloc while a size list is open: arrowing through
+			// the dropdown fires SelectedIndexChanged per step, and each
+			// realloc would stall this shared UI/render thread for a few ms.
+			comboBoxShadowResolution.DropDown += ShadowDropDown_Opened;
+			comboBoxShadowResolution.DropDownClosed += ShadowDropDown_Closed;
+			comboBoxShadowDistance.DropDown += ShadowDropDown_Opened;
+			comboBoxShadowDistance.DropDownClosed += ShadowDropDown_Closed;
+			comboBoxShadowCascades.DropDown += ShadowDropDown_Opened;
+			comboBoxShadowCascades.DropDownClosed += ShadowDropDown_Closed;
+		}
+
+		private void ShadowDropDown_Opened(object sender, EventArgs e)
+		{
+			shadowDropDownOpen = true;
+		}
+
+		private void ShadowDropDown_Closed(object sender, EventArgs e)
+		{
+			shadowDropDownOpen = false;
+			ApplyShadowMapSize();
+		}
+
+		/// <summary>Memory-only while a size list is open; single realloc on close.</summary>
+		private void ApplyShadowMapSizeOrDefer()
+		{
+			if (shadowDropDownOpen)
+			{
+				ReadShadowMapSize();
+				ReadShadowTweaks();
+				return;
+			}
+			ApplyShadowMapSize();
 		}
 
 		private void ShadowMapSetting_Changed(object sender, EventArgs e)
 		{
-			// Resolution / distance / cascade count reallocate GPU shadow maps
-			ApplyShadowSettingsRealtime(true);
+			if (suppressShadowEvents)
+			{
+				return;
+			}
+			ApplyShadowMapSizeOrDefer();
 		}
 
 		private void ShadowValue_Changed(object sender, EventArgs e)
 		{
-			// Strength / bias / filtering are read live from options every frame
-			ApplyShadowSettingsRealtime(false);
+			if (suppressShadowEvents)
+			{
+				return;
+			}
+			ApplyShadowTweaks();
 		}
 
-		private void ApplyShadowSettingsRealtime(bool reinitShadowMaps)
+		private void ReadShadowMapSize()
 		{
 			switch (comboBoxShadowResolution.SelectedIndex)
 			{
@@ -237,22 +322,38 @@ namespace ObjectViewer
 				case 1: Interface.CurrentOptions.ShadowCascades = ShadowCascadeCount.Three; break;
 				case 2: Interface.CurrentOptions.ShadowCascades = ShadowCascadeCount.Four; break;
 			}
+		}
+
+		private void ReadShadowTweaks()
+		{
 			Interface.CurrentOptions.ShadowStrength = (double)numericUpDownShadowStrength.Value / 100.0;
 			Interface.CurrentOptions.ShadowBias = (double)numericUpDownShadowBias.Value;
 			Interface.CurrentOptions.ShadowNormalBias = (double)numericUpDownShadowNormalBias.Value;
 			Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
-			if (reinitShadowMaps)
+		}
+
+		private void ApplyShadowMapSize()
+		{
+			// Reallocates GPU shadow maps: flag only, the render thread
+			// performs the reload at the top of its next frame. Skipped when
+			// nothing actually changed (e.g. list opened and closed as-is).
+			ShadowMapResolution oldResolution = Interface.CurrentOptions.ShadowResolution;
+			ShadowDistance oldDistance = Interface.CurrentOptions.ShadowDrawDistance;
+			ShadowCascadeCount oldCascades = Interface.CurrentOptions.ShadowCascades;
+			ReadShadowMapSize();
+			ReadShadowTweaks();
+			if (Interface.CurrentOptions.ShadowResolution != oldResolution ||
+				Interface.CurrentOptions.ShadowDrawDistance != oldDistance ||
+				Interface.CurrentOptions.ShadowCascades != oldCascades)
 			{
-				try
-				{
-					Program.Renderer.ReloadShadowSettings();
-				}
-				catch
-				{
-					// Best-effort; preview below still reflects lighting change
-				}
+				Program.ShadowSettingsDirty = true;
 			}
-			TryPreviewSun();
+		}
+
+		private void ApplyShadowTweaks()
+		{
+			// Consumed live by the shaders every frame; no reload needed.
+			ReadShadowTweaks();
 		}
 
 		private void UpdateSunDirection()
@@ -300,11 +401,38 @@ namespace ObjectViewer
 			box.SelectedItem = box.Items.Contains(value) ? value : fallback;
 		}
 
-		internal static DialogResult ShowOptions()
+		internal static void ShowOptions()
 		{
+			// Modeless: the render loop keeps running behind the dialog, so
+			// slider changes preview live on the next frame. The dialog only
+			// touches plain memory; all GL work runs on the render thread,
+			// which keeps this safe on Linux / macOS too. (A blocking
+			// ShowDialog would starve the render loop, and rendering from the
+			// nested WinForms pump is what breaks non-Windows platforms.)
+			if (Program.OptionsDialog != null && !Program.OptionsDialog.IsDisposed)
+			{
+				try
+				{
+					Program.OptionsDialog.BringToFront();
+					Program.OptionsDialog.Focus();
+				}
+				catch
+				{
+					// Best-effort
+				}
+				return;
+			}
 			formOptions Dialog = new formOptions();
-			DialogResult Result = Dialog.ShowDialog();
-			return Result;
+			Program.OptionsDialog = Dialog;
+			try
+			{
+				Dialog.Show();
+			}
+			catch
+			{
+				Program.OptionsDialog = null;
+				throw;
+			}
 		}
 
 		private void CloseButton_Click(object sender, EventArgs e)
@@ -451,8 +579,11 @@ namespace ObjectViewer
 			Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
 			
 			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));
-			Program.RefreshObjectsAsync();
-			DialogResult = DialogResult.OK;
+			// Deferred: the render loop drains the shadow flag and refreshes
+			// objects at the top of its next frame (never nested inside a
+			// WinForms dispatch).
+			committed = true;
+			Program.PendingOptionsCommit = true;
 			Close();
 		}
 	}
