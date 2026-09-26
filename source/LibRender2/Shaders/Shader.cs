@@ -298,6 +298,9 @@ namespace LibRender2.Shaders
 
 		public void SetLightPosition(Vector3 LightPosition)
 		{
+			// Pre-normalized on CPU: shader uses uLight.position directly as a direction.
+			// Vector3.Normalize() is a no-op on Zero, so the IsLight=false path stays safe.
+			LightPosition.Normalize();
 			GL.ProgramUniform3(Handle, UniformLayout.LightPosition, (float)LightPosition.X, (float)LightPosition.Y, (float)LightPosition.Z);
 		}
 

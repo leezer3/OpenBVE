@@ -94,11 +94,19 @@ float interleavedGradientNoise(vec2 p) {
     return fract(magic.z * fract(dot(p, magic.xy)));
 }
 
-// Vogel disk - uniform disk distribution via golden angle
-vec2 vogelDiskSample(int i, int n, float phi) {
-    float r = sqrt((float(i) + 0.5) / float(n));
-    float theta = float(i) * SHADOW_GOLDEN_ANGLE + phi;
-    return vec2(cos(theta), sin(theta)) * r;
+// Precomputed Vogel disk (n=5): r=sqrt((i+0.5)/5), theta=i*GOLDEN_ANGLE.
+// Saves 5x sqrt + 4x cos/sin per pixel vs computing per-tap; single
+// rotation by phi (IGN) hides the sampling pattern.
+const vec2 VOGEL_DISK_5[5] = vec2[5](
+    vec2(0.31622777, 0.0),
+    vec2(-0.40387357, 0.36998127),
+    vec2(0.06181932, -0.70439930),
+    vec2(0.50905647, 0.66397403),
+    vec2(-0.93418124, -0.16524351)
+);
+vec2 vogelDiskSample(int i, float cosPhi, float sinPhi) {
+    vec2 o = VOGEL_DISK_5[i];
+    return vec2(o.x * cosPhi - o.y * sinPhi, o.x * sinPhi + o.y * cosPhi);
 }
 
 /// Samples a single cascade using hardware PCF.
@@ -124,7 +132,7 @@ float GetCascadeShadowFactor(sampler2DShadow shadowMap, vec4 posLightSpace, floa
     // Slope-scaled Z-bias, deliberately small: 1 texel base + up to +1.5 texel at grazing.
     // Capped so a stale config can't push shadows off their caster.
     vec3 normal = normalize(vNormal);
-    vec3 lightDir = normalize(uLight.position);
+    vec3 lightDir = uLight.position; // pre-normalized on CPU in SetLightPosition
     float slope = clamp(1.0 - dot(normal, lightDir), 0.0, 1.0);
     float slopeScale = min(max(normalBias, 0.0), 1.5);
     float activeBias = bias * (1.0 + slope * slopeScale);
@@ -142,10 +150,12 @@ float GetCascadeShadowFactor(sampler2DShadow shadowMap, vec4 posLightSpace, floa
         // radius in texels: 1.5 = soft but detailed (exposed via uShadowFilterRadius, tune 1.0-2.5).
         float radiusScaled = clamp(uShadowFilterRadius, 0.5, 3.0);
         float phi = interleavedGradientNoise(gl_FragCoord.xy) * SHADOW_TWO_PI;
+        float cosPhi = cos(phi);
+        float sinPhi = sin(phi);
         float shadow = 0.0;
         // 5 taps, constant loop bounds -> driver will unroll; each tap is HW PCF bilinear.
         for (int i = 0; i < 5; ++i) {
-            vec2 offset = vogelDiskSample(i, 5, phi) * texelSize * radiusScaled;
+            vec2 offset = vogelDiskSample(i, cosPhi, sinPhi) * texelSize * radiusScaled;
             shadow += texture(shadowMap, vec3(projCoords.xy + offset, biasedDepth));
         }
         shadow *= 0.2;
@@ -197,6 +207,9 @@ float CalculateShadowFactor()
     for (int i = 0; i < cascadeCount; i++)
     {
         float splitDist = GetShadowSplitDistance(i);
+        // Proportional blend: 10% of split distance, clamped. Fixed 15.0 was
+        // too wide for near cascades and too narrow for far ones.
+        blendRange = clamp(splitDist * 0.1, 5.0, 25.0);
 
         if (vViewDepth < splitDist)
         {

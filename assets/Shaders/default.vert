@@ -95,7 +95,7 @@ out vec3 vNormal;
 vec4 getLightResult()
 {
 	vNormal = normalize(mat3(transpose(inverse(uCurrentModelViewMatrix))) * vec3(iNormal.x, iNormal.y, -iNormal.z));
-	float nDotVP = max(0.0, dot(vNormal, normalize(vec3(uLight.position))));
+	float nDotVP = max(0.0, dot(vNormal, vec3(uLight.position))); // pre-normalized on CPU in SetLightPosition
 	float nDotHV = max(0.0, dot(vNormal, normalize(vec3(oViewPos.xyz + uLight.position))));
 	float pf = nDotVP == 0.0 ? 0.0 : pow(nDotHV, uMaterial.shininess);
 
