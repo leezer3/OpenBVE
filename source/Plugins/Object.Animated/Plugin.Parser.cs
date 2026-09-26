@@ -1,5 +1,6 @@
 using Formats.OpenBve;
 using OpenBveApi.FunctionScripting;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -41,6 +42,11 @@ namespace Plugin
 						UnifiedObject[] obj = new UnifiedObject[4];
 						int objCount = 0;
 						Block.GetVector3(AnimatedKey.Position, ',', out Position);
+						bool includeCastShadows = true, includeReceiveShadows = true;
+						if (Block.GetValue(AnimatedKey.ShadowOverride, out string includeShadowOverride))
+						{
+							ParseShadowOverride(includeShadowOverride, FileName, currentHost, ref includeCastShadows, ref includeReceiveShadows);
+						}
 						while (Block.RemainingDataValues > 0 && Block.GetNextPath(Folder, out string file))
 						{
 							if (obj.Length == objCount)
@@ -67,7 +73,9 @@ namespace Plugin
 									ObjectState aos = new ObjectState
 									{
 										Prototype = s,
-										Translation = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z)
+										Translation = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z),
+										DisableShadowCasting = !includeCastShadows,
+										DisableShadowReceiving = !includeReceiveShadows
 									};
 									a.States = new[] { aos };
 									Result.Objects[ObjectCount] = a;
@@ -86,6 +94,8 @@ namespace Plugin
 										for (int h = 0; h < a.Objects[k].States.Length; h++)
 										{
 											a.Objects[k].States[h].Translation *= Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
+											a.Objects[k].States[h].DisableShadowCasting = !includeCastShadows;
+											a.Objects[k].States[h].DisableShadowReceiving = !includeReceiveShadows;
 										}
 
 										Result.Objects[ObjectCount] = a.Objects[k];
@@ -117,7 +127,9 @@ namespace Plugin
 									ObjectState aos = new ObjectState
 									{
 										Prototype = so,
-										Translation = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z)
+										Translation = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z),
+										DisableShadowCasting = !includeCastShadows,
+										DisableShadowReceiving = !includeReceiveShadows
 									};
 									a.States = new[] { aos };
 									Result.Objects[ObjectCount] = a;
@@ -149,6 +161,11 @@ namespace Plugin
 						if (Block.GetPathArray(AnimatedKey.States, ',', Folder, ref stateFiles))
 						{
 							Block.GetVector3(AnimatedKey.Position, ',', out Position);
+							bool objectCastShadows = true, objectReceiveShadows = true;
+							if (Block.GetValue(AnimatedKey.ShadowOverride, out string objectShadowOverride))
+							{
+								ParseShadowOverride(objectShadowOverride, FileName, currentHost, ref objectCastShadows, ref objectReceiveShadows);
+							}
 							Block.GetFunctionScript(new[] { AnimatedKey.RotateXFunction, AnimatedKey.RotateXFunctionRPN, AnimatedKey.RotateXScript }, Folder, out Result.Objects[ObjectCount].RotateXFunction);
 							Block.GetFunctionScript(new[] { AnimatedKey.RotateYFunction, AnimatedKey.RotateYFunctionRPN, AnimatedKey.RotateYScript }, Folder, out Result.Objects[ObjectCount].RotateYFunction);
 							Block.GetFunctionScript(new[] { AnimatedKey.RotateZFunction, AnimatedKey.RotateZFunctionRPN, AnimatedKey.RotateZScript }, Folder, out Result.Objects[ObjectCount].RotateZFunction);
@@ -218,6 +235,8 @@ namespace Plugin
 							{
 								Result.Objects[ObjectCount].States[k] = new ObjectState();
 								Result.Objects[ObjectCount].States[k].Translation = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
+								Result.Objects[ObjectCount].States[k].DisableShadowCasting = !objectCastShadows;
+								Result.Objects[ObjectCount].States[k].DisableShadowReceiving = !objectReceiveShadows;
 								if (stateFiles[k] != null)
 								{
 									if (!currentHost.LoadObject(stateFiles[k], Encoding, out UnifiedObject currentObject))
@@ -380,6 +399,63 @@ namespace Plugin
 
 			Array.Resize(ref Result.Objects, ObjectCount);
 			return Result;
+		}
+
+		/// <summary>Parses a ShadowOverride value (Cast, Receive) with 1/0 or true/false entries</summary>
+		private static void ParseShadowOverride(string value, string fileName, HostInterface host, ref bool castShadows, ref bool receiveShadows)
+		{
+			string[] parts = value.Split(',');
+			if (parts.Length == 0 || (parts.Length == 1 && string.IsNullOrWhiteSpace(parts[0])))
+			{
+				host.AddMessage(MessageType.Error, false, "ShadowOverride requires at least one boolean argument (Cast, Receive) in file " + fileName);
+				return;
+			}
+			if (TryParseShadowBool(parts[0], out bool cast))
+			{
+				castShadows = cast;
+				receiveShadows = parts.Length >= 2 ? receiveShadows : cast;
+			}
+			else
+			{
+				host.AddMessage(MessageType.Error, false, "Invalid Cast value in ShadowOverride (expected 1/0 or true/false) in file " + fileName);
+				return;
+			}
+			if (parts.Length >= 2)
+			{
+				if (TryParseShadowBool(parts[1], out bool receive))
+				{
+					receiveShadows = receive;
+				}
+				else
+				{
+					host.AddMessage(MessageType.Error, false, "Invalid Receive value in ShadowOverride (expected 1/0 or true/false) in file " + fileName);
+				}
+			}
+		}
+
+		private static bool TryParseShadowBool(string text, out bool result)
+		{
+			if (!string.IsNullOrWhiteSpace(text))
+			{
+				string trimmed = text.Trim();
+				if (trimmed.Equals("true", StringComparison.OrdinalIgnoreCase))
+				{
+					result = true;
+					return true;
+				}
+				if (trimmed.Equals("false", StringComparison.OrdinalIgnoreCase))
+				{
+					result = false;
+					return true;
+				}
+				if (int.TryParse(trimmed, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out int i))
+				{
+					result = i != 0;
+					return true;
+				}
+			}
+			result = false;
+			return false;
 		}
 	}
 }
