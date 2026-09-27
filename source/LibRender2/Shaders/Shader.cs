@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using LibRender2.Fogs;
+using LibRender2.ShadowMapping;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -56,12 +57,6 @@ namespace LibRender2.Shaders
 		private readonly int[] uShadowNormalBiasLocations;
 		private readonly int[] uShadowTexelWorldSizeLocations;
 
-		/// <summary>Maximum cascades supported by the scene shader.</summary>
-		private const int MaxCascadeCount = 4;
-		/// <summary>First texture unit reserved for shadow maps.</summary>
-		private const int ShadowMapBaseUnit = 4;
-		/// <summary>Fallback world-space texel size until shadow data is bound.</summary>
-		private const float FallbackTexelWorldSize = 0.05f;
 		/// <summary>Default shadow filter radius until shadow data is bound.</summary>
 		private const float DefaultShadowFilterRadius = 1.5f;
 
@@ -80,13 +75,13 @@ namespace LibRender2.Shaders
 			uShadowCascadeCountLocation = GL.GetUniformLocation(Handle, "uShadowCascadeCount");
 			uShadowSmoothLocation = GL.GetUniformLocation(Handle, "uShadowSmooth");
 			uShadowFilterRadiusLocation = GL.GetUniformLocation(Handle, "uShadowFilterRadius");
-			uLightSpaceMatrixLocations = new int[MaxCascadeCount];
-			uShadowMapLocations = new int[MaxCascadeCount];
-			uShadowSplitLocations = new int[MaxCascadeCount];
-			uShadowBiasLocations = new int[MaxCascadeCount];
-			uShadowNormalBiasLocations = new int[MaxCascadeCount];
-			uShadowTexelWorldSizeLocations = new int[MaxCascadeCount];
-			for (int i = 0; i < MaxCascadeCount; i++)
+			uLightSpaceMatrixLocations = new int[ShadowConstants.MaxCascadeCount];
+			uShadowMapLocations = new int[ShadowConstants.MaxCascadeCount];
+			uShadowSplitLocations = new int[ShadowConstants.MaxCascadeCount];
+			uShadowBiasLocations = new int[ShadowConstants.MaxCascadeCount];
+			uShadowNormalBiasLocations = new int[ShadowConstants.MaxCascadeCount];
+			uShadowTexelWorldSizeLocations = new int[ShadowConstants.MaxCascadeCount];
+			for (int i = 0; i < ShadowConstants.MaxCascadeCount; i++)
 			{
 				uLightSpaceMatrixLocations[i] = GL.GetUniformLocation(Handle, "uLightSpaceMatrix" + i);
 				uShadowMapLocations[i] = GL.GetUniformLocation(Handle, "uShadowMap" + i);
@@ -103,17 +98,17 @@ namespace LibRender2.Shaders
 
 			// Initialise shadow map units to something non-zero to avoid sampler collision with uTexture
 			// Note: GL spec forbids different sampler types (sampler2D and sampler2DShadow) targeting the same unit
-			for (int i = 0; i < MaxCascadeCount; i++)
+			for (int i = 0; i < ShadowConstants.MaxCascadeCount; i++)
 			{
-				GL.ProgramUniform1(Handle, uShadowMapLocations[i], ShadowMapBaseUnit + i);
+				GL.ProgramUniform1(Handle, uShadowMapLocations[i], ShadowConstants.FirstShadowSamplerIndex + i);
 			}
 			// Also ensure shadow is disabled by default
 			GL.ProgramUniform1(Handle, uShadowEnabledLocation, 0);
 			GL.ProgramUniform1(Handle, uShadowCascadeCountLocation, 0);
 			GL.ProgramUniform1(Handle, uShadowStrengthLocation, 1.0f);
-			for (int i = 0; i < MaxCascadeCount; i++)
+			for (int i = 0; i < ShadowConstants.MaxCascadeCount; i++)
 			{
-				if (uShadowTexelWorldSizeLocations[i] != -1) GL.ProgramUniform1(Handle, uShadowTexelWorldSizeLocations[i], FallbackTexelWorldSize);
+				if (uShadowTexelWorldSizeLocations[i] != -1) GL.ProgramUniform1(Handle, uShadowTexelWorldSizeLocations[i], ShadowConstants.FallbackTexelWorldSize);
 			}
 			if (uShadowSmoothLocation != -1) GL.ProgramUniform1(Handle, uShadowSmoothLocation, 1);
 			if (uShadowFilterRadiusLocation != -1) GL.ProgramUniform1(Handle, uShadowFilterRadiusLocation, DefaultShadowFilterRadius);
@@ -189,6 +184,7 @@ namespace LibRender2.Shaders
 		/// <summary>
 		/// Set the animation matricies
 		/// </summary>
+		/// <remarks>Clears the RenderFace object cache, which would otherwise reuse stale matrices.</remarks>
 		public void SetCurrentAnimationMatricies(ObjectState objectState)
 		{
 			Renderer.lastObjectState = null; // clear the cached object state, as otherwise it might be stale

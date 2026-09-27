@@ -35,6 +35,7 @@ namespace LibRender2.ShadowMapping
         public double SplitLambda { get; set; } = DefaultSplitLambda;
 
         /// <summary>Extra depth behind the sub-frustum to catch tall occluders.</summary>
+        /// <remarks>Shadows.ApplyTuning always overrides this; the default only applies to standalone use.</remarks>
         public double DepthMargin { get; set; } = 40.0;
 
         /// <summary>Active shadow map resolution (used for texel snapping).</summary>
@@ -117,7 +118,7 @@ namespace LibRender2.ShadowMapping
         {
             ComputeCascadeSphere(index, splits, invView, fovY, aspect, out Vector3 center, out double radius);
             Matrix4D lightView = ComputeSnappedLightView(center, lightDirection, radius, out double texelWorldSize);
-            ComputeCascadeProjection(index, splits, lightView, radius, texelWorldSize);
+            ComputeCascadeProjection(index, splits[index + 1], lightView, radius, texelWorldSize);
         }
 
         /// <summary>Computes the stable bounding sphere center and radius for one cascade.</summary>
@@ -138,7 +139,7 @@ namespace LibRender2.ShadowMapping
         /// Builds a light view matrix with its center snapped to texel boundaries
         /// to prevent shadow swimming on camera move.
         /// </summary>
-        private Matrix4D ComputeSnappedLightView(Vector3 center, Vector3 lightDirection, double orthoSize, out double texelWorldSize)
+        private Matrix4D ComputeSnappedLightView(Vector3 center, Vector3 lightDirection, double radius, out double texelWorldSize)
         {
             Vector3 up = Math.Abs(lightDirection.Y) < ParallelUpThreshold
                 ? new Vector3(0, 1, 0)
@@ -146,8 +147,8 @@ namespace LibRender2.ShadowMapping
 
             Matrix4D lightView = Matrix4D.LookAt(center, center + lightDirection, up);
 
-            // Each texel covers (2*orthoSize / Resolution) world units
-            texelWorldSize = (orthoSize * 2.0) / (double)Resolution;
+            // Each texel covers (2*radius / Resolution) world units
+            texelWorldSize = (radius * 2.0) / (double)Resolution;
 
             // Transform center into light view space to snap it
             Vector3 centerLS = TransformPoint(center, lightView);
@@ -163,7 +164,7 @@ namespace LibRender2.ShadowMapping
         }
 
         /// <summary>Builds the orthographic projection and depth bias for one cascade.</summary>
-        private void ComputeCascadeProjection(int index, double[] splits, Matrix4D lightView, double radius, double texelWorldSize)
+        private void ComputeCascadeProjection(int index, double splitDistance, Matrix4D lightView, double radius, double texelWorldSize)
         {
             // Tight ortho depth range around the cascade sphere to preserve
             // 24-bit depth precision. Symmetric range still catches tall
@@ -174,7 +175,7 @@ namespace LibRender2.ShadowMapping
             Matrix4D.CreateOrthographic(radius * 2.0, radius * 2.0, zNear, zFar, out Matrix4D lightProj);
 
             LightSpaceMatrices[index] = lightView * lightProj;
-            SplitDistances[index] = (float)splits[index + 1];
+            SplitDistances[index] = (float)splitDistance;
 
             // Z-Bias: Convert physical texel size into a Depth Buffer fraction.
             // This ensures we push the depth exactly enough to cure acne, but no more.

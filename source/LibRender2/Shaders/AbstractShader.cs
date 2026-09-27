@@ -199,6 +199,12 @@ namespace LibRender2.Shaders
 		}
 
 		/// <summary>Uploads an object's animation matrices to its uniform buffer.</summary>
+		/// <remarks>
+		/// This deliberately does not touch Renderer.lastObjectState: only the scene
+		/// pass caches per-object state in RenderFace, while the depth pass tracks
+		/// its own lastVAO locally. Callers using the scene-pass cache must
+		/// invalidate it themselves (see Shader.SetCurrentAnimationMatricies).
+		/// </remarks>
 		protected static void UploadAnimationMatrices(OpenBveApi.Objects.ObjectState objectState)
 		{
 			OpenTK.Matrix4[] matriciesToShader = new OpenTK.Matrix4[objectState.Matricies.Length];

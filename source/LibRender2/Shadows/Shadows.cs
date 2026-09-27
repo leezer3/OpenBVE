@@ -41,14 +41,13 @@ namespace LibRender2.ShadowMapping
 		private const float MinNormalBiasTexels = 0.0f;
 		private const float MaxNormalBiasTexels = 4.0f;
 
-		/// <summary>Safety margin in meters so tall occluders still cast into nearby cascades.</summary>
-		private const double CascadeDistanceMargin = 150.0;
+		/// <summary>Extra ortho depth around a cascade sphere to catch tall occluders.</summary>
+		private const double CasterDepthMargin = 150.0;
+		/// <summary>Per-cascade cull margin so long shadows from tall objects are kept.</summary>
+		/// <remarks>Tuned to the same value as <see cref="CasterDepthMargin"/> but acts on view-space distance, not ortho depth.</remarks>
+		private const double CascadeCullMargin = 150.0;
 		/// <summary>Near clip used when fitting cascade frustums.</summary>
 		private const double CascadeNearClip = 0.1;
-		/// <summary>Maximum cascades supported by the scene shader.</summary>
-		private const int MaxCascadeCount = 4;
-		/// <summary>Fallback world-space texel size when no cascade data exists.</summary>
-		private const float FallbackTexelWorldSize = 0.05f;
 
 		public Shadows(BaseRenderer renderer)
 		{
@@ -135,7 +134,7 @@ namespace LibRender2.ShadowMapping
 			Caster.ShadowDistance = shadowDistance;
 			Caster.Resolution = resolution;
 			Caster.SplitLambda = CascadedShadowCaster.DefaultSplitLambda;
-			Caster.DepthMargin = CascadeDistanceMargin;
+			Caster.DepthMargin = CasterDepthMargin;
 		}
 
 		/// <summary>
@@ -236,7 +235,7 @@ namespace LibRender2.ShadowMapping
 				 * Distant objects don't need to be rendered into near-field high-res shadow maps.
 				 * We use a safety margin to catch long shadows from tall objects.
 				 */
-				double maxDistance = renderer.currentOptions.ShadowFilterCascades ? Caster.SplitDistances[cascadeIndex] + CascadeDistanceMargin : double.MaxValue;
+				double maxDistance = renderer.currentOptions.ShadowFilterCascades ? Caster.SplitDistances[cascadeIndex] + CascadeCullMargin : double.MaxValue;
 				double maxDistanceSquared = maxDistance * maxDistance;
 
 				RenderFacesFiltered(renderer.VisibleObjects.OpaqueFaces, ref lastVAO, maxDistanceSquared);
@@ -401,10 +400,10 @@ namespace LibRender2.ShadowMapping
 			}
 
 			// Clear unused cascade slots so stale data from a previous cascade count can't leak in.
-			for (int i = cascadeCount; i < MaxCascadeCount; i++)
+			for (int i = cascadeCount; i < ShadowConstants.MaxCascadeCount; i++)
 			{
 				shader.SetShadowSplitDistance(i, 0.0f);
-				shader.SetTexelWorldSize(i, cascadeCount > 0 ? Caster.TexelWorldSizes[cascadeCount - 1] : FallbackTexelWorldSize);
+				shader.SetTexelWorldSize(i, cascadeCount > 0 ? Caster.TexelWorldSizes[cascadeCount - 1] : ShadowConstants.FallbackTexelWorldSize);
 			}
 			shader.SetShadowCascadeCount(cascadeCount);
 		}
@@ -412,13 +411,13 @@ namespace LibRender2.ShadowMapping
 		/// <summary>Resolves the texture unit reserved for a shadow cascade.</summary>
 		private static TextureUnit ShadowTextureUnit(int cascadeIndex)
 		{
-			return TextureUnit.Texture4 + cascadeIndex;
+			return ShadowConstants.FirstShadowUnit + cascadeIndex;
 		}
 
 		/// <summary>Resolves the sampler index matching a shadow cascade's texture unit.</summary>
 		private static int ShadowSamplerUnit(int cascadeIndex)
 		{
-			return (int)ShadowTextureUnit(cascadeIndex) - (int)TextureUnit.Texture0;
+			return ShadowConstants.FirstShadowSamplerIndex + cascadeIndex;
 		}
 
 		/// <summary>
@@ -427,7 +426,7 @@ namespace LibRender2.ShadowMapping
 		/// </summary>
 		private void BindNullDepthMaps()
 		{
-			for (int i = 0; i < MaxCascadeCount; i++)
+			for (int i = 0; i < ShadowConstants.MaxCascadeCount; i++)
 			{
 				GL.ActiveTexture(ShadowTextureUnit(i));
 				GL.BindTexture(TextureTarget.Texture2D, renderer.nullDepthMap);
