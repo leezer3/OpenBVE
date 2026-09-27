@@ -112,60 +112,69 @@ namespace LibRender2.ShadowMapping
         /// </summary>
         private void UpdateCascade(int index, Vector3 lightDirection, double[] splits, Matrix4D invView, double fovY, double aspect)
         {
-            // Compute a mathematically stable bounding sphere for CSM stability.
+            ComputeCascadeSphere(index, splits, invView, fovY, aspect, out Vector3 center, out double radius);
+            Matrix4D lightView = ComputeSnappedLightView(center, lightDirection, radius, out double texelWorldSize);
+            ComputeCascadeProjection(index, splits, lightView, radius, texelWorldSize);
+        }
+
+        /// <summary>Computes the stable bounding sphere center and radius for one cascade.</summary>
+        private static void ComputeCascadeSphere(int index, double[] splits, Matrix4D invView, double fovY, double aspect, out Vector3 center, out double radius)
+        {
             // Center is (0, 0, -(zNear + zFar)/2) in View Space.
             double stableNear = (index == 0) ? 0.0 : splits[index];
             double stableFar = splits[index + 1];
             double centerViewZ = -(stableNear + stableFar) / 2.0;
 
             // Transform the stable view-space center into world space
-            Vector3 center = TransformPoint(new Vector3(0, 0, centerViewZ), invView);
+            center = TransformPoint(new Vector3(0, 0, centerViewZ), invView);
 
-            double radius = FrustumUtils.GetStableRadius(stableNear, stableFar, fovY, aspect);
+            radius = FrustumUtils.GetStableRadius(stableNear, stableFar, fovY, aspect);
+        }
 
-            // Build light view matrix: Look along the light direction directly from the cascade center
-            Vector3 lightPos = center;
-
+        /// <summary>
+        /// Builds a light view matrix with its center snapped to texel boundaries
+        /// to prevent shadow swimming on camera move.
+        /// </summary>
+        private Matrix4D ComputeSnappedLightView(Vector3 center, Vector3 lightDirection, double orthoSize, out double texelWorldSize)
+        {
             Vector3 up = Math.Abs(lightDirection.Y) < ParallelUpThreshold
                 ? new Vector3(0, 1, 0)
                 : new Vector3(1, 0, 0);
 
-            Matrix4D lightView = Matrix4D.LookAt(lightPos, center + lightDirection, up);
+            Matrix4D lightView = Matrix4D.LookAt(center, center + lightDirection, up);
 
-            // Orthographic projection tightly fitting the bounding sphere
-            double orthoSize = radius;
-
-            // === Texel snapping to prevent shadow swimming on camera move ===
-            // Snap the light-space center to texel boundaries
             // Each texel covers (2*orthoSize / Resolution) world units
-            double worldTexelSize = (orthoSize * 2.0) / (double)Resolution;
+            texelWorldSize = (orthoSize * 2.0) / (double)Resolution;
 
             // Transform center into light view space to snap it
             Vector3 centerLS = TransformPoint(center, lightView);
-            centerLS.X = Math.Round(centerLS.X / worldTexelSize) * worldTexelSize;
-            centerLS.Y = Math.Round(centerLS.Y / worldTexelSize) * worldTexelSize;
+            centerLS.X = Math.Round(centerLS.X / texelWorldSize) * texelWorldSize;
+            centerLS.Y = Math.Round(centerLS.Y / texelWorldSize) * texelWorldSize;
 
             // Reconstruct light view by applying the snapped offset
             // We need to adjust the view matrix translation to account for the snap
             Matrix4D invLightView = Matrix4D.Inverse(lightView);
             Vector3 snappedCenter = TransformPoint(centerLS, invLightView);
 
-            lightView = Matrix4D.LookAt(snappedCenter, snappedCenter + lightDirection, up);
+            return Matrix4D.LookAt(snappedCenter, snappedCenter + lightDirection, up);
+        }
 
+        /// <summary>Builds the orthographic projection and depth bias for one cascade.</summary>
+        private void ComputeCascadeProjection(int index, double[] splits, Matrix4D lightView, double radius, double texelWorldSize)
+        {
             // Tight ortho depth range around the cascade sphere to preserve
             // 24-bit depth precision. Symmetric range still catches tall
             // occluders within DepthMargin.
             double zNear = -(radius + DepthMargin);
             double zFar = radius + DepthMargin;
 
-            Matrix4D.CreateOrthographic(orthoSize * 2.0, orthoSize * 2.0, zNear, zFar, out Matrix4D lightProj);
+            Matrix4D.CreateOrthographic(radius * 2.0, radius * 2.0, zNear, zFar, out Matrix4D lightProj);
 
             LightSpaceMatrices[index] = lightView * lightProj;
             SplitDistances[index] = (float)splits[index + 1];
 
             // Z-Bias: Convert physical texel size into a Depth Buffer fraction.
             // This ensures we push the depth exactly enough to cure acne, but no more.
-            double texelWorldSize = (orthoSize * 2.0) / (double)Resolution;
             double depthRange = zFar - zNear;
             double baseBias = texelWorldSize / depthRange;
             CascadeBiases[index] = (float)baseBias;

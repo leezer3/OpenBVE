@@ -32,10 +32,10 @@ namespace LibRender2.ShadowMapping
 
 			for (int i = 1; i < cascadeCount; i++)
 			{
-				double p = (double)i / cascadeCount;
-				double log = zNear * Math.Pow(zFar / zNear, p);
-				double lin = zNear + (zFar - zNear) * p;
-				splits[i] = lambda * log + (1.0 - lambda) * lin;
+				double fraction = (double)i / cascadeCount;
+				double logSplit = zNear * Math.Pow(zFar / zNear, fraction);
+				double linearSplit = zNear + (zFar - zNear) * fraction;
+				splits[i] = lambda * logSplit + (1.0 - lambda) * linearSplit;
 			}
 
 			return splits;

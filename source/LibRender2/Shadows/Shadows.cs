@@ -18,16 +18,16 @@ namespace LibRender2.ShadowMapping
 		private readonly BaseRenderer renderer;
 
 		/// <summary>The shadow map textures and framebuffers.</summary>
-		internal CascadedShadowMap Map;
+		internal CascadedShadowMap Map { get; private set; }
 		/// <summary>The math engine for computing cascade frustums and matrices.</summary>
-		internal CascadedShadowCaster Caster;
+		internal CascadedShadowCaster Caster { get; private set; }
 		/// <summary>The shader used for rendering the shadow depth pass.</summary>
-		internal ShadowDepthShader DepthShader;
+		internal ShadowDepthShader DepthShader { get; private set; }
 
 		/// <summary>Whether shadows are currently active.</summary>
-		public bool Enabled;
+		public bool Enabled { get; private set; }
 		/// <summary>The current darkness of the shadows (0.0 to 1.0).</summary>
-		public float Strength;
+		public float Strength { get; private set; }
 
 		// Reference tuning for ComputeEffectiveFilterRadius: Medium preset (300m / 3 cascades) with 2048px maps.
 		private const double ReferenceDistPerCascade = 100.0;
@@ -362,14 +362,7 @@ namespace LibRender2.ShadowMapping
 			if (!Enabled || Map == null || Caster == null)
 			{
 				shader.SetShadowEnabled(false);
-				// To satisfy strict OpenGL drivers, always bind something to the shadow map units
-				// even if shadow is disabled, to avoid "sampler collision" errors.
-				for (int i = 0; i < MaxCascadeCount; i++)
-				{
-					GL.ActiveTexture(ShadowTextureUnit(i));
-					GL.BindTexture(TextureTarget.Texture2D, renderer.nullDepthMap);
-				}
-				GL.ActiveTexture(TextureUnit.Texture0);
+				BindNullDepthMaps();
 				return;
 			}
 
@@ -410,6 +403,20 @@ namespace LibRender2.ShadowMapping
 		private static TextureUnit ShadowTextureUnit(int cascadeIndex)
 		{
 			return TextureUnit.Texture4 + cascadeIndex;
+		}
+
+		/// <summary>
+		/// Binds the dummy depth texture to all shadow units so strict drivers
+		/// never see colliding samplers when shadows are disabled.
+		/// </summary>
+		private void BindNullDepthMaps()
+		{
+			for (int i = 0; i < MaxCascadeCount; i++)
+			{
+				GL.ActiveTexture(ShadowTextureUnit(i));
+				GL.BindTexture(TextureTarget.Texture2D, renderer.nullDepthMap);
+			}
+			GL.ActiveTexture(TextureUnit.Texture0);
 		}
 
 		/// <summary>
