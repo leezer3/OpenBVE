@@ -7,6 +7,8 @@ namespace LibRender2.ShadowMapping
 	/// </summary>
 	public static class FrustumUtils
 	{
+		/// <summary>Minimum vertical FOV (45 degrees in radians) used for the stable bounding sphere.</summary>
+		private const double MinFovYRad = 0.785398;
 		/// <summary>
 		/// Computes split distances using the Parallel Split Shadow Maps (PSSM) algorithm.
 		/// </summary>
@@ -32,9 +34,9 @@ namespace LibRender2.ShadowMapping
 		/// </summary>
 		public static double GetStableRadius(double zNear, double zFar, double fovYRad, double aspect)
 		{
-			// Clamp min FOV to 45 degrees (0.785 rad) to prevent the sphere from shrinking too much when zooming.
+			// Clamp min FOV to 45 degrees to prevent the sphere from shrinking too much when zooming.
 			// This ensures large objects (like trains) don't get clipped from the shadow map at high zoom.
-			fovYRad = Math.Max(fovYRad, 0.785398); 
+			fovYRad = Math.Max(fovYRad, MinFovYRad); 
 			// Half-height/width of the far plane of this sub-frustum in camera space
 			double h = zFar * Math.Tan(fovYRad / 2.0);
 			double w = h * aspect;

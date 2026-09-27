@@ -9,6 +9,18 @@ namespace LibRender2.ShadowMapping
     /// </summary>
     public class CascadedShadowCaster
     {
+        /// <summary>Y threshold for switching the light-view up vector to avoid a degenerate look-at.</summary>
+        private const double ParallelUpThreshold = 0.99;
+
+        /// <summary>Epsilon for detecting a degenerate projection matrix when extracting the far plane.</summary>
+        private const double FarPlaneEpsilon = 1e-8;
+
+        /// <summary>Epsilon for the perspective divide in point transforms.</summary>
+        private const double TransformWDivideEpsilon = 1e-10;
+
+        /// <summary>Fallback far plane when the projection matrix is degenerate.</summary>
+        private const double FallbackFarPlane = 1000.0;
+
         /// <summary>Number of shadow cascades.</summary>
         public int CascadeCount { get; private set; }
 
@@ -115,7 +127,7 @@ namespace LibRender2.ShadowMapping
             // Build light view matrix: Look along the light direction directly from the cascade center
             Vector3 lightPos = center;
 
-            Vector3 up = Math.Abs(lightDirection.Y) < 0.99
+            Vector3 up = Math.Abs(lightDirection.Y) < ParallelUpThreshold
                 ? new Vector3(0, 1, 0)
                 : new Vector3(1, 0, 0);
 
@@ -171,7 +183,7 @@ namespace LibRender2.ShadowMapping
             // Solving: far = proj.Row3.Z / (proj.Row2.Z + 1)
             double a = proj.Row2.Z;
             double b = proj.Row3.Z;
-            if (Math.Abs(a + 1.0) < 1e-8) return 1000.0; // fallback
+            if (Math.Abs(a + 1.0) < FarPlaneEpsilon) return FallbackFarPlane; // fallback
             return b / (a + 1.0);
         }
 
@@ -182,7 +194,7 @@ namespace LibRender2.ShadowMapping
             double y = p.X * m.Row0.Y + p.Y * m.Row1.Y + p.Z * m.Row2.Y + m.Row3.Y;
             double z = p.X * m.Row0.Z + p.Y * m.Row1.Z + p.Z * m.Row2.Z + m.Row3.Z;
             double w = p.X * m.Row0.W + p.Y * m.Row1.W + p.Z * m.Row2.W + m.Row3.W;
-            if (Math.Abs(w) > 1e-10)
+            if (Math.Abs(w) > TransformWDivideEpsilon)
             {
                 return new Vector3(x / w, y / w, z / w);
             }
