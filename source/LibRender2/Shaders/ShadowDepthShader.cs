@@ -39,7 +39,7 @@ namespace LibRender2.Shaders
 		private readonly int uMaterialFlags;
 		private readonly int uTextureMatrix;
 
-		public ShadowDepthShader(BaseRenderer Renderer,  string vertexShaderName, string fragmentShaderName, bool isFromStream = false) : base(Renderer, vertexShaderName, fragmentShaderName, isFromStream, false)
+		public ShadowDepthShader(BaseRenderer Renderer, string vertexShaderName, string fragmentShaderName, bool isFromStream = false) : base(Renderer, vertexShaderName, fragmentShaderName, isFromStream, false)
 		{
 			// Explicitly bind the uniform block for matrices to binding point 0
 			// This matches BindBufferBase(..., 0, ...) in the rendering pass.
@@ -107,23 +107,7 @@ namespace LibRender2.Shaders
 
 		public void SetCurrentAnimationMatricies(OpenBveApi.Objects.ObjectState objectState)
 		{
-			OpenTK.Matrix4[] matriciesToShader = new OpenTK.Matrix4[objectState.Matricies.Length];
-
-			for (int i = 0; i < objectState.Matricies.Length; i++)
-			{
-				matriciesToShader[i] = ConvertToMatrix4(objectState.Matricies[i]);
-			}
-
-			unsafe
-			{
-				if (objectState.MatrixBufferIndex == 0)
-				{
-					objectState.MatrixBufferIndex = GL.GenBuffer();
-				}
-
-				GL.BindBuffer(BufferTarget.UniformBuffer, objectState.MatrixBufferIndex);
-				GL.BufferData(BufferTarget.UniformBuffer, sizeof(OpenTK.Matrix4) * matriciesToShader.Length, matriciesToShader, BufferUsageHint.StaticDraw);
-			}
+			UploadAnimationMatrices(objectState);
 		}
 	}
 }

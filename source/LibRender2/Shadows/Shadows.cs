@@ -62,47 +62,15 @@ namespace LibRender2.ShadowMapping
 		/// </summary>
 		public void Initialize()
 		{
-			var opts = renderer.currentOptions;
-
-			if (opts.ShadowResolution == ShadowMapResolution.Off)
+			if (!TryResolveSettings(out int resolution, out int cascadeCount, out double shadowDistance))
 			{
-				Dispose();
-				Enabled = false;
-				renderer.fileSystem.AppendToLogFile("[CSM] Shadows disabled by user setting.");
 				return;
 			}
 
-			int resolution = Math.Max(1, (int)opts.ShadowResolution);
-			int cascadeCount = (int)opts.ShadowCascades;
-			double shadowDistance = opts.ShadowDrawDistance == ShadowDistance.ViewingDistance ? opts.ViewingDistance : (double)(int)opts.ShadowDrawDistance;
-			shadowDistance = Math.Max(1.0, shadowDistance);
-			Strength = (float)opts.ShadowStrength;
-
 			try
 			{
-				if (Map == null)
-				{
-					Map = new CascadedShadowMap(cascadeCount, resolution);
-				}
-				else
-				{
-					Map.Resize(cascadeCount, resolution);
-				}
-
-				if (Caster == null || cascadeCount != Caster.CascadeCount)
-				{
-					Caster = new CascadedShadowCaster(cascadeCount);
-				}
-
-				Caster.ShadowDistance = shadowDistance;
-				Caster.Resolution = resolution;
-				Caster.SplitLambda = 0.75;
-				Caster.DepthMargin = CascadeDistanceMargin;
-
-				if (DepthShader == null)
-				{
-					DepthShader = new ShadowDepthShader(renderer, "shadow_depth", "shadow_depth", true);
-				}
+				AllocateResources(resolution, cascadeCount);
+				ApplyTuning(resolution, shadowDistance);
 
 				Enabled = true;
 				renderer.fileSystem.AppendToLogFile($"[CSM] Initialized: {cascadeCount} cascades, {resolution}×{resolution}, distance={shadowDistance}m, strength={Strength:P0}");
@@ -113,6 +81,63 @@ namespace LibRender2.ShadowMapping
 				Enabled = false;
 				GL.GetError();
 			}
+		}
+
+		/// <summary>Reads shadow settings from current options.</summary>
+		/// <returns>False when shadows are disabled and no resources should be allocated.</returns>
+		private bool TryResolveSettings(out int resolution, out int cascadeCount, out double shadowDistance)
+		{
+			var opts = renderer.currentOptions;
+
+			if (opts.ShadowResolution == ShadowMapResolution.Off)
+			{
+				Dispose();
+				Enabled = false;
+				renderer.fileSystem.AppendToLogFile("[CSM] Shadows disabled by user setting.");
+				resolution = 0;
+				cascadeCount = 0;
+				shadowDistance = 0.0;
+				return false;
+			}
+
+			resolution = Math.Max(1, (int)opts.ShadowResolution);
+			cascadeCount = (int)opts.ShadowCascades;
+			shadowDistance = opts.ShadowDrawDistance == ShadowDistance.ViewingDistance ? opts.ViewingDistance : (double)(int)opts.ShadowDrawDistance;
+			shadowDistance = Math.Max(1.0, shadowDistance);
+			Strength = (float)opts.ShadowStrength;
+			return true;
+		}
+
+		/// <summary>Creates or resizes GPU resources for the given settings.</summary>
+		private void AllocateResources(int resolution, int cascadeCount)
+		{
+			if (Map == null)
+			{
+				Map = new CascadedShadowMap(cascadeCount, resolution);
+			}
+			else
+			{
+				Map.Resize(cascadeCount, resolution);
+			}
+
+			if (Caster == null || cascadeCount != Caster.CascadeCount)
+			{
+				Caster = new CascadedShadowCaster(cascadeCount);
+			}
+
+			if (DepthShader == null)
+			{
+				DepthShader = new ShadowDepthShader(renderer, "shadow_depth", "shadow_depth", true);
+			}
+		}
+
+		/// <summary>Applies distance, resolution and bias tuning to the caster.</summary>
+		private void ApplyTuning(int resolution, double shadowDistance)
+		{
+			Caster.ShadowDistance = shadowDistance;
+			Caster.Resolution = resolution;
+			Caster.SplitLambda = 0.75;
+			Caster.DepthMargin = CascadeDistanceMargin;
 		}
 
 		/// <summary>
@@ -341,7 +366,7 @@ namespace LibRender2.ShadowMapping
 				// even if shadow is disabled, to avoid "sampler collision" errors.
 				for (int i = 0; i < MaxCascadeCount; i++)
 				{
-					GL.ActiveTexture(TextureUnit.Texture4 + i);
+					GL.ActiveTexture(ShadowTextureUnit(i));
 					GL.BindTexture(TextureTarget.Texture2D, renderer.nullDepthMap);
 				}
 				GL.ActiveTexture(TextureUnit.Texture0);
@@ -372,12 +397,19 @@ namespace LibRender2.ShadowMapping
 				shader.SetTexelWorldSize(i, Caster.TexelWorldSizes[i]);
 			}
 
+			// Clear unused cascade slots so stale data from a previous cascade count can't leak in.
 			for (int i = cascadeCount; i < MaxCascadeCount; i++)
 			{
 				shader.SetShadowSplitDistance(i, 0.0f);
 				shader.SetTexelWorldSize(i, cascadeCount > 0 ? Caster.TexelWorldSizes[cascadeCount - 1] : FallbackTexelWorldSize);
 			}
 			shader.SetShadowCascadeCount(cascadeCount);
+		}
+
+		/// <summary>Resolves the texture unit reserved for a shadow cascade.</summary>
+		private static TextureUnit ShadowTextureUnit(int cascadeIndex)
+		{
+			return TextureUnit.Texture4 + cascadeIndex;
 		}
 
 		/// <summary>

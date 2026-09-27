@@ -199,23 +199,7 @@ namespace LibRender2.Shaders
 		public void SetCurrentAnimationMatricies(ObjectState objectState)
 		{
 			Renderer.lastObjectState = null; // clear the cached object state, as otherwise it might be stale
-			Matrix4[] matriciesToShader = new Matrix4[objectState.Matricies.Length];
-
-			for (int i = 0; i < objectState.Matricies.Length; i++)
-			{
-				matriciesToShader[i] = ConvertToMatrix4(objectState.Matricies[i]);
-			}
-
-			unsafe
-			{
-				if (objectState.MatrixBufferIndex == 0)
-				{
-					objectState.MatrixBufferIndex = GL.GenBuffer();
-				}
-
-				GL.BindBuffer(BufferTarget.UniformBuffer, objectState.MatrixBufferIndex);
-				GL.BufferData(BufferTarget.UniformBuffer, sizeof(Matrix4) * matriciesToShader.Length, matriciesToShader, BufferUsageHint.StaticDraw);
-			}
+			UploadAnimationMatrices(objectState);
 
 		}
 

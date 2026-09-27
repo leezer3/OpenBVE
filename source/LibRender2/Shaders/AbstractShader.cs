@@ -198,6 +198,28 @@ namespace LibRender2.Shaders
 			);
 		}
 
+		/// <summary>Uploads an object's animation matrices to its uniform buffer.</summary>
+		protected static void UploadAnimationMatrices(OpenBveApi.Objects.ObjectState objectState)
+		{
+			OpenTK.Matrix4[] matriciesToShader = new OpenTK.Matrix4[objectState.Matricies.Length];
+
+			for (int i = 0; i < objectState.Matricies.Length; i++)
+			{
+				matriciesToShader[i] = ConvertToMatrix4(objectState.Matricies[i]);
+			}
+
+			unsafe
+			{
+				if (objectState.MatrixBufferIndex == 0)
+				{
+					objectState.MatrixBufferIndex = GL.GenBuffer();
+				}
+
+				GL.BindBuffer(BufferTarget.UniformBuffer, objectState.MatrixBufferIndex);
+				GL.BufferData(BufferTarget.UniformBuffer, sizeof(OpenTK.Matrix4) * matriciesToShader.Length, matriciesToShader, BufferUsageHint.StaticDraw);
+			}
+		}
+
 		private bool disposed;
 
 		/// <summary>Cleans up, releasing the underlying openTK/OpenGL shader program</summary>
