@@ -164,7 +164,7 @@ namespace LibRender2
 		public Shadows Shadows;
 
 		/// <summary>Whether shadows are enabled.</summary>
-		public bool ShadowsEnabled => Shadows?.Enabled ?? false;
+		public bool ShadowsEnabled => Shadows?.EffectiveEnabled ?? false;
 
 		/// <summary>Shadow strength: 0=invisible, 1=full darkness.</summary>
 		public float ShadowStrength => Shadows?.Strength ?? 0.7f;

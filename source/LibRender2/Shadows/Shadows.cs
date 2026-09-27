@@ -29,6 +29,10 @@ namespace LibRender2.ShadowMapping
 		/// <summary>The current darkness of the shadows (0.0 to 1.0).</summary>
 		public float Strength { get; private set; }
 
+		/// <summary>Whether shadows actually render this frame: enabled by the user AND the sun is up.</summary>
+		/// <remarks>Every reader (depth pass, shader bind, background restore) must use this, never Enabled directly.</remarks>
+		internal bool EffectiveEnabled => Enabled && IsSunUp();
+
 		// Reference tuning for ComputeEffectiveFilterRadius: Medium preset (300m / 3 cascades) with 2048px maps.
 		private const double ReferenceDistPerCascade = 100.0;
 		private const double ReferenceResolution = 2048.0;
@@ -142,12 +146,12 @@ namespace LibRender2.ShadowMapping
 		/// </summary>
 		public void RenderPass()
 		{
-			if (!Enabled || Map == null || Caster == null || DepthShader == null)
+			if (!EffectiveEnabled || Map == null || Caster == null || DepthShader == null)
 			{
 				return;
 			}
 
-			if (!IsSunUp() || !TryGetLightDirection(out Vector3 lightDir))
+			if (!TryGetLightDirection(out Vector3 lightDir))
 			{
 				return;
 			}
@@ -368,7 +372,7 @@ namespace LibRender2.ShadowMapping
 		/// </summary>
 		public void Bind(Shader shader)
 		{
-			if (!Enabled || Map == null || Caster == null || !IsSunUp())
+			if (!EffectiveEnabled || Map == null || Caster == null)
 			{
 				shader.SetShadowEnabled(false);
 				BindNullDepthMaps();
