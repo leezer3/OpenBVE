@@ -81,28 +81,17 @@ namespace LibRender2.ShadowMapping
             Vector3 ld = lightDirection;
             ld.Normalize();
 
-            // Compute the inverse view-projection to get frustum corners in world space
-            Matrix4D vp = cameraView * cameraProjection;
-            Matrix4D invVP = Matrix4D.Inverse(vp);
-            Vector3[] fullCorners = FrustumUtils.GetFrustumCornersWorldSpace(invVP);
-
             // Compute split distances using PSSM
             double shadowFar = Math.Min(ShadowDistance,
                 GetFarPlaneFromProjection(cameraProjection));
             double[] splits = FrustumUtils.ComputeSplitDistances(
                 CascadeCount, nearClip, shadowFar, SplitLambda);
 
-            // Fractions of the total frustum depth
-            double totalDepth = shadowFar - nearClip;
-
             // Precompute inverse view for stable center calculation
             Matrix4D invView = Matrix4D.Inverse(cameraView);
 
             for (int i = 0; i < CascadeCount; i++)
             {
-                double splitNearFrac = (splits[i] - nearClip) / totalDepth;
-                double splitFarFrac = (splits[i + 1] - nearClip) / totalDepth;
-
                 // Compute a mathematically stable bounding sphere for CSM stability.
                 // Center is (0, 0, -(zNear + zFar)/2) in View Space.
                 double stableNear = (i == 0) ? 0.0 : splits[i];

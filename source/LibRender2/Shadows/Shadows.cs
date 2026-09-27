@@ -188,16 +188,6 @@ namespace LibRender2.ShadowMapping
 		}
 
 		/// <summary>
-		/// Renders a collection of faces while minimizing VAO and texture state switches.
-		/// </summary>
-		/// <param name="faces">The faces to render.</param>
-		/// <param name="lastVAO">A reference to the last bound VAO handle, to avoid redundant binds.</param>
-		private void RenderFaces(IEnumerable<FaceState> faces, ref int lastVAO)
-		{
-			RenderFacesFiltered(faces, ref lastVAO, double.MaxValue);
-		}
-
-		/// <summary>
 		/// Renders a collection of faces filtered by distance to optimize per-cascade draw calls.
 		/// </summary>
 		/// <param name="faces">The faces to render.</param>

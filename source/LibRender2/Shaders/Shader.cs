@@ -548,17 +548,6 @@ namespace LibRender2.Shaders
 			GL.ProgramUniformMatrix4(Handle, uModelMatrixLocation, false, ref matrix);
 		}
 
-		private static float[] Matrix4DToFloatArray(OpenBveApi.Math.Matrix4D m)
-		{
-			return new float[]
-			{
-				(float)m.Row0.X, (float)m.Row0.Y, (float)m.Row0.Z, (float)m.Row0.W,
-				(float)m.Row1.X, (float)m.Row1.Y, (float)m.Row1.Z, (float)m.Row1.W,
-				(float)m.Row2.X, (float)m.Row2.Y, (float)m.Row2.Z, (float)m.Row2.W,
-				(float)m.Row3.X, (float)m.Row3.Y, (float)m.Row3.Z, (float)m.Row3.W
-			};
-		}
-
 		#endregion
 	}
 }

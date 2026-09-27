@@ -1,5 +1,4 @@
 using System;
-using OpenBveApi.Math;
 
 namespace LibRender2.ShadowMapping
 {
@@ -8,36 +7,6 @@ namespace LibRender2.ShadowMapping
 	/// </summary>
 	public static class FrustumUtils
 	{
-		/// <summary>
-		/// Extracts the 8 corners of the frustum in world space using the inverse View-Projection matrix.
-		/// </summary>
-		public static Vector3[] GetFrustumCornersWorldSpace(Matrix4D invVP)
-		{
-			Vector3[] corners = new Vector3[8];
-			Vector4[] ndcCorners = 
-			{
-				new Vector4(-1, -1, -1, 1), new Vector4(1, -1, -1, 1),
-				new Vector4(-1,  1, -1, 1), new Vector4(1,  1, -1, 1),
-				new Vector4(-1, -1,  1, 1), new Vector4(1, -1,  1, 1),
-				new Vector4(-1,  1,  1, 1), new Vector4(1,  1,  1, 1)
-			};
-
-			for (int i = 0; i < 8; i++)
-			{
-				Vector4 worldPt = Vector4.Transform(ndcCorners[i], invVP);
-				if (Math.Abs(worldPt.W) < 1e-10)
-				{
-					corners[i] = worldPt.Xyz; // fallback for W=0
-				}
-				else
-				{
-					corners[i] = worldPt.Xyz / worldPt.W;
-				}
-			}
-
-			return corners;
-		}
-
 		/// <summary>
 		/// Computes split distances using the Parallel Split Shadow Maps (PSSM) algorithm.
 		/// </summary>
@@ -56,21 +25,6 @@ namespace LibRender2.ShadowMapping
 			}
 
 			return splits;
-		}
-
-		/// <summary>
-		/// Interpolates between full frustum corners to get a sub-frustum between nearFrac and farFrac [0,1].
-		/// </summary>
-		public static Vector3[] GetSubFrustumCorners(Vector3[] fullCorners, double nearFrac, double farFrac)
-		{
-			Vector3[] corners = new Vector3[8];
-			for (int i = 0; i < 4; i++)
-			{
-				Vector3 dir = fullCorners[i + 4] - fullCorners[i];
-				corners[i] = fullCorners[i] + dir * nearFrac;
-				corners[i + 4] = fullCorners[i] + dir * farFrac;
-			}
-			return corners;
 		}
 
 		/// <summary>
@@ -93,31 +47,6 @@ namespace LibRender2.ShadowMapping
 			double dz = zFar - centerZ;
 			
 			return Math.Sqrt(w * w + h * h + dz * dz);
-		}
-
-		/// <summary>
-		/// Computes the average center of a set of points.
-		/// </summary>
-		public static Vector3 ComputeCenter(Vector3[] points)
-		{
-			Vector3 center = Vector3.Zero;
-			if (points == null || points.Length == 0) return center;
-			foreach (var p in points) center += p;
-			return center / points.Length;
-		}
-
-		/// <summary>
-		/// Computes the radius of a bounding sphere that encompasses all points.
-		/// </summary>
-		public static double ComputeBoundingSphereRadius(Vector3[] points, Vector3 center)
-		{
-			double maxDistSq = 0;
-			foreach (var p in points)
-			{
-				double d2 = (p - center).NormSquared();
-				if (d2 > maxDistSq) maxDistSq = d2;
-			}
-			return Math.Sqrt(maxDistSq);
 		}
 	}
 }
