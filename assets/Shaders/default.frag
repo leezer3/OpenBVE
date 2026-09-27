@@ -137,8 +137,11 @@ float GetCascadeShadowFactor(sampler2DShadow shadowMap, vec4 posLightSpace, floa
 
     // Slope-scaled Z-bias, deliberately small: 1 texel base + up to +1.5 texel at grazing.
     // Capped so a stale config can't push shadows off their caster.
-    vec3 normal = normalize(vNormal);
+    // Mesa-safe: a zero-length vNormal (uninitialized VAO normals) must not yield NaN.
+    // Fall back to the light direction so the slope term is 0 and shadows stay attached.
     vec3 lightDir = uLight.position; // pre-normalized on CPU in SetLightPosition
+    float nLen2 = dot(vNormal, vNormal);
+    vec3 normal = nLen2 < 1e-10 ? lightDir : vNormal * inversesqrt(nLen2);
     float slope = clamp(1.0 - dot(normal, lightDir), 0.0, 1.0);
     float slopeScale = clamp(normalBias, 0.0, 1.5);
     float activeBias = bias * (1.0 + slope * slopeScale);
