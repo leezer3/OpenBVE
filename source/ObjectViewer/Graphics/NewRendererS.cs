@@ -46,17 +46,17 @@ namespace ObjectViewer.Graphics
 			RefreshGround();
         }
 
-		/// Rebuilds the ground plane. Keeps the old one on failure.
+		/// <summary>Rebuilds the ground plane with the current options color. GL thread only.</summary>
 		internal void RefreshGround()
 		{
 			try
 			{
-				// Assignment only runs on success, so the old VAO survives a failure.
 				groundVAO = new Cube(this, new Color128(Interface.CurrentOptions.GroundColor));
 			}
 			catch
 			{
-				// Best-effort; keep previous ground.
+				// Best-effort; the plane simply stays hidden until this succeeds
+				groundVAO = null;
 			}
 		}
 

@@ -131,15 +131,16 @@ namespace LibRender2.Shaders
 			VertexLayout = GetVertexLayout();
 			UniformLayout = GetUniformLayout();
 
-			// Shadow units must not collide with uTexture. Skip inactive uniforms (-1).
-			if (uShadowMap0Location != -1) GL.ProgramUniform1(Handle, uShadowMap0Location, 4);
-			if (uShadowMap1Location != -1) GL.ProgramUniform1(Handle, uShadowMap1Location, 5);
-			if (uShadowMap2Location != -1) GL.ProgramUniform1(Handle, uShadowMap2Location, 6);
-			if (uShadowMap3Location != -1) GL.ProgramUniform1(Handle, uShadowMap3Location, 7);
-			// Disabled by default
-			if (uShadowEnabledLocation != -1) GL.ProgramUniform1(Handle, uShadowEnabledLocation, 0);
-			if (uShadowCascadeCountLocation != -1) GL.ProgramUniform1(Handle, uShadowCascadeCountLocation, 0);
-			if (uShadowStrengthLocation != -1) GL.ProgramUniform1(Handle, uShadowStrengthLocation, 1.0f);
+			// Initialise shadow map units to something non-zero to avoid sampler collision with uTexture
+			// Note: GL spec forbids different sampler types (sampler2D and sampler2DShadow) targeting the same unit
+			GL.ProgramUniform1(Handle, uShadowMap0Location, 4);
+			GL.ProgramUniform1(Handle, uShadowMap1Location, 5);
+			GL.ProgramUniform1(Handle, uShadowMap2Location, 6);
+			GL.ProgramUniform1(Handle, uShadowMap3Location, 7);
+			// Also ensure shadow is disabled by default
+			GL.ProgramUniform1(Handle, uShadowEnabledLocation, 0);
+			GL.ProgramUniform1(Handle, uShadowCascadeCountLocation, 0);
+			GL.ProgramUniform1(Handle, uShadowStrengthLocation, 1.0f);
 			if (uShadowTexelWorldSize0Location != -1) GL.ProgramUniform1(Handle, uShadowTexelWorldSize0Location, 0.05f);
 			if (uShadowTexelWorldSize1Location != -1) GL.ProgramUniform1(Handle, uShadowTexelWorldSize1Location, 0.05f);
 			if (uShadowTexelWorldSize2Location != -1) GL.ProgramUniform1(Handle, uShadowTexelWorldSize2Location, 0.05f);
@@ -462,7 +463,7 @@ namespace LibRender2.Shaders
 
 		public void SetShadowEnabled(bool enabled)
 		{
-			if (uShadowEnabledLocation != -1) GL.ProgramUniform1(Handle, uShadowEnabledLocation, enabled ? 1 : 0);
+			GL.ProgramUniform1(Handle, uShadowEnabledLocation, enabled ? 1 : 0);
 		}
 
 		/// <summary>Resolves a per-cascade uniform location. Returns -1 for out-of-range cascades.</summary>
@@ -517,12 +518,12 @@ namespace LibRender2.Shaders
 
 		public void SetShadowCascadeCount(int count)
 		{
-			if (uShadowCascadeCountLocation != -1) GL.ProgramUniform1(Handle, uShadowCascadeCountLocation, count);
+			GL.ProgramUniform1(Handle, uShadowCascadeCountLocation, count);
 		}
 
 		public void SetShadowStrength(float strength)
 		{
-			if (uShadowStrengthLocation != -1) GL.ProgramUniform1(Handle, uShadowStrengthLocation, strength);
+			GL.ProgramUniform1(Handle, uShadowStrengthLocation, strength);
 		}
 
 		public void SetShadowSmooth(bool smooth)
@@ -537,14 +538,12 @@ namespace LibRender2.Shaders
 
 		public void SetCurrentViewMatrix(OpenBveApi.Math.Matrix4D viewMatrix)
 		{
-			if (uCurrentViewMatrixLocation == -1) return;
 			Matrix4 matrix = ConvertToMatrix4(viewMatrix);
 			GL.ProgramUniformMatrix4(Handle, uCurrentViewMatrixLocation, false, ref matrix);
 		}
 
 		public void SetCurrentModelMatrix(OpenBveApi.Math.Matrix4D modelMatrix)
 		{
-			if (uModelMatrixLocation == -1) return;
 			Matrix4 matrix = ConvertToMatrix4(modelMatrix);
 			GL.ProgramUniformMatrix4(Handle, uModelMatrixLocation, false, ref matrix);
 		}

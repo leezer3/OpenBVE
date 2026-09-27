@@ -398,11 +398,9 @@ namespace LibRender2
 				DefaultShader.Deactivate();
 				dummyVao = new VertexArrayObject();
 			}
-			catch (Exception ex)
+			catch
 			{
-				// Log compiler output so shader failures are diagnosable.
-				currentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed: " + ex.Message);
-				try { fileSystem?.AppendToLogFile("[Shader] Default shader init failed: " + ex); } catch { }
+				currentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed.");
 				GL.GetError();
 				try
 				{
