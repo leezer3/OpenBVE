@@ -85,6 +85,8 @@ namespace RouteViewer
 		internal static double PrevShadowBias;
 		internal static double PrevShadowNormalBias;
 		internal static bool PrevShadowFilterCascades;
+		internal static bool PrevShadowSmooth;
+		internal static double PrevShadowFilterRadius;
 
 		[System.Runtime.InteropServices.DllImport("user32.dll")]
 		private static extern bool SetProcessDPIAware();
@@ -366,6 +368,8 @@ namespace RouteViewer
 			PrevShadowBias = Interface.CurrentOptions.ShadowBias;
 			PrevShadowNormalBias = Interface.CurrentOptions.ShadowNormalBias;
 			PrevShadowFilterCascades = Interface.CurrentOptions.ShadowFilterCascades;
+			PrevShadowSmooth = Interface.CurrentOptions.ShadowSmooth;
+			PrevShadowFilterRadius = Interface.CurrentOptions.ShadowFilterRadius;
 		}
 
 		/// <summary>Runs the post-OK reload. Called at the top of a render-loop
@@ -378,7 +382,9 @@ namespace RouteViewer
 			    PrevShadowCascades != Interface.CurrentOptions.ShadowCascades ||
 			    Math.Abs(PrevShadowStrength - Interface.CurrentOptions.ShadowStrength) > 0.01f ||
 			    Math.Abs(PrevShadowBias - Interface.CurrentOptions.ShadowBias) > 0.000001f ||
-			    Math.Abs(PrevShadowNormalBias - Interface.CurrentOptions.ShadowNormalBias) > 0.01f)
+			    Math.Abs(PrevShadowNormalBias - Interface.CurrentOptions.ShadowNormalBias) > 0.01f ||
+			    PrevShadowSmooth != Interface.CurrentOptions.ShadowSmooth ||
+			    Math.Abs(PrevShadowFilterRadius - Interface.CurrentOptions.ShadowFilterRadius) > 0.000001f)
 			{
 				Renderer.ReloadShadowSettings();
 			}
