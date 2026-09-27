@@ -67,9 +67,15 @@ namespace LibRender2.ShadowMapping
 
         private void CreateCascade(int index)
         {
-            // Generate depth texture
-            DepthTextures[index] = GL.GenTexture();
-            GL.BindTexture(TextureTarget.Texture2D, DepthTextures[index]);
+            DepthTextures[index] = CreateDepthTexture();
+            FBOs[index] = CreateDepthFramebuffer(DepthTextures[index], index);
+        }
+
+        /// <summary>Creates a depth texture for one cascade with border-lit and hardware-PCF sampling.</summary>
+        private int CreateDepthTexture()
+        {
+            int texture = GL.GenTexture();
+            GL.BindTexture(TextureTarget.Texture2D, texture);
             GL.TexImage2D(TextureTarget.Texture2D, 0,
                 PixelInternalFormat.DepthComponent24,
                 Resolution, Resolution, 0,
@@ -94,13 +100,17 @@ namespace LibRender2.ShadowMapping
                 TextureParameterName.TextureCompareFunc,
                 (int)All.Lequal);
             GL.BindTexture(TextureTarget.Texture2D, 0);
+            return texture;
+        }
 
-            // Generate FBO
-            FBOs[index] = GL.GenFramebuffer();
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, FBOs[index]);
+        /// <summary>Creates a depth-only FBO attached to the given texture.</summary>
+        private static int CreateDepthFramebuffer(int depthTexture, int cascadeIndex)
+        {
+            int fbo = GL.GenFramebuffer();
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer,
                 FramebufferAttachment.DepthAttachment,
-                TextureTarget.Texture2D, DepthTextures[index], 0);
+                TextureTarget.Texture2D, depthTexture, 0);
             GL.DrawBuffer(DrawBufferMode.None);
             GL.ReadBuffer(ReadBufferMode.None);
 
@@ -108,10 +118,11 @@ namespace LibRender2.ShadowMapping
             if (status != FramebufferErrorCode.FramebufferComplete)
             {
                 Console.Error.WriteLine(
-                    $"[CSM] Cascade {index} FBO incomplete: {status}");
+                    $"[CSM] Cascade {cascadeIndex} FBO incomplete: {status}");
             }
 
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            return fbo;
         }
 
         /// <summary>Binds a specific cascade's FBO for depth writing.</summary>

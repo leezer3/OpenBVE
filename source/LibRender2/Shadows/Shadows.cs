@@ -114,23 +114,13 @@ namespace LibRender2.ShadowMapping
 				return;
 			}
 
-			// 1. Get light direction pointing FROM the sun TOWARD the scene
-			// Sun position is in OpenBVE coordinates (X: right, Y: up, Z: backward)
-			// Light direction needs to be negated for some components to match the shadow math.
-			Vector3 lightDir = new Vector3(
-				-renderer.Lighting.OptionLightPosition.X,
-				-renderer.Lighting.OptionLightPosition.Y,
-				renderer.Lighting.OptionLightPosition.Z
-			);
-
-			if (lightDir.IsNullVector())
+			if (!TryGetLightDirection(out Vector3 lightDir))
 			{
 				return;
 			}
 
-			// 2. Update cascade matrices
-			// NOTE: We pass renderer.CurrentViewMatrix here which reflects the camera's rotation.
-			// The Caster will use this to align the shadow frustums with the view direction.
+			// Update cascade matrices using the camera's current view.
+			// The Caster aligns the shadow frustums with the view direction.
 			Caster.Resolution = Map.Resolution;
 			if (renderer.currentOptions.ShadowDrawDistance == ShadowDistance.ViewingDistance)
 			{
@@ -138,7 +128,36 @@ namespace LibRender2.ShadowMapping
 			}
 			Caster.Update(lightDir, renderer.CurrentViewMatrix, renderer.CurrentProjectionMatrix, 0.1, renderer.Camera.VerticalViewingAngle, renderer.Screen.AspectRatio);
 
-			// 3. Setup state for depth pass
+			SetupDepthState();
+
+			for (int i = 0; i < Caster.CascadeCount; i++)
+			{
+				RenderCascade(i);
+			}
+
+			RestoreDepthState();
+		}
+
+		/// <summary>
+		/// Resolves the light direction pointing FROM the sun TOWARD the scene.
+		/// </summary>
+		/// <returns>False when the sun position is degenerate and no pass should run.</returns>
+		private bool TryGetLightDirection(out Vector3 lightDir)
+		{
+			// Sun position is in OpenBVE coordinates (X: right, Y: up, Z: backward).
+			// Light direction needs to be negated for some components to match the shadow math.
+			lightDir = new Vector3(
+				-renderer.Lighting.OptionLightPosition.X,
+				-renderer.Lighting.OptionLightPosition.Y,
+				renderer.Lighting.OptionLightPosition.Z
+			);
+
+			return !lightDir.IsNullVector();
+		}
+
+		/// <summary>Sets up GL state for the depth pass.</summary>
+		private void SetupDepthState()
+		{
 			renderer.CurrentShader?.Deactivate();
 			DepthShader.Activate();
 			GL.Enable(EnableCap.DepthTest);
@@ -154,31 +173,35 @@ namespace LibRender2.ShadowMapping
 			}
 			GL.DepthMask(true);
 			DepthShader.SetTexture(0);
+		}
 
-			for (int i = 0; i < Caster.CascadeCount; i++)
+		/// <summary>Renders all visible faces into a single cascade's depth target.</summary>
+		private void RenderCascade(int cascadeIndex)
+		{
+			Map.BindCascadeForWriting(cascadeIndex);
+			GL.Clear(ClearBufferMask.DepthBufferBit);
+			DepthShader.SetLightSpaceMatrix(Caster.LightSpaceMatrices[cascadeIndex]);
+
+			lock (renderer.VisibleObjects.LockObject)
 			{
-				Map.BindCascadeForWriting(i);
-				GL.Clear(ClearBufferMask.DepthBufferBit);
-				DepthShader.SetLightSpaceMatrix(Caster.LightSpaceMatrices[i]);
+				int lastVAO = -1;
+				/*
+				 * Culling Per-Cascade:
+				 * Distant objects don't need to be rendered into near-field high-res shadow maps.
+				 * We use a safety margin (150m) to catch long shadows from tall objects.
+				 */
+				double maxDistance = renderer.currentOptions.ShadowFilterCascades ? Caster.SplitDistances[cascadeIndex] + 150.0 : double.MaxValue;
+				double maxDistanceSquared = maxDistance * maxDistance;
 
-				lock (renderer.VisibleObjects.LockObject)
-				{
-					int lastVAO = -1;
-					/*
-					 * Culling Per-Cascade:
-					 * Distant objects don't need to be rendered into near-field high-res shadow maps.
-					 * We use a safety margin (150m) to catch long shadows from tall objects.
-					 */
-					double maxDistance = renderer.currentOptions.ShadowFilterCascades ? Caster.SplitDistances[i] + 150.0 : double.MaxValue;
-					double maxDistanceSquared = maxDistance * maxDistance;
-
-					RenderFacesFiltered(renderer.VisibleObjects.OpaqueFaces, ref lastVAO, maxDistanceSquared);
-					RenderFacesFiltered(renderer.VisibleObjects.AlphaFaces, ref lastVAO, maxDistanceSquared); 
-				}
-				Map.Unbind();
+				RenderFacesFiltered(renderer.VisibleObjects.OpaqueFaces, ref lastVAO, maxDistanceSquared);
+				RenderFacesFiltered(renderer.VisibleObjects.AlphaFaces, ref lastVAO, maxDistanceSquared);
 			}
+			Map.Unbind();
+		}
 
-			// 4. Restore state
+		/// <summary>Restores GL state after the depth pass.</summary>
+		private void RestoreDepthState()
+		{
 			GL.DepthFunc(DepthFunction.Lequal);
 			GL.CullFace(CullFaceMode.Front);
 			GL.Viewport(0, 0, renderer.Screen.Width, renderer.Screen.Height);
@@ -199,76 +222,100 @@ namespace LibRender2.ShadowMapping
 
 			foreach (var face in faces)
 			{
-				if (face.Object.Prototype.Mesh.VAO == null || face.Object.DisableShadowCasting)
+				if (!IsShadowCaster(face, cameraPos, maxDistanceSquared, out ObjectState state, out MeshMaterial material))
 				{
 					continue;
 				}
 
-				ObjectState state = face.Object;
+				BindDepthMaterial(state, material);
+				DrawDepthFace(face, state, ref lastVAO);
+			}
+		}
 
-				// Per-cascade distance culling
-				if (maxDistanceSquared < double.MaxValue)
+		/// <summary>Checks VAO, shadow flags and per-cascade distance culling.</summary>
+		/// <returns>False when the face must not cast shadows into this cascade.</returns>
+		private static bool IsShadowCaster(FaceState face, Vector3 cameraPos, double maxDistanceSquared, out ObjectState state, out MeshMaterial material)
+		{
+			state = face.Object;
+			material = default(MeshMaterial);
+
+			if (state.Prototype.Mesh.VAO == null || state.DisableShadowCasting)
+			{
+				return false;
+			}
+
+			if (maxDistanceSquared < double.MaxValue)
+			{
+				double dx = state.WorldPosition.X - cameraPos.X;
+				double dy = state.WorldPosition.Y - cameraPos.Y;
+				double dz = state.WorldPosition.Z - cameraPos.Z;
+
+				if (dx * dx + dy * dy + dz * dz > maxDistanceSquared)
 				{
-					double dx = state.WorldPosition.X - cameraPos.X;
-					double dy = state.WorldPosition.Y - cameraPos.Y;
-					double dz = state.WorldPosition.Z - cameraPos.Z;
-
-					if (dx * dx + dy * dy + dz * dz > maxDistanceSquared)
-					{
-						continue;
-					}
+					return false;
 				}
+			}
 
-				DepthShader.SetModelMatrix(state.ModelMatrix * renderer.Camera.TranslationMatrix);
-				DepthShader.SetTextureMatrix(state.TextureTranslation);
+			material = state.Prototype.Mesh.Materials[face.Face.Material];
+			if ((material.Flags & MaterialFlags.NoShadow) != 0 || material.BlendMode == MeshMaterialBlendMode.Additive)
+			{
+				return false;
+			}
 
-				var material = face.Object.Prototype.Mesh.Materials[face.Face.Material];
-				if ((material.Flags & MaterialFlags.NoShadow) != 0 || material.BlendMode == MeshMaterialBlendMode.Additive)
+			return true;
+		}
+
+		/// <summary>Binds model, texture and alpha state for the depth pass.</summary>
+		private void BindDepthMaterial(ObjectState state, MeshMaterial material)
+		{
+			DepthShader.SetModelMatrix(state.ModelMatrix * renderer.Camera.TranslationMatrix);
+			DepthShader.SetTextureMatrix(state.TextureTranslation);
+
+			if (material.DaytimeTexture != null && renderer.currentHost.LoadTexture(ref material.DaytimeTexture, (OpenGlTextureWrapMode)(material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp)))
+			{
+				GL.ActiveTexture(TextureUnit.Texture0);
+				GL.BindTexture(TextureTarget.Texture2D, material.DaytimeTexture.OpenGlTextures[(int)(material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp)].Name);
+				DepthShader.SetHasTexture(true);
+			}
+			else
+			{
+				DepthShader.SetHasTexture(false);
+			}
+
+			DepthShader.SetAlphaCutoff(0.5f);
+			DepthShader.SetMaterialAlpha(material.Color.A / 255.0f);
+			DepthShader.SetMaterialFlags(material.Flags);
+		}
+
+		/// <summary>Draws a single face into the depth target, minimizing VAO switches.</summary>
+		private void DrawDepthFace(FaceState face, ObjectState state, ref int lastVAO)
+		{
+			if (state.Matricies != null && state.Matricies.Length > 0)
+			{
+				DepthShader.SetCurrentAnimationMatricies(state);
+				GL.BindBufferBase(BufferTarget.UniformBuffer, 0, state.MatrixBufferIndex);
+			}
+
+			VertexArrayObject vao = (VertexArrayObject)face.Object.Prototype.Mesh.VAO;
+			if (vao.handle != lastVAO)
+			{
+				vao.Bind();
+				lastVAO = vao.handle;
+			}
+			if (renderer.OptionBackFaceCulling)
+			{
+				if ((face.Face.Flags & FaceFlags.Face2Mask) != 0)
 				{
-					continue;
-				}
-				if (material.DaytimeTexture != null && renderer.currentHost.LoadTexture(ref material.DaytimeTexture, (OpenGlTextureWrapMode)(material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp)))
-				{
-					GL.ActiveTexture(TextureUnit.Texture0);
-					GL.BindTexture(TextureTarget.Texture2D, material.DaytimeTexture.OpenGlTextures[(int)(material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp)].Name);
-					DepthShader.SetHasTexture(true);
+					// Double-sided faces (Face2) must not be culled to ensure they cast shadows from both sides
+					GL.Disable(EnableCap.CullFace);
 				}
 				else
 				{
-					DepthShader.SetHasTexture(false);
+					GL.Enable(EnableCap.CullFace);
 				}
-
-				DepthShader.SetAlphaCutoff(0.5f);
-				DepthShader.SetMaterialAlpha(material.Color.A / 255.0f);
-				DepthShader.SetMaterialFlags(material.Flags);
-				
-				if (state.Matricies != null && state.Matricies.Length > 0)
-				{
-					DepthShader.SetCurrentAnimationMatricies(state);
-					GL.BindBufferBase(BufferTarget.UniformBuffer, 0, state.MatrixBufferIndex);
-				}
-
-				VertexArrayObject vao = (VertexArrayObject)face.Object.Prototype.Mesh.VAO;
-				if (vao.handle != lastVAO)
-				{
-					vao.Bind();
-					lastVAO = vao.handle;
-				}
-				if (renderer.OptionBackFaceCulling)
-				{
-					if ((face.Face.Flags & FaceFlags.Face2Mask) != 0)
-					{
-						// Double-sided faces (Face2) must not be culled to ensure they cast shadows from both sides
-						GL.Disable(EnableCap.CullFace);
-					}
-					else
-					{
-						GL.Enable(EnableCap.CullFace);
-					}
-				}
-				PrimitiveType drawMode = renderer.GetPrimitiveType(face.Face.Flags);
-				vao.Draw(drawMode, face.Face.IboStartIndex, face.Face.Vertices.Length);
 			}
+			PrimitiveType drawMode = renderer.GetPrimitiveType(face.Face.Flags);
+			vao.Draw(drawMode, face.Face.IboStartIndex, face.Face.Vertices.Length);
 		}
 
 		/// <summary>
