@@ -187,6 +187,17 @@ namespace LibRender2.Shaders
 		{
 		}
 
+		/// <summary>Converts a row-major Matrix4D to an OpenTK Matrix4 for uniform upload.</summary>
+		protected static OpenTK.Matrix4 ConvertToMatrix4(OpenBveApi.Math.Matrix4D mat)
+		{
+			return new OpenTK.Matrix4(
+				(float)mat.Row0.X, (float)mat.Row0.Y, (float)mat.Row0.Z, (float)mat.Row0.W,
+				(float)mat.Row1.X, (float)mat.Row1.Y, (float)mat.Row1.Z, (float)mat.Row1.W,
+				(float)mat.Row2.X, (float)mat.Row2.Y, (float)mat.Row2.Z, (float)mat.Row2.W,
+				(float)mat.Row3.X, (float)mat.Row3.Y, (float)mat.Row3.Z, (float)mat.Row3.W
+			);
+		}
+
 		private bool disposed;
 
 		/// <summary>Cleans up, releasing the underlying openTK/OpenGL shader program</summary>

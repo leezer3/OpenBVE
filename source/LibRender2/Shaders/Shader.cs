@@ -180,16 +180,6 @@ namespace LibRender2.Shaders
 		}
 
 
-		private Matrix4 ConvertToMatrix4(Matrix4D mat)
-		{
-			return new Matrix4(
-				(float)mat.Row0.X, (float)mat.Row0.Y, (float)mat.Row0.Z, (float)mat.Row0.W,
-				(float)mat.Row1.X, (float)mat.Row1.Y, (float)mat.Row1.Z, (float)mat.Row1.W,
-				(float)mat.Row2.X, (float)mat.Row2.Y, (float)mat.Row2.Z, (float)mat.Row2.W,
-				(float)mat.Row3.X, (float)mat.Row3.Y, (float)mat.Row3.Z, (float)mat.Row3.W
-			);
-		}
-
 		#region SetUniform
 
 		/// <summary>

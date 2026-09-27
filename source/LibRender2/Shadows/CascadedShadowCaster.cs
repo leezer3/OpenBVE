@@ -42,8 +42,7 @@ namespace LibRender2.ShadowMapping
 
 		/// <summary>Per-cascade split distances (view-space Z).</summary>
 		/// <remarks>
-		/// Length = CascadeCount. Renamed from FarDistance to SplitDistance to better reflect
-		/// standard CSM/PSSM terminology. These values represent the frustum slice boundaries
+		/// Length = CascadeCount. Each value is the frustum slice boundary
 		/// in view-space Z where the shadow transition between cascades occurs.
 		/// </remarks> 
 		public float[] SplitDistances { get; private set; }
@@ -153,10 +152,9 @@ namespace LibRender2.ShadowMapping
 
             lightView = Matrix4D.LookAt(snappedCenter, snappedCenter + lightDirection, up);
 
-            // Tight ortho depth range around the cascade sphere.
-            // Old code used zNear=-2000 (2km+ range), wasting 24-bit depth precision
-            // and forcing a larger bias (=> peter-panning) to cure acne.
-            // Symmetric range still catches tall occluders within DepthMargin.
+            // Tight ortho depth range around the cascade sphere to preserve
+            // 24-bit depth precision. Symmetric range still catches tall
+            // occluders within DepthMargin.
             double zNear = -(radius + DepthMargin);
             double zFar = radius + DepthMargin;
 

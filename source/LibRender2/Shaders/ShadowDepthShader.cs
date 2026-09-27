@@ -125,15 +125,5 @@ namespace LibRender2.Shaders
 				GL.BufferData(BufferTarget.UniformBuffer, sizeof(OpenTK.Matrix4) * matriciesToShader.Length, matriciesToShader, BufferUsageHint.StaticDraw);
 			}
 		}
-
-		private static OpenTK.Matrix4 ConvertToMatrix4(OpenBveApi.Math.Matrix4D mat)
-		{
-			return new OpenTK.Matrix4(
-				(float)mat.Row0.X, (float)mat.Row0.Y, (float)mat.Row0.Z, (float)mat.Row0.W,
-				(float)mat.Row1.X, (float)mat.Row1.Y, (float)mat.Row1.Z, (float)mat.Row1.W,
-				(float)mat.Row2.X, (float)mat.Row2.Y, (float)mat.Row2.Z, (float)mat.Row2.W,
-				(float)mat.Row3.X, (float)mat.Row3.Y, (float)mat.Row3.Z, (float)mat.Row3.W
-			);
-		}
 	}
 }

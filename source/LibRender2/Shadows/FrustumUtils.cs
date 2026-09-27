@@ -12,8 +12,20 @@ namespace LibRender2.ShadowMapping
 		/// <summary>
 		/// Computes split distances using the Parallel Split Shadow Maps (PSSM) algorithm.
 		/// </summary>
+		/// <param name="cascadeCount">Number of cascades (must be at least 1).</param>
+		/// <param name="zNear">Camera near clip distance.</param>
+		/// <param name="zFar">Shadow far distance (must be greater than zNear).</param>
+		/// <param name="lambda">Blend between linear (0) and logarithmic (1) splits.</param>
 		public static double[] ComputeSplitDistances(int cascadeCount, double zNear, double zFar, double lambda)
 		{
+			if (cascadeCount < 1)
+			{
+				throw new ArgumentOutOfRangeException(nameof(cascadeCount));
+			}
+			if (zFar <= zNear)
+			{
+				throw new ArgumentException("Shadow far distance must be greater than the near clip.");
+			}
 			double[] splits = new double[cascadeCount + 1];
 			splits[0] = zNear;
 			splits[cascadeCount] = zFar;
