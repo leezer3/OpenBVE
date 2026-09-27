@@ -100,28 +100,14 @@ float interleavedGradientNoise(vec2 p) {
     return fract(magic.z * fract(dot(p, magic.xy)));
 }
 
-// Precomputed Vogel disk (n=5): r=sqrt((i+0.5)/5), theta=i*GOLDEN_ANGLE.
-// Saves 5x sqrt + 4x cos/sin per pixel vs computing per-tap; single
-// rotation by phi (IGN) hides the sampling pattern.
-const vec2 VOGEL_DISK_5[5] = vec2[5](
-    vec2(0.31622777, 0.0),
-    vec2(-0.40387357, 0.36998127),
-    vec2(0.06181932, -0.70439930),
-    vec2(0.50905647, 0.66397403),
-    vec2(-0.93418124, -0.16524351)
-);
-vec2 vogelDiskSample(int i, float cosPhi, float sinPhi) {
-    vec2 o = VOGEL_DISK_5[i];
+// 5-tap Vogel disk, Note: Mesa may rejects const-array indexing
+// with a function parameter, so pass each tap directly.
+vec2 vogelDiskRot(vec2 o, float cosPhi, float sinPhi) {
     return vec2(o.x * cosPhi - o.y * sinPhi, o.x * sinPhi + o.y * cosPhi);
 }
 
-/// Samples a single cascade using hardware PCF.
-/// When uShadowSmooth is true: 5-tap Vogel disk + IGN rotation (soft, no banding).
-/// Each tap is hardware PCF bilinear (2x2) -> 5 taps effectively cover a smooth disk.
-/// When false: 4-tap tight grid (0.5 texel) for sharp, pixel-perfect shadows.
-/// bias is ~1 texel of depth (auto per-cascade + user). normalBias is now Unity-style
-/// texels (typ. 0.3-1.0); slope acne is mostly handled by the vertex normal offset,
-/// so the depth-side slope term stays small to avoid peter-panning.
+/// Samples one cascade with hardware PCF.
+/// Smooth: 5-tap Vogel disk. Sharp: 4-tap grid.
 float GetCascadeShadowFactor(sampler2DShadow shadowMap, vec4 posLightSpace, float bias, float normalBias)
 {
     vec3 projCoords = posLightSpace.xyz / posLightSpace.w;
@@ -153,17 +139,18 @@ float GetCascadeShadowFactor(sampler2DShadow shadowMap, vec4 posLightSpace, floa
     biasedDepth = max(biasedDepth, projCoords.z - (bias * SHADOW_BIAS_GUARD_TEXELS + SHADOW_BIAS_EPSILON));
 
     if (uShadowSmooth) {
-        // Smooth path: Vogel disk + IGN - rotated per-pixel to hide sampling pattern.
-        // radius in texels: 1.5 = soft but detailed (exposed via uShadowFilterRadius, tune 1.0-2.5).
+        // Smooth: Vogel disk + per-pixel rotation.
         float phi = interleavedGradientNoise(gl_FragCoord.xy) * SHADOW_TWO_PI;
         float cosPhi = cos(phi);
         float sinPhi = sin(phi);
+        // Unrolled for strict drivers (Mesa).
+        vec2 tapScale = texelSize * radiusScaled;
         float shadow = 0.0;
-        // 5 taps, constant loop bounds -> driver will unroll; each tap is HW PCF bilinear.
-        for (int i = 0; i < 5; ++i) {
-            vec2 offset = vogelDiskSample(i, cosPhi, sinPhi) * texelSize * radiusScaled;
-            shadow += texture(shadowMap, vec3(projCoords.xy + offset, biasedDepth));
-        }
+        shadow += texture(shadowMap, vec3(projCoords.xy + vogelDiskRot(vec2(0.31622777, 0.0), cosPhi, sinPhi) * tapScale, biasedDepth));
+        shadow += texture(shadowMap, vec3(projCoords.xy + vogelDiskRot(vec2(-0.40387357, 0.36998127), cosPhi, sinPhi) * tapScale, biasedDepth));
+        shadow += texture(shadowMap, vec3(projCoords.xy + vogelDiskRot(vec2(0.06181932, -0.70439930), cosPhi, sinPhi) * tapScale, biasedDepth));
+        shadow += texture(shadowMap, vec3(projCoords.xy + vogelDiskRot(vec2(0.50905647, 0.66397403), cosPhi, sinPhi) * tapScale, biasedDepth));
+        shadow += texture(shadowMap, vec3(projCoords.xy + vogelDiskRot(vec2(-0.93418124, -0.16524351), cosPhi, sinPhi) * tapScale, biasedDepth));
         shadow *= 0.2;
         return shadow;
     } else {
