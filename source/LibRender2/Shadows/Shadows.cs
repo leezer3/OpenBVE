@@ -148,7 +148,7 @@ namespace LibRender2.ShadowMapping
 				return;
 			}
 
-			if (!TryGetLightDirection(out Vector3 lightDir))
+			if (!IsSunUp() || !TryGetLightDirection(out Vector3 lightDir))
 			{
 				return;
 			}
@@ -170,6 +170,18 @@ namespace LibRender2.ShadowMapping
 			}
 
 			RestoreDepthState();
+		}
+
+		/// <summary>
+		/// Whether the sun is above the horizon and can cast directional shadows.
+		/// </summary>
+		/// <remarks>
+		/// Below the horizon there is no sunlight, so the depth pass is skipped
+		/// and stale cascade matrices are never bound to the scene shader.
+		/// </remarks>
+		private bool IsSunUp()
+		{
+			return renderer.Lighting.OptionLightPosition.Y > 0;
 		}
 
 		/// <summary>
@@ -357,7 +369,7 @@ namespace LibRender2.ShadowMapping
 		/// </summary>
 		public void Bind(Shader shader)
 		{
-			if (!Enabled || Map == null || Caster == null)
+			if (!Enabled || Map == null || Caster == null || !IsSunUp())
 			{
 				shader.SetShadowEnabled(false);
 				BindNullDepthMaps();
