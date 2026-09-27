@@ -9,6 +9,9 @@ namespace LibRender2.ShadowMapping
     /// </summary>
     public class CascadedShadowCaster
     {
+        /// <summary>Default PSSM blend between linear and logarithmic splits.</summary>
+        public const double DefaultSplitLambda = 0.75;
+
         /// <summary>Y threshold for switching the light-view up vector to avoid a degenerate look-at.</summary>
         private const double ParallelUpThreshold = 0.99;
 
@@ -29,7 +32,7 @@ namespace LibRender2.ShadowMapping
 
         /// <summary>PSSM lambda (0=linear, 1=log)</summary>
         /// <remarks>Higher values provide more resolution for near shadows</remarks>
-        public double SplitLambda { get; set; } = 0.75;
+        public double SplitLambda { get; set; } = DefaultSplitLambda;
 
         /// <summary>Extra depth behind the sub-frustum to catch tall occluders.</summary>
         public double DepthMargin { get; set; } = 40.0;

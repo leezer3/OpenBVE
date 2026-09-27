@@ -45,8 +45,6 @@ namespace LibRender2.ShadowMapping
 		private const double CascadeDistanceMargin = 150.0;
 		/// <summary>Near clip used when fitting cascade frustums.</summary>
 		private const double CascadeNearClip = 0.1;
-		/// <summary>First texture unit reserved for shadow maps.</summary>
-		private const int ShadowMapBaseUnit = 4;
 		/// <summary>Maximum cascades supported by the scene shader.</summary>
 		private const int MaxCascadeCount = 4;
 		/// <summary>Fallback world-space texel size when no cascade data exists.</summary>
@@ -136,7 +134,7 @@ namespace LibRender2.ShadowMapping
 		{
 			Caster.ShadowDistance = shadowDistance;
 			Caster.Resolution = resolution;
-			Caster.SplitLambda = 0.75;
+			Caster.SplitLambda = CascadedShadowCaster.DefaultSplitLambda;
 			Caster.DepthMargin = CascadeDistanceMargin;
 		}
 
@@ -382,7 +380,7 @@ namespace LibRender2.ShadowMapping
 			for (int i = 0; i < cascadeCount; i++)
 			{
 				shader.SetCascadeLightSpaceMatrix(i, Caster.LightSpaceMatrices[i]);
-				shader.SetCascadeShadowMapUnit(i, ShadowMapBaseUnit + i);
+				shader.SetCascadeShadowMapUnit(i, ShadowSamplerUnit(i));
 				// Split distance = the view-space Z where this cascade ends.
 				shader.SetShadowSplitDistance(i, (float)Caster.SplitDistances[i]);
 				shader.SetCascadeBias(i, Caster.CascadeBiases[i] + (float)renderer.currentOptions.ShadowBias);
@@ -403,6 +401,12 @@ namespace LibRender2.ShadowMapping
 		private static TextureUnit ShadowTextureUnit(int cascadeIndex)
 		{
 			return TextureUnit.Texture4 + cascadeIndex;
+		}
+
+		/// <summary>Resolves the sampler index matching a shadow cascade's texture unit.</summary>
+		private static int ShadowSamplerUnit(int cascadeIndex)
+		{
+			return (int)ShadowTextureUnit(cascadeIndex) - (int)TextureUnit.Texture0;
 		}
 
 		/// <summary>

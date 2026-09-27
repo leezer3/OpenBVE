@@ -169,13 +169,6 @@ namespace LibRender2.Shaders
 				Coordinates = (short)GL.GetUniformLocation(Handle, "uCoordinates"),
 				AtlasLocation = (short)GL.GetUniformLocation(Handle, "uAtlasLocation"),
 				AlphaFunction = (short)GL.GetUniformLocation(Handle, "uAlphaTest"),
-				LightSpaceMatrix0 = (short)GL.GetUniformLocation(Handle, "uLightSpaceMatrix0"),
-				LightSpaceMatrix1 = (short)GL.GetUniformLocation(Handle, "uLightSpaceMatrix1"),
-				LightSpaceMatrix2 = (short)GL.GetUniformLocation(Handle, "uLightSpaceMatrix2"),
-				ShadowMap0 = (short)GL.GetUniformLocation(Handle, "uShadowMap0"),
-				ShadowMap1 = (short)GL.GetUniformLocation(Handle, "uShadowMap1"),
-				ShadowMap2 = (short)GL.GetUniformLocation(Handle, "uShadowMap2"),
-				CurrentViewMatrix = (short)GL.GetUniformLocation(Handle, "uCurrentViewMatrix"),
 			};
 		}
 
