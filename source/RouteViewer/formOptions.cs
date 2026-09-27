@@ -91,7 +91,6 @@ namespace RouteViewer
 
             // Wire up shadow resolution change to enable/disable related controls
             comboBoxShadowResolution.SelectedIndexChanged += comboBoxShadowResolution_SelectedIndexChanged;
-            checkBoxShadowSmooth.CheckedChanged += (s, e) => UpdateShadowControlsEnabled();
 			numericUpDownViewingDistance.Value = Math.Min(Interface.CurrentOptions.ViewingDistance, numericUpDownViewingDistance.Maximum);
 			numericUpDownNearClip.Value = (decimal)Interface.CurrentOptions.NearClipBase;
 			if (Translations.CurrentLanguageCode != "en-US")
@@ -263,6 +262,8 @@ namespace RouteViewer
             numericUpDownShadowBias.ValueChanged += ShadowValue_Changed;
             numericUpDownShadowNormalBias.ValueChanged += ShadowValue_Changed;
             checkBoxShadowFilterCascades.CheckedChanged += ShadowValue_Changed;
+            checkBoxShadowSmooth.CheckedChanged += ShadowSmooth_Changed;
+            comboboxShadowFilterRadius.SelectedIndexChanged += ShadowFilter_Changed;
         }
 
         private void ShadowMapSetting_Changed(object sender, EventArgs e)
@@ -281,6 +282,26 @@ namespace RouteViewer
                 return;
             }
             ApplyShadowTweaks();
+        }
+
+        private void ShadowSmooth_Changed(object sender, EventArgs e)
+        {
+            if (suppressShadowEvents)
+            {
+                return;
+            }
+            // Smooth gates the radius combo, so re-evaluate enablement too.
+            UpdateShadowControlsEnabled();
+            ApplyShadowFilter();
+        }
+
+        private void ShadowFilter_Changed(object sender, EventArgs e)
+        {
+            if (suppressShadowEvents)
+            {
+                return;
+            }
+            ApplyShadowFilter();
         }
 
         private void ReadShadowMapSize()
@@ -317,6 +338,20 @@ namespace RouteViewer
             Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
         }
 
+        private void ReadShadowFilter()
+        {
+            // Single source of truth for the soft-shadow controls: used by the
+            // live path and by the OK handler, so the radius presets can never
+            // drift apart between preview and save.
+            Interface.CurrentOptions.ShadowSmooth = checkBoxShadowSmooth.Checked;
+            switch (comboboxShadowFilterRadius.SelectedIndex)
+            {
+                case 0: Interface.CurrentOptions.ShadowFilterRadius = 1.0; break;
+                case 2: Interface.CurrentOptions.ShadowFilterRadius = 2.5; break;
+                default: Interface.CurrentOptions.ShadowFilterRadius = 1.5; break;
+            }
+        }
+
         private void ApplyShadowMapSize()
         {
             // Reallocates GPU shadow maps: flag only, the render thread
@@ -341,6 +376,16 @@ namespace RouteViewer
             // Consumed live by the shaders every frame; no reload needed.
             // (Paused loop renders on-demand, so still flag one preview frame.)
             ReadShadowTweaks();
+            Program.PreviewDirty = true;
+            TryPresentPreview();
+        }
+
+        private void ApplyShadowFilter()
+        {
+            // Also consumed live, but by Shadows.Bind() on the main render
+            // pass rather than by the depth pass, so the soft-shadow toggle
+            // and radius need a redraw only - never a shadow map realloc.
+            ReadShadowFilter();
             Program.PreviewDirty = true;
             TryPresentPreview();
         }
@@ -577,8 +622,7 @@ namespace RouteViewer
             Interface.CurrentOptions.ShadowBias = (double)numericUpDownShadowBias.Value;
             Interface.CurrentOptions.ShadowNormalBias = (double)numericUpDownShadowNormalBias.Value;
             Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
-            Interface.CurrentOptions.ShadowSmooth = checkBoxShadowSmooth.Checked;
-            Interface.CurrentOptions.ShadowFilterRadius = comboboxShadowFilterRadius.SelectedIndex == 0 ? 1.0 : comboboxShadowFilterRadius.SelectedIndex == 2 ? 2.5 : 1.5;
+            ReadShadowFilter();
 
 			// VSync and FPS Limit
 			Interface.CurrentOptions.VerticalSynchronization = comboBoxVSync.SelectedIndex == 1;

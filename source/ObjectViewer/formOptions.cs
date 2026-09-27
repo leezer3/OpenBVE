@@ -31,6 +31,8 @@ namespace ObjectViewer
 		private double initialShadowBias;
 		private double initialShadowNormalBias;
 		private bool initialShadowFilterCascades;
+		private bool initialShadowSmooth;
+		private double initialShadowFilterRadius;
 		private Vector3 initialOptionLightPosition;
 		private bool initialShowGround;
 		private double initialGroundHeight;
@@ -100,7 +102,6 @@ namespace ObjectViewer
 
 			// Wire up shadow resolution change to enable/disable related controls
 			comboBoxShadowResolution.SelectedIndexChanged += comboBoxShadowResolution_SelectedIndexChanged;
-			checkBoxShadowSmooth.CheckedChanged += (s, e) => UpdateShadowControlsEnabled();
 
 			BindKey(comboBoxLeft, Interface.CurrentOptions.CameraMoveLeft, Key.A);
 			BindKey(comboBoxRight, Interface.CurrentOptions.CameraMoveRight, Key.D);
@@ -148,6 +149,8 @@ namespace ObjectViewer
 			initialShadowBias = Interface.CurrentOptions.ShadowBias;
 			initialShadowNormalBias = Interface.CurrentOptions.ShadowNormalBias;
 			initialShadowFilterCascades = Interface.CurrentOptions.ShadowFilterCascades;
+			initialShadowSmooth = Interface.CurrentOptions.ShadowSmooth;
+			initialShadowFilterRadius = Interface.CurrentOptions.ShadowFilterRadius;
 			initialShowGround = Interface.CurrentOptions.ShowGround;
 			initialGroundHeight = Interface.CurrentOptions.GroundHeight;
 			initialGroundColor = Interface.CurrentOptions.GroundColor;
@@ -173,6 +176,8 @@ namespace ObjectViewer
 			Interface.CurrentOptions.ShadowBias = initialShadowBias;
 			Interface.CurrentOptions.ShadowNormalBias = initialShadowNormalBias;
 			Interface.CurrentOptions.ShadowFilterCascades = initialShadowFilterCascades;
+			Interface.CurrentOptions.ShadowSmooth = initialShadowSmooth;
+			Interface.CurrentOptions.ShadowFilterRadius = initialShadowFilterRadius;
 			Interface.CurrentOptions.ShowGround = initialShowGround;
 			Interface.CurrentOptions.GroundHeight = initialGroundHeight;
 			Interface.CurrentOptions.GroundColor = initialGroundColor;
@@ -326,6 +331,8 @@ namespace ObjectViewer
 			numericUpDownShadowBias.ValueChanged += ShadowValue_Changed;
 			numericUpDownShadowNormalBias.ValueChanged += ShadowValue_Changed;
 			checkBoxShadowFilterCascades.CheckedChanged += ShadowValue_Changed;
+			checkBoxShadowSmooth.CheckedChanged += ShadowSmooth_Changed;
+			comboBoxShadowFilterRadius.SelectedIndexChanged += ShadowFilter_Changed;
 		}
 
 		private void ShadowMapSetting_Changed(object sender, EventArgs e)
@@ -344,6 +351,26 @@ namespace ObjectViewer
 				return;
 			}
 			ApplyShadowTweaks();
+		}
+
+		private void ShadowSmooth_Changed(object sender, EventArgs e)
+		{
+			if (suppressShadowEvents)
+			{
+				return;
+			}
+			// Smooth gates the radius combo, so re-evaluate enablement too.
+			UpdateShadowControlsEnabled();
+			ApplyShadowFilter();
+		}
+
+		private void ShadowFilter_Changed(object sender, EventArgs e)
+		{
+			if (suppressShadowEvents)
+			{
+				return;
+			}
+			ApplyShadowFilter();
 		}
 
 		private void ReadShadowMapSize()
@@ -380,6 +407,20 @@ namespace ObjectViewer
 			Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
 		}
 
+		private void ReadShadowFilter()
+		{
+			// Single source of truth for the soft-shadow controls: used by the
+			// live path and by the OK handler, so the radius presets can never
+			// drift apart between preview and save.
+			Interface.CurrentOptions.ShadowSmooth = checkBoxShadowSmooth.Checked;
+			switch (comboBoxShadowFilterRadius.SelectedIndex)
+			{
+				case 0: Interface.CurrentOptions.ShadowFilterRadius = 1.0; break;
+				case 2: Interface.CurrentOptions.ShadowFilterRadius = 2.5; break;
+				default: Interface.CurrentOptions.ShadowFilterRadius = 1.5; break;
+			}
+		}
+
 		private void ApplyShadowMapSize()
 		{
 			// Reallocates GPU shadow maps: flag only, the render thread
@@ -402,6 +443,15 @@ namespace ObjectViewer
 		{
 			// Consumed live by the shaders every frame; no reload needed.
 			ReadShadowTweaks();
+		}
+
+		private void ApplyShadowFilter()
+		{
+			// Also consumed live, but by Shadows.Bind() on the main render
+			// pass rather than by the depth pass, so the soft-shadow toggle
+			// and radius need no shadow map realloc. No PreviewDirty flag
+			// either - this viewer keeps rendering behind the dialog.
+			ReadShadowFilter();
 		}
 
 		private void UpdateSunDirection()
@@ -636,8 +686,7 @@ namespace ObjectViewer
 			Interface.CurrentOptions.ShadowBias = (double)numericUpDownShadowBias.Value;
 			Interface.CurrentOptions.ShadowNormalBias = (double)numericUpDownShadowNormalBias.Value;
 			Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
-			Interface.CurrentOptions.ShadowSmooth = checkBoxShadowSmooth.Checked;
-			Interface.CurrentOptions.ShadowFilterRadius = comboBoxShadowFilterRadius.SelectedIndex == 0 ? 1.0 : comboBoxShadowFilterRadius.SelectedIndex == 2 ? 2.5 : 1.5;
+			ReadShadowFilter();
 			
 			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));
 			// Deferred: the render loop drains the shadow flag and refreshes
