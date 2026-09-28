@@ -1,5 +1,6 @@
-// Portions of this file (CullVertices / GenerateVertexRemap) are a C# port of
-// meshoptimizer (https://github.com/zeux/meshoptimizer), used under the MIT License:
+// Portions of this file (CullVertices / GenerateVertexRemap / FilterTriangles /
+// GeneratePositionRemap) are a C# port of meshoptimizer
+// (https://github.com/zeux/meshoptimizer), used under the MIT License:
 //
 // Copyright (c) 2016-2026 Arseny Kapoulkine
 //
@@ -22,6 +23,7 @@
 // SOFTWARE.
 using System;
 using System.Collections.Generic;
+using OpenBveApi.Math;
 
 namespace OpenBveApi.Objects
 {
@@ -39,8 +41,9 @@ namespace OpenBveApi.Objects
 			CullVertices(mesh, f, preserveVertices, vertexCulling);
 			Triangulate(mesh, f);
 			Decompose(mesh, ref f);
+			FilterTriangles(mesh, ref f);
 			MergeFaces(mesh, ref f);
-			// finalize arrays
+			// shrink the backing arrays down to the live entries
 			if (m != mesh.Materials.Length)
 			{
 				Array.Resize(ref mesh.Materials, m);
@@ -51,57 +54,68 @@ namespace OpenBveApi.Objects
 			}
 		}
 
+		// Bucket count for an open-addressing table holding ~count entries (25% headroom).
+		private static int HashBuckets(int count)
+		{
+			int buckets = 1;
+			while (buckets < count + count / 4)
+			{
+				buckets *= 2;
+			}
+			return buckets;
+		}
+
+		// Fresh table with every slot marked empty. -1 is never a valid vertex, id, or key part.
+		private static int[] NewTable(int size)
+		{
+			int[] table = new int[size];
+			for (int i = 0; i < size; i++)
+			{
+				table[i] = -1;
+			}
+			return table;
+		}
+
+		private static bool IsTriangles(MeshFace face)
+		{
+			return (face.Flags & FaceFlags.FaceTypeMask) == FaceFlags.Triangles;
+		}
+
 		private static void EliminateInvalidFaces(Mesh mesh, ref int f)
 		{
-			// eliminate invalid faces and reduce incomplete faces
-			// single-pass compaction: write index only advances for kept faces (O(f))
+			// Drop faces too small to draw and trim leftovers that don't fill a primitive.
+			// Survivors compact down in one pass, keeping their original order.
 			int write = 0;
 			for (int i = 0; i < f; i++)
 			{
-				FaceFlags type = mesh.Faces[i].Flags & FaceFlags.FaceTypeMask;
-				bool keep;
-				switch (type)
+				int count = mesh.Faces[i].Vertices.Length;
+				int trimmed, min;
+				switch (mesh.Faces[i].Flags & FaceFlags.FaceTypeMask)
 				{
 					case FaceFlags.Triangles:
-						keep = mesh.Faces[i].Vertices.Length >= 3;
-						if (keep)
-						{
-							int n = (mesh.Faces[i].Vertices.Length / 3) * 3;
-							if (mesh.Faces[i].Vertices.Length != n)
-							{
-								Array.Resize(ref mesh.Faces[i].Vertices, n);
-							}
-						}
+						min = 3;
+						trimmed = count / 3 * 3;
 						break;
 					case FaceFlags.Quads:
-						keep = mesh.Faces[i].Vertices.Length >= 4;
-						if (keep)
-						{
-							int n = mesh.Faces[i].Vertices.Length & ~3;
-							if (mesh.Faces[i].Vertices.Length != n)
-							{
-								Array.Resize(ref mesh.Faces[i].Vertices, n);
-							}
-						}
+						min = 4;
+						trimmed = count & ~3;
 						break;
 					case FaceFlags.QuadStrip:
-						keep = mesh.Faces[i].Vertices.Length >= 4;
-						if (keep)
-						{
-							int n = mesh.Faces[i].Vertices.Length & ~1;
-							if (mesh.Faces[i].Vertices.Length != n)
-							{
-								Array.Resize(ref mesh.Faces[i].Vertices, n);
-							}
-						}
+						min = 4;
+						trimmed = count & ~1;
 						break;
 					default:
-						keep = mesh.Faces[i].Vertices.Length >= 3;
+						min = 3;
+						trimmed = count;
 						break;
 				}
-				if (!keep)
+				if (trimmed < min)
 				{
 					continue;
+				}
+				if (trimmed != count)
+				{
+					Array.Resize(ref mesh.Faces[i].Vertices, trimmed);
 				}
 				if (write != i)
 				{
@@ -114,7 +128,7 @@ namespace OpenBveApi.Objects
 
 		private static void EliminateUnusedMaterials(Mesh mesh, ref int m, int f)
 		{
-			// eliminate unused materials via a remap table: one pass over faces (O(m + f))
+			// Drop materials no face uses, then squeeze the surviving face indices down.
 			bool[] materialUsed = new bool[m];
 			for (int i = 0; i < f; i++)
 			{
@@ -124,14 +138,7 @@ namespace OpenBveApi.Objects
 			int newM = 0;
 			for (int i = 0; i < m; i++)
 			{
-				if (materialUsed[i])
-				{
-					remap[i] = newM++;
-				}
-				else
-				{
-					remap[i] = -1;
-				}
+				remap[i] = materialUsed[i] ? newM++ : -1;
 			}
 			if (newM == m)
 			{
@@ -158,8 +165,8 @@ namespace OpenBveApi.Objects
 
 		private static void EliminateDuplicateMaterials(Mesh mesh, ref int m, int f)
 		{
-			// eliminate duplicate materials, keeping the first occurrence
-			// pairwise == over distinct materials only: O(m^2 + f) instead of O(m^2 * f)
+			// Fold equal materials into the first of their kind. Materials are compared
+			// pairwise but faces are remapped in a single pass, so this costs O(m^2 + f).
 			if (m <= 1)
 			{
 				return;
@@ -197,7 +204,7 @@ namespace OpenBveApi.Objects
 			{
 				mesh.Faces[k].Material = (ushort)remap[mesh.Faces[k].Material];
 			}
-			// first[u] >= u, so the forward copy never overwrites a not-yet-read entry
+			// first[] holds increasing indices, so copying forward never clobbers an unread entry
 			for (int u = 0; u < unique; u++)
 			{
 				if (first[u] != u)
@@ -210,20 +217,15 @@ namespace OpenBveApi.Objects
 
 		private static void CullVertices(Mesh mesh, int faceCount, bool preserveVertices, bool vertexCulling)
 		{
-			// Cull identical and unreferenced vertices based on the hidden vertexCulling option.
-			// Deduplication is a C# port of meshoptimizer's generateVertexRemap / remapVertexBuffer /
-			// remapIndexBuffer (MIT, see header above), adapted to compare vertices via
-			// VertexTemplate.GetHashCode / Equals instead of raw byte comparison.
+			// Merge duplicate vertices and drop ones no face uses. Skipped when the caller
+			// wants vertices preserved. The dedup itself ports meshoptimizer's
+			// generateVertexRemap / remapVertexBuffer / remapIndexBuffer (MIT, see header
+			// above), comparing vertices via VertexTemplate.Equals instead of raw bytes.
 			if (!preserveVertices && vertexCulling)
 			{
 				VertexTemplate[] vertices = mesh.Vertices;
-				int[] remap = new int[vertices.Length];
-				for (int i = 0; i < remap.Length; i++)
-				{
-					remap[i] = -1;
-				}
+				int[] remap = NewTable(vertices.Length);
 				int uniqueCount = GenerateVertexRemap(vertices, mesh.Faces, faceCount, remap);
-				// Compact the vertex buffer, dropping unreferenced 'garbage' vertices.
 				VertexTemplate[] newVertices = new VertexTemplate[uniqueCount];
 				for (int i = 0; i < vertices.Length; i++)
 				{
@@ -233,7 +235,6 @@ namespace OpenBveApi.Objects
 						newVertices[newIndex] = vertices[i];
 					}
 				}
-				// Rewrite the live faces to point at the deduplicated vertices.
 				for (int i = 0; i < faceCount; i++)
 				{
 					MeshFaceVertex[] faceVertices = mesh.Faces[i].Vertices;
@@ -251,17 +252,8 @@ namespace OpenBveApi.Objects
 		private static int GenerateVertexRemap(VertexTemplate[] vertices, MeshFace[] faces, int faceCount, int[] remap)
 		{
 			// Open-addressing hash table with triangular probing, cf. meshopt::hashLookup.
-			int buckets = 1;
-			while (buckets < vertices.Length + vertices.Length / 4)
-			{
-				buckets *= 2;
-			}
-			int[] table = new int[buckets];
-			for (int i = 0; i < buckets; i++)
-			{
-				table[i] = -1;
-			}
-			int mask = buckets - 1;
+			int[] table = NewTable(HashBuckets(vertices.Length));
+			int mask = table.Length - 1;
 			int nextVertex = 0;
 			for (int i = 0; i < faceCount; i++)
 			{
@@ -273,13 +265,13 @@ namespace OpenBveApi.Objects
 					{
 						continue;
 					}
-					// MurmurHash3 fmix32 avalanche. VertexTemplate.GetHashCode has no bit diffusion
-					// (small integral floats hash with zero low bits), which power-of-two masking requires.
 					uint h;
 					unchecked
 					{
-						// NB: the int->uint bit reinterpretation must stay in unchecked scope:
-						// negative hash codes are common and throw in checked (Debug) builds.
+						// MurmurHash3 fmix32 avalanche. VertexTemplate.GetHashCode has no bit
+						// diffusion on its own (small integral floats hash with zero low bits),
+						// which power-of-two masking needs. Keep the int->uint reinterpretation
+						// in here: negative hash codes throw in checked (Debug) builds.
 						h = (uint)vertices[oldIndex].GetHashCode();
 						h ^= h >> 16;
 						h *= 0x85ebca6b;
@@ -303,8 +295,7 @@ namespace OpenBveApi.Objects
 							remap[oldIndex] = remap[entry];
 							break;
 						}
-						// Hash collision, triangular probing.
-						bucket = (bucket + probe) & mask;
+						bucket = (bucket + probe) & mask; // hash collision, triangular probing
 					}
 				}
 			}
@@ -313,50 +304,32 @@ namespace OpenBveApi.Objects
 
 		private static void Triangulate(Mesh mesh, int f)
 		{
-			// structure optimization
-			// Triangularize all polygons and quads into triangles
+			// Fan-triangulate polygons and quads, preserving wind order: 0-1-2, 0-2-3, 0-3-4, ...
 			for (int i = 0; i < f; ++i)
 			{
 				FaceFlags type = mesh.Faces[i].Flags & FaceFlags.FaceTypeMask;
-				// Only transform quads and polygons
-				if (type == FaceFlags.Quads || type == FaceFlags.Polygon)
+				if (type != FaceFlags.Quads && type != FaceFlags.Polygon)
 				{
-					int startingVertexCount = mesh.Faces[i].Vertices.Length;
-					// One triangle for the first three points, then one for each vertex
-					// Wind order is maintained.
-					// Ex: 0, 1, 2; 0, 2, 3; 0, 3, 4; 0, 4, 5;
-					int triCount = startingVertexCount - 2;
-					int vertexCount = triCount * 3;
-					// Copy old array for use as we work
-					MeshFaceVertex[] originalPoly = (MeshFaceVertex[])mesh.Faces[i].Vertices.Clone();
-					// Resize new array
-					Array.Resize(ref mesh.Faces[i].Vertices, vertexCount);
-					// Reference to output vertices
-					MeshFaceVertex[] outVerts = mesh.Faces[i].Vertices;
-					// Triangularize
-					for (int triIndex = 0, vertIndex = 0, oldVert = 2; triIndex < triCount; ++triIndex, ++oldVert)
-					{
-						// First vertex is always the 0th
-						outVerts[vertIndex] = originalPoly[0];
-						vertIndex += 1;
-						// Second vertex is one behind the current working vertex
-						outVerts[vertIndex] = originalPoly[oldVert - 1];
-						vertIndex += 1;
-						// Third vertex is current working vertex
-						outVerts[vertIndex] = originalPoly[oldVert];
-						vertIndex += 1;
-					}
-					// Mark as triangle
-					mesh.Faces[i].Flags &= ~FaceFlags.FaceTypeMask;
-					mesh.Faces[i].Flags |= FaceFlags.Triangles;
+					continue;
 				}
+				MeshFaceVertex[] poly = mesh.Faces[i].Vertices;
+				MeshFaceVertex[] tris = new MeshFaceVertex[(poly.Length - 2) * 3];
+				for (int t = 0, v = 0; t < poly.Length - 2; t++)
+				{
+					tris[v++] = poly[0];
+					tris[v++] = poly[t + 1];
+					tris[v++] = poly[t + 2];
+				}
+				mesh.Faces[i].Vertices = tris;
+				mesh.Faces[i].Flags &= ~FaceFlags.FaceTypeMask;
+				mesh.Faces[i].Flags |= FaceFlags.Triangles;
 			}
 		}
 
 		private static void Decompose(Mesh mesh, ref int f)
 		{
-			// decomposite TRIANGLES and QUADS
-			// pre-size once: the inner grow loop used to double repeatedly on large meshes
+			// Split faces holding several triangles/quads into one face each.
+			// The extra faces are counted up front so the backing array grows at most once.
 			int needed = f;
 			for (int i = 0; i < f; i++)
 			{
@@ -414,12 +387,194 @@ namespace OpenBveApi.Objects
 			}
 		}
 
+		private static void FilterTriangles(Mesh mesh, ref int f)
+		{
+			// Drop zero-area and repeated triangles (a port of meshoptimizer's filterIndexBuffer).
+			// Triangles match by position only, ignoring rotation but not winding, so a mirrored
+			// copy kept for double-sided rendering survives. Corner data (vertex indices and
+			// normals) passes through untouched, as do non-triangle faces.
+			int totalTris = 0;
+			for (int i = 0; i < f; i++)
+			{
+				if (IsTriangles(mesh.Faces[i]))
+				{
+					totalTris += mesh.Faces[i].Vertices.Length / 3;
+				}
+			}
+			if (totalTris == 0)
+			{
+				return;
+			}
+			int[] positionRemap = NewTable(mesh.Vertices.Length);
+			GeneratePositionRemap(mesh.Vertices, mesh.Faces, f, positionRemap);
+
+			int mask = HashBuckets(totalTris) - 1;
+			int[] tableA = NewTable(mask + 1);
+			int[] tableB = new int[mask + 1];
+			int[] tableC = new int[mask + 1];
+			// tableB/C need no init: tableA == -1 already means "empty, don't read the rest"
+
+			int writeFace = 0;
+			for (int i = 0; i < f; i++)
+			{
+				if (!IsTriangles(mesh.Faces[i]))
+				{
+					if (writeFace != i)
+					{
+						mesh.Faces[writeFace] = mesh.Faces[i];
+					}
+					writeFace++;
+					continue;
+				}
+				MeshFaceVertex[] faceVertices = mesh.Faces[i].Vertices;
+				int tris = faceVertices.Length / 3;
+				// A trailing partial triple can't happen after EliminateInvalidFaces, but if it
+				// ever does, carry it over verbatim instead of silently eating it.
+				int remainder = faceVertices.Length - tris * 3;
+				int writeTri = 0;
+				for (int t = 0; t < tris; t++)
+				{
+					int a = positionRemap[faceVertices[t * 3].Index];
+					int b = positionRemap[faceVertices[t * 3 + 1].Index];
+					int c = positionRemap[faceVertices[t * 3 + 2].Index];
+					if (a == b || a == c || b == c)
+					{
+						continue; // zero-area triangle
+					}
+					// Rotate the triple so the smallest corner comes first; mirrored
+					// windings stay distinct and are kept.
+					int ra = a, rb = b, rc = c;
+					if (rb < ra && rb < rc)
+					{
+						ra = b;
+						rb = c;
+						rc = a;
+					}
+					else if (rc < ra && rc < rb)
+					{
+						ra = c;
+						rb = a;
+						rc = b;
+					}
+					uint h;
+					unchecked
+					{
+						h = ((uint)ra * 73856093u) ^ ((uint)rb * 19349663u) ^ ((uint)rc * 83492791u);
+						h &= (uint)mask;
+					}
+					bool duplicate = false;
+					int bucket = (int)h;
+					for (int probe = 0; ; probe++)
+					{
+						if (tableA[bucket] == -1)
+						{
+							tableA[bucket] = ra;
+							tableB[bucket] = rb;
+							tableC[bucket] = rc;
+							break;
+						}
+						if (tableA[bucket] == ra && tableB[bucket] == rb && tableC[bucket] == rc)
+						{
+							duplicate = true;
+							break;
+						}
+						bucket = (bucket + probe + 1) & mask; // hash collision, quadratic probing
+					}
+					if (duplicate)
+					{
+						continue;
+					}
+					if (writeTri != t)
+					{
+						faceVertices[writeTri * 3] = faceVertices[t * 3];
+						faceVertices[writeTri * 3 + 1] = faceVertices[t * 3 + 1];
+						faceVertices[writeTri * 3 + 2] = faceVertices[t * 3 + 2];
+					}
+					writeTri++;
+				}
+				if (writeTri == 0 && remainder == 0)
+				{
+					continue;
+				}
+				for (int k = 0; k < remainder; k++)
+				{
+					faceVertices[writeTri * 3 + k] = faceVertices[tris * 3 + k];
+				}
+				if (writeTri * 3 + remainder != faceVertices.Length)
+				{
+					Array.Resize(ref mesh.Faces[i].Vertices, writeTri * 3 + remainder);
+				}
+				if (writeFace != i)
+				{
+					mesh.Faces[writeFace] = mesh.Faces[i];
+				}
+				writeFace++;
+			}
+			f = writeFace;
+		}
+
+		/// <summary>Builds a dense first-referenced-wins id per distinct position (Coordinates only)</summary>
+		/// <returns>The number of unique positions</returns>
+		private static int GeneratePositionRemap(VertexTemplate[] vertices, MeshFace[] faces, int faceCount, int[] remap)
+		{
+			// Same open-addressing scheme as GenerateVertexRemap, but corners match on
+			// Coordinates alone. Bit diffusion follows meshopt::VertexCustomHasher.
+			int[] table = NewTable(HashBuckets(vertices.Length));
+			int mask = table.Length - 1;
+			int nextId = 0;
+			for (int i = 0; i < faceCount; i++)
+			{
+				MeshFaceVertex[] faceVertices = faces[i].Vertices;
+				for (int j = 0; j < faceVertices.Length; j++)
+				{
+					int oldIndex = faceVertices[j].Index;
+					if (remap[oldIndex] != -1)
+					{
+						continue;
+					}
+					Vector3 p = vertices[oldIndex].Coordinates;
+					uint h;
+					unchecked
+					{
+						// Keep the double->uint reinterpretation in here: negative hash codes
+						// throw in checked (Debug) builds.
+						uint x = (uint)p.X.GetHashCode();
+						uint y = (uint)p.Y.GetHashCode();
+						uint z = (uint)p.Z.GetHashCode();
+						x ^= x >> 17;
+						y ^= y >> 17;
+						z ^= z >> 17;
+						h = (x * 73856093u) ^ (y * 19349663u) ^ (z * 83492791u);
+						h &= (uint)mask;
+					}
+					int bucket = (int)h;
+					for (int probe = 1; ; probe++)
+					{
+						int entry = table[bucket];
+						if (entry == -1)
+						{
+							table[bucket] = oldIndex;
+							remap[oldIndex] = nextId++;
+							break;
+						}
+						Vector3 q = vertices[entry].Coordinates;
+						if (q.X == p.X && q.Y == p.Y && q.Z == p.Z)
+						{
+							remap[oldIndex] = remap[entry];
+							break;
+						}
+						bucket = (bucket + probe) & mask; // hash collision, triangular probing
+					}
+				}
+			}
+			return nextId;
+		}
+
 		private static void MergeFaces(Mesh mesh, ref int f)
 		{
-			// Squish faces that have the same material.
-			// Group-by-key in first-appearance order: O(f + totalVertices) instead of O(f^2).
-			// Merge rule is unchanged: Triangles with equal material and Face2Mask merge,
-			// keeping the first face's flags; all other faces stay untouched singletons.
+			// Pack same-material triangles into shared faces to cut draw calls. Only Triangles
+			// with matching material and sidedness merge; everything else keeps its own face.
+			// Faces come out in first-seen order.
 			if (f <= 1)
 			{
 				return;
@@ -432,8 +587,7 @@ namespace OpenBveApi.Objects
 			int groupCount = 0;
 			for (int i = 0; i < f; i++)
 			{
-				FaceFlags type = mesh.Faces[i].Flags & FaceFlags.FaceTypeMask;
-				if (type != FaceFlags.Triangles)
+				if (!IsTriangles(mesh.Faces[i]))
 				{
 					faceGroup[i] = groupCount;
 					groupFirst[groupCount] = i;
@@ -442,6 +596,7 @@ namespace OpenBveApi.Objects
 					groupCount++;
 					continue;
 				}
+				// Face2Mask is a single bit (0 or 8), so both fit in one int key
 				int key = (mesh.Faces[i].Material << 4) | (int)(mesh.Faces[i].Flags & FaceFlags.Face2Mask);
 				int gid;
 				if (!groupByKey.TryGetValue(key, out gid))
