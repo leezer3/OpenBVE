@@ -1,5 +1,5 @@
 // Portions of this file (CullVertices / GenerateVertexRemap / FilterTriangles /
-// GeneratePositionRemap) are a C# port of meshoptimizer
+// GeneratePositionRemap / OptimizeOverdraw) are a C# port of meshoptimizer
 // (https://github.com/zeux/meshoptimizer), used under the MIT License:
 //
 // Copyright (c) 2016-2026 Arseny Kapoulkine
@@ -43,6 +43,7 @@ namespace OpenBveApi.Objects
 			Decompose(mesh, ref f);
 			FilterTriangles(mesh, ref f);
 			MergeFaces(mesh, ref f);
+			OptimizeOverdraw(mesh);
 			// shrink the backing arrays down to the live entries
 			if (m != mesh.Materials.Length)
 			{
@@ -568,6 +569,232 @@ namespace OpenBveApi.Objects
 				}
 			}
 			return nextId;
+		}
+
+		// Clusters may cost up to 5% more cache misses than the input order (upstream default).
+		private const float OverdrawThreshold = 1.05f;
+
+		private static void OptimizeOverdraw(Mesh mesh)
+		{
+			// Draw near triangles first to cut overdraw (ports meshopt_optimizeOverdraw).
+			// Each Triangles face is its own draw call, so clusters never cross faces.
+			// Only the order changes; the triples themselves are untouched.
+			int vCount = mesh.Vertices.Length;
+			if (vCount == 0)
+			{
+				return;
+			}
+			double cx = 0, cy = 0, cz = 0;
+			for (int i = 0; i < vCount; i++)
+			{
+				Vector3 p = mesh.Vertices[i].Coordinates;
+				cx += p.X;
+				cy += p.Y;
+				cz += p.Z;
+			}
+			Vector3 meshCentroid = new Vector3(cx / vCount, cy / vCount, cz / vCount);
+			uint[] timestamps = new uint[vCount]; // shared FIFO-cache scratch, reset per use
+			for (int i = 0; i < mesh.Faces.Length; i++)
+			{
+				if (IsTriangles(mesh.Faces[i]) && mesh.Faces[i].Vertices.Length >= 6)
+				{
+					OptimizeFaceOverdraw(mesh, i, meshCentroid, timestamps);
+				}
+			}
+		}
+
+		private static void OptimizeFaceOverdraw(Mesh mesh, int faceIndex, Vector3 meshCentroid, uint[] timestamps)
+		{
+			const uint cacheSize = 16; // FIFO depth the clustering models after upstream
+			MeshFaceVertex[] input = (MeshFaceVertex[])mesh.Faces[faceIndex].Vertices.Clone();
+			int triCount = input.Length / 3;
+
+			int[] hard = new int[triCount];
+			int hardCount = GenerateHardBoundaries(input, triCount, cacheSize, timestamps, hard);
+			int[] soft = new int[triCount + 1];
+			int softCount = GenerateSoftBoundaries(input, triCount, hard, hardCount, cacheSize, timestamps, soft);
+
+			double[] sortData = new double[softCount];
+			CalculateSortData(mesh, input, soft, softCount, meshCentroid, sortData);
+			ushort[] sortKeys = new ushort[softCount];
+			int[] sortOrder = new int[softCount];
+			CalculateSortOrder(sortData, sortKeys, sortOrder, softCount);
+
+			MeshFaceVertex[] output = mesh.Faces[faceIndex].Vertices;
+			int offset = 0;
+			for (int it = 0; it < softCount; it++)
+			{
+				int cluster = sortOrder[it];
+				int begin = soft[cluster] * 3;
+				int end = cluster + 1 < softCount ? soft[cluster + 1] * 3 : input.Length;
+				Array.Copy(input, begin, output, offset, end - begin);
+				offset += end - begin;
+			}
+		}
+
+		private static int UpdateCache(int a, int b, int c, uint cacheSize, uint[] timestamps, ref uint timestamp)
+		{
+			// Feed a triangle through a FIFO vertex cache model, counting misses.
+			int misses = 0;
+			if (timestamp - timestamps[a] > cacheSize)
+			{
+				timestamps[a] = timestamp++;
+				misses++;
+			}
+			if (timestamp - timestamps[b] > cacheSize)
+			{
+				timestamps[b] = timestamp++;
+				misses++;
+			}
+			if (timestamp - timestamps[c] > cacheSize)
+			{
+				timestamps[c] = timestamp++;
+				misses++;
+			}
+			return misses;
+		}
+
+		private static int GenerateHardBoundaries(MeshFaceVertex[] tris, int triCount, uint cacheSize, uint[] timestamps, int[] hard)
+		{
+			// Cut a cluster wherever a triangle shares no cached vertex with the recent past.
+			Array.Clear(timestamps, 0, timestamps.Length);
+			uint timestamp = cacheSize + 1;
+			int count = 0;
+			for (int i = 0; i < triCount; i++)
+			{
+				int misses = UpdateCache(tris[i * 3].Index, tris[i * 3 + 1].Index, tris[i * 3 + 2].Index,
+					cacheSize, timestamps, ref timestamp);
+				if (i == 0 || misses == 3)
+				{
+					hard[count++] = i;
+				}
+			}
+			return count;
+		}
+
+		private static int GenerateSoftBoundaries(MeshFaceVertex[] tris, int triCount, int[] hard, int hardCount, uint cacheSize, uint[] timestamps, int[] soft)
+		{
+			// Split each hard cluster so every soft cluster shades at roughly the same
+			// miss ratio, within OverdrawThreshold of its hard cluster.
+			Array.Clear(timestamps, 0, timestamps.Length);
+			uint timestamp = 0;
+			int count = 0;
+			for (int it = 0; it < hardCount; it++)
+			{
+				int start = hard[it];
+				int end = it + 1 < hardCount ? hard[it + 1] : triCount;
+				timestamp += cacheSize + 1; // reset cache
+				int clusterMisses = 0;
+				for (int i = start; i < end; i++)
+				{
+					clusterMisses += UpdateCache(tris[i * 3].Index, tris[i * 3 + 1].Index, tris[i * 3 + 2].Index,
+						cacheSize, timestamps, ref timestamp);
+				}
+				double clusterThreshold = OverdrawThreshold * ((double)clusterMisses / (end - start));
+				soft[count++] = start;
+				timestamp += cacheSize + 1; // reset cache
+				int runningMisses = 0;
+				int runningFaces = 0;
+				for (int i = start; i < end; i++)
+				{
+					runningMisses += UpdateCache(tris[i * 3].Index, tris[i * 3 + 1].Index, tris[i * 3 + 2].Index,
+						cacheSize, timestamps, ref timestamp);
+					runningFaces++;
+					if ((double)runningMisses / runningFaces <= clusterThreshold)
+					{
+						soft[count++] = i + 1;
+						timestamp += cacheSize + 1; // reset cache
+						runningMisses = 0;
+						runningFaces = 0;
+					}
+				}
+				// The trailing cluster is unfinished by definition and shades badly on its
+				// own, so fold it back into the previous one (also drops a redundant 'end').
+				if (soft[count - 1] != start)
+				{
+					count--;
+				}
+			}
+			return count;
+		}
+
+		private static void CalculateSortData(Mesh mesh, MeshFaceVertex[] tris, int[] clusters, int clusterCount, Vector3 meshCentroid, double[] sortData)
+		{
+			// Score each cluster by how much it faces away from the mesh center, so near
+			// patches draw first. Centroid is area-weighted, normals are summed.
+			for (int cluster = 0; cluster < clusterCount; cluster++)
+			{
+				int begin = clusters[cluster];
+				int end = cluster + 1 < clusterCount ? clusters[cluster + 1] : tris.Length / 3;
+				double area = 0;
+				double cX = 0, cY = 0, cZ = 0;
+				double nX = 0, nY = 0, nZ = 0;
+				for (int i = begin; i < end; i++)
+				{
+					Vector3 p0 = mesh.Vertices[tris[i * 3].Index].Coordinates;
+					Vector3 p1 = mesh.Vertices[tris[i * 3 + 1].Index].Coordinates;
+					Vector3 p2 = mesh.Vertices[tris[i * 3 + 2].Index].Coordinates;
+					double e1X = p1.X - p0.X, e1Y = p1.Y - p0.Y, e1Z = p1.Z - p0.Z;
+					double e2X = p2.X - p0.X, e2Y = p2.Y - p0.Y, e2Z = p2.Z - p0.Z;
+					double nx = e1Y * e2Z - e1Z * e2Y;
+					double ny = e1Z * e2X - e1X * e2Z;
+					double nz = e1X * e2Y - e1Y * e2X;
+					double a = System.Math.Sqrt(nx * nx + ny * ny + nz * nz);
+					cX += (p0.X + p1.X + p2.X) * (a / 3);
+					cY += (p0.Y + p1.Y + p2.Y) * (a / 3);
+					cZ += (p0.Z + p1.Z + p2.Z) * (a / 3);
+					nX += nx;
+					nY += ny;
+					nZ += nz;
+					area += a;
+				}
+				if (area != 0)
+				{
+					cX /= area;
+					cY /= area;
+					cZ /= area;
+				}
+				double nLen = System.Math.Sqrt(nX * nX + nY * nY + nZ * nZ);
+				if (nLen != 0)
+				{
+					nX /= nLen;
+					nY /= nLen;
+					nZ /= nLen;
+				}
+				sortData[cluster] = (cX - meshCentroid.X) * nX + (cY - meshCentroid.Y) * nY + (cZ - meshCentroid.Z) * nZ;
+			}
+		}
+
+		private static void CalculateSortOrder(double[] sortData, ushort[] sortKeys, int[] sortOrder, int clusterCount)
+		{
+			// Stable 11-bit counting sort, high scores first.
+			double max = 1e-3;
+			for (int i = 0; i < clusterCount; i++)
+			{
+				max = System.Math.Max(max, System.Math.Abs(sortData[i]));
+			}
+			for (int i = 0; i < clusterCount; i++)
+			{
+				double key = 0.5 - 0.5 * (sortData[i] / max);
+				int q = (int)(key * 2047.0 + 0.5);
+				sortKeys[i] = (ushort)(q < 0 ? 0 : q > 2047 ? 2047 : q);
+			}
+			int[] histogram = new int[2048];
+			for (int i = 0; i < clusterCount; i++)
+			{
+				histogram[sortKeys[i]]++;
+			}
+			int sum = 0;
+			for (int i = 0; i < 2048; i++)
+			{
+				int c = histogram[i];
+				histogram[i] = sum;
+				sum += c;
+			}
+			for (int i = 0; i < clusterCount; i++)
+			{
+				sortOrder[histogram[sortKeys[i]]++] = i;
+			}
 		}
 
 		private static void MergeFaces(Mesh mesh, ref int f)
