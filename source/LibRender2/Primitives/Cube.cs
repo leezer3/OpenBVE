@@ -58,37 +58,43 @@ namespace LibRender2.Primitives
 				{
 					Position = new Vector3f(1.0f, 1.0f, 1.0f),
 					UV = Vector2f.Null,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, 0.0f, 1.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, 1.0f, 1.0f),
 					UV = Vector2f.Right,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, 0.0f, 1.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, -1.0f, 1.0f),
 					UV = Vector2f.One,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, 0.0f, 1.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(1.0f, 1.0f, 1.0f),
 					UV = Vector2f.Null,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, 0.0f, 1.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, -1.0f, 1.0f),
 					UV = Vector2f.One,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, 0.0f, 1.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(1.0f, -1.0f, 1.0f),
 					UV = Vector2f.Down,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, 0.0f, 1.0f),
 				},
 
 				// right
@@ -96,37 +102,43 @@ namespace LibRender2.Primitives
 				{
 					Position = new Vector3f(1.0f, 1.0f, 1.0f),
 					UV = Vector2f.Right,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(1.0f, 0.0f, 0.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(1.0f, -1.0f, 1.0f),
 					UV = Vector2f.One,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(1.0f, 0.0f, 0.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(1.0f, -1.0f, -1.0f),
 					UV = Vector2f.Down,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(1.0f, 0.0f, 0.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(1.0f, 1.0f, 1.0f),
 					UV = Vector2f.Right,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(1.0f, 0.0f, 0.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(1.0f, -1.0f, -1.0f),
 					UV = Vector2f.Down,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(1.0f, 0.0f, 0.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(1.0f, 1.0f, -1.0f),
 					UV = Vector2f.Null,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(1.0f, 0.0f, 0.0f),
 				},
 
 				// top
@@ -134,37 +146,43 @@ namespace LibRender2.Primitives
 				{
 					Position = new Vector3f(1.0f, 1.0f, 1.0f),
 					UV = Vector2f.Right,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, 1.0f, 0.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(1.0f, 1.0f, -1.0f),
 					UV = Vector2f.One,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, 1.0f, 0.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, 1.0f, -1.0f),
 					UV = Vector2f.Down,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, 1.0f, 0.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(1.0f, 1.0f, 1.0f),
 					UV = Vector2f.Right,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, 1.0f, 0.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, 1.0f, -1.0f),
 					UV = Vector2f.Down,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, 1.0f, 0.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, 1.0f, 1.0f),
 					UV = Vector2f.Null,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, 1.0f, 0.0f),
 				},
 
 				// front
@@ -172,37 +190,43 @@ namespace LibRender2.Primitives
 				{
 					Position = new Vector3f(-1.0f, -1.0f, -1.0f),
 					UV = Vector2f.Down,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, 0.0f, -1.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, 1.0f, -1.0f),
 					UV = Vector2f.Null,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, 0.0f, -1.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(1.0f, 1.0f, -1.0f),
 					UV = Vector2f.Right,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, 0.0f, -1.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, -1.0f, -1.0f),
 					UV = Vector2f.Down,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, 0.0f, -1.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(1.0f, 1.0f, -1.0f),
 					UV = Vector2f.Right,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, 0.0f, -1.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(1.0f, -1.0f, -1.0f),
 					UV = Vector2f.One,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, 0.0f, -1.0f),
 				},
 
 				// left
@@ -210,37 +234,43 @@ namespace LibRender2.Primitives
 				{
 					Position = new Vector3f(-1.0f, -1.0f, -1.0f),
 					UV = Vector2f.One,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(-1.0f, 0.0f, 0.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, -1.0f, 1.0f),
 					UV = Vector2f.Down,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(-1.0f, 0.0f, 0.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, 1.0f, 1.0f),
 					UV = Vector2f.Null,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(-1.0f, 0.0f, 0.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, -1.0f, -1.0f),
 					UV = Vector2f.One,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(-1.0f, 0.0f, 0.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, 1.0f, 1.0f),
 					UV = Vector2f.Null,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(-1.0f, 0.0f, 0.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, 1.0f, -1.0f),
 					UV = Vector2f.Right,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(-1.0f, 0.0f, 0.0f),
 				},
 
 				// bottom
@@ -248,37 +278,43 @@ namespace LibRender2.Primitives
 				{
 					Position = new Vector3f(-1.0f, -1.0f, -1.0f),
 					UV = Vector2f.Null,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, -1.0f, 0.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(1.0f, -1.0f, -1.0f),
 					UV = Vector2f.Right,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, -1.0f, 0.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(1.0f, -1.0f, 1.0f),
 					UV = Vector2f.One,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, -1.0f, 0.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, -1.0f, -1.0f),
 					UV = Vector2f.Null,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, -1.0f, 0.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, -1.0f, 1.0f),
 					UV = Vector2f.Down,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, -1.0f, 0.0f),
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(1.0f, -1.0f, 1.0f),
 					UV = Vector2f.One,
-					Color = color
+					Color = color,
+					Normal = new Vector3f(0.0f, -1.0f, 0.0f),
 				},
 			};
 

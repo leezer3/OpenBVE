@@ -92,9 +92,15 @@ out vec4 vPosLightSpace2;
 out vec4 vPosLightSpace3;
 out vec3 vNormal;
 
+vec3 safeNormalizeVec3(vec3 v) {
+	float l2 = dot(v, v);
+	if (l2 < 1e-10) return vec3(0.0, 1.0, 0.0);
+	return v * inversesqrt(l2);
+}
+
 vec4 getLightResult()
 {
-	vNormal = normalize(mat3(transpose(inverse(uCurrentModelViewMatrix))) * vec3(iNormal.x, iNormal.y, -iNormal.z));
+	vNormal = safeNormalizeVec3(mat3(transpose(inverse(uCurrentModelViewMatrix))) * vec3(iNormal.x, iNormal.y, -iNormal.z));
 	float nDotVP = max(0.0, dot(vNormal, vec3(uLight.position))); // pre-normalized on CPU in SetLightPosition
 	float nDotHV = max(0.0, dot(vNormal, normalize(vec3(oViewPos.xyz + uLight.position))));
 	float pf = nDotVP == 0.0 ? 0.0 : pow(nDotHV, uMaterial.shininess);
@@ -220,7 +226,8 @@ void main()
 	gl_Position = uCurrentProjectionMatrix * oViewPos;
 	
 	// Pass normal to fragment shader (un-negated Z to match lighting expected convention)
-	vNormal = normalize(mat3(transpose(inverse(uCurrentModelViewMatrix))) * vec3(iNormal.x, iNormal.y, -iNormal.z));
+	// safeNormalize: Cube/ground and any VAO with zero normals must not produce NaN on Mesa.
+	vNormal = safeNormalizeVec3(mat3(transpose(inverse(uCurrentModelViewMatrix))) * vec3(iNormal.x, iNormal.y, -iNormal.z));
 
 	if (uShadowEnabled)
 	{
@@ -232,7 +239,7 @@ void main()
 		// by (texels * worldTexelSize). Front faces move closer to the light (=> lit,
 		// no acne), contact point barely shifts (=> no peter-panning).
 		// View->world rotation is orthonormal, so transpose == inverse.
-		vec3 worldNormal = normalize(transpose(mat3(uCurrentViewMatrix)) * vNormal);
+		vec3 worldNormal = safeNormalizeVec3(transpose(mat3(uCurrentViewMatrix)) * vNormal);
 		vec4 wp0 = vec4(worldPos4.xyz + worldNormal * (uShadowNormalBias0 * uShadowTexelWorldSize0), 1.0);
 		vec4 wp1 = vec4(worldPos4.xyz + worldNormal * (uShadowNormalBias1 * uShadowTexelWorldSize1), 1.0);
 		vec4 wp2 = vec4(worldPos4.xyz + worldNormal * (uShadowNormalBias2 * uShadowTexelWorldSize2), 1.0);
