@@ -17,11 +17,6 @@ namespace OpenBveApi.Objects
 			{
 				return;
 			}
-			if (Mesh.Vertices.Length > 10000)
-			{
-				// Don't attempt to de-duplicate where over 10k vertices
-				preserveVerticies = true;
-			}
 			MeshOptimizer.Optimize(Mesh, preserveVerticies, vertexCulling);
 		}
 
