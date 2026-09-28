@@ -21,6 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 using System;
+using System.Collections.Generic;
 
 namespace OpenBveApi.Objects
 {
@@ -53,6 +54,8 @@ namespace OpenBveApi.Objects
 		private static void EliminateInvalidFaces(Mesh mesh, ref int f)
 		{
 			// eliminate invalid faces and reduce incomplete faces
+			// single-pass compaction: write index only advances for kept faces (O(f))
+			int write = 0;
 			for (int i = 0; i < f; i++)
 			{
 				FaceFlags type = mesh.Faces[i].Flags & FaceFlags.FaceTypeMask;
@@ -98,75 +101,111 @@ namespace OpenBveApi.Objects
 				}
 				if (!keep)
 				{
-					for (int j = i; j < f - 1; j++)
-					{
-						mesh.Faces[j] = mesh.Faces[j + 1];
-					}
-					f--;
-					i--;
+					continue;
 				}
+				if (write != i)
+				{
+					mesh.Faces[write] = mesh.Faces[i];
+				}
+				write++;
 			}
+			f = write;
 		}
 
 		private static void EliminateUnusedMaterials(Mesh mesh, ref int m, int f)
 		{
-			// eliminate unused materials
+			// eliminate unused materials via a remap table: one pass over faces (O(m + f))
 			bool[] materialUsed = new bool[m];
 			for (int i = 0; i < f; i++)
 			{
 				materialUsed[mesh.Faces[i].Material] = true;
 			}
+			int[] remap = new int[m];
+			int newM = 0;
 			for (int i = 0; i < m; i++)
 			{
-				if (!materialUsed[i])
+				if (materialUsed[i])
 				{
-					for (int j = 0; j < f; j++)
-					{
-						if (mesh.Faces[j].Material > i)
-						{
-							mesh.Faces[j].Material--;
-						}
-					}
-					for (int j = i; j < m - 1; j++)
-					{
-						mesh.Materials[j] = mesh.Materials[j + 1];
-						materialUsed[j] = materialUsed[j + 1];
-					}
-					m--;
-					i--;
+					remap[i] = newM++;
+				}
+				else
+				{
+					remap[i] = -1;
 				}
 			}
+			if (newM == m)
+			{
+				return;
+			}
+			for (int j = 0; j < f; j++)
+			{
+				mesh.Faces[j].Material = (ushort)remap[mesh.Faces[j].Material];
+			}
+			int write = 0;
+			for (int i = 0; i < m; i++)
+			{
+				if (materialUsed[i])
+				{
+					if (write != i)
+					{
+						mesh.Materials[write] = mesh.Materials[i];
+					}
+					write++;
+				}
+			}
+			m = newM;
 		}
 
 		private static void EliminateDuplicateMaterials(Mesh mesh, ref int m, int f)
 		{
-			// eliminate duplicate materials
-			for (int i = 0; i < m - 1; i++)
+			// eliminate duplicate materials, keeping the first occurrence
+			// pairwise == over distinct materials only: O(m^2 + f) instead of O(m^2 * f)
+			if (m <= 1)
 			{
-				for (int j = i + 1; j < m; j++)
+				return;
+			}
+			int[] remap = new int[m];
+			int[] first = new int[m];
+			int unique = 0;
+			for (int i = 0; i < m; i++)
+			{
+				int found = -1;
+				for (int u = 0; u < unique; u++)
 				{
-					if (mesh.Materials[i] == mesh.Materials[j])
+					if (mesh.Materials[first[u]] == mesh.Materials[i])
 					{
-						for (int k = 0; k < f; k++)
-						{
-							if (mesh.Faces[k].Material == j)
-							{
-								mesh.Faces[k].Material = (ushort)i;
-							}
-							else if (mesh.Faces[k].Material > j)
-							{
-								mesh.Faces[k].Material--;
-							}
-						}
-						for (int k = j; k < m - 1; k++)
-						{
-							mesh.Materials[k] = mesh.Materials[k + 1];
-						}
-						m--;
-						j--;
+						found = u;
+						break;
 					}
 				}
+				if (found == -1)
+				{
+					remap[i] = unique;
+					first[unique] = i;
+					unique++;
+				}
+				else
+				{
+					remap[i] = found;
+				}
 			}
+			if (unique == m)
+			{
+				return;
+			}
+			for (int k = 0; k < f; k++)
+			{
+				mesh.Faces[k].Material = (ushort)remap[mesh.Faces[k].Material];
+			}
+			// first[u] >= u, so the forward copy never overwrites a not-yet-read entry
+			for (int u = 0; u < unique; u++)
+			{
+				if (first[u] != u)
+				{
+					mesh.Materials[u] = mesh.Materials[first[u]];
+				}
+			}
+			m = unique;
 		}
 
 		private static void CullVertices(Mesh mesh, int faceCount, bool preserveVertices, bool vertexCulling)
@@ -317,6 +356,21 @@ namespace OpenBveApi.Objects
 		private static void Decompose(Mesh mesh, ref int f)
 		{
 			// decomposite TRIANGLES and QUADS
+			// pre-size once: the inner grow loop used to double repeatedly on large meshes
+			int needed = f;
+			for (int i = 0; i < f; i++)
+			{
+				FaceFlags type = mesh.Faces[i].Flags & FaceFlags.FaceTypeMask;
+				int faceCount = type == FaceFlags.Triangles ? 3 : type == FaceFlags.Quads ? 4 : 0;
+				if (faceCount != 0 && mesh.Faces[i].Vertices.Length > faceCount)
+				{
+					needed += (mesh.Faces[i].Vertices.Length - faceCount) / faceCount;
+				}
+			}
+			while (needed > mesh.Faces.Length)
+			{
+				Array.Resize(ref mesh.Faces, mesh.Faces.Length << 1);
+			}
 			for (int i = 0; i < f; i++)
 			{
 				FaceFlags type = mesh.Faces[i].Flags & FaceFlags.FaceTypeMask;
@@ -363,61 +417,75 @@ namespace OpenBveApi.Objects
 		private static void MergeFaces(Mesh mesh, ref int f)
 		{
 			// Squish faces that have the same material.
-			bool[] canMerge = new bool[f];
-			for (int i = 0; i < f - 1; ++i)
+			// Group-by-key in first-appearance order: O(f + totalVertices) instead of O(f^2).
+			// Merge rule is unchanged: Triangles with equal material and Face2Mask merge,
+			// keeping the first face's flags; all other faces stay untouched singletons.
+			if (f <= 1)
 			{
-				int mergeVertices = 0;
-				// Type of current face
+				return;
+			}
+			Dictionary<int, int> groupByKey = new Dictionary<int, int>(f);
+			int[] faceGroup = new int[f];
+			int[] groupFirst = new int[f];
+			int[] groupVertices = new int[f];
+			int[] groupFaces = new int[f];
+			int groupCount = 0;
+			for (int i = 0; i < f; i++)
+			{
 				FaceFlags type = mesh.Faces[i].Flags & FaceFlags.FaceTypeMask;
-				FaceFlags face = mesh.Faces[i].Flags & FaceFlags.Face2Mask;
-				// Find faces that can be merged
-				for (int j = i + 1; j < f; ++j)
+				if (type != FaceFlags.Triangles)
 				{
-					FaceFlags type2 = mesh.Faces[j].Flags & FaceFlags.FaceTypeMask;
-					FaceFlags face2 = mesh.Faces[j].Flags & FaceFlags.Face2Mask;
-					// Conditions for face merger
-					bool mergeable = type == FaceFlags.Triangles &&
-					                 type == type2 &&
-					                 face == face2 &&
-					                 mesh.Faces[i].Material == mesh.Faces[j].Material;
-					canMerge[j] = mergeable;
-					mergeVertices += mergeable ? mesh.Faces[j].Vertices.Length : 0;
-				}
-				if (mergeVertices == 0)
-				{
+					faceGroup[i] = groupCount;
+					groupFirst[groupCount] = i;
+					groupVertices[groupCount] = mesh.Faces[i].Vertices.Length;
+					groupFaces[groupCount] = 1;
+					groupCount++;
 					continue;
 				}
-				// Current end of array index
-				int lastVertexIt = mesh.Faces[i].Vertices.Length;
-				// Resize current face's vertices to have enough room
-				Array.Resize(ref mesh.Faces[i].Vertices, lastVertexIt + mergeVertices);
-				// Merge faces
-				for (int j = i + 1; j < f; ++j)
+				int key = (mesh.Faces[i].Material << 4) | (int)(mesh.Faces[i].Flags & FaceFlags.Face2Mask);
+				int gid;
+				if (!groupByKey.TryGetValue(key, out gid))
 				{
-					if (canMerge[j])
-					{
-						// Copy vertices
-						mesh.Faces[j].Vertices.CopyTo(mesh.Faces[i].Vertices, lastVertexIt);
-						// Adjust index
-						lastVertexIt += mesh.Faces[j].Vertices.Length;
-					}
+					gid = groupCount++;
+					groupByKey[key] = gid;
+					groupFirst[gid] = i;
+					groupVertices[gid] = 0;
+					groupFaces[gid] = 0;
 				}
-				// Remove now unused faces
-				int jump = 0;
-				for (int j = i + 1; j < f; ++j)
-				{
-					if (canMerge[j])
-					{
-						jump += 1;
-					}
-					else if (jump > 0)
-					{
-						mesh.Faces[j - jump] = mesh.Faces[j];
-					}
-				}
-				// Remove faces removed from face count
-				f -= jump;
+				faceGroup[i] = gid;
+				groupVertices[gid] += mesh.Faces[i].Vertices.Length;
+				groupFaces[gid]++;
 			}
+			if (groupCount == f)
+			{
+				return;
+			}
+			MeshFace[] merged = new MeshFace[groupCount];
+			int[] groupOffset = new int[groupCount];
+			for (int g = 0; g < groupCount; g++)
+			{
+				merged[g] = mesh.Faces[groupFirst[g]];
+				if (groupFaces[g] > 1)
+				{
+					merged[g].Vertices = new MeshFaceVertex[groupVertices[g]];
+					groupOffset[g] = 0;
+				}
+			}
+			for (int i = 0; i < f; i++)
+			{
+				int g = faceGroup[i];
+				if (groupFaces[g] > 1)
+				{
+					MeshFaceVertex[] src = mesh.Faces[i].Vertices;
+					src.CopyTo(merged[g].Vertices, groupOffset[g]);
+					groupOffset[g] += src.Length;
+				}
+			}
+			for (int g = 0; g < groupCount; g++)
+			{
+				mesh.Faces[g] = merged[g];
+			}
+			f = groupCount;
 		}
 	}
 }
