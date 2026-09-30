@@ -18,7 +18,7 @@ namespace OpenBveApi {
 		
 		/// <summary>Combines a platform-specific absolute path with a platform-independent relative path that points to a directory.</summary>
 		/// <param name="absolute">The platform-specific absolute path.</param>
-		/// <param name="relative">The platform-independent relative path.</param>
+		/// <param name="relative">The platform-independent relative path, or a path starting with a variable such as {Other} to use a configured folder instead.</param>
 		/// <param name="allowQueryStr">If a part similar to a URL query string at the end of the path should be preserved.</param>
 		/// <returns>A platform-specific absolute path to the specified directory.</returns>
 		/// <exception cref="System.Exception">Raised when combining the paths failed, for example due to malformed paths or due to unauthorized access.</exception>
@@ -30,6 +30,10 @@ namespace OpenBveApi {
 			if (string.IsNullOrEmpty(relative))
 			{
 				throw new ArgumentException("The relative path was empty.");
+			}
+			if (TryResolvePathVariable(relative, out string folder, out string remainder))
+			{
+				return remainder.Length == 0 ? folder : CombineDirectory(folder, remainder, allowQueryStr);
 			}
             int index = relative.IndexOf("??", StringComparison.Ordinal);
 			if (index >= 0) {
@@ -124,10 +128,18 @@ namespace OpenBveApi {
 
 		/// <summary>Combines a platform-specific absolute path with a platform-independent relative path that points to a file.</summary>
 		/// <param name="absolute">The platform-specific absolute path.</param>
-		/// <param name="relative">The platform-independent relative path.</param>
+		/// <param name="relative">The platform-independent relative path, or a path starting with a variable such as {Other} to use a configured folder instead.</param>
 		/// <returns>Whether the operation succeeded and the specified file was found.</returns>
 		/// <exception cref="System.Exception">Raised when combining the paths failed, for example due to malformed paths or due to unauthorized access.</exception>
 		public static string CombineFile(string absolute, string relative) {
+			if (TryResolvePathVariable(relative, out string folder, out string remainder))
+			{
+				if (remainder.Length == 0)
+				{
+					throw new ArgumentException("The reference to the file is malformed.");
+				}
+				return CombineFile(folder, remainder);
+			}
 			if (System.IO.Path.IsPathRooted(relative) && char.IsLetter(relative[0]))
 			{
 				throw new ArgumentException("The relative path must not be rooted.");

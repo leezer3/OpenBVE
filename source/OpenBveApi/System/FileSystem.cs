@@ -129,6 +129,7 @@ namespace OpenBveApi.FileSystem {
 			}
 			RestartProcess = assemblyFile;
 			RestartArguments = string.Empty;
+			Path.SetFileSystem(this); // Lets content files use {Route} / {Train} / {Other}
 		}
 		
 		

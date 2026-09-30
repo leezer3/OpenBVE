@@ -573,9 +573,11 @@ namespace Formats.OpenBve
 							// allow empty states etc.
 							continue;
 						}
+						string splitValue = splitValues[i].Trim();
+						ReportUnknownPathVariable(splitValue, "state " + i + " in " + key + " in Section " + Key + " at line " + value.Key);
 						try
 						{
-							values[i] = Path.CombineFile(absolutePath, splitValues[i].Trim());
+							values[i] = Path.CombineFile(absolutePath, splitValue);
 							if (!File.Exists(values[i]))
 							{
 								currentHost.AddMessage(MessageType.Warning, false, "The path for state " + i + " was not found in " + key + " in Section " + Key + " at line " + value.Key + " in file " + FileName);
@@ -592,6 +594,19 @@ namespace Formats.OpenBve
 				currentHost.AddMessage(MessageType.Warning, false, "An empty path list was provided for " + key + " in Section " + Key + " at line " + value.Key + " in file " + FileName);
 			}
 			return false;
+		}
+
+		/// <summary>Warns about a path variable which has no folder set, e.g. a typo in {Other}</summary>
+		/// <param name="relativePath">The path as written in the file</param>
+		/// <param name="context">Where the path was found</param>
+		public void ReportUnknownPathVariable(string relativePath, string context)
+		{
+			string variable = Path.GetUnknownPathVariable(relativePath);
+			if (variable == null)
+			{
+				return;
+			}
+			currentHost.AddMessage(MessageType.Warning, false, "Path variable {" + variable + "} in " + context + " is not defined; check the package directories in your options. The path has been resolved relative to the file instead.");
 		}
 
 		/// <summary>Reads the specified path array from the block</summary>
@@ -799,6 +814,7 @@ namespace Formats.OpenBve
 				var fileName = rawValues.Dequeue();
 				if (!Path.ContainsInvalidChars(fileName.Value))
 				{
+					ReportUnknownPathVariable(fileName.Value, "the file at line " + fileName.Key + " in Section " + Key);
 					try
 					{
 						finalPath = Path.CombineFile(absolutePath, fileName.Value);
