@@ -954,7 +954,7 @@ namespace OpenBve
 						break;
 					case Translations.Command.MiscTimeFactor:
 						// time factor
-						if (TrainManager.PlayerTrain.Plugin != null && !TrainManager.PlayerTrain.Plugin.DisableTimeAcceleration)
+						if (TrainManager.PlayerTrain.Plugin == null || TrainManager.PlayerTrain.Plugin?.DisableTimeAcceleration == false)
 						{
 							if (Interface.CurrentOptions.GameMode == GameMode.Expert)
 							{
