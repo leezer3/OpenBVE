@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace OpenBveApi {
 
@@ -16,7 +15,7 @@ namespace OpenBveApi {
 	 * */
 	public static partial class Path {
 
-		/// <summary>Kept as a reference so that changes made in the options are picked up automatically.</summary>
+		/// <summary>Kept as a reference so changes made in the options are picked up automatically.</summary>
 		private static FileSystem.FileSystem currentFileSystem;
 
 
@@ -36,10 +35,7 @@ namespace OpenBveApi {
 		internal static bool TryResolvePathVariable(string relative, out string folder, out string remainder) {
 			folder = string.Empty;
 			remainder = string.Empty;
-			if (!TrySplitVariable(relative, out string name, out remainder) || !TryGetFolder(name, out folder)) {
-				return false;
-			}
-			return true;
+			return TrySplitVariable(relative, out string name, out remainder) && TryGetFolder(name, out folder);
 		}
 
 
@@ -51,8 +47,8 @@ namespace OpenBveApi {
 		/// <param name="remainder">The part of the path after the variable</param>
 		/// <returns>Whether the path starts with a {Variable}</returns>
 		/*
-		 * Only the first part of the path is treated as a variable, so a folder which
-		 * happens to have braces in its name is left alone.
+		 * Only the first part of the path counts, so a folder which happens to have
+		 * braces in its name is left alone.
 		 * */
 		private static bool TrySplitVariable(string relative, out string name, out string remainder) {
 			name = null;
@@ -83,12 +79,6 @@ namespace OpenBveApi {
 				return false;
 			}
 			switch (name.ToLowerInvariant()) {
-				case "route":
-					folder = currentFileSystem.RouteInstallationDirectory;
-					break;
-				case "train":
-					folder = currentFileSystem.TrainInstallationDirectory;
-					break;
 				case "other":
 					folder = currentFileSystem.OtherInstallationDirectory;
 					break;
@@ -101,16 +91,9 @@ namespace OpenBveApi {
 
 		// --- public functions ---
 
-		/// <summary>Gets the names of all of the supported path variables.</summary>
-		/// <returns>The list of path variable names</returns>
-		public static IReadOnlyList<string> GetPathVariableNames() {
-			return new[] { "Route", "Train", "Other" };
-		}
-
-		/// <summary>Gets the name of a path variable which is not defined, if the path starts with one.</summary>
+		/// <summary>Gets the name of a path variable which has no folder set, e.g. a typo in {Other}</summary>
 		/// <param name="relative">The path as written in the content file</param>
 		/// <returns>The name of the variable, or null if the path has no undefined variable</returns>
-		/// <remarks>Used to tell the user about a typo rather than failing silently.</remarks>
 		public static string GetUnknownPathVariable(string relative) {
 			return TrySplitVariable(relative, out string name, out string remainder) && !TryGetFolder(name, out string folder) ? name : null;
 		}

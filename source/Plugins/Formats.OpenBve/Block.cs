@@ -289,6 +289,7 @@ namespace Formats.OpenBve
 				index = indexedValues.ElementAt(0).Key;
 				indexedValues.TryRemove(index, out var value);
 
+				ReportUnknownPathVariable(value.Value, "Index " + value.Key + " in Section " + Key);
 				try
 				{
 					finalPath = value.Value != string.Empty ? Path.CombineFile(absolutePath, value.Value) : string.Empty;
