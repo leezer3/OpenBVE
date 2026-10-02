@@ -115,7 +115,11 @@
     <Compile Include="FunctionScripts\Instructions.cs" />
     <Compile Include="Graphics\Camera.RestrictionModes.cs" />
     <Compile Include="Graphics\Colors.ColorPalettes.cs" />
-    <Compile Include="Graphics\Colors.cs" />
+    <Compile Include="Graphics\Colors.Color24.cs" />
+    <Compile Include="Graphics\Colors.Color32.cs" />
+    <Compile Include="Graphics\Colors.Color96.cs" />
+    <Compile Include="Graphics\Colors.Color128.cs" />
+    <Compile Include="Graphics\Colors.MessageColors.cs" />
     <Compile Include="Interface\Input\Control.cs" />
     <Compile Include="Interface\Input\ControlMethod.cs" />
     <Compile Include="Interface\Input\DigitalControlState.cs" />
