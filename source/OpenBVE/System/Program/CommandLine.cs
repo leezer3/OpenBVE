@@ -36,7 +36,7 @@ namespace OpenBve
 							Result.InitialStation = value;
 							break;
 						case "/time":
-							Interface.TryParseTime(value, out Result.StartTime);
+							Time.TryParseTime(value, out Result.StartTime);
 							break;
 						case "/ai":
 							if (value.ToLowerInvariant() == "true" || value.ToLowerInvariant() == "1")
