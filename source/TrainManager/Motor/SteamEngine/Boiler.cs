@@ -50,12 +50,12 @@ namespace TrainManager.Motor
 			WaterLevel = startingWaterLevel;
 			CurrentPressure = startingPressure;
 			// calculate the starting steam volume in the boiler
-			double volumePerLiter = SteamTable.GetSteamVolume(CurrentPressure);
-			CurrentSteamMass = (Volume - WaterLevel) * volumePerLiter; // kgs
+			double volumePerCubicMeter = SteamTable.GetSteamDensity(CurrentPressure);
+			CurrentSteamMass = ((Volume - WaterLevel) / 1000) * volumePerCubicMeter; // kgs
 
 			double steamAvailableVolume = Volume - WaterLevel;
 			// density is mass / volume
-			double density = CurrentSteamMass / steamAvailableVolume;
+			double density = CurrentSteamMass / (steamAvailableVolume / 1000); // volume to m3
 			// pressure for one kilo is the same for all
 			CurrentPressure = SteamTable.GetPressure(density);
 		}
@@ -70,19 +70,16 @@ namespace TrainManager.Motor
 			double steamConverted = MaxOutput * firebox.HeatOutput * timeElapsed;
 			// NOTE: MSTS steam simulation bug- boiler volume fixed at 150 cubic feet (See 'Manual 2.0e.doc')
 			// for the minute, we'll run with that as this is the most likely to produce 'expected' results
-			if (CurrentPressure < MaxPressure)
-			{
-				CurrentSteamMass += steamConverted * 1600;
-				WaterLevel -= steamConverted / 1600;
+			CurrentSteamMass += steamConverted;
+			double waterDensity = WaterTable.GetDensity(100); // need to add further simulation of water temp in boiler- injectors will cool temp
+			WaterLevel -= steamConverted / waterDensity;
+			// boiler volume minus water volume gives the remaining steam space
+			double steamAvailableVolume = Volume - WaterLevel;
+			// density is mass / volume
+			double density = CurrentSteamMass / (steamAvailableVolume / 1000); // volume to m3
+			// pressure for one kilo is the same for all
+			CurrentPressure = SteamTable.GetPressure(density);
 
-				// boiler volume minus water volume gives the remaining steam space
-				double steamAvailableVolume = Volume - WaterLevel;
-				// density is mass / volume
-				double density = CurrentSteamMass / steamAvailableVolume;
-				// pressure for one kilo is the same for all
-				CurrentPressure = SteamTable.GetPressure(density);
-			}
-			
 		}
 	}
 }
