@@ -27,6 +27,9 @@ namespace Train.OpenBve
 			Plugin = plugin;
 		}
 
+		// Multiply km/h values by this to get m/s
+		private const double KmhToMs = 0.277777777777778;
+
 		/// <summary>
 		/// Read the file of the specified train.dat
 		/// </summary>
@@ -236,7 +239,7 @@ namespace Train.OpenBve
 			BrakeSystemType locomotiveBrakeType = BrakeSystemType.ElectromagneticStraightAirBrake;
 			EletropneumaticBrakeType ElectropneumaticType = EletropneumaticBrakeType.None;
 			double BrakeControlSpeed = 0.0;
-			double BrakeDeceleration = 0.277777777777778;
+			double BrakeDeceleration = KmhToMs;
 			double JerkPowerUp = 10.0;
 			double JerkPowerDown = 10.0;
 			double JerkBrakeUp = 10.0;
@@ -308,25 +311,25 @@ namespace Train.OpenBve
 											if (a <= 0.0) {
 												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "a0 in section #ACCELERATION is expected to be greater than zero" + At(i + 1, FileName));
 											} else {
-												AccelerationCurves[n].StageZeroAcceleration = a * 0.277777777777778;
+												AccelerationCurves[n].StageZeroAcceleration = a * KmhToMs;
 											} break;
 										case 1:
 											if (a <= 0.0) {
 												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "a1 in section #ACCELERATION is expected to be greater than zero" + At(i + 1, FileName));
 											} else {
-												AccelerationCurves[n].StageOneAcceleration = a * 0.277777777777778;
+												AccelerationCurves[n].StageOneAcceleration = a * KmhToMs;
 											} break;
 										case 2:
 											if (a <= 0.0) {
 												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "v1 in section #ACCELERATION is expected to be greater than zero" + At(i + 1, FileName));
 											} else {
-												AccelerationCurves[n].StageOneSpeed = a * 0.277777777777778;
+												AccelerationCurves[n].StageOneSpeed = a * KmhToMs;
 											} break;
 										case 3:
 											if (a <= 0.0) {
 												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "v2 in section #ACCELERATION is expected to be greater than zero" + At(i + 1, FileName));
 											} else {
-												AccelerationCurves[n].StageTwoSpeed = a * 0.277777777777778;
+												AccelerationCurves[n].StageTwoSpeed = a * KmhToMs;
 												if (AccelerationCurves[n].StageTwoSpeed < AccelerationCurves[n].StageOneSpeed) {
 													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "v2 in section #ACCELERATION is expected to be greater than or equal to v1" + At(i + 1, FileName));
 													AccelerationCurves[n].StageTwoSpeed = AccelerationCurves[n].StageOneSpeed;
@@ -367,7 +370,7 @@ namespace Train.OpenBve
 										if (a < 0.0) {
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BrakeDeceleration is expected to be non-negative" + At(i + 1, FileName));
 										} else {
-											BrakeDeceleration = a * 0.277777777777778;
+											BrakeDeceleration = a * KmhToMs;
 										} break;
 									case 1:
 										if (a < 0.0) {
@@ -631,7 +634,7 @@ namespace Train.OpenBve
 											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BrakeControlSpeed will be ignored due to the current brake setup" + At(i + 1, FileName));
 											break;
 										}
-										BrakeControlSpeed = a * 0.277777777777778; //Convert to m/s
+										BrakeControlSpeed = a * KmhToMs; //Convert to m/s
 										break;
 									case 3:
 										b = (int) Math.Round(a);

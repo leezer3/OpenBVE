@@ -13,6 +13,11 @@ namespace CsvRwRouteParser
 			+ ", column " + expression.Column.ToString(CultureInfo.InvariantCulture)
 			+ " in file " + expression.File;
 
+		// Multiply millimeter values by this to get meters
+		private const double MmToM = 0.001;
+		// Signal height used when none is given
+		private const double DefaultSignalHeight = 4.8;
+
 		private static void ParseSafetySystem(string system, TrackCommand command, Expression expression, out SafetySystem device)
 		{
 			if (!Enum.TryParse(system, true, out device))

@@ -161,7 +161,7 @@ namespace CsvRwRouteParser
 						}
 						else
 						{
-							cant *= 0.001;
+							cant *= MmToM;
 						}
 
 						currentRail.CurveCant = cant;
@@ -320,7 +320,7 @@ namespace CsvRwRouteParser
 						p = 0.0;
 					}
 
-					Data.Blocks[BlockIndex].Pitch = 0.001 * p;
+					Data.Blocks[BlockIndex].Pitch = MmToM * p;
 				}
 					break;
 				case TrackCommand.Curve:
@@ -340,7 +340,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						cant *= 0.001;
+						cant *= MmToM;
 					}
 
 					if (Data.SignedCant)
@@ -616,7 +616,7 @@ namespace CsvRwRouteParser
 
 						int n = Data.Blocks[BlockIndex].Signals.Length;
 						Array.Resize(ref Data.Blocks[BlockIndex].Signals, n + 1);
-						Data.Blocks[BlockIndex].Signals[n] = new Signal(Data.TrackPosition, CurrentSection + section, signalObject, new Vector2(x, y < 0.0 ? 4.8 : y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians(), true, y < 0.0);
+						Data.Blocks[BlockIndex].Signals[n] = new Signal(Data.TrackPosition, CurrentSection + section, signalObject, new Vector2(x, y < 0.0 ? DefaultSignalHeight : y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians(), true, y < 0.0);
 					}
 				}
 					break;
@@ -746,7 +746,7 @@ namespace CsvRwRouteParser
 						CurrentSection++;
 						n = Data.Blocks[BlockIndex].Signals.Length;
 						Array.Resize(ref Data.Blocks[BlockIndex].Signals, n + 1);
-						Data.Blocks[BlockIndex].Signals[n] = new Signal(Data.TrackPosition, CurrentSection, Data.CompatibilitySignals[comp], new Vector2(x, y < 0.0 ? 4.8 : y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians(), x != 0.0, x != 0.0 & y < 0.0);
+						Data.Blocks[BlockIndex].Signals[n] = new Signal(Data.TrackPosition, CurrentSection, Data.CompatibilitySignals[comp], new Vector2(x, y < 0.0 ? DefaultSignalHeight : y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians(), x != 0.0, x != 0.0 & y < 0.0);
 					}
 				}
 					break;
@@ -788,7 +788,7 @@ namespace CsvRwRouteParser
 
 						int n = Data.Blocks[BlockIndex].Signals.Length;
 						Array.Resize(ref Data.Blocks[BlockIndex].Signals, n + 1);
-						Data.Blocks[BlockIndex].Signals[n] = new Signal(Data.TrackPosition, CurrentSection + 1, Data.CompatibilitySignals[8], new Vector2(x, y < 0.0 ? 4.8 : y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians(), x != 0.0, x != 0.0 & y < 0.0);
+						Data.Blocks[BlockIndex].Signals[n] = new Signal(Data.TrackPosition, CurrentSection + 1, Data.CompatibilitySignals[8], new Vector2(x, y < 0.0 ? DefaultSignalHeight : y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians(), x != 0.0, x != 0.0 & y < 0.0);
 					}
 				}
 					break;
