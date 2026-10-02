@@ -58,6 +58,24 @@ namespace Train.OpenBve
 			}
 		}
 
+		// Load an image path, reporting illegal names and missing files
+		private void TryLoadImage(string value, string key, string section, int lineNumber, string fileName, string trainFolder, ref string target)
+		{
+			if (Path.ContainsInvalidChars(value))
+			{
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + key + " in " + section + At(lineNumber, fileName));
+			}
+			else
+			{
+				target = Path.CombineFile(trainFolder, value);
+				if (!File.Exists(target))
+				{
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + target + " could not be found in " + key + " in " + section + At(lineNumber, fileName));
+					target = null;
+				}
+			}
+		}
+
 		// constants
 		private const double StackDistance = 0.000001;
 		/// <remarks>EyeDistance is required to be 1.0 by UpdateCarSectionElement and by UpdateCameraRestriction, thus cannot be easily changed.</remarks>
@@ -173,34 +191,10 @@ namespace Train.OpenBve
 										}
 										break;
 									case Panel2Key.DaytimeImage:
-										if (Path.ContainsInvalidChars(Value))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + section + At(LineNumber, FileName));
-										}
-										else
-										{
-											PanelDaytimeImage = Path.CombineFile(Train.TrainFolder, Value);
-											if (!File.Exists(PanelDaytimeImage))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + PanelDaytimeImage + " could not be found in " + Key + " in " + section + At(LineNumber, FileName));
-												PanelDaytimeImage = null;
-											}
-										}
+										TryLoadImage(Value, Key.ToString(), section.ToString(), LineNumber, FileName, Train.TrainFolder, ref PanelDaytimeImage);
 										break;
 									case Panel2Key.NighttimeImage:
-										if (Path.ContainsInvalidChars(Value))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + section + At(LineNumber, FileName));
-										}
-										else
-										{
-											PanelNighttimeImage = Path.CombineFile(Train.TrainFolder, Value);
-											if (!File.Exists(PanelNighttimeImage))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + PanelNighttimeImage + " could not be found in " + Key + " in " + section + At(LineNumber, FileName));
-												PanelNighttimeImage = null;
-											}
-										}
+										TryLoadImage(Value, Key.ToString(), section.ToString(), LineNumber, FileName, Train.TrainFolder, ref PanelNighttimeImage);
 										break;
 									case Panel2Key.TransparentColor:
 										if (Value.Length != 0 && !Color24.TryParseHexColor(Value, out PanelTransparentColor))
@@ -475,34 +469,10 @@ namespace Train.OpenBve
 										TryParsePair(Value, Key.ToString(), Section.ToString(), LineNumber, FileName, "Left", "Top", ref LocationX, ref LocationY);
 										break;
 									case Panel2Key.DaytimeImage:
-										if (Path.ContainsInvalidChars(Value))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + At(LineNumber, FileName));
-										}
-										else
-										{
-											DaytimeImage = Path.CombineFile(Train.TrainFolder, Value);
-											if (!File.Exists(DaytimeImage))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + At(LineNumber, FileName));
-												DaytimeImage = null;
-											}
-										}
+										TryLoadImage(Value, Key.ToString(), Section.ToString(), LineNumber, FileName, Train.TrainFolder, ref DaytimeImage);
 										break;
 									case Panel2Key.NighttimeImage:
-										if (Path.ContainsInvalidChars(Value))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + At(LineNumber, FileName));
-										}
-										else
-										{
-											NighttimeImage = Path.CombineFile(Train.TrainFolder, Value);
-											if (!File.Exists(NighttimeImage))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + At(LineNumber, FileName));
-												NighttimeImage = null;
-											}
-										}
+										TryLoadImage(Value, Key.ToString(), Section.ToString(), LineNumber, FileName, Train.TrainFolder, ref NighttimeImage);
 										break;
 									case Panel2Key.TransparentColor:
 										if (Value.Length != 0 && !Color24.TryParseHexColor(Value, out TransparentColor))
@@ -599,34 +569,10 @@ namespace Train.OpenBve
 										}
 										break;
 									case Panel2Key.DaytimeImage:
-										if (Path.ContainsInvalidChars(Value))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + At(LineNumber, FileName));
-										}
-										else
-										{
-											DaytimeImage = Path.CombineFile(Train.TrainFolder, Value);
-											if (!File.Exists(DaytimeImage))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + At(LineNumber, FileName));
-												DaytimeImage = null;
-											}
-										}
+										TryLoadImage(Value, Key.ToString(), Section.ToString(), LineNumber, FileName, Train.TrainFolder, ref DaytimeImage);
 										break;
 									case Panel2Key.NighttimeImage:
-										if (Path.ContainsInvalidChars(Value))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + At(LineNumber, FileName));
-										}
-										else
-										{
-											NighttimeImage = Path.CombineFile(Train.TrainFolder, Value);
-											if (!File.Exists(NighttimeImage))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + At(LineNumber, FileName));
-												NighttimeImage = null;
-											}
-										}
+										TryLoadImage(Value, Key.ToString(), Section.ToString(), LineNumber, FileName, Train.TrainFolder, ref NighttimeImage);
 										break;
 									case Panel2Key.Color:
 										if (Value.Length != 0 && !Color32.TryParseHexColor(Value, out Color))
@@ -878,34 +824,10 @@ namespace Train.OpenBve
 										}
 										break;
 									case Panel2Key.DaytimeImage:
-										if (Path.ContainsInvalidChars(Value))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + At(LineNumber, FileName));
-										}
-										else
-										{
-											DaytimeImage = Path.CombineFile(Train.TrainFolder, Value);
-											if (!File.Exists(DaytimeImage))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + At(LineNumber, FileName));
-												DaytimeImage = null;
-											}
-										}
+										TryLoadImage(Value, Key.ToString(), Section.ToString(), LineNumber, FileName, Train.TrainFolder, ref DaytimeImage);
 										break;
 									case Panel2Key.NighttimeImage:
-										if (Path.ContainsInvalidChars(Value))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + At(LineNumber, FileName));
-										}
-										else
-										{
-											NighttimeImage = Path.CombineFile(Train.TrainFolder, Value);
-											if (!File.Exists(NighttimeImage))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + At(LineNumber, FileName));
-												NighttimeImage = null;
-											}
-										}
+										TryLoadImage(Value, Key.ToString(), Section.ToString(), LineNumber, FileName, Train.TrainFolder, ref NighttimeImage);
 										break;
 									case Panel2Key.TransparentColor:
 										if (Value.Length != 0 && !Color24.TryParseHexColor(Value, out TransparentColor))
@@ -992,34 +914,10 @@ namespace Train.OpenBve
 										TryParsePair(Value, Key.ToString(), Section.ToString(), LineNumber, FileName, "Left", "Top", ref LocationX, ref LocationY);
 										break;
 									case Panel2Key.DaytimeImage:
-										if (Path.ContainsInvalidChars(Value))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + At(LineNumber, FileName));
-										}
-										else
-										{
-											DaytimeImage = Path.CombineFile(Train.TrainFolder, Value);
-											if (!File.Exists(DaytimeImage))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + At(LineNumber, FileName));
-												DaytimeImage = null;
-											}
-										}
+										TryLoadImage(Value, Key.ToString(), Section.ToString(), LineNumber, FileName, Train.TrainFolder, ref DaytimeImage);
 										break;
 									case Panel2Key.NighttimeImage:
-										if (Path.ContainsInvalidChars(Value))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + At(LineNumber, FileName));
-										}
-										else
-										{
-											NighttimeImage = Path.CombineFile(Train.TrainFolder, Value);
-											if (!File.Exists(NighttimeImage))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + At(LineNumber, FileName));
-												NighttimeImage = null;
-											}
-										}
+										TryLoadImage(Value, Key.ToString(), Section.ToString(), LineNumber, FileName, Train.TrainFolder, ref NighttimeImage);
 										break;
 									case Panel2Key.TransparentColor:
 										if (Value.Length != 0 && !Color24.TryParseHexColor(Value, out TransparentColor))
