@@ -616,7 +616,7 @@ namespace CsvRwRouteParser
 						if (num != 1 & num != -2 & num != 2 & num != -3 & num != 3 & num != -4 & num != 4 & num != -5 & num != 5 & num != 6)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Aspects has an unsupported value in " + Command + At(Expression));
-							num = num == -3 | num == -6 | num == -1 ? -num : -4;
+							num = num == -3 || num == -6 || num == -1 ? -num : -4;
 						}
 
 						double x, y, yaw, pitch, roll;

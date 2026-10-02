@@ -725,7 +725,7 @@ namespace Train.OpenBve
 								double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
 								double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 								f += " " + a1.ToString(Culture) + " * " + a0.ToString(Culture) + " +";
-								if (NaturalFrequency >= 0.0 & DampingRatio >= 0.0)
+								if (NaturalFrequency >= 0.0 && DampingRatio >= 0.0)
 								{
 									CarSection.Groups[GroupIndex].Elements[j].RotateZDamping = new Damping(NaturalFrequency, DampingRatio);
 								}
