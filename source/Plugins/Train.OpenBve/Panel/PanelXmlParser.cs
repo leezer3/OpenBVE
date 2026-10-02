@@ -35,6 +35,29 @@ namespace Train.OpenBve
 			" at line " + lineNumber.ToString(System.Globalization.CultureInfo.InvariantCulture)
 			+ " in " + fileName;
 
+		// Parse a comma-separated pair of numbers, reporting each bad part by name
+		private void TryParsePair(string value, string key, string section, int lineNumber, string fileName, string firstName, string secondName, ref double first, ref double second)
+		{
+			int k = value.IndexOf(',');
+			if (k >= 0)
+			{
+				string a = value.Substring(0, k).TrimEnd();
+				string b = value.Substring(k + 1).TrimStart();
+				if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out first))
+				{
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, firstName + " is invalid in " + key + " in " + section + At(lineNumber, fileName));
+				}
+				if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out second))
+				{
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, secondName + " is invalid in " + key + " in " + section + At(lineNumber, fileName));
+				}
+			}
+			else
+			{
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + key + " in " + section + At(lineNumber, fileName));
+			}
+		}
+
 		// constants
 		private const double StackDistance = 0.000001;
 		/// <remarks>EyeDistance is required to be 1.0 by UpdateCarSectionElement and by UpdateCameraRestriction, thus cannot be easily changed.</remarks>
@@ -188,46 +211,12 @@ namespace Train.OpenBve
 										break;
 									case Panel2Key.Center:
 										{
-											int k = Value.IndexOf(',');
-											if (k >= 0)
-											{
-												string a = Value.Substring(0, k).TrimEnd();
-												string b = Value.Substring(k + 1).TrimStart();
-												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelCenter.X))
-												{
-													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + section + At(LineNumber, FileName));
-												}
-												if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out PanelCenter.Y))
-												{
-													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + section + At(LineNumber, FileName));
-												}
-											}
-											else
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + section + At(LineNumber, FileName));
-											}
+											TryParsePair(Value, Key.ToString(), section.ToString(), LineNumber, FileName, "X", "Y", ref PanelCenter.X, ref PanelCenter.Y);
 											break;
 										}
 									case Panel2Key.Origin:
 										{
-											int k = Value.IndexOf(',');
-											if (k >= 0)
-											{
-												string a = Value.Substring(0, k).TrimEnd();
-												string b = Value.Substring(k + 1).TrimStart();
-												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelOrigin.X))
-												{
-													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + section + At(LineNumber, FileName));
-												}
-												if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out PanelOrigin.Y))
-												{
-													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + section + At(LineNumber, FileName));
-												}
-											}
-											else
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + section + At(LineNumber, FileName));
-											}
+											TryParsePair(Value, Key.ToString(), section.ToString(), LineNumber, FileName, "X", "Y", ref PanelOrigin.X, ref PanelOrigin.Y);
 											break;
 										}
 								}
@@ -361,46 +350,12 @@ namespace Train.OpenBve
 								{
 									case Panel2Key.Location:
 										{
-											int k = Value.IndexOf(',');
-											if (k >= 0)
-											{
-												string a = Value.Substring(0, k).TrimEnd();
-												string b = Value.Substring(k + 1).TrimStart();
-												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out Location.X))
-												{
-													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + At(LineNumber, FileName));
-												}
-												if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out Location.Y))
-												{
-													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + At(LineNumber, FileName));
-												}
-											}
-											else
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + At(LineNumber, FileName));
-											}
+											TryParsePair(Value, Key.ToString(), Section.ToString(), LineNumber, FileName, "Left", "Top", ref Location.X, ref Location.Y);
 										}
 										break;
 									case Panel2Key.Size:
 										{
-											int k = Value.IndexOf(',');
-											if (k >= 0)
-											{
-												string a = Value.Substring(0, k).TrimEnd();
-												string b = Value.Substring(k + 1).TrimStart();
-												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out Size.X))
-												{
-													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "SizeX is invalid in " + Key + " in " + Section + At(LineNumber, FileName));
-												}
-												if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out Size.Y))
-												{
-													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "SizeY is invalid in " + Key + " in " + Section + At(LineNumber, FileName));
-												}
-											}
-											else
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + At(LineNumber, FileName));
-											}
+											TryParsePair(Value, Key.ToString(), Section.ToString(), LineNumber, FileName, "SizeX", "SizeY", ref Size.X, ref Size.Y);
 										}
 										break;
 									case Panel2Key.JumpScreen:
@@ -517,24 +472,7 @@ namespace Train.OpenBve
 										Function = Value;
 										break;
 									case Panel2Key.Location:
-										int k = Value.IndexOf(',');
-										if (k >= 0)
-										{
-											string a = Value.Substring(0, k).TrimEnd();
-											string b = Value.Substring(k + 1).TrimStart();
-											if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + At(LineNumber, FileName));
-											}
-											if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + At(LineNumber, FileName));
-											}
-										}
-										else
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + At(LineNumber, FileName));
-										}
+										TryParsePair(Value, Key.ToString(), Section.ToString(), LineNumber, FileName, "Left", "Top", ref LocationX, ref LocationY);
 										break;
 									case Panel2Key.DaytimeImage:
 										if (Path.ContainsInvalidChars(Value))
@@ -646,24 +584,7 @@ namespace Train.OpenBve
 										break;
 									case Panel2Key.Location:
 										{
-											int k = Value.IndexOf(',');
-											if (k >= 0)
-											{
-												string a = Value.Substring(0, k).TrimEnd();
-												string b = Value.Substring(k + 1).TrimStart();
-												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
-												{
-													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + At(LineNumber, FileName));
-												}
-												if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY))
-												{
-													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CenterY is invalid in " + Key + " in " + Section + At(LineNumber, FileName));
-												}
-											}
-											else
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + At(LineNumber, FileName));
-											}
+											TryParsePair(Value, Key.ToString(), Section.ToString(), LineNumber, FileName, "CenterX", "CenterY", ref LocationX, ref LocationY);
 										}
 										break;
 									case Panel2Key.Radius:
@@ -914,24 +835,7 @@ namespace Train.OpenBve
 										Function = Value;
 										break;
 									case Panel2Key.Location:
-										int k = Value.IndexOf(',');
-										if (k >= 0)
-										{
-											string a = Value.Substring(0, k).TrimEnd();
-											string b = Value.Substring(k + 1).TrimStart();
-											if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + At(LineNumber, FileName));
-											}
-											if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + At(LineNumber, FileName));
-											}
-										}
-										else
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + At(LineNumber, FileName));
-										}
+										TryParsePair(Value, Key.ToString(), Section.ToString(), LineNumber, FileName, "Left", "Top", ref LocationX, ref LocationY);
 										break;
 									case Panel2Key.Minimum:
 										if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Minimum))
@@ -1085,24 +989,7 @@ namespace Train.OpenBve
 										Function = Value;
 										break;
 									case Panel2Key.Location:
-										int k = Value.IndexOf(',');
-										if (k >= 0)
-										{
-											string a = Value.Substring(0, k).TrimEnd();
-											string b = Value.Substring(k + 1).TrimStart();
-											if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + At(LineNumber, FileName));
-											}
-											if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + At(LineNumber, FileName));
-											}
-										}
-										else
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + At(LineNumber, FileName));
-										}
+										TryParsePair(Value, Key.ToString(), Section.ToString(), LineNumber, FileName, "Left", "Top", ref LocationX, ref LocationY);
 										break;
 									case Panel2Key.DaytimeImage:
 										if (Path.ContainsInvalidChars(Value))
@@ -1275,24 +1162,7 @@ namespace Train.OpenBve
 										Function = Value;
 										break;
 									case Panel2Key.Location:
-										int k = Value.IndexOf(',');
-										if (k >= 0)
-										{
-											string a = Value.Substring(0, k).TrimEnd();
-											string b = Value.Substring(k + 1).TrimStart();
-											if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + At(LineNumber, FileName));
-											}
-											if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CenterY is invalid in " + Key + " in " + Section + At(LineNumber, FileName));
-											}
-										}
-										else
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + At(LineNumber, FileName));
-										}
+										TryParsePair(Value, Key.ToString(), Section.ToString(), LineNumber, FileName, "CenterX", "CenterY", ref LocationX, ref LocationY);
 										break;
 									case Panel2Key.Radius:
 										if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Radius))
@@ -1469,24 +1339,7 @@ namespace Train.OpenBve
 								switch (Key)
 								{
 									case Panel2Key.Location:
-										int k = Value.IndexOf(',');
-										if (k >= 0)
-										{
-											string a = Value.Substring(0, k).TrimEnd();
-											string b = Value.Substring(k + 1).TrimStart();
-											if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + At(LineNumber, FileName));
-											}
-											if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY))
-											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + At(LineNumber, FileName));
-											}
-										}
-										else
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + At(LineNumber, FileName));
-										}
+										TryParsePair(Value, Key.ToString(), Section.ToString(), LineNumber, FileName, "X", "Y", ref LocationX, ref LocationY);
 										break;
 									case Panel2Key.Width:
 										if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Width))
@@ -1563,50 +1416,13 @@ namespace Train.OpenBve
 							Enum.TryParse(KeyNode.Name.LocalName, true, out Panel2Key Key);
 							string Value = KeyNode.Value;
 							int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
-							int k;
 							switch (Key)
 							{
 								case Panel2Key.TopLeft:
-									k = Value.IndexOf(',');
-									if (k >= 0)
-									{
-										string a = Value.Substring(0, k).TrimEnd();
-										string b = Value.Substring(k + 1).TrimStart();
-										if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out topLeft.X))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + At(LineNumber, FileName));
-										}
-
-										if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out topLeft.Y))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + At(LineNumber, FileName));
-										}
-									}
-									else
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + At(LineNumber, FileName));
-									}
+									TryParsePair(Value, Key.ToString(), Section.ToString(), LineNumber, FileName, "X", "Y", ref topLeft.X, ref topLeft.Y);
 									break;
 								case Panel2Key.BottomRight:
-									k = Value.IndexOf(',');
-									if (k >= 0)
-									{
-										string a = Value.Substring(0, k).TrimEnd();
-										string b = Value.Substring(k + 1).TrimStart();
-										if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out bottomRight.X))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + At(LineNumber, FileName));
-										}
-
-										if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out bottomRight.Y))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + At(LineNumber, FileName));
-										}
-									}
-									else
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + At(LineNumber, FileName));
-									}
+									TryParsePair(Value, Key.ToString(), Section.ToString(), LineNumber, FileName, "X", "Y", ref bottomRight.X, ref bottomRight.Y);
 									break;
 								case Panel2Key.NumberOfDrops:
 									if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out numberOfDrops))
