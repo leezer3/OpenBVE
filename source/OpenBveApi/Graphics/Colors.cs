@@ -373,7 +373,7 @@ namespace OpenBveApi.Colors {
 		/// <returns>Whether the two colors are equal.</returns>
 		public bool Equals(Color32 a, Color32 b)
 		{
-			return a.R != b.R | a.G != b.G | a.B != b.B | a.A != b.A;
+			return a.R == b.R & a.G == b.G & a.B == b.B & a.A == b.A;
 		}
 
 		/// <summary>Checks whether this instance and a specified object are equal.</summary>
@@ -781,7 +781,7 @@ namespace OpenBveApi.Colors {
 		/// <returns>Whether the two colors are equal.</returns>
 		public bool Equals(Color96 a, Color96 b)
 		{
-			return a.R != b.R | a.G != b.G | a.B != b.B;
+			return a.R == b.R & a.G == b.G & a.B == b.B;
 		}
 
 		/// <summary>Checks whether this instance and a specified object are equal.</summary>
@@ -905,7 +905,7 @@ namespace OpenBveApi.Colors {
 		/// <returns>Whether the two colors are equal.</returns>
 		public bool Equals(Color128 a, Color128 b)
 		{
-			return a.R != b.R | a.G != b.G | a.B != b.B | a.A != b.A;
+			return a.R == b.R & a.G == b.G & a.B == b.B & a.A == b.A;
 		}
 
 		/// <summary>Checks whether this instance and a specified object are equal.</summary>

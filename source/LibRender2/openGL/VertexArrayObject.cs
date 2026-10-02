@@ -200,6 +200,66 @@ namespace LibRender2
 		}
 
 		
+		/// <summary>One rendered corner: the shared template plus its face normal</summary>
+		/// <remarks>
+		/// Template equality covers everything LibRenderVertex consumes, so equal keys
+		/// always render identically. (AnimatedVertex compares chains by reference,
+		/// which only ever misses sharing, never merges wrongly.)
+		/// </remarks>
+		private struct WeldKey
+		{
+			public VertexTemplate Template;
+			public Vector3 Normal;
+		}
+
+		private sealed class WeldKeyComparer : IEqualityComparer<WeldKey>
+		{
+			public bool Equals(WeldKey a, WeldKey b)
+			{
+				return a.Template.Equals(b.Template) &&
+					a.Normal.X == b.Normal.X && a.Normal.Y == b.Normal.Y && a.Normal.Z == b.Normal.Z;
+			}
+
+			public int GetHashCode(WeldKey key)
+			{
+				unchecked
+				{
+					int h = key.Template.GetHashCode();
+					h = (h * 397) ^ key.Normal.X.GetHashCode();
+					h = (h * 397) ^ key.Normal.Y.GetHashCode();
+					h = (h * 397) ^ key.Normal.Z.GetHashCode();
+					return h;
+				}
+			}
+		}
+
+		/// <summary>Expands faces into a welded vertex buffer plus a real index buffer</summary>
+		/// <remarks>
+		/// Identical corners share one vertex, numbered in first-use order (what
+		/// meshoptimizer's vertex-fetch pass produces). Each face keeps a contiguous
+		/// index run, so per-face IboStartIndex keeps working unchanged.
+		/// </remarks>
+		internal static void BuildIndexedData(Mesh mesh, List<LibRenderVertex> vertexData, List<uint> indexData)
+		{
+			Dictionary<WeldKey, uint> welded = new Dictionary<WeldKey, uint>(new WeldKeyComparer());
+			for (int i = 0; i < mesh.Faces.Length; i++)
+			{
+				mesh.Faces[i].IboStartIndex = indexData.Count;
+				foreach (MeshFaceVertex corner in mesh.Faces[i].Vertices)
+				{
+					WeldKey key = new WeldKey { Template = mesh.Vertices[corner.Index], Normal = corner.Normal };
+					uint index;
+					if (!welded.TryGetValue(key, out index))
+					{
+						index = (uint)vertexData.Count;
+						welded.Add(key, index);
+						vertexData.Add(new LibRenderVertex(key.Template, key.Normal));
+					}
+					indexData.Add(index);
+				}
+			}
+		}
+
 		private static void createOrUpdateVAO(Mesh mesh, bool isDynamic, VertexLayout vertexLayout, BaseRenderer renderer)
 		{
 			if (mesh == null)
@@ -222,18 +282,7 @@ namespace LibRender2
 
 			var vertexData = new List<LibRenderVertex>(totalFaceVertices);
 			var indexData = new List<uint>(totalFaceVertices);
-
-			for (int i = 0; i < mesh.Faces.Length; i++)
-			{
-				mesh.Faces[i].IboStartIndex = indexData.Count;
-
-				foreach (var vertex in mesh.Faces[i].Vertices)
-				{
-					vertexData.Add(new LibRenderVertex(mesh.Vertices[vertex], vertex.Normal));
-				}
-
-				indexData.AddRange(Enumerable.Range(mesh.Faces[i].IboStartIndex, mesh.Faces[i].Vertices.Length).Select(x => (uint)x));
-			}
+			BuildIndexedData(mesh, vertexData, indexData);
 
 			VertexArrayObject VAO = (VertexArrayObject)mesh.VAO;
 			if (VAO == null)
