@@ -382,13 +382,13 @@ namespace TrainManager.Car
 		public override void OpenDoors(bool Left, bool Right)
 		{
 			bool sl = false, sr = false;
-			if (Left & !Doors[0].AnticipatedOpen & (baseTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Left | baseTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
+			if (Left && !Doors[0].AnticipatedOpen && (baseTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Left || baseTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
 			{
 				Doors[0].AnticipatedOpen = true;
 				sl = true;
 			}
 
-			if (Right & !Doors[1].AnticipatedOpen & (baseTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Right | baseTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
+			if (Right && !Doors[1].AnticipatedOpen && (baseTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Right || baseTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
 			{
 				Doors[1].AnticipatedOpen = true;
 				sr = true;
@@ -815,7 +815,7 @@ namespace TrainManager.Car
 		private void UpdateCarSectionElement(CarSection CarSection, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 		{
 			Vector3 p;
-			if (CarSection.Type == ObjectType.Overlay & (TrainManagerBase.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && TrainManagerBase.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D))
+			if (CarSection.Type == ObjectType.Overlay && (TrainManagerBase.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && TrainManagerBase.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D))
 			{
 				p = new Vector3(Driver.X, Driver.Y, Driver.Z);
 			}
@@ -863,7 +863,7 @@ namespace TrainManager.Car
 		private void UpdateCarSectionTouchElement(CarSection CarSection, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 		{
 			Vector3 p;
-			if (CarSection.Type == ObjectType.Overlay & (TrainManagerBase.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && TrainManagerBase.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D))
+			if (CarSection.Type == ObjectType.Overlay && (TrainManagerBase.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && TrainManagerBase.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D))
 			{
 				p = new Vector3(Driver.X, Driver.Y, Driver.Z);
 			}
@@ -1036,7 +1036,7 @@ namespace TrainManager.Car
 
 			Specs.PitchDueToAccelerationAngle += Specs.PitchDueToAccelerationAngularSpeed * TimeElapsed;
 			// derailment
-			if (TrainManagerBase.Derailments & !Derailed)
+			if (TrainManagerBase.Derailments && !Derailed)
 			{
 				double a = Specs.RollDueToTopplingAngle + Specs.RollDueToCantAngle;
 				double sa = Math.Sign(a);
@@ -1194,7 +1194,7 @@ namespace TrainManager.Car
 			double FrictionBrakeAcceleration;
 			{
 				double v = Math.Abs(CurrentSpeed);
-				double t = Index == 0 & CurrentSpeed >= 0.0 || Index == baseTrain.NumberOfCars - 1 & CurrentSpeed <= 0.0 ? Specs.ExposedFrontalArea : Specs.UnexposedFrontalArea;
+				double t = (Index == 0 && CurrentSpeed >= 0.0) || (Index == baseTrain.NumberOfCars - 1 && CurrentSpeed <= 0.0) ? Specs.ExposedFrontalArea : Specs.UnexposedFrontalArea;
 
 				if (t == 0)
 				{
