@@ -50,7 +50,7 @@ namespace OpenBveApi.Colors
 		/// <returns>Whether the two colors are equal.</returns>
 		public bool Equals(Color96 a, Color96 b)
 		{
-			return a.R != b.R | a.G != b.G | a.B != b.B;
+			return a.R == b.R & a.G == b.G & a.B == b.B;
 		}
 
 		/// <summary>Checks whether this instance and a specified object are equal.</summary>
