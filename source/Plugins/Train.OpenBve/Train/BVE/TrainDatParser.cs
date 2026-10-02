@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -863,6 +863,12 @@ namespace Train.OpenBve
 										} else {
 											CarUnexposedFrontalArea = a;
 										} break;
+								}
+
+								if (Plugin.CurrentOptions.EnableBveTsHacks && currentFormat < TrainDatFormats.BVE1220000 && n == 3)
+								{
+									// Length, width etc. not valid in prior versions, so don't read in any present junk
+									break;
 								}
 							} i++; n++;
 						} i--; break;
