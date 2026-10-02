@@ -437,7 +437,7 @@ namespace TrainManager.Car
 			bool opened = false, closed = false, mixed = false;
 			for (int i = 0; i < Doors.Length; i++)
 			{
-				if (Left & Doors[i].Direction == -1 | Right & Doors[i].Direction == 1)
+				if (Left && Doors[i].Direction == -1 || Right && Doors[i].Direction == 1)
 				{
 					switch (Doors[i].State)
 					{
