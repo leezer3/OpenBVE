@@ -243,10 +243,9 @@ namespace Train.MsTs
 							currentCar.TractionModel = new TankEngine(currentCar, new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) }, MaxFuelLevel, MaxWaterLevel);
 						}
 
+						SteamProperties.Boiler.Create(currentCar.TractionModel);
 						currentCar.TractionModel.Components.Add(EngineComponent.CylinderCocks, new CylinderCocks(currentCar.TractionModel, SteamProperties.cylinderCocksAutomatic, CylinderCocksPowerModifier));
 						currentCar.TractionModel.Components.Add(EngineComponent.Blowers, new Blowers(currentCar.TractionModel));
-						currentCar.TractionModel.Components.Add(EngineComponent.Boiler, SteamProperties.Boiler.Create(currentCar.TractionModel));
-						currentCar.TractionModel.Components.Add(EngineComponent.SafetyValve, new SafetyValve(currentCar.TractionModel, SteamProperties.Boiler.SafetyValvePressureDifference, SteamProperties.Boiler.SafetyValveSteamUsage));
 						currentCar.TractionModel.Components.Add(EngineComponent.SteamInjector1, SteamProperties.Injectors[0].Create(currentCar.TractionModel));
 						currentCar.TractionModel.Components.Add(EngineComponent.SteamInjector2, SteamProperties.Injectors[1].Create(currentCar.TractionModel));
 						currentCar.TractionModel.Components.Add(EngineComponent.Firebox, new Firebox(currentCar.TractionModel, SteamProperties.MaxFireMass, Math.Min(SteamProperties.MaxFireMass, SteamProperties.StartingFireMass), SteamProperties.IdealFireMass, Math.Max(SteamProperties.StartingFireTemp, 500)));
@@ -1391,8 +1390,6 @@ namespace Train.MsTs
 					// pounds of steam / hr
 					// assume for the minute that 1lb of steam == 1lb of water
 					SteamProperties.Boiler.MaxOutput = block.ReadSingle(VolumetricUnit.LbPerHour);
-					// convert this to KG first, then divide by 3600 to give output per second
-					SteamProperties.Boiler.MaxOutput = SteamProperties.Boiler.MaxOutput / 2.205 / 3600;
 					break;
 				case KujuTokenID.MaxBoilerPressure:
 					SteamProperties.Boiler.MaxPressure = block.ReadSingle(UnitOfPressure.PoundsPerSquareInch);
@@ -1402,7 +1399,6 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.SafetyValvesSteamUsage:
 					SteamProperties.Boiler.SafetyValveSteamUsage = block.ReadSingle(VolumetricUnit.LbPerHour);
-					SteamProperties.Boiler.SafetyValveSteamUsage = SteamProperties.Boiler.SafetyValveSteamUsage / 2.205 / 3600;
 					break;
 				case KujuTokenID.InjectorTypes:
 					try

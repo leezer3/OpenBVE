@@ -27,14 +27,6 @@ namespace TrainManager.Motor
 {
 	public class Blowers : AbstractComponent
 	{
-		public bool Active;
-
-		public CarSound ActivationSound;
-
-		public CarSound DeactivationSound;
-
-		public CarSound LoopSound;
-
 		public Blowers(TractionModel engine) : base(engine)
 		{
 		}
