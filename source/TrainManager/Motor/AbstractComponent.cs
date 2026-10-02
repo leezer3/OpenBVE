@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using OpenBveApi.Interface;
+using SoundManager;
 
 namespace TrainManager.Motor
 {
@@ -34,7 +35,13 @@ namespace TrainManager.Motor
 	    public readonly bool Automatic;
 		/// <summary>Whether the component is currently operating / active</summary>
 	    public bool Active;
-		
+		/// <summary>The sound played when the component becomes active</summary>
+	    public CarSound ActivationSound;
+		/// <summary>The sound played when the component becomes inactive</summary>
+	    public CarSound DeactivationSound;
+		/// <summary>The loop sound played whilst the component is active</summary>
+	    public CarSound LoopSound;
+
 		protected AbstractComponent(TractionModel engine, bool automaticOperation)
 	    {
 			baseEngine = engine;

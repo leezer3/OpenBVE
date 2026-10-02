@@ -597,6 +597,28 @@ namespace Train.MsTs
 									}
 								}
 								break;
+							case SoundTrigger.SteamSafetyValveOn:
+								if (car.TractionModel.Components.TryGetTypedValue(EngineComponent.SafetyValve, out SafetyValve safetyValve))
+								{
+									if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
+									{
+										safetyValve.ActivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+									}
+									else
+									{
+										safetyValve.LoopSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+									}
+								}
+								break;
+							case SoundTrigger.SteamSafetyValveOff:
+								if (car.TractionModel.Components.TryGetTypedValue(EngineComponent.SafetyValve, out safetyValve))
+								{
+									if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
+									{
+										safetyValve.DeactivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+									}
+								}
+								break;
 							case SoundTrigger.DoorOpen:
 								car.Doors[0].OpenSound = new CarSound(Plugin.CurrentHost, soundFile, 5.0, new Vector3(-1.3, 0.0, 0.0));
 								car.Doors[1].OpenSound = new CarSound(Plugin.CurrentHost, soundFile, 5.0, new Vector3(1.3, 0.0, 0.0));

@@ -20,29 +20,42 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
+using OpenBveApi.Motor;
 using TrainManager.Motor;
 
 namespace Train.MsTs
 {
 	internal class BoilerProperties
 	{
+		/// <summary>The length of the boiler in M</summary>
 		internal double Length = 5;
-
+		/// <summary>The max steam output of the boier in lb/h</summary>
 		internal double MaxOutput = 32500; // no default specified in techdocs
-
+		/// <summary>The max pressure of the boiler in PSI</summary>
 		internal double MaxPressure = 180; // no default specified in techdocs
-
+		/// <summary>The trigger point for the safety valve, above MaxPressure</summary>
 		internal double SafetyValvePressureDifference = 5;
-
+		/// <summary>The steam expelled by the safety valve in lb/h</summary>
 		internal double SafetyValveSteamUsage = 8000;
-
+		/// <summary>The starting water level in L</summary>
 		internal double StartingWater;
-
+		/// <summary>The starting pressure in PSI</summary>
 		internal double StartingPressure;
 
-		internal AbstractComponent Create(TractionModel model)
+		internal void Create(TractionModel model)
 		{
-			return new Boiler(model, Length, MaxPressure, MaxOutput, StartingWater, StartingPressure);
+			/* assume that the safety valve must always be able to dump at least 2x more than the boiler
+			 *
+			 * Note that both of these were probably limited to 20,000lb/h in default MSTS
+			 * (MSTS-Dampflokomotive.de.doc)
+			 *
+			 * Probably a calculation slip somewhere too- generation / usage figures seem to be out by a factor of 100 at the minute
+			 */
+
+			SafetyValveSteamUsage = Math.Max(MaxOutput * 2, SafetyValveSteamUsage);
+			model.Components.Add(EngineComponent.Boiler, new Boiler(model, Length, MaxPressure, MaxOutput / 2.205 / 3600 / 100, StartingWater, StartingPressure));
+			model.Components.Add(EngineComponent.SafetyValve, new SafetyValve(model, MaxPressure + SafetyValvePressureDifference, MaxPressure - SafetyValvePressureDifference, SafetyValveSteamUsage / 2.205 / 3600 / 100));
 		}
 	}
 }

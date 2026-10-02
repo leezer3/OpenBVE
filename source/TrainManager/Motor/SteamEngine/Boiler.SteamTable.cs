@@ -121,10 +121,10 @@ namespace TrainManager.Motor
 			if (tableIndex <= Values.Length - 1)
 			{
 				double mu = (pressure - Values[tableIndex].Pressure) / (Values[tableIndex + 1].Pressure - Values[tableIndex].Pressure);
-				return Values[tableIndex].SpecificVolume + ((Values[tableIndex + 1].SpecificVolume - Values[tableIndex].SpecificVolume) * mu);
+				return Values[tableIndex].Density + ((Values[tableIndex + 1].Density - Values[tableIndex].Density) * mu);
 			}
 
-			return Values[tableIndex].SpecificVolume;
+			return Values[tableIndex].Density;
 		}
 
 		/// <summary>Gets the steam volume in L / kg for the given pressure</summary>
@@ -145,10 +145,10 @@ namespace TrainManager.Motor
 			if (tableIndex > 0)
 			{
 				double mu = (pressure - Values[tableIndex - 1].Pressure) / (Values[tableIndex].Pressure - Values[tableIndex - 1].Pressure);
-				return (Values[tableIndex - 1].Density + ((Values[tableIndex].Density - Values[tableIndex -1].Density) * mu)) * 1000;
+				return (Values[tableIndex - 1].Density + ((Values[tableIndex].Density - Values[tableIndex -1].Density) * mu));
 			}
 
-			return Values[tableIndex].Density * 1000; // stored as m3/kg at the minute, return as l/kg
+			return Values[tableIndex].Density;
 		}
 
 		/// <summary>Gets the enthalpy value for steam in kJ / kg for the given pressure</summary>
@@ -180,7 +180,6 @@ namespace TrainManager.Motor
 		/// <returns>The steam pressure in PSI</returns>
 		internal static double GetPressure(double density)
 		{
-			density /= 1000; // L to m3
 			int tableIndex;
 			for (tableIndex = 0; tableIndex < Values.Length - 1; tableIndex++)
 			{
