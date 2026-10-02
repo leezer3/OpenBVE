@@ -582,37 +582,8 @@ namespace CsvRwRouteParser
 							section = 0;
 						}
 
-						double x = 0.0, y = 0.0;
-						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out x))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Track.SigF" + At(Expression));
-							x = 0.0;
-						}
-
-						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out y))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Track.SigF" + At(Expression));
-							y = 0.0;
-						}
-
-						double yaw = 0.0, pitch = 0.0, roll = 0.0;
-						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out yaw))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in Track.SigF" + At(Expression));
-							yaw = 0.0;
-						}
-
-						if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out pitch))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in Track.SigF" + At(Expression));
-							pitch = 0.0;
-						}
-
-						if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], out roll))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in Track.SigF" + At(Expression));
-							roll = 0.0;
-						}
+						double x, y, yaw, pitch, roll;
+						ParseOffset(Arguments, 2, "Track.SigF", Expression, UnitOfLength, out x, out y, out yaw, out pitch, out roll);
 
 						int n = Data.Blocks[BlockIndex].Signals.Length;
 						Array.Resize(ref Data.Blocks[BlockIndex].Signals, n + 1);
@@ -648,37 +619,8 @@ namespace CsvRwRouteParser
 							num = num == -3 | num == -6 | num == -1 ? -num : -4;
 						}
 
-						double x = 0.0, y = 0.0;
-						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out x))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + At(Expression));
-							x = 0.0;
-						}
-
-						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out y))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + At(Expression));
-							y = 0.0;
-						}
-
-						double yaw = 0.0, pitch = 0.0, roll = 0.0;
-						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out yaw))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in " + Command + At(Expression));
-							yaw = 0.0;
-						}
-
-						if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out pitch))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in " + Command + At(Expression));
-							pitch = 0.0;
-						}
-
-						if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], out roll))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in " + Command + At(Expression));
-							roll = 0.0;
-						}
+						double x, y, yaw, pitch, roll;
+						ParseOffset(Arguments, 2, Command.ToString(), Expression, UnitOfLength, out x, out y, out yaw, out pitch, out roll);
 
 						int[] aspects;
 						int comp;
@@ -754,37 +696,8 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						double x = 0.0, y = 0.0;
-						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out x))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Track.Relay" + At(Expression));
-							x = 0.0;
-						}
-
-						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out y))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Track.Relay" + At(Expression));
-							y = 0.0;
-						}
-
-						double yaw = 0.0, pitch = 0.0, roll = 0.0;
-						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out yaw))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in Track.Relay" + At(Expression));
-							yaw = 0.0;
-						}
-
-						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out pitch))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in Track.Relay" + At(Expression));
-							pitch = 0.0;
-						}
-
-						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out roll))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in Track.Relay" + At(Expression));
-							roll = 0.0;
-						}
+						double x, y, yaw, pitch, roll;
+						ParseOffset(Arguments, 0, "Track.Relay", Expression, UnitOfLength, out x, out y, out yaw, out pitch, out roll);
 
 						int n = Data.Blocks[BlockIndex].Signals.Length;
 						Array.Resize(ref Data.Blocks[BlockIndex].Signals, n + 1);
@@ -851,37 +764,8 @@ namespace CsvRwRouteParser
 								triggerOnce = 0;
 							}
 
-							double x = 0.0, y = 0.0;
-							double yaw = 0.0, pitch = 0.0, roll = 0.0;
-							if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], UnitOfLength, out x))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Track.Destination" + At(Expression));
-								x = 0.0;
-							}
-
-							if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], UnitOfLength, out y))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Track.Destination" + At(Expression));
-								y = 0.0;
-							}
-
-							if (Arguments.Length >= 8 && Arguments[7].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[7], out yaw))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in Track.Destination" + At(Expression));
-								yaw = 0.0;
-							}
-
-							if (Arguments.Length >= 9 && Arguments[8].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[8], out pitch))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in Track.Destination" + At(Expression));
-								pitch = 0.0;
-							}
-
-							if (Arguments.Length >= 10 && Arguments[9].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[9], out roll))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in Track.Destination" + At(Expression));
-								roll = 0.0;
-							}
+							double x, y, yaw, pitch, roll;
+							ParseOffset(Arguments, 5, "Track.Destination", Expression, UnitOfLength, out x, out y, out yaw, out pitch, out roll);
 
 							int n = Data.Blocks[BlockIndex].DestinationChanges.Length;
 							Array.Resize(ref Data.Blocks[BlockIndex].DestinationChanges, n + 1);
@@ -951,37 +835,8 @@ namespace CsvRwRouteParser
 								section += CurrentSection;
 							}
 
-							double x = 0.0, y = 0.0;
-							double yaw = 0.0, pitch = 0.0, roll = 0.0;
-							if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], UnitOfLength, out x))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Track.Beacon" + At(Expression));
-								x = 0.0;
-							}
-
-							if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], UnitOfLength, out y))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Track.Beacon" + At(Expression));
-								y = 0.0;
-							}
-
-							if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], out yaw))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in Track.Beacon" + At(Expression));
-								yaw = 0.0;
-							}
-
-							if (Arguments.Length >= 8 && Arguments[7].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[7], out pitch))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in Track.Beacon" + At(Expression));
-								pitch = 0.0;
-							}
-
-							if (Arguments.Length >= 9 && Arguments[8].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[8], out roll))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in Track.Beacon" + At(Expression));
-								roll = 0.0;
-							}
+							double x, y, yaw, pitch, roll;
+							ParseOffset(Arguments, 4, "Track.Beacon", Expression, UnitOfLength, out x, out y, out yaw, out pitch, out roll);
 
 							int n = Data.Blocks[BlockIndex].Transponders.Length;
 							Array.Resize(ref Data.Blocks[BlockIndex].Transponders, n + 1);
@@ -1020,37 +875,8 @@ namespace CsvRwRouteParser
 							oversig = 0;
 						}
 
-						double x = 0.0, y = 0.0;
-						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out x))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + At(Expression));
-							x = 0.0;
-						}
-
-						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], UnitOfLength, out y))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + At(Expression));
-							y = 0.0;
-						}
-
-						double yaw = 0.0, pitch = 0.0, roll = 0.0;
-						if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out yaw))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in " + Command + At(Expression));
-							yaw = 0.0;
-						}
-
-						if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], out pitch))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in " + Command + At(Expression));
-							pitch = 0.0;
-						}
-
-						if (Arguments.Length >= 8 && Arguments[7].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[7], out roll))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in " + Command + At(Expression));
-							roll = 0.0;
-						}
+						double x, y, yaw, pitch, roll;
+						ParseOffset(Arguments, 3, Command.ToString(), Expression, UnitOfLength, out x, out y, out yaw, out pitch, out roll);
 
 						int n = Data.Blocks[BlockIndex].Transponders.Length;
 						Array.Resize(ref Data.Blocks[BlockIndex].Transponders, n + 1);
@@ -2968,37 +2794,8 @@ namespace CsvRwRouteParser
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex " + idx + " references a non-existing rail in " + Command + At(Expression));
 						}
 
-						double x = 0.0, y = 0.0;
-						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out x))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + At(Expression));
-							x = 0.0;
-						}
-
-						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out y))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + At(Expression));
-							y = 0.0;
-						}
-
-						double yaw = 0.0, pitch = 0.0, roll = 0.0;
-						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out yaw))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in " + Command + At(Expression));
-							yaw = 0.0;
-						}
-
-						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out pitch))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in " + Command + At(Expression));
-							pitch = 0.0;
-						}
-
-						if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out roll))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in " + Command + At(Expression));
-							roll = 0.0;
-						}
+						double x, y, yaw, pitch, roll;
+						ParseOffset(Arguments, 1, Command.ToString(), Expression, UnitOfLength, out x, out y, out yaw, out pitch, out roll);
 
 						string text = null;
 						if (Arguments.Length >= 7 && Arguments[6].Length != 0)
@@ -3057,37 +2854,8 @@ namespace CsvRwRouteParser
 								triggerOnce = 0;
 							}
 
-							double x = 0.0, y = 0.0;
-							double yaw = 0.0, pitch = 0.0, roll = 0.0;
-							if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out x))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Track.HornBlow" + At(Expression));
-								x = 0.0;
-							}
-
-							if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], UnitOfLength, out y))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Track.HornBlow" + At(Expression));
-								y = 0.0;
-							}
-
-							if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out yaw))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in Track.HornBlow" + At(Expression));
-								yaw = 0.0;
-							}
-
-							if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], out pitch))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in Track.HornBlow" + At(Expression));
-								pitch = 0.0;
-							}
-
-							if (Arguments.Length >= 8 && Arguments[7].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[7], out roll))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in Track.HornBlow" + At(Expression));
-								roll = 0.0;
-							}
+							double x, y, yaw, pitch, roll;
+							ParseOffset(Arguments, 3, "Track.HornBlow", Expression, UnitOfLength, out x, out y, out yaw, out pitch, out roll);
 
 							int n = Data.Blocks[BlockIndex].HornBlows.Length;
 							Array.Resize(ref Data.Blocks[BlockIndex].HornBlows, n + 1);
