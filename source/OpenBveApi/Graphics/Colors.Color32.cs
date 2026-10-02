@@ -132,7 +132,7 @@ namespace OpenBveApi.Colors
 			}
 		}
 
-		/// <summary>Defines the size of the Vector2 struct in bytes.</summary>
+		/// <summary>Defines the size of the Color32 struct in bytes.</summary>
 		public static readonly int SizeInBytes = Marshal.SizeOf((object)new Color32());
 
 		// --- read-only fields ---
@@ -456,7 +456,7 @@ namespace OpenBveApi.Colors
 			return System.Drawing.Color.FromArgb(c.A, c.R, c.G, c.B);
 		}
 
-		/// <summary>Returns a string representation of this Color24</summary>
+		/// <summary>Returns a string representation of this Color32</summary>
 		public override string ToString()
 		{
 			return $"#{BitConverter.ToString(new[] { R, G, B, A }).Replace("-", string.Empty)}";

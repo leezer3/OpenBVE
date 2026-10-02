@@ -141,14 +141,14 @@ namespace OpenBveApi.Colors
 
 		// --- conversions ---
 		/// <summary>Performs a widening conversion from Color24 to Color128.</summary>
-		/// <param name="value">The Color96 value.</param>
+		/// <param name="value">The Color24 value.</param>
 		/// <returns>The Color128 value.</returns>
 		public static implicit operator Color128(Color24 value) {
 			return new Color128(value.R, value.G, value.B);
 		}
 
 		/// <summary>Performs a widening conversion from Color32 to Color128.</summary>
-		/// <param name="value">The Color96 value.</param>
+		/// <param name="value">The Color32 value.</param>
 		/// <returns>The Color128 value.</returns>
 		public static implicit operator Color128(Color32 value)
 		{
