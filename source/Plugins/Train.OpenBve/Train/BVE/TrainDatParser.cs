@@ -258,7 +258,7 @@ namespace Train.OpenBve
 			double CarWidth = 2.6;
 			double CarHeight = 3.6;
 			double CenterOfGravityHeight = 1.6;
-			double CarExposedFrontalArea = 0.6 * CarWidth * CarHeight;
+			double CarExposedFrontalArea = 0.65 * CarWidth * CarHeight;
 			double CarUnexposedFrontalArea = 0.2 * CarWidth * CarHeight;
 			bool FrontCarIsMotorCar = true;
 			double DoorWidth = 1000.0;
@@ -849,12 +849,29 @@ namespace Train.OpenBve
 											CarLength = a;
 										} break;
 									case 5: FrontCarIsMotorCar = a == 1.0; break;
+
+									/* WARNING:
+									 * --------
+									 * See discussion in this PR
+									 * https://github.com/leezer3/OpenBVE/pull/1439
+									 * Width, height and frontal area appear to be an OpenBVE addition.
+									 *
+									 * Unfortunately, it's unclear when this was, or when the train editor
+									 * began using the OPENBVE header.
+									 *
+									 * There also appears to have been a discrepancy as to whether 0.65 or
+									 * 0.6 is used when calculating exposed frontal area.
+									 * Standardising on 0.65 (as this will have been the actual value used by OpenBVE
+									 * native content) and updating the documentation.
+									 *
+									 */
+
 									case 6:
 										if (a <= 0.0) {
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WidthOfACar is expected to be positive" + At(i + 1, FileName));
 										} else {
 											CarWidth = a;
-											CarExposedFrontalArea = 0.6 * CarWidth * CarHeight;
+											CarExposedFrontalArea = 0.65 * CarWidth * CarHeight;
 											CarUnexposedFrontalArea = 0.2 * CarWidth * CarHeight;
 										} break;
 									case 7:
@@ -862,7 +879,7 @@ namespace Train.OpenBve
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "HeightOfACar is expected to be positive" + At(i + 1, FileName));
 										} else {
 											CarHeight = a;
-											CarExposedFrontalArea = 0.6 * CarWidth * CarHeight;
+											CarExposedFrontalArea = 0.65 * CarWidth * CarHeight;
 											CarUnexposedFrontalArea = 0.2 * CarWidth * CarHeight;
 										} break;
 									case 8: CenterOfGravityHeight = a; break;
