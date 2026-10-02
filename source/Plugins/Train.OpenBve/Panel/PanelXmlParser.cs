@@ -962,7 +962,10 @@ namespace Train.OpenBve
 													break;
 												}
 											}
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in LinearGauge Direction at line " + LineNumber.ToString(Culture) + " in file " + FileName);
+											else
+											{
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in LinearGauge Direction at line " + LineNumber.ToString(Culture) + " in file " + FileName);
+											}
 										}
 										break;
 									case Panel2Key.DaytimeImage:
@@ -1607,7 +1610,7 @@ namespace Train.OpenBve
 									}
 									break;
 								case Panel2Key.DropSize:
-									if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out numberOfDrops))
+									if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out dropSize))
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DropSize is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 									}

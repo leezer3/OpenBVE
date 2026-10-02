@@ -59,8 +59,9 @@ namespace Train.OpenBve
 			}
 			else if (lines.Length == 0)
 			{
-				//Catch zero-length train.dat files
-				throw new Exception("The train.dat file " + fileName + " is of zero length.");
+				// Report empty files and fall back to defaults instead of crashing
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The train.dat file " + fileName + " is of zero length.");
+				return lines;
 			}
 
 			for (int i = 0; i < lines.Length; i++)
@@ -82,6 +83,12 @@ namespace Train.OpenBve
 			}
 
 			return lines;
+		}
+
+		// Parse a comma-separated list of numbers, using 0 for anything unreadable
+		private static double[] ParseDoubleArray(string line)
+		{
+			return line.Split(',').Select(x => { double v; NumberFormats.TryParseDoubleVb6(x.Trim(), out v); return v; }).ToArray();
 		}
 
 		/// <summary>Parse the format of the specified train.dat</summary>
@@ -361,7 +368,8 @@ namespace Train.OpenBve
 										if (a < 0.0) {
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CoefficientOfStaticFriction is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
-											if (Plugin.CurrentOptions.EnableBveTsHacks && (a > 0.1 || a < 1.0))
+											// With BVE-TS hacks on, skip implausible values instead of using them
+											if (Plugin.CurrentOptions.EnableBveTsHacks && (a <= 0.1 || a >= 1.0))
 											{
 												break;
 											}
@@ -390,7 +398,7 @@ namespace Train.OpenBve
 									case 0:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											powerDelayUp = Lines[i].Split( ',').Select(x => double.Parse(x, Culture)).ToArray();
+											powerDelayUp = ParseDoubleArray(Lines[i]);
 										}
 										else
 										{
@@ -404,7 +412,7 @@ namespace Train.OpenBve
 									case 1:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											powerDelayDown = Lines[i].Split(',').Select(x => double.Parse(x, Culture)).ToArray();
+											powerDelayDown = ParseDoubleArray(Lines[i]);
 										}
 										else
 										{
@@ -418,7 +426,7 @@ namespace Train.OpenBve
 									case 2:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											brakeDelayUp = Lines[i].Split(',').Select(x => double.Parse(x, Culture)).ToArray();
+											brakeDelayUp = ParseDoubleArray(Lines[i]);
 										}
 										else
 										{
@@ -432,7 +440,7 @@ namespace Train.OpenBve
 									case 3:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											brakeDelayDown = Lines[i].Split(',').Select(x => double.Parse(x, Culture)).ToArray();
+											brakeDelayDown = ParseDoubleArray(Lines[i]);
 										}
 										else
 										{
@@ -463,7 +471,7 @@ namespace Train.OpenBve
 												}
 												else if (myVersion >= 1534)
 												{
-													locoBrakeDelayUp = Lines[i].Split(',').Select(x => double.Parse(x, Culture)).ToArray();
+													locoBrakeDelayUp = ParseDoubleArray(Lines[i]);
 												}
 												else
 												{
@@ -490,7 +498,7 @@ namespace Train.OpenBve
 												}
 												else if(myVersion >= 1534)
 												{
-													locoBrakeDelayDown = Lines[i].Split(',').Select(x => double.Parse(x, Culture)).ToArray();
+													locoBrakeDelayDown = ParseDoubleArray(Lines[i]);
 												}
 												else
 												{
@@ -838,7 +846,7 @@ namespace Train.OpenBve
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WidthOfACar is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											CarWidth = a;
-											CarExposedFrontalArea = 0.65 * CarWidth * CarHeight;
+											CarExposedFrontalArea = 0.6 * CarWidth * CarHeight;
 											CarUnexposedFrontalArea = 0.2 * CarWidth * CarHeight;
 										} break;
 									case 7:
@@ -846,7 +854,7 @@ namespace Train.OpenBve
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "HeightOfACar is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											CarHeight = a;
-											CarExposedFrontalArea = 0.65 * CarWidth * CarHeight;
+											CarExposedFrontalArea = 0.6 * CarWidth * CarHeight;
 											CarUnexposedFrontalArea = 0.2 * CarWidth * CarHeight;
 										} break;
 									case 8: CenterOfGravityHeight = a; break;

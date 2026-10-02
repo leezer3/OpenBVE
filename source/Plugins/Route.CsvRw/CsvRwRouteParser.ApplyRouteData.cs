@@ -153,7 +153,7 @@ namespace CsvRwRouteParser
 					if (Data.Blocks[i].BrightnessChanges != null && Data.Blocks[i].BrightnessChanges.Length != 0)
 					{
 						CurrentBrightnessValue = Data.Blocks[i].BrightnessChanges[0].Value;
-						CurrentBrightnessTrackPosition = Data.Blocks[i].BrightnessChanges[0].Value;
+						CurrentBrightnessTrackPosition = Data.Blocks[i].BrightnessChanges[0].TrackPosition;
 						break;
 					}
 				}
@@ -957,7 +957,7 @@ namespace CsvRwRouteParser
 								// signals
 								for (int k = 0; k < Data.Blocks[i].Signals.Length; k++)
 								{
-									Data.Blocks[i].Signals[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, 0.27 + 0.75 * Data.GetBrightness(Data.Blocks[i].Signals[k].TrackPosition));
+									Data.Blocks[i].Signals[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, 0.25 + 0.75 * Data.GetBrightness(Data.Blocks[i].Signals[k].TrackPosition));
 								}
 
 								// sections
@@ -1022,7 +1022,8 @@ namespace CsvRwRouteParser
 							int n = i - Data.FirstUsedBlock;
 							double d = Data.Blocks[i].Transponders[j].TrackPosition - CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition;
 							int s = Data.Blocks[i].Transponders[j].SectionIndex;
-							if (s >= 0) s = -1;
+							// Keep valid section references; clamp bad values to -1 (unset)
+							if (s < 0) s = -1;
 							CurrentRoute.Tracks[0].Elements[n].Events.Add(new TransponderEvent(CurrentRoute, d, Data.Blocks[i].Transponders[j].Type, Data.Blocks[i].Transponders[j].Data, s, Data.Blocks[i].Transponders[j].ClipToFirstRedSection));
 							Data.Blocks[i].Transponders[j].Type = -1;
 						}

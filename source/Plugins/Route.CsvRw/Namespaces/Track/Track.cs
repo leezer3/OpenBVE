@@ -831,7 +831,7 @@ namespace CsvRwRouteParser
 							if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[4], out triggerOnce))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TriggerOnce is invalid in Track.Destination at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								previousDestination = 0;
+								triggerOnce = 0;
 							}
 
 							if (structure < -1)
@@ -3632,7 +3632,7 @@ namespace CsvRwRouteParser
 					int railIndex = -1;
 					double limit = 0.0;
 					int direction = 0, cource = 0;
-					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex) || railIndex == -1)
+					if ((Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex)) || railIndex == -1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailLimit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						break;
@@ -3667,7 +3667,7 @@ namespace CsvRwRouteParser
 					if (!PreviewOnly)
 					{
 						int railIndex = -1;
-						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex) || railIndex == -1)
+						if ((Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex)) || railIndex == -1)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailBuffer at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							break;
@@ -3694,7 +3694,7 @@ namespace CsvRwRouteParser
 					double acc = 2.0;
 					int railIndex = -1;
 
-					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex) || railIndex == -1)
+					if ((Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex)) || railIndex == -1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailAccuracy at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						break;
@@ -3714,7 +3714,7 @@ namespace CsvRwRouteParser
 					{
 						acc = 4.0;
 					}
-					Data.Blocks[BlockIndex].Rails[RailIndex].Accuracy = acc;
+					Data.Blocks[BlockIndex].Rails[railIndex].Accuracy = acc;
 				}
 					break;
 				case TrackCommand.RailAdhesion:
@@ -3723,7 +3723,7 @@ namespace CsvRwRouteParser
 					int railIndex = -1;
 
 
-					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex) || railIndex == -1)
+					if ((Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex)) || railIndex == -1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailAccuracy at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						break;
@@ -3814,17 +3814,17 @@ namespace CsvRwRouteParser
 								}
 							}
 
-							if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out voltage))
+							if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out voltage))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Voltage is invalid in Track.PowerSupply at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
 
-							if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out amps))
+							if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out amps))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Amperage is invalid in Track.PowerSupply at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
 
-							if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out contactHeight))
+							if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out contactHeight))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Contact height is invalid in Track.PowerSupply at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}

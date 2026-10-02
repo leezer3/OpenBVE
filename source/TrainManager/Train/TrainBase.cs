@@ -396,7 +396,7 @@ namespace TrainManager.Trains
 							double tPos = nextStation.DefaultTrackPosition - FrontCarTrackPosition;
 							if (!nextStation.AccessibilityAnnounced && tPos < 500)
 							{
-								string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "route_nextstation" }).Replace("[distance]", $"{tPos:0.0}") + "m".Replace("[name]", nextStation.Name);
+								string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "route_nextstation" }).Replace("[distance]", $"{tPos:0.0}m").Replace("[name]", nextStation.Name);
 								TrainManagerBase.currentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, 10.0, null);
 								nextStation.AccessibilityAnnounced = true;
 							}
