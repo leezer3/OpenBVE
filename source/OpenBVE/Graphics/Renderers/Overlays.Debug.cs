@@ -1,10 +1,11 @@
 using System;
+using OpenBveApi;
 using TrainManager.BrakeSystems;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
+using OpenBveApi.Motor;
 using OpenBveApi.Routes;
-using SoundManager;
 using TrainManager.Handles;
 using TrainManager.Motor;
 
@@ -150,18 +151,8 @@ namespace OpenBve.Graphics.Renderers
 				remainder = (int)Program.CurrentRoute.SecondsSinceMidnight % 3600,
 				minutes = remainder / 60,
 				seconds = remainder % 60;
-
-			bool hasRPM = false;
-			string RPM = "Engine RPM: ";
-			for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
-			{
-				if (TrainManager.PlayerTrain.Cars[i].TractionModel is DieselEngine dieselEngine)
-				{
-					RPM += "Car " + i + " " + (int)dieselEngine.CurrentRPM + "rpm ";
-					hasRPM = true;
-				}
-			}
-
+			TrainManager.PlayerTrain.Cars[0].TractionModel.Components
+				.TryGetTypedValue(EngineComponent.Boiler, out Boiler b);
 			string[] Lines = {
 				"=system",
 				"fps: " + Program.Renderer.FrameRate.ToString("0.0", Culture),
@@ -182,7 +173,6 @@ namespace OpenBve.Graphics.Renderers
 				"speed of sound: " + (Program.CurrentRoute.Atmosphere.GetSpeedOfSound(airDensity) * 3.6).ToString("0.00", Culture) + " km/h",
 				"passenger ratio: " + TrainManager.PlayerTrain.CargoRatio.ToString("0.00"),
 				"total mass: " + mass.ToString("0.00", Culture) + " kg",
-				"" + (hasRPM ? RPM : string.Empty),
 				"",
 				"=route",
 				"track limit: " + (TrainManager.PlayerTrain.CurrentRouteLimit == double.PositiveInfinity ? "unlimited" : ((TrainManager.PlayerTrain.CurrentRouteLimit * 3.6).ToString("0.0", Culture) + " km/h")),
@@ -225,6 +215,7 @@ namespace OpenBve.Graphics.Renderers
 				"train plugin status: " + (TrainManager.PlayerTrain.Plugin != null ? (TrainManager.PlayerTrain.Plugin.PluginValid ? "ok" : "error") : "n/a"),
 				"train plugin message: " + (TrainManager.PlayerTrain.Plugin != null ? (TrainManager.PlayerTrain.Plugin.PluginMessage ?? "n/a") : "n/a"),
 				"traction message: " + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.Message,
+				"boiler water: " + b.WaterLevel,
 			};
 			double x = 4.0;
 			double y = 4.0;

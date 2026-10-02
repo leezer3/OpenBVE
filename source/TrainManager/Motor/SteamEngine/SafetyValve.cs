@@ -20,39 +20,57 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using OpenBveApi.Interface;
+using OpenBveApi;
+using OpenBveApi.Motor;
 using SoundManager;
 
 namespace TrainManager.Motor
 {
-	public class Blowers : AbstractComponent
+	public class SafetyValve : AbstractComponent
 	{
-		public Blowers(TractionModel engine) : base(engine)
+		/// <summary>The pressure at which the safety valve operates</summary>
+		public readonly double OperatingPressure;
+		/// <summary>The pressure at which the safety valve releases</summary>
+		public readonly double ReleasePressure;
+		/// <summary>The decrease in pressure per second</summary>
+		public readonly double PressureDecrease;
+
+		public SafetyValve(TractionModel engine, double operatingPressure, double releasePressure, double pressureDecrease) : base(engine)
 		{
+			OperatingPressure = operatingPressure;
+			ReleasePressure = releasePressure;
+			PressureDecrease = pressureDecrease;
 		}
 
-		public override void ControlDown(Translations.Command command)
-		{
-			if (command == Translations.Command.Blowers)
-			{
-				if (Active)
-				{
-					DeactivationSound?.Play(baseEngine.BaseCar, false);
-				}
-				else
-				{
-					ActivationSound?.Play(baseEngine.BaseCar, false);
-				}
-
-				Active = !Active;
-			}
-		}
-		
 		public override void Update(double timeElapsed)
 		{
-			if (Active && !ActivationSound.IsPlaying)
+			if (!baseEngine.Components.TryGetTypedValue(EngineComponent.Boiler, out Boiler boiler))
 			{
-				LoopSound?.Play(baseEngine.BaseCar, true);
+				return;
+			}
+
+			if (boiler.CurrentPressure > OperatingPressure)
+			{
+				Active = true;
+				ActivationSound?.Play(baseEngine.BaseCar, false);
+			}
+			else
+			{
+				if (boiler.CurrentPressure < ReleasePressure)
+				{
+					Active = false;
+					LoopSound?.Stop();
+					DeactivationSound?.Play(baseEngine.BaseCar, false);
+				}
+			}
+
+			if (Active)
+			{
+				boiler.CurrentSteamMass -= PressureDecrease * timeElapsed;
+				if (LoopSound != null && LoopSound.IsPlaying == false)
+				{
+					LoopSound.Play(baseEngine.BaseCar, true);
+				}
 			}
 		}
 	}
