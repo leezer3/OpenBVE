@@ -197,6 +197,15 @@
     <Compile Include="Train\RequestStop.cs" />
     <Compile Include="Train\Station.cs" />
     <Compile Include="Train\TrainBase.cs" />
+    <Compile Include="Train\TrainBase.Physics.cs">
+      <DependentUpon>TrainBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Train\TrainBase.TrainMovement.cs">
+      <DependentUpon>TrainBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Train\TrainBase.Messages.cs">
+      <DependentUpon>TrainBase.cs</DependentUpon>
+    </Compile>
     <Compile Include="Train\TrainSpecs.cs" />
   </ItemGroup>
   <ItemGroup>
