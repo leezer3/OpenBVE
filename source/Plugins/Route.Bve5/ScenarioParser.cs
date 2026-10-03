@@ -44,43 +44,38 @@ namespace Route.Bve5
 			{
 				using (StreamReader reader = new StreamReader(fileName))
 				{
-					string firstLine = reader.ReadLine() ?? "";
-					string b = string.Empty;
-					if (!firstLine.ToLowerInvariant().StartsWith("bvets scenario"))
+					string firstLine = reader.ReadLine() ?? string.Empty;
+					if (!firstLine.StartsWith("bvets scenario", StringComparison.OrdinalIgnoreCase))
 					{
 						return false;
 					}
+
+					string versionText = string.Empty;
 					for (int i = 15; i < firstLine.Length; i++)
 					{
 						if (char.IsDigit(firstLine[i]) || firstLine[i] == '.')
 						{
-							b += firstLine[i];
+							versionText += firstLine[i];
 						}
 						else
 						{
 							break;
 						}
 					}
-					if (b.Length > 0)
-					{
-						NumberFormats.TryParseDoubleVb6(b, out double version);
-						if (version > 2.0)
-						{
-							throw new Exception(version + " is not a supported BVE5 scenario version");
-						}
-					}
-					else
+
+					if (versionText.Length == 0)
 					{
 						return false;
 					}
+
+					NumberFormats.TryParseDoubleVb6(versionText, out double version);
+					return version <= 2.0;
 				}
-				return true;
 			}
 			catch
 			{
 				return false;
 			}
-			
 		}
 
 		internal static void ParseScenario(string fileName, bool previewOnly)
@@ -124,27 +119,23 @@ namespace Route.Bve5
 		private static int GetRandomIndex(params double[] WeightTable)
 		{
 			double TotalWeight = 0.0;
-			double[] ThresholdTable = new double[WeightTable.Length];
-
-			for (int i = 0; i < WeightTable.Length; i++)
+			foreach (double weight in WeightTable)
 			{
-				ThresholdTable[i] = TotalWeight;
-				TotalWeight += WeightTable[i];
+				TotalWeight += weight;
 			}
 
 			double Value = Plugin.CurrentHost.Random.NextDouble() * TotalWeight;
-			int RetIndex = -1;
-
-			for (int i = WeightTable.Length - 1; i >= 0; i--)
+			double Cumulative = 0.0;
+			for (int i = 0; i < WeightTable.Length; i++)
 			{
-				if (Value >= ThresholdTable[i])
+				Cumulative += WeightTable[i];
+				if (Value < Cumulative)
 				{
-					RetIndex = i;
-					break;
+					return i;
 				}
 			}
 
-			return RetIndex;
+			return WeightTable.Length > 0 ? WeightTable.Length - 1 : -1;
 		}
 	}
 }

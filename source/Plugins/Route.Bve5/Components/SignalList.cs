@@ -43,15 +43,10 @@ namespace Route.Bve5
 				return;
 			}
 
-			if (!File.Exists(SignalListPath))
+			SignalListPath = FindComponentListFile(FileName, SignalListPath, "Signal List");
+			if (SignalListPath == null)
 			{
-				SignalListPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), SignalListPath);
-
-				if (!File.Exists(SignalListPath))
-				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Signal List file " + SignalListPath + " was not found.");
-					return;
-				}
+				return;
 			}
 
 			System.Text.Encoding Encoding = Text.DetermineBVE5FileEncoding(SignalListPath);
