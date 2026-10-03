@@ -30,7 +30,6 @@ using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
-using Path = OpenBveApi.Path;
 
 namespace Route.Bve5
 {
@@ -45,15 +44,10 @@ namespace Route.Bve5
 				return;
 			}
 			
-			if (!File.Exists(StationListPath))
+			StationListPath = FindComponentListFile(FileName, StationListPath, "Station List");
+			if (StationListPath == null)
 			{
-				StationListPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), StationListPath);
-
-				if (!File.Exists(StationListPath))
-				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Station List file " + StationListPath + " was not found.");
-					return;
-				}
+				return;
 			}
 
 			System.Text.Encoding Encoding = Text.DetermineBVE5FileEncoding(StationListPath);

@@ -32,6 +32,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using RouteManager2.Climate;
 using static Bve5_Parsing.MapGrammar.MapGrammarParser;
+using Path = OpenBveApi.Path;
 
 namespace Route.Bve5
 {
@@ -39,6 +40,31 @@ namespace Route.Bve5
 	{
 		private const int InterpolateInterval = 5;
 		private const double StationNoticeDistance = -200.0;
+
+		// Looks for a list file next to the scenario, and reports it if it is missing
+		private static string FindComponentListFile(string FileName, string ListPath, string Kind)
+		{
+			if (File.Exists(ListPath))
+			{
+				return ListPath;
+			}
+
+			ListPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), ListPath);
+			if (File.Exists(ListPath))
+			{
+				return ListPath;
+			}
+
+			Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: " + Kind + " file " + ListPath + " was not found.");
+			return null;
+		}
+
+		// Gives the UI thread a chance to notice a cancel request
+		private static bool CheckForCancel()
+		{
+			System.Threading.Thread.Sleep(1);
+			return plugin.Cancel;
+		}
 
 		internal class MapParser
 		{
@@ -55,17 +81,12 @@ namespace Route.Bve5
 
 			internal MapData Parse()
 			{
-				MapData Data = new MapData();
 				Parser = new MapGrammarParser();
+				MapData Data = Parser.ParseFromFile(FileName, MapGrammarParserOption.ParseIncludeSyntaxRecursively);
 
-				if (Parser != null)
+				if (IsDisplayErrors)
 				{
-					Data = Parser.ParseFromFile(FileName, MapGrammarParserOption.ParseIncludeSyntaxRecursively);
-
-					if (IsDisplayErrors)
-					{
-						DisplayErrors();
-					}
+					DisplayErrors();
 				}
 
 				return Data;
@@ -103,17 +124,14 @@ namespace Route.Bve5
 			MapParser Parser = new MapParser(FileName, true);
 			MapData RootData = Parser.Parse();
 
-			System.Threading.Thread.Sleep(1);
-			if (plugin.Cancel) return;
+			if (CheckForCancel()) return;
 
 
-			System.Threading.Thread.Sleep(1);
-			if (plugin.Cancel) return;
+			if (CheckForCancel()) return;
 
 			ConvertToBlock(FileName, PreviewOnly, RootData, out RouteData RouteData);
 
-			System.Threading.Thread.Sleep(1);
-			if (plugin.Cancel) return;
+			if (CheckForCancel()) return;
 
 			ApplyRouteData(FileName, PreviewOnly, RouteData);
 		}
@@ -160,8 +178,7 @@ namespace Route.Bve5
 				LoadScriptedTrain(FileName, PreviewOnly, ParseData, RouteData);
 			}
 
-			System.Threading.Thread.Sleep(1);
-			if (plugin.Cancel) return;
+			if (CheckForCancel()) return;
 			RouteData.Backgrounds = new ObjectDictionary();
 
 			/*
@@ -177,8 +194,7 @@ namespace Route.Bve5
 			ConvertData(ParseData, RouteData, PreviewOnly);
 			ConvertTrack(ParseData, RouteData);
 			
-			System.Threading.Thread.Sleep(1);
-			if (plugin.Cancel) return;
+			if (CheckForCancel()) return;
 
 			ConfirmCurve(RouteData.Blocks);
 			ConfirmGradient(RouteData.Blocks);
@@ -196,107 +212,81 @@ namespace Route.Bve5
 
 		private static void ConvertData(MapData parseData, RouteData routeData, bool previewOnly)
 		{
-			for (int i = 0; i < parseData.Statements.Count; i++)
+			foreach (Statement statement in parseData.Statements)
 			{
-				switch(parseData.Statements[i].ElementName)
+				switch (statement.ElementName)
 				{
 					case MapElementName.Curve:
-						ConvertCurve(parseData.Statements[i], routeData);
+						ConvertCurve(statement, routeData);
 						break;
 					case MapElementName.Gradient:
-						ConvertGradient(parseData.Statements[i], routeData);
+						ConvertGradient(statement, routeData);
 						break;
 					case MapElementName.Legacy:
-						switch (parseData.Statements[i].FunctionName)
+						switch (statement.FunctionName)
 						{
 							case MapFunctionName.Curve:
 							case MapFunctionName.Turn:
-								ConvertCurve(parseData.Statements[i], routeData);
+								ConvertCurve(statement, routeData);
 								break;
 							case MapFunctionName.Pitch:
-								ConvertGradient(parseData.Statements[i], routeData);
+								ConvertGradient(statement, routeData);
 								break;
 							case MapFunctionName.Fog:
 								if (!previewOnly)
 								{
-									ConvertFog(parseData.Statements[i], routeData);
+									ConvertFog(statement, routeData);
 								}
 								break;
 						}
 						break;
 					case MapElementName.Station:
-						ConvertStation(parseData.Statements[i], routeData);
+						ConvertStation(statement, routeData);
 						break;
-					case MapElementName.Background:
-						if (!previewOnly)
+					default:
+						// Everything else is only needed for the full parse
+						if (previewOnly)
 						{
-							ConvertBackground(parseData.Statements[i], routeData);
+							break;
 						}
-						break;
-					case MapElementName.Fog:
-						if (!previewOnly)
+						switch (statement.ElementName)
 						{
-							ConvertFog(parseData.Statements[i], routeData);
-						}
-						break;
-					case MapElementName.Irregularity:
-						if (!previewOnly)
-						{
-							ConvertIrregularity(parseData.Statements[i], routeData);
-						}
-						break;
-					case MapElementName.Adhesion:
-						if (!previewOnly)
-						{
-							ConvertAdhesion(parseData.Statements[i], routeData);
-						}
-						break;
-					case MapElementName.JointNoise:
-						if (!previewOnly)
-						{
-							ConvertJointNoise(parseData.Statements[i], routeData);
-						}
-						break;
-					case MapElementName.Pretrain:
-						if (!previewOnly)
-						{
-							ConfirmPreTrain(parseData.Statements[i]);
-						}
-						break;
-					case MapElementName.Light:
-						if (!previewOnly)
-						{
-							ConfirmLight(parseData.Statements[i]);
-						}
-						break;
-					case MapElementName.Sound:
-						if (!previewOnly)
-						{
-							ConfirmSound(parseData.Statements[i], routeData);
-						}
-						break;
-					case MapElementName.Sound3d:
-						if (!previewOnly)
-						{
-							ConfirmSound3D(parseData.Statements[i], routeData);
-						}
-						break;
-					case MapElementName.SpeedLimit:
-						if (!previewOnly)
-						{
-							ConfirmSpeedLimit(parseData.Statements[i], routeData);
-						}
-						break;
-					case MapElementName.CabIlluminance:
-						if (!previewOnly)
-						{
-							ConfirmCabIlluminance(parseData.Statements[i], routeData);
-						}
-						break;
-					case MapElementName.RollingNoise:
-						if (!previewOnly)
-						{
-							ConfirmRollingNoise(parseData.Statements[i], routeData);
+							case MapElementName.Background:
+								ConvertBackground(statement, routeData);
+								break;
+							case MapElementName.Fog:
+								ConvertFog(statement, routeData);
+								break;
+							case MapElementName.Irregularity:
+								ConvertIrregularity(statement, routeData);
+								break;
+							case MapElementName.Adhesion:
+								ConvertAdhesion(statement, routeData);
+								break;
+							case MapElementName.JointNoise:
+								ConvertJointNoise(statement, routeData);
+								break;
+							case MapElementName.Pretrain:
+								ConfirmPreTrain(statement);
+								break;
+							case MapElementName.Light:
+								ConfirmLight(statement);
+								break;
+							case MapElementName.Sound:
+								ConfirmSound(statement, routeData);
+								break;
+							case MapElementName.Sound3d:
+								ConfirmSound3D(statement, routeData);
+								break;
+							case MapElementName.SpeedLimit:
+								ConfirmSpeedLimit(statement, routeData);
+								break;
+							case MapElementName.CabIlluminance:
+								ConfirmCabIlluminance(statement, routeData);
+								break;
+							case MapElementName.RollingNoise:
+								ConfirmRollingNoise(statement, routeData);
+								break;
 						}
 						break;
 				}
