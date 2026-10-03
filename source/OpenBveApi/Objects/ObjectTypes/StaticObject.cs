@@ -11,6 +11,7 @@ namespace OpenBveApi.Objects
 	/// <inheritdoc />
 	public class StaticObject : UnifiedObject
 	{
+		private const double ReferencePlaneTolerance = 0.1;
 		/// <summary>Whether the object is optimized</summary>
 		private bool isOptimized;
 		/// <summary>The mesh of the object</summary>
@@ -140,6 +141,92 @@ namespace OpenBveApi.Objects
 			return mirrorResult;
 		}
 
+		private bool TryGetReferenceCorners(out int bottomLeft, out int bottomRight, out int topRight, out int topLeft)
+		{
+			if (TryGetReferenceCorners(4, out bottomLeft, out bottomRight, out topRight, out topLeft))
+			{
+				return true;
+			}
+
+			return TryGetReferenceCorners(Mesh.Vertices.Length, out bottomLeft, out bottomRight, out topRight, out topLeft);
+		}
+
+		private bool TryGetReferenceCorners(int vertexCount, out int bottomLeft, out int bottomRight, out int topRight, out int topLeft)
+		{
+			// Beveled meshes may place the two sides of an end by a few centimetres
+			// along Z.  Treat nearby vertices as one plane so the selected width
+			// cannot collapse and stretch a vertex to infinity.
+			bottomLeft = -1;
+			bottomRight = -1;
+			topRight = -1;
+			topLeft = -1;
+			double minZ = double.MaxValue;
+			double maxZ = double.MinValue;
+			for (int i = 0; i < vertexCount; i++)
+			{
+				double z = Mesh.Vertices[i].Coordinates.Z;
+				minZ = System.Math.Min(minZ, z);
+				maxZ = System.Math.Max(maxZ, z);
+			}
+
+			if (maxZ - minZ <= 2.0 * ReferencePlaneTolerance)
+			{
+				return false;
+			}
+
+			for (int i = 0; i < vertexCount; i++)
+			{
+				Vector3 c = Mesh.Vertices[i].Coordinates;
+				if (c.Z >= maxZ - ReferencePlaneTolerance)
+				{
+					if (bottomLeft < 0 || c.X < Mesh.Vertices[bottomLeft].Coordinates.X)
+					{
+						bottomLeft = i;
+					}
+					if (bottomRight < 0 || c.X > Mesh.Vertices[bottomRight].Coordinates.X)
+					{
+						bottomRight = i;
+					}
+				}
+				if (c.Z <= minZ + ReferencePlaneTolerance)
+				{
+					if (topLeft < 0 || c.X < Mesh.Vertices[topLeft].Coordinates.X)
+					{
+						topLeft = i;
+					}
+					if (topRight < 0 || c.X > Mesh.Vertices[topRight].Coordinates.X)
+					{
+						topRight = i;
+					}
+				}
+			}
+
+			if (bottomLeft < 0 || bottomRight < 0 || topRight < 0 || topLeft < 0 ||
+			    bottomLeft == bottomRight || topRight == topLeft)
+			{
+				return false;
+			}
+
+			double topWidth = Mesh.Vertices[topRight].Coordinates.X - Mesh.Vertices[topLeft].Coordinates.X;
+			double bottomWidth = Mesh.Vertices[bottomRight].Coordinates.X - Mesh.Vertices[bottomLeft].Coordinates.X;
+			return System.Math.Abs(topWidth) > 0.001 && System.Math.Abs(bottomWidth) > 0.001;
+		}
+
+		/// <summary>Gets the longitudinal span of the object's coherent deformation reference</summary>
+		/// <param name="span">The length of the deformation reference in metres</param>
+		/// <returns>Whether a valid deformation reference was found</returns>
+		public bool TryGetDeformationSpan(out double span)
+		{
+			if (!TryGetReferenceCorners(out int bottomLeft, out int _, out int _, out int topLeft))
+			{
+				span = 0.0;
+				return false;
+			}
+
+			span = System.Math.Abs(Mesh.Vertices[bottomLeft].Coordinates.Z - Mesh.Vertices[topLeft].Coordinates.Z);
+			return span > 0.001;
+		}
+
 		/// <inheritdoc/>
 		public override UnifiedObject Transform(double nearDistance, double farDistance)
 		{
@@ -193,27 +280,17 @@ namespace OpenBveApi.Objects
 			{
 				return (StaticObject)Clone();
 			}
-			// Find reference vertices by manually checking the first 4 vertices
+			// Find the reference vertices from the complete mesh.  The first face of
+			// many platform and roof meshes is a vertical face (and therefore has
+			// no X/Z extent), so restricting this search to the first four vertices
+			// makes those objects fall back to an untransformed clone.
 			// bottomLeft: highest Z, lowest X (Z Descending, X Ascending)
 			// bottomRight: highest Z, highest X (Z Descending, X Descending)
 			// topRight: lowest Z, highest X (Z Ascending, X Descending)
 			// topLeft: lowest Z, lowest X (Z Ascending, X Ascending)
-			int bottomLeftIdx = 0, bottomRightIdx = 0, topRightIdx = 0, topLeftIdx = 0;
-			for (int i = 1; i < 4; i++)
+			if (!TryGetReferenceCorners(out int bottomLeftIdx, out int bottomRightIdx, out int topRightIdx, out int topLeftIdx))
 			{
-				Vector3 c = Mesh.Vertices[i].Coordinates;
-				
-				Vector3 cbl = Mesh.Vertices[bottomLeftIdx].Coordinates;
-				if (c.Z > cbl.Z || (c.Z == cbl.Z && c.X < cbl.X)) bottomLeftIdx = i;
-
-				Vector3 cbr = Mesh.Vertices[bottomRightIdx].Coordinates;
-				if (c.Z > cbr.Z || (c.Z == cbr.Z && c.X > cbr.X)) bottomRightIdx = i;
-
-				Vector3 ctr = Mesh.Vertices[topRightIdx].Coordinates;
-				if (c.Z < ctr.Z || (c.Z == ctr.Z && c.X > ctr.X)) topRightIdx = i;
-
-				Vector3 ctl = Mesh.Vertices[topLeftIdx].Coordinates;
-				if (c.Z < ctl.Z || (c.Z == ctl.Z && c.X < ctl.X)) topLeftIdx = i;
+				return (StaticObject)Clone();
 			}
 
 			if (bottomLeftIdx == bottomRightIdx || bottomLeftIdx == topRightIdx || bottomLeftIdx == topLeftIdx ||
@@ -239,6 +316,7 @@ namespace OpenBveApi.Objects
 				double z = Mesh.Vertices[i].Coordinates.Z;
 				// Compute interpolation factor 't' along the Z length of the object
 				double t = zRange > 0.001 ? (z - zMin) / zRange : 0.0;
+				t = System.Math.Max(0.0, System.Math.Min(1.0, t));
 				// Interpolate reference coordinates at this vertex's Z position
 				double faceX = xLeft0 + t * (xLeft1 - xLeft0);
 				double originalBackX = xRight0 + t * (xRight1 - xRight0);
@@ -264,27 +342,17 @@ namespace OpenBveApi.Objects
 			{
 				return (StaticObject)Clone();
 			}
-			// Find reference vertices by manually checking the first 4 vertices
+			// Find the reference vertices from the complete mesh.  The first face of
+			// many platform and roof meshes is a vertical face (and therefore has
+			// no X/Z extent), so restricting this search to the first four vertices
+			// makes those objects fall back to an untransformed clone.
 			// bottomLeft: highest Z, lowest X (Z Descending, X Ascending)
 			// bottomRight: highest Z, highest X (Z Descending, X Descending)
 			// topRight: lowest Z, highest X (Z Ascending, X Descending)
 			// topLeft: lowest Z, lowest X (Z Ascending, X Ascending)
-			int bottomLeftIdx = 0, bottomRightIdx = 0, topRightIdx = 0, topLeftIdx = 0;
-			for (int i = 1; i < 4; i++)
+			if (!TryGetReferenceCorners(out int bottomLeftIdx, out int bottomRightIdx, out int topRightIdx, out int topLeftIdx))
 			{
-				Vector3 c = Mesh.Vertices[i].Coordinates;
-				
-				Vector3 cbl = Mesh.Vertices[bottomLeftIdx].Coordinates;
-				if (c.Z > cbl.Z || (c.Z == cbl.Z && c.X < cbl.X)) bottomLeftIdx = i;
-
-				Vector3 cbr = Mesh.Vertices[bottomRightIdx].Coordinates;
-				if (c.Z > cbr.Z || (c.Z == cbr.Z && c.X > cbr.X)) bottomRightIdx = i;
-
-				Vector3 ctr = Mesh.Vertices[topRightIdx].Coordinates;
-				if (c.Z < ctr.Z || (c.Z == ctr.Z && c.X > ctr.X)) topRightIdx = i;
-
-				Vector3 ctl = Mesh.Vertices[topLeftIdx].Coordinates;
-				if (c.Z < ctl.Z || (c.Z == ctl.Z && c.X < ctl.X)) topLeftIdx = i;
+				return (StaticObject)Clone();
 			}
 
 			if (bottomLeftIdx == bottomRightIdx || bottomLeftIdx == topRightIdx || bottomLeftIdx == topLeftIdx ||
@@ -310,6 +378,7 @@ namespace OpenBveApi.Objects
 				double z = Mesh.Vertices[i].Coordinates.Z;
 				// Compute interpolation factor 't' along the Z length of the object
 				double t = zRange > 0.001 ? (z - zMin) / zRange : 0.0;
+				t = System.Math.Max(0.0, System.Math.Min(1.0, t));
 				// Interpolate reference coordinates at this vertex's Z position
 				double faceX = xRight0 + t * (xRight1 - xRight0);
 				double originalBackX = xLeft0 + t * (xLeft1 - xLeft0);
@@ -600,22 +669,12 @@ namespace OpenBveApi.Objects
 			if (currentHost.Platform != HostPlatform.AppleOSX)
 			{
 				/*
-				 * HACK:
 				 * A forwards compatible GL3 context (required on OS-X) only supports tris
-				 * and thus an optimized object (decomposed into tris) in all circumstances
-				 *
-				 * When in viewers, skip optimisation if above the threshold to allow
-				 * faster reload speeds.
-				 *
-				 * When in-game, force optimisation at all times for best possible performance
-				 * even though this may have an effect on load-times
+				 * and thus an optimized object (decomposed into tris) in all circumstances.
+				 * Apply the same optimization in viewers and in the game; the previous
+				 * viewer-only early return prevented the selected optimization mode from
+				 * being applied to large .x meshes.
 				 */
-
-				if (m >= f / 500 && f >= faceThreshold && f < 20000 && currentHost.Application != HostApplication.OpenBve)
-				{
-					return;
-				}
-				
 			}
 
 			if (Mesh.Vertices.Length > 10000)
