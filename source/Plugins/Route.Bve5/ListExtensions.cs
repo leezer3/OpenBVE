@@ -29,13 +29,15 @@ namespace Route.Bve5
 			return -1;
 		}
 
+		/// <summary>Finds the index of the last block starting at or before the given distance</summary>
 		public static int FindBlockIndex<T>(this SortedList<double, T> source, double distance)
 		{
-			if (source.ContainsKey(distance))
+			int i = source.IndexOfKey(distance);
+			if (i >= 0)
 			{
-				return source.IndexOfKey(distance);
+				return i;
 			}
-			for (int i = source.Count - 1; i > 0; i--)
+			for (i = source.Count - 1; i > 0; i--)
 			{
 				if (source.Keys[i] <= distance)
 				{
@@ -47,7 +49,7 @@ namespace Route.Bve5
 
 		public static int FindLastIndex<T>(this IList<T> source, int startIndex, Predicate<T> match)
 		{
-			for (int i = startIndex; i > 0; i--)
+			for (int i = Math.Min(startIndex, source.Count - 1); i >= 0; i--)
 			{
 				if (match(source[i]))
 				{
@@ -59,14 +61,15 @@ namespace Route.Bve5
 
 		public static int FindLastIndex<T>(this IList<T> source, int startIndex, int count, Predicate<T> match)
 		{
-			for (int i = startIndex; i > Math.Max(0, startIndex - count); i--)
+			int stop = Math.Max(0, startIndex - count + 1);
+			for (int i = Math.Min(startIndex, source.Count - 1); i >= stop; i--)
 			{
 				if (match(source[i]))
 				{
 					return i;
 				}
 			}
-			return 0;
+			return -1;
 		}
 	}
 }

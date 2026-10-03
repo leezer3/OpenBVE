@@ -72,6 +72,15 @@
     <Compile Include="Car\Axle\BVEAxle.cs" />
     <Compile Include="Car\Bogie\Bogie.cs" />
     <Compile Include="Car\CarBase.cs" />
+    <Compile Include="Car\CarBase.Coupling.cs">
+      <DependentUpon>CarBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Car\CarBase.Sections.cs">
+      <DependentUpon>CarBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Car\CarBase.Physics.cs">
+      <DependentUpon>CarBase.cs</DependentUpon>
+    </Compile>
     <Compile Include="Car\CarSounds.cs" />
     <Compile Include="Car\Coupler\Coupler.cs" />
     <Compile Include="Car\Door.cs" />

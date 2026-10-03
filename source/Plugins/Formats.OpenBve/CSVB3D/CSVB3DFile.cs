@@ -58,6 +58,10 @@ namespace Formats.OpenBve
 		/// <summary>The current command's line</summary>
 		public int CurrentLine;
 
+		/// <summary>Location suffix shared by every block error message</summary>
+		protected string At() =>
+			" at line " + CurrentLine + " in file " + FileName;
+
 		/// <summary>The textual representation of the current command</summary>
 		/// <remarks>CSV and B3D equivalent commands are mapped to the same enum value, so this property
 		/// returns the actual command used in the object</remarks>
@@ -398,7 +402,7 @@ namespace Formats.OpenBve
 					}
 					if (!string.IsNullOrWhiteSpace(value[i]))
 					{
-						currentHost.AddMessage(MessageType.Error, false, "The vertex referenced at index " + i + " is not a valid integer in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+						currentHost.AddMessage(MessageType.Error, false, "The vertex referenced at index " + i + " is not a valid integer in " + CurrentCommand + At());
 					}
 					Array.Resize(ref parsedValues, i);
 					break;
@@ -408,7 +412,7 @@ namespace Formats.OpenBve
 			if (parsedValues.Length < 3)
 			{
 				// insufficient vertices to make a face
-				currentHost.AddMessage(MessageType.Error, false, CurrentCommand + " contains an insufficient number of arguments at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, CurrentCommand + " contains an insufficient number of arguments" + At());
 				return false;
 			}
 
@@ -424,7 +428,7 @@ namespace Formats.OpenBve
 			{
 				if (!NumberFormats.TryParseDoubleVb6(value[i], out parsedValues[i]) && !string.IsNullOrWhiteSpace(value[i])) // n.b. empty value is accepted (maps to zero), e.g. Neustadt tram routes
 				{
-					currentHost.AddMessage(MessageType.Error, false, "The value at array index " + i + " is not a valid double in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+					currentHost.AddMessage(MessageType.Error, false, "The value at array index " + i + " is not a valid double in " + CurrentCommand + At());
 					Array.Resize(ref parsedValues, i);
 					break;
 				}
@@ -446,19 +450,19 @@ namespace Formats.OpenBve
 
 			if (value.Length >= 1 && !string.IsNullOrWhiteSpace(value[0]) && !NumberFormats.TryParseByteVb6(value[0], out r))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Invalid value for Red in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Invalid value for Red in " + CurrentCommand + At());
 			}
 			if (value.Length >= 2 && !string.IsNullOrWhiteSpace(value[1]) && !NumberFormats.TryParseByteVb6(value[1], out g))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Invalid value for Green in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Invalid value for Green in " + CurrentCommand + At());
 			}
 			if (value.Length >= 3 && !string.IsNullOrWhiteSpace(value[2]) && !NumberFormats.TryParseByteVb6(value[2], out b))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Invalid value for Blue in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Invalid value for Blue in " + CurrentCommand + At());
 			}
 			if (value.Length >= 4 && !string.IsNullOrWhiteSpace(value[3]) && !NumberFormats.TryParseByteVb6(value[3], out a))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Invalid value for Alpha in " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Invalid value for Alpha in " + CurrentCommand + At());
 				a = 255; // special-case
 			}
 			c = new Color32((byte)r, (byte)g, (byte)b, (byte)a);
@@ -503,11 +507,11 @@ namespace Formats.OpenBve
 				tDay = value.Length >= 1 ? value[0] : string.Empty;
 				if (string.IsNullOrWhiteSpace(tDay))
 				{
-					currentHost.AddMessage(MessageType.Warning, false, "No DaytimeTexture File was specified for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+					currentHost.AddMessage(MessageType.Warning, false, "No DaytimeTexture File was specified for " + CurrentCommand + At());
 				}
 				else
 				{
-					currentHost.AddMessage(MessageType.Error, false, "DaytimeTexture File " + tDay + " was not found for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+					currentHost.AddMessage(MessageType.Error, false, "DaytimeTexture File " + tDay + " was not found for " + CurrentCommand + At());
 				}
 				tDay = string.Empty;
 			}
@@ -517,11 +521,11 @@ namespace Formats.OpenBve
 				tNight = value.Length >= 2 ? value[1] : string.Empty;
 				if(string.IsNullOrWhiteSpace(tNight))
 				{
-					currentHost.AddMessage(MessageType.Warning, false, "No NightTimeTexture File was specified for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+					currentHost.AddMessage(MessageType.Warning, false, "No NightTimeTexture File was specified for " + CurrentCommand + At());
 				}
 				else
 				{
-					currentHost.AddMessage(MessageType.Error, false, "NightTimeTexture File " + tNight + " was not found for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+					currentHost.AddMessage(MessageType.Error, false, "NightTimeTexture File " + tNight + " was not found for " + CurrentCommand + At());
 				}
 				tNight = string.Empty;
 			}
@@ -538,7 +542,7 @@ namespace Formats.OpenBve
 				return true;
 			}
 
-			currentHost.AddMessage(MessageType.Error, false, "Texture File was not found for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+			currentHost.AddMessage(MessageType.Error, false, "Texture File was not found for " + CurrentCommand + At());
 			return false;
 		}
 
@@ -551,7 +555,7 @@ namespace Formats.OpenBve
 			lightMapCoordinates = Vector2.Null;
 			if (value.Length >= 1 && !string.IsNullOrWhiteSpace(value[0]) && !NumberFormats.TryParseIntVb6(value[0], out index))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Vertex index was invalid for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Vertex index was invalid for " + CurrentCommand + At());
 				return false;
 			}
 
@@ -584,7 +588,7 @@ namespace Formats.OpenBve
 				}
 				else
 				{
-					currentHost.AddMessage(MessageType.Error, false, "BlendMode was invalid for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+					currentHost.AddMessage(MessageType.Error, false, "BlendMode was invalid for " + CurrentCommand + At());
 					return false;
 				}
 			}
@@ -603,7 +607,7 @@ namespace Formats.OpenBve
 				}
 				else
 				{
-					currentHost.AddMessage(MessageType.Error, false, "GlowAttenuationMode was invalid for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+					currentHost.AddMessage(MessageType.Error, false, "GlowAttenuationMode was invalid for " + CurrentCommand + At());
 				}
 			}
 			return true;
@@ -616,7 +620,7 @@ namespace Formats.OpenBve
 
 			if (value.Length >= 1 && !EnumCache<T3>.TryParse(value[0], out enumValue))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Value was invalid for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Value was invalid for " + CurrentCommand + At());
 				return false;
 			}
 
@@ -667,7 +671,7 @@ namespace Formats.OpenBve
 			string[] value = Dequeue();
 			if (value.Length == 0)
 			{
-				currentHost.AddMessage(MessageType.Warning, false, "No arguments were supplied for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Warning, false, "No arguments were supplied for " + CurrentCommand + At());
 				vector = Vector3.Zero;
 				return false;
 			}
@@ -727,7 +731,7 @@ namespace Formats.OpenBve
 
 			if (value.Length >= 7 && !NumberFormats.TryParseDoubleVb6(value[6], out shearRatio))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "ShearRatio was invalid for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "ShearRatio was invalid for " + CurrentCommand + At());
 				shearRatio = 0;
 			}
 			
@@ -755,7 +759,7 @@ namespace Formats.OpenBve
 			string[] value = Dequeue();
 			if (value.Length >= 1 ||  !NumberFormats.TryParseIntVb6(value[0], out int i))
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Invalid value for " + CurrentCommand + " at line " + CurrentLine + " in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "Invalid value for " + CurrentCommand + At());
 				booleanValue = false;
 				return false;
 			}

@@ -72,8 +72,8 @@ namespace Route.Bve5
 
 		private static double Multiple(double x, int y)
 		{
-			x = Math.Ceiling(x);
-			return x % y == 0 ? x : x + (y - x % y);
+			// Round up to the next multiple of y
+			return Math.Ceiling(x / (double)y) * y;
 		}
 
 		private static double LinearInterpolation(double x0, double y0, double x1, double y1, double x)

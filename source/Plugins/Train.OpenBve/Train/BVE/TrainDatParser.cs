@@ -601,7 +601,7 @@ namespace Train.OpenBve
 								{
 									case 0:
 										b = (int) Math.Round(a);
-										if (b >= 0 & b <= 2)
+										if (b >= 0 && b <= 2)
 										{
 											trainBrakeType = (BrakeSystemType) b;
 										}
@@ -613,7 +613,7 @@ namespace Train.OpenBve
 										break;
 									case 1:
 										b = (int) Math.Round(a);
-										if (b >= 0 & b <= 2)
+										if (b >= 0 && b <= 2)
 										{
 											ElectropneumaticType = (EletropneumaticBrakeType) b;
 										}
@@ -946,7 +946,7 @@ namespace Train.OpenBve
 									case 7:
 										{
 											int b = (int)Math.Round(a);
-											if (b >= 0 & b <= 2) {
+											if (b >= 0 && b <= 2) {
 												passAlarm = (PassAlarmType)b;
 											} else {
 												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "PassAlarm is invalid" + At(i + 1, FileName));
@@ -955,7 +955,7 @@ namespace Train.OpenBve
 									case 8:
 										{
 											int b = (int)Math.Round(a);
-											if (b >= 0 & b <= 2) {
+											if (b >= 0 && b <= 2) {
 												Train.Specs.DoorOpenMode = (DoorMode)b;
 											} else {
 												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DoorOpenMode is invalid" + At(i + 1, FileName));
@@ -964,7 +964,7 @@ namespace Train.OpenBve
 									case 9:
 										{
 											int b = (int)Math.Round(a);
-											if (b >= 0 & b <= 2) {
+											if (b >= 0 && b <= 2) {
 												Train.Specs.DoorCloseMode = (DoorMode)b;
 											} else {
 												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DoorCloseMode is invalid" + At(i + 1, FileName));

@@ -103,7 +103,7 @@ namespace OpenBveApi.Colors
 		/// <returns>Whether the two colors are equal.</returns>
 		public bool Equals(Color32 a, Color32 b)
 		{
-			return a.R != b.R | a.G != b.G | a.B != b.B | a.A != b.A;
+			return a.R == b.R & a.G == b.G & a.B == b.B & a.A == b.A;
 		}
 
 		/// <summary>Checks whether this instance and a specified object are equal.</summary>
@@ -132,7 +132,7 @@ namespace OpenBveApi.Colors
 			}
 		}
 
-		/// <summary>Defines the size of the Vector2 struct in bytes.</summary>
+		/// <summary>Defines the size of the Color32 struct in bytes.</summary>
 		public static readonly int SizeInBytes = Marshal.SizeOf((object)new Color32());
 
 		// --- read-only fields ---
@@ -456,7 +456,7 @@ namespace OpenBveApi.Colors
 			return System.Drawing.Color.FromArgb(c.A, c.R, c.G, c.B);
 		}
 
-		/// <summary>Returns a string representation of this Color24</summary>
+		/// <summary>Returns a string representation of this Color32</summary>
 		public override string ToString()
 		{
 			return $"#{BitConverter.ToString(new[] { R, G, B, A }).Replace("-", string.Empty)}";

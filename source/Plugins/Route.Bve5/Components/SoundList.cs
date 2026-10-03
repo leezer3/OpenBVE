@@ -40,15 +40,10 @@ namespace Route.Bve5
 				return;
 			}
 			
-			if (!File.Exists(SoundListPath))
+			SoundListPath = FindComponentListFile(FileName, SoundListPath, "Sound List");
+			if (SoundListPath == null)
 			{
-				SoundListPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), SoundListPath);
-
-				if (!File.Exists(SoundListPath))
-				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Sound List file " + SoundListPath + " was not found.");
-					return;
-				}
+				return;
 			}
 
 			string BaseDirectory = System.IO.Path.GetDirectoryName(SoundListPath);
@@ -106,15 +101,10 @@ namespace Route.Bve5
 				return;
 			}
 
-			if (!File.Exists(Sound3DListPath))
+			Sound3DListPath = FindComponentListFile(FileName, Sound3DListPath, "Sound3D List");
+			if (Sound3DListPath == null)
 			{
-				Sound3DListPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Sound3DListPath);
-
-				if (!File.Exists(Sound3DListPath))
-				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Sound3D List file " + Sound3DListPath + " was not found.");
-					return;
-				}
+				return;
 			}
 
 			string BaseDirectory = System.IO.Path.GetDirectoryName(Sound3DListPath);
