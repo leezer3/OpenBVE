@@ -22,9 +22,9 @@
 
 using OpenBveApi;
 using OpenBveApi.Motor;
-using SoundManager;
+using TrainManager.Motor;
 
-namespace TrainManager.Motor
+namespace TrainManager.SteamEngine
 {
 	public class SafetyValve : AbstractComponent
 	{

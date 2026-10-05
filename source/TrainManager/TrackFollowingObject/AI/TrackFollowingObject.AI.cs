@@ -32,6 +32,7 @@ using OpenBveApi.Trains;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Motor;
+using TrainManager.SteamEngine;
 
 namespace TrainManager.Trains
 {

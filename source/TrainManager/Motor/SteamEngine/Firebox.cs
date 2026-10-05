@@ -22,8 +22,9 @@
 
 using System;
 using OpenBveApi.Interface;
+using TrainManager.Motor;
 
-namespace TrainManager.Motor
+namespace TrainManager.SteamEngine
 {
 	public class Firebox : AbstractComponent
 	{

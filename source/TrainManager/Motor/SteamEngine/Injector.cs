@@ -24,8 +24,9 @@ using System;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Motor;
+using TrainManager.Motor;
 
-namespace TrainManager.Motor
+namespace TrainManager.SteamEngine
 {
 
 	public abstract class Injector : AbstractComponent
@@ -73,14 +74,14 @@ namespace TrainManager.Motor
 
 				// https://web.archive.org/web/20260903094113/https://www.firgelliauto.com/blogs/mechanisms/standard-injector
 				// feed water delivery rate
-				// ṁw = K × At × √(2 × ρs × Ps) × (hs − hd) / (hd − hw)
+				// mw = K × At × √(2 × ρs × Ps) × (hs − hd) / (hd − hw)
 
 				// first calculate steam mass jet flow
-				// ṁs = K × At × √(2 × ρs × Ps)
+				// ms = K × At × √(2 × ρs × Ps)
 				double bp = boiler.CurrentPressure * 703.0695796402; // psi to kg/m3
 				double steamMassFlow = SteamTable.DischargeCoefficient * 1.96 * Math.Pow(Diameter, -5) * Math.Sqrt(2 * bp * SteamTable.GetSteamDensity(boiler.CurrentPressure));
 				// apply enthalpy balance
-				// ṁw = ṁs × (hs − hd) / (hd − hw)
+				// mw = ms × (hs − hd) / (hd − hw)
 				WaterFlowRate = steamMassFlow * (SteamTable.SteamEnthalpyNominal - SteamTable.InjectorWaterEnthalpyNominal) / (SteamTable.GetSteamEnthalpy(boiler.CurrentPressure) - SteamTable.InjectorWaterEnthalpyNominal);
 
 				boiler.WaterLevel += WaterFlowRate * timeElapsed;
@@ -122,7 +123,7 @@ namespace TrainManager.Motor
 
 				// https://web.archive.org/web/20260903094113/https://www.firgelliauto.com/blogs/mechanisms/standard-injector
 				// feed water delivery rate
-				// ṁw = K × At × √(2 × ρs × Ps) × (hs − hd) / (hd − hw)
+				// mw = K × At × √(2 × ρs × Ps) × (hs − hd) / (hd − hw)
 
 				// first calculate steam mass jet flow
 				// ṁs = K × At × √(2 × ρs × Ps)
@@ -133,7 +134,7 @@ namespace TrainManager.Motor
 				// steamMassFlow should be Min of Cylinders.SteamMassFlow and steamMassFlow
 
 				// apply enthalpy balance
-				// ṁw = ṁs × (hs − hd) / (hd − hw)
+				// mw = ms × (hs − hd) / (hd − hw)
 				WaterFlowRate = steamMassFlow * (SteamTable.SteamEnthalpyNominal - SteamTable.InjectorWaterEnthalpyNominal) / (SteamTable.GetSteamEnthalpy(boiler.CurrentPressure) - SteamTable.InjectorWaterEnthalpyNominal);
 
 				boiler.WaterLevel += WaterFlowRate * timeElapsed;

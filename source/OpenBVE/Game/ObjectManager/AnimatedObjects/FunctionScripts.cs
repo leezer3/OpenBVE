@@ -12,6 +12,7 @@ using TrainManager.Car.Systems;
 using TrainManager.Handles;
 using TrainManager.Motor;
 using TrainManager.SafetySystems;
+using TrainManager.SteamEngine;
 using TrainManager.Trains;
 
 namespace OpenBve {
