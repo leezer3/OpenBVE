@@ -35,6 +35,8 @@ using OpenBveApi.Hosts;
 using SoundManager;
 using TrainManager.Car;
 using TrainManager.SafetySystems;
+using TrainManager.SteamEngine;
+
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 
 namespace Train.MsTs

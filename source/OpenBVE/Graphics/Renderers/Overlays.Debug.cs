@@ -8,6 +8,7 @@ using OpenBveApi.Motor;
 using OpenBveApi.Routes;
 using TrainManager.Handles;
 using TrainManager.Motor;
+using TrainManager.SteamEngine;
 
 namespace OpenBve.Graphics.Renderers
 {

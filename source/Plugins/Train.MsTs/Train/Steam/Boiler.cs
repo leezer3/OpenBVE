@@ -23,6 +23,7 @@
 using System;
 using OpenBveApi.Motor;
 using TrainManager.Motor;
+using TrainManager.SteamEngine;
 
 namespace Train.MsTs
 {

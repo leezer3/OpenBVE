@@ -28,10 +28,11 @@ using OpenBveApi.Motor;
 using System.Linq;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Motor;
 using TrainManager.Power;
 using TrainManager.Trains;
 
-namespace TrainManager.Motor
+namespace TrainManager.SteamEngine
 {
 	public class TankEngine : TractionModel
 	{

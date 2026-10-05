@@ -22,6 +22,7 @@
 
 
 using TrainManager.Motor;
+using TrainManager.SteamEngine;
 
 namespace Train.MsTs
 {
