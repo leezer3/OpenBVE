@@ -244,12 +244,7 @@ namespace Train.MsTs
 							currentCar.TractionModel = new TankEngine(currentCar, new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) }, MaxFuelLevel, MaxWaterLevel);
 						}
 
-						SteamProperties.Boiler.Create(currentCar.TractionModel);
-						currentCar.TractionModel.Components.Add(EngineComponent.CylinderCocks, new CylinderCocks(currentCar.TractionModel, SteamProperties.cylinderCocksAutomatic, CylinderCocksPowerModifier));
-						currentCar.TractionModel.Components.Add(EngineComponent.Blowers, new Blowers(currentCar.TractionModel));
-						currentCar.TractionModel.Components.Add(EngineComponent.SteamInjector1, SteamProperties.Injectors[0].Create(currentCar.TractionModel));
-						currentCar.TractionModel.Components.Add(EngineComponent.SteamInjector2, SteamProperties.Injectors[1].Create(currentCar.TractionModel));
-						currentCar.TractionModel.Components.Add(EngineComponent.Firebox, new Firebox(currentCar.TractionModel, SteamProperties.MaxFireMass, Math.Min(SteamProperties.MaxFireMass, SteamProperties.StartingFireMass), SteamProperties.IdealFireMass, Math.Max(SteamProperties.StartingFireTemp, 500)));
+						SteamProperties.CreateModel(currentCar.TractionModel);
 						break;
 					case EngineType.NoEngine:
 						currentCar.TractionModel = new BVETrailerCar(currentCar);
@@ -1480,6 +1475,30 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.IdealFireMass:
 					SteamProperties.IdealFireMass = block.ReadSingle(UnitOfWeight.Kilograms);
+					break;
+				case KujuTokenID.NumCylinders:
+					SteamProperties.Cylinders.TotalNumber = block.ReadInt32();
+					if (SteamProperties.Cylinders.TotalNumber <= 0)
+					{
+						Plugin.CurrentHost.AddMessage("MSTS Vehicle Parser: NumCylinders must be greater than 0");
+						SteamProperties.Cylinders.TotalNumber = 1;
+					}
+					break;
+				case KujuTokenID.CylinderDiameter:
+					SteamProperties.Cylinders.Diameter = block.ReadSingle(UnitOfLength.Meter);
+					if (SteamProperties.Cylinders.Diameter <= 0)
+					{
+						Plugin.CurrentHost.AddMessage("MSTS Vehicle Parser: CylinderDiameter must be greater than 0");
+						SteamProperties.Cylinders.Diameter = 48.5;
+					}
+					break;
+				case KujuTokenID.CylinderStroke:
+					SteamProperties.Cylinders.StrokeLength = block.ReadSingle(UnitOfLength.Meter);
+					if (SteamProperties.Cylinders.Diameter <= 0)
+					{
+						Plugin.CurrentHost.AddMessage("MSTS Vehicle Parser: CylinderStroke must be greater than 0");
+						SteamProperties.Cylinders.StrokeLength = 65;
+					}
 					break;
 				case KujuTokenID.PassengerCapacity:
 					double numPassengers = block.ReadSingle();
