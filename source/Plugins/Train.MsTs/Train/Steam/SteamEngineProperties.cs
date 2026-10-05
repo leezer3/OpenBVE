@@ -20,6 +20,11 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using OpenBveApi.Motor;
+using System;
+using TrainManager.Motor;
+using TrainManager.SteamEngine;
+
 namespace Train.MsTs
 {
 	internal class SteamEngineProperties
@@ -31,5 +36,16 @@ namespace Train.MsTs
 		internal bool cylinderCocksAutomatic = false;
 		internal InjectorProperties[] Injectors = new InjectorProperties[2];
 		internal BoilerProperties Boiler = new BoilerProperties();
+		internal CylinderProperties Cylinders = new CylinderProperties();
+
+		internal void CreateModel(TractionModel model)
+		{
+			Boiler.Create(model);
+			Injectors[0].Create(model, EngineComponent.SteamInjector1);
+			Injectors[1].Create(model, EngineComponent.SteamInjector2);
+			Cylinders.Create(model);
+			model.Components.Add(EngineComponent.Blowers, new Blowers(model));
+			model.Components.Add(EngineComponent.Firebox, new Firebox(model, MaxFireMass, Math.Min(MaxFireMass, StartingFireMass), IdealFireMass, Math.Max(StartingFireTemp, 500)));
+		}
 	}
 }

@@ -21,6 +21,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
+using OpenBveApi.Motor;
 using TrainManager.Motor;
 using TrainManager.SteamEngine;
 
@@ -38,13 +39,13 @@ namespace Train.MsTs
 
 		internal double MaxWater;
 
-		internal AbstractComponent Create(TractionModel model)
+		internal void Create(TractionModel model, EngineComponent component)
 		{
 			if (Type == 0)
 			{
-				return new LiveSteamInjector(model, Diameter, MinPressure, MinPressure, MaxWater);
+				model.Components.Add(component, new LiveSteamInjector(model, Diameter, MinPressure, MinPressure, MaxWater));
 			}
-			return new ExhaustSteamInjector(model, Diameter, MinPressure, MinPressure, MaxWater);
+			model.Components.Add(component, new ExhaustSteamInjector(model, Diameter, MinPressure, MinPressure, MaxWater));
 		}
 	}
 }

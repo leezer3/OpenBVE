@@ -111,7 +111,7 @@ namespace TrainManager.SteamEngine
 
 		public override void Update(double timeElapsed)
 		{
-			if (Active && baseEngine.Components.TryGetTypedValue(EngineComponent.Boiler, out Boiler boiler))
+			if (Active && baseEngine.Components.TryGetTypedValue(EngineComponent.Boiler, out Boiler boiler) && baseEngine.Components.TryGetTypedValue(EngineComponent.Cylinders, out Cylinders cylinders))
 			{
 				if (boiler.CurrentPressure < minimumBoilerPressure || boiler.WaterLevel < minimumBoilerWaterLevel ||
 				    boiler.WaterLevel > maximumBoilerWaterLevel || Diameter == 0)
@@ -130,8 +130,12 @@ namespace TrainManager.SteamEngine
 				double bp = boiler.CurrentPressure * 703.0695796402; // psi to kg/m3
 				double steamMassFlow = SteamTable.DischargeCoefficient * 1.96 * Math.Pow(Diameter, -5) * Math.Sqrt(2 * bp * SteamTable.GetSteamDensity(boiler.CurrentPressure));
 
-				// Cylinders not yet implimented
-				// steamMassFlow should be Min of Cylinders.SteamMassFlow and steamMassFlow
+				steamMassFlow = Math.Min(steamMassFlow, cylinders.SteamMassFlow * cylinders.TotalNumber);
+				if (steamMassFlow == 0)
+				{
+					WaterFlowRate = 0;
+					return;
+				}
 
 				// apply enthalpy balance
 				// mw = ms × (hs − hd) / (hd − hw)
