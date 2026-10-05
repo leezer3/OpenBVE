@@ -40,6 +40,7 @@ using TrainManager.Car.Systems;
 using TrainManager.Motor;
 using TrainManager.MsTsSounds;
 using TrainManager.SafetySystems;
+using TrainManager.SteamEngine;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace Train.MsTs
@@ -574,8 +575,8 @@ namespace Train.MsTs
 								{
 									if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
 									{
-										cylinderCocks.OpenSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
-										cylinderCocks.CloseSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+										cylinderCocks.ActivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+										cylinderCocks.DeactivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
 									}
 									else
 									{

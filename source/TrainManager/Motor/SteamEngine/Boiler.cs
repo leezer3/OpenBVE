@@ -22,8 +22,9 @@
 
 using OpenBveApi;
 using OpenBveApi.Motor;
+using TrainManager.Motor;
 
-namespace TrainManager.Motor
+namespace TrainManager.SteamEngine
 {
 	public class Boiler : AbstractComponent
 	{
