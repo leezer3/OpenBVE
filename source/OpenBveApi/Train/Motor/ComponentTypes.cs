@@ -48,6 +48,8 @@ namespace OpenBveApi.Motor
 		/// <summary>Steam engine firebox</summary>
 		Firebox,
 		/// <summary>Steam engine boiler safety valve</summary>
-		SafetyValve
+		SafetyValve,
+		/// <summary>Steam engine cylinders</summary>
+		Cylinders
 	}
 }

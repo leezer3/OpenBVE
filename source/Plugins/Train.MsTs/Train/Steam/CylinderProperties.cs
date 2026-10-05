@@ -20,32 +20,30 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
 using OpenBveApi.Motor;
 using TrainManager.Motor;
 using TrainManager.SteamEngine;
 
 namespace Train.MsTs
 {
-	internal struct InjectorProperties
+	internal class CylinderProperties
 	{
-		internal int Type;
+		internal double StrokeLength;
 
 		internal double Diameter;
 
-		internal double MinPressure;
+		internal int TotalNumber;
 
-		internal double MinWater;
-
-		internal double MaxWater;
-
-		internal void Create(TractionModel model, EngineComponent component)
+		internal CylinderProperties()
 		{
-			if (Type == 0)
-			{
-				model.Components.Add(component, new LiveSteamInjector(model, Diameter, MinPressure, MinPressure, MaxWater));
-			}
-			model.Components.Add(component, new ExhaustSteamInjector(model, Diameter, MinPressure, MinPressure, MaxWater));
+			TotalNumber = 1;
+			Diameter = 48.5;
+			StrokeLength = 65;
+		}
+
+		internal void Create(TractionModel model)
+		{
+			model.Components.Add(EngineComponent.Cylinders, new Cylinders(model, Diameter, StrokeLength, TotalNumber));
 		}
 	}
 }
