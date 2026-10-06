@@ -23,8 +23,11 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using Bve5_Parsing;
 using Bve5_Parsing.MapGrammar;
 using Bve5_Parsing.MapGrammar.EvaluateData;
@@ -61,6 +64,7 @@ namespace Route.Bve5
 				if (Parser != null)
 				{
 					Data = Parser.ParseFromFile(FileName, MapGrammarParserOption.ParseIncludeSyntaxRecursively);
+					RecoverIncludesWithoutDetectableEncoding(Data);
 
 					if (IsDisplayErrors)
 					{
@@ -71,10 +75,144 @@ namespace Route.Bve5
 				return Data;
 			}
 
+			/// <summary>Pulls the file path out of an unknown-encoding error.</summary>
+			private static readonly Regex unknownEncodingPath = new Regex(@"File path：(.+?)）", RegexOptions.Compiled);
+
+			/// <summary>Includes fixed up below; their original errors stay hidden.</summary>
+			private readonly HashSet<string> recoveredIncludePaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+			/// <summary>
+			/// Re-reads includes the library found but couldn't decode (no BOM, no :encoding suffix).
+			/// Otherwise the whole include and its statements are lost.
+			/// </summary>
+			private void RecoverIncludesWithoutDetectableEncoding(MapData Data)
+			{
+				// Assume the route shares its top-level encoding; real BVE5 falls back to Shift-JIS.
+				Encoding routeEncoding = GetDeclaredMapEncoding(FileName) ?? Encoding.GetEncoding("shift_jis");
+				HashSet<string> visited = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { FileName };
+				Queue<string> pending = new Queue<string>();
+				foreach (string path in FindUndecodableIncludes(Parser.ParserErrors))
+				{
+					if (visited.Add(path))
+					{
+						pending.Enqueue(path);
+					}
+				}
+
+				while (pending.Count != 0)
+				{
+					if (plugin.Cancel) return;
+					string path = pending.Dequeue();
+					string text;
+					try
+					{
+						text = ReadWithFallbackEncoding(path, routeEncoding);
+					}
+					catch
+					{
+						continue; // keep the original error
+					}
+
+					MapGrammarParser subParser = new MapGrammarParser();
+					MapData subData;
+					try
+					{
+						subData = subParser.Parse(text, path, MapGrammarParserOption.ParseIncludeSyntaxRecursively);
+					}
+					catch
+					{
+						continue;
+					}
+					Data.AddIncludeData(subData);
+					recoveredIncludePaths.Add(path);
+
+					foreach (ParseError error in subParser.ParserErrors)
+					{
+						Match match = unknownEncodingPath.Match(error.Message);
+						if (match.Success)
+						{
+							if (visited.Add(match.Groups[1].Value))
+							{
+								pending.Enqueue(match.Groups[1].Value);
+							}
+						}
+						else
+						{
+							Plugin.CurrentHost.AddMessage(error.ErrorLevel == ParseErrorLevel.Error ? MessageType.Error : MessageType.Warning, false,
+								$"[{error.Line}:{error.Column}] {error.ErrorLevel}: {error.Message} in {path}");
+						}
+					}
+				}
+			}
+
+			private static IEnumerable<string> FindUndecodableIncludes(IEnumerable<ParseError> errors)
+			{
+				foreach (ParseError error in errors)
+				{
+					Match match = unknownEncodingPath.Match(error.Message);
+					if (match.Success)
+					{
+						yield return match.Groups[1].Value;
+					}
+				}
+			}
+
+			/// <summary>Header-declared encoding of a map file, or null.</summary>
+			private static Encoding GetDeclaredMapEncoding(string fileName)
+			{
+				try
+				{
+					string firstLine;
+					using (StreamReader reader = new StreamReader(fileName, Encoding.ASCII))
+					{
+						firstLine = reader.ReadLine();
+					}
+					if (firstLine == null)
+					{
+						return null;
+					}
+					string[] header = firstLine.Split(':');
+					if (header.Length == 1)
+					{
+						return null;
+					}
+					return Encoding.GetEncoding(header[1].Split(',')[0].ToLowerInvariant().Trim());
+				}
+				catch
+				{
+					return null;
+				}
+			}
+
+			/// <summary>Reads a file, honouring a BOM, else strict fallback encoding.</summary>
+			private static string ReadWithFallbackEncoding(string path, Encoding fallback)
+			{
+				byte[] bytes = File.ReadAllBytes(path);
+				if (bytes.Length >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF)
+				{
+					return Encoding.UTF8.GetString(bytes, 3, bytes.Length - 3);
+				}
+				if (bytes.Length >= 2 && bytes[0] == 0xFF && bytes[1] == 0xFE)
+				{
+					return Encoding.Unicode.GetString(bytes, 2, bytes.Length - 2);
+				}
+				if (bytes.Length >= 2 && bytes[0] == 0xFE && bytes[1] == 0xFF)
+				{
+					return Encoding.BigEndianUnicode.GetString(bytes, 2, bytes.Length - 2);
+				}
+				Encoding strict = Encoding.GetEncoding(fallback.WebName, EncoderExceptionFallback.ExceptionFallback, DecoderExceptionFallback.ExceptionFallback);
+				return strict.GetString(bytes);
+			}
+
 			private void DisplayErrors()
 			{
 				foreach (ParseError error in Parser.ParserErrors.OrderBy(e => e.Line).ThenBy(e => e.Column))
 				{
+					Match match = unknownEncodingPath.Match(error.Message);
+					if (match.Success && recoveredIncludePaths.Contains(match.Groups[1].Value))
+					{
+						continue; // already recovered above
+					}
 					// ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 					switch (error.ErrorLevel)
 					{
