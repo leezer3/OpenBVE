@@ -38,6 +38,7 @@ using RouteManager2.SignalManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Route.Bve5
 {
@@ -660,6 +661,186 @@ namespace Route.Bve5
 			{
 				ComputeCantTangents();
 			}
+
+			// Repeaters go last via TrackFollower (as Hmmsim does): the track must exist
+			// first so spans walk the real alignment instead of one block's guess.
+			if (!PreviewOnly && Data.Repeaters.Count != 0)
+			{
+				for (int i = 0; i < Data.Repeaters.Count; i++)
+				{
+					plugin.CurrentProgress = 0.95 + i * (0.05 / Math.Max(1, Data.Repeaters.Count));
+					if ((i & 15) == 0)
+					{
+						System.Threading.Thread.Sleep(1);
+						if (plugin.Cancel) return;
+					}
+
+					CreateRepeater(Data, Data.Repeaters[i]);
+				}
+			}
+		}
+
+		/// <summary>Places one repeater run.</summary>
+		/// <remarks>Math runs in parallel (thread-local followers, read-only track);
+		/// commits stay sequential as the renderer owns shared state.</remarks>
+		private static void CreateRepeater(RouteData Data, Repeater Repeater)
+		{
+			if (Repeater.Interval <= 0.0 || Repeater.ObjectKeys == null || Repeater.ObjectKeys.Length == 0)
+			{
+				return;
+			}
+
+			int trackIndex = Data.TrackKeyList.IndexOf(Repeater.TrackKey, StringComparison.OrdinalIgnoreCase);
+			if (trackIndex < 0 || !Plugin.CurrentRoute.Tracks.TryGetValue(trackIndex, out Track track) || track.Elements == null || track.Elements.Length == 0)
+			{
+				return;
+			}
+
+			double end = Repeater.EndingDistance;
+			if (end <= Repeater.StartingDistance)
+			{
+				return;
+			}
+
+			// Orientation looks ahead max(span, 1.0), as in BveTs.
+			double span = Math.Max(Repeater.Span, 1.0);
+
+			// Same distance sequence as the old inline loop; only the math is parallel.
+			List<double> distances = new List<double>();
+			for (double d = Repeater.StartingDistance; d < end; d += Repeater.Interval)
+			{
+				distances.Add(d);
+			}
+			int count = distances.Count;
+			if (count <= 0)
+			{
+				return;
+			}
+
+			RepeaterPlacement[] placements = new RepeaterPlacement[count];
+			bool followGradient = Repeater.Type == ObjectTransformType.FollowsGradient || Repeater.Type == ObjectTransformType.FollowsGradientAndCant;
+			bool followCant = Repeater.Type == ObjectTransformType.FollowsCant || Repeater.Type == ObjectTransformType.FollowsGradientAndCant;
+			int keyCount = Repeater.ObjectKeys.Length;
+
+			if (count < 1024 || Environment.ProcessorCount < 2)
+			{
+				TrackFollower follower = new TrackFollower(Plugin.CurrentHost)
+				{
+					TrackIndex = trackIndex
+				};
+				for (int idx = 0; idx < count; idx++)
+				{
+					if (plugin.Cancel)
+					{
+						return;
+					}
+					ComputeRepeaterPlacement(Data, Repeater, span, followGradient, followCant, keyCount, idx, distances[idx], follower, placements);
+				}
+			}
+			else
+			{
+				ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = ComputeStructureLoadDop() };
+				Parallel.For(0, count, options, () => new TrackFollower(Plugin.CurrentHost) { TrackIndex = trackIndex },
+					(idx, state, follower) =>
+					{
+						if (plugin.Cancel)
+						{
+							state.Stop();
+							return follower;
+						}
+						ComputeRepeaterPlacement(Data, Repeater, span, followGradient, followCant, keyCount, idx, distances[idx], follower, placements);
+						return follower;
+					},
+					(follower) => { });
+				if (plugin.Cancel)
+				{
+					return;
+				}
+			}
+
+			for (int idx = 0; idx < count; idx++)
+			{
+				if (placements[idx].Obj == null)
+				{
+					continue;
+				}
+				placements[idx].Obj.CreateObject(placements[idx].Position, placements[idx].World, new Transformation(Repeater.Yaw, Repeater.Pitch, Repeater.Roll), new ObjectCreationParameters(placements[idx].Distance, placements[idx].Distance, placements[idx].Distance + span));
+			}
+		}
+
+		private struct RepeaterPlacement
+		{
+			internal UnifiedObject Obj;
+			internal Vector3 Position;
+			internal Transformation World;
+			internal double Distance;
+		}
+
+		private static void ComputeRepeaterPlacement(RouteData Data, Repeater Repeater, double span, bool followGradient, bool followCant, int keyCount, int idx, double distance, TrackFollower follower, RepeaterPlacement[] placements)
+		{
+			string key = Repeater.ObjectKeys[idx % keyCount];
+			if (string.IsNullOrEmpty(key))
+			{
+				// Empty key places nothing.
+				return;
+			}
+
+			if (!Data.Objects.TryGetValue(key, out UnifiedObject obj) || obj == null)
+			{
+				return;
+			}
+
+			follower.UpdateAbsolute(distance, true, false);
+			Vector3 start = new Vector3(follower.WorldPosition);
+
+			follower.UpdateAbsolute(distance + span, true, false);
+			Vector3 finish = new Vector3(follower.WorldPosition);
+
+			// BveTs samples cant for orientation at the span midpoint.
+			double cant;
+			if (followCant)
+			{
+				follower.UpdateAbsolute(distance + span / 2.0, true, false);
+				cant = follower.CurveCant;
+			}
+			else
+			{
+				cant = 0.0;
+			}
+
+			Vector3 r;
+			if (followGradient)
+			{
+				r = new Vector3(finish.X - start.X, finish.Y - start.Y, finish.Z - start.Z);
+			}
+			else
+			{
+				// Level span when not following the gradient.
+				r = new Vector3(finish.X - start.X, 0.0, finish.Z - start.Z);
+			}
+
+			if (r.X == 0.0 && r.Y == 0.0 && r.Z == 0.0)
+			{
+				return;
+			}
+			r.Normalize();
+
+			Transformation world = new Transformation
+			{
+				Z = r,
+				X = new Vector3(r.Z, 0.0, -r.X)
+			};
+			Normalize(ref world.X.X, ref world.X.Z);
+			world.Y = Vector3.Cross(world.Z, world.X);
+			if (followCant)
+			{
+				world = new Transformation(world, 0.0, 0.0, Math.Atan(cant));
+			}
+
+			placements[idx].Obj = obj;
+			placements[idx].Position = start + Repeater.Position * world;
+			placements[idx].World = world;
+			placements[idx].Distance = distance;
 		}
 
 		private static void ComputeCantTangents()
