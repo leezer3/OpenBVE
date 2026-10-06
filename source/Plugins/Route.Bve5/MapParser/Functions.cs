@@ -317,17 +317,9 @@ namespace Route.Bve5
 
 		/// <summary>
 		/// Walks the player track forwards from the start of a block to a track position, stepping off
-		/// to the requested rail on the way.
+		/// to the requested rail on the way. A span can cover several blocks, so we can't just read the
+		/// answer out of a single block.
 		/// </summary>
-		/// <remarks>
-		/// A structure with a span (an overhead line, a platform roof, a length of ballast) covers several
-		/// blocks, and both the alignment of the track and the lateral offset of the rail can change
-		/// underneath it. Reading those out of the block the structure happens to start in leaves its far
-		/// end off the rail, which is most visible where consecutive segments should meet: the catenary
-		/// wires at Chiba used to stop ~0.35m short of each other at the 260m pole.
-		/// Walking the track is the same work ApplyRouteData does to lay the track out in the first place,
-		/// so both ends of the chord land exactly on the rail.
-		/// </remarks>
 		private static Vector3 GetRailPosition(Vector3 StartingPosition, IList<Block> Blocks, int StartingBlock, string RailKey, Vector2 Direction, double TargetDistance)
 		{
 			Vector3 position = StartingPosition;
@@ -382,11 +374,6 @@ namespace Route.Bve5
 		}
 
 		/// <summary>Gets the transformation for a structure which spans a chord of the rail, e.g. an overhead line</summary>
-		/// <remarks>
-		/// The structure is rigid, so it is placed along the straight line between the two ends of its
-		/// span rather than being bent to follow the curve. Where the track genuinely curves over the span
-		/// that chord is very slightly shorter than the track it covers, which is expected.
-		/// </remarks>
 		private static void GetTransformation(Vector3 StartingPosition, IList<Block> Blocks, int StartingBlock, string RailKey, double TrackDistance, ObjectTransformType Type, double Span, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
 		{
 			Transformation = new Transformation();
