@@ -155,6 +155,7 @@ namespace Route.Bve5
 
 			// process blocks
 			double progressFactor = Data.Blocks.Count == 0 ? 0.5 : 0.5 / Data.Blocks.Count;
+			List<SpanJob> deferredSpans = new List<SpanJob>();
 			for (int i = 0; i < Data.Blocks.Count; i++)
 			{
 				plugin.CurrentProgress = 0.6667 + i * progressFactor;
@@ -333,24 +334,31 @@ namespace Route.Bve5
 				{
 					for (int j = 0; j < Data.Blocks[i].Rails.Count; j++)
 					{
-						// free objects (including placed repeaters)
+						// free objects (repeaters are queued separately)
 						string railKey = Data.Blocks[i].Rails.ElementAt(j).Key;
 						if (Data.Blocks[i].FreeObjects.ContainsKey(railKey))
 						{
 							for (int k = 0; k < Data.Blocks[i].FreeObjects[railKey].Count; k++)
 							{
-								string key = Data.Blocks[i].FreeObjects[railKey][k].Key;
+								FreeObj freeObj = Data.Blocks[i].FreeObjects[railKey][k];
+								if (freeObj.Span > 0.0)
+								{
+									// Spans walk the finished track like BVE5 does; placed after the walk.
+									deferredSpans.Add(new SpanJob(railKey, freeObj.TrackPosition, freeObj.Span, freeObj.Type, freeObj.Position, freeObj.Yaw, freeObj.Pitch, freeObj.Roll, freeObj.Key, StartingDistance, EndingDistance));
+									continue;
+								}
+								string key = freeObj.Key;
 								Vector3 wpos;
 								Transformation Transformation;
-								if (!GetRailTransformation(railKey, Position, Data.Blocks, i, Data.Blocks[i].FreeObjects[railKey][k], Direction, out wpos, out Transformation))
+								if (!GetRailTransformation(railKey, Position, Data.Blocks, i, freeObj, Direction, out wpos, out Transformation))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unknown transform type encountered for object " + Data.Blocks[i].FreeObjects[railKey][k].Key + " at track position " + StartingDistance);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unknown transform type encountered for object " + freeObj.Key + " at track position " + StartingDistance);
 									continue;
 								}
 
-								wpos += Data.Blocks[i].FreeObjects[railKey][k].Position * Transformation;
+								wpos += freeObj.Position * Transformation;
 								Data.Objects.TryGetValue(key, out UnifiedObject obj);
-								obj?.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].FreeObjects[railKey][k].Yaw, Data.Blocks[i].FreeObjects[railKey][k].Pitch, Data.Blocks[i].FreeObjects[railKey][k].Roll), new ObjectCreationParameters(Data.Blocks[i].FreeObjects[railKey][k].TrackPosition, StartingDistance, EndingDistance));
+								obj?.CreateObject(wpos, Transformation, new Transformation(freeObj.Yaw, freeObj.Pitch, freeObj.Roll), new ObjectCreationParameters(freeObj.TrackPosition, StartingDistance, EndingDistance));
 							}
 						}
 
@@ -662,10 +670,11 @@ namespace Route.Bve5
 				ComputeCantTangents();
 			}
 
-			// Repeaters go last via TrackFollower (as Hmmsim does): the track must exist
-			// first so spans walk the real alignment instead of one block's guess.
-			if (!PreviewOnly && Data.Repeaters.Count != 0)
+			// Spans go last via TrackFollower: the track must exist first so they
+			// walk the real alignment instead of one block's guess, as in BveTs.
+			if (!PreviewOnly && (deferredSpans.Count != 0 || Data.Repeaters.Count != 0))
 			{
+				PlaceSpans(Data, deferredSpans);
 				for (int i = 0; i < Data.Repeaters.Count; i++)
 				{
 					plugin.CurrentProgress = 0.95 + i * (0.05 / Math.Max(1, Data.Repeaters.Count));
@@ -675,15 +684,59 @@ namespace Route.Bve5
 						if (plugin.Cancel) return;
 					}
 
-					CreateRepeater(Data, Data.Repeaters[i]);
+					List<SpanJob> jobs = new List<SpanJob>();
+					QueueRepeaterJobs(Data, Data.Repeaters[i], jobs);
+					PlaceSpans(Data, jobs);
 				}
 			}
 		}
 
-		/// <summary>Places one repeater run.</summary>
-		/// <remarks>Math runs in parallel (thread-local followers, read-only track);
-		/// commits stay sequential as the renderer owns shared state.</remarks>
-		private static void CreateRepeater(RouteData Data, Repeater Repeater)
+		/// <summary>One spanning object to place: a repeater instance or a deferred structure.</summary>
+		private struct SpanJob
+		{
+			internal readonly string RailKey;
+			internal readonly double Distance;
+			internal readonly double Span;
+			internal readonly ObjectTransformType Type;
+			internal readonly Vector3 Offset;
+			internal readonly double Yaw;
+			internal readonly double Pitch;
+			internal readonly double Roll;
+			internal readonly string ObjKey;
+			internal readonly double ParamStart;
+			internal readonly double ParamEnd;
+
+			internal SpanJob(string railKey, double distance, double span, ObjectTransformType type, Vector3 offset, double yaw, double pitch, double roll, string objKey, double paramStart, double paramEnd)
+			{
+				RailKey = railKey;
+				Distance = distance;
+				Span = span;
+				Type = type;
+				Offset = offset;
+				Yaw = yaw;
+				Pitch = pitch;
+				Roll = roll;
+				ObjKey = objKey;
+				ParamStart = paramStart;
+				ParamEnd = paramEnd;
+			}
+		}
+
+		private struct SpanPlacement
+		{
+			internal UnifiedObject Obj;
+			internal Vector3 Position;
+			internal Transformation World;
+			internal double Distance;
+			internal double ParamStart;
+			internal double ParamEnd;
+			internal double Yaw;
+			internal double Pitch;
+			internal double Roll;
+		}
+
+		/// <summary>Expands a repeater run into span jobs, same distance sequence as before.</summary>
+		private static void QueueRepeaterJobs(RouteData Data, Repeater Repeater, List<SpanJob> jobs)
 		{
 			if (Repeater.Interval <= 0.0 || Repeater.ObjectKeys == null || Repeater.ObjectKeys.Length == 0)
 			{
@@ -691,56 +744,108 @@ namespace Route.Bve5
 			}
 
 			int trackIndex = Data.TrackKeyList.IndexOf(Repeater.TrackKey, StringComparison.OrdinalIgnoreCase);
-			if (trackIndex < 0 || !Plugin.CurrentRoute.Tracks.TryGetValue(trackIndex, out Track track) || track.Elements == null || track.Elements.Length == 0)
+			if (trackIndex < 0)
+			{
+				return;
+			}
+			string railKey = Data.TrackKeyList[trackIndex];
+
+			if (Repeater.EndingDistance <= Repeater.StartingDistance)
 			{
 				return;
 			}
 
-			double end = Repeater.EndingDistance;
-			if (end <= Repeater.StartingDistance)
+			int loopCount = 0;
+			for (double distance = Repeater.StartingDistance; distance < Repeater.EndingDistance; distance += Repeater.Interval)
+			{
+				string key = Repeater.ObjectKeys[loopCount];
+				loopCount = (loopCount + 1) % Repeater.ObjectKeys.Length;
+				if (string.IsNullOrEmpty(key))
+				{
+					continue;
+				}
+				jobs.Add(new SpanJob(railKey, distance, Repeater.Span, Repeater.Type, Repeater.Position, Repeater.Yaw, Repeater.Pitch, Repeater.Roll, key, distance, distance));
+			}
+		}
+
+		/// <summary>Rail lateral/vertical offset at a distance, interpolated between neighbours.</summary>
+		private static Vector2 GetRailOffsetAtDistance(RouteData Data, string railKey, double distance)
+		{
+			IList<Block> blocks = Data.Blocks;
+			if (blocks.Count == 0)
+			{
+				return Vector2.Null;
+			}
+			if (distance <= blocks[0].StartingDistance)
+			{
+				return new Vector2(blocks[0].Rails[railKey].Position.X, blocks[0].Rails[railKey].Position.Y);
+			}
+			int index = Data.sortedBlocks.FindBlockIndex(distance);
+			if (index >= blocks.Count - 1)
+			{
+				Rail last = blocks[blocks.Count - 1].Rails[railKey];
+				return new Vector2(last.Position.X, last.Position.Y);
+			}
+			Block first = blocks[index];
+			Block second = blocks[index + 1];
+			double x = GetTrackCoordinate(first.StartingDistance, first.Rails[railKey].Position.X, second.StartingDistance, second.Rails[railKey].Position.X, first.Rails[railKey].RadiusH, distance);
+			double y = GetTrackCoordinate(first.StartingDistance, first.Rails[railKey].Position.Y, second.StartingDistance, second.Rails[railKey].Position.Y, first.Rails[railKey].RadiusV, distance);
+			return new Vector2(x, y);
+		}
+
+		/// <summary>Rail cant at a distance, lerped between neighbours.</summary>
+		private static double GetRailCantAtDistance(RouteData Data, string railKey, double distance)
+		{
+			IList<Block> blocks = Data.Blocks;
+			if (blocks.Count == 0)
+			{
+				return 0.0;
+			}
+			if (distance <= blocks[0].StartingDistance)
+			{
+				return blocks[0].Rails[railKey].CurveCant;
+			}
+			int index = Data.sortedBlocks.FindBlockIndex(distance);
+			if (index >= blocks.Count - 1)
+			{
+				return blocks[blocks.Count - 1].Rails[railKey].CurveCant;
+			}
+			Block first = blocks[index];
+			Block second = blocks[index + 1];
+			if (second.StartingDistance <= first.StartingDistance)
+			{
+				return first.Rails[railKey].CurveCant;
+			}
+			double t = (distance - first.StartingDistance) / (second.StartingDistance - first.StartingDistance);
+			return first.Rails[railKey].CurveCant + (second.Rails[railKey].CurveCant - first.Rails[railKey].CurveCant) * t;
+		}
+
+		/// <summary>Places span jobs: math in parallel, renderer commits in order.</summary>
+		private static void PlaceSpans(RouteData Data, List<SpanJob> jobs)
+		{
+			int count = jobs.Count;
+			if (count == 0 || !Plugin.CurrentRoute.Tracks.TryGetValue(0, out Track track) || track.Elements == null || track.Elements.Length == 0)
 			{
 				return;
 			}
 
-			// Orientation looks ahead max(span, 1.0), as in BveTs.
-			double span = Math.Max(Repeater.Span, 1.0);
-
-			// Same distance sequence as the old inline loop; only the math is parallel.
-			List<double> distances = new List<double>();
-			for (double d = Repeater.StartingDistance; d < end; d += Repeater.Interval)
-			{
-				distances.Add(d);
-			}
-			int count = distances.Count;
-			if (count <= 0)
-			{
-				return;
-			}
-
-			RepeaterPlacement[] placements = new RepeaterPlacement[count];
-			bool followGradient = Repeater.Type == ObjectTransformType.FollowsGradient || Repeater.Type == ObjectTransformType.FollowsGradientAndCant;
-			bool followCant = Repeater.Type == ObjectTransformType.FollowsCant || Repeater.Type == ObjectTransformType.FollowsGradientAndCant;
-			int keyCount = Repeater.ObjectKeys.Length;
-
+			SpanPlacement[] placements = new SpanPlacement[count];
 			if (count < 1024 || Environment.ProcessorCount < 2)
 			{
-				TrackFollower follower = new TrackFollower(Plugin.CurrentHost)
-				{
-					TrackIndex = trackIndex
-				};
+				TrackFollower follower = new TrackFollower(Plugin.CurrentHost);
 				for (int idx = 0; idx < count; idx++)
 				{
 					if (plugin.Cancel)
 					{
 						return;
 					}
-					ComputeRepeaterPlacement(Data, Repeater, span, followGradient, followCant, keyCount, idx, distances[idx], follower, placements);
+					ComputeSpan(Data, jobs[idx], follower, placements, idx);
 				}
 			}
 			else
 			{
 				ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = ComputeStructureLoadDop() };
-				Parallel.For(0, count, options, () => new TrackFollower(Plugin.CurrentHost) { TrackIndex = trackIndex },
+				Parallel.For(0, count, options, () => new TrackFollower(Plugin.CurrentHost),
 					(idx, state, follower) =>
 					{
 						if (plugin.Cancel)
@@ -748,7 +853,7 @@ namespace Route.Bve5
 							state.Stop();
 							return follower;
 						}
-						ComputeRepeaterPlacement(Data, Repeater, span, followGradient, followCant, keyCount, idx, distances[idx], follower, placements);
+						ComputeSpan(Data, jobs[idx], follower, placements, idx);
 						return follower;
 					},
 					(follower) => { });
@@ -764,44 +869,48 @@ namespace Route.Bve5
 				{
 					continue;
 				}
-				placements[idx].Obj.CreateObject(placements[idx].Position, placements[idx].World, new Transformation(Repeater.Yaw, Repeater.Pitch, Repeater.Roll), new ObjectCreationParameters(placements[idx].Distance, placements[idx].Distance, placements[idx].Distance + span));
+				placements[idx].Obj.CreateObject(placements[idx].Position, placements[idx].World, new Transformation(placements[idx].Yaw, placements[idx].Pitch, placements[idx].Roll), new ObjectCreationParameters(placements[idx].Distance, placements[idx].ParamStart, placements[idx].ParamEnd));
 			}
 		}
 
-		private struct RepeaterPlacement
+		private static void ComputeSpan(RouteData Data, SpanJob job, TrackFollower follower, SpanPlacement[] placements, int idx)
 		{
-			internal UnifiedObject Obj;
-			internal Vector3 Position;
-			internal Transformation World;
-			internal double Distance;
-		}
-
-		private static void ComputeRepeaterPlacement(RouteData Data, Repeater Repeater, double span, bool followGradient, bool followCant, int keyCount, int idx, double distance, TrackFollower follower, RepeaterPlacement[] placements)
-		{
-			string key = Repeater.ObjectKeys[idx % keyCount];
-			if (string.IsNullOrEmpty(key))
-			{
-				// Empty key places nothing.
-				return;
-			}
-
-			if (!Data.Objects.TryGetValue(key, out UnifiedObject obj) || obj == null)
+			if (!Data.Objects.TryGetValue(job.ObjKey, out UnifiedObject obj) || obj == null)
 			{
 				return;
 			}
 
-			follower.UpdateAbsolute(distance, true, false);
+			bool isMain = job.RailKey.Equals("0", StringComparison.OrdinalIgnoreCase);
+			bool followGradient = job.Type == ObjectTransformType.FollowsGradient || job.Type == ObjectTransformType.FollowsGradientAndCant;
+			bool followCant = job.Type == ObjectTransformType.FollowsCant || job.Type == ObjectTransformType.FollowsGradientAndCant;
+
+			// Orientation looks ahead max(span, 1.0), as in BveTs.
+			double span = Math.Max(job.Span, 1.0);
+
+			follower.TrackIndex = 0;
+			follower.UpdateAbsolute(job.Distance, true, false);
 			Vector3 start = new Vector3(follower.WorldPosition);
+			Vector3 side = new Vector3(follower.WorldSide);
+			Vector3 up = new Vector3(follower.WorldUp);
+			if (!isMain)
+			{
+				Vector2 offset = GetRailOffsetAtDistance(Data, job.RailKey, job.Distance);
+				start += side * offset.X + up * offset.Y;
+			}
 
-			follower.UpdateAbsolute(distance + span, true, false);
+			follower.UpdateAbsolute(job.Distance + span, true, false);
 			Vector3 finish = new Vector3(follower.WorldPosition);
+			if (!isMain)
+			{
+				Vector2 offset = GetRailOffsetAtDistance(Data, job.RailKey, job.Distance + span);
+				finish += new Vector3(follower.WorldSide) * offset.X + new Vector3(follower.WorldUp) * offset.Y;
+			}
 
 			// BveTs samples cant for orientation at the span midpoint.
 			double cant;
 			if (followCant)
 			{
-				follower.UpdateAbsolute(distance + span / 2.0, true, false);
-				cant = follower.CurveCant;
+				cant = isMain ? MidMainCant(follower, job.Distance + span / 2.0) : GetRailCantAtDistance(Data, job.RailKey, job.Distance + span / 2.0);
 			}
 			else
 			{
@@ -838,9 +947,20 @@ namespace Route.Bve5
 			}
 
 			placements[idx].Obj = obj;
-			placements[idx].Position = start + Repeater.Position * world;
+			placements[idx].Position = start + job.Offset * world;
 			placements[idx].World = world;
-			placements[idx].Distance = distance;
+			placements[idx].Distance = job.Distance;
+			placements[idx].ParamStart = job.ParamStart;
+			placements[idx].ParamEnd = job.ParamEnd + span;
+			placements[idx].Yaw = job.Yaw;
+			placements[idx].Pitch = job.Pitch;
+			placements[idx].Roll = job.Roll;
+		}
+
+		private static double MidMainCant(TrackFollower follower, double distance)
+		{
+			follower.UpdateAbsolute(distance, true, false);
+			return follower.CurveCant;
 		}
 
 		private static void ComputeCantTangents()
