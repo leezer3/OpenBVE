@@ -45,7 +45,10 @@ namespace Train.MsTs
 			{
 				model.Components.Add(component, new LiveSteamInjector(model, Diameter, MinPressure, MinPressure, MaxWater));
 			}
-			model.Components.Add(component, new ExhaustSteamInjector(model, Diameter, MinPressure, MinPressure, MaxWater));
+			else
+			{
+				model.Components.Add(component, new ExhaustSteamInjector(model, Diameter, MinPressure, MinPressure, MaxWater));
+			}
 		}
 	}
 }
