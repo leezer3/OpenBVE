@@ -103,7 +103,8 @@ namespace Route.Bve5
 					}
 					else
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: No object file was specified for key " + Lines[i]);
+						// Like BVE5, a key with no file is a null mesh, skipped silently later.
+						RouteData.Objects.Add(Key, null);
 					}
 					continue;
 				}
