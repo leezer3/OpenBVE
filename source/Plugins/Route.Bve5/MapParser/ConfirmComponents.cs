@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Bve5_Parsing.MapGrammar;
 using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi.Colors;
@@ -422,6 +423,8 @@ namespace Route.Bve5
 
 			IList<Block> Blocks = RouteData.Blocks;
 
+			// One group per block, so groups run in parallel without sharing state.
+			Dictionary<int, List<Statement>> blockStatements = new Dictionary<int, List<Statement>>();
 			foreach (Statement Statement in ParseData.Statements)
 			{
 				if (Statement.ElementName != MapElementName.Structure)
@@ -429,85 +432,102 @@ namespace Route.Bve5
 					continue;
 				}
 
-				switch (Statement.FunctionName)
+				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
+				if (!blockStatements.TryGetValue(BlockIndex, out List<Statement> blockStatementList))
 				{
-					case MapFunctionName.Put:
-					case MapFunctionName.Put0:
+					blockStatementList = new List<Statement>();
+					blockStatements.Add(BlockIndex, blockStatementList);
+				}
+				blockStatementList.Add(Statement);
+			}
+
+			Parallel.ForEach(blockStatements, (blockStatementGroup) =>
+			{
+				if (plugin.Cancel)
+				{
+					return;
+				}
+				int GroupBlockIndex = blockStatementGroup.Key;
+				foreach (Statement Statement in blockStatementGroup.Value)
+				{
+					switch (Statement.FunctionName)
 					{
-						string TrackKey = Statement.GetArgumentValueAsString(ArgumentName.TrackKey);
-						if (string.IsNullOrEmpty(TrackKey))
+						case MapFunctionName.Put:
+						case MapFunctionName.Put0:
 						{
-							TrackKey = "0";
-						}
-
-						if (!RouteData.Objects.ContainsKey(Statement.Key))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Structure " + Statement.Key + " was not found on Track " + TrackKey + " at track position " + Statement.Distance + "m");
-							continue;
-						}
-
-						if (!RouteData.TrackKeyList.Contains(TrackKey, StringComparer.OrdinalIgnoreCase))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Attempted to place Structure " + Statement.Key + " on the non-existent track " + TrackKey + " at track position " + Statement.Distance + "m");
-							TrackKey = "0";
-						}
-						
-						double RX = Statement.GetArgumentValueAsDouble(ArgumentName.RX);
-						double RY = Statement.GetArgumentValueAsDouble(ArgumentName.RY);
-						double RZ = Statement.GetArgumentValueAsDouble(ArgumentName.RZ);
-						int Tilt = Statement.GetArgumentValueAsInt(ArgumentName.Tilt);
-						double Span = Statement.GetArgumentValueAsDouble(ArgumentName.Span);
-
-						if (Tilt > 3)
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Invalid ObjectTransformType for Structure " + Statement.Key + " on track " + TrackKey + " at track position " + Statement.Distance + "m");
-							Tilt = 0;
-						}
-
-						int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-
-						if (!Blocks[BlockIndex].FreeObjects.ContainsKey(TrackKey))
-						{
-							Blocks[BlockIndex].FreeObjects.Add(TrackKey, new List<FreeObj>());
-						}
-
-						Vector3 position = new Vector3(Statement.GetArgumentValueAsDouble(ArgumentName.X), Statement.GetArgumentValueAsDouble(ArgumentName.Y), Statement.GetArgumentValueAsDouble(ArgumentName.Z));
-						Blocks[BlockIndex].FreeObjects[TrackKey].Add(new FreeObj(Statement.Distance, Statement.Key, position, RY.ToRadians(), -RX.ToRadians(), RZtoRoll(RY, RZ).ToRadians(), (ObjectTransformType)Tilt, Span));
-					}
-					break;
-					case MapFunctionName.PutBetween:
-					{
-						string[] TrackKeys = new string[2];
-						if (!Statement.HasArgument(ArgumentName.TrackKey1) || string.IsNullOrEmpty(TrackKeys[0] = Statement.GetArgumentValueAsString(ArgumentName.TrackKey1)))
-						{
-							TrackKeys[0] = "0";
-						}
-						if (!Statement.HasArgument(ArgumentName.TrackKey2) || string.IsNullOrEmpty(TrackKeys[1] = Statement.GetArgumentValueAsString(ArgumentName.TrackKey2)))
-						{
-							TrackKeys[1] = "0";
-						}
-
-						if (!RouteData.Objects.ContainsKey(Statement.Key))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Structure " + Statement.Key + " was not found for PutBetween Track " + TrackKeys[0] + " and Track " + TrackKeys[1] + " at track position " + Statement.Distance + "m");
-							continue;
-						}
-
-						if (RouteData.TrackKeyList.Contains(TrackKeys[0], StringComparer.OrdinalIgnoreCase) && RouteData.TrackKeyList.Contains(TrackKeys[1]))
-						{
-							int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-							double Span = InterpolateInterval;
-							if (RouteData.Objects[Statement.Key] is StaticObject staticObject && staticObject.TryGetDeformationSpan(out double objectSpan))
+							string TrackKey = Statement.GetArgumentValueAsString(ArgumentName.TrackKey);
+							if (string.IsNullOrEmpty(TrackKey))
 							{
-								Span = objectSpan;
+								TrackKey = "0";
 							}
 
-							Blocks[BlockIndex].Cracks.Add(new Crack(Statement.Key, Statement.Distance, TrackKeys[0], TrackKeys[1], Span));
+							if (!RouteData.Objects.ContainsKey(Statement.Key))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Structure " + Statement.Key + " was not found on Track " + TrackKey + " at track position " + Statement.Distance + "m");
+								continue;
+							}
+
+							if (!RouteData.TrackKeyList.Contains(TrackKey, StringComparer.OrdinalIgnoreCase))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Attempted to place Structure " + Statement.Key + " on the non-existent track " + TrackKey + " at track position " + Statement.Distance + "m");
+								TrackKey = "0";
+							}
+
+							double RX = Statement.GetArgumentValueAsDouble(ArgumentName.RX);
+							double RY = Statement.GetArgumentValueAsDouble(ArgumentName.RY);
+							double RZ = Statement.GetArgumentValueAsDouble(ArgumentName.RZ);
+							int Tilt = Statement.GetArgumentValueAsInt(ArgumentName.Tilt);
+							double Span = Statement.GetArgumentValueAsDouble(ArgumentName.Span);
+
+							if (Tilt < 0 || Tilt > 3)
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Invalid ObjectTransformType for Structure " + Statement.Key + " on track " + TrackKey + " at track position " + Statement.Distance + "m");
+								// Tilt is a bit flag (1 = gradient, 2 = cant): mask, don't drop.
+								Tilt &= 3;
+							}
+
+							if (!Blocks[GroupBlockIndex].FreeObjects.ContainsKey(TrackKey))
+							{
+								Blocks[GroupBlockIndex].FreeObjects.Add(TrackKey, new List<FreeObj>());
+							}
+
+							Vector3 position = new Vector3(Statement.GetArgumentValueAsDouble(ArgumentName.X), Statement.GetArgumentValueAsDouble(ArgumentName.Y), Statement.GetArgumentValueAsDouble(ArgumentName.Z));
+							Blocks[GroupBlockIndex].FreeObjects[TrackKey].Add(new FreeObj(Statement.Distance, Statement.Key, position, RY.ToRadians(), -RX.ToRadians(), RZtoRoll(RY, RZ).ToRadians(), (ObjectTransformType)Tilt, Span));
 						}
-					}
 						break;
+						case MapFunctionName.PutBetween:
+						{
+							string[] TrackKeys = new string[2];
+							if (!Statement.HasArgument(ArgumentName.TrackKey1) || string.IsNullOrEmpty(TrackKeys[0] = Statement.GetArgumentValueAsString(ArgumentName.TrackKey1)))
+							{
+								TrackKeys[0] = "0";
+							}
+							if (!Statement.HasArgument(ArgumentName.TrackKey2) || string.IsNullOrEmpty(TrackKeys[1] = Statement.GetArgumentValueAsString(ArgumentName.TrackKey2)))
+							{
+								TrackKeys[1] = "0";
+							}
+
+							if (!RouteData.Objects.ContainsKey(Statement.Key))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Structure " + Statement.Key + " was not found for PutBetween Track " + TrackKeys[0] + " and Track " + TrackKeys[1] + " at track position " + Statement.Distance + "m");
+								continue;
+							}
+
+							if (RouteData.TrackKeyList.Contains(TrackKeys[0], StringComparer.OrdinalIgnoreCase) && RouteData.TrackKeyList.Contains(TrackKeys[1]))
+							{
+								double Span = InterpolateInterval;
+								if (RouteData.Objects[Statement.Key] is StaticObject staticObject && staticObject.TryGetDeformationSpan(out double objectSpan))
+								{
+									Span = objectSpan;
+								}
+
+								Blocks[GroupBlockIndex].Cracks.Add(new Crack(Statement.Key, Statement.Distance, TrackKeys[0], TrackKeys[1], Span));
+							}
+						}
+						break;
+					}
 				}
-			}
+			});
 		}
 
 		private static void ConfirmRepeater(bool PreviewOnly, MapData ParseData, RouteData RouteData)
@@ -534,7 +554,6 @@ namespace Route.Bve5
 
 			foreach (Repeater Repeater in RepeaterList)
 			{
-				double lastDistance = -1;
 				bool possibleEnd = false;
 				foreach (Statement Statement in ParseData.Statements)
 				{
@@ -551,11 +570,11 @@ namespace Route.Bve5
 								if (Repeater.StartRefreshed)
 								{
 									Repeater.EndingDistance = Statement.Distance;
-									PutRepeater(RouteData, Repeater);
+									QueueRepeater(RouteData, Repeater);
 									Repeater.StartRefreshed = false;
 								}
 
-								dynamic d = Statement; // HACK: as we don't know which type
+								dynamic d = Statement; // Concrete statement type is only known at runtime
 								string TrackKey = Statement.GetArgumentValueAsString(ArgumentName.TrackKey);
 								if (string.IsNullOrEmpty(TrackKey))
 								{
@@ -574,10 +593,11 @@ namespace Route.Bve5
 								double Span = Statement.GetArgumentValueAsDouble(ArgumentName.Span);
 								double Interval = Statement.GetArgumentValueAsDouble(ArgumentName.Interval);
 
-								if (Tilt > 3)
+								if (Tilt < 0 || Tilt > 3)
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Invalid ObjectTransformType for Repeater " + Statement.Key + " on track " + TrackKey + " at track position " + Statement.Distance + "m");
-									Tilt = 0;
+									// Tilt is a bit flag (1 = gradient, 2 = cant): mask, don't drop.
+									Tilt &= 3;
 								}
 
 								Repeater.StartingDistance = Statement.Distance;
@@ -597,8 +617,7 @@ namespace Route.Bve5
 								d.StructureKeys.CopyTo(Repeater.ObjectKeys, 0);
 								for (int i = 0; i < Repeater.ObjectKeys.Length; i++)
 								{
-									// empty string == no object placed
-									// also only add the error once per position (even if the object appears multiple times in the cycle)
+									// Empty keys place nothing; report each missing key only once
 									if (!RouteData.Objects.ContainsKey(Repeater.ObjectKeys[i]) && missingObjectKeys.Add(Repeater.ObjectKeys[i]) && !string.IsNullOrEmpty(Repeater.ObjectKeys[i]))
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Structure " + Repeater.ObjectKeys[i] + " was not found in Repeater " + Statement.Key + " on track " + TrackKey + " at track position " + Statement.Distance + "m");
@@ -612,70 +631,37 @@ namespace Route.Bve5
 							break;
 					}
 
-					/*
-					 * HACK: Commands may no longer be in order after sort by TPos (in BVE5_Parsing), but we can
-					 * work around that by triggering the end on the next track position instead
-					 */
+					// HACK: parsing sorts by distance, so an End can detach:
+					// close the run at the next track position instead.
 
 					if (possibleEnd && Repeater.StartRefreshed)
 					{
 						Repeater.EndingDistance = Statement.Distance;
-						PutRepeater(RouteData, Repeater);
+						QueueRepeater(RouteData, Repeater);
 						Repeater.StartRefreshed = false;
 						possibleEnd = false;
 					}
-
-					lastDistance = Statement.Distance;
-
 				}
 
-				// Hack:
+				// Runs without an End last until the end of the route
 				if (Repeater.StartRefreshed)
 				{
 					double EndTrackPosition = Plugin.CurrentRoute.Stations.Last().Stops.First().TrackPosition + Plugin.CurrentOptions.ViewingDistance;
 					Repeater.EndingDistance = EndTrackPosition;
-					PutRepeater(RouteData, Repeater);
+					QueueRepeater(RouteData, Repeater);
 					Repeater.StartRefreshed = false;
 				}
 			}
 		}
 
-		private static void PutRepeater(RouteData RouteData, Repeater Repeater)
+		private static void QueueRepeater(RouteData RouteData, Repeater Repeater)
 		{
 			if (Repeater.Interval <= 0.0)
 			{
 				return;
 			}
 
-			string TrackKey = Repeater.TrackKey;
-
-			int LoopCount = 0;
-
-			for (double i = Repeater.StartingDistance; i < Repeater.EndingDistance; i += Repeater.Interval)
-			{
-				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(i);
-
-				if (!RouteData.Blocks[BlockIndex].FreeObjects.ContainsKey(TrackKey))
-				{
-					RouteData.Blocks[BlockIndex].FreeObjects.Add(TrackKey, new List<FreeObj>());
-				}
-
-				/*
-				 * The relationship between span and interval is an absolute pain in the neck
-				 *
-				 * This seems to get stuff on Chuo Rapid Line looking OK in terms of the gradients
-				 */
-				RouteData.Blocks[BlockIndex].FreeObjects[TrackKey].Add(new FreeObj(i, Repeater.ObjectKeys[LoopCount], Repeater.Position, Repeater.Yaw, Repeater.Pitch, Repeater.Roll, Repeater.Type, Math.Max(Repeater.Interval, Repeater.Span)));
-
-				if (LoopCount >= Repeater.ObjectKeys.Length - 1)
-				{
-					LoopCount = 0;
-				}
-				else
-				{
-					LoopCount++;
-				}
-			}
+			RouteData.Repeaters.Add(new Repeater(Repeater));
 		}
 
 		private static void ConfirmSection(bool PreviewOnly, MapData ParseData, RouteData RouteData)
