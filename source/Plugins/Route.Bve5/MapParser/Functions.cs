@@ -309,88 +309,57 @@ namespace Route.Bve5
 			}
 			else
 			{
-				GetTransformation(StartingPosition, Blocks, StartingBlock, RailKey, Structure.TrackPosition, Structure.Type, Structure.Span, Direction, out ObjectPosition, out Transformation);
+				int nextBlock = StartingBlock < Blocks.Count - 1 ? StartingBlock + 1 : StartingBlock;
+				GetTransformation(StartingPosition, Blocks[StartingBlock], Blocks[nextBlock], RailKey, Blocks[StartingBlock].Pitch, Structure.TrackPosition, Structure.Type, Structure.Span, Direction, out ObjectPosition, out Transformation);
 			}
 			
 			return true;
 		}
 
-		/// <summary>
-		/// Walks the player track forwards from the start of a block to a track position, stepping off
-		/// to the requested rail on the way. A span can cover several blocks, so we can't just read the
-		/// answer out of a single block.
-		/// </summary>
-		private static Vector3 GetRailPosition(Vector3 StartingPosition, IList<Block> Blocks, int StartingBlock, string RailKey, Vector2 Direction, double TargetDistance)
-		{
-			Vector3 position = StartingPosition;
-			Vector2 direction = Direction;
-			direction.Rotate(-Math.Atan(Blocks[StartingBlock].Turn));
-
-			// position always follows the player track, so the rail offset gets recalculated for every block rather than added on top of the previous one
-			Vector3 offset = Vector3.Zero;
-			double distance = Blocks[StartingBlock].StartingDistance;
-
-			for (int i = StartingBlock; i < Blocks.Count; i++)
-			{
-				Block block = Blocks[i];
-				bool HasNextBlock = i < Blocks.Count - 1;
-				double blockEnd = HasNextBlock ? Blocks[i + 1].StartingDistance : distance + InterpolateInterval;
-				double step = Math.Min(TargetDistance, blockEnd) - distance;
-
-				offset = Vector3.Zero;
-
-				if (RailKey != "0" && block.Rails.ContainsKey(RailKey))
-				{
-					// Interpolating within this block only keeps us from dragging one block's offset slope across the whole span
-					Rail rail = block.Rails[RailKey];
-					bool NextBlockHasRail = HasNextBlock && Blocks[i + 1].Rails.ContainsKey(RailKey);
-					double InterpolateX = GetTrackCoordinate(block.StartingDistance, rail.Position.X, blockEnd, NextBlockHasRail ? Blocks[i + 1].Rails[RailKey].Position.X : rail.Position.X, rail.RadiusH, distance);
-					double InterpolateY = GetTrackCoordinate(block.StartingDistance, rail.Position.Y, blockEnd, NextBlockHasRail ? Blocks[i + 1].Rails[RailKey].Position.Y : rail.Position.Y, rail.RadiusV, distance);
-					offset = new Vector3(direction.Y * InterpolateX, InterpolateY, -direction.X * InterpolateX);
-				}
-
-				if (step <= 0.0)
-				{
-					// We've arrived, and the offset we just worked out is the one which applies here
-					break;
-				}
-
-				CalcTransformation(block.CurrentTrackState.CurveRadius, block.Pitch, step, ref direction, out double a, out double c, out double h);
-
-				position.X += direction.X * c;
-				position.Y += h;
-				position.Z += direction.Y * c;
-				direction.Rotate(-a);
-
-				distance = blockEnd;
-
-				if (HasNextBlock)
-				{
-					direction.Rotate(-Math.Atan(Blocks[i + 1].Turn));
-				}
-			}
-
-			return position + offset;
-		}
-
-		/// <summary>Gets the transformation for a structure which spans a chord of the rail, e.g. an overhead line</summary>
-		private static void GetTransformation(Vector3 StartingPosition, IList<Block> Blocks, int StartingBlock, string RailKey, double TrackDistance, ObjectTransformType Type, double Span, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
+		/// <summary>Gets the transformation between two blocks</summary>
+		private static void GetTransformation(Vector3 StartingPosition, Block FirstBlock, Block SecondBlock, string RailKey, double Pitch, double TrackDistance, ObjectTransformType Type, double Span, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
 		{
 			Transformation = new Transformation();
+			Direction.Rotate(-Math.Atan(FirstBlock.Turn));
 
-			// Point the structure along the chord between the two ends of its span
-			ObjectPosition = GetRailPosition(StartingPosition, Blocks, StartingBlock, RailKey, Direction, TrackDistance);
-			Vector3 SpanEnd = GetRailPosition(StartingPosition, Blocks, StartingBlock, RailKey, Direction, TrackDistance + Span);
+			Vector3 Position = StartingPosition;
+
+			CalcTransformation(FirstBlock.CurrentTrackState.CurveRadius, Pitch, TrackDistance - FirstBlock.StartingDistance, ref Direction, out double a, out double c, out double h);
+
+			Position.X += Direction.X * c;
+			Position.Y += h;
+			Position.Z += Direction.Y * c;
+			Direction.Rotate(-a);
+
+			CalcTransformation(FirstBlock.CurrentTrackState.CurveRadius, Pitch, Span, ref Direction, out a, out c, out h);
+
+			double InterpolateX = GetTrackCoordinate(FirstBlock.StartingDistance, FirstBlock.Rails[RailKey].Position.X, SecondBlock.StartingDistance,SecondBlock.Rails[RailKey].Position.X, FirstBlock.Rails[RailKey].RadiusH, TrackDistance);
+			double InterpolateY = GetTrackCoordinate(FirstBlock.StartingDistance, FirstBlock.Rails[RailKey].Position.Y, SecondBlock.StartingDistance, SecondBlock.Rails[RailKey].Position.Y, FirstBlock.Rails[RailKey].RadiusV, TrackDistance);
+
+			Vector3 Offset = new Vector3(Direction.Y * InterpolateX, InterpolateY, -Direction.X * InterpolateX);
+			ObjectPosition = Position + Offset;
+
+			Position.X += Direction.X * c;
+			Position.Y += h;
+			Position.Z += Direction.Y * c;
+			Direction.Rotate(-a);
+
+			CalcTransformation(FirstBlock.CurrentTrackState.CurveRadius, Pitch, Span, ref Direction, out _, out _, out _);
+
+			double InterpolateX2 = GetTrackCoordinate(FirstBlock.StartingDistance, FirstBlock.Rails[RailKey].Position.X, SecondBlock.StartingDistance, SecondBlock.Rails[RailKey].Position.X, FirstBlock.Rails[RailKey].RadiusH, TrackDistance + Span);
+			double InterpolateY2 = GetTrackCoordinate(FirstBlock.StartingDistance, FirstBlock.Rails[RailKey].Position.Y, SecondBlock.StartingDistance, SecondBlock.Rails[RailKey].Position.Y, FirstBlock.Rails[RailKey].RadiusV, TrackDistance + Span);
+
+			Vector3 Offset2 = new Vector3(Direction.Y * InterpolateX2, InterpolateY2, -Direction.X * InterpolateX2);
+			Vector3 ObjectPosition2 = Position + Offset2;
 
 			Vector3 r;
 			if (Type == ObjectTransformType.FollowsGradient || Type == ObjectTransformType.FollowsGradientAndCant)
 			{
-				r = new Vector3(SpanEnd.X - ObjectPosition.X, SpanEnd.Y - ObjectPosition.Y, SpanEnd.Z - ObjectPosition.Z);
+				r = new Vector3(ObjectPosition2.X - ObjectPosition.X, ObjectPosition2.Y - ObjectPosition.Y, ObjectPosition2.Z - ObjectPosition.Z);
 			}
 			else
 			{
-				// These transform types don't follow the gradient, so the span stays level
-				r = new Vector3(SpanEnd.X - ObjectPosition.X, 0.0, SpanEnd.Z - ObjectPosition.Z);
+				r = new Vector3(ObjectPosition2.X - ObjectPosition.X, 0.0, ObjectPosition2.Z - ObjectPosition.Z);
 			}
 			r.Normalize();
 			Transformation.Z = r;
@@ -399,7 +368,7 @@ namespace Route.Bve5
 			Transformation.Y = Vector3.Cross(Transformation.Z, Transformation.X);
 			if (Type == ObjectTransformType.FollowsCant || Type == ObjectTransformType.FollowsGradientAndCant)
 			{
-				Transformation = new Transformation(Transformation, 0.0, 0.0, Math.Atan(Blocks[StartingBlock].CurrentTrackState.CurveCant));
+				Transformation = new Transformation(Transformation, 0.0, 0.0, Math.Atan(FirstBlock.CurrentTrackState.CurveCant));
 			}
 		}
 		private static void Normalize(ref double x, ref double y)
