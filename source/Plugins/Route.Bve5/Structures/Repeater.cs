@@ -64,5 +64,22 @@ namespace Route.Bve5
 			 */
 			Key = key;
 		}
+
+		/// <summary>Snapshots a finished run (the parser reuses one instance per key).</summary>
+		internal Repeater(Repeater source)
+		{
+			Key = source.Key;
+			TrackKey = source.TrackKey;
+			StartingDistance = source.StartingDistance;
+			EndingDistance = source.EndingDistance;
+			Interval = source.Interval;
+			ObjectKeys = source.ObjectKeys;
+			Position = source.Position;
+			Yaw = source.Yaw;
+			Pitch = source.Pitch;
+			Roll = source.Roll;
+			Type = source.Type;
+			Span = source.Span;
+		}
 	}
 }

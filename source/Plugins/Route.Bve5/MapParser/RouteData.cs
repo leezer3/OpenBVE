@@ -39,6 +39,8 @@ namespace Route.Bve5
 		internal List<Bve5ScenarioParser.SignalData> SignalObjects;
 		internal readonly Bve5ScenarioParser.SoundDictionary Sounds;
 		internal readonly Bve5ScenarioParser.SoundDictionary Sound3Ds;
+		/// <summary>Finished repeater runs, placed once the track exists.</summary>
+		internal readonly List<Repeater> Repeaters;
 
 		internal RouteData(HashSet<string> trackKeys)
 		{
@@ -46,6 +48,7 @@ namespace Route.Bve5
 			TrackKeyList = trackKeys.ToList();
 			Sounds = new Bve5ScenarioParser.SoundDictionary();
 			Sound3Ds = new Bve5ScenarioParser.SoundDictionary();
+			Repeaters = new List<Repeater>();
 		}
 
 		//Set units of speed initially to km/h
