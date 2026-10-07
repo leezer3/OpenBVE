@@ -184,7 +184,8 @@ namespace ObjectViewer {
 
 		public override bool RegisterTexture(Bitmap texture, TextureParameters parameters, out Texture handle)
 		{
-			handle = new Texture(texture, parameters);
+			// Goes through the manager so identical images share one handle
+			handle = Program.Renderer.TextureManager.RegisterTexture(texture, parameters);
 			return true;
 		}
 
