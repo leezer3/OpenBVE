@@ -20,6 +20,14 @@ namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
+		// Brightness remap used for every lit object
+		private static double RemapBrightness(RouteData data, double trackPosition) =>
+			0.25 + 0.75 * data.GetBrightness(trackPosition);
+
+		// Distance from an object's track position into its route element
+		private double ElementDelta(int elementIndex, double trackPosition) =>
+			trackPosition - CurrentRoute.Tracks[0].Elements[elementIndex].StartingTrackPosition;
+
 		private void ApplyRouteData(string FileName, ref RouteData Data, bool PreviewOnly)
 		{
 			if (CompatibilityObjectsUsed != 0)
@@ -153,7 +161,7 @@ namespace CsvRwRouteParser
 					if (Data.Blocks[i].BrightnessChanges != null && Data.Blocks[i].BrightnessChanges.Length != 0)
 					{
 						CurrentBrightnessValue = Data.Blocks[i].BrightnessChanges[0].Value;
-						CurrentBrightnessTrackPosition = Data.Blocks[i].BrightnessChanges[0].Value;
+						CurrentBrightnessTrackPosition = Data.Blocks[i].BrightnessChanges[0].TrackPosition;
 						break;
 					}
 				}
@@ -936,7 +944,7 @@ namespace CsvRwRouteParser
 							{
 								for (int k = 0; k < Data.Blocks[i].Transponders.Length; k++)
 								{
-									double b = 0.25 + 0.75 * Data.GetBrightness(Data.Blocks[i].Transponders[k].TrackPosition);
+									double b = RemapBrightness(Data, Data.Blocks[i].Transponders[k].TrackPosition);
 									Data.Blocks[i].Transponders[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b, Data.Structure.Beacon);
 								}
 
@@ -957,7 +965,7 @@ namespace CsvRwRouteParser
 								// signals
 								for (int k = 0; k < Data.Blocks[i].Signals.Length; k++)
 								{
-									Data.Blocks[i].Signals[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, 0.27 + 0.75 * Data.GetBrightness(Data.Blocks[i].Signals[k].TrackPosition));
+									Data.Blocks[i].Signals[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, RemapBrightness(Data, Data.Blocks[i].Signals[k].TrackPosition));
 								}
 
 								// sections
@@ -983,7 +991,7 @@ namespace CsvRwRouteParser
 							{
 								if (railKey == Data.Blocks[i].Limits[k].RailIndex)
 								{
-									double b = 0.25 + 0.75 * Data.GetBrightness(Data.Blocks[i].Limits[k].TrackPosition);
+									double b = RemapBrightness(Data, Data.Blocks[i].Limits[k].TrackPosition);
 									Data.Blocks[i].Limits[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b, Data.UnitOfSpeed);
 								}
 							}
@@ -993,7 +1001,7 @@ namespace CsvRwRouteParser
 							{
 								for (int k = 0; k < Data.Blocks[i].StopPositions.Length; k++)
 								{
-									double b = 0.25 + 0.75 * Data.GetBrightness(Data.Blocks[i].StopPositions[k].TrackPosition);
+									double b = RemapBrightness(Data, Data.Blocks[i].StopPositions[k].TrackPosition);
 									Data.Blocks[i].StopPositions[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b);
 								}
 							}
@@ -1020,9 +1028,10 @@ namespace CsvRwRouteParser
 						if (Data.Blocks[i].Transponders[j].Type != -1)
 						{
 							int n = i - Data.FirstUsedBlock;
-							double d = Data.Blocks[i].Transponders[j].TrackPosition - CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition;
+							double d = ElementDelta(n, Data.Blocks[i].Transponders[j].TrackPosition);
 							int s = Data.Blocks[i].Transponders[j].SectionIndex;
-							if (s >= 0) s = -1;
+							// Keep valid section references; clamp bad values to -1 (unset)
+							if (s < 0) s = -1;
 							CurrentRoute.Tracks[0].Elements[n].Events.Add(new TransponderEvent(CurrentRoute, d, Data.Blocks[i].Transponders[j].Type, Data.Blocks[i].Transponders[j].Data, s, Data.Blocks[i].Transponders[j].ClipToFirstRedSection));
 							Data.Blocks[i].Transponders[j].Type = -1;
 						}
@@ -1031,13 +1040,13 @@ namespace CsvRwRouteParser
 					for (int j = 0; j < Data.Blocks[i].DestinationChanges.Length; j++)
 					{
 						int n = i - Data.FirstUsedBlock;
-						double d = Data.Blocks[i].DestinationChanges[j].TrackPosition - CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition;
+						double d = ElementDelta(n, Data.Blocks[i].DestinationChanges[j].TrackPosition);
 						CurrentRoute.Tracks[0].Elements[n].Events.Add(new RouteManager2.Events.DestinationEvent(d, Data.Blocks[i].DestinationChanges[j].Type, Data.Blocks[i].DestinationChanges[j].NextDestination, Data.Blocks[i].DestinationChanges[j].PreviousDestination, Data.Blocks[i].DestinationChanges[j].TriggerOnce));
 					}
 					for (int j = 0; j < Data.Blocks[i].HornBlows.Length; j++)
 					{
 						int n = i - Data.FirstUsedBlock;
-						double d = Data.Blocks[i].HornBlows[j].TrackPosition - CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition;
+						double d = ElementDelta(n, Data.Blocks[i].HornBlows[j].TrackPosition);
 						CurrentRoute.Tracks[0].Elements[n].Events.Add(new RouteManager2.Events.HornBlowEvent(d, Data.Blocks[i].HornBlows[j].Type, Data.Blocks[i].HornBlows[j].TriggerOnce));
 					}
 				}

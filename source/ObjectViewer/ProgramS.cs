@@ -69,6 +69,13 @@ namespace ObjectViewer {
 
 		internal static TrainManager TrainManager;
 
+		// Live options-preview state. The modeless options dialog only writes
+		// plain memory; GPU work (shadow realloc) is flagged here and executed
+		// at the top of the update frame, on the GL thread.
+		internal static volatile bool ShadowSettingsDirty = false;
+		internal static volatile bool PendingOptionsCommit = false;
+		internal static formOptions OptionsDialog = null;
+
 		[System.Runtime.InteropServices.DllImport("user32.dll")]
 		private static extern bool SetProcessDPIAware();
 
@@ -382,6 +389,18 @@ namespace ObjectViewer {
 				Files.Clear();
 			}
 		}
+
+	    /// <summary>Runs the post-OK work. Called at the top of an update frame,
+	    /// never nested inside a WinForms dispatch.</summary>
+	    internal static void ApplyOptionsCommit()
+	    {
+		    if (ShadowSettingsDirty)
+		    {
+			    ShadowSettingsDirty = false;
+			    Renderer.ReloadShadowSettings();
+		    }
+		    RefreshObjectsAsync();
+	    }
 
     internal static void RefreshObjects(bool autoReload = false, bool quietTiming = false)
     {
@@ -1481,14 +1500,18 @@ namespace ObjectViewer {
 		                return;
 	                }
 
-	                if (formOptions.ShowOptions() == DialogResult.OK)
-	                {
-		                // Sun direction is already updated in real-time via slider events
-
-		                // Appy shadow map settings immediately
-		                Renderer.ReloadShadowSettings();
-					}
-                    Application.DoEvents();
+	                // Modeless: returns immediately, preview stays live behind
+	                // the dialog; the post-OK work runs deferred via
+	                // PendingOptionsCommit in the update frame.
+	                formOptions.ShowOptions();
+                    try
+                    {
+	                    Application.DoEvents();
+                    }
+                    catch
+                    {
+	                    // Best-effort
+                    }
                     break;
                 case Key.F10:
 	                if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)

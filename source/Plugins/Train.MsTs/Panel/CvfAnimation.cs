@@ -571,6 +571,9 @@ namespace Train.MsTs
 						}
 					}
 					break;
+				case PanelSubject.Accelerometer:
+					lastResult = dynamicTrain.Cars[carIndex].Specs.Acceleration * UnitConversionFactor;
+					break;
 			}
 			return lastResult;
 		}

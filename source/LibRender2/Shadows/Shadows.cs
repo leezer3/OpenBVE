@@ -29,6 +29,18 @@ namespace LibRender2.ShadowMapping
 		/// <summary>The current darkness of the shadows (0.0 to 1.0).</summary>
 		public float Strength;
 
+		// Reference tuning for ComputeEffectiveFilterRadius: Medium preset (300m / 3 cascades) with 2048px maps.
+		private const double ReferenceDistPerCascade = 100.0;
+		private const double ReferenceResolution = 2048.0;
+		private const double MinDistFactor = 0.7;
+		private const double MaxDistFactor = 1.8;
+		private const double MinResFactor = 0.7;
+		private const double MaxResFactor = 1.4;
+		private const double MinFilterRadius = 0.5;
+		private const double MaxFilterRadius = 3.0;
+		private const float MinNormalBiasTexels = 0.0f;
+		private const float MaxNormalBiasTexels = 4.0f;
+
 		public Shadows(BaseRenderer renderer)
 		{
 			this.renderer = renderer;
@@ -291,11 +303,16 @@ namespace LibRender2.ShadowMapping
 			shader.Activate();
 			shader.SetShadowEnabled(true);
 			shader.SetShadowStrength((float)renderer.currentOptions.ShadowStrength);
+			shader.SetShadowSmooth(renderer.currentOptions.ShadowSmooth);
+			shader.SetShadowFilterRadius(ComputeEffectiveFilterRadius());
 			shader.SetCurrentViewMatrix(renderer.CurrentViewMatrix);
 
 			Map.BindAllCascadesForReading(TextureUnit.Texture4);
 
 			int cascadeCount = Caster.CascadeCount;
+			// Normal bias is in Unity-style texel units (typical 0.3-1.0). Clamp so a stale
+			// config (old 2.0x multiplier default) can't detach shadows catastrophically.
+			float normalBiasTexels = Math.Max(MinNormalBiasTexels, Math.Min(MaxNormalBiasTexels, (float)renderer.currentOptions.ShadowNormalBias));
 			for (int i = 0; i < cascadeCount; i++)
 			{
 				shader.SetCascadeLightSpaceMatrix(i, Caster.LightSpaceMatrices[i]);
@@ -303,14 +320,42 @@ namespace LibRender2.ShadowMapping
 				// Split distance = the view-space Z where this cascade ends.
 				shader.SetShadowSplitDistance(i, (float)Caster.SplitDistances[i]);
 				shader.SetCascadeBias(i, Caster.CascadeBiases[i] + (float)renderer.currentOptions.ShadowBias);
-				shader.SetNormalBias(i, (float)renderer.currentOptions.ShadowNormalBias);
+				shader.SetNormalBias(i, normalBiasTexels);
+				shader.SetTexelWorldSize(i, Caster.TexelWorldSizes[i]);
 			}
 
 			for (int i = cascadeCount; i < 4; i++)
 			{
 				shader.SetShadowSplitDistance(i, 0.0f);
+				shader.SetTexelWorldSize(i, cascadeCount > 0 ? Caster.TexelWorldSizes[cascadeCount - 1] : 0.05f);
 			}
 			shader.SetShadowCascadeCount(cascadeCount);
+		}
+
+		/// <summary>
+		/// Auto-scales the filter radius by cascade count, shadow distance and resolution
+		/// so softness stays perceptually consistent: far distance / few cascades / high res → slightly larger texel radius.
+		/// </summary>
+		private float ComputeEffectiveFilterRadius()
+		{
+			double baseRadius = renderer.currentOptions.ShadowFilterRadius;
+
+			double shadowDist = renderer.currentOptions.ShadowDrawDistance == ShadowDistance.ViewingDistance
+				? renderer.currentOptions.ViewingDistance
+				: (double)(int)renderer.currentOptions.ShadowDrawDistance;
+			int optCascadeCount = Math.Max(1, (int)renderer.currentOptions.ShadowCascades);
+			int res = Math.Max(512, (int)renderer.currentOptions.ShadowResolution);
+
+			double actualDistPerCascade = shadowDist / optCascadeCount;
+			double distFactor = Math.Sqrt(actualDistPerCascade / ReferenceDistPerCascade);
+			distFactor = Math.Max(MinDistFactor, Math.Min(MaxDistFactor, distFactor));
+
+			double resFactor = Math.Sqrt((double)res / ReferenceResolution);
+			resFactor = Math.Max(MinResFactor, Math.Min(MaxResFactor, resFactor));
+
+			double effectiveRadius = baseRadius * distFactor * resFactor;
+			effectiveRadius = Math.Max(MinFilterRadius, Math.Min(MaxFilterRadius, effectiveRadius));
+			return (float)effectiveRadius;
 		}
 
 		/// <summary>

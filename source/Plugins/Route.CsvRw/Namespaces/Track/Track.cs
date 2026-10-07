@@ -31,13 +31,13 @@ namespace CsvRwRouteParser
 						int idx = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in " + Command + At(Expression));
 							break;
 						}
 
 						if (idx < 1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be positive in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be positive in " + Command + At(Expression));
 							break;
 						}
 
@@ -45,7 +45,7 @@ namespace CsvRwRouteParser
 						{
 							if (Data.Blocks[BlockIndex].Rails.ContainsKey(idx) && Data.Blocks[BlockIndex].Rails[idx].RailStarted)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex " + idx + " is required to reference a non-existing rail in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex " + idx + " is required to reference a non-existing rail in " + Command + At(Expression));
 							}
 						}
 
@@ -79,7 +79,7 @@ namespace CsvRwRouteParser
 							{
 								if (!NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out currentRail.RailStart.X))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + At(Expression));
 									currentRail.RailStart.X = 0.0;
 								}
 							}
@@ -96,7 +96,7 @@ namespace CsvRwRouteParser
 							{
 								if (!NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out currentRail.RailStart.Y))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + At(Expression));
 									currentRail.RailStart.Y = 0.0;
 								}
 							}
@@ -121,17 +121,17 @@ namespace CsvRwRouteParser
 						{
 							if (!NumberFormats.TryParseIntVb6(Arguments[3], out int sttype))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex is invalid in " + Command + At(Expression));
 								sttype = 0;
 							}
 
 							if (sttype < 0)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex is expected to be non-negative in " + Command + At(Expression));
 							}
 							else if ((Data.FileFormat != RoutefileFormat.Hmmsim && !Data.Structure.RailObjects.ContainsKey(sttype)) || (Data.FileFormat == RoutefileFormat.Hmmsim && !Data.Structure.FreeObjects.ContainsKey(sttype)))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex " + sttype + " references an object not loaded in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex " + sttype + " references an object not loaded in " + Command + At(Expression));
 							}
 							else
 							{
@@ -154,14 +154,14 @@ namespace CsvRwRouteParser
 						{
 							if (Arguments[4] != "id 0" && Arguments[4] != "id=0") //RouteBuilder inserts these, harmless so let's ignore
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CantInMillimeters is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CantInMillimeters is invalid in " + Command + At(Expression));
 							}
 
 							cant = 0.0;
 						}
 						else
 						{
-							cant *= 0.001;
+							cant *= MmToM;
 						}
 
 						currentRail.CurveCant = cant;
@@ -175,19 +175,19 @@ namespace CsvRwRouteParser
 						int idx = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex " + idx + " is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex " + idx + " is invalid in " + Command + At(Expression));
 							break;
 						}
 
 						if (idx == 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The command " + Command + " is invalid for Rail 0 at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The command " + Command + " is invalid for Rail 0" + At(Expression));
 							break;
 						}
 
 						if (idx < 0 || !Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || !Data.Blocks[BlockIndex].Rails[idx].RailStarted)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex " + idx + " references a non-existing rail in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex " + idx + " references a non-existing rail in " + Command + At(Expression));
 							break;
 						}
 
@@ -206,7 +206,7 @@ namespace CsvRwRouteParser
 						{
 							if (!NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out currentRail.RailEnd.X))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + At(Expression));
 								currentRail.RailEnd.X = 0.0;
 							}
 						}
@@ -215,7 +215,7 @@ namespace CsvRwRouteParser
 						{
 							if (!NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out currentRail.RailEnd.Y))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + At(Expression));
 								currentRail.RailEnd.Y = 0.0;
 							}
 						}
@@ -231,35 +231,35 @@ namespace CsvRwRouteParser
 						int idx = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in " + Command + At(Expression));
 							idx = 0;
 						}
 
 						int sttype = 0;
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out sttype))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex is invalid in " + Command + At(Expression));
 							sttype = 0;
 						}
 
 						if (idx < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be non-negative in " + Command + At(Expression));
 						}
 						else
 						{
 							if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || !Data.Blocks[BlockIndex].Rails[idx].RailStarted)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in " + Command + At(Expression));
 							}
 
 							if (sttype < 0)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex is expected to be non-negative in " + Command + At(Expression));
 							}
 							else if (!Data.Structure.RailObjects.ContainsKey(sttype))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex " + sttype + " references an object not loaded in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex " + sttype + " references an object not loaded in " + Command + At(Expression));
 							}
 							else
 							{
@@ -295,7 +295,7 @@ namespace CsvRwRouteParser
 					double acc = 2.0;
 					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out acc))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Command + At(Expression));
 						acc = 2.0;
 					}
 
@@ -316,11 +316,11 @@ namespace CsvRwRouteParser
 					double p = 0.0;
 					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out p))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ValueInPermille is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ValueInPermille is invalid in " + Command + At(Expression));
 						p = 0.0;
 					}
 
-					Data.Blocks[BlockIndex].Pitch = 0.001 * p;
+					Data.Blocks[BlockIndex].Pitch = MmToM * p;
 				}
 					break;
 				case TrackCommand.Curve:
@@ -328,19 +328,19 @@ namespace CsvRwRouteParser
 					double radius = 0.0;
 					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out radius))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Radius is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Radius is invalid in " + Command + At(Expression));
 						radius = 0.0;
 					}
 
 					double cant = 0.0;
 					if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out cant))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CantInMillimeters is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CantInMillimeters is invalid in " + Command + At(Expression));
 						cant = 0.0;
 					}
 					else
 					{
-						cant *= 0.001;
+						cant *= MmToM;
 					}
 
 					if (Data.SignedCant)
@@ -366,7 +366,7 @@ namespace CsvRwRouteParser
 					double s = 0.0;
 					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out s))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Ratio is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Ratio is invalid in " + Command + At(Expression));
 						s = 0.0;
 					}
 
@@ -378,13 +378,13 @@ namespace CsvRwRouteParser
 					double a = 100.0;
 					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out a))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Command + At(Expression));
 						a = 100.0;
 					}
 
 					if (a < 0.0)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is expected to be non-negative in " + Command + At(Expression));
 						a = 100.0;
 					}
 
@@ -398,7 +398,7 @@ namespace CsvRwRouteParser
 						float value = 255.0f;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseFloatVb6(Arguments[0], out value))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Command + At(Expression));
 							value = 255.0f;
 						}
 
@@ -419,31 +419,31 @@ namespace CsvRwRouteParser
 						int r = 128, g = 128, b = 128;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out start))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "StartingDistance is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "StartingDistance is invalid in " + Command + At(Expression));
 							start = 0.0;
 						}
 
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out end))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "EndingDistance is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "EndingDistance is invalid in " + Command + At(Expression));
 							end = 0.0;
 						}
 
 						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[2], out r))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Command + At(Expression));
 							r = 128;
 						}
 						
 						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[3], out g))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Command + At(Expression));
 							g = 128;
 						}
 
 						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[4], out b))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Command + At(Expression));
 							b = 128;
 						}
 
@@ -471,7 +471,7 @@ namespace CsvRwRouteParser
 					{
 						if (Arguments.Length == 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "At least one argument is required in " + Command + "at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "At least one argument is required in " + Command + At(Expression));
 						}
 						else
 						{
@@ -503,12 +503,12 @@ namespace CsvRwRouteParser
 							{
 								if (string.IsNullOrEmpty(Arguments[i]) || !NumberFormats.TryParseIntVb6(Arguments[i], out aspects[i]))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Aspect" + i.ToString(Culture) + " is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Aspect" + i.ToString(Culture) + " is invalid in " + Command + At(Expression));
 									aspects[i] = -1;
 								}
 								else if (aspects[i] < 0)
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Aspect" + i.ToString(Culture) + " is expected to be non-negative in " + Command + "at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Aspect" + i.ToString(Culture) + " is expected to be non-negative in " + Command + At(Expression));
 									aspects[i] = -1;
 								}
 							}
@@ -555,7 +555,7 @@ namespace CsvRwRouteParser
 						int objidx = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out objidx))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "SignalIndex is invalid in Track.SigF at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "SignalIndex is invalid in Track.SigF" + At(Expression));
 							objidx = 0;
 						}
 
@@ -566,57 +566,28 @@ namespace CsvRwRouteParser
 						}
 						else if (objidx >= 0 && Data.CompatibilitySignals.Length > objidx)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "SignalIndex " + objidx + " mapped to default signal, as custom signal not loaded in Track.SigF at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "SignalIndex " + objidx + " mapped to default signal, as custom signal not loaded in Track.SigF" + At(Expression));
 							signalObject = Data.CompatibilitySignals[objidx];
 						}
 						else
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "SignalIndex " + objidx + " references a signal object not loaded in Track.SigF at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "SignalIndex " + objidx + " references a signal object not loaded in Track.SigF" + At(Expression));
 							break;
 						}
 
 						int section = 0;
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out section))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Section is invalid in Track.SigF at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Section is invalid in Track.SigF" + At(Expression));
 							section = 0;
 						}
 
-						double x = 0.0, y = 0.0;
-						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out x))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Track.SigF at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							x = 0.0;
-						}
-
-						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out y))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Track.SigF at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							y = 0.0;
-						}
-
-						double yaw = 0.0, pitch = 0.0, roll = 0.0;
-						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out yaw))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in Track.SigF at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							yaw = 0.0;
-						}
-
-						if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out pitch))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in Track.SigF at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							pitch = 0.0;
-						}
-
-						if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], out roll))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in Track.SigF at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							roll = 0.0;
-						}
+						double x, y, yaw, pitch, roll;
+						ParseOffset(Arguments, 2, "Track.SigF", Expression, UnitOfLength, out x, out y, out yaw, out pitch, out roll);
 
 						int n = Data.Blocks[BlockIndex].Signals.Length;
 						Array.Resize(ref Data.Blocks[BlockIndex].Signals, n + 1);
-						Data.Blocks[BlockIndex].Signals[n] = new Signal(Data.TrackPosition, CurrentSection + section, signalObject, new Vector2(x, y < 0.0 ? 4.8 : y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians(), true, y < 0.0);
+						Data.Blocks[BlockIndex].Signals[n] = new Signal(Data.TrackPosition, CurrentSection + section, signalObject, new Vector2(x, y < 0.0 ? DefaultSignalHeight : y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians(), true, y < 0.0);
 					}
 				}
 					break;
@@ -628,7 +599,7 @@ namespace CsvRwRouteParser
 						int num = -2;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out num))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Aspects is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Aspects is invalid in " + Command + At(Expression));
 							num = -2;
 						}
 
@@ -644,41 +615,12 @@ namespace CsvRwRouteParser
 
 						if (num != 1 & num != -2 & num != 2 & num != -3 & num != 3 & num != -4 & num != 4 & num != -5 & num != 5 & num != 6)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Aspects has an unsupported value in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Aspects has an unsupported value in " + Command + At(Expression));
 							num = num == -3 | num == -6 | num == -1 ? -num : -4;
 						}
 
-						double x = 0.0, y = 0.0;
-						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out x))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							x = 0.0;
-						}
-
-						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out y))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							y = 0.0;
-						}
-
-						double yaw = 0.0, pitch = 0.0, roll = 0.0;
-						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out yaw))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							yaw = 0.0;
-						}
-
-						if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out pitch))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							pitch = 0.0;
-						}
-
-						if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], out roll))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							roll = 0.0;
-						}
+						double x, y, yaw, pitch, roll;
+						ParseOffset(Arguments, 2, Command.ToString(), Expression, UnitOfLength, out x, out y, out yaw, out pitch, out roll);
 
 						int[] aspects;
 						int comp;
@@ -746,7 +688,7 @@ namespace CsvRwRouteParser
 						CurrentSection++;
 						n = Data.Blocks[BlockIndex].Signals.Length;
 						Array.Resize(ref Data.Blocks[BlockIndex].Signals, n + 1);
-						Data.Blocks[BlockIndex].Signals[n] = new Signal(Data.TrackPosition, CurrentSection, Data.CompatibilitySignals[comp], new Vector2(x, y < 0.0 ? 4.8 : y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians(), x != 0.0, x != 0.0 & y < 0.0);
+						Data.Blocks[BlockIndex].Signals[n] = new Signal(Data.TrackPosition, CurrentSection, Data.CompatibilitySignals[comp], new Vector2(x, y < 0.0 ? DefaultSignalHeight : y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians(), x != 0.0, x != 0.0 & y < 0.0);
 					}
 				}
 					break;
@@ -754,41 +696,12 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						double x = 0.0, y = 0.0;
-						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out x))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Track.Relay at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							x = 0.0;
-						}
-
-						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out y))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Track.Relay at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							y = 0.0;
-						}
-
-						double yaw = 0.0, pitch = 0.0, roll = 0.0;
-						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out yaw))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in Track.Relay at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							yaw = 0.0;
-						}
-
-						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out pitch))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in Track.Relay at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							pitch = 0.0;
-						}
-
-						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out roll))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in Track.Relay at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							roll = 0.0;
-						}
+						double x, y, yaw, pitch, roll;
+						ParseOffset(Arguments, 0, "Track.Relay", Expression, UnitOfLength, out x, out y, out yaw, out pitch, out roll);
 
 						int n = Data.Blocks[BlockIndex].Signals.Length;
 						Array.Resize(ref Data.Blocks[BlockIndex].Signals, n + 1);
-						Data.Blocks[BlockIndex].Signals[n] = new Signal(Data.TrackPosition, CurrentSection + 1, Data.CompatibilitySignals[8], new Vector2(x, y < 0.0 ? 4.8 : y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians(), x != 0.0, x != 0.0 & y < 0.0);
+						Data.Blocks[BlockIndex].Signals[n] = new Signal(Data.TrackPosition, CurrentSection + 1, Data.CompatibilitySignals[8], new Vector2(x, y < 0.0 ? DefaultSignalHeight : y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians(), x != 0.0, x != 0.0 & y < 0.0);
 					}
 				}
 					break;
@@ -799,89 +712,60 @@ namespace CsvRwRouteParser
 						int type = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out type))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Type is invalid in Track.Destination at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Type is invalid in Track.Destination" + At(Expression));
 							type = 0;
 						}
 
 						if (type < -1 || type > 1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Type is expected to be in the range of -1 to 1 in Track.Destination at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Type is expected to be in the range of -1 to 1 in Track.Destination" + At(Expression));
 						}
 						else
 						{
 							int structure = 0, nextDestination = 0, previousDestination = 0, triggerOnce = 0;
 							if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out structure))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex is invalid in Track.Destination at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex is invalid in Track.Destination" + At(Expression));
 								structure = 0;
 							}
 
 							if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out nextDestination))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "NextDestination is invalid in Track.Destination at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "NextDestination is invalid in Track.Destination" + At(Expression));
 								nextDestination = 0;
 							}
 
 							if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[3], out previousDestination))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "PreviousDestination is invalid in Track.Destination at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "PreviousDestination is invalid in Track.Destination" + At(Expression));
 								previousDestination = 0;
 							}
 
 							if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[4], out triggerOnce))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TriggerOnce is invalid in Track.Destination at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								previousDestination = 0;
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TriggerOnce is invalid in Track.Destination" + At(Expression));
+								triggerOnce = 0;
 							}
 
 							if (structure < -1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex is expected to be non-negative or -1 in Track.Destination at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex is expected to be non-negative or -1 in Track.Destination" + At(Expression));
 								structure = -1;
 							}
 							else if (structure >= 0 && !Data.Structure.Beacon.ContainsKey(structure))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex " + structure + " references an object not loaded in Track.Destination at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex " + structure + " references an object not loaded in Track.Destination" + At(Expression));
 								structure = -1;
 							}
 
 							if (triggerOnce < 0 || triggerOnce > 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TriggerOnce is expected to be in the range of 0 to 1 in Track.Destination at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TriggerOnce is expected to be in the range of 0 to 1 in Track.Destination" + At(Expression));
 								triggerOnce = 0;
 							}
 
-							double x = 0.0, y = 0.0;
-							double yaw = 0.0, pitch = 0.0, roll = 0.0;
-							if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], UnitOfLength, out x))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Track.Destination at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								x = 0.0;
-							}
-
-							if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], UnitOfLength, out y))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Track.Destination at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								y = 0.0;
-							}
-
-							if (Arguments.Length >= 8 && Arguments[7].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[7], out yaw))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in Track.Destination at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								yaw = 0.0;
-							}
-
-							if (Arguments.Length >= 9 && Arguments[8].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[8], out pitch))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in Track.Destination at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								pitch = 0.0;
-							}
-
-							if (Arguments.Length >= 10 && Arguments[9].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[9], out roll))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in Track.Destination at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								roll = 0.0;
-							}
+							double x, y, yaw, pitch, roll;
+							ParseOffset(Arguments, 5, "Track.Destination", Expression, UnitOfLength, out x, out y, out yaw, out pitch, out roll);
 
 							int n = Data.Blocks[BlockIndex].DestinationChanges.Length;
 							Array.Resize(ref Data.Blocks[BlockIndex].DestinationChanges, n + 1);
@@ -897,43 +781,43 @@ namespace CsvRwRouteParser
 						int type = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out type))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Type is invalid in Track.Beacon at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Type is invalid in Track.Beacon" + At(Expression));
 							type = 0;
 						}
 
 						if (type < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Type is expected to be non-negative in Track.Beacon at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Type is expected to be non-negative in Track.Beacon" + At(Expression));
 						}
 						else
 						{
 							int structure = 0, section = 0, optional = 0;
 							if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out structure))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex is invalid in Track.Beacon at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex is invalid in Track.Beacon" + At(Expression));
 								structure = 0;
 							}
 
 							if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out section))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Section is invalid in Track.Beacon at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Section is invalid in Track.Beacon" + At(Expression));
 								section = 0;
 							}
 
 							if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[3], out optional))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Data is invalid in Track.Beacon at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Data is invalid in Track.Beacon" + At(Expression));
 								optional = 0;
 							}
 
 							if (structure < -1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex is expected to be non-negative or -1 in Track.Beacon at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex is expected to be non-negative or -1 in Track.Beacon" + At(Expression));
 								structure = -1;
 							}
 							else if (structure >= 0 && !Data.Structure.Beacon.ContainsKey(structure))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex " + structure + " references an object not loaded in Track.Beacon at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex " + structure + " references an object not loaded in Track.Beacon" + At(Expression));
 								structure = -1;
 							}
 
@@ -943,7 +827,7 @@ namespace CsvRwRouteParser
 							}
 							else if (section < 0)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Section is expected to be non-negative or -1 in Track.Beacon at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Section is expected to be non-negative or -1 in Track.Beacon" + At(Expression));
 								section = CurrentSection + 1;
 							}
 							else
@@ -951,37 +835,8 @@ namespace CsvRwRouteParser
 								section += CurrentSection;
 							}
 
-							double x = 0.0, y = 0.0;
-							double yaw = 0.0, pitch = 0.0, roll = 0.0;
-							if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], UnitOfLength, out x))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Track.Beacon at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								x = 0.0;
-							}
-
-							if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], UnitOfLength, out y))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Track.Beacon at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								y = 0.0;
-							}
-
-							if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], out yaw))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in Track.Beacon at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								yaw = 0.0;
-							}
-
-							if (Arguments.Length >= 8 && Arguments[7].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[7], out pitch))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in Track.Beacon at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								pitch = 0.0;
-							}
-
-							if (Arguments.Length >= 9 && Arguments[8].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[8], out roll))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in Track.Beacon at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								roll = 0.0;
-							}
+							double x, y, yaw, pitch, roll;
+							ParseOffset(Arguments, 4, "Track.Beacon", Expression, UnitOfLength, out x, out y, out yaw, out pitch, out roll);
 
 							int n = Data.Blocks[BlockIndex].Transponders.Length;
 							Array.Resize(ref Data.Blocks[BlockIndex].Transponders, n + 1);
@@ -998,59 +853,30 @@ namespace CsvRwRouteParser
 						int type = 0, oversig = 0, work = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out type))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Type is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Type is invalid in " + Command + At(Expression));
 							type = 0;
 						}
 
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out oversig))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Signals is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Signals is invalid in " + Command + At(Expression));
 							oversig = 0;
 						}
 
 						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out work))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "SwitchSystems is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "SwitchSystems is invalid in " + Command + At(Expression));
 							work = 0;
 						}
 
 						if (oversig < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Signals is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Signals is expected to be non-negative in " + Command + At(Expression));
 							oversig = 0;
 						}
 
-						double x = 0.0, y = 0.0;
-						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out x))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							x = 0.0;
-						}
-
-						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], UnitOfLength, out y))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							y = 0.0;
-						}
-
-						double yaw = 0.0, pitch = 0.0, roll = 0.0;
-						if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out yaw))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							yaw = 0.0;
-						}
-
-						if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], out pitch))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							pitch = 0.0;
-						}
-
-						if (Arguments.Length >= 8 && Arguments[7].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[7], out roll))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							roll = 0.0;
-						}
+						double x, y, yaw, pitch, roll;
+						ParseOffset(Arguments, 3, Command.ToString(), Expression, UnitOfLength, out x, out y, out yaw, out pitch, out roll);
 
 						int n = Data.Blocks[BlockIndex].Transponders.Length;
 						Array.Resize(ref Data.Blocks[BlockIndex].Transponders, n + 1);
@@ -1085,14 +911,14 @@ namespace CsvRwRouteParser
 						int type = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out type))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Type is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Type is invalid in " + Command + At(Expression));
 							type = 0;
 						}
 
 						double speed = 0.0;
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out speed))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Speed is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Speed is invalid in " + Command + At(Expression));
 							speed = 0.0;
 						}
 
@@ -1116,7 +942,7 @@ namespace CsvRwRouteParser
 						double speed = 0.0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out speed))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Speed is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Speed is invalid in " + Command + At(Expression));
 							speed = 0.0;
 						}
 
@@ -1132,25 +958,25 @@ namespace CsvRwRouteParser
 					int direction = 0, cource = 0;
 					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out limit))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Speed is invalid in Track.Limit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Speed is invalid in Track.Limit" + At(Expression));
 						limit = 0.0;
 					}
 
 					if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out direction))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Direction is invalid in Track.Limit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Direction is invalid in Track.Limit" + At(Expression));
 						direction = 0;
 					}
 
 					if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out cource))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Cource is invalid in Track.Limit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Course is invalid in Track.Limit" + At(Expression));
 						cource = 0;
 					}
 
 					if (limit < 0.0)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Speed must be positive in Track.Limit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Speed must be positive in Track.Limit" + At(Expression));
 						break;
 					}
 
@@ -1164,44 +990,44 @@ namespace CsvRwRouteParser
 				case TrackCommand.StopPos:
 					if (CurrentStation == -1)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A stop without a station is invalid in Track.Stop at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A stop without a station is invalid in Track.Stop" + At(Expression));
 					}
 					else
 					{
 						int dir = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out dir))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Direction is invalid in Track.Stop at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Direction is invalid in Track.Stop" + At(Expression));
 							dir = 0;
 						}
 
 						double backw = 5.0, forw = 5.0;
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out backw))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackwardTolerance is invalid in Track.Stop at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackwardTolerance is invalid in Track.Stop" + At(Expression));
 							backw = 5.0;
 						}
 						else if (backw <= 0.0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackwardTolerance is expected to be positive in Track.Stop at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackwardTolerance is expected to be positive in Track.Stop" + At(Expression));
 							backw = 5.0;
 						}
 
 						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out forw))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ForwardTolerance is invalid in Track.Stop at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ForwardTolerance is invalid in Track.Stop" + At(Expression));
 							forw = 5.0;
 						}
 						else if (forw <= 0.0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ForwardTolerance is expected to be positive in Track.Stop at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ForwardTolerance is expected to be positive in Track.Stop" + At(Expression));
 							forw = 5.0;
 						}
 
 						int cars = 0;
 						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[3], out cars))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Cars is invalid in Track.Stop at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Cars is invalid in Track.Stop" + At(Expression));
 							cars = 0;
 						}
 
@@ -1238,7 +1064,7 @@ namespace CsvRwRouteParser
 							CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.PlayerPass;
 							if (!TryParseTime(Arguments[1].Substring(2).TrimStart(), out arr))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ArrivalTime is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ArrivalTime is invalid in Track.Sta" + At(Expression));
 								arr = -1.0;
 							}
 						}
@@ -1251,7 +1077,7 @@ namespace CsvRwRouteParser
 							CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.PlayerStop;
 							if (!TryParseTime(Arguments[1].Substring(2).TrimStart(), out arr))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ArrivalTime is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ArrivalTime is invalid in Track.Sta" + At(Expression));
 								arr = -1.0;
 							}
 						}
@@ -1265,7 +1091,7 @@ namespace CsvRwRouteParser
 						}
 						else if (!TryParseTime(Arguments[1], out arr))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ArrivalTime is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ArrivalTime is invalid in Track.Sta" + At(Expression));
 							arr = -1.0;
 						}
 					}
@@ -1281,7 +1107,7 @@ namespace CsvRwRouteParser
 							CurrentRoute.Stations[CurrentStation].Type = StationType.Terminal;
 							if (!TryParseTime(Arguments[2].Substring(2).TrimStart(), out dep))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta" + At(Expression));
 								dep = -1.0;
 							}
 						}
@@ -1294,7 +1120,7 @@ namespace CsvRwRouteParser
 							CurrentRoute.Stations[CurrentStation].Type = StationType.ChangeEnds;
 							if (!TryParseTime(Arguments[2].Substring(2).TrimStart(), out dep))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta" + At(Expression));
 								dep = -1.0;
 							}
 						}
@@ -1308,7 +1134,7 @@ namespace CsvRwRouteParser
 									case 1:
 										if (!NumberFormats.TryParseIntVb6(splitString[1].TrimStart(), out CurrentRoute.Stations[CurrentStation].JumpIndex))
 										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "JumpStationIndex is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "JumpStationIndex is invalid in Track.Sta" + At(Expression));
 											dep = -1.0;
 										}
 										else
@@ -1320,7 +1146,7 @@ namespace CsvRwRouteParser
 									case 2:
 										if (!TryParseTime(splitString[2].TrimStart(), out dep))
 										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta" + At(Expression));
 											dep = -1.0;
 										}
 
@@ -1334,7 +1160,7 @@ namespace CsvRwRouteParser
 						}
 						else if (!TryParseTime(Arguments[2], out dep))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta" + At(Expression));
 							dep = -1.0;
 						}
 					}
@@ -1342,7 +1168,7 @@ namespace CsvRwRouteParser
 					int passalarm = 0;
 					if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[3], out passalarm))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "PassAlarm is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "PassAlarm is invalid in Track.Sta" + At(Expression));
 						passalarm = 0;
 					}
 
@@ -1359,7 +1185,7 @@ namespace CsvRwRouteParser
 					int stop = 0;
 					if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[5], out stop))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ForcedRedSignal is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ForcedRedSignal is invalid in Track.Sta" + At(Expression));
 						stop = 0;
 					}
 
@@ -1377,7 +1203,7 @@ namespace CsvRwRouteParser
 						{
 							if (Path.ContainsInvalidChars(Arguments[7]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ArrivalSound contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ArrivalSound contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
@@ -1386,7 +1212,7 @@ namespace CsvRwRouteParser
 								{
 									if (Arguments[7] != "0") // RouteBuilder...
 									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, true, "ArrivalSound " + f + " not found in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, true, "ArrivalSound " + f + " not found in Track.Sta" + At(Expression));
 									}
 								}
 								else
@@ -1401,12 +1227,12 @@ namespace CsvRwRouteParser
 					double halt = 15.0;
 					if (Arguments.Length >= 9 && Arguments[8].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[8], out halt))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "StopDuration is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "StopDuration is invalid in Track.Sta" + At(Expression));
 						halt = 15.0;
 					}
 					else if (halt < 0)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "StopDuration is expected to be non-negative in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "StopDuration is expected to be non-negative in Track.Sta" + At(Expression));
 					}
 					else if (halt < 5.0)
 					{
@@ -1418,12 +1244,12 @@ namespace CsvRwRouteParser
 					{
 						if (Arguments.Length >= 10 && Arguments[9].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[9], out jam))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "PassengerRatio is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "PassengerRatio is invalid in Track.Sta" + At(Expression));
 							jam = 100.0;
 						}
 						else if (jam < 0.0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "PassengerRatio is expected to be non-negative in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "PassengerRatio is expected to be non-negative in Track.Sta" + At(Expression));
 							jam = 100.0;
 						}
 					}
@@ -1434,14 +1260,14 @@ namespace CsvRwRouteParser
 						{
 							if (Path.ContainsInvalidChars(Arguments[10]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DepartureSound contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DepartureSound contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
 								string f = Path.CombineFile(SoundPath, Arguments[10]);
 								if (!System.IO.File.Exists(f))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "DepartureSound " + f + " not found in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "DepartureSound " + f + " not found in Track.Sta" + At(Expression));
 								}
 								else
 								{
@@ -1466,12 +1292,12 @@ namespace CsvRwRouteParser
 							{
 								if (ttidx < 0)
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TimetableIndex is expected to be non-negative in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TimetableIndex is expected to be non-negative in Track.Sta" + At(Expression));
 									ttidx = -1;
 								}
 								else if (ttidx >= Data.TimetableDaytime.Length & ttidx >= Data.TimetableNighttime.Length)
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TimetableIndex references textures not loaded in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TimetableIndex references textures not loaded in Track.Sta" + At(Expression));
 									ttidx = -1;
 								}
 
@@ -1510,12 +1336,12 @@ namespace CsvRwRouteParser
 					{
 						if (Arguments.Length >= 13 && Arguments[12].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[12], out reopenDoor))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ReopenDoor is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ReopenDoor is invalid in Track.Sta" + At(Expression));
 							reopenDoor = 0.0;
 						}
 						else if (reopenDoor < 0.0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ReopenDoor is expected to be non-negative in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ReopenDoor is expected to be non-negative in Track.Sta" + At(Expression));
 							reopenDoor = 0.0;
 						}
 					}
@@ -1525,12 +1351,12 @@ namespace CsvRwRouteParser
 					{
 						if (Arguments.Length >= 14 && Arguments[13].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[13], out reopenStationLimit))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ReopenStationLimit is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ReopenStationLimit is invalid in Track.Sta" + At(Expression));
 							reopenStationLimit = 5;
 						}
 						else if (reopenStationLimit < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ReopenStationLimit is expected to be non-negative in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ReopenStationLimit is expected to be non-negative in Track.Sta" + At(Expression));
 							reopenStationLimit = 0;
 						}
 					}
@@ -1540,12 +1366,12 @@ namespace CsvRwRouteParser
 					{
 						if (Arguments.Length >= 15 && Arguments[14].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[14], out interferenceInDoor))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "InterferenceInDoor is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "InterferenceInDoor is invalid in Track.Sta" + At(Expression));
 							interferenceInDoor = Plugin.CurrentHost.Random.NextDouble() * 30.0;
 						}
 						else if (interferenceInDoor < 0.0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "InterferenceInDoor is expected to be non-negative in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "InterferenceInDoor is expected to be non-negative in Track.Sta" + At(Expression));
 							interferenceInDoor = 0.0;
 						}
 					}
@@ -1555,12 +1381,12 @@ namespace CsvRwRouteParser
 					{
 						if (Arguments.Length >= 16 && Arguments[15].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[15], out maxInterferingObjectRate))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MaxInterferingObjectRate is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MaxInterferingObjectRate is invalid in Track.Sta" + At(Expression));
 							maxInterferingObjectRate = Plugin.CurrentHost.Random.Next(1, 99);
 						}
 						else if (maxInterferingObjectRate <= 0 || maxInterferingObjectRate >= 100)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MaxInterferingObjectRate is expected to be positive, less than 100 in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MaxInterferingObjectRate is expected to be positive, less than 100 in Track.Sta" + At(Expression));
 							maxInterferingObjectRate = Plugin.CurrentHost.Random.Next(1, 99);
 						}
 					}
@@ -1628,7 +1454,7 @@ namespace CsvRwRouteParser
 							CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.PlayerPass;
 							if (!TryParseTime(Arguments[1].Substring(2).TrimStart(), out arr))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ArrivalTime is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ArrivalTime is invalid in Track.Sta" + At(Expression));
 								arr = -1.0;
 							}
 						}
@@ -1641,13 +1467,13 @@ namespace CsvRwRouteParser
 							CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.PlayerStop;
 							if (!TryParseTime(Arguments[1].Substring(2).TrimStart(), out arr))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ArrivalTime is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ArrivalTime is invalid in Track.Sta" + At(Expression));
 								arr = -1.0;
 							}
 						}
 						else if (!TryParseTime(Arguments[1], out arr))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ArrivalTime is invalid in Track.Station at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ArrivalTime is invalid in Track.Station" + At(Expression));
 							arr = -1.0;
 						}
 					}
@@ -1663,7 +1489,7 @@ namespace CsvRwRouteParser
 							CurrentRoute.Stations[CurrentStation].Type = StationType.Terminal;
 							if (!TryParseTime(Arguments[2].Substring(2).TrimStart(), out dep))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta" + At(Expression));
 								dep = -1.0;
 							}
 						}
@@ -1676,13 +1502,13 @@ namespace CsvRwRouteParser
 							CurrentRoute.Stations[CurrentStation].Type = StationType.ChangeEnds;
 							if (!TryParseTime(Arguments[2].Substring(2).TrimStart(), out dep))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta" + At(Expression));
 								dep = -1.0;
 							}
 						}
 						else if (!TryParseTime(Arguments[2], out dep))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Station at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Station" + At(Expression));
 							dep = -1.0;
 						}
 					}
@@ -1690,7 +1516,7 @@ namespace CsvRwRouteParser
 					int stop = 0;
 					if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[3], out stop))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ForcedRedSignal is invalid in Track.Station at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ForcedRedSignal is invalid in Track.Station" + At(Expression));
 						stop = 0;
 					}
 
@@ -1715,14 +1541,14 @@ namespace CsvRwRouteParser
 						{
 							if (Path.ContainsInvalidChars(Arguments[5]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DepartureSound contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DepartureSound contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
 								string f = Path.CombineFile(SoundPath, Arguments[5]);
 								if (!System.IO.File.Exists(f))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "DepartureSound " + f + " not found in Track.Station at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "DepartureSound " + f + " not found in Track.Station" + At(Expression));
 								}
 								else
 								{
@@ -1792,7 +1618,7 @@ namespace CsvRwRouteParser
 					string fn = Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[0]);
 					if (!System.IO.File.Exists(fn))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, true, "Station XML file " + fn + " not found in Track.StationXML at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, true, "Station XML file " + fn + " not found in Track.StationXML" + At(Expression));
 						break;
 					}
 
@@ -1825,7 +1651,7 @@ namespace CsvRwRouteParser
 						int idx1 = 0, idx2 = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx1))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex1 is invalid in Track.Form at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex1 is invalid in Track.Form" + At(Expression));
 							idx1 = 0;
 						}
 
@@ -1845,7 +1671,7 @@ namespace CsvRwRouteParser
 							}
 							else if (!NumberFormats.TryParseIntVb6(Arguments[1], out idx2))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is invalid in Track.Form at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is invalid in Track.Form" + At(Expression));
 								idx2 = 0;
 							}
 						}
@@ -1868,45 +1694,45 @@ namespace CsvRwRouteParser
 
 						if (idx1 < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex1 is expected to be non-negative in Track.Form at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex1 is expected to be non-negative in Track.Form" + At(Expression));
 						}
 						else if (idx2 < 0 & idx2 != Form.SecondaryRailStub & idx2 != Form.SecondaryRailL & idx2 != Form.SecondaryRailR)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is expected to be greater or equal to -2 in Track.Form at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is expected to be greater or equal to -2 in Track.Form" + At(Expression));
 						}
 						else
 						{
 							if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx1) || !Data.Blocks[BlockIndex].Rails[idx1].RailStarted)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex1 could be out of range in Track.Form at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex1 could be out of range in Track.Form" + At(Expression));
 							}
 
 							if (idx2 != Form.SecondaryRailStub & idx2 != Form.SecondaryRailL & idx2 != Form.SecondaryRailR && (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx2) || !Data.Blocks[BlockIndex].Rails[idx2].RailStarted))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex2 could be out of range in Track.Form at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex2 could be out of range in Track.Form" + At(Expression));
 							}
 
 							int roof = 0, pf = 0;
 							if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out roof) || roof < 0)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex is invalid in Track.Form at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex is invalid in Track.Form" + At(Expression));
 								roof = 0;
 							}
 
 							if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[3], out pf))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FormStructureIndex is invalid in Track.Form at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FormStructureIndex is invalid in Track.Form" + At(Expression));
 								pf = 0;
 							}
 							
 							if (roof > 0 && !Data.Structure.RoofL.ContainsKey(roof) && !Data.Structure.RoofR.ContainsKey(roof))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex " + roof + " references an object not loaded in Track.Form at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex " + roof + " references an object not loaded in Track.Form" + At(Expression));
 							}
 
 							if (pf < 0 | (!Data.Structure.FormL.ContainsKey(pf) & !Data.Structure.FormR.ContainsKey(pf)))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FormStructureIndex " + pf + " references an object not loaded in Track.Form at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FormStructureIndex " + pf + " references an object not loaded in Track.Form" + At(Expression));
 							}
 
 							int n = Data.Blocks[BlockIndex].Forms.Length;
@@ -1923,19 +1749,19 @@ namespace CsvRwRouteParser
 						int idx = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.Pole at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.Pole" + At(Expression));
 							idx = 0;
 						}
 
 						if (idx < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be non-negative in Track.Pole at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be non-negative in Track.Pole" + At(Expression));
 						}
 						else
 						{
 							if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || !Data.Blocks[BlockIndex].Rails[idx].RailStarted)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.Pole at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.Pole" + At(Expression));
 							}
 
 							if (idx >= Data.Blocks[BlockIndex].RailPole.Length)
@@ -1953,7 +1779,7 @@ namespace CsvRwRouteParser
 							{
 								if (!NumberFormats.TryParseIntVb6(Arguments[1], out typ))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "AdditionalRailsCovered is invalid in Track.Pole at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "AdditionalRailsCovered is invalid in Track.Pole" + At(Expression));
 									typ = 0;
 								}
 							}
@@ -1962,7 +1788,7 @@ namespace CsvRwRouteParser
 							{
 								if (!NumberFormats.TryParseDoubleVb6(Arguments[2], out double loc))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Location is invalid in Track.Pole at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Location is invalid in Track.Pole" + At(Expression));
 									loc = 0.0;
 								}
 
@@ -1973,7 +1799,7 @@ namespace CsvRwRouteParser
 							{
 								if (!NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out double dist))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Interval is invalid in Track.Pole at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Interval is invalid in Track.Pole" + At(Expression));
 									dist = Data.BlockInterval;
 								}
 
@@ -1984,18 +1810,18 @@ namespace CsvRwRouteParser
 							{
 								if (!NumberFormats.TryParseIntVb6(Arguments[4], out sttype))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "PoleStructureIndex is invalid in Track.Pole at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "PoleStructureIndex is invalid in Track.Pole" + At(Expression));
 									sttype = 0;
 								}
 							}
 
 							if (typ < 0 || !Data.Structure.Poles.ContainsKey(typ) || Data.Structure.Poles[typ] == null)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "PoleStructureIndex " + typ + " references an object not loaded in Track.Pole at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "PoleStructureIndex " + typ + " references an object not loaded in Track.Pole" + At(Expression));
 							}
 							else if (sttype < 0 || !Data.Structure.Poles[typ].ContainsKey(sttype) || Data.Structure.Poles[typ][sttype] == null)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "PoleStructureIndex " + typ + " references an object not loaded in Track.Pole at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "PoleStructureIndex " + typ + " references an object not loaded in Track.Pole" + At(Expression));
 							}
 							else
 							{
@@ -2014,19 +1840,19 @@ namespace CsvRwRouteParser
 						int idx = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.PoleEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.PoleEnd" + At(Expression));
 							idx = 0;
 						}
 
 						if (idx < 0 | idx >= Data.Blocks[BlockIndex].RailPole.Length)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex " + idx + " does not reference an existing pole in Track.PoleEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex " + idx + " does not reference an existing pole in Track.PoleEnd" + At(Expression));
 						}
 						else
 						{
 							if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || (!Data.Blocks[BlockIndex].Rails[idx].RailStarted & !Data.Blocks[BlockIndex].Rails[idx].RailEnded))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.PoleEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.PoleEnd" + At(Expression));
 							}
 
 							Data.Blocks[BlockIndex].RailPole[idx].Exists = false;
@@ -2041,13 +1867,13 @@ namespace CsvRwRouteParser
 						int idx = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.Wall at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.Wall" + At(Expression));
 							idx = 0;
 						}
 
 						if (idx < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be a non-negative integer in Track.Wall at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be a non-negative integer in Track.Wall" + At(Expression));
 							idx = 0;
 						}
 
@@ -2064,7 +1890,7 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Track.Wall is expected to have at least 3 arguments at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Track.Wall is expected to have at least 3 arguments" + At(Expression));
 							}
 						}
 
@@ -2076,13 +1902,13 @@ namespace CsvRwRouteParser
 						int sttype = 0;
 						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out sttype))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WallStructureIndex is invalid in Track.Wall at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WallStructureIndex is invalid in Track.Wall" + At(Expression));
 							sttype = 0;
 						}
 
 						if (sttype < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WallStructureIndex is expected to be a non-negative integer in Track.Wall at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WallStructureIndex is expected to be a non-negative integer in Track.Wall" + At(Expression));
 							sttype = 0;
 						}
 
@@ -2090,15 +1916,15 @@ namespace CsvRwRouteParser
 						{
 							if (dir < 0)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WallStructureIndex " + sttype + " references an object not loaded in Track.WallL at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WallStructureIndex " + sttype + " references an object not loaded in Track.WallL" + At(Expression));
 							}
 							else if (dir > 0)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WallStructureIndex " + sttype + " references an object not loaded in Track.WallR at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WallStructureIndex " + sttype + " references an object not loaded in Track.WallR" + At(Expression));
 							}
 							else
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WallStructureIndex " + sttype + " references an object not loaded in Track.WallBothSides at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WallStructureIndex " + sttype + " references an object not loaded in Track.WallBothSides" + At(Expression));
 							}
 						}
 						else
@@ -2107,20 +1933,20 @@ namespace CsvRwRouteParser
 							{
 								if (!Data.Structure.WallL.ContainsKey(sttype))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "LeftWallStructureIndex " + sttype + " references an object not loaded in Track.WallBothSides at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "LeftWallStructureIndex " + sttype + " references an object not loaded in Track.WallBothSides" + At(Expression));
 									dir = Direction.Right;
 								}
 
 								if (!Data.Structure.WallR.ContainsKey(sttype))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RightWallStructureIndex " + sttype + " references an object not loaded in Track.WallBothSides at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RightWallStructureIndex " + sttype + " references an object not loaded in Track.WallBothSides" + At(Expression));
 									dir = Direction.Left;
 								}
 							}
 
 							if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || !Data.Blocks[BlockIndex].Rails[idx].RailStarted)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.Wall at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.Wall" + At(Expression));
 							}
 
 							if (Data.Blocks[BlockIndex].RailWall.ContainsKey(idx))
@@ -2142,19 +1968,19 @@ namespace CsvRwRouteParser
 						int idx = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.WallEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.WallEnd" + At(Expression));
 							idx = 0;
 						}
 
 						if (!Data.Blocks[BlockIndex].RailWall.ContainsKey(idx))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex " + idx + " does not reference an existing wall in Track.WallEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex " + idx + " does not reference an existing wall in Track.WallEnd" + At(Expression));
 						}
 						else
 						{
 							if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || (!Data.Blocks[BlockIndex].Rails[idx].RailStarted & !Data.Blocks[BlockIndex].Rails[idx].RailEnded))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.WallEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.WallEnd" + At(Expression));
 							}
 
 							if (Data.Blocks[BlockIndex].RailWall.ContainsKey(idx))
@@ -2172,13 +1998,13 @@ namespace CsvRwRouteParser
 						int idx = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.Dike at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.Dike" + At(Expression));
 							idx = 0;
 						}
 
 						if (idx < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be a non-negative integer in Track.Dike at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be a non-negative integer in Track.Dike" + At(Expression));
 							idx = 0;
 						}
 
@@ -2196,7 +2022,7 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Track.Dike is expected to have at least 3 arguments at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Track.Dike is expected to have at least 3 arguments" + At(Expression));
 							}
 						}
 
@@ -2208,13 +2034,13 @@ namespace CsvRwRouteParser
 						int sttype = 0;
 						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out sttype))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DikeStructureIndex is invalid in Track.Dike at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DikeStructureIndex is invalid in Track.Dike" + At(Expression));
 							sttype = 0;
 						}
 
 						if (sttype < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DikeStructureIndex is expected to be a non-negative integer in Track.DikeL at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DikeStructureIndex is expected to be a non-negative integer in Track.DikeL" + At(Expression));
 							sttype = 0;
 						}
 
@@ -2222,18 +2048,18 @@ namespace CsvRwRouteParser
 						{
 							if (dir > 0)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DikeStructureIndex " + sttype + " references an object not loaded in Track.DikeL at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DikeStructureIndex " + sttype + " references an object not loaded in Track.DikeL" + At(Expression));
 							}
 							else if (dir < 0)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DikeStructureIndex " + sttype + " references an object not loaded in Track.DikeR at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DikeStructureIndex " + sttype + " references an object not loaded in Track.DikeR" + At(Expression));
 							}
 							else
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DikeStructureIndex " + sttype + " references an object not loaded in Track.DikeBothSides at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DikeStructureIndex " + sttype + " references an object not loaded in Track.DikeBothSides" + At(Expression));
 							}
 
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DikeStructureIndex " + sttype + " references an object not loaded in Track.Dike at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DikeStructureIndex " + sttype + " references an object not loaded in Track.Dike" + At(Expression));
 						}
 						else
 						{
@@ -2241,20 +2067,20 @@ namespace CsvRwRouteParser
 							{
 								if (!Data.Structure.DikeL.ContainsKey(sttype))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "LeftDikeStructureIndex " + sttype + " references an object not loaded in Track.DikeBothSides at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "LeftDikeStructureIndex " + sttype + " references an object not loaded in Track.DikeBothSides" + At(Expression));
 									dir = Direction.Right;
 								}
 
 								if (!Data.Structure.DikeR.ContainsKey(sttype))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RightDikeStructureIndex " + sttype + " references an object not loaded in Track.DikeBothSides at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RightDikeStructureIndex " + sttype + " references an object not loaded in Track.DikeBothSides" + At(Expression));
 									dir = Direction.Left;
 								}
 							}
 
 							if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || !Data.Blocks[BlockIndex].Rails[idx].RailStarted)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.Dike at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.Dike" + At(Expression));
 							}
 
 							if (Data.Blocks[BlockIndex].RailDike.ContainsKey(idx))
@@ -2277,19 +2103,19 @@ namespace CsvRwRouteParser
 						int idx = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.DikeEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.DikeEnd" + At(Expression));
 							idx = 0;
 						}
 
 						if (!Data.Blocks[BlockIndex].RailDike.ContainsKey(idx))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex " + idx + " does not reference an existing dike in Track.DikeEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex " + idx + " does not reference an existing dike in Track.DikeEnd" + At(Expression));
 						}
 						else
 						{
 							if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || (!Data.Blocks[BlockIndex].Rails[idx].RailStarted && !Data.Blocks[BlockIndex].Rails[idx].RailEnded))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.DikeEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.DikeEnd" + At(Expression));
 							}
 
 							if (Data.Blocks[BlockIndex].RailDike.ContainsKey(idx))
@@ -2307,18 +2133,18 @@ namespace CsvRwRouteParser
 					{
 						if (Arguments.Length < 1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Marker is expected to have at least one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Marker is expected to have at least one argument" + At(Expression));
 						}
 						else if (Path.ContainsInvalidChars(Arguments[0]))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 						}
 						else
 						{
 							string f = Path.CombineFile(ObjectPath, Arguments[0]);
 							if (!System.IO.File.Exists(f) && Command == TrackCommand.Marker)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in Track.Marker at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in Track.Marker" + At(Expression));
 							}
 							else
 							{
@@ -2334,7 +2160,7 @@ namespace CsvRwRouteParser
 								double dist = Data.BlockInterval;
 								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out dist))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Distance is invalid in Track.Marker at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Distance is invalid in Track.Marker" + At(Expression));
 									dist = Data.BlockInterval;
 								}
 
@@ -2394,7 +2220,7 @@ namespace CsvRwRouteParser
 												message.Color = MessageColor.Magenta;
 												break;
 											default:
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MessageColor is invalid in Track.TextMarker at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MessageColor is invalid in Track.TextMarker" + At(Expression));
 												//Default message color is set to white
 												break;
 										}
@@ -2429,7 +2255,7 @@ namespace CsvRwRouteParser
 						double h = 0.0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out h))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Height is invalid in Track.Height at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Height is invalid in Track.Height" + At(Expression));
 							h = 0.0;
 						}
 
@@ -2457,7 +2283,7 @@ namespace CsvRwRouteParser
 						int cytype = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out cytype))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CycleIndex is invalid in Track.Ground at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CycleIndex is invalid in Track.Ground" + At(Expression));
 							cytype = 0;
 						}
 
@@ -2469,7 +2295,7 @@ namespace CsvRwRouteParser
 						{
 							if (!Data.Structure.Ground.ContainsKey(cytype))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CycleIndex " + cytype + " references an object not loaded in Track.Ground at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CycleIndex " + cytype + " references an object not loaded in Track.Ground" + At(Expression));
 							}
 							else
 							{
@@ -2486,51 +2312,51 @@ namespace CsvRwRouteParser
 						int idx1 = 0, idx2 = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx1))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex1 is invalid in Track.Crack at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex1 is invalid in Track.Crack" + At(Expression));
 							idx1 = 0;
 						}
 
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out idx2))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is invalid in Track.Crack at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is invalid in Track.Crack" + At(Expression));
 							idx2 = 0;
 						}
 
 						int sttype = 0;
 						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out sttype))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CrackStructureIndex is invalid in Track.Crack at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CrackStructureIndex is invalid in Track.Crack" + At(Expression));
 							sttype = 0;
 						}
 
 						if (sttype < 0 || !Data.Structure.CrackL.ContainsKey(sttype) || !Data.Structure.CrackR.ContainsKey(sttype))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CrackStructureIndex " + sttype + " references an object not loaded in Track.Crack at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CrackStructureIndex " + sttype + " references an object not loaded in Track.Crack" + At(Expression));
 						}
 						else
 						{
 							if (idx1 < 0)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex1 is expected to be non-negative in Track.Crack at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex1 is expected to be non-negative in Track.Crack" + At(Expression));
 							}
 							else if (idx2 < 0)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is expected to be non-negative in Track.Crack at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is expected to be non-negative in Track.Crack" + At(Expression));
 							}
 							else if (idx1 == idx2)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex1 is expected to be unequal to Index2 in Track.Crack at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex1 is expected to be unequal to Index2 in Track.Crack" + At(Expression));
 							}
 							else
 							{
 								if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx1) || !Data.Blocks[BlockIndex].Rails[idx1].RailStarted)
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex1 " + idx1 + " could be out of range in Track.Crack at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex1 " + idx1 + " could be out of range in Track.Crack" + At(Expression));
 								}
 
 								if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx2) || !Data.Blocks[BlockIndex].Rails[idx2].RailStarted)
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex2 " + idx2 + " could be out of range in Track.Crack at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex2 " + idx2 + " could be out of range in Track.Crack" + At(Expression));
 								}
 
 								int n = Data.Blocks[BlockIndex].Cracks.Length;
@@ -2553,41 +2379,41 @@ namespace CsvRwRouteParser
 							 *
 							 * BVE4 ignores these, and we should too.
 							 */
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "An insufficient number of arguments was supplied in Track.FreeObj at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "An insufficient number of arguments was supplied in Track.FreeObj" + At(Expression));
 							return;
 						}
 
 						int idx = 0, sttype = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.FreeObj at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.FreeObj" + At(Expression));
 							idx = 0;
 						}
 
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out sttype))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FreeObjStructureIndex is invalid in Track.FreeObj at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FreeObjStructureIndex is invalid in Track.FreeObj" + At(Expression));
 							sttype = 0;
 						}
 
 						if (idx < -1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be non-negative or -1 in Track.FreeObj at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be non-negative or -1 in Track.FreeObj" + At(Expression));
 						}
 						else if (sttype < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FreeObjStructureIndex is expected to be non-negative in Track.FreeObj at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FreeObjStructureIndex is expected to be non-negative in Track.FreeObj" + At(Expression));
 						}
 						else
 						{
 							if (idx >= 0 && (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || !Data.Blocks[BlockIndex].Rails[idx].RailStarted))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.FreeObj at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.FreeObj" + At(Expression));
 							}
 
 							if (!Data.Structure.FreeObjects.ContainsKey(sttype))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FreeObjStructureIndex " + sttype + " references an object not loaded in Track.FreeObj at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FreeObjStructureIndex " + sttype + " references an object not loaded in Track.FreeObj" + At(Expression));
 							}
 							else
 							{
@@ -2595,17 +2421,17 @@ namespace CsvRwRouteParser
 								double yaw = 0.0, pitch = 0.0, roll = 0.0;
 								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out objectPosition.X))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Track.FreeObj at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Track.FreeObj" + At(Expression));
 								}
 
 								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out objectPosition.Y))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Track.FreeObj at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Track.FreeObj" + At(Expression));
 								}
 
 								if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out yaw))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in Track.FreeObj at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in Track.FreeObj" + At(Expression));
 									yaw = 0.0;
 								}
 
@@ -2613,7 +2439,7 @@ namespace CsvRwRouteParser
 								{
 									if (!Data.IgnorePitchRoll)
 									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in Track.FreeObj at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in Track.FreeObj" + At(Expression));
 									}
 									pitch = 0.0;
 								}
@@ -2622,7 +2448,7 @@ namespace CsvRwRouteParser
 								{
 									if (!Data.IgnorePitchRoll)
 									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in Track.FreeObj at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in Track.FreeObj" + At(Expression));
 									}
 									roll = 0.0;
 								}
@@ -2667,13 +2493,13 @@ namespace CsvRwRouteParser
 						int typ = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out typ))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundIndex is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundIndex is invalid in " + Command + At(Expression));
 							typ = 0;
 						}
 
 						if (typ < 0 | !Data.Backgrounds.ContainsKey(typ))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundIndex " + typ + " references a background not loaded in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundIndex " + typ + " references a background not loaded in " + Command + At(Expression));
 						}
 						else if (Data.Backgrounds[typ] is StaticBackground)
 						{
@@ -2682,7 +2508,7 @@ namespace CsvRwRouteParser
 							{
 								//There's a possibility that this was loaded via a default BVE command rather than XML
 								//Thus check for the existence of the file and chuck out error if appropriate
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundIndex " + typ + " has not been loaded via Texture.Background in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundIndex " + typ + " has not been loaded via Texture.Background in " + Command + At(Expression));
 							}
 							else
 							{
@@ -2726,27 +2552,27 @@ namespace CsvRwRouteParser
 					{
 						if (Arguments.Length == 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have between 1 and 2 arguments at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have between 1 and 2 arguments" + At(Expression));
 						}
 						else
 						{
 							if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
 								string f = Arguments[0];
 								if (!LocateSound(ref f, SoundPath))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 								}
 								else
 								{
 									double speed = 0.0;
 									if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out speed))
 									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Speed is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Speed is invalid in " + Command + At(Expression));
 										speed = 0.0;
 									}
 
@@ -2774,32 +2600,32 @@ namespace CsvRwRouteParser
 					{
 						if (Arguments.Length < 2)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have between 2 and 3 arguments at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have between 2 and 3 arguments" + At(Expression));
 						}
 						else
 						{
 							if (!NumberFormats.TryParseIntVb6(Arguments[0], out int railIndex))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid rail index for " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid rail index for " + Command + At(Expression));
 								break;
 							}
 							if (Path.ContainsInvalidChars(Arguments[1]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[1] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[1] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
 								string f = Arguments[1];
 								if (!LocateSound(ref f, SoundPath))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 								}
 								else
 								{
 									double speed = 0.0;
 									if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out speed))
 									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Speed is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Speed is invalid in " + Command + At(Expression));
 										speed = 0.0;
 									}
 									int n = Data.Blocks[BlockIndex].SoundEvents.Length;
@@ -2825,33 +2651,33 @@ namespace CsvRwRouteParser
 					{
 						if (Arguments.Length == 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have between 1 and 3 arguments at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have between 1 and 3 arguments" + At(Expression));
 						}
 						else
 						{
 							if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
 								string f = Arguments[0];
 								if (!LocateSound(ref f, SoundPath))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 								}
 								else
 								{
 									double x = 0.0, y = 0.0;
 									if (Arguments.Length >= 2 && Arguments[1].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out x))
 									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + At(Expression));
 										x = 0.0;
 									}
 
 									if (Arguments.Length >= 3 && Arguments[2].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out y))
 									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + At(Expression));
 										y = 0.0;
 									}
 
@@ -2878,35 +2704,35 @@ namespace CsvRwRouteParser
 						double x = 0.0, y = 0.0, back = 0.0, front = 0.0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out x))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + At(Expression));
 							x = 0.0;
 						}
 
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out y))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + At(Expression));
 							y = 0.0;
 						}
 
 						if (Arguments.Length >= 3 && Arguments[2].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out back))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackwardTolerance is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackwardTolerance is invalid in " + Command + At(Expression));
 							back = 0.0;
 						}
 						else if (back < 0.0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackwardTolerance is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackwardTolerance is expected to be non-negative in " + Command + At(Expression));
 							back = 0.0;
 						}
 
 						if (Arguments.Length >= 4 && Arguments[3].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out front))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ForwardTolerance is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ForwardTolerance is invalid in " + Command + At(Expression));
 							front = 0.0;
 						}
 						else if (front < 0.0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ForwardTolerance is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ForwardTolerance is expected to be non-negative in " + Command + At(Expression));
 							front = 0.0;
 						}
 
@@ -2922,20 +2748,20 @@ namespace CsvRwRouteParser
 					{
 						if (Arguments.Length == 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have exactly 1 argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have exactly 1 argument" + At(Expression));
 						}
 						else
 						{
 							if (Arguments[0].Length > 0 & !TryParseTime(Arguments[0], out double time))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Time is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Time is invalid in " + Command + At(Expression));
 								time = 0.0;
 							}
 
 							int n = CurrentRoute.BogusPreTrainInstructions.Length;
 							if (n != 0 && CurrentRoute.BogusPreTrainInstructions[n - 1].Time >= time)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Time is expected to be in ascending order between successive " + Command + " commands at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Time is expected to be in ascending order between successive " + Command + " commands" + At(Expression));
 							}
 
 							Array.Resize(ref CurrentRoute.BogusPreTrainInstructions, n + 1);
@@ -2953,52 +2779,23 @@ namespace CsvRwRouteParser
 						int idx = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in " + Command + At(Expression));
 							idx = 0;
 						}
 
 						if (idx < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be non-negative in " + Command + At(Expression));
 							idx = 0;
 						}
 
 						if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || !Data.Blocks[BlockIndex].Rails[idx].RailStarted)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex " + idx + " references a non-existing rail in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex " + idx + " references a non-existing rail in " + Command + At(Expression));
 						}
 
-						double x = 0.0, y = 0.0;
-						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out x))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							x = 0.0;
-						}
-
-						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out y))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							y = 0.0;
-						}
-
-						double yaw = 0.0, pitch = 0.0, roll = 0.0;
-						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out yaw))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							yaw = 0.0;
-						}
-
-						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out pitch))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							pitch = 0.0;
-						}
-
-						if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out roll))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-							roll = 0.0;
-						}
+						double x, y, yaw, pitch, roll;
+						ParseOffset(Arguments, 1, Command.ToString(), Expression, UnitOfLength, out x, out y, out yaw, out pitch, out roll);
 
 						string text = null;
 						if (Arguments.Length >= 7 && Arguments[6].Length != 0)
@@ -3018,76 +2815,47 @@ namespace CsvRwRouteParser
 						int type = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out type))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "HornType is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "HornType is invalid in Track.HornBlow" + At(Expression));
 							type = 0;
 						}
 
 						if (type < 0 || type > 2)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "HornType is expected to be in the range of -1 to 1 in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "HornType is expected to be in the range of 0 to 2 in Track.HornBlow" + At(Expression));
 						}
 						else
 						{
 							int structure = 0, triggerOnce = 0;
 							if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out structure))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex is invalid in Track.HornBlow" + At(Expression));
 								structure = 0;
 							}
 
 							if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out triggerOnce))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TriggerOnce is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TriggerOnce is invalid in Track.HornBlow" + At(Expression));
 							}
 
 							if (structure < -1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex is expected to be non-negative or -1 in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex is expected to be non-negative or -1 in Track.HornBlow" + At(Expression));
 								structure = -1;
 							}
 							else if (structure >= 0 && !Data.Structure.Beacon.ContainsKey(structure))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex " + structure + " references an object not loaded in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex " + structure + " references an object not loaded in Track.HornBlow" + At(Expression));
 								structure = -1;
 							}
 
 							if (triggerOnce < 0 || triggerOnce > 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TriggerOnce is expected to be in the range of 0 to 1 in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TriggerOnce is expected to be in the range of 0 to 1 in Track.HornBlow" + At(Expression));
 								triggerOnce = 0;
 							}
 
-							double x = 0.0, y = 0.0;
-							double yaw = 0.0, pitch = 0.0, roll = 0.0;
-							if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out x))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								x = 0.0;
-							}
-
-							if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], UnitOfLength, out y))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								y = 0.0;
-							}
-
-							if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out yaw))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Yaw is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								yaw = 0.0;
-							}
-
-							if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], out pitch))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Pitch is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								pitch = 0.0;
-							}
-
-							if (Arguments.Length >= 8 && Arguments[7].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[7], out roll))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Roll is invalid in Track.HornBlow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								roll = 0.0;
-							}
+							double x, y, yaw, pitch, roll;
+							ParseOffset(Arguments, 3, "Track.HornBlow", Expression, UnitOfLength, out x, out y, out yaw, out pitch, out roll);
 
 							int n = Data.Blocks[BlockIndex].HornBlows.Length;
 							Array.Resize(ref Data.Blocks[BlockIndex].HornBlows, n + 1);
@@ -3103,7 +2871,7 @@ namespace CsvRwRouteParser
 						{
 							if (!NumberFormats.TryParseIntVb6(Arguments[0], out int currentIntensity))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Intensity is invalid in Track.Rain at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Intensity is invalid in Track.Rain" + At(Expression));
 							}
 							else
 							{
@@ -3115,7 +2883,7 @@ namespace CsvRwRouteParser
 						{
 							if (!NumberFormats.TryParseIntVb6(Arguments[1], out int structure))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex is invalid in Track.Rain at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex is invalid in Track.Rain" + At(Expression));
 							}
 							else
 							{
@@ -3125,7 +2893,7 @@ namespace CsvRwRouteParser
 								}
 								else
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex " + structure + " was not found in Track.Rain at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex " + structure + " was not found in Track.Rain" + At(Expression));
 								}
 
 							}
@@ -3140,7 +2908,7 @@ namespace CsvRwRouteParser
 						{
 							if (!NumberFormats.TryParseIntVb6(Arguments[0], out int currentIntensity))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Intensity is invalid in Track.Snow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Intensity is invalid in Track.Snow" + At(Expression));
 							}
 							else
 							{
@@ -3152,7 +2920,7 @@ namespace CsvRwRouteParser
 						{
 							if (!NumberFormats.TryParseIntVb6(Arguments[1], out int structure))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex is invalid in Track.Snow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex is invalid in Track.Snow" + At(Expression));
 							}
 							else
 							{
@@ -3162,7 +2930,7 @@ namespace CsvRwRouteParser
 								}
 								else
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex " + structure + " was not found in Track.Snow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex " + structure + " was not found in Track.Snow" + At(Expression));
 								}
 
 							}
@@ -3177,7 +2945,7 @@ namespace CsvRwRouteParser
 						{
 							if (!NumberFormats.TryParseIntVb6(Arguments[0], out int currentLightSet))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DynamicLightIndex is invalid in Track.DynamicLight at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DynamicLightIndex is invalid in Track.DynamicLight" + At(Expression));
 							}
 							else
 							{
@@ -3203,17 +2971,17 @@ namespace CsvRwRouteParser
 						int r = 255, g = 255, b = 255;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[0], out r))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Command + At(Expression));
 						}
 						
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[1], out g))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Command + At(Expression));
 						}
 
 						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[2], out b))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Command + At(Expression));
 						}
 
 						int l = Data.Blocks[BlockIndex].LightingChanges.Length;
@@ -3237,17 +3005,17 @@ namespace CsvRwRouteParser
 						int r = 255, g = 255, b = 255;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[0], out r))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Command + At(Expression));
 						}
 
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[1], out g))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Command + At(Expression));
 						}
 						
 						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[2], out b))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Command + At(Expression));
 						}
 						
 						int l = Data.Blocks[BlockIndex].LightingChanges.Length;
@@ -3271,12 +3039,12 @@ namespace CsvRwRouteParser
 						double theta = 60.0, phi = -26.565051177078;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out theta))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Theta is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Theta is invalid in " + Command + At(Expression));
 						}
 
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out phi))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Phi is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Phi is invalid in " + Command + At(Expression));
 						}
 
 						theta = theta.ToRadians();
@@ -3313,7 +3081,7 @@ namespace CsvRwRouteParser
 						int idx = -1;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is invalid in " + Command + At(Expression));
 							break;
 						}
 
@@ -3321,13 +3089,13 @@ namespace CsvRwRouteParser
 
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out RailIndex))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in " + Command + At(Expression));
 						}
 
 						double Interval = 0;	
 						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out Interval))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Repetition interval is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Repetition interval is invalid in " + Command + At(Expression));
 							// CHECK: What does Hmmsim actually do?
 							break;
 						}
@@ -3335,7 +3103,7 @@ namespace CsvRwRouteParser
 						double Span = 0;
 						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out Span))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Repetition interval is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Repetition interval is invalid in " + Command + At(Expression));
 							Span = 0;
 						}
 
@@ -3343,12 +3111,12 @@ namespace CsvRwRouteParser
 
 						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out Position.X))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X position is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "X position is invalid in " + Command + At(Expression));
 						}
 
 						if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out Position.Y))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y position is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Y position is invalid in " + Command + At(Expression));
 						}
 						
 						int[] Types = new int[Arguments.Length - 6];
@@ -3357,7 +3125,7 @@ namespace CsvRwRouteParser
 						{
 							if (!NumberFormats.TryParseIntVb6(Arguments[i], out Types[i - 6]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ObjectIndex is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ObjectIndex is invalid in " + Command + At(Expression));
 								break;
 							}
 						}
@@ -3369,7 +3137,7 @@ namespace CsvRwRouteParser
 
 						if (Data.PatternObjects[idx].Entries.ContainsKey(Data.TrackPosition) && Data.PatternObjects[idx].Entries[Data.TrackPosition] is PatternStart)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Duplicate PatternStart command at Track Position " + Data.TrackPosition + " - The most recent will be used at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Duplicate PatternStart command at Track Position " + Data.TrackPosition + " - The most recent will be used" + At(Expression));
 						}
 
 						Data.PatternObjects[idx].Entries[Data.TrackPosition] = new PatternStart(RailIndex, Interval, Span, Position, Types);
@@ -3389,7 +3157,7 @@ namespace CsvRwRouteParser
 						int idx = -1;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is invalid in " + Command + At(Expression));
 							break;
 						}
 
@@ -3400,7 +3168,7 @@ namespace CsvRwRouteParser
 
 						if (Data.PatternObjects[idx].Entries.ContainsKey(Data.TrackPosition) && Data.PatternObjects[idx].Entries[Data.TrackPosition] is PatternStart)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A PatternStart command has also been issued at Track Position " + Data.TrackPosition + ", but this will be overriden by the more recent PatternEnd command at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A PatternStart command has also been issued at Track Position " + Data.TrackPosition + ", but this will be overriden by the more recent PatternEnd command" + At(Expression));
 						}
 
 						Data.PatternObjects[idx].Entries[Data.TrackPosition] = new PatternEnd();
@@ -3416,46 +3184,46 @@ namespace CsvRwRouteParser
 						int idx = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in " + Command + At(Expression));
 							break;
 						}
 
 						if (idx < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be positive in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be positive in " + Command + At(Expression));
 							break;
 						}
 
 						int idx1 = 0;
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out idx1))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is invalid in " + Command + At(Expression));
 							break;
 						}
 
 						if (idx1 < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is expected to be positive in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is expected to be positive in " + Command + At(Expression));
 							break;
 						}
 
 						int initialSetting = idx;
 						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out initialSetting))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Initial setting for Switch is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Initial setting for Switch is invalid in " + Command + At(Expression));
 							break;
 						}
 
 						if (initialSetting < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Initial setting for Switch is expected to be positive in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Initial setting for Switch is expected to be positive in " + Command + At(Expression));
 							initialSetting = idx;
 						}
 
 						bool springReturn = Plugin.CurrentOptions.Derailments;
 						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !bool.TryParse(Arguments[3], out springReturn))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Spring return setting for Switch is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Spring return setting for Switch is invalid in " + Command + At(Expression));
 						}
 
 						string switchName = string.Empty;
@@ -3559,26 +3327,26 @@ namespace CsvRwRouteParser
 					int idx = 0;
 					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in " + Command + At(Expression));
 						break;
 					}
 
 					if (idx < 0)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be positive in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be positive in " + Command + At(Expression));
 						break;
 					}
 
 					int idx1 = 0;
 					if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out idx1))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is invalid in " + Command + At(Expression));
 						break;
 					}
 					
 					if (idx1 < 0)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is expected to be positive in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is expected to be positive in " + Command + At(Expression));
 						break;
 					}
 
@@ -3632,27 +3400,27 @@ namespace CsvRwRouteParser
 					int railIndex = -1;
 					double limit = 0.0;
 					int direction = 0, cource = 0;
-					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex) || railIndex == -1)
+					if ((Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex)) || railIndex == -1)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailLimit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailLimit" + At(Expression));
 						break;
 					}
 
 					if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out limit))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Limit is invalid in Track.RailLimit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Limit is invalid in Track.RailLimit" + At(Expression));
 						break;
 					}
 
 					if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out direction))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Direction is invalid in Track.Limit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Direction is invalid in Track.RailLimit" + At(Expression));
 						direction = 0;
 					}
 
 					if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[3], out cource))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Cource is invalid in Track.Limit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Course is invalid in Track.RailLimit" + At(Expression));
 						cource = 0;
 					}
 
@@ -3667,21 +3435,21 @@ namespace CsvRwRouteParser
 					if (!PreviewOnly)
 					{
 						int railIndex = -1;
-						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex) || railIndex == -1)
+						if ((Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex)) || railIndex == -1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailBuffer at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailBuffer" + At(Expression));
 							break;
 						}
 
 						int affectsAI = 0;
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out affectsAI))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Limit is invalid in Track.RailBuffer at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Limit is invalid in Track.RailBuffer" + At(Expression));
 						}
 
 						if (affectsAI != 0 && affectsAI != 1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "AffectsAI is invalid in Track.RailBuffer at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "AffectsAI is invalid in Track.RailBuffer" + At(Expression));
 							affectsAI = 0;
 						}
 
@@ -3694,15 +3462,15 @@ namespace CsvRwRouteParser
 					double acc = 2.0;
 					int railIndex = -1;
 
-					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex) || railIndex == -1)
+					if ((Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex)) || railIndex == -1)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailAccuracy at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailAccuracy" + At(Expression));
 						break;
 					}
 
 					if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out acc))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Command + At(Expression));
 						acc = 2.0;
 					}
 					
@@ -3714,7 +3482,7 @@ namespace CsvRwRouteParser
 					{
 						acc = 4.0;
 					}
-					Data.Blocks[BlockIndex].Rails[RailIndex].Accuracy = acc;
+					Data.Blocks[BlockIndex].Rails[railIndex].Accuracy = acc;
 				}
 					break;
 				case TrackCommand.RailAdhesion:
@@ -3723,21 +3491,21 @@ namespace CsvRwRouteParser
 					int railIndex = -1;
 
 
-					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex) || railIndex == -1)
+					if ((Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex)) || railIndex == -1)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailAccuracy at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailAdhesion" + At(Expression));
 						break;
 					}
 
 					if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out a))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Command + At(Expression));
 						a = 100;
 					}
 
 					if (a < 0.0)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is expected to be non-negative in " + Command + At(Expression));
 						a = 100.0;
 					}
 
@@ -3751,13 +3519,13 @@ namespace CsvRwRouteParser
 							int idx = 0;
 							if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.PowerSupply at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.PowerSupply" + At(Expression));
 								idx = 0;
 							}
 
 							if (idx < 0)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be a non-negative integer in Track.PowerSupply at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be a non-negative integer in Track.PowerSupply" + At(Expression));
 								idx = 0;
 							}
 
@@ -3791,7 +3559,7 @@ namespace CsvRwRouteParser
 										amps = 3000;
 										break;
 									default:
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid type in Track.PowerSupply at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid type in Track.PowerSupply" + At(Expression));
 										break;
 								}
 							}
@@ -3809,29 +3577,29 @@ namespace CsvRwRouteParser
 										voltageType = PowerSupplyVoltageTypes.DC;
 										break;
 									default:
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid voltage type in Track.PowerSupply at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid voltage type in Track.PowerSupply" + At(Expression));
 										break;
 								}
 							}
 
-							if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out voltage))
+							if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out voltage))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Voltage is invalid in Track.PowerSupply at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Voltage is invalid in Track.PowerSupply" + At(Expression));
 							}
 
-							if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out amps))
+							if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out amps))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Amperage is invalid in Track.PowerSupply at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Amperage is invalid in Track.PowerSupply" + At(Expression));
 							}
 
-							if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out contactHeight))
+							if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out contactHeight))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Contact height is invalid in Track.PowerSupply at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Contact height is invalid in Track.PowerSupply" + At(Expression));
 							}
 
 							if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || !Data.Blocks[BlockIndex].Rails[idx].RailStarted)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.PowerSupply at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.PowerSupply" + At(Expression));
 							}
 
 							
@@ -3850,13 +3618,13 @@ namespace CsvRwRouteParser
 							int idx = 0;
 							if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.PowerSupplyEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.PowerSupplyEnd" + At(Expression));
 								idx = 0;
 							}
 
 							if (idx < 0)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be a non-negative integer in Track.PowerSupplyEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be a non-negative integer in Track.PowerSupplyEnd" + At(Expression));
 								idx = 0;
 							}
 
@@ -3878,7 +3646,7 @@ namespace CsvRwRouteParser
 										type = PowerSupplyTypes.FourthRail;
 										break;
 									default:
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid type in Track.PowerSupplyEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid type in Track.PowerSupplyEnd" + At(Expression));
 										break;
 								}
 							}
@@ -3896,7 +3664,7 @@ namespace CsvRwRouteParser
 						int idx = 0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx) || idx < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailSoundIndex is invalid in Hmm.RailSound at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailSoundIndex is invalid in Hmm.RailSound" + At(Expression));
 							break;
 						}
 
@@ -3905,7 +3673,7 @@ namespace CsvRwRouteParser
 					break;
 				case TrackCommand.CurveTransition:
 				case TrackCommand.PitchTransition:
-					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Hmmsim: Command " + Command + " is not currently implemented at Line "+ Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Hmmsim: Command " + Command + " is not currently implemented" + At(Expression));
 					Data.SetHmmsimProperties();
 					break;
 			}

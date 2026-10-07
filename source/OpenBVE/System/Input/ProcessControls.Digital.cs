@@ -954,7 +954,7 @@ namespace OpenBve
 						break;
 					case Translations.Command.MiscTimeFactor:
 						// time factor
-						if (TrainManager.PlayerTrain.Plugin != null && !TrainManager.PlayerTrain.Plugin.DisableTimeAcceleration)
+						if (TrainManager.PlayerTrain.Plugin == null || TrainManager.PlayerTrain.Plugin?.DisableTimeAcceleration == false)
 						{
 							if (Interface.CurrentOptions.GameMode == GameMode.Expert)
 							{
@@ -1056,7 +1056,7 @@ namespace OpenBve
 							//If we find an appropriate signal, and the distance to it is less than 500m, announce if screen reader is present
 							//Aspect announce to be triggered via a separate keybind
 							double tPos = nextStation.DefaultTrackPosition - TrainManagerBase.PlayerTrain.FrontCarTrackPosition;
-							string stt = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","route_nextstation"}).Replace("[distance]", $"{tPos:0.0}") + "m".Replace("[name]", nextStation.Name);
+							string stt = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","route_nextstation"}).Replace("[distance]", $"{tPos:0.0}m").Replace("[name]", nextStation.Name);
 							Program.CurrentHost.AddMessage(stt, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, 10.0, null);
 							nextStation.AccessibilityAnnounced = true;
 						}

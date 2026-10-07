@@ -163,6 +163,12 @@
     <Compile Include="System\Logging\BlackBox\BlackBox.Entry.cs" />
     <Compile Include="System\Logging\BlackBox\BlackBox.Power.cs" />
     <Compile Include="Game\Menu\Menu.Controls.cs" />
+    <Compile Include="Game\Menu\Menu.Dispatch.cs">
+      <DependentUpon>Menu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Game\Menu\Menu.Drawing.cs">
+      <DependentUpon>Menu.cs</DependentUpon>
+    </Compile>
     <Compile Include="Game\Menu\Menu.Route.cs" />
     <Compile Include="Game\Menu\Menu.SingleMenu.cs" />
     <Compile Include="Game\MessageManager.cs" />

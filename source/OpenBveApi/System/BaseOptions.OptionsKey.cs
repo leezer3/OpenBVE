@@ -58,6 +58,8 @@ namespace OpenBveApi
 		ShadowBias,
 		ShadowNormalBias,
 		ShadowFilterCascades,
+		ShadowSmooth,
+		ShadowFilterRadius,
 		LightAzimuth,
 
 		LightElevation,
@@ -116,6 +118,10 @@ namespace OpenBveApi
 		Up,
 		Down,
 		Forward,
-		Backward
+		Backward,
+		// Object Viewer ground plane
+		ShowGround,
+		GroundHeight,
+		GroundColor
     }
 }

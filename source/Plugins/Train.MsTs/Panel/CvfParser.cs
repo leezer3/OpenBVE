@@ -537,6 +537,17 @@ namespace Train.MsTs
 							break;
 					}
 					break;
+				case PanelSubject.Accelerometer:
+					switch (subjectUnits)
+					{
+						case Units.Meters_Sec:
+							Code = "acceleration";
+							break;
+					}
+					break;
+				case PanelSubject.RPM:
+					Code = car.Index + " enginerpmindex";
+					break;
 				default:
 					Code = "0";
 					break;

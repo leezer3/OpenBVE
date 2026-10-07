@@ -39,6 +39,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using OpenBveApi.Hosts;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
@@ -830,7 +831,7 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.CabView:
 					// Loads cab view file
-					if (Plugin.PreviewOnly)
+					if (Plugin.PreviewOnly || Plugin.CurrentHost.Application != HostApplication.OpenBve)
 					{
 						break;
 					}
@@ -861,6 +862,10 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.PassengerCabinFile:
+					if (Plugin.PreviewOnly || Plugin.CurrentHost.Application != HostApplication.OpenBve)
+					{
+						break;
+					}
 					// 3D passenger interior
 					string interiorViewFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(fileName), block.ReadString());
 					if (car.CarSections.ContainsKey(CarSectionType.Interior))

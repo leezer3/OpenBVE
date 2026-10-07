@@ -53,7 +53,7 @@ namespace OpenBveApi.FunctionScripting
 		TrainDistanceToCar, TrainTrackDistanceToCar, CurveRadiusOfCar, FrontAxleCurveRadiusOfCar, RearAxleCurveRadiusOfCar, CurveCantOfCar, PitchOfCar, OdometerOfCar, BrightnessOfCar,
 		FrontCouplerIndex, RearCouplerIndex,
 		TrackNumber, TrackNumberIndex,
-		TrainSpeedOfCar, TrainSpeedometerOfCar, TrainAccelerationOfCar, TrainAccelerationMotorOfCar,
+		TrainSpeedOfCar, TrainSpeedometerOfCar, TrainAccelerationOfCar, TrainAccelerationMotorOfCar, TrainMotorDeceleration, TrainMotorDecelerationOfCar, TrainCarMass, TrainCarMassIndex,
 		LeftDoorsIndex, RightDoorsIndex,
 		LeftDoorsTargetIndex, RightDoorsTargetIndex,
 		BrakeMainReservoirOfCar, BrakeEqualizingReservoirOfCar, BrakeBrakePipeOfCar, BrakeBrakeCylinderOfCar, BrakeStraightAirPipeOfCar,

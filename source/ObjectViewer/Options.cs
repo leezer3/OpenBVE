@@ -37,6 +37,15 @@ namespace ObjectViewer
 
 		internal Color32 TextColor;
 
+		/// <summary>Whether the flat ground reference plane is shown</summary>
+		internal bool ShowGround;
+
+		/// <summary>Height of the ground plane in meters</summary>
+		internal double GroundHeight;
+
+		/// <summary>Color of the ground plane</summary>
+		internal Color24 GroundColor;
+
 		/// <summary>Whether the loading screen shows the decode progress bar</summary>
 		internal bool LoadingProgressBar = true;
 
@@ -70,6 +79,9 @@ namespace ObjectViewer
 			VerticalSynchronization = true;
 			FPSLimit = 0;
 			ObjectOptimizationMode = ObjectOptimizationMode.Low;
+			ShowGround = false;
+			GroundHeight = 0.0;
+			GroundColor = new Color24(128, 128, 128);
 			// Shadow settings use synced base defaults
 		}
 
@@ -94,6 +106,9 @@ namespace ObjectViewer
 				Builder.AppendLine("showprogressbar = " + (LoadingProgressBar ? "true" : "false"));
 				Builder.AppendLine("backgroundColor = " + BackgroundColor);
 				Builder.AppendLine("textColor = " + TextColor);
+				Builder.AppendLine("showground = " + (ShowGround ? "true" : "false"));
+				Builder.AppendLine("groundheight = " + GroundHeight.ToString(Culture));
+				Builder.AppendLine("groundcolor = " + GroundColor);
 				Builder.AppendLine();
 				Builder.AppendLine("[quality]");
 				Builder.AppendLine("interpolation = " + Interpolation);
@@ -106,6 +121,9 @@ namespace ObjectViewer
 				Builder.AppendLine("shadowstrength = " + ShadowStrength.ToString("0.00", Culture));
 				Builder.AppendLine("shadowbias = " + ShadowBias.ToString("0.000000", Culture));
 				Builder.AppendLine("shadownormalbias = " + ShadowNormalBias.ToString("0.00", Culture));
+				Builder.AppendLine("shadowfiltercascades = " + (ShadowFilterCascades ? "true" : "false"));
+				Builder.AppendLine("shadowsmooth = " + (ShadowSmooth ? "true" : "false"));
+				Builder.AppendLine("shadowfilterradius = " + ShadowFilterRadius.ToString(Culture));
 				Builder.AppendLine("lightazimuth = " + LightAzimuth.ToString(Culture));
 				Builder.AppendLine("lightelevation = " + LightElevation.ToString(Culture));
 				Builder.AppendLine();
@@ -134,9 +152,17 @@ namespace ObjectViewer
 			}
 		}
 
-		private static Key ResetIfUnknown(Key key, Key defaultKey)
+		/// <summary>Reads a camera key: Disabled stays disabled, Unknown / missing / invalid fall back to default</summary>
+		private static Key GetCameraKey(Block<OptionsSection, OptionsKey> block, OptionsKey option, Key fallback)
 		{
-			return key == Key.Unknown ? defaultKey : key;
+			if (!block.GetValue(option, out string raw))
+				return fallback;
+			raw = raw.Trim();
+			if (Enum.TryParse(raw, true, out Key key) && key != Key.Unknown && key != Key.LastKey)
+				return key;
+			if (!raw.Equals("unknown", StringComparison.OrdinalIgnoreCase))
+				Program.CurrentHost.AddMessage(OpenBveApi.Interface.MessageType.Error, false, "Value " + raw + " is invalid in " + option + " in " + block.Key + " in file " + block.FileName);
+			return fallback;
 		}
 
 		internal static void LoadOptions()
@@ -200,6 +226,10 @@ namespace ObjectViewer
 							block.GetValue(OptionsKey.ShowProgressBar, out Interface.CurrentOptions.LoadingProgressBar);
 							block.GetColor24(OptionsKey.BackgroundColor, out Interface.CurrentOptions.BackgroundColor);
 							block.GetColor32(OptionsKey.TextColor, out Interface.CurrentOptions.TextColor);
+							block.GetValue(OptionsKey.ShowGround, out Interface.CurrentOptions.ShowGround);
+							block.TryGetValue(OptionsKey.GroundHeight, ref Interface.CurrentOptions.GroundHeight, NumberRange.Any);
+							Interface.CurrentOptions.GroundHeight = Math.Max(-100.0, Math.Min(100.0, Interface.CurrentOptions.GroundHeight));
+							block.GetColor24(OptionsKey.GroundColor, out Interface.CurrentOptions.GroundColor);
 							break;
 						case OptionsSection.Quality:
 							block.GetEnumValue(OptionsKey.Interpolation, out Interface.CurrentOptions.Interpolation);
@@ -212,6 +242,19 @@ namespace ObjectViewer
 							block.TryGetValue(OptionsKey.ShadowStrength, ref Interface.CurrentOptions.ShadowStrength, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.ShadowBias, ref Interface.CurrentOptions.ShadowBias);
 							block.TryGetValue(OptionsKey.ShadowNormalBias, ref Interface.CurrentOptions.ShadowNormalBias);
+							if (Interface.CurrentOptions.ShadowNormalBias < 0.0) Interface.CurrentOptions.ShadowNormalBias = 0.0;
+							if (Interface.CurrentOptions.ShadowNormalBias > 4.0) Interface.CurrentOptions.ShadowNormalBias = 4.0;
+							if (block.GetValue(OptionsKey.ShadowFilterCascades, out string sfcVal))
+							{
+								Interface.CurrentOptions.ShadowFilterCascades = sfcVal.Trim().Equals("true", StringComparison.OrdinalIgnoreCase) || sfcVal.Trim() == "1";
+							}
+							if (block.GetValue(OptionsKey.ShadowSmooth, out string smoothVal))
+							{
+								Interface.CurrentOptions.ShadowSmooth = smoothVal.Trim().Equals("true", StringComparison.OrdinalIgnoreCase) || smoothVal.Trim() == "1";
+							}
+							block.TryGetValue(OptionsKey.ShadowFilterRadius, ref Interface.CurrentOptions.ShadowFilterRadius);
+							if (Interface.CurrentOptions.ShadowFilterRadius < 0.5) Interface.CurrentOptions.ShadowFilterRadius = 0.5;
+							if (Interface.CurrentOptions.ShadowFilterRadius > 3.0) Interface.CurrentOptions.ShadowFilterRadius = 3.0;
 							block.TryGetValue(OptionsKey.LightAzimuth, ref Interface.CurrentOptions.LightAzimuth);
 							block.TryGetValue(OptionsKey.LightElevation, ref Interface.CurrentOptions.LightElevation);
 							break;
@@ -232,19 +275,12 @@ namespace ObjectViewer
 							}
 							break;
 						case OptionsSection.Keys:
-							block.GetEnumValue(OptionsKey.Left, out Interface.CurrentOptions.CameraMoveLeft);
-							block.GetEnumValue(OptionsKey.Right, out Interface.CurrentOptions.CameraMoveRight);
-							block.GetEnumValue(OptionsKey.Up, out Interface.CurrentOptions.CameraMoveUp);
-							block.GetEnumValue(OptionsKey.Down, out Interface.CurrentOptions.CameraMoveDown);
-							block.GetEnumValue(OptionsKey.Forward, out Interface.CurrentOptions.CameraMoveForward);
-							block.GetEnumValue(OptionsKey.Backward, out Interface.CurrentOptions.CameraMoveBackward);
-							// Reset any invalid or unknown camera keys back to their defaults
-							Interface.CurrentOptions.CameraMoveLeft = ResetIfUnknown(Interface.CurrentOptions.CameraMoveLeft, Key.A);
-							Interface.CurrentOptions.CameraMoveRight = ResetIfUnknown(Interface.CurrentOptions.CameraMoveRight, Key.D);
-							Interface.CurrentOptions.CameraMoveUp = ResetIfUnknown(Interface.CurrentOptions.CameraMoveUp, Key.W);
-							Interface.CurrentOptions.CameraMoveDown = ResetIfUnknown(Interface.CurrentOptions.CameraMoveDown, Key.S);
-							Interface.CurrentOptions.CameraMoveForward = ResetIfUnknown(Interface.CurrentOptions.CameraMoveForward, Key.Q);
-							Interface.CurrentOptions.CameraMoveBackward = ResetIfUnknown(Interface.CurrentOptions.CameraMoveBackward, Key.E);
+							Interface.CurrentOptions.CameraMoveLeft = GetCameraKey(block, OptionsKey.Left, Key.A);
+							Interface.CurrentOptions.CameraMoveRight = GetCameraKey(block, OptionsKey.Right, Key.D);
+							Interface.CurrentOptions.CameraMoveUp = GetCameraKey(block, OptionsKey.Up, Key.W);
+							Interface.CurrentOptions.CameraMoveDown = GetCameraKey(block, OptionsKey.Down, Key.S);
+							Interface.CurrentOptions.CameraMoveForward = GetCameraKey(block, OptionsKey.Forward, Key.Q);
+							Interface.CurrentOptions.CameraMoveBackward = GetCameraKey(block, OptionsKey.Backward, Key.E);
 							break;
 
 					}

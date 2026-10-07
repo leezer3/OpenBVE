@@ -51,7 +51,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Hacks\Hacks.cs" />
     <Compile Include="Plugin.cs" />

@@ -560,6 +560,10 @@ namespace OpenBve {
 			for (int j = 0; j < Translations.TranslatedKeys.Count; j++)
 			{
 				Key k = Translations.TranslatedKeys.ElementAt(j).Key;
+				if (k == Key.Disabled || k == Key.Unknown)
+				{
+					continue;
+				}
 				if (kbState.IsKeyDown((OpenTK.Input.Key)k))
 				{
 					int i = listviewControls.SelectedIndices[0];
