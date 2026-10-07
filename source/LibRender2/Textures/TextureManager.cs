@@ -205,6 +205,8 @@ namespace LibRender2.Textures
 					RegisteredTextureLookup[path] = list;
 				}
 				list.Add(handle);
+				// Files re-decode from disk, so the GL copy may be dropped after 20s unused
+				handle.AvailableToUnload = true;
 			}
 			return true;
 		}
@@ -520,6 +522,8 @@ namespace LibRender2.Textures
 				int idx = GetNextFreeTexture();
 				RegisteredTextures[idx] = new Texture(bitmap, parameters);
 				RegisteredTexturesCount++;
+				// Bitmaps re-decode from the retained image, so the GL copy may be dropped when unused
+				RegisteredTextures[idx].AvailableToUnload = true;
 				if (bitmap != null && ParametersShareable(parameters) && TryHashBitmap(bitmap, out ulong hash))
 				{
 					AddBitmapTexture(bitmap, parameters, hash, RegisteredTextures[idx]);
@@ -544,6 +548,7 @@ namespace LibRender2.Textures
 				int idx = GetNextFreeTexture();
 				RegisteredTextures[idx] = new Texture(bitmap);
 				RegisteredTexturesCount++;
+				RegisteredTextures[idx].AvailableToUnload = true;
 				if (bitmap != null && TryHashBitmap(bitmap, out ulong hash))
 				{
 					AddBitmapTexture(bitmap, null, hash, RegisteredTextures[idx]);
@@ -568,6 +573,11 @@ namespace LibRender2.Textures
 			bool result = LoadTextureInternal(ref handle, wrap, currentTicks, Interpolation, AnisotropicFilteringLevel);
 			UploadCount++;
 			UploadMs += uploadTimer.ElapsedMilliseconds;
+			if (result && handle != null)
+			{
+				// Static hits never stamped this, so everything looked 20s stale to the unloader
+				handle.LastAccess = currentTicks;
+			}
 			return result;
 		}
 
@@ -1188,6 +1198,15 @@ namespace LibRender2.Textures
 			// been cleared by UnloadAllTextures, which previously produced hollow handles with
 			// a null origin here and killed animated GIFs after a reload / filtering change.)
 			handle = new Texture(texture.Origin);
+			// The old handle's frames are orphaned now: drop the cached decode so it can be freed.
+			// Next use re-decodes from disk through the new hollow handle.
+			if (texture.Origin != null)
+			{
+				lock (TextureLookupLock)
+				{
+					animatedTextures.Remove(texture.Origin);
+				}
+			}
 			}
 			else
 			{
