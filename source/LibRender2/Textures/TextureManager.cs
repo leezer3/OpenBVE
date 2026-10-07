@@ -250,6 +250,13 @@ namespace LibRender2.Textures
 		private const ulong FnvOffsetBasis = 14695981039346656037ul;
 		private const ulong FnvPrime = 1099511628211ul;
 
+		// Only mipmap min filters can sample below level 0, so skip generating the chain otherwise (~1/3 VRAM saved).
+		// Aniso also needs the chain: without mipmaps drivers may ignore the anisotropy setting entirely.
+		private static bool UsesMipmaps(InterpolationMode mode)
+		{
+			return mode != InterpolationMode.NearestNeighbor && mode != InterpolationMode.Bilinear;
+		}
+
 		private static ulong HashBytes(byte[] data, int offset, int count)
 		{
 			ulong hash = FnvOffsetBasis;
@@ -697,7 +704,7 @@ namespace LibRender2.Textures
 									GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.Width, texture.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, pooled);
 								}
 							}
-							GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+							if (UsesMipmaps(Interpolation)) GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 						}
 						else
 						{
@@ -717,7 +724,7 @@ namespace LibRender2.Textures
 								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
 								GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.Width, texture.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, subBytes);
 							}
-							GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+							if (UsesMipmaps(Interpolation)) GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 						}
 						// Keep the stable handle in sync without swapping identity: the handle keeps
 						// its origin so the animated cache keeps hitting every tick (swapping to the
@@ -1083,7 +1090,7 @@ namespace LibRender2.Textures
 						}
 						
 					}
-					GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+					if (UsesMipmaps(Interpolation)) GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
                     handle.OpenGlTextures[(int)wrap].Valid = true;
 					if (texture.MultipleFrames)
 					{
