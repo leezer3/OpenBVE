@@ -509,165 +509,74 @@ namespace Route.Bve5
 			{
 				return;
 			}
-
-			List<Repeater> RepeaterList = new List<Repeater>();
-
+			
 			foreach (Statement Statement in ParseData.Statements)
 			{
-				if (Statement.ElementName != MapElementName.Repeater)
-				{
-					continue;
-				}
+					double lastDistance = -1;
+					bool possibleEnd = false;
 
-				if (!RepeaterList.Exists(Repeater => Repeater.Key.Equals(Statement.Key, StringComparison.InvariantCultureIgnoreCase)))
-				{
-					RepeaterList.Add(new Repeater(Statement.Key));
-				}
-			}
-
-			foreach (Repeater Repeater in RepeaterList)
-			{
-				double lastDistance = -1;
-				bool possibleEnd = false;
-				foreach (Statement Statement in ParseData.Statements)
-				{
-					if (Statement.ElementName != MapElementName.Repeater || !Statement.Key.Equals(Repeater.Key, StringComparison.InvariantCultureIgnoreCase))
+					if (Statement.ElementName != MapElementName.Repeater)
 					{
 						continue;
+					}
+
+					if (!RouteData.Repeaters.ContainsKey(Statement.Key))
+					{
+						RouteData.Repeaters.Add(Statement.Key, new NewRepeater());
 					}
 
 					switch (Statement.FunctionName)
 					{
 						case MapFunctionName.Begin:
 						case MapFunctionName.Begin0:
+							dynamic d = Statement; // HACK: as we don't know which type
+							string TrackKey = Statement.GetArgumentValueAsString(ArgumentName.TrackKey);
+							if (string.IsNullOrEmpty(TrackKey))
 							{
-								if (Repeater.StartRefreshed)
-								{
-									Repeater.EndingDistance = Statement.Distance;
-									PutRepeater(RouteData, Repeater);
-									Repeater.StartRefreshed = false;
-								}
-
-								dynamic d = Statement; // HACK: as we don't know which type
-								string TrackKey = Statement.GetArgumentValueAsString(ArgumentName.TrackKey);
-								if (string.IsNullOrEmpty(TrackKey))
-								{
-									TrackKey = "0";
-								}
-
-								if (!RouteData.TrackKeyList.Contains(TrackKey, StringComparer.OrdinalIgnoreCase))
-								{
-									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Attempted to place Repeater " + Statement.Key + " on the non-existent track " + TrackKey + " at track position " + Statement.Distance + "m");
-									TrackKey = "0";
-								}
-								double RX = Statement.GetArgumentValueAsDouble(ArgumentName.RX);
-								double RY = Statement.GetArgumentValueAsDouble(ArgumentName.RY);
-								double RZ = Statement.GetArgumentValueAsDouble(ArgumentName.RZ);
-								int Tilt = Statement.GetArgumentValueAsInt(ArgumentName.Tilt);
-								double Span = Statement.GetArgumentValueAsDouble(ArgumentName.Span);
-								double Interval = Statement.GetArgumentValueAsDouble(ArgumentName.Interval);
-
-								if (Tilt > 3)
-								{
-									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Invalid ObjectTransformType for Repeater " + Statement.Key + " on track " + TrackKey + " at track position " + Statement.Distance + "m");
-									Tilt = 0;
-								}
-
-								Repeater.StartingDistance = Statement.Distance;
-								Repeater.TrackKey = Convert.ToString(TrackKey);
-								Repeater.Position = new Vector3(Statement.GetArgumentValueAsDouble(ArgumentName.X), Statement.GetArgumentValueAsDouble(ArgumentName.Y), Statement.GetArgumentValueAsDouble(ArgumentName.Z));
-								Repeater.Yaw = RY.ToRadians();
-								Repeater.Pitch = -RX.ToRadians();
-								Repeater.Roll = RZtoRoll(RY, RZ).ToRadians();
-								Repeater.Type = (ObjectTransformType)Tilt;
-								Repeater.Span = Span;
-								Repeater.Interval = Interval;
-								Repeater.StartRefreshed = true;
-
-								
-								Repeater.ObjectKeys = new string[d.StructureKeys.Count];
-								HashSet<string> missingObjectKeys = new HashSet<string>();
-								d.StructureKeys.CopyTo(Repeater.ObjectKeys, 0);
-								for (int i = 0; i < Repeater.ObjectKeys.Length; i++)
-								{
-									// empty string == no object placed
-									// also only add the error once per position (even if the object appears multiple times in the cycle)
-									if (!RouteData.Objects.ContainsKey(Repeater.ObjectKeys[i]) && missingObjectKeys.Add(Repeater.ObjectKeys[i]) && !string.IsNullOrEmpty(Repeater.ObjectKeys[i]))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Structure " + Repeater.ObjectKeys[i] + " was not found in Repeater " + Statement.Key + " on track " + TrackKey + " at track position " + Statement.Distance + "m");
-									}
-								}
-								possibleEnd = false;
+								TrackKey = "0";
 							}
-							break;
+
+							if (!RouteData.TrackKeyList.Contains(TrackKey, StringComparer.OrdinalIgnoreCase))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Attempted to place Repeater " + Statement.Key + " on the non-existent track " + TrackKey + " at track position " + Statement.Distance + "m");
+								TrackKey = "0";
+							}
+
+							double RX = Statement.GetArgumentValueAsDouble(ArgumentName.RX);
+							double RY = Statement.GetArgumentValueAsDouble(ArgumentName.RY);
+							double RZ = Statement.GetArgumentValueAsDouble(ArgumentName.RZ);
+							int Tilt = Statement.GetArgumentValueAsInt(ArgumentName.Tilt);
+							double Span = Statement.GetArgumentValueAsDouble(ArgumentName.Span);
+							double Interval = Statement.GetArgumentValueAsDouble(ArgumentName.Interval);
+
+							if (Tilt > 3)
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BVE5: Invalid ObjectTransformType for Repeater " + Statement.Key + " on track " + TrackKey + " at track position " + Statement.Distance + "m");
+								Tilt = 0;
+							}
+
+							Vector3 position = new Vector3(Statement.GetArgumentValueAsDouble(ArgumentName.X), Statement.GetArgumentValueAsDouble(ArgumentName.Y), Statement.GetArgumentValueAsDouble(ArgumentName.Z));
+
+							string[] objectKeys = new string[d.StructureKeys.Count];
+							HashSet<string> missingObjectKeys = new HashSet<string>();
+							d.StructureKeys.CopyTo(objectKeys, 0);
+							for (int i = 0; i < objectKeys.Length; i++)
+							{
+								// empty string == no object placed
+								// also only add the error once per position (even if the object appears multiple times in the cycle)
+								if (!RouteData.Objects.ContainsKey(objectKeys[i]) &&
+								    missingObjectKeys.Add(objectKeys[i]) && !string.IsNullOrEmpty(objectKeys[i]))
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BVE5: Structure " + objectKeys[i] + " was not found in Repeater " + Statement.Key + " on track " + TrackKey + " at track position " + Statement.Distance + "m");
+								}
+							}
+							RepeaterStart repeaterStart = new RepeaterStart(TrackKey, objectKeys, Interval, Span, position, RY.ToRadians(), -RX.ToRadians(), RZtoRoll(RY, RZ).ToRadians(), (ObjectTransformType)Tilt);
+							RouteData.Repeaters[Statement.Key].Entries[Statement.Distance] = repeaterStart;
+						break;
 						case MapFunctionName.End:
-							possibleEnd = true;
+							RouteData.Repeaters[Statement.Key].Entries[Statement.Distance] = new RepeaterEnd();
 							break;
 					}
-
-					/*
-					 * HACK: Commands may no longer be in order after sort by TPos (in BVE5_Parsing), but we can
-					 * work around that by triggering the end on the next track position instead
-					 */
-
-					if (possibleEnd && Repeater.StartRefreshed)
-					{
-						Repeater.EndingDistance = Statement.Distance;
-						PutRepeater(RouteData, Repeater);
-						Repeater.StartRefreshed = false;
-						possibleEnd = false;
-					}
-
-					lastDistance = Statement.Distance;
-
-				}
-
-				// Hack:
-				if (Repeater.StartRefreshed)
-				{
-					double EndTrackPosition = Plugin.CurrentRoute.Stations.Last().Stops.First().TrackPosition + Plugin.CurrentOptions.ViewingDistance;
-					Repeater.EndingDistance = EndTrackPosition;
-					PutRepeater(RouteData, Repeater);
-					Repeater.StartRefreshed = false;
-				}
-			}
-		}
-
-		private static void PutRepeater(RouteData RouteData, Repeater Repeater)
-		{
-			if (Repeater.Interval <= 0.0)
-			{
-				return;
-			}
-
-			string TrackKey = Repeater.TrackKey;
-
-			int LoopCount = 0;
-
-			for (double i = Repeater.StartingDistance; i < Repeater.EndingDistance; i += Repeater.Interval)
-			{
-				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(i);
-
-				if (!RouteData.Blocks[BlockIndex].FreeObjects.ContainsKey(TrackKey))
-				{
-					RouteData.Blocks[BlockIndex].FreeObjects.Add(TrackKey, new List<FreeObj>());
-				}
-
-				/*
-				 * The relationship between span and interval is an absolute pain in the neck
-				 *
-				 * This seems to get stuff on Chuo Rapid Line looking OK in terms of the gradients
-				 */
-				RouteData.Blocks[BlockIndex].FreeObjects[TrackKey].Add(new FreeObj(i, Repeater.ObjectKeys[LoopCount], Repeater.Position, Repeater.Yaw, Repeater.Pitch, Repeater.Roll, Repeater.Type, Math.Max(Repeater.Interval, Repeater.Span)));
-
-				if (LoopCount >= Repeater.ObjectKeys.Length - 1)
-				{
-					LoopCount = 0;
-				}
-				else
-				{
-					LoopCount++;
-				}
 			}
 		}
 

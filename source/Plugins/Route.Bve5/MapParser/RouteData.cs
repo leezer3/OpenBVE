@@ -40,12 +40,15 @@ namespace Route.Bve5
 		internal readonly Bve5ScenarioParser.SoundDictionary Sounds;
 		internal readonly Bve5ScenarioParser.SoundDictionary Sound3Ds;
 
+		internal Dictionary<string, NewRepeater> Repeaters;
+
 		internal RouteData(HashSet<string> trackKeys)
 		{
 			sortedBlocks = new SortedList<double, Bve5ScenarioParser.Block>();
 			TrackKeyList = trackKeys.ToList();
 			Sounds = new Bve5ScenarioParser.SoundDictionary();
 			Sound3Ds = new Bve5ScenarioParser.SoundDictionary();
+			Repeaters = new Dictionary<string, NewRepeater>(StringComparer.OrdinalIgnoreCase);
 		}
 
 		//Set units of speed initially to km/h

@@ -23,46 +23,145 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
+using OpenBveApi.Routes;
+using OpenBveApi.World;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using static Route.Bve5.Bve5ScenarioParser;
 
 namespace Route.Bve5
 {
-	internal class Repeater
+	internal class NewRepeater
 	{
-		/// <summary>The key used to refer to the repeater</summary>
-		internal readonly string Key;
-		/// <summary>They key for the controlling track</summary>
-		internal string TrackKey;
-		/// <summary>The current starting distance</summary>
-		internal double StartingDistance;
-		/// <summary>Whether the start has been refreshed in this block</summary>
-		/// <remarks>e.g. command has been issued</remarks>
-		internal bool StartRefreshed;
-		/// <summary>The current ending distance for the repeater</summary>
-		internal double EndingDistance;
-		/// <summary>The repetition placement interval</summary>
-		internal double Interval;
-		/// <summary>The current set of object keys in use</summary>
-		internal string[] ObjectKeys;
-		/// <summary>The position of the repeater relative to the rail</summary>
-		internal Vector3 Position;
-		/// <summary>The yaw of the object (radians)</summary>
-		internal double Yaw;
-		/// <summary>The pitch of the object (radians)</summary>
-		internal double Pitch;
-		/// <summary>The roll of the object (radians)</summary>
-		internal double Roll;
-		/// <summary>The transform type used when placing the repeater</summary>
-		internal ObjectTransformType Type;
-		/// <summary>The span of the repeater</summary>
-		internal double Span;
+		internal SortedDictionary<double, RepeaterEntry> Entries;
 
-		internal Repeater(string key)
+		internal NewRepeater()
 		{
-			/*
-			 * Note that only the key of the repeater may be set in the constructor.
-			 * All other types may be by design changed at any point by issuing another repeater command
-			 */
-			Key = key;
+			Entries = new SortedDictionary<double, RepeaterEntry>();
+		}
+
+		internal void Create(RouteData RouteData, ObjectDictionary objects, double lastBlock)
+		{
+			TrackFollower tf = new TrackFollower(Plugin.CurrentHost);
+			for (int i = 0; i < Entries.Count; i++)
+			{
+				double tPos = Entries.ElementAt(i).Key;
+				double nextPos = i < Entries.Count - 1 ? Entries.ElementAt(i + 1).Key : lastBlock;
+				if (Entries.TryGetValue(tPos, out RepeaterEntry n))
+				{
+					n.Create(RouteData, objects, tf, tPos, nextPos);
+				}
+			}
 		}
 	}
+
+	internal abstract class RepeaterEntry
+	{
+
+
+		internal virtual void Create(RouteData ParseData, ObjectDictionary objects, TrackFollower tf, double tPos, double nextPos)
+		{
+		}
+	}
+
+	internal class RepeaterStart : RepeaterEntry
+	{
+		internal readonly string[] Types;
+
+		internal readonly double Interval;
+
+		internal readonly double Span;
+
+		internal readonly string RailKey;
+
+		internal int CurrentType;
+
+		internal Vector3 Position;
+
+		internal double Yaw;
+
+		internal double Pitch;
+
+		internal double Roll;
+
+		internal ObjectTransformType Transform;
+
+		internal RepeaterStart(string railKey, string[] types, double interval, double span, Vector3 position, double yaw, double pitch, double roll, ObjectTransformType transform)
+		{
+			RailKey = railKey;
+			Types = types;
+			Interval = interval;
+			Span = span;
+			Position = position;
+			Yaw = yaw;
+			Pitch = pitch;
+			Roll = roll;
+			Transform = transform;
+		}
+
+		internal override void Create(RouteData ParseData, ObjectDictionary objects, TrackFollower tf, double tPos, double nextPos)
+		{
+			tf.TrackIndex = ParseData.TrackKeyList.IndexOf(RailKey, StringComparison.OrdinalIgnoreCase);
+			while (true)
+			{
+				tf.UpdateAbsolute(tPos, true, false);
+				Vector3 startingPos = tf.WorldPosition;
+
+				tf.UpdateRelative(Span, true, false);
+
+				Vector3 nextElementPos = tf.WorldPosition;
+				double dist = Math.Abs(Math.Sqrt(((startingPos.X - nextElementPos.X) * (startingPos.X - nextElementPos.X)) + ((startingPos.Y - nextElementPos.Y) * (startingPos.Y - nextElementPos.Y))));
+				if (dist > Span * 2)
+				{
+					nextElementPos = startingPos;
+				}
+
+				Vector3 p = new Vector3(startingPos);
+				// find direction, up and side vectors
+				Vector3 d = nextElementPos == startingPos ? nextElementPos : new Vector3(nextElementPos - startingPos);
+				double t = d.Magnitude();
+				d *= t;
+				t = 1.0 / Math.Sqrt(d.X * d.X + d.Z * d.Z);
+				double ex = d.X * t;
+				double ez = d.Z * t;
+				Vector3 s = new Vector3(ez, 0.0, -ex);
+				Vector3 u = Vector3.Cross(d, s);
+
+				if (Types.Length == 0 || !objects.ContainsKey(Types[CurrentType]))
+				{
+					return;
+				}
+
+				UnifiedObject currentObject = objects[Types[CurrentType]];
+
+				Transformation transform = new Transformation(d, u, s);
+				transform = new Transformation(transform, Yaw, Pitch, Roll);
+
+				p += Position.X * transform.X + Position.Y * transform.Y + Position.Z * transform.Z;
+
+				currentObject.CreateObject(p, new Transformation(d, u, s), new ObjectCreationParameters(tPos, tPos + 100));
+
+				CurrentType++;
+				if (CurrentType > Types.Length - 1)
+				{
+					CurrentType = 0;
+				}
+
+				tPos += Interval;
+				if (tPos >= nextPos)
+				{
+					break;
+				}
+			}
+		}
+	}
+
+	internal class RepeaterEnd : RepeaterEntry
+	{
+		// does nothing!
+	}
+
 }
+

@@ -638,6 +638,12 @@ namespace Route.Bve5
 				Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new TrackEndEvent(Plugin.CurrentHost, InterpolateInterval));
 			}
 
+			// insert Repeater (using a TrackFollower)
+			foreach (var repeater in Data.Repeaters)
+			{
+				repeater.Value.Create(Data, Data.Objects, Plugin.CurrentRoute.Tracks[0].Elements[Plugin.CurrentRoute.Tracks[0].Elements.Length - 1].StartingTrackPosition);
+			}
+
 			// cant
 			if (!PreviewOnly)
 			{
