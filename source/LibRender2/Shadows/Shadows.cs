@@ -229,14 +229,15 @@ namespace LibRender2.ShadowMapping
 					}
 				}
 
-				DepthShader.SetModelMatrix(state.ModelMatrix * renderer.Camera.TranslationMatrix);
-				DepthShader.SetTextureMatrix(state.TextureTranslation);
-
+				// Skip faces that can't cast before touching GL
 				var material = face.Object.Prototype.Mesh.Materials[face.Face.Material];
 				if ((material.Flags & MaterialFlags.NoShadow) != 0 || material.BlendMode == MeshMaterialBlendMode.Additive)
 				{
 					continue;
 				}
+
+				DepthShader.SetModelMatrix(state.ModelMatrix * renderer.Camera.TranslationMatrix);
+				DepthShader.SetTextureMatrix(state.TextureTranslation);
 				if (material.DaytimeTexture != null && renderer.currentHost.LoadTexture(ref material.DaytimeTexture, (OpenGlTextureWrapMode)(material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp)))
 				{
 					GL.ActiveTexture(TextureUnit.Texture0);

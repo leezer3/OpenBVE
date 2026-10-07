@@ -299,6 +299,9 @@ namespace LibRender2.Shaders
 		/// <param name="TextureMatrix"></param>
 		public void SetCurrentTextureMatrix(Matrix4D TextureMatrix)
 		{
+			if (hasLastTextureMatrix && lastTextureMatrix == TextureMatrix) return;
+			lastTextureMatrix = TextureMatrix;
+			hasLastTextureMatrix = true;
 			Matrix4 matrix = ConvertToMatrix4(TextureMatrix);
 			GL.ProgramUniformMatrix4(Handle, UniformLayout.CurrentTextureMatrix, false, ref matrix);
 		}
@@ -359,11 +362,15 @@ namespace LibRender2.Shaders
 
 		public void SetMaterialShininess(float materialShininess)
 		{
+			if (materialShininess == lastShininess) return;
+			lastShininess = materialShininess;
 			GL.ProgramUniform1(Handle, UniformLayout.MaterialShininess, materialShininess);
 		}
 
 		public void SetMaterialFlags(MaterialFlags Flags)
 		{
+			if ((int)Flags == lastMaterialFlags) return;
+			lastMaterialFlags = (int)Flags;
 			GL.ProgramUniform1(Handle, UniformLayout.MaterialFlags, (int)Flags);
 		}
 
@@ -400,20 +407,25 @@ namespace LibRender2.Shaders
 			GL.ProgramUniform1(Handle, UniformLayout.Texture, textureUnit);
 		}
 
+		// Last values sent to GL, so repeat faces skip the call
 		private float lastBrightness;
+		private float lastOpacity = float.NaN;
+		private int lastMaterialFlags = -1;
+		private float lastShininess = float.NaN;
+		private OpenBveApi.Math.Matrix4D lastTextureMatrix;
+		private bool hasLastTextureMatrix;
 
 		public void SetBrightness(float brightness)
 		{
-			if(brightness == lastBrightness)
-			{
-				return;
-			}
+			if (brightness == lastBrightness) return;
 			lastBrightness = brightness;
 			GL.ProgramUniform1(Handle, UniformLayout.Brightness, brightness);
 		}
 
 		public void SetOpacity(float opacity)
 		{
+			if (opacity == lastOpacity) return;
+			lastOpacity = opacity;
 			GL.ProgramUniform1(Handle, UniformLayout.Opacity, opacity);
 		}
 

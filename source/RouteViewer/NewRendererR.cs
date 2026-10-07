@@ -190,6 +190,7 @@ namespace RouteViewer
 			List<FaceState> opaqueFaces, alphaFaces;
 			lock (VisibleObjects.LockObject)
 			{
+				VisibleObjects.EnsureOpaqueOrder();
 				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
 				alphaFaces = VisibleObjects.GetSortedPolygons();
 			}

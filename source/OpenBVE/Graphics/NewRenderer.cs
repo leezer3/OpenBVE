@@ -40,6 +40,12 @@ namespace OpenBve.Graphics
 		private Overlays overlays;
 		internal Touch Touch;
 
+		// Keep opaque faces around so we only re-copy when visibility changes
+		private readonly List<FaceState> cachedOpaqueFaces = new List<FaceState>();
+		private readonly List<FaceState> cachedOverlayOpaqueFaces = new List<FaceState>();
+		private int cachedOpaqueVersion = -1;
+		private int cachedOverlayOpaqueVersion = -1;
+
 		public override void Initialize()
 		{
 			base.Initialize();
@@ -209,9 +215,22 @@ namespace OpenBve.Graphics
 			List<FaceState> opaqueFaces, alphaFaces, overlayOpaqueFaces, overlayAlphaFaces;
 			lock (VisibleObjects.LockObject)
 			{
-				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
+				VisibleObjects.EnsureOpaqueOrder();
+				if (VisibleObjects.OpaqueVersion != cachedOpaqueVersion)
+				{
+					cachedOpaqueFaces.Clear();
+					cachedOpaqueFaces.AddRange(VisibleObjects.OpaqueFaces);
+					cachedOpaqueVersion = VisibleObjects.OpaqueVersion;
+				}
+				if (VisibleObjects.OverlayOpaqueVersion != cachedOverlayOpaqueVersion)
+				{
+					cachedOverlayOpaqueFaces.Clear();
+					cachedOverlayOpaqueFaces.AddRange(VisibleObjects.OverlayOpaqueFaces);
+					cachedOverlayOpaqueVersion = VisibleObjects.OverlayOpaqueVersion;
+				}
+				opaqueFaces = cachedOpaqueFaces;
+				overlayOpaqueFaces = cachedOverlayOpaqueFaces;
 				alphaFaces = VisibleObjects.GetSortedPolygons();
-				overlayOpaqueFaces = VisibleObjects.OverlayOpaqueFaces.ToList();
 				overlayAlphaFaces = VisibleObjects.GetSortedPolygons(true);
 			}
 
