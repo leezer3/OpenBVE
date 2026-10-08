@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Bve5_Parsing.MapGrammar;
 using Bve5_Parsing.MapGrammar.EvaluateData;
@@ -479,17 +480,32 @@ namespace Route.Bve5
 
 		private static void ConvertTrack(MapData ParseData, RouteData RouteData)
 		{
+			// Bucket track statements once: the old code re-scanned all N statements per rail key.
+			Dictionary<string, List<Statement>> trackStatementsByKey = new Dictionary<string, List<Statement>>(StringComparer.InvariantCultureIgnoreCase);
+			foreach (Statement TrackStatement in ParseData.Statements)
+			{
+				if (TrackStatement.ElementName != MapElementName.Track)
+				{
+					continue;
+				}
+				if (!trackStatementsByKey.TryGetValue(TrackStatement.Key, out List<Statement> keyStatements))
+				{
+					keyStatements = new List<Statement>();
+					trackStatementsByKey.Add(TrackStatement.Key, keyStatements);
+				}
+				keyStatements.Add(TrackStatement);
+			}
 
 			// Own track is excluded.
 			for (int railIndex = 1; railIndex < RouteData.TrackKeyList.Count; railIndex++)
 			{
 				string railKey = RouteData.TrackKeyList[railIndex];
-				foreach (Statement Statement in ParseData.Statements)
+				if (!trackStatementsByKey.TryGetValue(railKey, out List<Statement> railStatements))
 				{
-					if (Statement.ElementName != MapElementName.Track || !Statement.Key.Equals(RouteData.TrackKeyList[railIndex], StringComparison.InvariantCultureIgnoreCase))
-					{
-						continue;
-					}
+					railStatements = new List<Statement>();
+				}
+				foreach (Statement Statement in railStatements)
+				{
 
 					dynamic d = Statement;
 
