@@ -39,6 +39,7 @@ using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Motor;
 using TrainManager.Power;
+using TrainManager.SteamEngine;
 using TrainManager.Trains;
 
 namespace Train.MsTs

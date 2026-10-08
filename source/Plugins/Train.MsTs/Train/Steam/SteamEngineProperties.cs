@@ -1,6 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
-//
-//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
+﻿//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -22,36 +20,32 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using TrainManager.Car;
+using OpenBveApi.Motor;
+using System;
 using TrainManager.Motor;
+using TrainManager.SteamEngine;
 
-namespace TrainManager.SteamEngine
+namespace Train.MsTs
 {
-	public class Tender : TractionModel
+	internal class SteamEngineProperties
 	{
-		/// <summary>The maximum water level</summary>
-		public readonly double MaxWaterLevel;
-		/// <summary>The current water level</summary>
-		public double WaterLevel;
+		internal double MaxFireMass;
+		internal double IdealFireMass;
+		internal double StartingFireTemp;
+		internal double StartingFireMass;
+		internal bool cylinderCocksAutomatic = false;
+		internal InjectorProperties[] Injectors = new InjectorProperties[2];
+		internal BoilerProperties Boiler = new BoilerProperties();
+		internal CylinderProperties Cylinders = new CylinderProperties();
 
-		public Tender(CarBase car, double maxFuelLevel, double maxWaterLevel) : base(car, null, false)
+		internal void CreateModel(TractionModel model)
 		{
-			FuelTank = new FuelTank(maxFuelLevel, 0, maxFuelLevel);
-			// TODO: This just gives us a marginally sensible (fixed) reading on gauges
-			MaxWaterLevel = maxWaterLevel * 0.8;
-			WaterLevel = maxWaterLevel * 0.8;
-		}
-
-		public Tender(CarBase car, double maxFuelLevel, double fuelLevel, double maxWaterLevel, double waterLevel) : base(car, null, false)
-		{
-			FuelTank = new FuelTank(maxFuelLevel, 0, fuelLevel);
-			MaxWaterLevel = maxWaterLevel;
-			WaterLevel = waterLevel;
-		}
-
-		public override void Update(double timeElapsed)
-		{
-
+			Boiler.Create(model);
+			Injectors[0].Create(model, EngineComponent.SteamInjector1);
+			Injectors[1].Create(model, EngineComponent.SteamInjector2);
+			Cylinders.Create(model);
+			model.Components.Add(EngineComponent.Blowers, new Blowers(model));
+			model.Components.Add(EngineComponent.Firebox, new Firebox(model, MaxFireMass, Math.Min(MaxFireMass, StartingFireMass), IdealFireMass, Math.Max(StartingFireTemp, 500)));
 		}
 	}
 }

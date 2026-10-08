@@ -1,6 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
-//
-//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
+﻿//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -22,36 +20,35 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using TrainManager.Car;
+
+using OpenBveApi.Motor;
 using TrainManager.Motor;
+using TrainManager.SteamEngine;
 
-namespace TrainManager.SteamEngine
+namespace Train.MsTs
 {
-	public class Tender : TractionModel
+	internal struct InjectorProperties
 	{
-		/// <summary>The maximum water level</summary>
-		public readonly double MaxWaterLevel;
-		/// <summary>The current water level</summary>
-		public double WaterLevel;
+		internal int Type;
 
-		public Tender(CarBase car, double maxFuelLevel, double maxWaterLevel) : base(car, null, false)
+		internal double Diameter;
+
+		internal double MinPressure;
+
+		internal double MinWater;
+
+		internal double MaxWater;
+
+		internal void Create(TractionModel model, EngineComponent component)
 		{
-			FuelTank = new FuelTank(maxFuelLevel, 0, maxFuelLevel);
-			// TODO: This just gives us a marginally sensible (fixed) reading on gauges
-			MaxWaterLevel = maxWaterLevel * 0.8;
-			WaterLevel = maxWaterLevel * 0.8;
-		}
-
-		public Tender(CarBase car, double maxFuelLevel, double fuelLevel, double maxWaterLevel, double waterLevel) : base(car, null, false)
-		{
-			FuelTank = new FuelTank(maxFuelLevel, 0, fuelLevel);
-			MaxWaterLevel = maxWaterLevel;
-			WaterLevel = waterLevel;
-		}
-
-		public override void Update(double timeElapsed)
-		{
-
+			if (Type == 0)
+			{
+				model.Components.Add(component, new LiveSteamInjector(model, Diameter, MinPressure, MinPressure, MaxWater));
+			}
+			else
+			{
+				model.Components.Add(component, new ExhaustSteamInjector(model, Diameter, MinPressure, MinPressure, MaxWater));
+			}
 		}
 	}
 }

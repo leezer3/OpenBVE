@@ -1,6 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
-//
-//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
+﻿//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -22,36 +20,58 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using TrainManager.Car;
+using OpenBveApi;
+using OpenBveApi.Motor;
 using TrainManager.Motor;
 
 namespace TrainManager.SteamEngine
 {
-	public class Tender : TractionModel
+	public class SafetyValve : AbstractComponent
 	{
-		/// <summary>The maximum water level</summary>
-		public readonly double MaxWaterLevel;
-		/// <summary>The current water level</summary>
-		public double WaterLevel;
+		/// <summary>The pressure at which the safety valve operates</summary>
+		public readonly double OperatingPressure;
+		/// <summary>The pressure at which the safety valve releases</summary>
+		public readonly double ReleasePressure;
+		/// <summary>The decrease in pressure per second</summary>
+		public readonly double PressureDecrease;
 
-		public Tender(CarBase car, double maxFuelLevel, double maxWaterLevel) : base(car, null, false)
+		public SafetyValve(TractionModel engine, double operatingPressure, double releasePressure, double pressureDecrease) : base(engine)
 		{
-			FuelTank = new FuelTank(maxFuelLevel, 0, maxFuelLevel);
-			// TODO: This just gives us a marginally sensible (fixed) reading on gauges
-			MaxWaterLevel = maxWaterLevel * 0.8;
-			WaterLevel = maxWaterLevel * 0.8;
-		}
-
-		public Tender(CarBase car, double maxFuelLevel, double fuelLevel, double maxWaterLevel, double waterLevel) : base(car, null, false)
-		{
-			FuelTank = new FuelTank(maxFuelLevel, 0, fuelLevel);
-			MaxWaterLevel = maxWaterLevel;
-			WaterLevel = waterLevel;
+			OperatingPressure = operatingPressure;
+			ReleasePressure = releasePressure;
+			PressureDecrease = pressureDecrease;
 		}
 
 		public override void Update(double timeElapsed)
 		{
+			if (!baseEngine.Components.TryGetTypedValue(EngineComponent.Boiler, out Boiler boiler))
+			{
+				return;
+			}
 
+			if (boiler.CurrentPressure > OperatingPressure)
+			{
+				Active = true;
+				ActivationSound?.Play(baseEngine.BaseCar, false);
+			}
+			else
+			{
+				if (boiler.CurrentPressure < ReleasePressure)
+				{
+					Active = false;
+					LoopSound?.Stop();
+					DeactivationSound?.Play(baseEngine.BaseCar, false);
+				}
+			}
+
+			if (Active)
+			{
+				boiler.CurrentSteamMass -= PressureDecrease * timeElapsed;
+				if (LoopSound != null && LoopSound.IsPlaying == false)
+				{
+					LoopSound.Play(baseEngine.BaseCar, true);
+				}
+			}
 		}
 	}
 }
