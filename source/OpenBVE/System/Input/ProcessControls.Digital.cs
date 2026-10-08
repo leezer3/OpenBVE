@@ -557,18 +557,8 @@ namespace OpenBve
 							default:
 								Program.Renderer.Camera.CurrentRestriction = Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off ? TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode : CameraRestrictionMode.Off;
 								World.InitializeCameraRestriction();
-								if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off)
-								{
-									MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","camerarestriction_off"}),
-										MessageDependency.CameraView, GameMode.Expert,
-										MessageColor.White, 2, null);
-								}
-								else
-								{
-									MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","camerarestriction_on"}),
-										MessageDependency.CameraView, GameMode.Expert,
-										MessageColor.White, 2, null);
-								}
+								MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "notification", Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off ? "camerarestriction_off" : "camerarestriction_on" }), 
+									MessageDependency.CameraView, GameMode.Expert, MessageColor.White, 2, null);
 
 								break;
 						}

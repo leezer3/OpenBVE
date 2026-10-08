@@ -370,6 +370,12 @@ namespace OpenBveApi {
 		 * Provide easy mirrors to the System.IO.Path functions
 		 */
 
+		/// <summary>Combines two strings into a path</summary>
+		public static string Combine(string path1, string path2)
+		{
+			return System.IO.Path.Combine(path1, path2);
+		}
+
 		/// <summary>Returns the directory information for the specified path string</summary>
 		/// <param name="path">The path string</param>
 		public static string GetDirectoryName(string path)

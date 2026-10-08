@@ -8,7 +8,6 @@ using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using System;
-using OpenBveApi.World;
 using TrainManager.Trains;
 
 namespace OpenBve {
