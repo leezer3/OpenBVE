@@ -35,14 +35,22 @@ namespace Route.Bve5
 			{
 				return source.IndexOfKey(distance);
 			}
-			for (int i = source.Count - 1; i > 0; i--)
+			// Binary search: last block starting at or before distance (clamped to 0, as before).
+			int lo = 0, hi = source.Count - 1, result = 0;
+			while (lo <= hi)
 			{
-				if (source.Keys[i] <= distance)
+				int mid = lo + ((hi - lo) >> 1);
+				if (source.Keys[mid] <= distance)
 				{
-					return i;
+					result = mid;
+					lo = mid + 1;
+				}
+				else
+				{
+					hi = mid - 1;
 				}
 			}
-			return 0;
+			return result;
 		}
 
 		public static int FindLastIndex<T>(this IList<T> source, int startIndex, Predicate<T> match)
