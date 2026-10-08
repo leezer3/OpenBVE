@@ -538,6 +538,7 @@ namespace Route.Bve5
 			}
 
 			List<Repeater> RepeaterList = new List<Repeater>();
+			Dictionary<string, List<Statement>> statementsByRepeaterKey = new Dictionary<string, List<Statement>>(StringComparer.InvariantCultureIgnoreCase);
 
 			foreach (Statement Statement in ParseData.Statements)
 			{
@@ -546,22 +547,21 @@ namespace Route.Bve5
 					continue;
 				}
 
-				if (!RepeaterList.Exists(Repeater => Repeater.Key.Equals(Statement.Key, StringComparison.InvariantCultureIgnoreCase)))
+				if (!statementsByRepeaterKey.TryGetValue(Statement.Key, out List<Statement> keyStatements))
 				{
+					keyStatements = new List<Statement>();
+					statementsByRepeaterKey.Add(Statement.Key, keyStatements);
 					RepeaterList.Add(new Repeater(Statement.Key));
 				}
+				keyStatements.Add(Statement);
 			}
 
-			foreach (Repeater Repeater in RepeaterList)
+			for (int repeaterIndex = 0; repeaterIndex < RepeaterList.Count; repeaterIndex++)
 			{
+				Repeater Repeater = RepeaterList[repeaterIndex];
 				bool possibleEnd = false;
-				foreach (Statement Statement in ParseData.Statements)
+				foreach (Statement Statement in statementsByRepeaterKey[Repeater.Key])
 				{
-					if (Statement.ElementName != MapElementName.Repeater || !Statement.Key.Equals(Repeater.Key, StringComparison.InvariantCultureIgnoreCase))
-					{
-						continue;
-					}
-
 					switch (Statement.FunctionName)
 					{
 						case MapFunctionName.Begin:
@@ -720,12 +720,52 @@ namespace Route.Bve5
 			}
 		}
 
+		private static double[] CollectSortedSectionPositions(RouteData RouteData)
+		{
+			int total = 0;
+			for (int i = 0; i < RouteData.Blocks.Count; i++)
+			{
+				total += RouteData.Blocks[i].Sections.Count;
+			}
+			double[] positions = new double[total];
+			int index = 0;
+			for (int i = 0; i < RouteData.Blocks.Count; i++)
+			{
+				for (int j = 0; j < RouteData.Blocks[i].Sections.Count; j++)
+				{
+					positions[index++] = RouteData.Blocks[i].Sections[j].TrackPosition;
+				}
+			}
+			Array.Sort(positions);
+			return positions;
+		}
+
+		private static int CountSectionsAtOrBefore(double[] sortedPositions, double distance)
+		{
+			int lo = 0, hi = sortedPositions.Length;
+			while (lo < hi)
+			{
+				int mid = lo + ((hi - lo) >> 1);
+				if (sortedPositions[mid] <= distance)
+				{
+					lo = mid + 1;
+				}
+				else
+				{
+					hi = mid;
+				}
+			}
+			return lo;
+		}
+
 		private static void ConfirmSignal(bool PreviewOnly, MapData ParseData, RouteData RouteData)
 		{
 			if (PreviewOnly)
 			{
 				return;
 			}
+
+			double[] sectionPositions = CollectSortedSectionPositions(RouteData);
 
 			foreach (Statement Statement in ParseData.Statements)
 			{
@@ -772,11 +812,7 @@ namespace Route.Bve5
 						RouteData.Blocks[BlockIndex].Signals[RailIndex] = new List<Signal>();
 					}
 
-					int CurrentSection = 0;
-					for (int i = BlockIndex; i >= 0; i--)
-					{
-						CurrentSection += RouteData.Blocks[i].Sections.Count(s => s.TrackPosition <= Statement.Distance);
-					}
+					int CurrentSection = CountSectionsAtOrBefore(sectionPositions, Statement.Distance);
 
 					Vector3 Position = new Vector3(Statement.GetArgumentValueAsDouble(ArgumentName.X), Statement.GetArgumentValueAsDouble(ArgumentName.Y), Statement.GetArgumentValueAsDouble(ArgumentName.Z));
 					RouteData.Blocks[BlockIndex].Signals[RailIndex].Add(new Signal(Statement.Key, Statement.Distance, Tilt, Span, Position)
@@ -797,6 +833,8 @@ namespace Route.Bve5
 				return;
 			}
 
+			double[] sectionPositions = CollectSortedSectionPositions(RouteData);
+
 			foreach (Statement Statement in ParseData.Statements)
 			{
 				if (Statement.ElementName != MapElementName.Beacon)
@@ -810,11 +848,7 @@ namespace Route.Bve5
 				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
 
 				int Section = Convert.ToInt32(TempSection);
-				int CurrentSection = 0;
-				for (int i = BlockIndex; i >= 0; i--)
-				{
-					CurrentSection += RouteData.Blocks[i].Sections.Count(s => s.TrackPosition <= Statement.Distance);
-				}
+				int CurrentSection = CountSectionsAtOrBefore(sectionPositions, Statement.Distance);
 
 				if (Section < -1)
 				{
