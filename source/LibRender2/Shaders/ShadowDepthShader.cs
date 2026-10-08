@@ -39,7 +39,7 @@ namespace LibRender2.Shaders
 		private readonly int uMaterialFlags;
 		private readonly int uTextureMatrix;
 
-		public ShadowDepthShader(BaseRenderer Renderer,  string vertexShaderName, string fragmentShaderName, bool isFromStream = false) : base(Renderer, vertexShaderName, fragmentShaderName, isFromStream, false)
+		public ShadowDepthShader(BaseRenderer Renderer, string vertexShaderName, string fragmentShaderName, bool isFromStream = false) : base(Renderer, vertexShaderName, fragmentShaderName, isFromStream, false)
 		{
 			// Explicitly bind the uniform block for matrices to binding point 0
 			// This matches BindBufferBase(..., 0, ...) in the rendering pass.
@@ -107,46 +107,7 @@ namespace LibRender2.Shaders
 
 		public void SetCurrentAnimationMatricies(OpenBveApi.Objects.ObjectState objectState)
 		{
-			OpenTK.Matrix4[] matriciesToShader = new OpenTK.Matrix4[objectState.Matricies.Length];
-
-			for (int i = 0; i < objectState.Matricies.Length; i++)
-			{
-				matriciesToShader[i] = ConvertToMatrix4(objectState.Matricies[i]);
-			}
-
-			unsafe
-			{
-				if (objectState.MatrixBufferIndex == 0)
-				{
-					objectState.MatrixBufferIndex = GL.GenBuffer();
-				}
-
-				GL.BindBuffer(BufferTarget.UniformBuffer, objectState.MatrixBufferIndex);
-				GL.BufferData(BufferTarget.UniformBuffer, sizeof(OpenTK.Matrix4) * matriciesToShader.Length, matriciesToShader, BufferUsageHint.StaticDraw);
-			}
-		}
-
-		private static OpenTK.Matrix4 ConvertToMatrix4(OpenBveApi.Math.Matrix4D mat)
-		{
-			return new OpenTK.Matrix4(
-				(float)mat.Row0.X, (float)mat.Row0.Y, (float)mat.Row0.Z, (float)mat.Row0.W,
-				(float)mat.Row1.X, (float)mat.Row1.Y, (float)mat.Row1.Z, (float)mat.Row1.W,
-				(float)mat.Row2.X, (float)mat.Row2.Y, (float)mat.Row2.Z, (float)mat.Row2.W,
-				(float)mat.Row3.X, (float)mat.Row3.Y, (float)mat.Row3.Z, (float)mat.Row3.W
-			);
-		}
-
-		private static float[] Matrix4DToFloatArray(OpenBveApi.Math.Matrix4D m)
-		{
-			// OpenBVE's Matrix4D is row-major; OpenGL expects column-major
-			// So we transpose on upload (or set transpose=true)
-			return new float[]
-			{
-				(float)m.Row0.X, (float)m.Row0.Y, (float)m.Row0.Z, (float)m.Row0.W,
-				(float)m.Row1.X, (float)m.Row1.Y, (float)m.Row1.Z, (float)m.Row1.W,
-				(float)m.Row2.X, (float)m.Row2.Y, (float)m.Row2.Z, (float)m.Row2.W,
-				(float)m.Row3.X, (float)m.Row3.Y, (float)m.Row3.Z, (float)m.Row3.W
-			};
+			UploadAnimationMatrices(objectState);
 		}
 	}
 }
