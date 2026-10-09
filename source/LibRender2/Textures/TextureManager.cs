@@ -714,7 +714,6 @@ namespace LibRender2.Textures
 									GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.Width, texture.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, pooled);
 								}
 							}
-							if (UsesMipmaps(Interpolation)) GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 						}
 						else
 						{
@@ -734,7 +733,10 @@ namespace LibRender2.Textures
 								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
 								GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.Width, texture.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, subBytes);
 							}
-							if (UsesMipmaps(Interpolation)) GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+							// No mip chain for animated textures: level 0 was just replaced, and
+							// rebuilding the whole chain on every frame change is far more costly
+							// than the filtering gains. The min filter is demoted to match, so an
+							// incomplete chain is never sampled.
 						}
 						// Keep the stable handle in sync without swapping identity: the handle keeps
 						// its origin so the animated cache keeps hitting every tick (swapping to the
@@ -868,33 +870,44 @@ namespace LibRender2.Textures
 						handle.OpenGlTextures[(int)wrap].Name = 0;
 						return false;
 					}
+					float minFilter, magFilter;
 					switch (Interpolation)
 					{
 						case InterpolationMode.NearestNeighbor:
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.Nearest);
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Nearest);
+							minFilter = (float)TextureMinFilter.Nearest;
+							magFilter = (float)TextureMagFilter.Nearest;
 							break;
 						case InterpolationMode.Bilinear:
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.Linear);
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
+							minFilter = (float)TextureMinFilter.Linear;
+							magFilter = (float)TextureMagFilter.Linear;
 							break;
 						case InterpolationMode.NearestNeighborMipmapped:
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.NearestMipmapNearest);
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Nearest);
+							minFilter = (float)TextureMinFilter.NearestMipmapNearest;
+							magFilter = (float)TextureMagFilter.Nearest;
 							break;
 						case InterpolationMode.BilinearMipmapped:
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.NearestMipmapLinear);
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
+							minFilter = (float)TextureMinFilter.NearestMipmapLinear;
+							magFilter = (float)TextureMagFilter.Linear;
 							break;
 						case InterpolationMode.TrilinearMipmapped:
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.LinearMipmapLinear);
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
+							minFilter = (float)TextureMinFilter.LinearMipmapLinear;
+							magFilter = (float)TextureMagFilter.Linear;
 							break;
 						default:
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.LinearMipmapLinear);
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
+							minFilter = (float)TextureMinFilter.LinearMipmapLinear;
+							magFilter = (float)TextureMagFilter.Linear;
 							break;
 					}
+					if (texture.MultipleFrames)
+					{
+						// Animated textures never get a mip chain: level 0 is replaced on every
+						// frame change, so regenerating the whole chain per frame costs far more
+						// than it saves. A mipmapped min filter would then sample an incomplete
+						// chain, so demote to the mag filter (same numeric value in both enums).
+						minFilter = magFilter;
+					}
+					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, minFilter);
+					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, magFilter);
 
 					if ((wrap & OpenGlTextureWrapMode.RepeatClamp) != 0)
 					{
@@ -1116,7 +1129,9 @@ namespace LibRender2.Textures
 						}
 						
 					}
-					if (UsesMipmaps(Interpolation)) GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+					// Animated textures get no mip chain at all (see the frame-update path), so
+					// skip it here too; their min filter was already demoted above.
+					if (!texture.MultipleFrames && UsesMipmaps(Interpolation)) GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
                     handle.OpenGlTextures[(int)wrap].Valid = true;
 					if (texture.MultipleFrames)
 					{
