@@ -385,6 +385,7 @@ namespace ObjectViewer
 	        FileDrop += Program.DragFile;
 	        Program.Renderer.Camera.Reset(new Vector3(-5.0, 2.5, -25.0));
             Program.Renderer.Initialize();
+            Program.Renderer.DetermineMaxAFLevel();
             Program.Renderer.Lighting.Initialize();
             Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 			Program.Renderer.InitializeVisibility();
