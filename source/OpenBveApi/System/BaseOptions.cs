@@ -1,5 +1,9 @@
+using System;
+using System.Globalization;
+using System.Windows.Forms;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
@@ -35,6 +39,7 @@ namespace OpenBveApi
 		/// <summary>The maximum level of anisotropic filtering supported by the system</summary>
 		public int AnisotropicFilteringMaximum;
 		/// <summary>The level of antialiasing to be applied</summary>
+		/// <remarks>One of <see cref="AntiAliasingLevels"/>; run it through <see cref="NormalizeAntiAliasingLevel"/> when it comes from an options file or a hand-edited value</remarks>
 		public int AntiAliasingLevel;
 		/// <summary>The parser to use for Microsoft DirectX objects</summary>
 		public XParsers CurrentXParser;
@@ -147,6 +152,62 @@ namespace OpenBveApi
 		/// <summary>The color used by the renderer when issuing GL.Clear()</summary>
 		/// <remarks>Not saved</remarks>
 		public Color24 ClearColor = new Color24(170, 170, 170);
+
+		/// <summary>The MSAA sample counts we offer for antialiasing</summary>
+		/// <remarks>Nothing above 8x is offered: consumer GPUs don't support it and the gain over 8x isn't visible anyway</remarks>
+		public static readonly int[] AntiAliasingLevels = { 0, 2, 4, 8 };
+
+		/// <summary>Snaps an arbitrary antialiasing sample count onto the nearest one we offer</summary>
+		/// <param name="level">The requested sample count, which may be any value</param>
+		/// <returns>One of <see cref="AntiAliasingLevels"/></returns>
+		/// <remarks>Lets options files from older versions, which offered 16x, keep loading instead of falling back to no antialiasing</remarks>
+		public static int NormalizeAntiAliasingLevel(int level)
+		{
+			//1x costs the same as turning antialiasing off without visibly helping, so treat it as off
+			if (level <= 1)
+			{
+				return 0;
+			}
+
+			foreach (int offered in AntiAliasingLevels)
+			{
+				if (level <= offered)
+				{
+					return offered;
+				}
+			}
+
+			return AntiAliasingLevels[AntiAliasingLevels.Length - 1];
+		}
+
+		/// <summary>Selects the antialiasing level in a dropdown, snapping the stored level if we no longer offer it</summary>
+		/// <param name="dropdown">The dropdown to fill and select from</param>
+		/// <param name="level">The sample count to select</param>
+		public static void SelectAntiAliasingLevel(ComboBox dropdown, int level)
+		{
+			level = NormalizeAntiAliasingLevel(level);
+
+			dropdown.Items.Clear();
+			foreach (int offered in AntiAliasingLevels)
+			{
+				dropdown.Items.Add(offered == 0 ? Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "quality_interpolation_antialiasing_off" }) : offered.ToString(CultureInfo.InvariantCulture));
+			}
+
+			//Items are in level order, so the index is the level's position rather than the level itself
+			dropdown.SelectedIndex = Array.IndexOf(AntiAliasingLevels, level);
+			if (dropdown.SelectedIndex < 0)
+			{
+				dropdown.SelectedIndex = 0;
+			}
+		}
+
+		/// <summary>Reads the antialiasing level back out of a dropdown filled by <see cref="SelectAntiAliasingLevel"/></summary>
+		/// <param name="dropdown">The dropdown to read from</param>
+		public static int GetAntiAliasingLevel(ComboBox dropdown)
+		{
+			int index = dropdown.SelectedIndex;
+			return index >= 0 && index < AntiAliasingLevels.Length ? AntiAliasingLevels[index] : 0;
+		}
 
 		/// <summary>Saves the options to the specified filename</summary>
 		/// <param name="fileName">The filename to save the options to</param>
