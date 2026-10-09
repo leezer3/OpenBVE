@@ -1100,7 +1100,7 @@ namespace LibRender2
 				currentOptions.AnisotropicFilteringMaximum = 0;
 				currentOptions.AnisotropicFilteringLevel = 0;
 			}
-			else if (currentOptions.AnisotropicFilteringLevel == 0 & currentOptions.AnisotropicFilteringMaximum > 0)
+			else if (currentOptions.AnisotropicFilteringLevel == 0 && currentOptions.AnisotropicFilteringMaximum > 0)
 			{
 				currentOptions.AnisotropicFilteringLevel = currentOptions.AnisotropicFilteringMaximum;
 			}

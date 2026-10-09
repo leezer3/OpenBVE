@@ -267,6 +267,16 @@ namespace LibRender2.Menu
 					break;
 				case OptionType.Interpolation:
 					BaseMenu.CurrentOptions.Interpolation = (InterpolationMode)CurrentlySelectedOption;
+					// Filter mode is baked into each uploaded GL texture; stale textures would
+					// keep the old filter (early-out on Valid), so force a re-upload.
+					try
+					{
+						BaseMenu.Renderer?.TextureManager?.UnloadAllTextures(false);
+					}
+					catch
+					{
+						// Best-effort; textures reload on next use regardless
+					}
 					break;
 				case OptionType.AutoReloadObjects:
 					BaseMenu.CurrentOptions.AutoReloadObjects = !BaseMenu.CurrentOptions.AutoReloadObjects;
@@ -274,6 +284,15 @@ namespace LibRender2.Menu
 				//HACK: We can't store plain ints due to to boxing, so store strings and parse instead
 				case OptionType.AnisotropicLevel:
 					BaseMenu.CurrentOptions.AnisotropicFilteringLevel = int.Parse((string)CurrentOption, NumberStyles.Integer);
+					// Aniso level is also baked into uploaded textures; re-upload so it takes effect.
+					try
+					{
+						BaseMenu.Renderer?.TextureManager?.UnloadAllTextures(false);
+					}
+					catch
+					{
+						// Best-effort
+					}
 					break;
 				case OptionType.AntialiasingLevel:
 					BaseMenu.CurrentOptions.AntiAliasingLevel = int.Parse((string)CurrentOption, NumberStyles.Integer);

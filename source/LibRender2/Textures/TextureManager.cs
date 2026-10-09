@@ -916,7 +916,23 @@ namespace LibRender2.Textures
 
 					if (Interpolation == InterpolationMode.AnisotropicFiltering && AnisotropicFilteringLevel > 0)
 					{
-						GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, AnisotropicFilteringLevel);
+						// Clamp to the detected GPU maximum when known (viewers may not have
+						// queried it yet, in which case Maximum is 0 and the driver clamps).
+						int anisoLevel = AnisotropicFilteringLevel;
+						int anisoMax = 0;
+						try
+						{
+							anisoMax = renderer?.currentOptions?.AnisotropicFilteringMaximum ?? 0;
+						}
+						catch
+						{
+							anisoMax = 0;
+						}
+						if (anisoMax > 0 && anisoLevel > anisoMax)
+						{
+							anisoLevel = anisoMax;
+						}
+						GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, anisoLevel);
 					}
 					
 					if (handle.Transparency == TextureTransparencyType.Opaque)
