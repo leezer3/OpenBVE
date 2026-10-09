@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using Formats.OpenBve;
 using OpenBveApi;
+using OpenBveApi.Graphics;
 using Path = OpenBveApi.Path;
 
 namespace RouteViewer
@@ -50,6 +51,7 @@ namespace RouteViewer
 			VerticalSynchronization = true;
 			FPSLimit = 0;
 			ObjectOptimizationMode = ObjectOptimizationMode.Low;
+			Interpolation = InterpolationMode.BilinearMipmapped;
 			ViewingDistance = 600;
 			SoundNumber = 16;
 		}

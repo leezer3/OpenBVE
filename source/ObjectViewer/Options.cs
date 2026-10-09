@@ -7,6 +7,7 @@ using Formats.OpenBve;
 using ObjectViewer.Graphics;
 using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.Graphics;
 using OpenBveApi.Input;
 using Path = OpenBveApi.Path;
 
@@ -79,6 +80,7 @@ namespace ObjectViewer
 			VerticalSynchronization = true;
 			FPSLimit = 0;
 			ObjectOptimizationMode = ObjectOptimizationMode.Low;
+			Interpolation = InterpolationMode.BilinearMipmapped;
 			ShowGround = false;
 			GroundHeight = 0.0;
 			GroundColor = new Color24(128, 128, 128);
