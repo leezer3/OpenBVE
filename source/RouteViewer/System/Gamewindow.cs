@@ -191,6 +191,7 @@ namespace RouteViewer
             Program.Renderer.Camera.ExtraViewingDistance = 50.0;
 
             Program.Renderer.Initialize();
+            Program.Renderer.DetermineMaxAFLevel();
             Program.Renderer.Lighting.Initialize();
 			try
 			{

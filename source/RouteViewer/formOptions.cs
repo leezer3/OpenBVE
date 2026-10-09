@@ -536,6 +536,14 @@ namespace RouteViewer
 
 			//Anisotropic filtering level
 			Interface.CurrentOptions.AnisotropicFilteringLevel = (int) AnisotropicLevel.Value;
+			if (Interface.CurrentOptions.AnisotropicFilteringLevel != previousAnisotropicLevel &&
+				(Interface.CurrentOptions.Interpolation == OpenBveApi.Graphics.InterpolationMode.AnisotropicFiltering ||
+				 previousInterpolationMode == OpenBveApi.Graphics.InterpolationMode.AnisotropicFiltering))
+			{
+				// The level is baked into each uploaded texture, so they need re-uploading.
+				// Harmless if the interpolation branch above already did this.
+				Program.Renderer.TextureManager.UnloadAllTextures(false);
+			}
             //Antialiasing level
             Interface.CurrentOptions.AntiAliasingLevel = (int)AntialiasingLevel.Value;
             if (Interface.CurrentOptions.AntiAliasingLevel != previousAntialiasingLevel)

@@ -76,6 +76,21 @@ namespace Train.OpenBve
 			}
 		}
 
+		// World size of the panel in meters, depending on screen orientation
+		private void GetWorldSize(out double worldWidth, out double worldHeight)
+		{
+			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)
+			{
+				worldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
+				worldHeight = worldWidth / Plugin.Renderer.Screen.AspectRatio;
+			}
+			else
+			{
+				worldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * EyeDistance / Plugin.Renderer.Screen.AspectRatio;
+				worldWidth = worldHeight * Plugin.Renderer.Screen.AspectRatio;
+			}
+		}
+
 		// constants
 		private const double StackDistance = 0.000001;
 		/// <remarks>EyeDistance is required to be 1.0 by UpdateCarSectionElement and by UpdateCameraRestriction, thus cannot be easily changed.</remarks>
@@ -220,17 +235,7 @@ namespace Train.OpenBve
 				}
 
 				// camera restriction
-				double WorldWidth, WorldHeight;
-				if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)
-				{
-					WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
-					WorldHeight = WorldWidth / Plugin.Renderer.Screen.AspectRatio;
-				}
-				else
-				{
-					WorldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * EyeDistance / Plugin.Renderer.Screen.AspectRatio;
-					WorldWidth = WorldHeight * Plugin.Renderer.Screen.AspectRatio;
-				}
+				GetWorldSize(out double WorldWidth, out double WorldHeight);
 				double x0 = (PanelLeft - PanelCenter.X) / PanelResolution;
 				double x1 = (PanelRight - PanelCenter.X) / PanelResolution;
 				double y0 = (PanelCenter.Y - PanelBottom) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
@@ -725,7 +730,7 @@ namespace Train.OpenBve
 								double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
 								double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 								f += " " + a1.ToString(Culture) + " * " + a0.ToString(Culture) + " +";
-								if (NaturalFrequency >= 0.0 & DampingRatio >= 0.0)
+								if (NaturalFrequency >= 0.0 && DampingRatio >= 0.0)
 								{
 									CarSection.Groups[GroupIndex].Elements[j].RotateZDamping = new Damping(NaturalFrequency, DampingRatio);
 								}
@@ -1797,17 +1802,7 @@ namespace Train.OpenBve
 
 		internal void CreateTouchElement(ElementsGroup Group, Vector2 Location, Vector2 Size, int ScreenIndex, int[] SoundIndices, CommandEntry[] CommandEntries, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver)
 		{
-			double WorldWidth, WorldHeight;
-			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)
-			{
-				WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
-				WorldHeight = WorldWidth / Plugin.Renderer.Screen.AspectRatio;
-			}
-			else
-			{
-				WorldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * EyeDistance / Plugin.Renderer.Screen.AspectRatio;
-				WorldWidth = WorldHeight * Plugin.Renderer.Screen.AspectRatio;
-			}
+			GetWorldSize(out double WorldWidth, out double WorldHeight);
 			double x0 = Location.X / PanelResolution;
 			double x1 = (Location.X + Size.X) / PanelResolution;
 			double y0 = (PanelBottom - Location.Y) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;

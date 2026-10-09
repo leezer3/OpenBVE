@@ -35,6 +35,20 @@ namespace OpenBveApi.Textures
 		/// <returns>Whether the texture could be obtained successfully.</returns>
 		public override bool GetTexture(out Texture texture)
 		{
+			// Handles can share one bitmap now, so decode one at a time per image
+			if (this.Bitmap == null)
+			{
+				texture = null;
+				return false;
+			}
+			lock (this.Bitmap)
+			{
+				return GetTextureInternal(out texture);
+			}
+		}
+
+		private bool GetTextureInternal(out Texture texture)
+		{
 			Bitmap bitmap = this.Bitmap;
 			Rectangle rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
 			/* 

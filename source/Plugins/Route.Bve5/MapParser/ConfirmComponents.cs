@@ -36,379 +36,212 @@ namespace Route.Bve5
 {
 	internal static partial class Bve5ScenarioParser
 	{
-		private static void ConfirmCurve(IList<Block> Blocks)
+		// Blocks with no value of their own take the last confirmed one
+		private static void FillTentativeBlocks(IList<Block> Blocks, Func<Block, bool> IsStart, Func<Block, bool> IsEnd, Action<Block, Block> CopyValue)
 		{
-			// Set a tentative value to a block that has not been decided.
-
-			int LastConfirmBlock = 0;
+			int Last = 0;
 			for (int i = 1; i < Blocks.Count; i++)
 			{
-				if (!Blocks[i].Rails["0"].CurveInterpolateStart && !Blocks[i].Rails["0"].CurveInterpolateEnd)
+				if (!IsStart(Blocks[i]) && !IsEnd(Blocks[i]))
 				{
 					continue;
 				}
 
-				for (int k = LastConfirmBlock + 1; k < i; k++)
+				for (int k = Last + 1; k < i; k++)
 				{
-					Blocks[k].CurrentTrackState.CurveRadius = Blocks[LastConfirmBlock].CurrentTrackState.CurveRadius;
-					Blocks[k].CurrentTrackState.CurveCant = Blocks[LastConfirmBlock].CurrentTrackState.CurveCant;
+					CopyValue(Blocks[k], Blocks[Last]);
 				}
 
-				LastConfirmBlock = i;
+				Last = i;
 			}
+		}
 
-			// Curve transition
+		// Runs Apply over every span that has both a start and an end
+		private static void ApplyToSpans(IList<Block> Blocks, Func<Block, bool> IsStart, Func<Block, bool> IsEnd, bool StopAtAnyEnd, Action<int, int> Apply)
+		{
 			for (int i = 0; i < Blocks.Count; i++)
 			{
-				if (!Blocks[i].Rails["0"].CurveTransitionEnd)
+				if (!IsEnd(Blocks[i]))
 				{
 					continue;
 				}
 
-				int StartBlock = i;
-
-				for (int k = i - 1; k >= 1; k--)
-				{
-					if (Blocks[k].Rails["0"].CurveTransitionEnd)
-					{
-						break;
-					}
-
-					if (Blocks[k].Rails["0"].CurveTransitionStart)
-					{
-						StartBlock = k;
-						break;
-					}
-				}
-
+				int StartBlock = FindSpanStart(Blocks, IsStart, IsEnd, i, StopAtAnyEnd);
 				if (StartBlock != i)
 				{
-					double StartDistance = Blocks[StartBlock].StartingDistance;
-					double StartRadius = StartBlock != 0 ? Blocks[StartBlock - 1].CurrentTrackState.CurveRadius : Blocks[0].CurrentTrackState.CurveRadius;
-					double StartCant = StartBlock != 0 ? Blocks[StartBlock - 1].CurrentTrackState.CurveCant : Blocks[0].CurrentTrackState.CurveCant;
-					double EndDistance = Blocks[i].StartingDistance;
-					double EndRadius = Blocks[i].CurrentTrackState.CurveRadius;
-					double EndCant = Blocks[i].CurrentTrackState.CurveCant;
-
-					for (int k = StartBlock; k < i; k++)
-					{
-						double CurrentDistance = Blocks[k].StartingDistance;
-						CalcCurveTransition(StartDistance, StartRadius, StartCant, EndDistance, EndRadius, EndCant, CurrentDistance, out Blocks[k].CurrentTrackState.CurveRadius, out Blocks[k].CurrentTrackState.CurveCant);
-					}
-				}
-			}
-
-			// Curve interpolate
-			for (int i = 0; i < Blocks.Count; i++)
-			{
-				if (!Blocks[i].Rails["0"].CurveInterpolateEnd)
-				{
-					continue;
-				}
-
-				int StartBlock = i;
-
-				for (int k = i - 1; k >= 0; k--)
-				{
-					if (Blocks[k].Rails["0"].CurveInterpolateEnd && !Blocks[k].Rails["0"].CurveInterpolateStart)
-					{
-						break;
-					}
-
-					if (Blocks[k].Rails["0"].CurveInterpolateStart)
-					{
-						StartBlock = k;
-						break;
-					}
-				}
-
-				if (StartBlock != i)
-				{
-					double StartDistance = Blocks[StartBlock].StartingDistance;
-					double StartRadius = Blocks[StartBlock].CurrentTrackState.CurveRadius;
-					double StartCant = Blocks[StartBlock].CurrentTrackState.CurveCant;
-					double EndDistance = Blocks[i].StartingDistance;
-					double EndRadius = Blocks[i].CurrentTrackState.CurveRadius;
-					double EndCant = Blocks[i].CurrentTrackState.CurveCant;
-
-					for (int k = StartBlock + 1; k < i; k++)
-					{
-						double CurrentDistance = Blocks[k].StartingDistance;
-						CalcCurveTransition(StartDistance, StartRadius, StartCant, EndDistance, EndRadius, EndCant, CurrentDistance, out Blocks[k].CurrentTrackState.CurveRadius, out Blocks[k].CurrentTrackState.CurveCant);
-					}
+					Apply(StartBlock, i);
 				}
 			}
 		}
 
+		// A transition eases out of the value before the span and covers its first block,
+		// an interpolation starts from the values inside the span
+		private static void SetCurveSpan(IList<Block> Blocks, int StartBlock, int EndBlock, bool StartFromPrevious)
+		{
+			int From = StartFromPrevious && StartBlock != 0 ? StartBlock - 1 : StartBlock;
+			int First = StartFromPrevious ? StartBlock : StartBlock + 1;
+			double StartDistance = Blocks[StartBlock].StartingDistance;
+			double StartRadius = Blocks[From].CurrentTrackState.CurveRadius;
+			double StartCant = Blocks[From].CurrentTrackState.CurveCant;
+			double EndDistance = Blocks[EndBlock].StartingDistance;
+			double EndRadius = Blocks[EndBlock].CurrentTrackState.CurveRadius;
+			double EndCant = Blocks[EndBlock].CurrentTrackState.CurveCant;
+
+			for (int k = First; k < EndBlock; k++)
+			{
+				CalcCurveTransition(StartDistance, StartRadius, StartCant, EndDistance, EndRadius, EndCant, Blocks[k].StartingDistance, out Blocks[k].CurrentTrackState.CurveRadius, out Blocks[k].CurrentTrackState.CurveCant);
+			}
+		}
+
+		private static void SetGradientSpan(IList<Block> Blocks, int StartBlock, int EndBlock, bool StartFromPrevious)
+		{
+			int From = StartFromPrevious && StartBlock != 0 ? StartBlock - 1 : StartBlock;
+			int First = StartFromPrevious ? StartBlock : StartBlock + 1;
+			double StartDistance = Blocks[StartBlock].StartingDistance;
+			double StartPitch = Blocks[From].Pitch;
+			double EndDistance = Blocks[EndBlock].StartingDistance;
+			double EndPitch = Blocks[EndBlock].Pitch;
+
+			for (int k = First; k < EndBlock; k++)
+			{
+				Blocks[k].Pitch = LinearInterpolation(StartDistance, StartPitch, EndDistance, EndPitch, Blocks[k].StartingDistance);
+			}
+		}
+
+		private static void SetCantSpan(IList<Block> Blocks, string RailKey, int StartBlock, int EndBlock, bool StartFromPrevious)
+		{
+			int From = StartFromPrevious && StartBlock != 0 ? StartBlock - 1 : StartBlock;
+			int First = StartFromPrevious ? StartBlock : StartBlock + 1;
+			double StartDistance = Blocks[StartBlock].StartingDistance;
+			double StartCant = Blocks[From].Rails[RailKey].CurveCant;
+			double EndDistance = Blocks[EndBlock].StartingDistance;
+			double EndCant = Blocks[EndBlock].Rails[RailKey].CurveCant;
+
+			for (int k = First; k < EndBlock; k++)
+			{
+				CalcCurveTransition(StartDistance, 0.0, StartCant, EndDistance, 0.0, EndCant, Blocks[k].StartingDistance, out _, out Blocks[k].Rails[RailKey].CurveCant);
+			}
+		}
+
+		private static void ConfirmCurve(IList<Block> Blocks)
+		{
+			FillTentativeBlocks(Blocks,
+				b => b.Rails["0"].CurveInterpolateStart,
+				b => b.Rails["0"].CurveInterpolateEnd,
+				(block, last) =>
+				{
+					block.CurrentTrackState.CurveRadius = last.CurrentTrackState.CurveRadius;
+					block.CurrentTrackState.CurveCant = last.CurrentTrackState.CurveCant;
+				});
+
+			// Curve transition
+			ApplyToSpans(Blocks,
+				b => b.Rails["0"].CurveTransitionStart,
+				b => b.Rails["0"].CurveTransitionEnd,
+				StopAtAnyEnd: true,
+				(start, end) => SetCurveSpan(Blocks, start, end, StartFromPrevious: true));
+
+			// Curve interpolate
+			ApplyToSpans(Blocks,
+				b => b.Rails["0"].CurveInterpolateStart,
+				b => b.Rails["0"].CurveInterpolateEnd,
+				StopAtAnyEnd: false,
+				(start, end) => SetCurveSpan(Blocks, start, end, StartFromPrevious: false));
+		}
+
 		private static void ConfirmGradient(IList<Block> Blocks)
 		{
-			// Set a tentative value to a block that has not been decided.
-			int LastConfirmBlock = 0;
-			for (int i = 1; i < Blocks.Count; i++)
-			{
-				if (!Blocks[i].GradientInterpolateStart && !Blocks[i].GradientInterpolateEnd)
-				{
-					continue;
-				}
-				
-				if (LastConfirmBlock != -1)
-				{
-					for (int k = LastConfirmBlock + 1; k < i; k++)
-					{
-						Blocks[k].Pitch = Blocks[LastConfirmBlock].Pitch;
-					}
-				}
-
-				LastConfirmBlock = i;
-			}
+			FillTentativeBlocks(Blocks,
+				b => b.GradientInterpolateStart,
+				b => b.GradientInterpolateEnd,
+				(block, last) => block.Pitch = last.Pitch);
 
 			// Gradient transition
-			// Provisional implementation
-			for (int i = 0; i < Blocks.Count; i++)
-			{
-				if (!Blocks[i].GradientTransitionEnd)
-				{
-					continue;
-				}
-
-				int StartBlock = i;
-
-				for (int k = i - 1; k >= 0; k--)
-				{
-					if (Blocks[k].GradientTransitionEnd)
-					{
-						break;
-					}
-
-					if (Blocks[k].GradientTransitionStart)
-					{
-						StartBlock = k;
-						break;
-					}
-				}
-
-				if (StartBlock != i)
-				{
-					double StartDistance = Blocks[StartBlock].StartingDistance;
-					double StartPitch = StartBlock != 0 ? Blocks[StartBlock - 1].Pitch : Blocks[0].Pitch;
-					double EndDistance = Blocks[i].StartingDistance;
-					double EndPitch = Blocks[i].Pitch;
-
-					for (int k = StartBlock; k < i; k++)
-					{
-						double CurrentDistance = Blocks[k].StartingDistance;
-						double CurrentPitch = LinearInterpolation(StartDistance, StartPitch, EndDistance, EndPitch, CurrentDistance);
-
-						Blocks[k].Pitch = CurrentPitch;
-					}
-				}
-			}
+			ApplyToSpans(Blocks,
+				b => b.GradientTransitionStart,
+				b => b.GradientTransitionEnd,
+				StopAtAnyEnd: true,
+				(start, end) => SetGradientSpan(Blocks, start, end, StartFromPrevious: true));
 
 			// Gradient interpolate
-			for (int i = 0; i < Blocks.Count; i++)
-			{
-				if (!Blocks[i].GradientInterpolateEnd)
-				{
-					continue;
-				}
-
-				int StartBlock = i;
-
-				for (int k = i - 1; k >= 0; k--)
-				{
-					if (Blocks[k].GradientInterpolateEnd && !Blocks[k].GradientInterpolateStart)
-					{
-						break;
-					}
-
-					if (Blocks[k].GradientInterpolateStart)
-					{
-						StartBlock = k;
-						break;
-					}
-				}
-
-				if (StartBlock != i)
-				{
-					double StartDistance = Blocks[StartBlock].StartingDistance;
-					double StartPitch = Blocks[StartBlock].Pitch;
-					double EndDistance = Blocks[i].StartingDistance;
-					double EndPitch = Blocks[i].Pitch;
-
-					for (int k = StartBlock + 1; k < i; k++)
-					{
-						double CurrentDistance = Blocks[k].StartingDistance;
-						double CurrentPitch = LinearInterpolation(StartDistance, StartPitch, EndDistance, EndPitch, CurrentDistance);
-
-						Blocks[k].Pitch = CurrentPitch;
-					}
-				}
-			}
+			ApplyToSpans(Blocks,
+				b => b.GradientInterpolateStart,
+				b => b.GradientInterpolateEnd,
+				StopAtAnyEnd: false,
+				(start, end) => SetGradientSpan(Blocks, start, end, StartFromPrevious: false));
 		}
 
 		private static void ConfirmTrack(RouteData RouteData)
 		{
 			IList<Block> Blocks = RouteData.Blocks;
 
+			// X and Y positions of every rail, the player track included
 			for (int j = 0; j < RouteData.TrackKeyList.Count; j++)
 			{
-				string railKey = RouteData.TrackKeyList[j];
-
-				// last block in which interpolation has been done, hence starting point for next
-				int lastInterpolateX = 0, lastInterpolateY = 0;
-
-				for (int i = 1; i < Blocks.Count; i++)
-				{
-					if (Blocks[i].Rails[railKey].InterpolateX)
-					{
-						double StartDistance = Blocks[lastInterpolateX].StartingDistance;
-						double StartX = Blocks[lastInterpolateX].Rails[railKey].Position.X;
-						double EndDistance = Blocks[i].StartingDistance;
-						double EndX = Blocks[i].Rails[railKey].Position.X;
-						double RadiusH = Blocks[lastInterpolateX].Rails[railKey].RadiusH;
-
-						for (int k = lastInterpolateX + 1; k < i; k++)
-						{
-							double CurrentDistance = Blocks[k].StartingDistance;
-							double CurrentX = GetTrackCoordinate(StartDistance, StartX, EndDistance, EndX, RadiusH, CurrentDistance);
-
-							Blocks[k].Rails[railKey].Position.X = CurrentX;
-							Blocks[k].Rails[railKey].RadiusH = RadiusH;
-						}
-
-						lastInterpolateX = i;
-					}
-
-					if (Blocks[i].Rails[railKey].InterpolateY)
-					{
-						double StartDistance = Blocks[lastInterpolateY].StartingDistance;
-						double StartY = Blocks[lastInterpolateY].Rails[railKey].Position.Y;
-						double EndDistance = Blocks[i].StartingDistance;
-						double EndY = Blocks[i].Rails[railKey].Position.Y;
-						double RadiusV = Blocks[lastInterpolateY].Rails[railKey].RadiusV;
-
-						for (int k = lastInterpolateY + 1; k < i; k++)
-						{
-							double CurrentDistance = Blocks[k].StartingDistance;
-							double CurrentY = GetTrackCoordinate(StartDistance, StartY, EndDistance, EndY, RadiusV, CurrentDistance);
-
-							Blocks[k].Rails[railKey].Position.Y = CurrentY;
-							Blocks[k].Rails[railKey].RadiusV = RadiusV;
-						}
-
-						lastInterpolateY = i;
-					}
-				}
+				string RailKey = RouteData.TrackKeyList[j];
+				InterpolateRailPosition(Blocks, RailKey, Horizontal: true);
+				InterpolateRailPosition(Blocks, RailKey, Horizontal: false);
 			}
 
-			// Set a tentative value to a block that has not been decided.
+			// Cant of the secondary rails
 			for (int j = 1; j < RouteData.TrackKeyList.Count; j++)
 			{
-				string railKey = RouteData.TrackKeyList[j];
-				int LastConfirmBlock = 0;
-				for (int i = 1; i < Blocks.Count; i++)
-				{
-					if (!Blocks[i].Rails[railKey].CurveInterpolateStart && !Blocks[i].Rails[railKey].CurveInterpolateEnd)
-					{
-						continue;
-					}
-					
-					if (LastConfirmBlock != -1)
-					{
-						for (int k = LastConfirmBlock + 1; k < i; k++)
-						{
-							Blocks[k].Rails[railKey].CurveCant = Blocks[LastConfirmBlock].Rails[railKey].CurveCant;
-						}
-					}
+				string RailKey = RouteData.TrackKeyList[j];
 
-					LastConfirmBlock = i;
-				}
+				FillTentativeBlocks(Blocks,
+					b => b.Rails[RailKey].CurveInterpolateStart,
+					b => b.Rails[RailKey].CurveInterpolateEnd,
+					(block, last) => block.Rails[RailKey].CurveCant = last.Rails[RailKey].CurveCant);
+
+				ApplyToSpans(Blocks,
+					b => b.Rails[RailKey].CurveTransitionStart,
+					b => b.Rails[RailKey].CurveTransitionEnd,
+					StopAtAnyEnd: true,
+					(start, end) => SetCantSpan(Blocks, RailKey, start, end, StartFromPrevious: true));
+
+				ApplyToSpans(Blocks,
+					b => b.Rails[RailKey].CurveInterpolateStart,
+					b => b.Rails[RailKey].CurveInterpolateEnd,
+					StopAtAnyEnd: false,
+					(start, end) => SetCantSpan(Blocks, RailKey, start, end, StartFromPrevious: false));
 			}
+		}
 
-			// Curve transition
-			for (int j = 1; j < RouteData.TrackKeyList.Count; j++)
+		// Fills in the X (or Y) position of a rail between the stated positions
+		private static void InterpolateRailPosition(IList<Block> Blocks, string RailKey, bool Horizontal)
+		{
+			int Last = 0;
+			for (int i = 1; i < Blocks.Count; i++)
 			{
-				string railKey = RouteData.TrackKeyList[j];
-				for (int i = 0; i < Blocks.Count; i++)
+				Rail Rail = Blocks[i].Rails[RailKey];
+				if (Horizontal ? !Rail.InterpolateX : !Rail.InterpolateY)
 				{
-					if (!Blocks[i].Rails[railKey].CurveTransitionEnd)
+					continue;
+				}
+
+				Rail From = Blocks[Last].Rails[RailKey];
+				double StartDistance = Blocks[Last].StartingDistance;
+				double EndDistance = Blocks[i].StartingDistance;
+				double StartValue = Horizontal ? From.Position.X : From.Position.Y;
+				double EndValue = Horizontal ? Rail.Position.X : Rail.Position.Y;
+				double Radius = Horizontal ? From.RadiusH : From.RadiusV;
+
+				for (int k = Last + 1; k < i; k++)
+				{
+					double Value = GetTrackCoordinate(StartDistance, StartValue, EndDistance, EndValue, Radius, Blocks[k].StartingDistance);
+					if (Horizontal)
 					{
-						continue;
+						Blocks[k].Rails[RailKey].Position.X = Value;
+						Blocks[k].Rails[RailKey].RadiusH = Radius;
 					}
-
-					int StartBlock = i;
-
-					for (int k = i - 1; k >= 1; k--)
+					else
 					{
-						if (Blocks[k].Rails[railKey].CurveTransitionEnd)
-						{
-							break;
-						}
-
-						if (Blocks[k].Rails[railKey].CurveTransitionStart)
-						{
-							StartBlock = k;
-							break;
-						}
-					}
-
-					if (StartBlock != i)
-					{
-						double StartDistance = Blocks[StartBlock].StartingDistance;
-						double StartCant = Blocks[StartBlock - 1].Rails[railKey].CurveCant;
-						double EndDistance = Blocks[i].StartingDistance;
-						double EndCant = Blocks[i].Rails[railKey].CurveCant;
-
-						for (int k = StartBlock; k < i; k++)
-						{
-							double CurrentDistance = Blocks[k].StartingDistance;
-							CalcCurveTransition(StartDistance, 0.0, StartCant, EndDistance, 0.0, EndCant, CurrentDistance, out _, out Blocks[k].Rails[railKey].CurveCant);
-						}
+						Blocks[k].Rails[RailKey].Position.Y = Value;
+						Blocks[k].Rails[RailKey].RadiusV = Radius;
 					}
 				}
-			}
 
-			// Curve interpolate
-			for (int j = 1; j < RouteData.TrackKeyList.Count; j++)
-			{
-				string railKey = RouteData.TrackKeyList[j];
-				for (int i = 0; i < Blocks.Count; i++)
-				{
-					if (!Blocks[i].Rails[railKey].CurveInterpolateEnd)
-					{
-						continue;
-					}
-
-					int StartBlock = i;
-
-					for (int k = i - 1; k >= 0; k--)
-					{
-						if (Blocks[k].Rails[railKey].CurveInterpolateEnd && !Blocks[k].Rails[railKey].CurveInterpolateStart)
-						{
-							break;
-						}
-
-						if (Blocks[k].Rails[railKey].CurveInterpolateStart)
-						{
-							StartBlock = k;
-							break;
-						}
-					}
-
-					if (StartBlock != i)
-					{
-						double StartDistance = Blocks[StartBlock].StartingDistance;
-						double StartCant = Blocks[StartBlock].Rails[railKey].CurveCant;
-						double EndDistance = Blocks[i].StartingDistance;
-						double EndCant = Blocks[i].Rails[railKey].CurveCant;
-
-						for (int k = StartBlock + 1; k < i; k++)
-						{
-							double CurrentDistance = Blocks[k].StartingDistance;
-							CalcCurveTransition(StartDistance, 0.0, StartCant, EndDistance, 0.0, EndCant, CurrentDistance, out _, out Blocks[k].Rails[railKey].CurveCant);
-						}
-					}
-				}
+				Last = i;
 			}
 		}
 
@@ -859,96 +692,50 @@ namespace Route.Bve5
 			switch (Statement.FunctionName)
 			{
 				case MapFunctionName.Ambient:
-				{
-					if (!Statement.HasArgument(ArgumentName.Red) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Red), out double Red))
-					{
-						Red = 1.0;
-					}
-
-					if (!Statement.HasArgument(ArgumentName.Green) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Green), out double Green))
-					{
-						Green = 1.0;
-					}
-
-					if (!Statement.HasArgument(ArgumentName.Blue) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Blue), out double Blue))
-					{
-						Blue = 1.0;
-					}
-
-					if (Red < 0.0 || Red > 1.0)
-					{
-						Red = Red < 0.0 ? 0.0 : 1.0;
-					}
-
-					if (Green < 0.0 || Green > 1.0)
-					{
-						Green = Green < 0.0 ? 0.0 : 1.0;
-					}
-
-					if (Blue < 0.0 || Blue > 1.0)
-					{
-						Blue = Blue < 0.0 ? 0.0 : 1.0;
-					}
-
-					Plugin.CurrentRoute.Atmosphere.AmbientLightColor = new Color24((byte)(Red * 255), (byte)(Green * 255), (byte)(Blue * 255));
-				}
+					Plugin.CurrentRoute.Atmosphere.AmbientLightColor = ParseLightColor(Statement);
 					break;
 				case MapFunctionName.Diffuse:
-				{
-					if (!Statement.HasArgument(ArgumentName.Red) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Red), out double Red))
-					{
-						Red = 1.0;
-					}
-
-					if (!Statement.HasArgument(ArgumentName.Green) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Green), out double Green))
-					{
-						Green = 1.0;
-					}
-
-					if (!Statement.HasArgument(ArgumentName.Blue) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Blue), out double Blue))
-					{
-						Blue = 1.0;
-					}
-
-					if (Red < 0.0 || Red > 1.0)
-					{
-						Red = Red < 0.0 ? 0.0 : 1.0;
-					}
-
-					if (Green < 0.0 || Green > 1.0)
-					{
-						Green = Green < 0.0 ? 0.0 : 1.0;
-					}
-
-					if (Blue < 0.0 || Blue > 1.0)
-					{
-						Blue = Blue < 0.0 ? 0.0 : 1.0;
-					}
-
-					Plugin.CurrentRoute.Atmosphere.DiffuseLightColor = new Color24((byte)(Red * 255), (byte)(Green * 255), (byte)(Blue * 255));
-				}
+					Plugin.CurrentRoute.Atmosphere.DiffuseLightColor = ParseLightColor(Statement);
 					break;
 				case MapFunctionName.Direction:
-				{
-					if (!Statement.HasArgument(ArgumentName.Pitch) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Pitch), out double Pitch))
 					{
-						Pitch = 60.0;
-					}
+						if (!Statement.HasArgument(ArgumentName.Pitch) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Pitch), out double Pitch))
+						{
+							Pitch = 60.0;
+						}
 
-					if (!Statement.HasArgument(ArgumentName.Yaw) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Yaw), out double Yaw))
-					{
-						Yaw = -26.565051177078;
-					}
+						if (!Statement.HasArgument(ArgumentName.Yaw) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Yaw), out double Yaw))
+						{
+							Yaw = -26.565051177078;
+						}
 
-					double Theta = Pitch.ToRadians();
-					double Phi = Yaw.ToRadians();
-					double dx = Math.Cos(Theta) * Math.Sin(Phi);
-					double dy = -Math.Sin(Theta);
-					double dz = Math.Cos(Theta) * Math.Cos(Phi);
-					Plugin.CurrentRoute.Atmosphere.LightPosition = new Vector3((float)-dx, (float)-dy, (float)-dz);
-				}
+						double Theta = Pitch.ToRadians();
+						double Phi = Yaw.ToRadians();
+						double dx = Math.Cos(Theta) * Math.Sin(Phi);
+						double dy = -Math.Sin(Theta);
+						double dz = Math.Cos(Theta) * Math.Cos(Phi);
+						Plugin.CurrentRoute.Atmosphere.LightPosition = new Vector3((float)-dx, (float)-dy, (float)-dz);
+					}
 					break;
 			}
+		}
+
+		// Parses an RGB light color, defaulting each missing / invalid component to 1.0
+		private static Color24 ParseLightColor(Statement Statement)
+		{
+			double Red = ParseLightColorComponent(Statement, ArgumentName.Red);
+			double Green = ParseLightColorComponent(Statement, ArgumentName.Green);
+			double Blue = ParseLightColorComponent(Statement, ArgumentName.Blue);
+			return new Color24((byte)(Red * 255), (byte)(Green * 255), (byte)(Blue * 255));
+		}
+
+		private static double ParseLightColorComponent(Statement Statement, ArgumentName Arg)
+		{
+			if (!Statement.HasArgument(Arg) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(Arg), out double value))
+			{
+				return 1.0;
+			}
+			return Math.Max(0.0, Math.Min(1.0, value));
 		}
 
 		private static void ConfirmCabIlluminance(Statement Statement, RouteData RouteData)
@@ -974,24 +761,10 @@ namespace Route.Bve5
 				return;
 			}
 
-			int StartBlock = -1;
-			for (int i = 1; i < RouteData.Blocks.Count; i++)
-			{
-				if (!RouteData.Blocks[i].AccuracyDefined)
-				{
-					continue;
-				}
-
-				if (StartBlock != -1)
-				{
-					for (int j = StartBlock+1; j < i; j++)
-					{
-						RouteData.Blocks[j].Accuracy = RouteData.Blocks[StartBlock].Accuracy;
-					}
-				}
-
-				StartBlock = i;
-			}
+			FillTentativeBlocks(RouteData.Blocks,
+				b => false,
+				b => b.AccuracyDefined,
+				(Target, Source) => Target.Accuracy = Source.Accuracy);
 		}
 
 		private static void ConfirmAdhesion(bool PreviewOnly, RouteData RouteData)
@@ -1001,25 +774,10 @@ namespace Route.Bve5
 				return;
 			}
 
-			int StartBlock = -1;
-
-			for (int i = 1; i < RouteData.Blocks.Count; i++)
-			{
-				if (!RouteData.Blocks[i].AdhesionMultiplierDefined)
-				{
-					continue;
-				}
-
-				if (StartBlock != -1)
-				{
-					for (int j = StartBlock + 1; j < i; j++)
-					{
-						RouteData.Blocks[j].AdhesionMultiplier = RouteData.Blocks[StartBlock].AdhesionMultiplier;
-					}
-				}
-
-				StartBlock = i;
-			}
+			FillTentativeBlocks(RouteData.Blocks,
+				b => false,
+				b => b.AdhesionMultiplierDefined,
+				(Target, Source) => Target.AdhesionMultiplier = Source.AdhesionMultiplier);
 		}
 
 		private static void ConfirmSound(Statement Statement, RouteData RouteData)

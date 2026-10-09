@@ -135,8 +135,7 @@ namespace Route.Bve5
 				plugin.CurrentProgress = 0.6667 + i * progressFactor;
 				if ((i & 15) == 0)
 				{
-					System.Threading.Thread.Sleep(1);
-					if (plugin.Cancel) return;
+					if (CheckForCancel()) return;
 				}
 
 				double StartingDistance = Data.Blocks[i].StartingDistance;
@@ -247,19 +246,7 @@ namespace Route.Bve5
 				{
 					int s = Data.Blocks[i].StationIndex;
 					Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new StationStartEvent(Plugin.CurrentRoute, 0.0, s));
-					double dx;
-					if (Plugin.CurrentRoute.Stations[s].OpenLeftDoors & !Plugin.CurrentRoute.Stations[s].OpenRightDoors)
-					{
-						dx = -5.0;
-					}
-					else if (!Plugin.CurrentRoute.Stations[s].OpenLeftDoors & Plugin.CurrentRoute.Stations[s].OpenRightDoors)
-					{
-						dx = 5.0;
-					}
-					else
-					{
-						dx = 0.0;
-					}
+					double dx = GetDoorSideOffset(Plugin.CurrentRoute.Stations[s]);
 					Plugin.CurrentRoute.Stations[s].SoundOrigin = Position + dx * Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide + 3.0 * Plugin.CurrentRoute.Tracks[0].Elements[n].WorldUp;
 				}
 
@@ -267,19 +254,7 @@ namespace Route.Bve5
 				if (Data.Blocks[i].Stop >= 0)
 				{
 					int s = Data.Blocks[i].Stop;
-					double dx;
-					if (Plugin.CurrentRoute.Stations[s].OpenLeftDoors & !Plugin.CurrentRoute.Stations[s].OpenRightDoors)
-					{
-						dx = -5.0;
-					}
-					else if (!Plugin.CurrentRoute.Stations[s].OpenLeftDoors & Plugin.CurrentRoute.Stations[s].OpenRightDoors)
-					{
-						dx = 5.0;
-					}
-					else
-					{
-						dx = 0.0;
-					}
+					double dx = GetDoorSideOffset(Plugin.CurrentRoute.Stations[s]);
 					Plugin.CurrentRoute.Stations[s].SoundOrigin = Position + dx * Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide + 3.0 * Plugin.CurrentRoute.Tracks[0].Elements[n].WorldUp;
 				}
 
@@ -643,6 +618,20 @@ namespace Route.Bve5
 			{
 				ComputeCantTangents();
 			}
+		}
+
+		// how far off the track the station marker sits, based on the door side
+		private static double GetDoorSideOffset(RouteManager2.Stations.RouteStation Station)
+		{
+			if (Station.OpenLeftDoors & !Station.OpenRightDoors)
+			{
+				return -5.0;
+			}
+			if (!Station.OpenLeftDoors & Station.OpenRightDoors)
+			{
+				return 5.0;
+			}
+			return 0.0;
 		}
 
 		private static void ComputeCantTangents()

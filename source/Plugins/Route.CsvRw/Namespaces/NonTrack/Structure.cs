@@ -21,24 +21,24 @@ namespace CsvRwRouteParser
 				{
 					if (commandIndices[0] < 0)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex is expected to be non-negative in " + Command + At(Expression));
 					}
 					else
 					{
 						if (Arguments.Length < 1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 						}
 						else if (Path.ContainsInvalidChars(Arguments[0]))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 						}
 						else
 						{
 							string f = Arguments[0];
 							if (!LocateObject(ref f, ObjectPath))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 								missingObjectCount++;
 							}
 							else
@@ -63,24 +63,24 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex is expected to be non-negative in " + Command + At(Expression));
 						}
 						else
 						{
 							if (Arguments.Length < 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 							}
 							else if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
 								string f = Path.CombineFile(ObjectPath, Arguments[0]);
 								if (!File.Exists(f))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + Arguments[0] + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + Arguments[0] + " not found in " + Command + At(Expression));
 								}
 								else
 								{
@@ -97,21 +97,21 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "AdditionalRailsCovered is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "AdditionalRailsCovered is expected to be non-negative in " + Command + At(Expression));
 						}
 						else if (commandIndices[1] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "PoleStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "PoleStructureIndex is expected to be non-negative in " + Command + At(Expression));
 						}
 						else
 						{
 							if (Arguments.Length < 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 							}
 							else if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
@@ -124,7 +124,7 @@ namespace CsvRwRouteParser
 								string f = Arguments[0];
 								if (!LocateObject(ref f, ObjectPath))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 								}
 								else
 								{
@@ -141,24 +141,24 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GroundStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GroundStructureIndex is expected to be non-negative in " + Command + At(Expression));
 						}
 						else
 						{
 							if (Arguments.Length < 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 							}
 							else if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
 								string f = Arguments[0];
 								if (!LocateObject(ref f, ObjectPath))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 								}
 								else
 								{
@@ -175,24 +175,24 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left WallStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left WallStructureIndex is expected to be non-negative in " + Command + At(Expression));
 						}
 						else
 						{
 							if (Arguments.Length < 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 							}
 							else if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
 								string f = Arguments[0];
 								if (!LocateObject(ref f, ObjectPath))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 								}
 								else
 								{
@@ -209,24 +209,24 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right WallStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right WallStructureIndex is expected to be non-negative in " + Command + At(Expression));
 						}
 						else
 						{
 							if (Arguments.Length < 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 							}
 							else if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
 								string f = Arguments[0];
 								if (!LocateObject(ref f, ObjectPath))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 								}
 								else
 								{
@@ -243,24 +243,24 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left DikeStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left DikeStructureIndex is expected to be non-negative in " + Command + At(Expression));
 						}
 						else
 						{
 							if (Arguments.Length < 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 							}
 							else if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
 								string f = Arguments[0];
 								if (!LocateObject(ref f, ObjectPath))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 								}
 								else
 								{
@@ -277,24 +277,24 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right DikeStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right DikeStructureIndex is expected to be non-negative in " + Command + At(Expression));
 						}
 						else
 						{
 							if (Arguments.Length < 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 							}
 							else if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
 								string f = Arguments[0];
 								if (!LocateObject(ref f, ObjectPath))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 								}
 								else
 								{
@@ -311,24 +311,24 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left FormStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left FormStructureIndex is expected to be non-negative in " + Command + At(Expression));
 						}
 						else
 						{
 							if (Arguments.Length < 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 							}
 							else if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
 								string f = Arguments[0];
 								if (!LocateObject(ref f, ObjectPath))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 								}
 								else
 								{
@@ -345,24 +345,24 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right FormStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right FormStructureIndex is expected to be non-negative in " + Command + At(Expression));
 						}
 						else
 						{
 							if (Arguments.Length < 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 							}
 							else if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
 								string f = Arguments[0];
 								if (!LocateObject(ref f, ObjectPath))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 								}
 								else
 								{
@@ -379,24 +379,24 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left FormCStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left FormCStructureIndex is expected to be non-negative in " + Command + At(Expression));
 						}
 						else
 						{
 							if (Arguments.Length < 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 							}
 							else if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
 								string f = Arguments[0];
 								if (!LocateObject(ref f, ObjectPath))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 								}
 								else
 								{
@@ -413,24 +413,24 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right FormCStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right FormCStructureIndex is expected to be non-negative in " + Command + At(Expression));
 						}
 						else
 						{
 							if (Arguments.Length < 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 							}
 							else if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
 								string f = Arguments[0];
 								if (!LocateObject(ref f, ObjectPath))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 								}
 								else
 								{
@@ -455,17 +455,17 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left RoofStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left RoofStructureIndex is expected to be non-negative in " + Command + At(Expression));
 						}
 						else
 						{
 							if (Arguments.Length < 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 							}
 							else if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
@@ -473,7 +473,7 @@ namespace CsvRwRouteParser
 								{
 									if (Data.FileFormat != RoutefileFormat.RW)
 									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex was omitted or is 0 in " + Command + " argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex was omitted or is 0 in " + Command + " argument" + At(Expression));
 									}
 
 									commandIndices[0] = 1;
@@ -481,14 +481,14 @@ namespace CsvRwRouteParser
 
 								if (commandIndices[0] < 0)
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex is expected to be non-negative in " + Command + " argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex is expected to be non-negative in " + Command + " argument" + At(Expression));
 								}
 								else
 								{
 									string f = Arguments[0];
 									if (!LocateObject(ref f, ObjectPath))
 									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 									}
 									else
 									{
@@ -506,17 +506,17 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right RoofStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right RoofStructureIndex is expected to be non-negative in " + Command + At(Expression));
 						}
 						else
 						{
 							if (Arguments.Length < 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 							}
 							else if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
@@ -524,7 +524,7 @@ namespace CsvRwRouteParser
 								{
 									if (Data.FileFormat != RoutefileFormat.RW)
 									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex was omitted or is 0 in " + Command + " argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex was omitted or is 0 in " + Command + " argument" + At(Expression));
 									}
 
 									commandIndices[0] = 1;
@@ -532,14 +532,14 @@ namespace CsvRwRouteParser
 
 								if (commandIndices[0] < 0)
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex is expected to be non-negative in " + Command + " argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex is expected to be non-negative in " + Command + " argument" + At(Expression));
 								}
 								else
 								{
 									string f = Arguments[0];
 									if (!LocateObject(ref f, ObjectPath))
 									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 									}
 									else
 									{
@@ -557,17 +557,17 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left RoofCStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left RoofCStructureIndex is expected to be non-negative in " + Command + At(Expression));
 						}
 						else
 						{
 							if (Arguments.Length < 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 							}
 							else if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
@@ -575,7 +575,7 @@ namespace CsvRwRouteParser
 								{
 									if (Data.FileFormat != RoutefileFormat.RW)
 									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex was omitted or is 0 in " + Command + " argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex was omitted or is 0 in " + Command + " argument" + At(Expression));
 									}
 
 									commandIndices[0] = 1;
@@ -583,14 +583,14 @@ namespace CsvRwRouteParser
 
 								if (commandIndices[0] < 0)
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex is expected to be non-negative in " + Command + " argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex is expected to be non-negative in " + Command + " argument" + At(Expression));
 								}
 								else
 								{
 									string f = Arguments[0];
 									if (!LocateObject(ref f, ObjectPath))
 									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 									}
 									else
 									{
@@ -608,17 +608,17 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right RoofCStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right RoofCStructureIndex is expected to be non-negative in " + Command + At(Expression));
 						}
 						else
 						{
 							if (Arguments.Length < 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 							}
 							else if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
@@ -626,7 +626,7 @@ namespace CsvRwRouteParser
 								{
 									if (Data.FileFormat != RoutefileFormat.RW)
 									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex was omitted or is 0 in " + Command + " argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex was omitted or is 0 in " + Command + " argument" + At(Expression));
 									}
 
 									commandIndices[0] = 1;
@@ -634,14 +634,14 @@ namespace CsvRwRouteParser
 
 								if (commandIndices[0] < 0)
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex is expected to be non-negative in " + Command + " argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex is expected to be non-negative in " + Command + " argument" + At(Expression));
 								}
 								else
 								{
 									string f = Arguments[0];
 									if (!LocateObject(ref f, ObjectPath))
 									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 									}
 									else
 									{
@@ -659,24 +659,24 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left CrackStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left CrackStructureIndex is expected to be non-negative in " + Command + At(Expression));
 						}
 						else
 						{
 							if (Arguments.Length < 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 							}
 							else if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
 								string f = Arguments[0];
 								if (!LocateObject(ref f, ObjectPath))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 								}
 								else
 								{
@@ -693,24 +693,24 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right CrackStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right CrackStructureIndex is expected to be non-negative in " + Command + At(Expression));
 						}
 						else
 						{
 							if (Arguments.Length < 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 							}
 							else if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
 								string f = Arguments[0];
 								if (!LocateObject(ref f, ObjectPath))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 								}
 								else
 								{
@@ -730,24 +730,24 @@ namespace CsvRwRouteParser
 					}
 					if (commandIndices[0] < 0)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FreeObjStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FreeObjStructureIndex is expected to be non-negative in " + Command + At(Expression));
 					}
 					else
 					{
 						if (Arguments.Length < 1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 						}
 						else if (Path.ContainsInvalidChars(Arguments[0]))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 						}
 						else
 						{
 							string f = Arguments[0];
 							if (!LocateObject(ref f, ObjectPath))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " could not be found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " could not be found in " + Command + At(Expression));
 								missingObjectCount++;
 							}
 							else
@@ -772,17 +772,17 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundTextureIndex is expected to be non-negative at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundTextureIndex is expected to be non-negative" + At(Expression));
 						}
 						else if (Arguments.Length < 1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 						}
 						else
 						{
 							if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
@@ -814,7 +814,7 @@ namespace CsvRwRouteParser
 
 								if (!File.Exists(f))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 								}
 								else
 								{
@@ -829,11 +829,11 @@ namespace CsvRwRouteParser
 										{
 											if (ex is XmlException)
 											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, true, f + " contains malformed XML in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, true, f + " contains malformed XML in " + Command + At(Expression));
 											}
 											else
 											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, true, f + " is not a valid background XML in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, true, f + " is not a valid background XML in " + Command + At(Expression));
 											}
 													
 										}
@@ -858,11 +858,11 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundTextureIndex " + commandIndices[0] + " is expected to be non-negative at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundTextureIndex " + commandIndices[0] + " is expected to be non-negative" + At(Expression));
 						}
 						else if (Arguments.Length < 1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 						}
 						else
 						{
@@ -873,11 +873,11 @@ namespace CsvRwRouteParser
 
 							if (!NumberFormats.TryParseIntVb6(Arguments[0], out int x))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundTextureIndex " + Arguments[0] + " is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundTextureIndex " + Arguments[0] + " is invalid in " + Command + At(Expression));
 							}
 							else if (x == 0)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RepetitionCount is expected to be non-zero in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RepetitionCount is expected to be non-zero in " + Command + At(Expression));
 							}
 							else
 							{
@@ -897,11 +897,11 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundTextureIndex " + commandIndices[0] + " is expected to be non-negative at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundTextureIndex " + commandIndices[0] + " is expected to be non-negative" + At(Expression));
 						}
 						else if (Arguments.Length < 1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 						}
 						else
 						{
@@ -912,11 +912,11 @@ namespace CsvRwRouteParser
 
 							if (!NumberFormats.TryParseIntVb6(Arguments[0], out int aspect))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundTextureIndex " + Arguments[0] + " is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundTextureIndex " + Arguments[0] + " is invalid in " + Command + At(Expression));
 							}
 							else if (aspect != 0 & aspect != 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is expected to be either 0 or 1 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is expected to be either 0 or 1 in " + Command + At(Expression));
 							}
 							else
 							{
@@ -936,24 +936,24 @@ namespace CsvRwRouteParser
 					{
 						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex is expected to be non-negative in " + Command + At(Expression));
 						}
 						else
 						{
 							if (Arguments.Length < 1)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument" + At(Expression));
 							}
 							else if (Path.ContainsInvalidChars(Arguments[0]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + At(Expression));
 							}
 							else
 							{
 								string f = Path.CombineFile(ObjectPath, Arguments[0]);
 								if (!File.Exists(f))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + At(Expression));
 								}
 								else
 								{
@@ -967,7 +967,7 @@ namespace CsvRwRouteParser
 				case StructureCommand.DynamicLight:
 					if (commandIndices[0] < 0)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DynamicLightIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DynamicLightIndex is expected to be non-negative in " + Command + At(Expression));
 					}
 					else
 					{
@@ -996,12 +996,12 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The file " + path + " is not a valid dynamic lighting XML file, at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The file " + path + " is not a valid dynamic lighting XML file," + At(Expression));
 							}
 						}
 						else
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Dynamic lighting XML file not found at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Dynamic lighting XML file not found" + At(Expression));
 						}
 					}
 					break;

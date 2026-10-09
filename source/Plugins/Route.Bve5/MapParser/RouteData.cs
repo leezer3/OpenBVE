@@ -56,43 +56,21 @@ namespace Route.Bve5
 
 		internal void TryAddBlock(double Distance)
 		{
-			if (sortedBlocks.ContainsKey(Distance))
+			if (!sortedBlocks.ContainsKey(Distance))
 			{
-				return;
-			}
-			Bve5ScenarioParser.Block NewBlock = new Bve5ScenarioParser.Block
-			{
-				Rails = TrackKeyList.ToDictionary(x => x, x => new Rail()),
-				StartingDistance = Distance,
-				CurrentTrackState =
-				{
-					StartingTrackPosition = Distance
-				},
-				FreeObjects = new Dictionary<string, List<FreeObj>>(StringComparer.InvariantCultureIgnoreCase),
-				Cracks = new List<Crack>(),
-				Sections = new List<Section>(),
-				Signals = new List<Signal>[TrackKeyList.Count],
-				Transponders = new List<Transponder>(),
-				Limits = new List<Limit>(),
-				BrightnessChanges = new List<Brightness>(),
-				SoundEvents = new List<Sound>(),
-				RunSounds = new List<RunSound>(),
-				FlangeSounds = new List<FlangeSound>()
-			};
-			sortedBlocks.Add(Distance, NewBlock);
-			int newIndex = sortedBlocks.IndexOfKey(Distance);
-			if (newIndex > 0)
-			{
-				Blocks[newIndex].Fog = Blocks[newIndex - 1].Fog;
+				InsertBlock(Distance);
 			}
 		}
 
 		internal int FindOrAddBlock(double Distance)
 		{
-			if (sortedBlocks.ContainsKey(Distance))
-			{
-				return sortedBlocks.IndexOfKey(Distance);
-			}
+			int index = sortedBlocks.IndexOfKey(Distance);
+			return index >= 0 ? index : InsertBlock(Distance);
+		}
+
+		/// <summary>Adds a new block at the given distance and returns its index in the sorted blocks</summary>
+		private int InsertBlock(double Distance)
+		{
 			Bve5ScenarioParser.Block NewBlock = new Bve5ScenarioParser.Block
 			{
 				Rails = TrackKeyList.ToDictionary(x => x, x => new Rail()),
@@ -116,7 +94,7 @@ namespace Route.Bve5
 			int newIndex = sortedBlocks.IndexOfKey(Distance);
 			if (newIndex > 0)
 			{
-				Blocks[newIndex].Fog = Blocks[newIndex - 1].Fog;
+				NewBlock.Fog = Blocks[newIndex - 1].Fog;
 			}
 			return newIndex;
 		}

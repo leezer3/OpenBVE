@@ -2,10 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using LibRender2.Screens;
 using OpenBveApi;
+using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
@@ -44,6 +48,43 @@ namespace LibRender2.Textures
 		private static readonly Dictionary<string, List<Texture>> RegisteredTextureLookup = new Dictionary<string, List<Texture>>(StringComparer.OrdinalIgnoreCase);
 
 		private static readonly object TextureLookupLock = new object();
+
+		// Textures without a path (bitmaps, decoded images) share one handle when their content matches.
+		// Bitmap entries also key on params; raw entries only match while both sides still hold CPU bytes.
+		private struct ContentKey : IEquatable<ContentKey>
+		{
+			public int Width;
+			public int Height;
+			public int Format;
+			public ulong Hash;
+			public TextureClipRegion Clip;
+			public Color24? Transparent;
+
+			public bool Equals(ContentKey o)
+			{
+				return Width == o.Width && Height == o.Height && Format == o.Format && Hash == o.Hash && Clip == o.Clip && Transparent == o.Transparent;
+			}
+
+			public override bool Equals(object obj)
+			{
+				return obj is ContentKey o && Equals(o);
+			}
+
+			public override int GetHashCode()
+			{
+				unchecked
+				{
+					int h = Width;
+					h = (h * 397) ^ Height;
+					h = (h * 397) ^ Format;
+					h = (h * 397) ^ Hash.GetHashCode();
+					return h;
+				}
+			}
+		}
+
+		private static readonly Dictionary<ContentKey, Texture> BitmapTextureLookup = new Dictionary<ContentKey, Texture>();
+		private static readonly Dictionary<ContentKey, Texture> RawTextureLookup = new Dictionary<ContentKey, Texture>();
 
 		/// <summary>Striped locks serializing same-path texture registration.</summary>
 		private static readonly object[] PathRegisterStripes = CreateStripes();
@@ -164,6 +205,8 @@ namespace LibRender2.Textures
 					RegisteredTextureLookup[path] = list;
 				}
 				list.Add(handle);
+				// Files re-decode from disk, so the GL copy may be dropped after 20s unused
+				handle.AvailableToUnload = true;
 			}
 			return true;
 		}
@@ -198,20 +241,266 @@ namespace LibRender2.Textures
 			return false;
 		}
 
+		// Params carry fields that == skips, so don't share those (wrong image on screen)
+		private static bool ParametersShareable(TextureParameters parameters)
+		{
+			return parameters == null || (parameters.TransparencyTexture == null && !parameters.FirstColorTransparent);
+		}
+
+		// FNV-1a 64-bit constants (offset basis 0xCBF29CE484222325, prime 0x100000001B3).
+		// Source: Fowler-Noll-Vo hash, http://www.isthe.com/chongo/tech/comp/fnv/
+		private const ulong FnvOffsetBasis = 14695981039346656037ul;
+		private const ulong FnvPrime = 1099511628211ul;
+
+		// Only mipmap min filters can sample below level 0, so skip generating the chain otherwise (~1/3 VRAM saved).
+		// Aniso also needs the chain: without mipmaps drivers may ignore the anisotropy setting entirely.
+		private static bool UsesMipmaps(InterpolationMode mode)
+		{
+			return mode != InterpolationMode.NearestNeighbor && mode != InterpolationMode.Bilinear;
+		}
+
+		private static ulong HashBytes(byte[] data, int offset, int count)
+		{
+			ulong hash = FnvOffsetBasis;
+			for (int i = offset; i < offset + count; i++)
+			{
+				hash = (hash ^ data[i]) * FnvPrime;
+			}
+			return hash;
+		}
+
+		private static ulong CombineHash(ulong a, ulong b)
+		{
+			return a * FnvPrime ^ b;
+		}
+
+		private static int BitmapBytesPerPixel(System.Drawing.Imaging.PixelFormat format)
+		{
+			switch (format)
+			{
+				case System.Drawing.Imaging.PixelFormat.Format8bppIndexed: return 1;
+				case System.Drawing.Imaging.PixelFormat.Format24bppRgb: return 3;
+				case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
+				case System.Drawing.Imaging.PixelFormat.Format32bppPArgb:
+				case System.Drawing.Imaging.PixelFormat.Format32bppRgb: return 4;
+				default: return -1;
+			}
+		}
+
+		// Hashes the used bytes per row, skipping stride padding
+		private static bool TryHashBitmap(Bitmap bitmap, out ulong hash)
+		{
+			hash = 0;
+			int bpp = BitmapBytesPerPixel(bitmap.PixelFormat);
+			if (bpp < 0) return false;
+			BitmapData data = null;
+			try
+			{
+				data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+				ulong h = FnvOffsetBasis;
+				byte[] row = new byte[bitmap.Width * bpp];
+				for (int y = 0; y < bitmap.Height; y++)
+				{
+					Marshal.Copy(new IntPtr(data.Scan0.ToInt64() + (long)y * data.Stride), row, 0, row.Length);
+					h = CombineHash(h, HashBytes(row, 0, row.Length));
+				}
+				hash = h;
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+			finally
+			{
+				if (data != null)
+				{
+					try { bitmap.UnlockBits(data); } catch { }
+				}
+			}
+		}
+
+		private static bool BitmapsEqual(Bitmap a, Bitmap b)
+		{
+			if (ReferenceEquals(a, b)) return true;
+			if (a.Width != b.Width || a.Height != b.Height || a.PixelFormat != b.PixelFormat) return false;
+			int bpp = BitmapBytesPerPixel(a.PixelFormat);
+			if (bpp < 0) return false;
+			Rectangle rect = new Rectangle(0, 0, a.Width, a.Height);
+			BitmapData da = null, db = null;
+			// Fixed lock order; GetTexture only takes one, so no deadlock
+			Bitmap first = RuntimeHelpers.GetHashCode(a) < RuntimeHelpers.GetHashCode(b) ? a : b;
+			Bitmap second = first == a ? b : a;
+			try
+			{
+				lock (first)
+				{
+					lock (second)
+					{
+						da = a.LockBits(rect, ImageLockMode.ReadOnly, a.PixelFormat);
+						try
+						{
+							db = b.LockBits(rect, ImageLockMode.ReadOnly, b.PixelFormat);
+						}
+						catch
+						{
+							return false;
+						}
+						int rowBytes = a.Width * bpp;
+						byte[] ra = new byte[rowBytes];
+						byte[] rb = new byte[rowBytes];
+						for (int y = 0; y < a.Height; y++)
+						{
+							Marshal.Copy(new IntPtr(da.Scan0.ToInt64() + (long)y * da.Stride), ra, 0, rowBytes);
+							Marshal.Copy(new IntPtr(db.Scan0.ToInt64() + (long)y * db.Stride), rb, 0, rowBytes);
+							for (int x = 0; x < rowBytes; x++)
+							{
+								if (ra[x] != rb[x]) return false;
+							}
+						}
+						return true;
+					}
+				}
+			}
+			catch
+			{
+				return false;
+			}
+			finally
+			{
+				if (da != null)
+				{
+					try { a.UnlockBits(da); } catch { }
+				}
+				if (db != null)
+				{
+					try { b.UnlockBits(db); } catch { }
+				}
+			}
+		}
+
+		// Needs TextureLookupLock. Hash first, then compare pixels to rule out collisions.
+		private static bool TryFindBitmapTexture(Bitmap bitmap, TextureParameters parameters, out Texture handle)
+		{
+			handle = null;
+			if (bitmap == null || !ParametersShareable(parameters)) return false;
+			if (!TryHashBitmap(bitmap, out ulong hash)) return false;
+			ContentKey key = new ContentKey
+			{
+				Width = bitmap.Width,
+				Height = bitmap.Height,
+				Format = (int)bitmap.PixelFormat,
+				Hash = hash,
+				Clip = parameters?.ClipRegion,
+				Transparent = parameters?.TransparentColor
+			};
+			if (BitmapTextureLookup.TryGetValue(key, out Texture existing) && existing?.Origin is BitmapOrigin origin && origin.Bitmap != null)
+			{
+				if (BitmapsEqual(origin.Bitmap, bitmap))
+				{
+					handle = existing;
+					return true;
+				}
+			}
+			return false;
+		}
+
+		// Needs TextureLookupLock
+		private static void AddBitmapTexture(Bitmap bitmap, TextureParameters parameters, ulong hash, Texture handle)
+		{
+			BitmapTextureLookup[new ContentKey
+			{
+				Width = bitmap.Width,
+				Height = bitmap.Height,
+				Format = (int)bitmap.PixelFormat,
+				Hash = hash,
+				Clip = parameters?.ClipRegion,
+				Transparent = parameters?.TransparentColor
+			}] = handle;
+		}
+
+		// Needs TextureLookupLock. Only matches while both sides still hold CPU bytes.
+		private static bool TryFindRawTexture(Texture texture, out Texture handle)
+		{
+			handle = null;
+			if (texture == null || texture.MultipleFrames) return false;
+			byte[] bytes;
+			try
+			{
+				bytes = texture.Bytes;
+			}
+			catch
+			{
+				return false;
+			}
+			if (bytes == null || bytes.Length == 0) return false;
+			ContentKey key = new ContentKey
+			{
+				Width = texture.Width,
+				Height = texture.Height,
+				Format = (int)texture.PixelFormat,
+				Hash = HashBytes(bytes, 0, bytes.Length)
+			};
+			if (RawTextureLookup.TryGetValue(key, out Texture existing))
+			{
+				byte[] other;
+				try
+				{
+					other = existing?.Bytes;
+				}
+				catch
+				{
+					return false;
+				}
+				if (other == null || other.Length != bytes.Length) return false;
+				for (int i = 0; i < bytes.Length; i++)
+				{
+					if (other[i] != bytes[i]) return false;
+				}
+				handle = existing;
+				return true;
+			}
+			return false;
+		}
+
+		// Needs TextureLookupLock
+		private static void AddRawTexture(Texture source, Texture handle)
+		{
+			byte[] bytes;
+			try
+			{
+				bytes = source.Bytes;
+			}
+			catch
+			{
+				return;
+			}
+			if (bytes == null || bytes.Length == 0 || source.MultipleFrames) return;
+			RawTextureLookup[new ContentKey
+			{
+				Width = source.Width,
+				Height = source.Height,
+				Format = (int)source.PixelFormat,
+				Hash = HashBytes(bytes, 0, bytes.Length)
+			}] = handle;
+		}
+
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>
 		/// <param name="texture">The texture data.</param>
 		/// <returns>The handle to the texture.</returns>
 		public Texture RegisterTexture(Texture texture)
 		{
-			/*
-			 * Register the texture and return the newly created handle.
-			 * Locked: shares the index allocator with parallel path registration.
-			 * */
+			// Same decoded image registered twice shares one handle (one CPU copy, one GL texture)
 			lock (TextureLookupLock)
 			{
+				if (TryFindRawTexture(texture, out Texture existing))
+				{
+					return existing;
+				}
 				int idx = GetNextFreeTexture();
 				RegisteredTextures[idx] = new Texture(texture);
 				RegisteredTexturesCount++;
+				AddRawTexture(texture, RegisteredTextures[idx]);
 				return RegisteredTextures[idx];
 			}
 		}
@@ -223,15 +512,22 @@ namespace LibRender2.Textures
 		/// <remarks>Be sure not to dispose of the bitmap after calling this function.</remarks>
 		public Texture RegisterTexture(Bitmap bitmap, TextureParameters parameters)
 		{
-			/*
-			 * Register the texture and return the newly created handle.
-			 * Locked: shares the index allocator with parallel path registration.
-			 * */
+			// Same image registered twice shares one handle (one CPU copy, one GL texture)
 			lock (TextureLookupLock)
 			{
+				if (TryFindBitmapTexture(bitmap, parameters, out Texture existing))
+				{
+					return existing;
+				}
 				int idx = GetNextFreeTexture();
 				RegisteredTextures[idx] = new Texture(bitmap, parameters);
 				RegisteredTexturesCount++;
+				// Bitmaps re-decode from the retained image, so the GL copy may be dropped when unused
+				RegisteredTextures[idx].AvailableToUnload = true;
+				if (bitmap != null && ParametersShareable(parameters) && TryHashBitmap(bitmap, out ulong hash))
+				{
+					AddBitmapTexture(bitmap, parameters, hash, RegisteredTextures[idx]);
+				}
 				return RegisteredTextures[idx];
 			}
 		}
@@ -242,15 +538,21 @@ namespace LibRender2.Textures
 		/// <remarks>Be sure not to dispose of the bitmap after calling this function.</remarks>
 		public Texture RegisterTexture(Bitmap bitmap)
 		{
-			/*
-			 * Register the texture and return the newly created handle.
-			 * Locked: shares the index allocator with parallel path registration.
-			 * */
+			// Same image registered twice shares one handle (one CPU copy, one GL texture)
 			lock (TextureLookupLock)
 			{
+				if (TryFindBitmapTexture(bitmap, null, out Texture existing))
+				{
+					return existing;
+				}
 				int idx = GetNextFreeTexture();
 				RegisteredTextures[idx] = new Texture(bitmap);
 				RegisteredTexturesCount++;
+				RegisteredTextures[idx].AvailableToUnload = true;
+				if (bitmap != null && TryHashBitmap(bitmap, out ulong hash))
+				{
+					AddBitmapTexture(bitmap, null, hash, RegisteredTextures[idx]);
+				}
 				return RegisteredTextures[idx];
 			}
 		}
@@ -271,6 +573,11 @@ namespace LibRender2.Textures
 			bool result = LoadTextureInternal(ref handle, wrap, currentTicks, Interpolation, AnisotropicFilteringLevel);
 			UploadCount++;
 			UploadMs += uploadTimer.ElapsedMilliseconds;
+			if (result && handle != null)
+			{
+				// Static hits never stamped this, so everything looked 20s stale to the unloader
+				handle.LastAccess = currentTicks;
+			}
 			return result;
 		}
 
@@ -407,7 +714,6 @@ namespace LibRender2.Textures
 									GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.Width, texture.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, pooled);
 								}
 							}
-							GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 						}
 						else
 						{
@@ -427,7 +733,6 @@ namespace LibRender2.Textures
 								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
 								GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.Width, texture.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, subBytes);
 							}
-							GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 						}
 						// Keep the stable handle in sync without swapping identity: the handle keeps
 						// its origin so the animated cache keeps hitting every tick (swapping to the
@@ -561,33 +866,43 @@ namespace LibRender2.Textures
 						handle.OpenGlTextures[(int)wrap].Name = 0;
 						return false;
 					}
+					float minFilter, magFilter;
 					switch (Interpolation)
 					{
 						case InterpolationMode.NearestNeighbor:
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.Nearest);
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Nearest);
+							minFilter = (float)TextureMinFilter.Nearest;
+							magFilter = (float)TextureMagFilter.Nearest;
 							break;
 						case InterpolationMode.Bilinear:
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.Linear);
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
+							minFilter = (float)TextureMinFilter.Linear;
+							magFilter = (float)TextureMagFilter.Linear;
 							break;
 						case InterpolationMode.NearestNeighborMipmapped:
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.NearestMipmapNearest);
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Nearest);
+							minFilter = (float)TextureMinFilter.NearestMipmapNearest;
+							magFilter = (float)TextureMagFilter.Nearest;
 							break;
 						case InterpolationMode.BilinearMipmapped:
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.NearestMipmapLinear);
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
+							minFilter = (float)TextureMinFilter.NearestMipmapLinear;
+							magFilter = (float)TextureMagFilter.Linear;
 							break;
 						case InterpolationMode.TrilinearMipmapped:
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.LinearMipmapLinear);
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
+							minFilter = (float)TextureMinFilter.LinearMipmapLinear;
+							magFilter = (float)TextureMagFilter.Linear;
 							break;
 						default:
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.LinearMipmapLinear);
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
+							minFilter = (float)TextureMinFilter.LinearMipmapLinear;
+							magFilter = (float)TextureMagFilter.Linear;
 							break;
 					}
+					if (texture.MultipleFrames)
+					{
+						// Animated textures get no mip chain, so a mipmapped min filter would
+						// sample an incomplete one. Demote it to the mag filter, which shares
+						// the same numeric values for Nearest and Linear.
+						minFilter = magFilter;
+					}
+					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, minFilter);
+					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, magFilter);
 
 					if ((wrap & OpenGlTextureWrapMode.RepeatClamp) != 0)
 					{
@@ -609,7 +924,15 @@ namespace LibRender2.Textures
 
 					if (Interpolation == InterpolationMode.AnisotropicFiltering && AnisotropicFilteringLevel > 0)
 					{
-						GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, AnisotropicFilteringLevel);
+						// A level saved on a beefier GPU has to be clamped; Maximum is 0 until
+						// the driver has been queried, in which case the driver clamps for us.
+						int anisoLevel = AnisotropicFilteringLevel;
+						int anisoMax = renderer?.currentOptions?.AnisotropicFilteringMaximum ?? 0;
+						if (anisoMax > 0 && anisoLevel > anisoMax)
+						{
+							anisoLevel = anisoMax;
+						}
+						GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, anisoLevel);
 					}
 					
 					if (handle.Transparency == TextureTransparencyType.Opaque)
@@ -793,7 +1116,8 @@ namespace LibRender2.Textures
 						}
 						
 					}
-					GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+					// Animated textures never get a chain, so don't start one here either
+					if (!texture.MultipleFrames && UsesMipmaps(Interpolation)) GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
                     handle.OpenGlTextures[(int)wrap].Valid = true;
 					if (texture.MultipleFrames)
 					{
@@ -891,6 +1215,15 @@ namespace LibRender2.Textures
 			// been cleared by UnloadAllTextures, which previously produced hollow handles with
 			// a null origin here and killed animated GIFs after a reload / filtering change.)
 			handle = new Texture(texture.Origin);
+			// The old handle's frames are orphaned now: drop the cached decode so it can be freed.
+			// Next use re-decodes from disk through the new hollow handle.
+			if (texture.Origin != null)
+			{
+				lock (TextureLookupLock)
+				{
+					animatedTextures.Remove(texture.Origin);
+				}
+			}
 			}
 			else
 			{
@@ -1013,6 +1346,15 @@ namespace LibRender2.Textures
 						}
 						list.Add(texture);
 					}
+				}
+				// Drop shared entries whose handle was replaced, so new copies re-share the live one
+				foreach (ContentKey key in BitmapTextureLookup.Keys.ToList())
+				{
+					if (!IsLiveHandle(BitmapTextureLookup[key])) BitmapTextureLookup.Remove(key);
+				}
+				foreach (ContentKey key in RawTextureLookup.Keys.ToList())
+				{
+					if (!IsLiveHandle(RawTextureLookup[key])) RawTextureLookup.Remove(key);
 				}
 			}
 
@@ -1146,6 +1488,17 @@ namespace LibRender2.Textures
 			return count;
 		}
 
+
+		// Caller must hold TextureLookupLock. Uses reference compare: two handles can hold equal bytes.
+		private bool IsLiveHandle(Texture handle)
+		{
+			if (handle == null) return false;
+			for (int i = 0; i < RegisteredTexturesCount && i < RegisteredTextures.Length; i++)
+			{
+				if (ReferenceEquals(RegisteredTextures[i], handle)) return true;
+			}
+			return false;
+		}
 
 		/// <summary>Gets the next free texture, resizing the base textures array if appropriate</summary>
 		/// <returns>The index of the next free texture</returns>

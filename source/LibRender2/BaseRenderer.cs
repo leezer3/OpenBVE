@@ -284,6 +284,9 @@ namespace LibRender2
 
 		internal Color32 lastColor;
 
+		// Remembers if culling is on, so we don't call GL for every face
+		private bool cullFaceEnabled = true;
+
 		/// <summary>Holds the handle of the last VAO bound by openGL</summary>
 		public int lastVAO;
 
@@ -597,6 +600,7 @@ namespace LibRender2
 		public virtual void ResetOpenGlState()
 		{
 			GL.Enable(EnableCap.CullFace);
+			cullFaceEnabled = true;
 			GL.CullFace(CullFaceMode.Front);
 			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			UnsetBlendFunc();
@@ -1096,7 +1100,7 @@ namespace LibRender2
 				currentOptions.AnisotropicFilteringMaximum = 0;
 				currentOptions.AnisotropicFilteringLevel = 0;
 			}
-			else if (currentOptions.AnisotropicFilteringLevel == 0 & currentOptions.AnisotropicFilteringMaximum > 0)
+			else if (currentOptions.AnisotropicFilteringLevel == 0 && currentOptions.AnisotropicFilteringMaximum > 0)
 			{
 				currentOptions.AnisotropicFilteringLevel = currentOptions.AnisotropicFilteringMaximum;
 			}
@@ -1305,14 +1309,16 @@ namespace LibRender2
 
 			if (!OptionBackFaceCulling || (face.Flags & FaceFlags.Face2Mask) != 0)
 			{
-				GL.Disable(EnableCap.CullFace);
-			}
-			else if (OptionBackFaceCulling)
-			{
-				if ((face.Flags & FaceFlags.Face2Mask) == 0)
+				if (cullFaceEnabled)
 				{
-					GL.Enable(EnableCap.CullFace);
+					GL.Disable(EnableCap.CullFace);
+					cullFaceEnabled = false;
 				}
+			}
+			else if (!cullFaceEnabled)
+			{
+				GL.Enable(EnableCap.CullFace);
+				cullFaceEnabled = true;
 			}
 
 			// model matricies

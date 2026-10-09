@@ -51,15 +51,10 @@ namespace Route.Bve5
 				return;
 			}
 
-			if (!File.Exists(StructureListPath))
+			StructureListPath = FindComponentListFile(FileName, StructureListPath, "Structure List");
+			if (StructureListPath == null)
 			{
-				StructureListPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), StructureListPath);
-
-				if (!File.Exists(StructureListPath))
-				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BVE5: Structure List file " + StructureListPath + " was not found.");
-					return;
-				}
+				return;
 			}
 
 			string BaseDirectory = System.IO.Path.GetDirectoryName(StructureListPath);

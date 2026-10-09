@@ -1,5 +1,6 @@
 using Formats.OpenBve;
 using OpenBveApi;
+using OpenBveApi.Graphics;
 using System;
 using System.Globalization;
 using System.IO;
@@ -16,6 +17,7 @@ namespace TrainEditor2.Systems
 			internal Options()
 			{
 				LanguageCode = "en-US";
+				Interpolation = InterpolationMode.BilinearMipmapped;
 			}
 
 

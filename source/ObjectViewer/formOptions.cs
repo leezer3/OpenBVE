@@ -544,6 +544,7 @@ namespace ObjectViewer
 
 			//Interpolation mode
 			InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
+			int previousAnisotropicLevel = Interface.CurrentOptions.AnisotropicFilteringLevel;
 			switch (InterpolationMode.SelectedIndex)
 			{
 				case 0:
@@ -574,6 +575,13 @@ namespace ObjectViewer
 
 			//Anisotropic filtering level
 			Interface.CurrentOptions.AnisotropicFilteringLevel = (int) AnisotropicLevel.Value;
+			if (Interface.CurrentOptions.AnisotropicFilteringLevel != previousAnisotropicLevel &&
+				(Interface.CurrentOptions.Interpolation == OpenBveApi.Graphics.InterpolationMode.AnisotropicFiltering ||
+				 previousInterpolationMode == OpenBveApi.Graphics.InterpolationMode.AnisotropicFiltering))
+			{
+				// The level is baked into each uploaded texture, so they need re-uploading.
+				Program.Renderer.TextureManager.UnloadAllTextures(false);
+			}
 			//Antialiasing level
 			Interface.CurrentOptions.AntiAliasingLevel = (int) AntialiasingLevel.Value;
 			if (Interface.CurrentOptions.AntiAliasingLevel != previousAntialiasingLevel)

@@ -176,6 +176,19 @@ namespace LibRender2.Menu
 			CurrentlySelectedOption = 0;
 		}
 
+		/// <summary>Re-uploads the textures, whose GL state bakes in the filter settings</summary>
+		private void ReloadTextures()
+		{
+			try
+			{
+				BaseMenu.Renderer?.TextureManager?.UnloadAllTextures(false);
+			}
+			catch
+			{
+				// Best-effort; they reload on next use anyway
+			}
+		}
+
 		/// <summary>Flips to the next option</summary>
 		public void Flip()
 		{
@@ -267,6 +280,7 @@ namespace LibRender2.Menu
 					break;
 				case OptionType.Interpolation:
 					BaseMenu.CurrentOptions.Interpolation = (InterpolationMode)CurrentlySelectedOption;
+					ReloadTextures();
 					break;
 				case OptionType.AutoReloadObjects:
 					BaseMenu.CurrentOptions.AutoReloadObjects = !BaseMenu.CurrentOptions.AutoReloadObjects;
@@ -274,6 +288,7 @@ namespace LibRender2.Menu
 				//HACK: We can't store plain ints due to to boxing, so store strings and parse instead
 				case OptionType.AnisotropicLevel:
 					BaseMenu.CurrentOptions.AnisotropicFilteringLevel = int.Parse((string)CurrentOption, NumberStyles.Integer);
+					ReloadTextures();
 					break;
 				case OptionType.AntialiasingLevel:
 					BaseMenu.CurrentOptions.AntiAliasingLevel = int.Parse((string)CurrentOption, NumberStyles.Integer);

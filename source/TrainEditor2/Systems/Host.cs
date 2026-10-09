@@ -19,7 +19,9 @@ namespace TrainEditor2.Systems
 
 		public override bool LoadTexture(ref Texture Texture, OpenGlTextureWrapMode wrapMode)
 		{
-			return Program.Renderer.TextureManager.LoadTexture(ref Texture, wrapMode, Environment.TickCount, InterpolationMode.BilinearMipmapped, 16);
+			InterpolationMode interpolation = Interface.CurrentOptions != null ? Interface.CurrentOptions.Interpolation : InterpolationMode.BilinearMipmapped;
+			int anisoLevel = Interface.CurrentOptions != null ? Interface.CurrentOptions.AnisotropicFilteringLevel : 0;
+			return Program.Renderer.TextureManager.LoadTexture(ref Texture, wrapMode, Environment.TickCount, interpolation, anisoLevel);
 		}
 
 		// --- sound ---
