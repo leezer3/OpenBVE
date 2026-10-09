@@ -506,7 +506,6 @@ namespace RouteViewer
 
 			//Interpolation mode
 			InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
-			int previousAnisotropicLevelLocal = Interface.CurrentOptions.AnisotropicFilteringLevel;
 			switch (InterpolationMode.SelectedIndex)
             {
                 case 0:
@@ -537,13 +536,12 @@ namespace RouteViewer
 
 			//Anisotropic filtering level
 			Interface.CurrentOptions.AnisotropicFilteringLevel = (int) AnisotropicLevel.Value;
-			if (Interface.CurrentOptions.AnisotropicFilteringLevel != previousAnisotropicLevelLocal &&
+			if (Interface.CurrentOptions.AnisotropicFilteringLevel != previousAnisotropicLevel &&
 				(Interface.CurrentOptions.Interpolation == OpenBveApi.Graphics.InterpolationMode.AnisotropicFiltering ||
 				 previousInterpolationMode == OpenBveApi.Graphics.InterpolationMode.AnisotropicFiltering))
 			{
-				// Aniso level affects the uploaded texture state, so stale GL textures must be re-uploaded
-				// (PendingOptionsCommit below also triggers a route reload, this avoids a stale-filter frame first;
-				// a duplicate unload after an interpolation change is a harmless no-op)
+				// The level is baked into each uploaded texture, so they need re-uploading.
+				// Harmless if the interpolation branch above already did this.
 				Program.Renderer.TextureManager.UnloadAllTextures(false);
 			}
             //Antialiasing level

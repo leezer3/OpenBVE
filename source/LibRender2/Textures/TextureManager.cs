@@ -733,10 +733,6 @@ namespace LibRender2.Textures
 								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
 								GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.Width, texture.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, subBytes);
 							}
-							// No mip chain for animated textures: level 0 was just replaced, and
-							// rebuilding the whole chain on every frame change is far more costly
-							// than the filtering gains. The min filter is demoted to match, so an
-							// incomplete chain is never sampled.
 						}
 						// Keep the stable handle in sync without swapping identity: the handle keeps
 						// its origin so the animated cache keeps hitting every tick (swapping to the
@@ -900,10 +896,9 @@ namespace LibRender2.Textures
 					}
 					if (texture.MultipleFrames)
 					{
-						// Animated textures never get a mip chain: level 0 is replaced on every
-						// frame change, so regenerating the whole chain per frame costs far more
-						// than it saves. A mipmapped min filter would then sample an incomplete
-						// chain, so demote to the mag filter (same numeric value in both enums).
+						// Animated textures get no mip chain, so a mipmapped min filter would
+						// sample an incomplete one. Demote it to the mag filter, which shares
+						// the same numeric values for Nearest and Linear.
 						minFilter = magFilter;
 					}
 					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, minFilter);
@@ -929,18 +924,10 @@ namespace LibRender2.Textures
 
 					if (Interpolation == InterpolationMode.AnisotropicFiltering && AnisotropicFilteringLevel > 0)
 					{
-						// Clamp to the detected GPU maximum when known (viewers may not have
-						// queried it yet, in which case Maximum is 0 and the driver clamps).
+						// A level saved on a beefier GPU has to be clamped; Maximum is 0 until
+						// the driver has been queried, in which case the driver clamps for us.
 						int anisoLevel = AnisotropicFilteringLevel;
-						int anisoMax = 0;
-						try
-						{
-							anisoMax = renderer?.currentOptions?.AnisotropicFilteringMaximum ?? 0;
-						}
-						catch
-						{
-							anisoMax = 0;
-						}
+						int anisoMax = renderer?.currentOptions?.AnisotropicFilteringMaximum ?? 0;
 						if (anisoMax > 0 && anisoLevel > anisoMax)
 						{
 							anisoLevel = anisoMax;
@@ -1129,8 +1116,7 @@ namespace LibRender2.Textures
 						}
 						
 					}
-					// Animated textures get no mip chain at all (see the frame-update path), so
-					// skip it here too; their min filter was already demoted above.
+					// Animated textures never get a chain, so don't start one here either
 					if (!texture.MultipleFrames && UsesMipmaps(Interpolation)) GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
                     handle.OpenGlTextures[(int)wrap].Valid = true;
 					if (texture.MultipleFrames)

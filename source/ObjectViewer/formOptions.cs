@@ -579,7 +579,7 @@ namespace ObjectViewer
 				(Interface.CurrentOptions.Interpolation == OpenBveApi.Graphics.InterpolationMode.AnisotropicFiltering ||
 				 previousInterpolationMode == OpenBveApi.Graphics.InterpolationMode.AnisotropicFiltering))
 			{
-				// Aniso level affects the uploaded texture state, so stale GL textures must be re-uploaded
+				// The level is baked into each uploaded texture, so they need re-uploading.
 				Program.Renderer.TextureManager.UnloadAllTextures(false);
 			}
 			//Antialiasing level
