@@ -457,7 +457,7 @@ namespace OpenBve {
 					updownAnisotropic.Value = updownAnisotropic.Minimum;
 				}
 			}
-			updownAntiAliasing.Value = Interface.CurrentOptions.AntiAliasingLevel;
+			BaseOptions.SelectAntiAliasingLevel(updownAntiAliasing, Interface.CurrentOptions.AntiAliasingLevel);
 			updownDistance.Value = Interface.CurrentOptions.ViewingDistance;
 			updownNearClipScenery.Value = (decimal)Interface.CurrentOptions.NearClipScenery;
 			updownNearClipCab.Value = (decimal)Interface.CurrentOptions.NearClipCab;
@@ -1261,7 +1261,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.FullscreenBits = comboboxFullscreenBits.SelectedIndex == 0 ? 16 : 32;
 			Interface.CurrentOptions.Interpolation = (InterpolationMode)comboboxInterpolation.SelectedIndex;
 			Interface.CurrentOptions.AnisotropicFilteringLevel = (int)Math.Round(updownAnisotropic.Value);
-			Interface.CurrentOptions.AntiAliasingLevel = (int)Math.Round(updownAntiAliasing.Value);
+			Interface.CurrentOptions.AntiAliasingLevel = BaseOptions.GetAntiAliasingLevel(updownAntiAliasing);
 			Interface.CurrentOptions.TransparencyMode = (TransparencyMode)trackbarTransparency.Value;
 			Interface.CurrentOptions.NearClipScenery = (double)updownNearClipScenery.Value;
 			Interface.CurrentOptions.NearClipCab = (double)updownNearClipCab.Value;
