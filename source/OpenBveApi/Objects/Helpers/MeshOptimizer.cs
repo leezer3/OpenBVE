@@ -341,9 +341,14 @@ namespace OpenBveApi.Objects
 					needed += (mesh.Faces[i].Vertices.Length - faceCount) / faceCount;
 				}
 			}
-			while (needed > mesh.Faces.Length)
+			// We already know exactly how big the result is, so allocate it once. Growing by
+			// doubling instead costs a reallocation plus a copy per doubling, which for a dense
+			// mesh means copying the whole face array several times over.
+			if (needed != mesh.Faces.Length)
 			{
-				Array.Resize(ref mesh.Faces, mesh.Faces.Length << 1);
+				MeshFace[] grown = new MeshFace[needed];
+				Array.Copy(mesh.Faces, grown, f);
+				mesh.Faces = grown;
 			}
 			for (int i = 0; i < f; i++)
 			{
@@ -365,10 +370,6 @@ namespace OpenBveApi.Objects
 					if (mesh.Faces[i].Vertices.Length > faceCount)
 					{
 						int n = (mesh.Faces[i].Vertices.Length - faceCount) / faceCount;
-						while (f + n > mesh.Faces.Length)
-						{
-							Array.Resize(ref mesh.Faces, mesh.Faces.Length << 1);
-						}
 						for (int j = 0; j < n; j++)
 						{
 							mesh.Faces[f + j].Vertices = new MeshFaceVertex[faceCount];
@@ -806,7 +807,25 @@ namespace OpenBveApi.Objects
 			{
 				return;
 			}
-			Dictionary<int, int> groupByKey = new Dictionary<int, int>(f);
+			// Keys are (material, Face2Mask), so there can never be more than twice the material
+			// count distinct ones. A flat table sized off the material count replaces a
+			// Dictionary that was being allocated with room for one entry per face.
+			int materialCount = 0;
+			for (int i = 0; i < f; i++)
+			{
+				if (mesh.Faces[i].Material + 1 > materialCount)
+				{
+					materialCount = mesh.Faces[i].Material + 1;
+				}
+			}
+			int keySpace = 8;
+			while (keySpace < materialCount * 4)
+			{
+				keySpace <<= 1;
+			}
+			int keyMask = keySpace - 1;
+			int[] keyTable = NewTable(keySpace); // slot -> group id + 1, -1 is empty
+
 			int[] faceGroup = new int[f];
 			int[] groupFirst = new int[f];
 			int[] groupVertices = new int[f];
@@ -825,11 +844,23 @@ namespace OpenBveApi.Objects
 				}
 				// Face2Mask is a single bit (0 or 8), so both fit in one int key
 				int key = (mesh.Faces[i].Material << 4) | (int)(mesh.Faces[i].Flags & FaceFlags.Face2Mask);
-				int gid;
-				if (!groupByKey.TryGetValue(key, out gid))
+				int slot = key & keyMask;
+				int gid = -1;
+				for (int entry = keyTable[slot]; entry != -1; entry = keyTable[slot])
+				{
+					MeshFace groupFirstFace = mesh.Faces[groupFirst[entry]];
+					int groupKey = (groupFirstFace.Material << 4) | (int)(groupFirstFace.Flags & FaceFlags.Face2Mask);
+					if (groupKey == key)
+					{
+						gid = entry;
+						break;
+					}
+					slot = (slot + 1) & keyMask; // hash collision
+				}
+				if (gid < 0)
 				{
 					gid = groupCount++;
-					groupByKey[key] = gid;
+					keyTable[slot] = gid;
 					groupFirst[gid] = i;
 					groupVertices[gid] = 0;
 					groupFaces[gid] = 0;
