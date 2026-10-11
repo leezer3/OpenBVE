@@ -304,8 +304,11 @@ namespace Train.MsTs
 							particleSource.EmitsAtIdle = false;
 							break;
 						case KujuTokenID.SafetyValvesFX:
+							particleSource = new LibRender2.Smoke.ParticleSource(Plugin.Renderer, currentCar, ParticleSources[i].Offset, ParticleSources[i].Size, ParticleSources[i].Size * 15, ParticleSources[i].Direction, 5.0, ParticleType.Steam);
+							particleSource.Controller = new FunctionScript(Plugin.CurrentHost, currentCar.Index + " blowoffstateindex", false);
+							particleSource.EmitsAtIdle = false;
+							break;
 						case KujuTokenID.DrainpipeFX:
-							// steam locomotive blowoff and cylinder drains not yet implemented
 							// note that DrainpipeFX broken / not implemented in vanilla MSTS, despite being in docs
 							break;
 					}
