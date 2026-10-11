@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using LibRender2;
 using LibRender2.Camera;
 using LibRender2.Cameras;
@@ -15,6 +12,9 @@ using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TrainManager.Brake;
 using TrainManager.BrakeSystems;
 using TrainManager.Car.Systems;
@@ -524,7 +524,7 @@ namespace TrainManager.Car
 							 * Set the eye position to something vaguely sensible, rather than leaving it on the rails
 							 * Whilst there will be no cab, at least it's a bit more usable like this
 							 */
-							baseTrain.Cars[i - 1].InteriorCamera = new CameraAlignment()
+							baseTrain.Cars[i - 1].InteriorCamera = new CameraAlignment
 							{
 								Position = new Vector3(0, 2, 0.5 * Length)
 							};

@@ -18,8 +18,8 @@ namespace TrainManager.Motor
 
 		public BVE5MotorSound(CarBase car) : base(car)
 		{
-			SoundBuffers = new SoundBuffer[0];
-			SoundSources = new SoundSource[0];
+			SoundBuffers = Array.Empty<SoundBuffer>();
+			SoundSources = Array.Empty<SoundSource>();
 		}
 
 		public override void Update(double TimeElapsed)

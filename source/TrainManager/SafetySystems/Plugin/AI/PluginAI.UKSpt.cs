@@ -323,14 +323,13 @@ namespace TrainManager.SafetySystems
 					{
 						Plugin.KeyDown(VirtualKeys.B1);
 						Plugin.KeyUp(VirtualKeys.B1);
-						data.Response = AIResponse.Short;
 					}
 					else
 					{
 						Plugin.KeyDown(VirtualKeys.B2);
 						Plugin.KeyUp(VirtualKeys.B2);
-						data.Response = AIResponse.Short;
 					}
+					data.Response = AIResponse.Short;
 					return;
 				case 2:
 					if (currentRainIntensity < 60)
