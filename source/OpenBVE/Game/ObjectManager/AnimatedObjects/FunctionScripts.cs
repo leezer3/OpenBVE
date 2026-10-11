@@ -2330,6 +2330,32 @@ namespace OpenBve {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					case Instructions.BlowoffStateOfCar:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								if (Train.Cars[j].TractionModel.Components.TryGetTypedValue(EngineComponent.SafetyValve, out SafetyValve sv))
+								{
+									Function.Stack[s - 1] = sv.Active ? 1 : 0;
+								}
+								else
+								{
+									Function.Stack[s - 1] = 0.0;
+								}
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						break;
 					case Instructions.TenderWaterOfCar:
 						if (Train != null)
 						{
