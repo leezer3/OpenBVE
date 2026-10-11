@@ -33,6 +33,7 @@ namespace TrainManager.SteamEngine
 		/// <summary>The diameter of the cylinder port</summary>
 		public readonly double Diameter;
 		/// <summary>The length of the piston stroke</summary>
+		// ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
 		private readonly double StrokeLength;
 		/// <summary>The current piston position</summary>
 		/// <remarks>Expressed as a double from 0 (full reverse) to 1 (full forward)</remarks>
@@ -44,25 +45,39 @@ namespace TrainManager.SteamEngine
 		/// <summary>Holds the last updated track position</summary>
 		private double lastTrackPosition;
 
+		private readonly double CylinderVolume;
+
 		public Cylinders(TractionModel engine, double diameter, double strokeLength, double totalNumber) : base(engine)
 		{
 			Diameter = diameter;
 			StrokeLength = strokeLength;
 			TotalNumber = totalNumber;
+			CylinderVolume = Math.PI * (Diameter / 2) * StrokeLength;
 		}
 
 		public override void Update(double timeElapsed)
 		{
 			if (baseEngine.BaseCar.TractionModel.Components.TryGetTypedValue(EngineComponent.Boiler, out Boiler boiler))
 			{
-				if (baseEngine.BaseCar.baseTrain.StationState == TrainStopState.Jumping || baseEngine.BaseCar.baseTrain.State != TrainState.Available)
+				if (baseEngine.BaseCar.baseTrain.StationState == TrainStopState.Jumping || baseEngine.BaseCar.baseTrain.State != TrainState.Available || TrainManagerBase.currentHost.SimulationState != SimulationState.Running)
 				{
 					// only update the last track position, do no further processing
 					lastTrackPosition = baseEngine.BaseCar.FrontAxle.Follower.TrackPosition;
 					return;
 				}
 
+				// https://web.archive.org/web/20260903094113/https://www.firgelliauto.com/blogs/mechanisms/compound-locomotive-cylinders
+
 				double distanceTravelled = baseEngine.BaseCar.FrontAxle.Follower.TrackPosition - lastTrackPosition;
+				lastTrackPosition = baseEngine.BaseCar.FrontAxle.Follower.TrackPosition;
+
+				if (distanceTravelled == 0 || Math.Abs(distanceTravelled) > 1)
+				{
+					// zero distance, or greater distance than sensible in one frame
+					SteamMassFlow = 0;
+					return;
+				}
+
 				// convert to number of wheel revolutions
 				double wheelCircumference = baseEngine.BaseCar.DrivingWheels[0].Radius * 2 * Math.PI;
 				// total number of full strokes performed, then perform remainder on the position to give final piston pos
@@ -72,15 +87,19 @@ namespace TrainManager.SteamEngine
 				// now calculate number of ascending strokes, where steam is being introduced
 				// this assumes 0 - 0.5 is the exhaust part of the stroke
 				double ascendingStrokes = Math.Max(Math.Abs(CurrentPistonPosition) / 2 - 0.5, 0);
-				CurrentPistonPosition %= 1;
-				// from this calculate the percentage of actual strokes introducing steam, and thus total steam time
-				double steamIntroducedPercentage = ascendingStrokes / Math.Abs(numberOfStrokes);
-				double steamIntroductionTime = timeElapsed * steamIntroducedPercentage;
 
-				// ms = K × At × √(2 × ρs × Ps)
-				double bp = boiler.CurrentPressure * 703.0695796402; // psi to kg/m3
-				SteamMassFlow = SteamTable.DischargeCoefficient * 1.96 * Math.Pow(Diameter, -5) * Math.Sqrt(2 * bp * SteamTable.GetSteamDensity(boiler.CurrentPressure));
-				boiler.CurrentSteamMass -= SteamMassFlow * steamIntroductionTime;
+				CurrentPistonPosition %= 1;
+				
+				if (ascendingStrokes == 0)
+				{
+					// no ascending strokes this frame, so steam mass flow is zero
+					// however return here so we keep the flow number in the debug
+					return;
+				}
+				SteamMassFlow = SteamTable.GetSteamDensity(boiler.CurrentPressure) * CylinderVolume; // TODO: Multiply by Abs(Cutoff)
+				SteamMassFlow *= ascendingStrokes;
+
+				boiler.CurrentSteamMass -= SteamMassFlow;
 			}
 			
 		}
