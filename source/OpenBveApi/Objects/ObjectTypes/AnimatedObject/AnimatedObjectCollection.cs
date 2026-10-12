@@ -69,7 +69,7 @@ namespace OpenBveApi.Objects
 							mat *= Objects[i].States[0].Translation;
 							mat *= transformationMatrix;
 							Parameters.AccurateObjectDisposalZOffset = Objects[i].States[0].Translation.ExtractTranslation().Z * -1.0; //To calculate the Z-offset within the object, we want the untransformed co-ordinates, not the world co-ordinates
-							currentHost.CreateStaticObject(Objects[i].States[0].Prototype, Position, LocalTransformation, mat, Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z), Parameters);
+							currentHost.CreateStaticObject(Objects[i].States[0].Prototype, Position, LocalTransformation, mat, Parameters);
 						}
 						else
 						{
