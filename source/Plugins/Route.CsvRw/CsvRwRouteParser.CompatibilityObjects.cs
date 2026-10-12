@@ -4,16 +4,34 @@ using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using System;
+using System.Collections.Generic;
 
 namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
+		/// <summary>Path variables already reported, so a single typo does not flood the log</summary>
+		private static readonly HashSet<string> reportedPathVariables = new HashSet<string>();
+
+		/// <summary>Warns about a path variable which has no folder set, e.g. a typo in {Other}</summary>
+		/// <param name="fileName">The path as written in the route file</param>
+		/// <param name="context">What the path was meant to point at</param>
+		private static void ReportUnknownPathVariable(string fileName, string context)
+		{
+			string variable = Path.GetUnknownPathVariable(fileName);
+			if (variable == null || !reportedPathVariables.Add(variable))
+			{
+				return;
+			}
+			Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Path variable {" + variable + "} in " + context + " is not defined; check the package directories in your options. The path has been resolved relative to the route instead.");
+		}
+
 		/// <summary>Locates the absolute on-disk path of the object to be loaded, or an available compatible replacement if not found</summary>
 		/// <param name="fileName">The object's file-name</param>
 		/// <param name="objectPath">The path to the objects directory for this route</param>
 		internal static bool LocateObject(ref string fileName, string objectPath)
 		{
+			ReportUnknownPathVariable(fileName, "an object reference");
 			string n;
 			if (EnabledHacks.BveTsHacks)
 			{
@@ -190,6 +208,7 @@ namespace CsvRwRouteParser
 		/// <param name="objectPath">The path to the objects directory for this route</param>
 		internal static bool LocateSound(ref string fileName, string objectPath)
 		{
+			ReportUnknownPathVariable(fileName, "a sound reference");
 			string n;
 			try
 			{
