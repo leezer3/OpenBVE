@@ -52,7 +52,7 @@ namespace Plugin
 			};
 			byte[] Data = File.ReadAllBytes(fileName);
 			
-			if (Data.Length < 16 || Data[0] != 120 | Data[1] != 111 | Data[2] != 102 | Data[3] != 32)
+			if (Data.Length < 16 || Data[0] != 120 || Data[1] != 111 || Data[2] != 102 || Data[3] != 32)
 			{
 				// Object is actually a single line text file containing relative path to the 'real' X
 				// Found in BRSigs\Night
@@ -65,11 +65,11 @@ namespace Plugin
 
 			// floating-point format
 			int floatingPointSize;
-			if (Data[12] == 48 & Data[13] == 48 & Data[14] == 51 & Data[15] == 50)
+			if (Data[12] == 48 && Data[13] == 48 && Data[14] == 51 && Data[15] == 50)
 			{
 				floatingPointSize = 32;
 			}
-			else if (Data[12] == 48 & Data[13] == 48 & Data[14] == 54 & Data[15] == 52)
+			else if (Data[12] == 48 && Data[13] == 48 && Data[14] == 54 && Data[15] == 52)
 			{
 				floatingPointSize = 64;
 			}
@@ -79,7 +79,7 @@ namespace Plugin
 			}
 
 			// supported floating point format
-			if (Data[8] == 116 & Data[9] == 120 & Data[10] == 116 & Data[11] == 32)
+			if (Data[8] == 116 && Data[9] == 120 && Data[10] == 116 && Data[11] == 32)
 			{
 				// textual flavor
 				string[] Lines = File.ReadAllLines(fileName, encoding);
@@ -110,7 +110,7 @@ namespace Plugin
 			}
 
 			byte[] newData;
-			if (Data[8] == 98 & Data[9] == 105 & Data[10] == 110 & Data[11] == 32)
+			if (Data[8] == 98 && Data[9] == 105 && Data[10] == 110 && Data[11] == 32)
 			{
 				//Uncompressed binary, so skip the header
 				newData = new byte[Data.Length - 16];
@@ -118,7 +118,7 @@ namespace Plugin
 				return parser.LoadBinaryX(newData, floatingPointSize);
 			}
 
-			if (Data[8] == 116 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112)
+			if (Data[8] == 116 && Data[9] == 122 && Data[10] == 105 && Data[11] == 112)
 			{
 				// compressed textual flavor
 				newData = MSZip.Decompress(Data);
@@ -126,7 +126,7 @@ namespace Plugin
 				return parser.LoadTextualX(Text);
 			}
 
-			if (Data[8] == 98 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112)
+			if (Data[8] == 98 && Data[9] == 122 && Data[10] == 105 && Data[11] == 112)
 			{
 				//Compressed binary
 				//16 bytes of header, then 8 bytes of padding, followed by the actual compressed data
@@ -449,6 +449,7 @@ namespace Plugin
 				case TemplateID.Material:
 					Material newMaterial = new Material();
 					newMaterial.Color = new Color32(block.ReadColor128);
+					// ReSharper disable once UnusedVariable
 					double mPower = block.ReadSingle(); //TODO: Unsure what this does...
 					try
 					{

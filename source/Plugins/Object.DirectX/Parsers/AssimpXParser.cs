@@ -58,7 +58,7 @@ namespace Plugin
 			{
 #endif
 			byte[] buffer = File.ReadAllBytes(fileName);
-				if (buffer.Length < 16 || buffer[0] != 120 | buffer[1] != 111 | buffer[2] != 102 | buffer[3] != 32)
+				if (buffer.Length < 16 || buffer[0] != 120 || buffer[1] != 111 | buffer[2] != 102 || buffer[3] != 32)
 				{
 					// Object is actually a single line text file containing relative path to the 'real' X
 					// Found in BRSigs\Night
@@ -220,6 +220,7 @@ namespace Plugin
 				Array.Resize(ref builder.Materials, m + 1);
 				builder.Materials[m] = new OpenBveApi.Objects.Material();
 				builder.Materials[m].Color = new Color32(mesh.Materials[i].Diffuse);
+				// ReSharper disable once UnusedVariable
 				double mPower = mesh.Materials[i].SpecularExponent; //TODO: Unsure what this does...
 				builder.Materials[m].SpecularColor = new Color24(mesh.Materials[i].Specular);
 				if (builder.Materials[m].SpecularColor != Color24.Black)
