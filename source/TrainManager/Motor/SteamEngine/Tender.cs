@@ -23,8 +23,9 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using TrainManager.Car;
+using TrainManager.Motor;
 
-namespace TrainManager.Motor
+namespace TrainManager.SteamEngine
 {
 	public class Tender : TractionModel
 	{

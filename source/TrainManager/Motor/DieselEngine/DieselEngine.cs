@@ -78,6 +78,7 @@ namespace TrainManager.Motor
 			IdleFuelUse = idleFuelUse;
 			MaxPowerFuelUse = maxFuelUse;
 			MaxTractiveEffortSpeed = maxTractiveEffortSpeed;
+			Message = new string[3];
 		}
 
 		public override void Update(double timeElapsed)
@@ -119,11 +120,12 @@ namespace TrainManager.Motor
 				CurrentRPM = Math.Max(CurrentRPM, targetRPM);
 			}
 
-			Message = @"Current RPM " + Math.Round(CurrentRPM);
+			int messageIdx = 0;
+			Message[messageIdx++] = @"Current RPM: " + Math.Round(CurrentRPM);
 
 			if(Components.TryGetTypedValue(EngineComponent.Gearbox, out Gearbox gearbox))
 			{
-				Message += " Current Gear " + gearbox.CurrentGear;
+				Message[messageIdx++] = "Current Gear: " + gearbox.CurrentGear;
 			}
 
 			if (FuelTank != null)
@@ -131,12 +133,12 @@ namespace TrainManager.Motor
 				if (currentRPM <= IdleRPM)
 				{
 					FuelTank.CurrentLevel -= IdleFuelUse * timeElapsed;
-					Message += " Fuel Use " + Math.Round(IdleFuelUse * timeElapsed, 5);
+					Message[messageIdx] = "Fuel Use " + Math.Round(IdleFuelUse * timeElapsed, 5);
 				}
 				else
 				{
 					FuelTank.CurrentLevel -= (MaxPowerFuelUse - IdleFuelUse) / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch * BaseCar.baseTrain.Handles.Power.Actual * timeElapsed;
-					Message += " Fuel Use " + Math.Round((MaxPowerFuelUse - IdleFuelUse) / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch * BaseCar.baseTrain.Handles.Power.Actual * timeElapsed, 5);
+					Message[messageIdx] = "Fuel Use " + Math.Round((MaxPowerFuelUse - IdleFuelUse) / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch * BaseCar.baseTrain.Handles.Power.Actual * timeElapsed, 5);
 				}
 			}
 

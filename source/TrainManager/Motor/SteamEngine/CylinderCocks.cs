@@ -24,22 +24,15 @@
 
 using OpenBveApi.Interface;
 using SoundManager;
+using TrainManager.Motor;
 
-namespace TrainManager.Motor
+namespace TrainManager.SteamEngine
 {
 	public class CylinderCocks : AbstractComponent
 	{
-		/// <summary>Whether the Cylinder Cocks are currently open</summary>
-		public bool Opened;
 		/// <summary>The power modifier applied when the cylinder cocks are open</summary>
 		public readonly double PowerModifier = 1.0;
 		
-		public CarSound OpenSound;
-
-		public CarSound CloseSound;
-
-		public CarSound LoopSound;
-
 		private double timer;
 
 		private double lastSpeed;
@@ -53,16 +46,16 @@ namespace TrainManager.Motor
 		{
 			if (command == Translations.Command.CylinderCocks)
 			{
-				if (Opened)
+				if (Active)
 				{
-					CloseSound?.Play(baseEngine.BaseCar, false);
+					DeactivationSound?.Play(baseEngine.BaseCar, false);
 				}
 				else
 				{
-					OpenSound?.Play(baseEngine.BaseCar, false);
+					ActivationSound?.Play(baseEngine.BaseCar, false);
 				}
 
-				Opened = !Opened;
+				Active = !Active;
 				timer = 0;
 			}
 		}
@@ -75,19 +68,19 @@ namespace TrainManager.Motor
 				if (baseEngine.BaseCar.CurrentSpeed == 0 && lastSpeed == 0)
 				{
 					timer += timeElapsed;
-					if (timer > 5000 && Opened == false)
+					if (timer > 5000 && Active == false)
 					{
 						ControlDown(Translations.Command.CylinderCocks);
 					}
 				}
 
-				if (baseEngine.BaseCar.CurrentSpeed > 5 && !Opened)
+				if (baseEngine.BaseCar.CurrentSpeed > 5 && !Active)
 				{
 					ControlDown(Translations.Command.CylinderCocks);
 				}
 				
 			}
-			if (!Opened)
+			if (!Active)
 			{
 				LoopSound?.Stop();
 				return;
