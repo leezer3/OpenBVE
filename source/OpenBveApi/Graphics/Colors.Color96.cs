@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MergeCastWithTypeCheck
@@ -20,10 +19,21 @@ namespace OpenBveApi.Colors
 		/// <param name="g">The green component.</param>
 		/// <param name="b">The blue component.</param>
 		public Color96(float r, float g, float b) {
-			if (r > 1 || r < 0 || g > 1 || g < 0 || b > 1 || b < 0)
+			if (r > 1 || r < 0)
 			{
-				throw new InvalidDataException();
+				throw new InvalidDataException("Red must be between 0 and 1");
 			}
+
+			if (g > 1 || g < 0)
+			{
+				throw new InvalidDataException("Green must be between 0 and 1");
+			}
+
+			if (b > 1 || b < 0)
+			{
+				throw new InvalidDataException("Blue must be between 0 and 1");
+			}
+
 			this.R = r;
 			this.G = g;
 			this.B = b;
