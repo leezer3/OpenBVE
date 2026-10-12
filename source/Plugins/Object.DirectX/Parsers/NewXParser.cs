@@ -517,7 +517,7 @@ namespace Plugin
 						}
 						else
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"Referenced, but unused material {material.Key} specifies an empty texture");
+							Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"Referenced, but unused material { (string.IsNullOrEmpty(material.Key) ? builder.Materials.Length.ToString() : material.Key) } specifies an empty texture");
 						}
 						material.DaytimeTexture = null;
 						break;
@@ -542,7 +542,7 @@ namespace Plugin
 						}
 						else
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, $"Referenced, but unused Texture file path {texturePath} for material {material.Key} in file {currentFile} has the problem: {e.Message}");
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, $"Referenced, but unused Texture file path {texturePath} for material {(string.IsNullOrEmpty(material.Key) ? builder.Materials.Length.ToString() : material.Key)} in file {currentFile} has the problem: {e.Message}");
 						}
 						material.DaytimeTexture = null;
 					}
@@ -567,11 +567,11 @@ namespace Plugin
 					{
 						if (currentMaterialUsed)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, true, $"Texture {material.DaytimeTexture} for material {material.Key} was not found in file {currentFile}");
+							Plugin.CurrentHost.AddMessage(MessageType.Error, true, $"Texture {texturePath} for material {(string.IsNullOrEmpty(material.Key) ? builder.Materials.Length.ToString() : material.Key)} was not found in file {currentFile}");
 						}
 						else
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, true, $"Referenced, but unused Texture {material.DaytimeTexture} for material {material.Key} was not found in file {currentFile}");
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, true, $"Referenced, but unused Texture {texturePath} for material {(string.IsNullOrEmpty(material.Key) ? builder.Materials.Length.ToString() : material.Key)} was not found in file {currentFile}");
 						}
 						material.DaytimeTexture = null;
 					}
