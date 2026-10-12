@@ -310,6 +310,27 @@ namespace OpenBve
 										}
 									}
 									break;
+								case ".l3dfpl":
+									fileName = System.IO.Path.GetFileName(Files[i]);
+									if (fileName == null)
+									{
+										continue;
+									}
+
+									if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
+									{
+										throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
+									}
+									for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
+									{
+										if (Program.CurrentHost.Plugins[j].Route != null && Program.CurrentHost.Plugins[j].Route.CanLoadRoute(Files[i]))
+										{
+											Item = listView.Items.Add(fileName);
+											Item.ImageKey = @"loksim";
+											Item.Tag = Files[i];
+										}
+									}
+									break;
 							}
 						}
 					}
