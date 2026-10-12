@@ -358,7 +358,7 @@ namespace Route.Bve5
 
 								wpos += freeObj.Position * Transformation;
 								Data.Objects.TryGetValue(key, out UnifiedObject obj);
-								obj?.CreateObject(wpos, Transformation, new Transformation(freeObj.Yaw, freeObj.Pitch, freeObj.Roll), new ObjectCreationParameters(freeObj.TrackPosition, StartingDistance, EndingDistance));
+								obj?.CreateObject(wpos, Transformation, new Transformation(freeObj.Yaw, freeObj.Pitch, freeObj.Roll), new ObjectCreationParameters(freeObj.TrackPosition, freeObj.Position.Z, StartingDistance, EndingDistance));
 							}
 						}
 
@@ -869,7 +869,7 @@ namespace Route.Bve5
 				{
 					continue;
 				}
-				placements[idx].Obj.CreateObject(placements[idx].Position, placements[idx].World, new Transformation(placements[idx].Yaw, placements[idx].Pitch, placements[idx].Roll), new ObjectCreationParameters(placements[idx].Distance, placements[idx].ParamStart, placements[idx].ParamEnd));
+				placements[idx].Obj.CreateObject(placements[idx].Position, placements[idx].World, new Transformation(placements[idx].Yaw, placements[idx].Pitch, placements[idx].Roll), new ObjectCreationParameters(placements[idx].Distance, placements[idx].Position.Z, placements[idx].ParamStart, placements[idx].ParamEnd));
 			}
 		}
 
