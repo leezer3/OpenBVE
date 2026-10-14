@@ -646,7 +646,12 @@ namespace Route.Bve5
 				// Runs without an End last until the end of the route
 				if (Repeater.StartRefreshed)
 				{
-					double EndTrackPosition = Plugin.CurrentRoute.Stations.Last().Stops.First().TrackPosition + Plugin.CurrentOptions.ViewingDistance;
+					double EndTrackPosition = RouteData.Blocks[RouteData.Blocks.Count - 1].CurrentTrackState.StartingTrackPosition + Plugin.CurrentOptions.ViewingDistance;
+					if (Plugin.CurrentRoute.Stations != null && Plugin.CurrentRoute.Stations.Length != 0)
+					{
+						EndTrackPosition = Plugin.CurrentRoute.Stations.Last().Stops.First().TrackPosition + Plugin.CurrentOptions.ViewingDistance;
+					}
+
 					Repeater.EndingDistance = EndTrackPosition;
 					QueueRepeater(RouteData, Repeater);
 					Repeater.StartRefreshed = false;
