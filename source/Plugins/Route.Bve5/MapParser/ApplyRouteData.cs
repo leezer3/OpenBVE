@@ -869,7 +869,7 @@ namespace Route.Bve5
 				{
 					continue;
 				}
-				placements[idx].Obj.CreateObject(placements[idx].Position, placements[idx].World, new Transformation(placements[idx].Yaw, placements[idx].Pitch, placements[idx].Roll), new ObjectCreationParameters(placements[idx].Distance, placements[idx].Position.Z, placements[idx].ParamStart, placements[idx].ParamEnd));
+				placements[idx].Obj.CreateObject(placements[idx].Position, placements[idx].World, new Transformation(placements[idx].Yaw, placements[idx].Pitch, placements[idx].Roll), new ObjectCreationParameters(placements[idx].Distance, jobs[idx].Offset.Z, placements[idx].ParamStart, placements[idx].ParamEnd));
 			}
 		}
 
