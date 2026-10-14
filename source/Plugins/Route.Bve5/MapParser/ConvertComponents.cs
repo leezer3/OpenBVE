@@ -38,9 +38,7 @@ namespace Route.Bve5
 {
 	internal static partial class Bve5ScenarioParser
 	{
-		private static double lastLegacyCurvePosition = double.MinValue;
 		private static double lastLegacyGradientPosition = double.MinValue;
-		private static double lastLegacyCurveSecondDistance = double.MinValue;
 		private static void ConvertCurve(Statement Statement, RouteData RouteData)
 		{
 			{
@@ -89,55 +87,13 @@ namespace Route.Bve5
 					case MapFunctionName.Change:
 					case MapFunctionName.Curve:
 						{
-							/*
-							 * NOTE: The behaviour of Legacy commands is not properly documented, and *does not* match prior versions of BVE.
-							 *		 From observation of BVE5 behavior:
-							 *		 * When the distance between curves is greater than 25m, interpolation is used from -10m to +15m of the statement position
-							 *		 * Otherwise, it's somewhat glitchy, e.g. https://github.com/leezer3/OpenBVE/issues/1045#issuecomment-2275286076
-							 *         For the minute, let's assume that is fundamentally bugged, and just issue an immediate change in this case
-							 */
 							double Radius = d.Radius;
 							double Cant = Statement.GetArgumentValueAsDouble(ArgumentName.Cant) / 1000.0;
-							if (Statement.ElementName == MapElementName.Legacy && Statement.Distance - lastLegacyCurvePosition >= 15)
-							{
-								int firstIndex = RouteData.FindOrAddBlock(Math.Max(0, Statement.Distance - 10));
-								int secondIndex = RouteData.FindOrAddBlock(Statement.Distance + 15);
-								lastLegacyCurveSecondDistance = Statement.Distance + 15;
-								RouteData.Blocks[secondIndex].CurrentTrackState.CurveRadius = Radius;
-								RouteData.Blocks[secondIndex].CurrentTrackState.CurveCant = Math.Abs(Cant) * Math.Sign(Radius);
-								RouteData.Blocks[firstIndex].Rails["0"].CurveInterpolateStart = true;
-								RouteData.Blocks[firstIndex].Rails["0"].CurveInterpolateEnd = true;
-								RouteData.Blocks[secondIndex].Rails["0"].CurveInterpolateEnd = true;
-								RouteData.Blocks[secondIndex].Rails["0"].CurveTransitionEnd = true;
-							}
-							else
-							{
-								int Index = RouteData.FindOrAddBlock(Statement.Distance);
-								RouteData.Blocks[Index].CurrentTrackState.CurveRadius = Radius;
-								RouteData.Blocks[Index].CurrentTrackState.CurveCant = Math.Abs(Cant) * Math.Sign(Radius);
-								RouteData.Blocks[Index].Rails["0"].CurveInterpolateStart = true;
-								RouteData.Blocks[Index].Rails["0"].CurveTransitionEnd = true;
-								if (lastLegacyCurveSecondDistance > Statement.Distance)
-								{
-									int SecondIndex = RouteData.FindOrAddBlock(lastLegacyCurveSecondDistance);
-									for (int i = Index; i < SecondIndex; i++)
-									{
-										// second curve command has been issued within the interpolate distance- change immediately
-										RouteData.Blocks[i].CurrentTrackState.CurveRadius = Radius;
-										RouteData.Blocks[i].CurrentTrackState.CurveCant = Math.Abs(Cant) * Math.Sign(Radius);
-										RouteData.Blocks[i].Rails["0"].CurveInterpolateStart = true;
-										RouteData.Blocks[i].Rails["0"].CurveTransitionEnd = true;
-									}
-								}
-								
-
-							}
-
-							if (Statement.ElementName == MapElementName.Legacy)
-							{
-								lastLegacyCurvePosition = Statement.Distance;
-							}
-
+							int Index = RouteData.FindOrAddBlock(Statement.Distance);
+							RouteData.Blocks[Index].CurrentTrackState.CurveRadius = Radius;
+							RouteData.Blocks[Index].CurrentTrackState.CurveCant = Math.Abs(Cant) * Math.Sign(Radius);
+							RouteData.Blocks[Index].Rails["0"].CurveInterpolateStart = true;
+							RouteData.Blocks[Index].Rails["0"].CurveTransitionEnd = true;
 						}
 						break;
 					case MapFunctionName.End:
