@@ -91,7 +91,7 @@ namespace Route.Bve5
 							double Cant = Statement.GetArgumentValueAsDouble(ArgumentName.Cant) / 1000.0;
 							int Index = RouteData.FindOrAddBlock(Statement.Distance);
 							RouteData.Blocks[Index].CurrentTrackState.CurveRadius = Radius;
-							RouteData.Blocks[Index].CurrentTrackState.CurveCant = Math.Abs(Cant) * Math.Sign(Radius);
+							RouteData.Blocks[Index].CurrentTrackState.CurveCant = Cant;
 							RouteData.Blocks[Index].Rails["0"].CurveInterpolateStart = true;
 							RouteData.Blocks[Index].Rails["0"].CurveTransitionEnd = true;
 						}
@@ -131,7 +131,7 @@ namespace Route.Bve5
 							}
 
 							RouteData.Blocks[Index].CurrentTrackState.CurveRadius = Convert.ToDouble(Radius);
-							RouteData.Blocks[Index].CurrentTrackState.CurveCant = Math.Abs(Convert.ToDouble(Cant)) * Math.Sign(Convert.ToDouble(Radius));
+							RouteData.Blocks[Index].CurrentTrackState.CurveCant = Cant;
 							RouteData.Blocks[Index].Rails["0"].CurveInterpolateStart = true;
 							RouteData.Blocks[Index].Rails["0"].CurveInterpolateEnd = true;
 							RouteData.Blocks[Index].Rails["0"].CurveTransitionEnd = true;
