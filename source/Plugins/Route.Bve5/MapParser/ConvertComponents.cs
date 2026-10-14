@@ -39,6 +39,7 @@ namespace Route.Bve5
 	internal static partial class Bve5ScenarioParser
 	{
 		private static double lastLegacyGradientPosition = double.MinValue;
+		private static double lastCurveTransitionPosition = double.MinValue;
 		private static void ConvertCurve(Statement Statement, RouteData RouteData)
 		{
 			{
@@ -80,6 +81,7 @@ namespace Route.Bve5
 							RouteData.TryAddBlock(Statement.Distance);
 							RouteData.sortedBlocks[Statement.Distance].Rails["0"].CurveInterpolateStart = true;
 							RouteData.sortedBlocks[Statement.Distance].Rails["0"].CurveTransitionStart = true;
+							lastCurveTransitionPosition = Statement.Distance;
 						}
 						break;
 					case MapFunctionName.Begin:
@@ -94,6 +96,10 @@ namespace Route.Bve5
 							RouteData.Blocks[Index].CurrentTrackState.CurveCant = Cant;
 							RouteData.Blocks[Index].Rails["0"].CurveInterpolateStart = true;
 							RouteData.Blocks[Index].Rails["0"].CurveTransitionEnd = true;
+							if (Statement.ElementName == MapElementName.Legacy)
+							{
+								RouteData.Blocks[Index].Rails["0"].CurveIsLegacy = true;
+							}
 						}
 						break;
 					case MapFunctionName.End:

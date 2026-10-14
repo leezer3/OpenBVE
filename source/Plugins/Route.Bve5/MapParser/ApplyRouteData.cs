@@ -191,6 +191,10 @@ namespace Route.Bve5
 				Plugin.CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition = StartingDistance;
 				Plugin.CurrentRoute.Tracks[0].Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
 				Plugin.CurrentRoute.Tracks[0].Elements[n].CsvRwAccuracyLevel = Data.Blocks[i].Accuracy;
+				if (Data.Blocks[i].Rails["0"].CurveIsLegacy)
+				{
+					Plugin.CurrentRoute.Tracks[0].Elements[n].ReturnsRawCant = true;
+				}
 				for (int k = 0; k < Plugin.CurrentRoute.Tracks.Count; k++)
 				{
 					int j = Plugin.CurrentRoute.Tracks.ElementAt(k).Key;
@@ -960,6 +964,18 @@ namespace Route.Bve5
 		private static double MidMainCant(TrackFollower follower, double distance)
 		{
 			follower.UpdateAbsolute(distance, true, false);
+
+			int element = follower.LastTrackElement;
+			int trackIndex = follower.TrackIndex;
+			if (element <= Plugin.CurrentRoute.Tracks[trackIndex].Elements.Length - 2)
+			{
+				if (Plugin.CurrentRoute.Tracks[trackIndex].Elements[element + 1].ReturnsRawCant)
+				{
+					return follower.RawCant;
+				}
+			}
+
+			
 			return follower.CurveCant;
 		}
 
