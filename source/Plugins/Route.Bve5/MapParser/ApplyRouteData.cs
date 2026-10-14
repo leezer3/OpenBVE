@@ -969,6 +969,22 @@ namespace Route.Bve5
 			int trackIndex = follower.TrackIndex;
 			if (element <= Plugin.CurrentRoute.Tracks[trackIndex].Elements.Length - 2)
 			{
+				/*
+				 * Handle the mix between legacy and non-legacy here
+				 *--------------------------------------------------
+				 *
+				 * Cant interpolation is not performed when going from non-legacy to legacy
+				 * However, it is performed when going from legacy to non-legacy
+				 * In this case, we take the raw cant value from the track element (as opposed to the follower's interpolated value)
+				 *
+				 * This 'works' as the BVE5 parser doesn't use fixed length track elements
+				 * and each legacy element encompasses the whole of the track segment
+				 * Non-legacy on the other hand creates elements as needed, which don't set the ReturnsRawCant value
+				 *
+				 * Note that the default TrackFollower cant value is always interpolated between two positions
+				 * (which is good assuming you want a rail car, but not necessarily for these purposes)
+				 *
+				 */
 				if (Plugin.CurrentRoute.Tracks[trackIndex].Elements[element + 1].ReturnsRawCant)
 				{
 					return follower.RawCant;
