@@ -69,7 +69,7 @@ namespace Route.Bve5
 
 				int StartBlock = i;
 
-				for (int k = i - 1; k >= 1; k--)
+				for (int k = i - 1; k >= 0; k--)
 				{
 					if (Blocks[k].Rails["0"].CurveTransitionEnd)
 					{
