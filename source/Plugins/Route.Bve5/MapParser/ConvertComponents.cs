@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Bve5_Parsing.MapGrammar;
 using Bve5_Parsing.MapGrammar.EvaluateData;
@@ -37,9 +38,8 @@ namespace Route.Bve5
 {
 	internal static partial class Bve5ScenarioParser
 	{
-		private static double lastLegacyCurvePosition = double.MinValue;
 		private static double lastLegacyGradientPosition = double.MinValue;
-		private static double lastLegacyCurveSecondDistance = double.MinValue;
+		private static double lastCurveTransitionPosition = double.MinValue;
 		private static void ConvertCurve(Statement Statement, RouteData RouteData)
 		{
 			{
@@ -81,6 +81,7 @@ namespace Route.Bve5
 							RouteData.TryAddBlock(Statement.Distance);
 							RouteData.sortedBlocks[Statement.Distance].Rails["0"].CurveInterpolateStart = true;
 							RouteData.sortedBlocks[Statement.Distance].Rails["0"].CurveTransitionStart = true;
+							lastCurveTransitionPosition = Statement.Distance;
 						}
 						break;
 					case MapFunctionName.Begin:
@@ -88,55 +89,17 @@ namespace Route.Bve5
 					case MapFunctionName.Change:
 					case MapFunctionName.Curve:
 						{
-							/*
-							 * NOTE: The behaviour of Legacy commands is not properly documented, and *does not* match prior versions of BVE.
-							 *		 From observation of BVE5 behavior:
-							 *		 * When the distance between curves is greater than 25m, interpolation is used from -10m to +15m of the statement position
-							 *		 * Otherwise, it's somewhat glitchy, e.g. https://github.com/leezer3/OpenBVE/issues/1045#issuecomment-2275286076
-							 *         For the minute, let's assume that is fundamentally bugged, and just issue an immediate change in this case
-							 */
 							double Radius = d.Radius;
 							double Cant = Statement.GetArgumentValueAsDouble(ArgumentName.Cant) / 1000.0;
-							if (Statement.ElementName == MapElementName.Legacy && Statement.Distance - lastLegacyCurvePosition >= 15)
-							{
-								int firstIndex = RouteData.FindOrAddBlock(Math.Max(0, Statement.Distance - 10));
-								int secondIndex = RouteData.FindOrAddBlock(Statement.Distance + 15);
-								lastLegacyCurveSecondDistance = Statement.Distance + 15;
-								RouteData.Blocks[secondIndex].CurrentTrackState.CurveRadius = Radius;
-								RouteData.Blocks[secondIndex].CurrentTrackState.CurveCant = Math.Abs(Cant) * Math.Sign(Radius);
-								RouteData.Blocks[firstIndex].Rails["0"].CurveInterpolateStart = true;
-								RouteData.Blocks[firstIndex].Rails["0"].CurveInterpolateEnd = true;
-								RouteData.Blocks[secondIndex].Rails["0"].CurveInterpolateEnd = true;
-								RouteData.Blocks[secondIndex].Rails["0"].CurveTransitionEnd = true;
-							}
-							else
-							{
-								int Index = RouteData.FindOrAddBlock(Statement.Distance);
-								RouteData.Blocks[Index].CurrentTrackState.CurveRadius = Radius;
-								RouteData.Blocks[Index].CurrentTrackState.CurveCant = Math.Abs(Cant) * Math.Sign(Radius);
-								RouteData.Blocks[Index].Rails["0"].CurveInterpolateStart = true;
-								RouteData.Blocks[Index].Rails["0"].CurveTransitionEnd = true;
-								if (lastLegacyCurveSecondDistance > Statement.Distance)
-								{
-									int SecondIndex = RouteData.FindOrAddBlock(lastLegacyCurveSecondDistance);
-									for (int i = Index; i < SecondIndex; i++)
-									{
-										// second curve command has been issued within the interpolate distance- change immediately
-										RouteData.Blocks[i].CurrentTrackState.CurveRadius = Radius;
-										RouteData.Blocks[i].CurrentTrackState.CurveCant = Math.Abs(Cant) * Math.Sign(Radius);
-										RouteData.Blocks[i].Rails["0"].CurveInterpolateStart = true;
-										RouteData.Blocks[i].Rails["0"].CurveTransitionEnd = true;
-									}
-								}
-								
-
-							}
-
+							int Index = RouteData.FindOrAddBlock(Statement.Distance);
+							RouteData.Blocks[Index].CurrentTrackState.CurveRadius = Radius;
+							RouteData.Blocks[Index].CurrentTrackState.CurveCant = Cant;
+							RouteData.Blocks[Index].Rails["0"].CurveInterpolateStart = true;
+							RouteData.Blocks[Index].Rails["0"].CurveTransitionEnd = true;
 							if (Statement.ElementName == MapElementName.Legacy)
 							{
-								lastLegacyCurvePosition = Statement.Distance;
+								RouteData.Blocks[Index].Rails["0"].CurveIsLegacy = true;
 							}
-
 						}
 						break;
 					case MapFunctionName.End:
@@ -174,7 +137,7 @@ namespace Route.Bve5
 							}
 
 							RouteData.Blocks[Index].CurrentTrackState.CurveRadius = Convert.ToDouble(Radius);
-							RouteData.Blocks[Index].CurrentTrackState.CurveCant = Math.Abs(Convert.ToDouble(Cant)) * Math.Sign(Convert.ToDouble(Radius));
+							RouteData.Blocks[Index].CurrentTrackState.CurveCant = Cant;
 							RouteData.Blocks[Index].Rails["0"].CurveInterpolateStart = true;
 							RouteData.Blocks[Index].Rails["0"].CurveInterpolateEnd = true;
 							RouteData.Blocks[Index].Rails["0"].CurveTransitionEnd = true;
@@ -479,17 +442,32 @@ namespace Route.Bve5
 
 		private static void ConvertTrack(MapData ParseData, RouteData RouteData)
 		{
+			// Bucket track statements once: the old code re-scanned all N statements per rail key.
+			Dictionary<string, List<Statement>> trackStatementsByKey = new Dictionary<string, List<Statement>>(StringComparer.InvariantCultureIgnoreCase);
+			foreach (Statement TrackStatement in ParseData.Statements)
+			{
+				if (TrackStatement.ElementName != MapElementName.Track)
+				{
+					continue;
+				}
+				if (!trackStatementsByKey.TryGetValue(TrackStatement.Key, out List<Statement> keyStatements))
+				{
+					keyStatements = new List<Statement>();
+					trackStatementsByKey.Add(TrackStatement.Key, keyStatements);
+				}
+				keyStatements.Add(TrackStatement);
+			}
 
 			// Own track is excluded.
 			for (int railIndex = 1; railIndex < RouteData.TrackKeyList.Count; railIndex++)
 			{
 				string railKey = RouteData.TrackKeyList[railIndex];
-				foreach (Statement Statement in ParseData.Statements)
+				if (!trackStatementsByKey.TryGetValue(railKey, out List<Statement> railStatements))
 				{
-					if (Statement.ElementName != MapElementName.Track || !Statement.Key.Equals(RouteData.TrackKeyList[railIndex], StringComparison.InvariantCultureIgnoreCase))
-					{
-						continue;
-					}
+					railStatements = new List<Statement>();
+				}
+				foreach (Statement Statement in railStatements)
+				{
 
 					dynamic d = Statement;
 

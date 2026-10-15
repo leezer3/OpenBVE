@@ -105,6 +105,11 @@ namespace RouteViewer
         //This renders the frame
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+	        // The run loop can dispatch one last frame after the window was closed.
+	        if (IsDisposed || !Exists || IsExiting)
+	        {
+		        return;
+	        }
 			Program.MouseMovement();
 			Program.Renderer.FrameRate = RenderFrequency;
 
@@ -141,7 +146,7 @@ namespace RouteViewer
 	            {
 		            Program.PreviewDirty = false;
 		            Program.Renderer.RenderScene(PausedElapsed);
-		            SwapBuffers();
+		            TrySwapBuffers();
 	            }
 	            return;
             }
@@ -160,8 +165,28 @@ namespace RouteViewer
             Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight, Program.CurrentRoute.LightDefinitions);
             Program.Renderer.RenderScene(TimeElapsed);
             MessageManager.UpdateMessages(TimeElapsed);
-            SwapBuffers();
+            TrySwapBuffers();
             
+        }
+
+        private void TrySwapBuffers()
+        {
+	        // The window may be closed/disposed mid-frame; never let the final
+	        // present take down the process.
+	        try
+	        {
+		        if (IsDisposed || !Exists || IsExiting)
+		        {
+			        return;
+		        }
+		        SwapBuffers();
+	        }
+	        catch (ObjectDisposedException)
+	        {
+	        }
+	        catch (InvalidOperationException)
+	        {
+	        }
         }
 
         protected override void OnResize(EventArgs e)
