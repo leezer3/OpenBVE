@@ -111,6 +111,7 @@ namespace Route.Bve5
 
 				
 				string FilePath = splitStrings[1].Trim();
+				FilePath = FilePath.Trim('"', '\''); 
 				try
 				{
 					FilePath = Path.CombineFile(BaseDirectory, FilePath);
