@@ -348,7 +348,8 @@ namespace Route.Bve5
 								if (freeObj.Span > 0.0)
 								{
 									// Spans walk the finished track like BVE5 does; placed after the walk.
-									deferredSpans.Add(new SpanJob(railKey, freeObj.TrackPosition, freeObj.Span, freeObj.Type, freeObj.Position, freeObj.Yaw, freeObj.Pitch, freeObj.Roll, freeObj.Key, StartingDistance, EndingDistance));
+									Data.Objects.TryGetValue(freeObj.Key, out UnifiedObject spanObj);
+									deferredSpans.Add(new SpanJob(railKey, freeObj.TrackPosition, freeObj.Span, freeObj.Type, freeObj.Position, freeObj.Yaw, freeObj.Pitch, freeObj.Roll, spanObj, StartingDistance, EndingDistance));
 									continue;
 								}
 								string key = freeObj.Key;
@@ -386,9 +387,19 @@ namespace Route.Bve5
 								double d0 = sInterpolateX0 - pInterpolateX0;
 								double d1 = sInterpolateX1 - pInterpolateX1;
 
-								if(Data.Objects.TryGetValue(Data.Blocks[i].Cracks[k].Key, out UnifiedObject obj) && obj != null)
+								if (!Data.Objects.TryGetValue(Data.Blocks[i].Cracks[k].Key, out UnifiedObject obj) || obj == null)
 								{
-									UnifiedObject crack = d0 < 0.0 ? obj.TransformRight(d0, d1) : obj.TransformLeft(d0, d1);
+									continue;
+								}
+
+								UnifiedObject crack = d0 < 0.0 ? obj.TransformRight(d0, d1) : obj.TransformLeft(d0, d1);
+
+								if (Data.Blocks[i].Cracks[k].Span != 0)
+								{
+									deferredSpans.Add(new SpanJob(Data.Blocks[i].Cracks[k].PrimaryRail, Data.Blocks[i].Cracks[k].TrackPosition, Data.Blocks[i].Cracks[k].Span, ObjectTransformType.FollowsGradient, Vector3.Zero, 0,0,0, crack, StartingDistance, EndingDistance));
+								}
+								else
+								{
 									crack.CreateObject(wpos, railTransformation, new ObjectCreationParameters(Data.Blocks[i].Cracks[k].TrackPosition, StartingDistance, EndingDistance));
 								}
 							}
@@ -700,11 +711,11 @@ namespace Route.Bve5
 			internal readonly double Yaw;
 			internal readonly double Pitch;
 			internal readonly double Roll;
-			internal readonly string ObjKey;
+			internal readonly UnifiedObject UnifiedObject;
 			internal readonly double ParamStart;
 			internal readonly double ParamEnd;
 
-			internal SpanJob(string railKey, double distance, double span, ObjectTransformType type, Vector3 offset, double yaw, double pitch, double roll, string objKey, double paramStart, double paramEnd)
+			internal SpanJob(string railKey, double distance, double span, ObjectTransformType type, Vector3 offset, double yaw, double pitch, double roll, UnifiedObject staticObject, double paramStart, double paramEnd)
 			{
 				RailKey = railKey;
 				Distance = distance;
@@ -714,7 +725,7 @@ namespace Route.Bve5
 				Yaw = yaw;
 				Pitch = pitch;
 				Roll = roll;
-				ObjKey = objKey;
+				UnifiedObject = staticObject;
 				ParamStart = paramStart;
 				ParamEnd = paramEnd;
 			}
@@ -762,7 +773,8 @@ namespace Route.Bve5
 				{
 					continue;
 				}
-				jobs.Add(new SpanJob(railKey, distance, Repeater.Span, Repeater.Type, Repeater.Position, Repeater.Yaw, Repeater.Pitch, Repeater.Roll, key, distance, distance));
+				Data.Objects.TryGetValue(key, out UnifiedObject repeaterObj);
+				jobs.Add(new SpanJob(railKey, distance, Repeater.Span, Repeater.Type, Repeater.Position, Repeater.Yaw, Repeater.Pitch, Repeater.Roll, repeaterObj, distance, distance));
 			}
 		}
 
@@ -873,7 +885,7 @@ namespace Route.Bve5
 
 		private static void ComputeSpan(RouteData Data, SpanJob job, TrackFollower follower, SpanPlacement[] placements, int idx)
 		{
-			if (!Data.Objects.TryGetValue(job.ObjKey, out UnifiedObject obj) || obj == null)
+			if (job.UnifiedObject == null)
 			{
 				return;
 			}
@@ -936,7 +948,7 @@ namespace Route.Bve5
 				world = new Transformation(world, 0.0, 0.0, Math.Atan(cant));
 			}
 
-			placements[idx].Obj = obj;
+			placements[idx].Obj = job.UnifiedObject;
 			placements[idx].Position = start + job.Offset * world;
 			placements[idx].World = world;
 			placements[idx].Distance = job.Distance;
