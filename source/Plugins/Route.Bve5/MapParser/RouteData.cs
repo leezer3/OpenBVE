@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using Bve5_Parsing.MapGrammar.EvaluateData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,7 @@ namespace Route.Bve5
 		internal readonly Bve5ScenarioParser.SoundDictionary Sound3Ds;
 		/// <summary>Finished repeater runs, placed once the track exists.</summary>
 		internal readonly List<Repeater> Repeaters;
+		internal readonly Dictionary<string, List<Statement>> trackStatementsByKey;
 
 		internal RouteData(HashSet<string> trackKeys)
 		{
@@ -49,6 +51,7 @@ namespace Route.Bve5
 			Sounds = new Bve5ScenarioParser.SoundDictionary();
 			Sound3Ds = new Bve5ScenarioParser.SoundDictionary();
 			Repeaters = new List<Repeater>();
+			trackStatementsByKey = new Dictionary<string, List<Statement>>(StringComparer.InvariantCultureIgnoreCase);
 		}
 
 		//Set units of speed initially to km/h

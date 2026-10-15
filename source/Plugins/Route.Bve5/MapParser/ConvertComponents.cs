@@ -440,29 +440,13 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void ConvertTrack(MapData ParseData, RouteData RouteData)
+		private static void ConvertTrack(RouteData RouteData)
 		{
-			// Bucket track statements once: the old code re-scanned all N statements per rail key.
-			Dictionary<string, List<Statement>> trackStatementsByKey = new Dictionary<string, List<Statement>>(StringComparer.InvariantCultureIgnoreCase);
-			foreach (Statement TrackStatement in ParseData.Statements)
-			{
-				if (TrackStatement.ElementName != MapElementName.Track)
-				{
-					continue;
-				}
-				if (!trackStatementsByKey.TryGetValue(TrackStatement.Key, out List<Statement> keyStatements))
-				{
-					keyStatements = new List<Statement>();
-					trackStatementsByKey.Add(TrackStatement.Key, keyStatements);
-				}
-				keyStatements.Add(TrackStatement);
-			}
-
 			// Own track is excluded.
 			for (int railIndex = 1; railIndex < RouteData.TrackKeyList.Count; railIndex++)
 			{
 				string railKey = RouteData.TrackKeyList[railIndex];
-				if (!trackStatementsByKey.TryGetValue(railKey, out List<Statement> railStatements))
+				if (!RouteData.trackStatementsByKey.TryGetValue(railKey, out List<Statement> railStatements))
 				{
 					railStatements = new List<Statement>();
 				}

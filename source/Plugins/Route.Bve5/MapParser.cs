@@ -313,7 +313,7 @@ namespace Route.Bve5
 			 */
 
 			ConvertData(ParseData, RouteData, PreviewOnly);
-			ConvertTrack(ParseData, RouteData);
+			ConvertTrack(RouteData);
 			
 			System.Threading.Thread.Sleep(1);
 			if (plugin.Cancel) return;
@@ -435,6 +435,17 @@ namespace Route.Bve5
 						if (!previewOnly)
 						{
 							ConfirmRollingNoise(parseData.Statements[i], routeData);
+						}
+						break;
+					case MapElementName.Track:
+						if (!previewOnly)
+						{
+							if (!routeData.trackStatementsByKey.TryGetValue(parseData.Statements[i].Key, out List<Statement> keyStatements))
+							{
+								keyStatements = new List<Statement>();
+								routeData.trackStatementsByKey.Add(parseData.Statements[i].Key, keyStatements);
+							}
+							keyStatements.Add(parseData.Statements[i]);
 						}
 						break;
 				}
