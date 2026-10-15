@@ -56,6 +56,9 @@ namespace OpenBve.Formats.DirectX
 		/// <summary>Reads a single-bit precision floating point number from the block</summary>
 		public abstract float ReadSingle();
 
+		/// <summary>Reads a single-bit precision floating point number from the block</summary>
+		internal abstract float ReadSingle(float min, float max);
+
 		/// <summary>Skips <para>length</para> through the block</summary>
 		/// <param name="length">The length to skip</param>
 		public abstract void Skip(int length);
@@ -64,10 +67,10 @@ namespace OpenBve.Formats.DirectX
 		public abstract string ReadString();
 
 		/// <summary>Reads a Color128 from the block</summary>
-		public Color128 ReadColor128 => new Color128(ReadSingle(), ReadSingle(), ReadSingle(), ReadSingle());
+		public Color128 ReadColor128 => new Color128(ReadSingle(0,1), ReadSingle(0,1), ReadSingle(0,1), ReadSingle(0,1));
 
 		/// <summary>Reads a Color96 from the block</summary>
-		public Color96 ReadColor96 => new Color96(ReadSingle(), ReadSingle(), ReadSingle());
+		public Color96 ReadColor96 => new Color96(ReadSingle(0,1), ReadSingle(0,1), ReadSingle(0,1));
 
 		/// <summary>Returns the length of the block</summary>
 		public abstract long Length();
@@ -506,6 +509,12 @@ namespace OpenBve.Formats.DirectX
 			throw new Exception("Unable to parse " + s + " to a valid float in block " + Token);
 		}
 
+		internal override float ReadSingle(float min, float max)
+		{
+			float f = ReadSingle();
+			return Math.Max(min, Math.Min(f, max));
+		}
+
 		public override void Skip(int length)
 		{
 			//Unused at the minute
@@ -738,6 +747,14 @@ namespace OpenBve.Formats.DirectX
 		{
 			float f = (float)cachedFloats[0];
 			cachedFloats.RemoveAt(0);
+			return f;
+		}
+
+		internal override float ReadSingle(float min, float max)
+		{
+			float f = (float)cachedFloats[0];
+			cachedFloats.RemoveAt(0);
+			f = Math.Min(max, Math.Max(min, f));
 			return f;
 		}
 
