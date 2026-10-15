@@ -259,7 +259,7 @@ namespace Route.Bve5
 		private static void ConvertToBlock(string FileName, bool PreviewOnly, MapData ParseData, out RouteData RouteData)
 		{
 			RouteData = new RouteData(ParseData.TrackKeys);
-			RouteData.TryAddBlock(0);
+			RouteData.FindOrAddBlock(0);
 			RouteData.Blocks[0].Fog = new Fog(0, 1, Color24.Grey, 0, false);
 			
 			if (ParseData.StationListPaths.Count == 0)

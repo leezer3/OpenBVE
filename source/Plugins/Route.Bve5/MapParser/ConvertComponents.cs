@@ -78,7 +78,7 @@ namespace Route.Bve5
 						break;
 					case MapFunctionName.BeginTransition:
 						{
-							RouteData.TryAddBlock(Statement.Distance);
+							RouteData.FindOrAddBlock(Statement.Distance);
 							RouteData.sortedBlocks[Statement.Distance].Rails["0"].CurveInterpolateStart = true;
 							RouteData.sortedBlocks[Statement.Distance].Rails["0"].CurveTransitionStart = true;
 							lastCurveTransitionPosition = Statement.Distance;
@@ -104,7 +104,7 @@ namespace Route.Bve5
 						break;
 					case MapFunctionName.End:
 						{
-							RouteData.TryAddBlock(Statement.Distance);
+							RouteData.FindOrAddBlock(Statement.Distance);
 							RouteData.sortedBlocks[Statement.Distance].Rails["0"].CurveInterpolateStart = true;
 							RouteData.sortedBlocks[Statement.Distance].Rails["0"].CurveTransitionEnd = true;
 						}
@@ -146,7 +146,7 @@ namespace Route.Bve5
 					case MapFunctionName.Turn:
 						{
 							object Slope = d.Slope;
-							RouteData.TryAddBlock(Statement.Distance);
+							RouteData.FindOrAddBlock(Statement.Distance);
 							RouteData.sortedBlocks[Statement.Distance].Turn = Convert.ToDouble(Slope);
 						}
 						break;
@@ -243,10 +243,7 @@ namespace Route.Bve5
 							continue;
 						}
 
-						for (double k = StartDistance; k < EndDistance; k += InterpolateInterval)
-						{
-							RouteData.TryAddBlock(k);
-						}
+						RouteData.CreateMissingBlocks(StartDistance, EndDistance, InterpolateInterval);
 					}
 
 					// now use distance to retrieve the *new* index of said block after insertions (+1 to carry on with loop)
@@ -263,7 +260,7 @@ namespace Route.Bve5
 				{
 					case MapFunctionName.BeginTransition:
 						{
-							RouteData.TryAddBlock(Statement.Distance);
+							RouteData.FindOrAddBlock(Statement.Distance);
 							RouteData.sortedBlocks[Statement.Distance].GradientInterpolateStart = true;
 							RouteData.sortedBlocks[Statement.Distance].GradientTransitionStart = true;
 						}
@@ -307,7 +304,7 @@ namespace Route.Bve5
 						break;
 					case MapFunctionName.End:
 						{
-							RouteData.TryAddBlock(Statement.Distance);
+							RouteData.FindOrAddBlock(Statement.Distance);
 							RouteData.sortedBlocks[Statement.Distance].GradientInterpolateStart = true;
 							RouteData.sortedBlocks[Statement.Distance].GradientTransitionEnd = true;
 						}
@@ -375,10 +372,7 @@ namespace Route.Bve5
 						double StartDistance = Multiple(RouteData.Blocks[StartBlock].StartingDistance, InterpolateInterval);
 						double EndDistance = RouteData.Blocks[i].StartingDistance;
 
-						for (double k = StartDistance; k < EndDistance; k += InterpolateInterval)
-						{
-							RouteData.FindOrAddBlock(k);
-						}
+						RouteData.CreateMissingBlocks(StartDistance, EndDistance, InterpolateInterval);
 					}
 
 					// now use distance to retrieve the *new* index of said block after insertions (+1 to carry on with loop)
@@ -428,10 +422,7 @@ namespace Route.Bve5
 							continue;
 						}
 
-						for (double k = StartDistance; k < EndDistance; k += InterpolateInterval)
-						{
-							RouteData.FindOrAddBlock(k);
-						}
+						RouteData.CreateMissingBlocks(StartDistance, EndDistance, InterpolateInterval);
 					}
 
 					// now use distance to retrieve the *new* index of said block after insertions (+1 to carry on with loop)
@@ -558,14 +549,14 @@ namespace Route.Bve5
 						{
 							case MapFunctionName.BeginTransition:
 								{
-									RouteData.TryAddBlock(Statement.Distance);
+									RouteData.FindOrAddBlock(Statement.Distance);
 									RouteData.sortedBlocks[Statement.Distance].Rails[railKey].CurveInterpolateStart = true;
 									RouteData.sortedBlocks[Statement.Distance].Rails[railKey].CurveTransitionStart = true;
 								}
 								break;
 							case MapFunctionName.Begin:
 								{
-									RouteData.TryAddBlock(Statement.Distance);
+									RouteData.FindOrAddBlock(Statement.Distance);
 									RouteData.sortedBlocks[Statement.Distance].Rails[railKey].CurveCant = Statement.GetArgumentValueAsDouble(ArgumentName.Cant) / 1000.0;
 									RouteData.sortedBlocks[Statement.Distance].Rails[railKey].CurveInterpolateStart = true;
 									RouteData.sortedBlocks[Statement.Distance].Rails[railKey].CurveTransitionEnd = true;
@@ -573,7 +564,7 @@ namespace Route.Bve5
 								break;
 							case MapFunctionName.End:
 								{
-									RouteData.TryAddBlock(Statement.Distance);
+									RouteData.FindOrAddBlock(Statement.Distance);
 									RouteData.sortedBlocks[Statement.Distance].Rails[railKey].CurveInterpolateStart = true;
 									RouteData.sortedBlocks[Statement.Distance].Rails[railKey].CurveTransitionEnd = true;
 								}
@@ -688,10 +679,7 @@ namespace Route.Bve5
 							continue;
 						}
 
-						for (double k = StartDistance; k < EndDistance; k += InterpolateInterval)
-						{
-							RouteData.FindOrAddBlock(k);
-						}
+						RouteData.CreateMissingBlocks(StartDistance, EndDistance, InterpolateInterval);
 					}
 
 					// now use distance to retrieve the *new* index of said block after insertions (+1 to carry on with loop)
@@ -729,10 +717,7 @@ namespace Route.Bve5
 							continue;
 						}
 
-						for (double k = StartDistance; k < EndDistance; k += InterpolateInterval)
-						{
-							RouteData.FindOrAddBlock(k);
-						}
+						RouteData.CreateMissingBlocks(StartDistance, EndDistance, InterpolateInterval);
 					}
 
 					// now use distance to retrieve the *new* index of said block after insertions (+1 to carry on with loop)
@@ -776,10 +761,7 @@ namespace Route.Bve5
 						double StartDistance = Multiple(RouteData.Blocks[StartBlock].StartingDistance, InterpolateInterval);
 						double EndDistance = RouteData.Blocks[i].StartingDistance;
 
-						for (double k = StartDistance; k < EndDistance; k += InterpolateInterval)
-						{
-							RouteData.FindOrAddBlock(k);
-						}
+						RouteData.CreateMissingBlocks(StartDistance, EndDistance, InterpolateInterval);
 					}
 
 					// now use distance to retrieve the *new* index of said block after insertions (+1 to carry on with loop)
@@ -830,10 +812,7 @@ namespace Route.Bve5
 							continue;
 						}
 
-						for (double k = StartDistance; k < EndDistance; k += InterpolateInterval)
-						{
-							RouteData.FindOrAddBlock(k);
-						}
+						RouteData.CreateMissingBlocks(StartDistance, EndDistance, InterpolateInterval);
 					}
 
 					// now use distance to retrieve the *new* index of said block after insertions (+1 to carry on with loop)
@@ -911,7 +890,7 @@ namespace Route.Bve5
 
 			if (RouteData.Backgrounds.ContainsKey(BackgroundKey))
 			{
-				RouteData.TryAddBlock(Statement.Distance);
+				RouteData.FindOrAddBlock(Statement.Distance);
 				RouteData.sortedBlocks[Statement.Distance].Background = BackgroundKey;
 			}
 		}
@@ -969,7 +948,7 @@ namespace Route.Bve5
 				break;
 				case MapFunctionName.Interpolate:
 				case MapFunctionName.Set:
-					RouteData.TryAddBlock(Statement.Distance);
+					RouteData.FindOrAddBlock(Statement.Distance);
 					float Density = 0.0f, r = 1.0f, g = 1.0f, b = 1.0f;
 					if (!Statement.HasArgument(ArgumentName.Red) && !Statement.HasArgument(ArgumentName.Green) &&
 					    !Statement.HasArgument(ArgumentName.Blue))

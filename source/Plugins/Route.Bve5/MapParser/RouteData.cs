@@ -60,39 +60,10 @@ namespace Route.Bve5
 
 		internal double[] SignalSpeeds;
 
-		internal void TryAddBlock(double Distance)
-		{
-			if (sortedBlocks.ContainsKey(Distance))
-			{
-				return;
-			}
-			Bve5ScenarioParser.Block NewBlock = new Bve5ScenarioParser.Block
-			{
-				Rails = TrackKeyList.ToDictionary(x => x, x => new Rail()),
-				StartingDistance = Distance,
-				CurrentTrackState =
-				{
-					StartingTrackPosition = Distance
-				},
-				FreeObjects = new Dictionary<string, List<FreeObj>>(StringComparer.InvariantCultureIgnoreCase),
-				Cracks = new List<Crack>(),
-				Sections = new List<Section>(),
-				Signals = new List<Signal>[TrackKeyList.Count],
-				Transponders = new List<Transponder>(),
-				Limits = new List<Limit>(),
-				BrightnessChanges = new List<Brightness>(),
-				SoundEvents = new List<Sound>(),
-				RunSounds = new List<RunSound>(),
-				FlangeSounds = new List<FlangeSound>()
-			};
-			sortedBlocks.Add(Distance, NewBlock);
-			int newIndex = sortedBlocks.IndexOfKey(Distance);
-			if (newIndex > 0)
-			{
-				Blocks[newIndex].Fog = Blocks[newIndex - 1].Fog;
-			}
-		}
 
+		/// <summary>Creates a new block, if not present at the specified distance and returns the index</summary>
+		/// <param name="Distance">The distance</param>
+		/// <returns>The new block index</returns>
 		internal int FindOrAddBlock(double Distance)
 		{
 			if (sortedBlocks.ContainsKey(Distance))
@@ -125,6 +96,18 @@ namespace Route.Bve5
 				Blocks[newIndex].Fog = Blocks[newIndex - 1].Fog;
 			}
 			return newIndex;
+		}
+
+		/// <summary>Creates the missing blocks between two distances</summary>
+		/// <param name="startDistance">The starting distance</param>
+		/// <param name="endDistance">The ending distance</param>
+		/// <param name="blockInterval">The block interval</param>
+		internal void CreateMissingBlocks(double startDistance, double endDistance, double blockInterval)
+		{
+			for (double k = startDistance; k < endDistance; k += blockInterval)
+			{
+				FindOrAddBlock(k);
+			}
 		}
 	}
 }
