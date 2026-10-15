@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using OpenBveApi.Math;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
-using System;
+using OpenTK.Input;
 
 namespace LibRender2.Primitives
 {
@@ -33,9 +33,34 @@ namespace LibRender2.Primitives
                         Children.Add(content);
                 }
 
+                /// <summary>The content control for the currently selected tab, if any</summary>
+                public GLControl SelectedContent => SelectedTab >= 0 && SelectedTab < TabContents.Count ? TabContents[SelectedTab] : null;
+
+                private Vector2 ContentLocation => new Vector2(Location.X, Location.Y + TabHeaderHeight);
+                private Vector2 ContentSize => new Vector2(Size.X, Size.Y - TabHeaderHeight);
+
+                public override void PerformLayout()
+                {
+                        Vector2 contentLoc = ContentLocation;
+                        Vector2 contentSize = ContentSize;
+                        for (int i = 0; i < TabContents.Count; i++)
+                        {
+                                GLControl content = TabContents[i];
+                                if (content == null) continue;
+                                content.IsVisible = (i == SelectedTab);
+                                if (content.IsVisible)
+                                {
+                                        content.Location = contentLoc;
+                                        content.Size = contentSize;
+                                        content.PerformLayout();
+                                }
+                        }
+                }
+
                 public override void Draw()
                 {
                         if (!IsVisible || TabTitles.Count == 0) return;
+                        PerformLayout();
 
                         // Draw tab headers
                         float tabWidth = (float)(Size.X / TabTitles.Count);
@@ -74,32 +99,23 @@ namespace LibRender2.Primitives
                         }
 
                         // Draw content area background
-                        Vector2 contentLoc = new Vector2(Location.X, Location.Y + TabHeaderHeight);
-                        Vector2 contentSize = new Vector2(Size.X, Size.Y - TabHeaderHeight);
-                        Renderer.Rectangle.Draw(null, contentLoc, contentSize, ContentBackgroundColor);
+                        Renderer.Rectangle.Draw(null, ContentLocation, ContentSize, ContentBackgroundColor);
 
-                        // Show only the selected tab's content
-                        for (int i = 0; i < TabContents.Count; i++)
-                        {
-                                if (TabContents[i] == null) continue;
-                                
-                                bool isSelected = (i == SelectedTab);
-                                TabContents[i].IsVisible = isSelected;
-                                if (isSelected)
-                                {
-                                        // Align content to fit the tab area
-                                        TabContents[i].Location = contentLoc;
-                                        TabContents[i].Size = contentSize;
-                                        TabContents[i].Draw();
-                                }
-                        }
+                        // Children hold the tab contents; only the selected one is visible
+                        base.Draw();
+                }
+
+                public void SelectTab(int index)
+                {
+                        if (index < 0 || index >= TabTitles.Count) return;
+                        SelectedTab = index;
+                        PerformLayout();
                 }
 
                 public override void MouseMove(int x, int y)
                 {
                         if (!IsVisible || TabTitles.Count == 0) return;
 
-                        // Check if hovering over a tab header
                         if (x >= Location.X && x <= Location.X + Size.X && y >= Location.Y && y <= Location.Y + TabHeaderHeight)
                         {
                                 float tabWidth = (float)(Size.X / TabTitles.Count);
@@ -111,7 +127,6 @@ namespace LibRender2.Primitives
                                 hoveredTab = -1;
                         }
 
-                        // Pass to selected tab's content
                         base.MouseMove(x, y);
                 }
 
@@ -119,30 +134,46 @@ namespace LibRender2.Primitives
                 {
                         if (!IsVisible || TabTitles.Count == 0) return;
 
-                        // Check if header clicked
                         if (x >= Location.X && x <= Location.X + Size.X && y >= Location.Y && y <= Location.Y + TabHeaderHeight)
                         {
                                 float tabWidth = (float)(Size.X / TabTitles.Count);
                                 int clickedTab = (int)((x - Location.X) / tabWidth);
                                 if (clickedTab >= 0 && clickedTab < TabTitles.Count)
                                 {
-                                        SelectedTab = clickedTab;
+                                        SelectTab(clickedTab);
                                         return;
                                 }
                         }
 
-                        // Otherwise pass to child contents
                         base.MouseDown(x, y);
-                }
-
-                public override void MouseUp(int x, int y)
-                {
-                        base.MouseUp(x, y);
                 }
 
                 public override void MouseWheel(int delta)
                 {
-                        base.MouseWheel(delta);
+                        GLControl content = SelectedContent;
+                        if (content != null)
+                        {
+                                content.MouseWheel(delta);
+                        }
+                }
+
+                public override void KeyDown(Key key)
+                {
+                        if (key == Key.Left)
+                        {
+                                SelectTab(SelectedTab - 1);
+                                return;
+                        }
+                        if (key == Key.Right)
+                        {
+                                SelectTab(SelectedTab + 1);
+                                return;
+                        }
+                        GLControl content = SelectedContent;
+                        if (content != null)
+                        {
+                                content.KeyDown(key);
+                        }
                 }
         }
 }
