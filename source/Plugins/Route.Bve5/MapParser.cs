@@ -35,6 +35,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using RouteManager2.Climate;
 using static Bve5_Parsing.MapGrammar.MapGrammarParser;
+// ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 
 namespace Route.Bve5
 {
@@ -213,7 +214,7 @@ namespace Route.Bve5
 					{
 						continue; // already recovered above
 					}
-					// ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+
 					switch (error.ErrorLevel)
 					{
 						case ParseErrorLevel.Error:

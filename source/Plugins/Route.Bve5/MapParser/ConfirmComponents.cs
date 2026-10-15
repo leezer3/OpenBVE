@@ -33,6 +33,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Sounds;
+// ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 
 namespace Route.Bve5
 {
@@ -441,7 +442,7 @@ namespace Route.Bve5
 				blockStatementList.Add(Statement);
 			}
 
-			Parallel.ForEach(blockStatements, (blockStatementGroup) =>
+			Parallel.ForEach(blockStatements, blockStatementGroup =>
 			{
 				if (plugin.Cancel)
 				{

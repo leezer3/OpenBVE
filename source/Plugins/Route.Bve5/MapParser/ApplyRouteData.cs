@@ -352,9 +352,7 @@ namespace Route.Bve5
 									continue;
 								}
 								string key = freeObj.Key;
-								Vector3 wpos;
-								Transformation Transformation;
-								if (!GetRailTransformation(railKey, Position, Data.Blocks, i, freeObj, Direction, out wpos, out Transformation))
+								if (!GetRailTransformation(railKey, Position, Data.Blocks, i, freeObj, Direction, out Vector3 wpos, out Transformation Transformation))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unknown transform type encountered for object " + freeObj.Key + " at track position " + StartingDistance);
 									continue;
@@ -374,9 +372,7 @@ namespace Route.Bve5
 								string p = Data.Blocks[i].Cracks[k].PrimaryRail;
 								string s = Data.Blocks[i].Cracks[k].SecondaryRail;
 
-								Vector3 wpos;
-								Transformation railTransformation;
-								if (!GetRailTransformation(railKey, Position, Data.Blocks, i, Data.Blocks[i].Cracks[k], Direction, out wpos, out railTransformation))
+								if (!GetRailTransformation(railKey, Position, Data.Blocks, i, Data.Blocks[i].Cracks[k], Direction, out Vector3 wpos, out Transformation railTransformation))
 								{
 
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unknown transform type encountered for crack " + Data.Blocks[i].Cracks[k].Key + " at track position " + StartingDistance);
@@ -403,9 +399,7 @@ namespace Route.Bve5
 						{
 							for (int k = 0; k < Data.Blocks[i].Signals[j].Count; k++)
 							{
-								Vector3 wpos;
-								Transformation railTransformation;
-								if (!GetRailTransformation(railKey, Position, Data.Blocks, i, Data.Blocks[i].Signals[j][k], Direction, out wpos, out railTransformation))
+								if (!GetRailTransformation(railKey, Position, Data.Blocks, i, Data.Blocks[i].Signals[j][k], Direction, out Vector3 wpos, out Transformation railTransformation))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unknown transform type encountered for signal " + Data.Blocks[i].Signals[j][k].Key + " at track position " + StartingDistance);
 									continue;
@@ -860,7 +854,7 @@ namespace Route.Bve5
 						ComputeSpan(Data, jobs[idx], follower, placements, idx);
 						return follower;
 					},
-					(follower) => { });
+					follower => { });
 				if (plugin.Cancel)
 				{
 					return;
@@ -921,18 +915,10 @@ namespace Route.Bve5
 				cant = 0.0;
 			}
 
-			Vector3 r;
-			if (followGradient)
-			{
-				r = new Vector3(finish.X - start.X, finish.Y - start.Y, finish.Z - start.Z);
-			}
-			else
-			{
-				// Level span when not following the gradient.
-				r = new Vector3(finish.X - start.X, 0.0, finish.Z - start.Z);
-			}
+			// Level span when not following the gradient.
+			Vector3 r = followGradient ? new Vector3(finish.X - start.X, finish.Y - start.Y, finish.Z - start.Z) : new Vector3(finish.X - start.X, 0.0, finish.Z - start.Z);
 
-			if (r.X == 0.0 && r.Y == 0.0 && r.Z == 0.0)
+			if (r == Vector3.Zero)
 			{
 				return;
 			}

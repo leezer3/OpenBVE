@@ -52,19 +52,7 @@ namespace Route.Bve5
 			}
 			return result;
 		}
-
-		public static int FindLastIndex<T>(this IList<T> source, int startIndex, Predicate<T> match)
-		{
-			for (int i = startIndex; i > 0; i--)
-			{
-				if (match(source[i]))
-				{
-					return i;
-				}
-			}
-			return -1;
-		}
-
+		
 		public static int FindLastIndex<T>(this IList<T> source, int startIndex, int count, Predicate<T> match)
 		{
 			for (int i = startIndex; i > Math.Max(0, startIndex - count); i--)

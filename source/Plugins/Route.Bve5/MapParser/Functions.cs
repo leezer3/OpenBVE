@@ -347,10 +347,9 @@ namespace Route.Bve5
 
 				offset = Vector3.Zero;
 
-				if (RailKey != "0" && block.Rails.ContainsKey(RailKey))
+				if (RailKey != "0" && block.Rails.TryGetValue(RailKey, out Rail rail))
 				{
 					// Interpolating within this block only keeps us from dragging one block's offset slope across the whole span
-					Rail rail = block.Rails[RailKey];
 					bool NextBlockHasRail = HasNextBlock && Blocks[i + 1].Rails.ContainsKey(RailKey);
 					double InterpolateX = GetTrackCoordinate(block.StartingDistance, rail.Position.X, blockEnd, NextBlockHasRail ? Blocks[i + 1].Rails[RailKey].Position.X : rail.Position.X, rail.RadiusH, distance);
 					double InterpolateY = GetTrackCoordinate(block.StartingDistance, rail.Position.Y, blockEnd, NextBlockHasRail ? Blocks[i + 1].Rails[RailKey].Position.Y : rail.Position.Y, rail.RadiusV, distance);

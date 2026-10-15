@@ -33,13 +33,13 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using RouteManager2.Climate;
 using RouteManager2.Stations;
+// ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 
 namespace Route.Bve5
 {
 	internal static partial class Bve5ScenarioParser
 	{
 		private static double lastLegacyGradientPosition = double.MinValue;
-		private static double lastCurveTransitionPosition = double.MinValue;
 		private static void ConvertCurve(Statement Statement, RouteData RouteData)
 		{
 			{
@@ -81,7 +81,6 @@ namespace Route.Bve5
 							RouteData.FindOrAddBlock(Statement.Distance);
 							RouteData.sortedBlocks[Statement.Distance].Rails["0"].CurveInterpolateStart = true;
 							RouteData.sortedBlocks[Statement.Distance].Rails["0"].CurveTransitionStart = true;
-							lastCurveTransitionPosition = Statement.Distance;
 						}
 						break;
 					case MapFunctionName.Begin:
