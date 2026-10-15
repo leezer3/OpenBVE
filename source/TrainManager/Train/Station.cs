@@ -262,20 +262,20 @@ namespace TrainManager.Trains
 										if (TrainManagerBase.CurrentRoute.Stations[i].OpenLeftDoors & Cars[j].Doors[k].Direction == -1 | TrainManagerBase.CurrentRoute.Stations[i].OpenRightDoors & Cars[j].Doors[k].Direction == 1)
 										{
 											double p = 0.005 * TrainManagerBase.CurrentRoute.Stations[i].PassengerRatio * TrainManagerBase.CurrentRoute.Stations[i].PassengerRatio * TrainManagerBase.CurrentRoute.Stations[i].PassengerRatio * TrainManagerBase.CurrentRoute.Stations[i].PassengerRatio;
-											if (TrainManagerBase.RandomNumberGenerator.NextDouble() < p)
+											if (TrainManagerBase.currentHost.Random.NextDouble() < p)
 											{
 												/*
 												 * -- door lock at state --
 												 * minimum: 0.2 (nearly closed)
 												 * maximum: 0.8 (nearly opened)
 												 * */
-												Cars[j].Doors[k].DoorLockState = 0.2 + 0.6 * TrainManagerBase.RandomNumberGenerator.NextDouble();
+												Cars[j].Doors[k].DoorLockState = 0.2 + 0.6 * TrainManagerBase.currentHost.Random.NextDouble();
 												/* -- waiting time --
 												 * minimum: 2.9 s
 												 * maximum: 40.0 s
 												 * average: 7.6 s
 												 * */
-												p = TrainManagerBase.RandomNumberGenerator.NextDouble();
+												p = TrainManagerBase.currentHost.Random.NextDouble();
 												Cars[j].Doors[k].DoorLockDuration = (50.0 - 10.0 * p) / (17.0 - 16.0 * p);
 											}
 										}
@@ -303,22 +303,22 @@ namespace TrainManager.Trains
 
 								if (Specs.DoorClosureAttempted)
 								{
-									if (TrainManagerBase.CurrentRoute.Stations[i].OpenLeftDoors && !Cars[j].Doors[0].AnticipatedReopen && TrainManagerBase.RandomNumberGenerator.NextDouble() < TrainManagerBase.CurrentRoute.Stations[i].ReopenDoor)
+									if (TrainManagerBase.CurrentRoute.Stations[i].OpenLeftDoors && !Cars[j].Doors[0].AnticipatedReopen && TrainManagerBase.currentHost.Random.NextDouble() < TrainManagerBase.CurrentRoute.Stations[i].ReopenDoor)
 									{
-										Cars[j].Doors[0].ReopenLimit = TrainManagerBase.RandomNumberGenerator.Next(1, TrainManagerBase.CurrentRoute.Stations[i].ReopenStationLimit);
+										Cars[j].Doors[0].ReopenLimit = TrainManagerBase.currentHost.Random.Next(1, TrainManagerBase.CurrentRoute.Stations[i].ReopenStationLimit);
 										Cars[j].Doors[0].ReopenCounter = 0;
-										Cars[j].Doors[0].InterferingObjectRate = TrainManagerBase.RandomNumberGenerator.Next(1, TrainManagerBase.CurrentRoute.Stations[i].MaxInterferingObjectRate) * 0.01;
+										Cars[j].Doors[0].InterferingObjectRate = TrainManagerBase.currentHost.Random.Next(1, TrainManagerBase.CurrentRoute.Stations[i].MaxInterferingObjectRate) * 0.01;
 										if (Cars[j].Doors[0].InterferingObjectRate * Cars[j].Doors[0].Width >= Cars[j].Doors[0].MaxTolerance)
 										{
 											Cars[j].Doors[0].AnticipatedReopen = true;
 										}
 									}
 
-									if (TrainManagerBase.CurrentRoute.Stations[i].OpenRightDoors && !Cars[j].Doors[1].AnticipatedReopen && TrainManagerBase.RandomNumberGenerator.NextDouble() < TrainManagerBase.CurrentRoute.Stations[i].ReopenDoor)
+									if (TrainManagerBase.CurrentRoute.Stations[i].OpenRightDoors && !Cars[j].Doors[1].AnticipatedReopen && TrainManagerBase.currentHost.Random.NextDouble() < TrainManagerBase.CurrentRoute.Stations[i].ReopenDoor)
 									{
-										Cars[j].Doors[1].ReopenLimit = TrainManagerBase.RandomNumberGenerator.Next(1, TrainManagerBase.CurrentRoute.Stations[i].ReopenStationLimit);
+										Cars[j].Doors[1].ReopenLimit = TrainManagerBase.currentHost.Random.Next(1, TrainManagerBase.CurrentRoute.Stations[i].ReopenStationLimit);
 										Cars[j].Doors[1].ReopenCounter = 0;
-										Cars[j].Doors[1].InterferingObjectRate = TrainManagerBase.RandomNumberGenerator.Next(1, TrainManagerBase.CurrentRoute.Stations[i].MaxInterferingObjectRate) * 0.01;
+										Cars[j].Doors[1].InterferingObjectRate = TrainManagerBase.currentHost.Random.Next(1, TrainManagerBase.CurrentRoute.Stations[i].MaxInterferingObjectRate) * 0.01;
 										if (Cars[j].Doors[1].InterferingObjectRate * Cars[j].Doors[1].Width >= Cars[j].Doors[1].MaxTolerance)
 										{
 											Cars[j].Doors[1].AnticipatedReopen = true;
@@ -456,10 +456,10 @@ namespace TrainManager.Trains
 							{
 								if (!Cars[j].EnableLoadingSway) continue;
 								double r = 2.0 * TrainManagerBase.CurrentRoute.Stations[i].PassengerRatio * TimeElapsed;
-								if (r >= TrainManagerBase.RandomNumberGenerator.NextDouble())
+								if (r >= TrainManagerBase.currentHost.Random.NextDouble())
 								{
 									int d =
-										(int) Math.Floor(TrainManagerBase.RandomNumberGenerator.NextDouble() * Cars[j].Doors.Length);
+										(int) Math.Floor(TrainManagerBase.currentHost.Random.NextDouble() * Cars[j].Doors.Length);
 									if (Cars[j].Doors[d].State == 1.0)
 									{
 										Cars[j].Specs.RollShakeDirection += Cars[j].Doors[d].Direction;

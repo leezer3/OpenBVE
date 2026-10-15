@@ -42,13 +42,13 @@ namespace TrainManager.Motor
 			if (BaseCar.baseTrain.Specs.PantographState != PantographState.Raised)
 			{
 				Message = @"Pantograph not raised";
+				MaximumPossibleAcceleration = 0;
 			}
 			else
 			{
 				Message = @"n/a";
+				MaximumPossibleAcceleration = AccelerationCurves[0].MaximumAcceleration;
 			}
-
-			MaximumPossibleAcceleration = AccelerationCurves[0].MaximumAcceleration;
 		}
 
 		public override double CurrentPower
@@ -81,9 +81,14 @@ namespace TrainManager.Motor
 		{
 			get
 			{
+				
 				if (AccelerationCurves.Length == 1)
 				{
 					// MSTS content
+					if (BaseCar.baseTrain.Specs.PantographState != PantographState.Raised)
+					{
+						return 0;
+					}
 					return AccelerationCurves[0].GetAccelerationOutput(BaseCar.CurrentSpeed);
 				}
 

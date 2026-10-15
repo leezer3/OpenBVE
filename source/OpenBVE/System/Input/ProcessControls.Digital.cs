@@ -557,18 +557,8 @@ namespace OpenBve
 							default:
 								Program.Renderer.Camera.CurrentRestriction = Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off ? TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode : CameraRestrictionMode.Off;
 								World.InitializeCameraRestriction();
-								if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off)
-								{
-									MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","camerarestriction_off"}),
-										MessageDependency.CameraView, GameMode.Expert,
-										MessageColor.White, 2, null);
-								}
-								else
-								{
-									MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","camerarestriction_on"}),
-										MessageDependency.CameraView, GameMode.Expert,
-										MessageColor.White, 2, null);
-								}
+								MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "notification", Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off ? "camerarestriction_off" : "camerarestriction_on" }), 
+									MessageDependency.CameraView, GameMode.Expert, MessageColor.White, 2, null);
 
 								break;
 						}
@@ -592,6 +582,11 @@ namespace OpenBve
 							if (TrainManager.PlayerTrain.Cars[d].Horns.Length > j)
 							{
 								TrainManager.PlayerTrain.Cars[d].Horns[j].Play();
+								if (j == 1 && TrainManager.PlayerTrain.Specs.HornTriggersBell)
+								{
+									// MSTS allows the horn to also simultaneously trigger the bell (US trains)
+									TrainManager.PlayerTrain.Cars[d].Horns[3].Play();
+								}
 								TrainManager.PlayerTrain.Plugin?.HornBlow(j == 0 ? HornTypes.Primary : j == 1 ? HornTypes.Secondary : HornTypes.Music);
 							}
 						}
@@ -949,7 +944,7 @@ namespace OpenBve
 						break;
 					case Translations.Command.MiscTimeFactor:
 						// time factor
-						if (TrainManager.PlayerTrain.Plugin != null && !TrainManager.PlayerTrain.Plugin.DisableTimeAcceleration)
+						if (TrainManager.PlayerTrain.Plugin == null || TrainManager.PlayerTrain.Plugin?.DisableTimeAcceleration == false)
 						{
 							if (Interface.CurrentOptions.GameMode == GameMode.Expert)
 							{
@@ -1026,7 +1021,7 @@ namespace OpenBve
 					case Translations.Command.MiscMute:
 						// mute
 						Program.Sounds.GlobalMute = !Program.Sounds.GlobalMute;
-						Program.Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
+						Program.Sounds.Update(TimeElapsed);
 						break;
 					case Translations.Command.RouteInformation:
 						Game.RouteInfoOverlay.ProcessCommand(Translations.Command.RouteInformation);
@@ -1051,7 +1046,7 @@ namespace OpenBve
 							//If we find an appropriate signal, and the distance to it is less than 500m, announce if screen reader is present
 							//Aspect announce to be triggered via a separate keybind
 							double tPos = nextStation.DefaultTrackPosition - TrainManagerBase.PlayerTrain.FrontCarTrackPosition;
-							string stt = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","route_nextstation"}).Replace("[distance]", $"{tPos:0.0}") + "m".Replace("[name]", nextStation.Name);
+							string stt = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","route_nextstation"}).Replace("[distance]", $"{tPos:0.0}m").Replace("[name]", nextStation.Name);
 							Program.CurrentHost.AddMessage(stt, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, 10.0, null);
 							nextStation.AccessibilityAnnounced = true;
 						}
@@ -1084,6 +1079,12 @@ namespace OpenBve
 				{
 					SafetySystem system = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].SafetySystems.ElementAt(i).Key;
 					TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].SafetySystems[system].ControlUp(Control.Command);
+				}
+
+				for (int i = 0; i < TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.Components.Count; i++)
+				{
+					EngineComponent component = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.Components.ElementAt(i).Key;
+					TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.Components[component].ControlUp(Control.Command);
 				}
 				TrainManager.PlayerTrain.Handles.ControlUp(Control);
 

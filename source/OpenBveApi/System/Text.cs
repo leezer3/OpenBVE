@@ -75,6 +75,18 @@ namespace OpenBveApi
 			return Builder.ToString();
 		}
 
+		/// <summary>Provides an exception free implimentation of string.Substring, returning less characters rather than an exception</summary>
+		public static string SafeSubstring(this string Text, int StartIndex, int Length)
+		{
+			if (StartIndex > Text.Length)
+			{
+				return string.Empty;
+			}
+
+			Length = System.Math.Min(Length, Text.Length - StartIndex);
+			return Text.Substring(StartIndex, Length);
+		}
+
 		/// <summary>Provides an escaped copy of a string</summary>
 		public static string Escape(this string text)
 		{
@@ -241,6 +253,23 @@ namespace OpenBveApi
 			string[] splitString = text.Split(separator);
 			Array.Copy(splitString, result, System.Math.Min(desiredLength, splitString.Length));
 			return result;
+		}
+
+		/// <summary>Checks whether the string starts with any of the specified candidate strings</summary>
+		/// <param name="value">The string to test</param>
+		/// <param name="candidates">The list of candidate strings</param>
+		/// <param name="comparision">The StringComparison to use</param>
+		public static bool StartsWithAny(this string value, string[] candidates, StringComparison comparision = StringComparison.CurrentCulture)
+		{
+			foreach (string c in candidates)
+			{
+				if (value.StartsWith(c, comparision))
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 	}
 }

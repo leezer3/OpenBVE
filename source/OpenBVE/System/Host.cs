@@ -1,4 +1,4 @@
-using LibRender2.Screens;
+﻿using LibRender2.Screens;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
@@ -34,10 +33,9 @@ namespace OpenBve {
 				case ProblemType.DirectoryNotFound:
 				case ProblemType.FileNotFound:
 				case ProblemType.PathNotFound:
-					if (!MissingFiles.Contains(text))
+					if (ReportMissingFile(text))
 					{
 						Interface.AddMessage(MessageType.Error, true, type + " : " + text);
-						MissingFiles.Add(text);
 					}
 					break;
 				default:
@@ -133,6 +131,15 @@ namespace OpenBve {
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool LoadTexture(string path, TextureParameters parameters, out Texture texture)
 		{
+			Stopwatch textureDecodeTimer = Stopwatch.StartNew();
+			bool result = LoadTextureInternal(path, parameters, out texture);
+			TextureDecodeCalls++;
+			TextureDecodeMs += textureDecodeTimer.ElapsedMilliseconds;
+			return result;
+		}
+
+		private bool LoadTextureInternal(string path, TextureParameters parameters, out Texture texture)
+		{
 			if (File.Exists(path) || Directory.Exists(path))
 			{
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
@@ -162,9 +169,8 @@ namespace OpenBve {
 										texture = texture.ApplyParameters(parameters);
 										return true;
 									}
-									if (!FailedTextures.Contains(path))
+									if (ReportFailure(FailedTextures, path))
 									{
-										FailedTextures.Add(path);
 										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadTexture for file " + path);
 									}
 
@@ -185,17 +191,15 @@ namespace OpenBve {
 				FileInfo f = new FileInfo(path);
 				if (f.Length == 0)
 				{
-					if (!FailedTextures.Contains(path))
+					if (ReportFailure(FailedTextures, path))
 					{
-						FailedTextures.Add(path);
 						Interface.AddMessage(MessageType.Error, false, "Zero-byte texture file encountered at " + path);
 					}
 				}
 				else
 				{
-					if (!FailedTextures.Contains(path))
+					if (ReportFailure(FailedTextures, path))
 					{
-						FailedTextures.Add(path);
 						Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading texture " + path);
 					}
 				}
@@ -221,21 +225,17 @@ namespace OpenBve {
 		/// <param name="timeout">The timeout for loading the texture</param>
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false, int timeout = 1000) {
-			if (File.Exists(path) || Directory.Exists(path)) {
-				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out var data)) {
-					handle = data;
-					if (loadTexture)
+			if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out var data)) {
+				handle = data;
+				if (loadTexture)
+				{
+					Program.Renderer.RunInRenderThread(() =>
 					{
-						Program.Renderer.RunInRenderThread(() =>
-						{
-							LoadTexture(ref data, OpenGlTextureWrapMode.ClampClamp);
-						}, timeout);
+						LoadTexture(ref data, OpenGlTextureWrapMode.ClampClamp);
+					}, timeout);
 
-					}
-					return true;
 				}
-			} else {
-				ReportProblem(ProblemType.PathNotFound, path);
+				return true;
 			}
 			handle = null;
 			return false;
@@ -356,7 +356,7 @@ namespace OpenBve {
 										{
 											staticObject.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, Interface.CurrentOptions.ObjectOptimizationVertexCulling);
 											Object = staticObject;
-											StaticObjectCache.Add(ValueTuple.Create(path.ToLowerInvariant(), PreserveVertices, File.GetLastWriteTime(path)), Object);
+											StoreStaticObject(ValueTuple.Create(path.ToLowerInvariant(), PreserveVertices, File.GetLastWriteTime(path)), Object);
 											return true;
 										}
 
@@ -364,9 +364,8 @@ namespace OpenBve {
 										// may be trying to load in different places, so leave
 										Interface.AddMessage(MessageType.Error, false, "Attempted to load " + path + " which is an animated object where only static objects are allowed.");
 									}
-									if(!FailedObjects.Contains(path))
+									if (ReportFailure(FailedObjects, path))
 									{
-										FailedObjects.Add(path);
 										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject for file " + path);
 									}
 									
@@ -379,9 +378,8 @@ namespace OpenBve {
 						}
 					}
 				}
-				if (!FailedObjects.Contains(path))
+				if (ReportFailure(FailedObjects, path))
 				{
-					FailedObjects.Add(path);
 					Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
 				}
 				
@@ -424,20 +422,19 @@ namespace OpenBve {
 
 										if (Object is StaticObject staticObject)
 										{
-											StaticObjectCache.Add(ValueTuple.Create(path.ToLowerInvariant(), false, File.GetLastWriteTime(path)), staticObject);
+											StoreStaticObject(ValueTuple.Create(path.ToLowerInvariant(), false, File.GetLastWriteTime(path)), staticObject);
 											return true;
 										}
 
 										if (Object is AnimatedObjectCollection aoc)
 										{
-											AnimatedObjectCollectionCache.Add(path.ToLowerInvariant(), aoc);
+											StoreAnimatedObject(path.ToLowerInvariant(), aoc);
 										}
 
 										return true;
 									}
-									if (!FailedObjects.Contains(path))
+									if (ReportFailure(FailedObjects, path))
 									{
-										FailedObjects.Add(path);
 										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject for file " + path);
 									}
 
@@ -456,19 +453,20 @@ namespace OpenBve {
 					}
 				}
 				FileInfo f = new FileInfo(path);
+				string nullKey = Path.GetFileNameWithoutExtension(path);
 				if (f.Length == 0)
 				{
-					if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path).ToLowerInvariant()) && !FailedObjects.Contains(path))
+					bool reportZero = !IsNullFile(nullKey) && ReportFailure(FailedObjects, path);
+					if (reportZero)
 					{
-						FailedObjects.Add(path);
 						Interface.AddMessage(MessageType.Error, false, "Zero-byte object file encountered at " + path);
 					}
 				}
 				else
 				{
-					if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path).ToLowerInvariant()) && !FailedObjects.Contains(path))
+					bool reportNoPlugin = !IsNullFile(nullKey) && ReportFailure(FailedObjects, path);
+					if (reportNoPlugin)
 					{
-						FailedObjects.Add(path);
 						Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
 					}
 				}
@@ -491,9 +489,9 @@ namespace OpenBve {
 			return Program.Renderer.CreateStaticObject(Prototype, Position, WorldTransformation, LocalTransformation, Program.CurrentRoute.AccurateObjectDisposal, Parameters, Program.CurrentRoute.BlockLength);
 		}
 
-		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, ObjectCreationParameters Parameters)
+		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, ObjectCreationParameters Parameters)
 		{
-			return Program.Renderer.CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Translate, Program.CurrentRoute.AccurateObjectDisposal, Parameters, Program.CurrentRoute.BlockLength);
+			return Program.Renderer.CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Program.CurrentRoute.AccurateObjectDisposal, Parameters, Program.CurrentRoute.BlockLength);
 		}
 
 		public override void CreateDynamicObject(ref ObjectState internalObject)

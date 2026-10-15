@@ -10,7 +10,7 @@ namespace OpenBveApi.Objects
 		/// <param name="Mode">The glow attenuation mode.</param>
 		/// <returns>A System.UInt16 packed with the information about the half distance and glow attenuation mode.</returns>
 		public static ushort GetAttenuationData(double HalfDistance, GlowAttenuationMode Mode) {
-			if (HalfDistance <= 0.0 | Mode == GlowAttenuationMode.None) return 0;
+			if (HalfDistance <= 0.0 || Mode == GlowAttenuationMode.None) return 0;
 			if (HalfDistance < 1.0) {
 				HalfDistance = 1.0;
 			} else if (HalfDistance > 4095.0) {
@@ -53,7 +53,7 @@ namespace OpenBveApi.Objects
 				return 1.0;
 			}
 
-			SplitAttenuationData(GlowAttenuationData, out mode, out double halfdistance);
+			SplitAttenuationData(GlowAttenuationData, out mode, out double halfDistance);
 			int i = Face.Vertices[0].Index;
 			Vector3 d = new Vector3(Vertices[i].Coordinates.X, Vertices[i].Coordinates.Y, -Vertices[i].Coordinates.Z);
 			d.Transform(ModelMatrix, false);
@@ -62,14 +62,14 @@ namespace OpenBveApi.Objects
 				case GlowAttenuationMode.DivisionExponent2:
 					{
 						double t = d.NormSquared();
-						return t / (t + halfdistance * halfdistance);
+						return t / (t + halfDistance * halfDistance);
 					}
 				case GlowAttenuationMode.DivisionExponent4:
 					{
 						double t = d.NormSquared();
 						t *= t;
-						halfdistance *= halfdistance;
-						return t / (t + halfdistance * halfdistance);
+						halfDistance *= halfDistance;
+						return t / (t + halfDistance * halfDistance);
 					}
 				default:
 					return 1.0;

@@ -37,7 +37,9 @@ namespace Plugin
 		/// <returns>The raw sound data.</returns>
 		private static Sound LoadFromFile(string fileName)
 		{
-			using (Mp3FileReader reader = new Mp3FileReader(fileName, wf => new Mp3FrameDecompressor(wf)))
+			// Use the managed NLayer decoder so MP3 works on all platforms (the default
+			// Mp3FileReader relies on Windows ACM / Msacm32.dll and fails on Linux)
+			using (Mp3FileReaderBase reader = new Mp3FileReaderBase(fileName, new Mp3FileReaderBase.FrameDecompressorBuilder(wf => new Mp3FrameDecompressor(wf))))
 			{
 				byte[] dataBytes = new byte[reader.Length];
 
@@ -69,6 +71,11 @@ namespace Plugin
 						if (sample > 1.0f)
 						{
 							sample = 1.0f;
+						}
+
+						if (float.IsNaN(sample))
+						{
+							sample = 0;
 						}
 
 						writer.Write((short)(sample * short.MaxValue));

@@ -110,7 +110,7 @@ namespace CsvRwRouteParser
 			}
 
 			aoc.Objects[0].StateFunction = new FunctionScript(Plugin.CurrentHost, expr, false);
-			aoc.Objects[0].RefreshRate = 1.0 + 0.01 * Plugin.RandomNumberGenerator.NextDouble();
+			aoc.Objects[0].RefreshRate = 1.0 + 0.01 * Plugin.CurrentHost.Random.NextDouble();
 			aoc.CreateObject(wpos, RailTransformation, LocalTransformation, new ObjectCreationParameters(TrackPosition, StartingDistance, EndingDistance, 1.0, SectionIndex));
 		}
 	}

@@ -16,7 +16,7 @@ namespace Plugin
 			new QuaternionFrame(5, new Quaternion(-0.923879, 0, 0, -0.382684)),
 			new QuaternionFrame(6, new Quaternion(-1, 0, 0, 0)),
 			new QuaternionFrame(7, new Quaternion(-0.92388, 0, 0, 0.382683)),
-			new QuaternionFrame(8, new Quaternion(0.707107, 0, 0, -0.707106)),
+			new QuaternionFrame(8, new Quaternion(0.707107, 0, 0, -0.707106))
 		};
     }
 }

@@ -44,9 +44,9 @@ namespace OpenBveApi.Routes
 			{
 				bool visible;
 				if (
-					BoundingRectangle.Left <= node.BoundingRectangle.Right &
-					BoundingRectangle.Right >= node.BoundingRectangle.Left &
-					BoundingRectangle.Near <= node.BoundingRectangle.Far &
+					BoundingRectangle.Left <= node.BoundingRectangle.Right &&
+					BoundingRectangle.Right >= node.BoundingRectangle.Left &&
+					BoundingRectangle.Near <= node.BoundingRectangle.Far &&
 					BoundingRectangle.Far >= node.BoundingRectangle.Near
 				)
 				{
@@ -57,9 +57,9 @@ namespace OpenBveApi.Routes
 					visible = true;
 				}
 				else if (
-					BoundingRectangle.Left - viewingDistance <= node.BoundingRectangle.Right &
-					BoundingRectangle.Right + viewingDistance >= node.BoundingRectangle.Left &
-					BoundingRectangle.Near - viewingDistance <= node.BoundingRectangle.Far &
+					BoundingRectangle.Left - viewingDistance <= node.BoundingRectangle.Right &&
+					BoundingRectangle.Right + viewingDistance >= node.BoundingRectangle.Left &&
+					BoundingRectangle.Near - viewingDistance <= node.BoundingRectangle.Far &&
 					BoundingRectangle.Far + viewingDistance >= node.BoundingRectangle.Near
 				)
 				{
@@ -69,10 +69,10 @@ namespace OpenBveApi.Routes
 					 * visibility is at least a possibility.
 					 * */
 					if (
-						BoundingRectangle.Left <= node.BoundingRectangle.Right &
-						BoundingRectangle.Right >= node.BoundingRectangle.Left |
-						BoundingRectangle.Near <= node.BoundingRectangle.Far &
-						BoundingRectangle.Far >= node.BoundingRectangle.Near
+						(BoundingRectangle.Left <= node.BoundingRectangle.Right &&
+						BoundingRectangle.Right >= node.BoundingRectangle.Left) ||
+						(BoundingRectangle.Near <= node.BoundingRectangle.Far &&
+						BoundingRectangle.Far >= node.BoundingRectangle.Near)
 					)
 					{
 						/*
@@ -251,23 +251,7 @@ namespace OpenBveApi.Routes
 
 			Parent?.UpdateBoundingRectangle();
 		}
-
-		/// <summary>Ensures that all textures that are used by the static objects in this leaf node have been loaded.</summary>
-		internal void LoadTextures()
-		{
-			for (int i = 0; i < StaticObjectCount; i++)
-			{
-				for (int j = 0; j < Objects[i].Prototype.Mesh.Faces.Length; j++)
-				{
-					Texture texture = Objects[i].Prototype.Mesh.Materials[i].DaytimeTexture;
-					if (texture != null)
-					{
-						//Textures.LoadTexture(apiHandle.TextureIndex, true);
-					}
-				}
-			}
-		}
-
+		
 		/// <inheritdoc />
 		public override void FinalizeBoundingRectangles()
 		{

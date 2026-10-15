@@ -9,6 +9,6 @@
 		Reversed,
 		LoadingSway,
 		VisibleFromInterior,
-		Distances,
+		Distances
 	}
 }

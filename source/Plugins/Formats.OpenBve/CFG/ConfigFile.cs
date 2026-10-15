@@ -50,7 +50,7 @@ namespace Formats.OpenBve
 			bool addToBlock = defaultFirstBlock;
 			int idx = -1;
 			int previousIdx = -1;
-			T1 previousSection = default(T1);
+			T1 previousSection = default;
 
 			// ReSharper disable once InconsistentNaming
 			bool headerOK = string.IsNullOrEmpty(expectedHeader);
@@ -123,7 +123,7 @@ namespace Formats.OpenBve
 						sct = sct.Substring(0, c);
 
 					}
-					if (!Enum.TryParse(sct, true, out T1 currentSection))
+					if (!EnumCache<T1>.TryParse(sct, out T1 currentSection))
 					{
 						addToBlock = false;
 						currentHost.AddMessage(MessageType.Error, false, "Unknown Section " + sct + " encountered at line " + i);
@@ -160,9 +160,6 @@ namespace Formats.OpenBve
 
 	public class ConfigSection<T1, T2> : Block<T1, T2> where T1 : struct, Enum where T2 : struct, Enum
 	{
-		public readonly T1 Token;
-
-		
 		public override Block<T1, T2> ReadNextBlock()
 		{
 			currentHost.AddMessage(MessageType.Error, false, "A section in a CFG file cannot contain sub-blocks.");
@@ -198,7 +195,7 @@ namespace Formats.OpenBve
 				{
 					string a = myLines[i].Substring(0, j).TrimEnd();
 					string b = myLines[i].Substring(j + 1).TrimStart();
-					if (int.TryParse(a, out var idx))
+					if (int.TryParse(a, out int idx))
 					{
 						if (idx >= 0)
 						{
@@ -219,7 +216,7 @@ namespace Formats.OpenBve
 						}
 
 					}
-					else if (Enum.TryParse(a.Replace(" ", ""), true, out T2 key))
+					else if (EnumCache<T2>.TryParse(a.Replace(" ", ""), out T2 key))
 					{
 						keyValuePairs.TryAdd(key, new KeyValuePair<int, string>(i + startingLine, b));
 					}
@@ -238,14 +235,14 @@ namespace Formats.OpenBve
 			}
 		}
 
-		public override bool GetFunctionScript(T2 key, out AnimationScript function)
+		public override bool GetFunctionScript(T2 key, out AnimationScript function, int totalStates = 0)
 		{
 			if (keyValuePairs.TryRemove(key, out var script))
 			{
 				try
 				{
 					bool isInfix = key.ToString().IndexOf("RPN", StringComparison.Ordinal) == -1;
-					function = new FunctionScript(currentHost, script.Value, isInfix);
+					function = new FunctionScript(currentHost, script.Value, isInfix, totalStates);
 					return true;
 				}
 				catch
@@ -260,7 +257,7 @@ namespace Formats.OpenBve
 			return false;
 		}
 
-		public override bool GetFunctionScript(T2[] keys, string absolutePath, out AnimationScript function)
+		public override bool GetFunctionScript(T2[] keys, string absolutePath, out AnimationScript function, int totalStates = 0)
 		{
 
 			foreach (T2 key in keys)
@@ -291,7 +288,7 @@ namespace Formats.OpenBve
 						try
 						{
 							bool isInfix = key.ToString().IndexOf("RPN", StringComparison.Ordinal) == -1;
-							function = new FunctionScript(currentHost, script.Value, isInfix);
+							function = new FunctionScript(currentHost, script.Value, isInfix, totalStates);
 							return true;
 						}
 						catch

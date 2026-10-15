@@ -30,7 +30,6 @@ namespace OpenBveApi
 		LoadInAdvance,
 		UnloadTextures,
 		ForwardsCompatibleContext,
-		IsUseNewRenderer,
 		ViewingDistance,
 		QuadLeafSize,
 		UIScaleFactor,
@@ -41,6 +40,8 @@ namespace OpenBveApi
 		CameraInteriorTransition,
 		CameraExteriorTransition,
 		CameraTransitionSpeed,
+		BackgroundColor,
+		TextColor,
 		// Quality
 		Interpolation,
 		AnisotropicFilteringLevel,
@@ -57,11 +58,14 @@ namespace OpenBveApi
 		ShadowBias,
 		ShadowNormalBias,
 		ShadowFilterCascades,
+		ShadowSmooth,
+		ShadowFilterRadius,
 		LightAzimuth,
 
 		LightElevation,
 		// Object Optimization
 		BasicThreshold,
+		/// <remarks>No longer used</remarks>
 		FullThreshold,
 		VertexCulling,
 		// Simulation
@@ -114,6 +118,10 @@ namespace OpenBveApi
 		Up,
 		Down,
 		Forward,
-		Backward
+		Backward,
+		// Object Viewer ground plane
+		ShowGround,
+		GroundHeight,
+		GroundColor
     }
 }

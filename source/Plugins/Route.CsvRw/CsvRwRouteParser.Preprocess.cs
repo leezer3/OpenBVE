@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
-using Route.CsvRw;
 
 namespace CsvRwRouteParser
 {
@@ -15,8 +13,8 @@ namespace CsvRwRouteParser
 		private void PreprocessSplitIntoExpressions(string FileName, List<string> Lines, out IList<Expression> Expressions, bool AllowRwRouteDescription, double trackPositionOffset = 0.0) {
 			// use a high initial capacity to try and minimize churn
 			Expressions = new List<Expression>(20000); 
-			// full-line rw comments
-			if (IsRW) {
+			// RW comments
+			if (Data.FileFormat == RoutefileFormat.RW) {
 				for (int i = 0; i < Lines.Count; i++) {
 					int Level = 0;
 					for (int j = 0; j < Lines[i].Length; j++) {
@@ -28,7 +26,7 @@ namespace CsvRwRouteParser
 								Level--;
 								break;
 							case ';':
-								if (Level == 0)
+								if (Level == 0 || Plugin.CurrentOptions.EnableBveTsHacks)
 								{
 									Lines[i] = Lines[i].Substring(0, j).TrimEnd();
 									j = Lines[i].Length;
@@ -49,7 +47,7 @@ namespace CsvRwRouteParser
 				//Found these in a couple of older routes, harmless but generate errors
 				//Possibly caused by BVE-RR (DOS version)
 				Lines[i] = Lines[i].Replace("\0", string.Empty);
-				if (IsRW & AllowRwRouteDescription) {
+				if (Data.FileFormat == RoutefileFormat.RW & AllowRwRouteDescription) {
 					// ignore rw route description
 					if (
 						Lines[i].StartsWith("[", StringComparison.Ordinal) && Lines[i].IndexOf("]", StringComparison.Ordinal) > 0 ||
@@ -68,19 +66,31 @@ namespace CsvRwRouteParser
 				{
 					if (SplitLineHack)
 					{
-						MatchCollection matches = Regex.Matches(Lines[i], ".Load", RegexOptions.IgnoreCase);
-						if (matches.Count > 1)
+						// Count occurrences of ".Load" (case-insensitive)
+						int loadCount = 0;
+						int searchIndex = 0;
+						string line = Lines[i];
+						while (searchIndex < line.Length)
+						{
+							int pos = line.IndexOf(".Load", searchIndex, StringComparison.OrdinalIgnoreCase);
+							if (pos == -1) break;
+							loadCount++;
+							searchIndex = pos + 5;
+						}
+						if (loadCount > 1)
 						{
 							string[] splitLine = Lines[i].Split(',');
-							Lines.RemoveAt(i);
-							for (int j = 0; j < splitLine.Length; j++)
+							List<string> replacement = new List<string>(splitLine.Length);
+							for (int j = splitLine.Length - 1; j >= 0; j--)
 							{
 								string newLine = splitLine[j].Trim();
 								if (newLine.Length > 0)
 								{
-									Lines.Insert(i, newLine);
+									replacement.Add(newLine);
 								}
 							}
+							Lines.RemoveAt(i);
+							Lines.InsertRange(i, replacement);
 						}
 					}
 					// create expressions
@@ -111,7 +121,7 @@ namespace CsvRwRouteParser
 								}
 								break;
 							case ',':
-								if (Level == 0 && !IsRW) {
+								if (Level == 0 && Data.FileFormat != RoutefileFormat.RW) {
 									string t = Lines[i].Substring(a, j - a).Trim();
 									if (t.Length > 0 && !t.StartsWith(";"))
 									{
@@ -122,7 +132,7 @@ namespace CsvRwRouteParser
 								}
 								break;
 							case '@':
-								if (!IsRW)
+								if (Data.FileFormat != RoutefileFormat.RW)
 								{
 									// @ is not a valid control character in CSV files
 									break;
@@ -137,7 +147,7 @@ namespace CsvRwRouteParser
 									Level = 0;
 								}
 								
-								if (Level == 0 && IsRW) {
+								if (Level == 0 && Data.FileFormat == RoutefileFormat.RW) {
 									string t = Lines[i].Substring(a, j - a).Trim();
 									if (t.Length > 0 && !t.StartsWith(";"))
 									{
@@ -397,7 +407,7 @@ namespace CsvRwRouteParser
 										break;
 									}
 									if (!continueWithNextExpression) {
-										double number = Plugin.RandomNumberGenerator.NextDouble() * weightsTotal;
+										double number = Plugin.CurrentHost.Random.NextDouble() * weightsTotal;
 										double value = 0.0;
 										int chosenIndex = 0;
 										for (int ia = 0; ia < count; ia++) {
@@ -476,7 +486,7 @@ namespace CsvRwRouteParser
 											string s2 = s.Substring(m + 1).TrimStart();
 											if (NumberFormats.TryParseIntVb6(s1, out int x)) {
 												if (NumberFormats.TryParseIntVb6(s2, out int y)) {
-													int z = x + (int)Math.Floor(Plugin.RandomNumberGenerator.NextDouble() * (y - x + 1));
+													int z = x + (int)Math.Floor(Plugin.CurrentHost.Random.NextDouble() * (y - x + 1));
 													Expressions[i].Text = Expressions[i].Text.Substring(0, j) + z.ToString(Culture) + Expressions[i].Text.Substring(h + 1);
 												} else {
 													continueWithNextExpression = true;
@@ -581,15 +591,15 @@ namespace CsvRwRouteParser
 		}
 
 		private void PreprocessSortByTrackPosition(double[] unitFactors, ref IList<Expression> Expressions) {
-			SortedList<double, Expression> positionedExpressions = new SortedList<double, Expression>(new DuplicateLessThanKeyComparer<double>());
+			List<KeyValuePair<double, Expression>> positionedExpressions = new List<KeyValuePair<double, Expression>>(Expressions.Count);
 			double a = -1.0, pa = -1.0;
-			bool numberCheck = !IsRW;
+			bool numberCheck = Data.FileFormat != RoutefileFormat.RW;
 			for (int i = 0; i < Expressions.Count; i++) {
 				if (Expressions[i].Skip)
 				{
 					continue;
 				}
-				if (IsRW) {
+				if (Data.FileFormat == RoutefileFormat.RW) {
 					// only check for track positions in the railway section for RW routes
 					if (Expressions[i].Text.StartsWith("[", StringComparison.Ordinal) && Expressions[i].Text.EndsWith("]", StringComparison.Ordinal))
 					{
@@ -628,13 +638,13 @@ namespace CsvRwRouteParser
 				} else {
 					if (pa != a)
 					{
-						positionedExpressions.Add(a, new Expression(string.Empty, (a / unitFactors[unitFactors.Length - 1]).ToString(Culture), -1, -1, -1));
+						positionedExpressions.Add(new KeyValuePair<double, Expression>(a, new Expression(string.Empty, (a / unitFactors[unitFactors.Length - 1]).ToString(Culture), -1, -1, -1)));
 						pa = a;
 					}
-					positionedExpressions.Add(a, Expressions[i]);
+					positionedExpressions.Add(new KeyValuePair<double, Expression>(a, Expressions[i]));
 				}
 			}
-			Expressions = positionedExpressions.Values;
+			Expressions = positionedExpressions.OrderBy(p => p.Key).Select(p => p.Value).ToList();
 		}
 	}
 }

@@ -48,6 +48,10 @@ namespace TrainManager.Motor
 		public readonly double IdleFuelUse;
 		/// <summary>The fuel used at max power</summary>
 		public readonly double MaxPowerFuelUse;
+		/// <summary>The maximum temperature of the engine</summary>
+		public double MaxTemperature;
+		/// <summary>The maximum oil pressure of the engine</summary>
+		public double MaxOilPressure;
 
 		public readonly double MaxTractiveEffortSpeed;
 	    /// <summary>Gets or sets the current engine RPM</summary>

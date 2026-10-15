@@ -236,9 +236,10 @@ namespace Plugin.BMP
 					return false;
 				}
 				
-				if (ImageSize == 0 && Format > BmpFormat.OS2v2)
+				if (ImageSize == 0 && Format > BmpFormat.OS2v2 && CompressionFormat != CompressionFormat.BI_RGB)
 				{
-					/* Compressed image size of zero should only be valid with uncompressed data, unless OS/2 bitmaps
+					/* biSizeImage may legally be zero for uncompressed (BI_RGB) bitmaps,
+					 * and pixels are read up to EOF below, so only warn for compressed data.
 					 * However, continue to load and see what happens
 					 *
 					 * Only report this in debug mode, as this seems to be a 'common' problem....

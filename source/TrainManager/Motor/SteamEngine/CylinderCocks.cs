@@ -29,16 +29,24 @@ namespace TrainManager.Motor
 {
 	public class CylinderCocks : AbstractComponent
 	{
+		/// <summary>Whether the Cylinder Cocks are currently open</summary>
 		public bool Opened;
-
+		/// <summary>The power modifier applied when the cylinder cocks are open</summary>
+		public readonly double PowerModifier = 1.0;
+		
 		public CarSound OpenSound;
 
 		public CarSound CloseSound;
 
 		public CarSound LoopSound;
 
-		public CylinderCocks(TractionModel engine) : base(engine)
+		private double timer;
+
+		private double lastSpeed;
+
+		public CylinderCocks(TractionModel engine, bool automatic, double powerModifier) : base(engine, automatic)
 		{
+			PowerModifier = powerModifier;
 		}
 
 		public override void ControlDown(Translations.Command command)
@@ -55,11 +63,30 @@ namespace TrainManager.Motor
 				}
 
 				Opened = !Opened;
+				timer = 0;
 			}
 		}
 		
 		public override void Update(double timeElapsed)
 		{
+			lastSpeed = baseEngine.BaseCar.CurrentSpeed;
+			if (Automatic)
+			{
+				if (baseEngine.BaseCar.CurrentSpeed == 0 && lastSpeed == 0)
+				{
+					timer += timeElapsed;
+					if (timer > 5000 && Opened == false)
+					{
+						ControlDown(Translations.Command.CylinderCocks);
+					}
+				}
+
+				if (baseEngine.BaseCar.CurrentSpeed > 5 && !Opened)
+				{
+					ControlDown(Translations.Command.CylinderCocks);
+				}
+				
+			}
 			if (!Opened)
 			{
 				LoopSound?.Stop();

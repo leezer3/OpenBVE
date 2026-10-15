@@ -39,6 +39,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using OpenBveApi.Hosts;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
@@ -177,6 +178,7 @@ namespace Train.MsTs
 							currentCar.TractionModel.Components.Add(EngineComponent.TractionMotor, new TractionMotor(currentCar.TractionModel, maxEngineAmps));
 						}
 						break;
+					case EngineType.DieselMechanical:
 					case EngineType.DieselHydraulic:
 						AccelerationCurve[] accelerationCurves;
 						if (Gears == null)
@@ -192,7 +194,14 @@ namespace Train.MsTs
 							}
 						}
 
-						currentCar.TractionModel = new DieselEngine(currentCar, accelerationCurves, dieselIdleRPM, dieselIdleRPM, dieselMaxRPM, dieselRPMChangeRate, dieselRPMChangeRate, dieselIdleUse, dieselMaxUse);
+						DieselEngine dieselEngine = new DieselEngine(currentCar, accelerationCurves, dieselIdleRPM, dieselIdleRPM, dieselMaxRPM, dieselRPMChangeRate, dieselRPMChangeRate, dieselIdleUse, dieselMaxUse)
+						{
+							// changeable to allow for failures etc.
+							MaxOilPressure =  dieselMaxOilPressure,
+							MaxTemperature = dieselMaxTemperature
+						};
+
+						currentCar.TractionModel = dieselEngine;
 						currentCar.TractionModel.FuelTank = new FuelTank(GetMaxDieselCapacity(currentCar.Index));
 						currentCar.TractionModel.IsRunning = true;
 						currentCar.TractionModel.Components.Add(EngineComponent.Gearbox, new Gearbox(currentCar.TractionModel, Gears, gearboxOperationMode));
@@ -234,7 +243,7 @@ namespace Train.MsTs
 							currentCar.TractionModel = new TankEngine(currentCar, new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) }, MaxFuelLevel, MaxWaterLevel);
 						}
 
-						currentCar.TractionModel.Components.Add(EngineComponent.CylinderCocks, new CylinderCocks(currentCar.TractionModel));
+						currentCar.TractionModel.Components.Add(EngineComponent.CylinderCocks, new CylinderCocks(currentCar.TractionModel, cylinderCocksAutomatic, CylinderCocksPowerModifier));
 						currentCar.TractionModel.Components.Add(EngineComponent.Blowers, new Blowers(currentCar.TractionModel));
 						currentCar.TractionModel.Components.Add(EngineComponent.Boiler, new Boiler(currentCar.TractionModel, BoilerLength, MaxBoilerOutput, StartingBoilerWater, StartingBoilerPressure));
 						currentCar.TractionModel.Components.Add(EngineComponent.SteamInjector1, injectorType1 == 0 ? (AbstractComponent)new LiveSteamInjector(currentCar.TractionModel, injectorDiameter1) : new ExhaustSteamInjector(currentCar.TractionModel, injectorDiameter1));
@@ -298,7 +307,11 @@ namespace Train.MsTs
 							particleSource.Controller = new FunctionScript(Plugin.CurrentHost, currentCar.Index + " enginepowerindex " + currentCar.Index + " cylindercocksstateindex *", false);
 							particleSource.EmitsAtIdle = false;
 							break;
-
+						case KujuTokenID.SafetyValvesFX:
+						case KujuTokenID.DrainpipeFX:
+							// steam locomotive blowoff and cylinder drains not yet implemented
+							// note that DrainpipeFX broken / not implemented in vanilla MSTS, despite being in docs
+							break;
 					}
 
 					if (particleSource != null)
@@ -371,7 +384,8 @@ namespace Train.MsTs
 						}
 
 						airBrake.MainReservoir = new MainReservoir(mainReservoirMinimumPressure, mainReservoirMaximumPressure, 0.01, 0.075 / train.Cars.Length);
-						airBrake.Compressor = new Compressor(5000.0, airBrake.MainReservoir, currentCar);
+						airBrake.MainReservoir.Volume = mainReservoirVolume;
+						airBrake.Compressor = new Compressor(compressionRate, airCompressorRestartPressure, airBrake.MainReservoir, currentCar);
 						airBrake.BrakeCylinder = new BrakeCylinder(brakeCylinderMaximumPressure, brakeCylinderMaximumPressure * 1.1, 90000.0, emergencyRate, releaseRate);
 						double r = 200000.0 / airBrake.BrakeCylinder.EmergencyMaximumPressure - 1.0;
 						if (r < 0.1) r = 0.1;
@@ -553,11 +567,15 @@ namespace Train.MsTs
 		private double dieselMaxUse;
 		private double dieselCapacity;
 		private double dieselMaxTractiveEffortSpeed;
+		private double dieselMaxTemperature = 120; // degrees c
+		private double dieselMaxOilPressure = 90; // psi
 		private double maxEngineAmps;
 		private double maxBrakeAmps;
 		private double mainReservoirMinimumPressure = 690000.0;
 		private double mainReservoirMaximumPressure = 780000.0;
+		private double mainReservoirVolume = 0.5;
 		private double brakeCylinderMaximumPressure = 440000.0;
+		private double airCompressorRestartPressure = 620528; // 90psi
 		private double emergencyRate;
 		private double releaseRate;
 		private double compressionRate = 3500;
@@ -586,6 +604,7 @@ namespace Train.MsTs
 		private double StartingFireMass;
 		private double StartingBoilerWater;
 		private double StartingBoilerPressure;
+		private double CylinderCocksPowerModifier = 0.9;
 		/// <summary>The maximum expanded size of a particle</summary>
 		internal double ExhaustMaxMagnitude;
 		/// <summary>The rate of particle emissions at idle</summary>
@@ -593,6 +612,7 @@ namespace Train.MsTs
 		/// <summary>The rate of particle emissions at maximum power</summary>SmokeMaxMagnitude`
 		internal double ExhaustMaxRate;
 
+		private bool cylinderCocksAutomatic = false;
 
 		private double GetMaxDieselCapacity(int carIndex)
 		{
@@ -704,6 +724,12 @@ namespace Train.MsTs
 							case "hydraulic":
 								currentEngineType = EngineType.DieselHydraulic;
 								break;
+							case "electric":
+								currentEngineType = EngineType.Diesel;
+								break;
+							case "mechanical":
+								currentEngineType = EngineType.DieselMechanical;
+								break;
 						}
 					}
 					else
@@ -770,6 +796,11 @@ namespace Train.MsTs
 					// Sets the empty mass of the car
 					car.EmptyMass = block.ReadSingle(UnitOfWeight.Kilograms);
 					break;
+				case KujuTokenID.CentreOfGravity:
+					block.ReadSingle(UnitOfLength.Meter); // coupler #1 center of gravity
+					car.Specs.CenterOfGravityHeight = block.ReadSingle(UnitOfLength.Meter);
+					block.ReadSingle(UnitOfLength.Meter); // coupler #2 center of gravity
+					break;
 				case KujuTokenID.BrakeEquipmentType:
 					// Determines the brake equipment types available
 					BrakeEquipmentType[] brakeEquipmentTypes = block.ReadEnumArray(default(BrakeEquipmentType));
@@ -800,7 +831,7 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.CabView:
 					// Loads cab view file
-					if (Plugin.PreviewOnly)
+					if (Plugin.PreviewOnly || Plugin.CurrentHost.Application != HostApplication.OpenBve)
 					{
 						break;
 					}
@@ -810,9 +841,65 @@ namespace Train.MsTs
 						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Cab view file " + cabViewFile + " was not found");
 						return true;
 					}
-					
+					if (car.CarSections.ContainsKey(CarSectionType.Interior))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle defines a CabView, but an interior is already present.");
+						return true;
+					}
 					CabviewFileParser.ParseCabViewFile(cabViewFile, ref car);
 					car.HasInteriorView = true;
+					break;
+				case KujuTokenID.Inside:
+					// Loads interior view
+					if (Plugin.PreviewOnly)
+					{
+						break;
+					}
+					while (block.Position() < block.Length() - 2)
+					{
+						newBlock = block.ReadSubBlock();
+						ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
+					}
+					break;
+				case KujuTokenID.PassengerCabinFile:
+					if (Plugin.PreviewOnly || Plugin.CurrentHost.Application != HostApplication.OpenBve)
+					{
+						break;
+					}
+					// 3D passenger interior
+					string interiorViewFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(fileName), block.ReadString());
+					if (car.CarSections.ContainsKey(CarSectionType.Interior))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle defines a PassengerCabinFile, but an interior is already present.");
+						return true;
+					}
+					for (int i = 0; i < Plugin.CurrentHost.Plugins.Length; i++)
+					{
+						if (Plugin.CurrentHost.Plugins[i].Object == null || !Plugin.CurrentHost.Plugins[i].Object.CanLoadObject(interiorViewFile))
+						{
+							continue;
+						}
+						Plugin.CurrentHost.Plugins[i].Object.LoadObject(interiorViewFile, Path.GetDirectoryName(fileName), Encoding.Default, out UnifiedObject interiorObject);
+						if (interiorObject is KeyframeAnimatedObject ko)
+						{
+							ko.IsInterior = true;
+						}
+						if (car.CarSections.ContainsKey(CarSectionType.Interior))
+						{
+							CarSection interiorCarSection = car.CarSections[CarSectionType.Interior];
+							interiorCarSection.AppendObject(Plugin.CurrentHost, new Vector3(0, 0, 0), car, interiorObject);
+							car.CarSections[CarSectionType.Interior] = interiorCarSection;
+						}
+						else
+						{
+							car.CarSections.Add(CarSectionType.Interior, new CarSection(Plugin.CurrentHost, ObjectType.Dynamic, false, car, interiorObject));
+						}
+						break;
+					}
+					car.HasInteriorView = true;
+					break;
+				case KujuTokenID.PassengerCabinHeadPos:
+					car.Driver = block.ReadVector3();
 					break;
 				case KujuTokenID.Description:
 					/*
@@ -1006,6 +1093,13 @@ namespace Train.MsTs
 				case KujuTokenID.MaxDieselLevel:
 					dieselCapacity = block.ReadSingle(UnitOfVolume.Litres);
 					break;
+				case KujuTokenID.MaxTemperature:
+					// TODO: no temperature converter yet...
+					dieselMaxTemperature = block.ReadSingle();
+					break;
+				case KujuTokenID.MaxOilPressure:
+					dieselMaxOilPressure = block.ReadSingle(UnitOfPressure.PoundsPerSquareInch);
+					break;
 				case KujuTokenID.MaxCurrent:
 					maxEngineAmps = block.ReadSingle(UnitOfCurrent.Amps);
 					break;
@@ -1030,6 +1124,9 @@ namespace Train.MsTs
 					{
 						compressionRate = 3500;
 					}
+					break;
+				case KujuTokenID.AirBrakesCompressorRestartPressure:
+					airCompressorRestartPressure = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
 					break;
 				case KujuTokenID.TrainBrakesControllerMaxReleaseRate:
 					releaseRate = block.ReadSingle(UnitOfPressure.Pascal, brakeSystemDefaultUnits);
@@ -1154,9 +1251,11 @@ namespace Train.MsTs
 				case KujuTokenID.Exhaust3:
 				case KujuTokenID.WhistleFX:
 				case KujuTokenID.CylindersFX:
+				case KujuTokenID.SafetyValvesFX:
+				case KujuTokenID.DrainpipeFX:
 					ParticleSource particleSource = new ParticleSource(block.Token);
-					particleSource.Offset = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
-					particleSource.Direction = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
+					particleSource.Offset = block.ReadVector3();
+					particleSource.Direction = block.ReadVector3();
 					particleSource.Size = block.ReadSingle();
 					ParticleSources.Add(particleSource);
 					break;
@@ -1360,6 +1459,34 @@ namespace Train.MsTs
 						};
 						car.DetermineDoorClosingSpeed();
 					}
+					break;
+				case KujuTokenID.HeadOut:
+					// head out view is triggered when pressing UP / DOWN in cabview
+					// view to exterior of train at specified position, looking F / R
+					Vector3 headOutPos = Vector3.Zero;
+					headOutPos.X = block.ReadSingle();
+					headOutPos.Y = block.ReadSingle();
+					headOutPos.Z = block.ReadSingle();
+					break;
+				case KujuTokenID.AirBrakesMainResVolume:
+					mainReservoirVolume = block.ReadSingle(UnitOfVolume.Litres, UnitOfVolume.MetersCubed);
+					break;
+				case KujuTokenID.SteamCylinderCocksOperation:
+					if (block.ReadString().ToLowerInvariant() == "automatic")
+					{
+						cylinderCocksAutomatic = true;
+					}
+					break;
+				case KujuTokenID.CylinderCocksPowerEfficiency:
+					CylinderCocksPowerModifier = block.ReadSingle();
+					if (CylinderCocksPowerModifier < 0 || CylinderCocksPowerModifier > 1)
+					{
+						CylinderCocksPowerModifier = 1;
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Vehicle Parser: CylinderCocksPowerModifier must be between 0 and 1");
+					}
+					break;
+				case KujuTokenID.DoesHornTriggerBell:
+					train.Specs.HornTriggersBell = block.ReadInt16() != 0;
 					break;
 			}
 			return true;

@@ -1,9 +1,12 @@
+#SHELL := /bin/bash
+
 # Version checking
 MSBUILD := msbuild
+NUGET := nuget
 MIN_MONO_VERSION:= "5.18.0"
 MONO_VERSION:= $(shell mono --version | awk '/version/ { print $$5 }')
 MIN_NUGET_VERSION:= "2.16.0"
-NUGET_VERSION:= $(shell nuget help 2> /dev/null | awk '/Version:/ { print $$3; exit 0}')
+NUGET_VERSION:= $(shell $NUGET help 2> /dev/null | awk '/Version:/ { print $$3; exit 0}')
 GreaterVersion = $(shell printf '%s\n' $(1) $(2) | sort -t. -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr | head -n 1)
 PROGRAM_VERSION = $(shell git describe --tags --exact-match 2> /dev/null)
 ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -35,11 +38,12 @@ COLOR_MAGENTA := "\033[1;35m"
 COLOR_CYAN    := "\033[1;36m"
 COLOR_WHITE   := "\033[1;37m"
 COLOR_END     := "\033[0m"
-#Literal sequences don't work in the info command....
+# Literal sequences don't work in the info command....
 red:=$(shell tput setaf 1)
 green:=$(shell tput setaf 2)
 blue:=$(shell tput setaf 4)
 reset:=$(shell tput sgr0)
+
 
 .PHONY: all 
 .PHONY: all-debug
@@ -57,7 +61,7 @@ reset:=$(shell tput sgr0)
 .PHONY: prequisite-check
 
 restore:
-	nuget restore OpenBVE.sln
+	$(NUGET) restore OpenBVE.sln
 
 debug: openbve-debug
 release: openbve-release
@@ -66,20 +70,24 @@ openbve: openbve-debug
 openbve-debug: restore
 	$(info Building OpenBVE in debug mode....)
 	$(MSBUILD) /t:OpenBve /p:Configuration=Debug OpenBVE.sln
+	@cp source/LibRender2/OpenTK.dll.config bin_debug/OpenTK.dll.config
 
 openbve-release: restore
 	$(info Building OpenBVE in release mode....)
 	$(MSBUILD) /t:OpenBve /p:Configuration=Release OpenBVE.sln
+	@cp source/LibRender2/OpenTK.dll.config bin_release/OpenTK.dll.config
 
 all: all-debug
 
 all-debug: restore
 	$(info Building OpenBVE and developer tools in debug mode....)
 	$(MSBUILD) /t:build /p:Configuration=Debug OpenBVE.sln
+	@cp source/LibRender2/OpenTK.dll.config bin_debug/OpenTK.dll.config
 
 all-release: restore
 	$(info Building OpenBVE and developer tools in release mode....)
 	$(MSBUILD) /t:build /p:Configuration=Release OpenBVE.sln
+	@cp source/LibRender2/OpenTK.dll.config bin_release/OpenTK.dll.config
 
 clean-all: clean
 
@@ -108,6 +116,11 @@ debian: $(DEBIAN_BUILD_RESULT)
 
 prequisite-check:
  #Very basic prequisite check function
+ ifeq (forky/sid, $(shell cat /etc/debian_version))
+ # Forky mono seems to need this....
+ # remove if they actually fix the thing
+ $$TERM=linux
+ endif
  $(info Checking for prequisite system libraries.)
  $(info Checking for Mono....)
  ifeq (, $(shell which mono))
@@ -125,27 +138,59 @@ prequisite-check:
  endif
  $(info Checking for MSBuild....)
  ifeq (, $(shell which msbuild))
+ ifeq (forky/sid, $(shell cat /etc/debian_version))
+ $(info Debian Forky system- downloading msbuild if required)
+ ifneq ($(shell test -d packages/MSBuild/15.0/bin && echo 1 || echo 0), 1) 
+		ifneq ($(shell test -f msbuild.zip && echo 1 || echo 0), 1) 
+			$(shell wget https\://download-cdn.jetbrains.com/resharper/JetMSBuild.v15.9.20.62856.zip -O msbuild.zip)
+			$(info MSBuild downloaded)
+		endif
+ endif
+  
+ # this is horrid, but makefile gets in a twist if output is enabled
+  $(shell exec > /dev/null 2>&1 unzip -n $(CURDIR)/msbuild.zip -d $(CURDIR)/packages)
+  $(info wft)
+  MSBUILD = ./packages/MSBuild/15.0/bin/MSBuild.exe
+ else
  $(info msbuild does not appear to be installed on this system.)
  $(info Please either install the $(green)mono-xbuild$(reset) package provided by your distribution, or the latest version of Mono from $(blue)https://www.mono-project.com/$(reset))
  $(error )
  endif
+ endif
  $(info Checking for nuget....)
  ifeq (, $(shell which nuget))
+ ifeq (forky/sid, $(shell cat /etc/debian_version))
+ $(info Debian Forky system, downloading nuget if required...)
+  ifneq ($(shell test -f packages/nuget.exe && echo 1 || echo 0), 1)
+    $(shell wget https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -O packages/nuget.exe)
+ endif
+ NUGET = ./packages/nuget.exe
+ else
  $(info nuget does not appear to be installed on this system.)
  $(info Please either install the $(green)nuget$(reset) package provided by your distribution, or the latest version of Mono from $(blue)https://www.mono-project.com/$(reset))
  $(error )
+ endif
  endif
  $(info nuget Version $(NUGET_VERSION) found.)
  ifeq "$(call GreaterVersion, $(NUGET_VERSION), $(MIN_NUGET_VERSION))" "$(NUGET_VERSION)"
  #Nothing
  else ifeq ($(strip $(NUGET_VERSION)),)
+ ifeq (, $(shell which nuget))
+ $(bash $(NUGET) update)
+else 
  $(info Unable to determine the nuget version installed.)
  $(info OpenBVE requires a minimum nuget version of 2.16- The build will fail with versions below this.)
+ endif
+ else
+ ifeq ("$(NUGET) $(nuget.exe))","")
+ $(shell $(NUGET) update)
  else
  $(info OpenBVE requires a minimum nuget version of 2.16)
  $(info Please run $(red)nuget update -self$(reset) with administrative priveledges.)
  $(error )
  endif
+ endif
+ 
  $(info Attempting to restore nuget packages (This may take a while)....)
 	
 $(MAC_BUILD_RESULT): all-release
@@ -160,6 +205,7 @@ $(MAC_BUILD_RESULT): all-release
 
 	@echo $(COLOR_RED)Copying build data into $(COLOR_CYAN)OpenBVE.app$(COLOR_END)
 	@cp -r $(RELEASE_DIR)/* mac/OpenBVE.app/Contents/Resources/
+	@test -f mac/OpenBVE.app/Contents/Resources/OpenTK.dll.config || (echo "OpenTK.dll.config is missing from the macOS app bundle"; exit 1)
 
 # Because Azure is iffy on MacOS13, let's try a custom script
 	@echo $(COLOR_RED)Creating $(COLOR_CYAN)$(MAC_BUILD_RESULT)$(COLOR_END)

@@ -302,7 +302,7 @@ namespace Texture.Ace {
 
 							offset -= 2;
 						}
-						return new OpenBveApi.Textures.Texture(width, height, PixelFormat.RGB, bytes, null);
+						return new OpenBveApi.Textures.Texture(width, height, PixelFormat.RGB, bytes, (OpenBveApi.Colors.Color24[])null);
 					}
 
 					if (type == 16 & channels == 4)
@@ -362,7 +362,7 @@ namespace Texture.Ace {
 
 							offset -= 3;
 						}
-						return new OpenBveApi.Textures.Texture(width, height, PixelFormat.RGBAlpha, bytes, null);
+						return new OpenBveApi.Textures.Texture(width, height, PixelFormat.RGBAlpha, bytes, (OpenBveApi.Colors.Color24[])null);
 					}
 
 					if (type == 17 & channels == 5)
@@ -410,7 +410,7 @@ namespace Texture.Ace {
 
 							offset -= 3;
 						}
-						return new OpenBveApi.Textures.Texture(width, height, PixelFormat.RGBAlpha, bytes, null);
+						return new OpenBveApi.Textures.Texture(width, height, PixelFormat.RGBAlpha, bytes, (OpenBveApi.Colors.Color24[])null);
 					}
 
 					if (type == 18 & (channels == 3 | channels == 4))
@@ -470,7 +470,7 @@ namespace Texture.Ace {
 
 						}
 
-						return new OpenBveApi.Textures.Texture(width, height, channels == 3 ? PixelFormat.RGB :  PixelFormat.RGBAlpha, bytes, null);
+						return new OpenBveApi.Textures.Texture(width, height, channels == 3 ? PixelFormat.RGB :  PixelFormat.RGBAlpha, bytes, (OpenBveApi.Colors.Color24[])null);
 					}
 
 					// --- not supported ---

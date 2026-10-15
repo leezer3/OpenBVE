@@ -36,6 +36,11 @@ namespace CsvRwRouteParser
 				if (backgroundBlock.GetPath(DynamicBackgroundKey.Object, Path.GetDirectoryName(fileName), out string objectPath))
 				{
 					Plugin.CurrentHost.LoadObject(objectPath, System.Text.Encoding.Default, out UnifiedObject obj);
+					if (obj is AnimatedObjectCollection animatedObject)
+					{
+						BackgroundObject bo = new BackgroundObject(animatedObject, Plugin.CurrentOptions.ViewingDistance, FogDistance);
+						return bo;
+					}
 					o = (StaticObject)obj;
 				}
 				else if (backgroundBlock.GetPath(DynamicBackgroundKey.Texture, Path.GetDirectoryName(fileName), out string texturePath))
@@ -56,8 +61,7 @@ namespace CsvRwRouteParser
 				}
 				else if (o != null)
 				{
-					BackgroundObject bo = new BackgroundObject(o, Plugin.CurrentOptions.ViewingDistance);
-					bo.FogDistance = FogDistance;
+					BackgroundObject bo = new BackgroundObject(o, Plugin.CurrentOptions.ViewingDistance, false, FogDistance);
 					return bo;
 				}
 			}

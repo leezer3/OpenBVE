@@ -476,8 +476,29 @@ namespace Formats.OpenBve
 		    return false;
 		}
 
-	    /// <summary>Reads the specified Color24 from the block, preserving the prior value if not present</summary>
-	    public virtual bool TryGetColor24(T2 key, ref Color24 value)
+		/// <summary>Unconditionally reads the specified Color32 from the block</summary>
+		public virtual bool GetColor32(T2 key, out Color32 value)
+		{
+			if (keyValuePairs.TryRemove(key, out var color))
+			{
+				if (Color32.TryParseHexColor(color.Value, out value))
+				{
+					return true;
+				}
+
+				if (Color32.TryParseColor(color.Value, ',', out value))
+				{
+					return true;
+				}
+				currentHost.AddMessage(MessageType.Error, false, "Color is invalid in " + key + " in " + Key + " at line " + color.Key);
+			}
+
+			value = Color24.White;
+			return false;
+		}
+
+		/// <summary>Reads the specified Color24 from the block, preserving the prior value if not present</summary>
+		public virtual bool TryGetColor24(T2 key, ref Color24 value)
 	    {
 			if (keyValuePairs.TryRemove(key, out var color))
 			{
@@ -547,17 +568,23 @@ namespace Formats.OpenBve
 					values = new string[splitValues.Length];
 					for (int i = 0; i < splitValues.Length; i++)
 					{
+						if (string.IsNullOrWhiteSpace(splitValues[i]) || splitValues[i].Equals("null", StringComparison.InvariantCultureIgnoreCase))
+						{
+							// allow empty states etc.
+							continue;
+						}
 						try
 						{
 							values[i] = Path.CombineFile(absolutePath, splitValues[i].Trim());
+							if (!File.Exists(values[i]))
+							{
+								currentHost.AddMessage(MessageType.Warning, false, "The path for state " + i + " was not found in " + key + " in Section " + Key + " at line " + value.Key + " in file " + FileName);
+								values[i] = null;
+							}
 						}
 						catch
 						{
-							if (!string.IsNullOrEmpty(splitValues[i]) && !splitValues[i].Equals("null", StringComparison.InvariantCultureIgnoreCase))
-							{
-								// allow empty states etc.
-								currentHost.AddMessage(MessageType.Warning, false, "The path for state " + i + " was invalid in " + key + " in Section " + Key + " at line " + value.Key + " in file " + FileName);
-							}
+							currentHost.AddMessage(MessageType.Warning, false, "The path for state " + i + " was invalid in " + key + " in Section " + Key + " at line " + value.Key + " in file " + FileName);
 						}
 					}
 					return true;
@@ -617,14 +644,14 @@ namespace Formats.OpenBve
 		}
 
 		/// <summary>Reads the specified FunctionScript from the block, preserving the prior value if not present</summary>
-		public virtual bool GetFunctionScript(T2 key, out AnimationScript function)
+		public virtual bool GetFunctionScript(T2 key, out AnimationScript function, int totalStates = 0)
 	    {
 		    function = null;
 		    return false;
 	    }
 
 	    /// <summary>Reads the specified FunctionScript from the block, preserving the prior value if not present</summary>
-	    public virtual bool GetFunctionScript(T2[] keys, string absolutePath, out AnimationScript function)
+	    public virtual bool GetFunctionScript(T2[] keys, string absolutePath, out AnimationScript function, int totalStates = 0)
 	    {
 		    function = null;
 		    return false;
@@ -635,7 +662,7 @@ namespace Formats.OpenBve
 	    {
 			if (keyValuePairs.TryRemove(key, out var value))
 			{
-				if (Enum.TryParse(value.Value, true, out enumValue))
+				if (EnumCache<T3>.TryParse(value.Value, out enumValue))
 				{
 					return true;
 				}
@@ -652,7 +679,7 @@ namespace Formats.OpenBve
 		{
 			if (keyValuePairs.TryRemove(key, out var value))
 			{
-				if (Enum.TryParse(value.Value, true, out enumValue))
+				if (EnumCache<T3>.TryParse(value.Value, out enumValue))
 				{
 					return true;
 				}
@@ -675,13 +702,13 @@ namespace Formats.OpenBve
 				for (i = s.Length - 1; i >= 0; i--)
 				{
 					int a = char.ConvertToUtf32(s, i);
-					if (a < 48 | a > 57) break;
+					if (a < 48 || a > 57) break;
 				}
-				if (i >= 0 & i < s.Length - 1)
+				if (i >= 0 && i < s.Length - 1)
 				{
 					if (s[i] == 'd')
 					{
-						if (int.TryParse(s.Substring(i + 1), NumberStyles.Integer, CultureInfo.InvariantCulture, out var n))
+						if (int.TryParse(s.Substring(i + 1), NumberStyles.Integer, CultureInfo.InvariantCulture, out int n))
 						{
 							if (n == 0)
 							{
@@ -699,23 +726,18 @@ namespace Formats.OpenBve
 				}
 
 				string num = string.Empty;
-				if (s.StartsWith("ats"))
+				if (s.StartsWith("ats", StringComparison.InvariantCulture))
 				{
 					num = s.Substring(3);
 					s = s.Substring(0, 3);
 				}
-				else if (s.StartsWith("doorl"))
+				else if (s.StartsWith("doorl", StringComparison.InvariantCultureIgnoreCase) || s.StartsWith("doorr", StringComparison.InvariantCultureIgnoreCase))
 				{
 					num = s.Substring(5);
 					s = s.Substring(0, 5);
 				}
-				else if (s.StartsWith("doorr"))
-				{
-					num = s.Substring(5);
-					s = s.Substring(0, 5);
-				}
-
-				if (Enum.TryParse(s, true, out enumValue))
+				
+				if (EnumCache<T3>.TryParse(s, out enumValue))
 				{
 					int.TryParse(num, out index);
 					return true;
@@ -738,9 +760,9 @@ namespace Formats.OpenBve
 				string colorValue = value.Value.Substring(colonIndex + 1);
 				string s = value.Value.Substring(0, colonIndex);
 
-				if (Enum.TryParse(s, true, out enumValue))
+				if (EnumCache<T3>.TryParse(s, out enumValue))
 				{
-					if (Color32.TryParseColor(colorValue.Split(','), out var newColor))
+					if (Color32.TryParseColor(colorValue.Split(','), out Color32 newColor))
 					{
 						color = newColor;
 					}
@@ -869,7 +891,7 @@ namespace Formats.OpenBve
 						if (int.TryParse(Expression.Substring(0, i), NumberStyles.Integer, Culture, out int h))
 						{
 							int n = Expression.Length - i - 1;
-							if (n == 1 | n == 2)
+							if (n == 1 || n == 2)
 							{
 								if (uint.TryParse(Expression.Substring(i + 1, n), NumberStyles.None, Culture,
 									    out uint m))

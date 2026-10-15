@@ -1,5 +1,8 @@
 ﻿using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveApi.Textures;
+using System.Collections.Generic;
+using static System.Windows.Forms.AxHost;
 
 namespace OpenBveApi.Objects
 {
@@ -69,12 +72,60 @@ namespace OpenBveApi.Objects
 			NormalsVAO = null;
 		}
 
-		/// <summary>Creates the normals for all faces within this mesh</summary>
-		public void CreateNormals()
+		/// <summary>Finalizes the mesh</summary>
+		/// <remarks>This generates any missing normals, and sets the texture wrap modes appropriately</remarks>
+		public void FinalizeMesh()
 		{
 			for (int i = 0; i < Faces.Length; i++)
 			{
 				CreateNormals(i);
+			}
+
+			// create list of potential vertices (set backing array to the length of our vertices)
+			List<MeshFaceVertex> materialVerts = new List<MeshFaceVertex>(Vertices.Length);
+
+			for (int i = 0; i < Materials.Length; i++)
+			{
+				if (Materials[i].WrapMode == null)
+				{
+					/*
+					 * If the object does not have a stored wrapping mode, determine it now
+					 * https://github.com/leezer3/OpenBVE/issues/971
+					 *
+					 * Unfortunately, there appear to be X objects in the wild which expect a non-default wrapping mode
+					 * which means the best fast exit we can do is to check for RepeatRepeat
+					 *
+					 * We also need to check for all faces in the mesh using this material
+					 * (as otherwise non-contiguous faces mapped to the same texture may not work as expected)
+					 */
+					for (int j = 0; j < Faces.Length; j++)
+					{
+						materialVerts.AddRange(Faces[j].Vertices);
+					}
+
+					OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
+
+					foreach (MeshFaceVertex vertex in materialVerts)
+					{
+						if (Vertices[vertex].TextureCoordinates.X < 0.0f || Vertices[vertex].TextureCoordinates.X > 1.0f)
+						{
+							wrap |= OpenGlTextureWrapMode.RepeatClamp;
+						}
+
+						if (Vertices[vertex.Index].TextureCoordinates.Y < 0.0f || Vertices[vertex].TextureCoordinates.Y > 1.0f)
+						{
+							wrap |= OpenGlTextureWrapMode.ClampRepeat;
+						}
+
+						if (wrap == OpenGlTextureWrapMode.RepeatRepeat)
+						{
+							break;
+						}
+					}
+
+					Materials[i].WrapMode = wrap;
+					materialVerts.Clear();
+				}
 			}
 		}
 
@@ -83,9 +134,9 @@ namespace OpenBveApi.Objects
 		{
 			if (Faces[FaceIndex].Vertices.Length >= 3)
 			{
-				int i0 = Faces[FaceIndex].Vertices[0].Index;
-				int i1 = Faces[FaceIndex].Vertices[1].Index;
-				int i2 = Faces[FaceIndex].Vertices[2].Index;
+				int i0 = Faces[FaceIndex].Vertices[0];
+				int i1 = Faces[FaceIndex].Vertices[1];
+				int i2 = Faces[FaceIndex].Vertices[2];
 				double ax = Vertices[i1].Coordinates.X - Vertices[i0].Coordinates.X;
 				double ay = Vertices[i1].Coordinates.Y - Vertices[i0].Coordinates.Y;
 				double az = Vertices[i1].Coordinates.Z - Vertices[i0].Coordinates.Z;

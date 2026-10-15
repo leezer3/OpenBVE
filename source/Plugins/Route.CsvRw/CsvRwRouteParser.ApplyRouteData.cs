@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -21,6 +20,14 @@ namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
+		// Brightness remap used for every lit object
+		private static double RemapBrightness(RouteData data, double trackPosition) =>
+			0.25 + 0.75 * data.GetBrightness(trackPosition);
+
+		// Distance from an object's track position into its route element
+		private double ElementDelta(int elementIndex, double trackPosition) =>
+			trackPosition - CurrentRoute.Tracks[0].Elements[elementIndex].StartingTrackPosition;
+
 		private void ApplyRouteData(string FileName, ref RouteData Data, bool PreviewOnly)
 		{
 			if (CompatibilityObjectsUsed != 0)
@@ -129,7 +136,11 @@ namespace CsvRwRouteParser
 						 * Don't hide behind the hacks option, as routes can start at a non-zero position with a
 						 * non-zero background quite validly
 						 */
-						CurrentRoute.CurrentBackground = Data.Backgrounds[Data.Backgrounds.ElementAt(0).Key];
+						foreach (var bg in Data.Backgrounds)
+						{
+							CurrentRoute.CurrentBackground = Data.Backgrounds[bg.Key];
+							break;
+						}
 					}
 					else
 					{
@@ -150,7 +161,7 @@ namespace CsvRwRouteParser
 					if (Data.Blocks[i].BrightnessChanges != null && Data.Blocks[i].BrightnessChanges.Length != 0)
 					{
 						CurrentBrightnessValue = Data.Blocks[i].BrightnessChanges[0].Value;
-						CurrentBrightnessTrackPosition = Data.Blocks[i].BrightnessChanges[0].Value;
+						CurrentBrightnessTrackPosition = Data.Blocks[i].BrightnessChanges[0].TrackPosition;
 						break;
 					}
 				}
@@ -171,9 +182,8 @@ namespace CsvRwRouteParser
 			Fog CurrentFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
 			for (int i = Data.FirstUsedBlock; i < Data.Blocks.Count; i++)
 			{
-				for (int d = 0; d < Data.Blocks[i].Rails.Count; d++)
+				foreach (var item in Data.Blocks[i].Rails)
 				{
-					KeyValuePair<int, Rail> item = Data.Blocks[i].Rails.ElementAt(d);
 					if (!CurrentRoute.Tracks.ContainsKey(item.Key))
 					{
 						CurrentRoute.Tracks.Add(item.Key, new Track());
@@ -187,7 +197,7 @@ namespace CsvRwRouteParser
 				Plugin.CurrentProgress = 0.6667 + (i - Data.FirstUsedBlock) * progressFactor;
 				if ((i & 15) == 0)
 				{
-					System.Threading.Thread.Sleep(1);
+					System.Threading.Thread.Yield();
 					if (Plugin.Cancel)
 					{
 						Plugin.IsLoading = false;
@@ -215,12 +225,11 @@ namespace CsvRwRouteParser
 				}
 				TrackElement WorldTrackElement = Data.Blocks[i].CurrentTrackState;
 				int n = CurrentTrackLength;
-				for (int j = 0; j < CurrentRoute.Tracks.Count; j++)
+				foreach (var track in CurrentRoute.Tracks)
 				{
-					int key = CurrentRoute.Tracks.ElementAt(j).Key;
-					if (n >= CurrentRoute.Tracks[key].Elements.Length)
+					if (n >= track.Value.Elements.Length)
 					{
-						Array.Resize(ref CurrentRoute.Tracks[key].Elements, CurrentRoute.Tracks[key].Elements.Length << 1);
+						Array.Resize(ref track.Value.Elements, track.Value.Elements.Length << 1);
 					}
 				}
 				CurrentTrackLength++;
@@ -241,14 +250,15 @@ namespace CsvRwRouteParser
 					lastRainIntensity = Data.Blocks[i].RainIntensity;
 				}
 				CurrentRoute.Tracks[0].Elements[n].CsvRwAccuracyLevel = Data.Blocks[i].Rails[0].Accuracy;
-				for (int j = 0; j < CurrentRoute.Tracks.Count; j++)
+				int trackIdx = 0;
+				foreach (var track in CurrentRoute.Tracks)
 				{
-					if (PreviewOnly && j != 0)
+					if (PreviewOnly && trackIdx != 0)
 					{
 						break;
 					}
-					int key = CurrentRoute.Tracks.ElementAt(j).Key;
-					CurrentRoute.Tracks[key].Elements[n].Events = new List<GeneralEvent>();
+					track.Value.Elements[n].Events = new List<GeneralEvent>();
+					trackIdx++;
 				}
 				// background
 				if (!PreviewOnly)
@@ -348,7 +358,7 @@ namespace CsvRwRouteParser
 					}
 				}
 				// rail sounds
-				if (!PreviewOnly)
+				if (!PreviewOnly && Data.FileFormat != RoutefileFormat.Hmmsim)
 				{
 					int j = Data.Blocks[i].RailType[0];
 					int r = j < Data.Structure.Run.Length ? Data.Structure.Run[j] : 0;
@@ -366,15 +376,15 @@ namespace CsvRwRouteParser
 				{
 					if (i < Data.Blocks.Count - 1)
 					{
-						for (int jj = 0; jj < Data.Blocks[i].Rails.Count; jj++)
+						foreach (var railJvp in Data.Blocks[i].Rails)
 						{
-							int j = Data.Blocks[i].Rails.ElementAt(jj).Key;
+							int j = railJvp.Key;
 							if (Data.Blocks[i].Rails[j].RailStarted && Data.Blocks[i + 1].Rails.ContainsKey(j))
 							{
 								bool q = false;
-								for (int kk = 0; kk < Data.Blocks[i].Rails.Count; kk++)
+								foreach (var railKvp in Data.Blocks[i].Rails)
 								{
-									int k = Data.Blocks[i].Rails.ElementAt(kk).Key;
+									int k = railKvp.Key;
 									if (Data.Blocks[i].Rails[k].RailStarted && Data.Blocks[i + 1].Rails.ContainsKey(k))
 									{
 										bool qx = Math.Sign(Data.Blocks[i].Rails[k].RailStart.X - Data.Blocks[i].Rails[j].RailStart.X) != Math.Sign(Data.Blocks[i + 1].Rails[k].RailEnd.X - Data.Blocks[i + 1].Rails[j].RailEnd.X);
@@ -408,7 +418,6 @@ namespace CsvRwRouteParser
 													addPointSound = false;
 													break;
 												}
-												
 											}
 										}
 									}
@@ -416,7 +425,6 @@ namespace CsvRwRouteParser
 									{
 										CurrentRoute.Tracks[j].Elements[n].Events.Add(new PointSoundEvent());
 									}
-									
 								}
 							}
 						}
@@ -425,10 +433,9 @@ namespace CsvRwRouteParser
 				// power supplies
 				if (!PreviewOnly)
 				{
-					for (int jj = 0; jj < Data.Blocks[i].Rails.Count; jj++)
+					foreach (var railKvp in Data.Blocks[i].Rails)
 					{
-						int j = Data.Blocks[i].Rails.ElementAt(jj).Key;
-						CurrentRoute.Tracks[j].Elements[n].PowerSupplies = Data.Blocks[i].Rails[j].PowerSupplies;
+						CurrentRoute.Tracks[railKvp.Key].Elements[n].PowerSupplies = railKvp.Value.PowerSupplies;
 					}
 				}
 				// station
@@ -651,9 +658,9 @@ namespace CsvRwRouteParser
 				}
 				// rail-aligned objects
 				{
-					for (int railInBlock = 0; railInBlock < Data.Blocks[i].Rails.Count; railInBlock++)
+					foreach (var railKvp in Data.Blocks[i].Rails)
 					{
-						int railKey = Data.Blocks[i].Rails.ElementAt(railInBlock).Key;
+						int railKey = railKvp.Key;
 						if (railKey > 0 && !Data.Blocks[i].Rails[railKey].RailStarted && !Plugin.CurrentRoute.Tracks[railKey].Elements[n].ContainsSwitch)
 						{
 							// NOTE: If element contains a switch, it must be valid
@@ -770,6 +777,7 @@ namespace CsvRwRouteParser
 
 						ObjectCreationParameters railParameters = new ObjectCreationParameters(StartingDistance, EndingDistance);
 
+						bool freeObjPositionHack = false;
 						if (!PreviewOnly)
 						{
 							if (railKey > 0 && !Data.Blocks[i].Rails[railKey].RailStarted)
@@ -780,8 +788,16 @@ namespace CsvRwRouteParser
 									CurrentRoute.Tracks[railKey].Elements[n].Events.Add(new TrackEndEvent(Plugin.CurrentHost, Data.BlockInterval));
 								}
 
-								//In order to run on other tracks, we need to calculate the positions and stuff, so continue after here instead
-								continue;
+								
+								if (Plugin.CurrentOptions.EnableBveTsHacks && EnabledHacks.RailEndedObject)
+								{
+									freeObjPositionHack = true;
+								}
+								else
+								{
+									// In order to run on other tracks, we need to calculate the positions and stuff, so continue after here instead
+									continue;
+								}
 							}
 
 							if (railKey >= 0 && Data.Structure.RailObjects.ContainsKey(Data.Blocks[i].RailType[railKey]))
@@ -878,12 +894,48 @@ namespace CsvRwRouteParser
 								Data.Blocks[i].Cracks[k].Create(railKey, RailTransformation, pos, Data.Blocks[i], Data.Blocks[i + 1], Data.Structure, railParameters);
 							}
 
+							if (EnabledHacks.RailEndedObject && railKey == 1)
+							{
+								/*
+								 * This one is *really* odd- if the rail key is 1
+								 * BVE2 seems to use the track transformation for FreeObjects,
+								 * not the rail transformation.
+								 *
+								 * I can find no mention of this behaviour in any documentation in my
+								 * archive.
+								 *
+								 * Only found a broken example of this on the Monserrat route,
+								 * and for the moment, I think this needs to be behind the
+								 * specific hack above. 
+								 */
+								RailTransformation = TrackTransformation;
+							}
+
 							// free objects
 							if (Data.Blocks[i].RailFreeObj.ContainsKey(railKey))
 							{
 								for (int k = 0; k < Data.Blocks[i].RailFreeObj[railKey].Count; k++)
 								{
-									Data.Blocks[i].RailFreeObj[railKey][k].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance);
+									if (freeObjPositionHack && i > 0)
+									{
+										// find last block in which rail was valid 
+										int blockSearch = i - 1;
+										while (blockSearch >= 0)
+										{
+											if (Data.Blocks[blockSearch].Rails[railKey].RailStarted)
+											{
+												Data.Blocks[i].RailFreeObj[railKey][k].CreateRailAligned(Data.Structure.FreeObjects, blockSearch * Data.BlockInterval, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance);
+												break;
+											}
+											blockSearch--;
+										}
+										
+									}
+									else
+									{
+										Data.Blocks[i].RailFreeObj[railKey][k].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance);
+									}
+									
 								}
 							}
 							
@@ -892,7 +944,7 @@ namespace CsvRwRouteParser
 							{
 								for (int k = 0; k < Data.Blocks[i].Transponders.Length; k++)
 								{
-									double b = 0.25 + 0.75 * Data.GetBrightness(Data.Blocks[i].Transponders[k].TrackPosition);
+									double b = RemapBrightness(Data, Data.Blocks[i].Transponders[k].TrackPosition);
 									Data.Blocks[i].Transponders[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b, Data.Structure.Beacon);
 								}
 
@@ -913,7 +965,7 @@ namespace CsvRwRouteParser
 								// signals
 								for (int k = 0; k < Data.Blocks[i].Signals.Length; k++)
 								{
-									Data.Blocks[i].Signals[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, 0.27 + 0.75 * Data.GetBrightness(Data.Blocks[i].Signals[k].TrackPosition));
+									Data.Blocks[i].Signals[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, RemapBrightness(Data, Data.Blocks[i].Signals[k].TrackPosition));
 								}
 
 								// sections
@@ -939,7 +991,7 @@ namespace CsvRwRouteParser
 							{
 								if (railKey == Data.Blocks[i].Limits[k].RailIndex)
 								{
-									double b = 0.25 + 0.75 * Data.GetBrightness(Data.Blocks[i].Limits[k].TrackPosition);
+									double b = RemapBrightness(Data, Data.Blocks[i].Limits[k].TrackPosition);
 									Data.Blocks[i].Limits[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b, Data.UnitOfSpeed);
 								}
 							}
@@ -949,7 +1001,7 @@ namespace CsvRwRouteParser
 							{
 								for (int k = 0; k < Data.Blocks[i].StopPositions.Length; k++)
 								{
-									double b = 0.25 + 0.75 * Data.GetBrightness(Data.Blocks[i].StopPositions[k].TrackPosition);
+									double b = RemapBrightness(Data, Data.Blocks[i].StopPositions[k].TrackPosition);
 									Data.Blocks[i].StopPositions[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b);
 								}
 							}
@@ -976,9 +1028,10 @@ namespace CsvRwRouteParser
 						if (Data.Blocks[i].Transponders[j].Type != -1)
 						{
 							int n = i - Data.FirstUsedBlock;
-							double d = Data.Blocks[i].Transponders[j].TrackPosition - CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition;
+							double d = ElementDelta(n, Data.Blocks[i].Transponders[j].TrackPosition);
 							int s = Data.Blocks[i].Transponders[j].SectionIndex;
-							if (s >= 0) s = -1;
+							// Keep valid section references; clamp bad values to -1 (unset)
+							if (s < 0) s = -1;
 							CurrentRoute.Tracks[0].Elements[n].Events.Add(new TransponderEvent(CurrentRoute, d, Data.Blocks[i].Transponders[j].Type, Data.Blocks[i].Transponders[j].Data, s, Data.Blocks[i].Transponders[j].ClipToFirstRedSection));
 							Data.Blocks[i].Transponders[j].Type = -1;
 						}
@@ -987,13 +1040,13 @@ namespace CsvRwRouteParser
 					for (int j = 0; j < Data.Blocks[i].DestinationChanges.Length; j++)
 					{
 						int n = i - Data.FirstUsedBlock;
-						double d = Data.Blocks[i].DestinationChanges[j].TrackPosition - CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition;
+						double d = ElementDelta(n, Data.Blocks[i].DestinationChanges[j].TrackPosition);
 						CurrentRoute.Tracks[0].Elements[n].Events.Add(new RouteManager2.Events.DestinationEvent(d, Data.Blocks[i].DestinationChanges[j].Type, Data.Blocks[i].DestinationChanges[j].NextDestination, Data.Blocks[i].DestinationChanges[j].PreviousDestination, Data.Blocks[i].DestinationChanges[j].TriggerOnce));
 					}
 					for (int j = 0; j < Data.Blocks[i].HornBlows.Length; j++)
 					{
 						int n = i - Data.FirstUsedBlock;
-						double d = Data.Blocks[i].HornBlows[j].TrackPosition - CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition;
+						double d = ElementDelta(n, Data.Blocks[i].HornBlows[j].TrackPosition);
 						CurrentRoute.Tracks[0].Elements[n].Events.Add(new RouteManager2.Events.HornBlowEvent(d, Data.Blocks[i].HornBlows[j].Type, Data.Blocks[i].HornBlows[j].TriggerOnce));
 					}
 				}
@@ -1052,9 +1105,9 @@ namespace CsvRwRouteParser
 				Array.Resize(ref CurrentRoute.PointsOfInterest, n);
 			}
 			// convert block-based cant into point-based cant
-			for (int ii = 0; ii < CurrentRoute.Tracks.Count; ii++)
+			foreach (var track in CurrentRoute.Tracks)
 			{
-				int i = CurrentRoute.Tracks.ElementAt(ii).Key;
+				int i = track.Key;
 				for (int j = CurrentTrackLength - 1; j >= 1; j--)
 				{
 					if (CurrentRoute.Tracks[i].Elements[j].CurveCant == 0.0)
@@ -1078,10 +1131,9 @@ namespace CsvRwRouteParser
 				}
 			}
 			// finalize
-			for (int ii = 0; ii < CurrentRoute.Tracks.Count; ii++)
+			foreach (var track in CurrentRoute.Tracks)
 			{
-				int i = CurrentRoute.Tracks.ElementAt(ii).Key;
-				Array.Resize(ref CurrentRoute.Tracks[i].Elements, CurrentTrackLength);
+				Array.Resize(ref track.Value.Elements, CurrentTrackLength);
 			}
 			for (int i = 0; i < CurrentRoute.Stations.Length; i++)
 			{
@@ -1257,16 +1309,25 @@ namespace CsvRwRouteParser
 				}
 			}
 
-			// insert PatternObj (using a TrackFollower)
-			for (int patternObj = 0; patternObj < Data.PatternObjects.Count; patternObj++)
+			if (!PreviewOnly && Data.FileFormat == RoutefileFormat.Hmmsim)
 			{
-				int key = Data.PatternObjects.ElementAt(patternObj).Key;
-				if (key == 0)
+				// Create rail sounds events
+				CurrentRunIndex = 0;
+				for (int i = 0; i < Data.Blocks.Count; i++)
 				{
-					int b = 0;
+					for (int j = 0; j < Data.Blocks[i].RailSounds.Count; j++)
+					{
+						Data.Blocks[i].RailSounds[j].Create(CurrentRunIndex);
+						CurrentRunIndex = Data.Blocks[i].RailSounds[j].NewSound;
+					}
 				}
-				Data.PatternObjects[key].Create(Data.Structure.FreeObjects, CurrentRoute.Tracks[0].Elements[CurrentRoute.Tracks[0].Elements.Length - 1].StartingTrackPosition);
+				// insert PatternObj (using a TrackFollower)
+				foreach (var patternKvp in Data.PatternObjects)
+				{
+					patternKvp.Value.Create(Data.Structure.FreeObjects, CurrentRoute.Tracks[0].Elements[CurrentRoute.Tracks[0].Elements.Length - 1].StartingTrackPosition);
+				}
 			}
+			
 
 			if (!PreviewOnly)
 			{
@@ -1291,10 +1352,9 @@ namespace CsvRwRouteParser
 
 		private void ComputeCantTangents()
 		{
-			for (int ii = 0; ii < CurrentRoute.Tracks.Count; ii++)
+			foreach (var track in CurrentRoute.Tracks)
 			{
-				int i = CurrentRoute.Tracks.ElementAt(ii).Key;
-				CurrentRoute.Tracks[i].ComputeCantTangents();
+				track.Value.ComputeCantTangents();
 			}
 		}
 	}

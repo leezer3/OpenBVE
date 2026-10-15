@@ -145,15 +145,18 @@ namespace LibRender2
 
 		public List<int> usedTrackColors = new List<int>();
 		public Dictionary<int, RailPath> trackColors = new Dictionary<int, RailPath>();
-
+#if RELEASE
 #pragma warning disable 0219, CS0169
+#endif
 		/// <summary>Holds the last openGL error</summary>
 		/// <remarks>Is only used in debug builds, hence the pragma</remarks>
 		private ErrorCode lastError;
+#if RELEASE
 #pragma warning restore 0219, CS0169
+#endif
 
 		/// <summary>The current shader in use</summary>
-		protected internal AbstractShader CurrentShader;
+		public AbstractShader CurrentShader;
 
 		public Shader DefaultShader;
 		
@@ -170,7 +173,59 @@ namespace LibRender2
 		public bool OptionLighting = true;
 
 		/// <summary>Whether normals rendering is enabled in the debug options</summary>
-		public bool OptionNormals = false;
+		private bool optionNormals = false;
+
+		/// <summary>Whether normals rendering is enabled in the debug options</summary>
+		/// <remarks>Disposing the normals VAO when disabled frees the duplicate vertex buffer held in RAM.</remarks>
+		public bool OptionNormals
+		{
+			get => optionNormals;
+			set
+			{
+				if (value == optionNormals)
+				{
+					return;
+				}
+
+				optionNormals = value;
+				if (!value)
+				{
+					DisposeNormalsVAOs();
+					// Force the GC so the freed normals buffers are gone from RAM immediately.
+					GC.Collect();
+					GC.WaitForPendingFinalizers();
+				}
+			}
+		}
+
+		private void DisposeNormalsVAOs()
+		{
+			if (StaticObjectStates != null)
+			{
+				foreach (var state in StaticObjectStates)
+				{
+					DisposeNormalsVAO(state);
+				}
+			}
+
+			if (DynamicObjectStates != null)
+			{
+				foreach (var state in DynamicObjectStates)
+				{
+					DisposeNormalsVAO(state);
+				}
+			}
+		}
+
+		private static void DisposeNormalsVAO(ObjectState state)
+		{
+			if (state?.Prototype?.Mesh?.NormalsVAO is VertexArrayObject normalsVao)
+			{
+				normalsVao.UnBind();
+				normalsVao.Dispose();
+				state.Prototype.Mesh.NormalsVAO = null;
+			}
+		}
 
 		/// <summary>Whether back face culling is enabled</summary>
 		public bool OptionBackFaceCulling = true;
@@ -227,7 +282,7 @@ namespace LibRender2
 		/// <summary>Stores the most recently bound texture</summary>
 		public OpenGlTexture LastBoundTexture;
 
-		private Color32 lastColor;
+		internal Color32 lastColor;
 
 		/// <summary>Holds the handle of the last VAO bound by openGL</summary>
 		public int lastVAO;
@@ -309,15 +364,7 @@ namespace LibRender2
 			currentHost = CurrentHost;
 			currentOptions = CurrentOptions;
 			fileSystem = FileSystem;
-			if (CurrentHost.Application != HostApplication.TrainEditor && CurrentHost.Application != HostApplication.TrainEditor2)
-			{
-				/*
-				 * TrainEditor2 uses a GLControl
-				 * On the Linux SLD2 backend, this crashes when attempting to get the list of supported screen resolutions
-				 * As we don't care about fullscreen here, just don't bother with this constructor
-				 */
-				Screen = new Screen();
-			}
+			Screen = new Screen(this);
 			Camera = new CameraProperties(this);
 			Lighting = new Lighting(this);
 			Marker = new Marker(this);
@@ -392,10 +439,10 @@ namespace LibRender2
 			StaticObjectStates = new List<ObjectState>();
 			DynamicObjectStates = new List<ObjectState>();
 			VisibleObjects = new VisibleObjectLibrary(this);
-			whitePixel = new Texture(new Texture(1, 1, PixelFormat.RGBAlpha, new byte[] {255, 255, 255, 255}, null));
+			whitePixel = new Texture(new Texture(1, 1, PixelFormat.RGBAlpha, new byte[] {255, 255, 255, 255}, (OpenBveApi.Colors.Color24[])null));
 			nullDepthMap = GL.GenTexture();
 			GL.BindTexture(TextureTarget.Texture2D, nullDepthMap);
-			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent16, 1, 1, 0, OpenTK.Graphics.OpenGL.PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
+			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent16, 1, 1, 0, OpenTK.Graphics.OpenGL.PixelFormat.DepthComponent, PixelType.UnsignedShort, IntPtr.Zero);
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureCompareMode, (int)TextureCompareMode.CompareRefToTexture);
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
@@ -465,6 +512,25 @@ namespace LibRender2
 		/// <summary>Deinitializes the renderer</summary>
 		public void DeInitialize()
 		{
+			// Flush all in-memory caches on shutdown (close window / process exit).
+			// Must run before GameWindow.Dispose() while the GL context is still alive.
+			try
+			{
+				TextureManager?.UnloadAllTextures(false);
+			}
+			catch
+			{
+				// Ignored - best effort cleanup during shutdown
+			}
+			try
+			{
+				currentHost?.ClearObjectCaches();
+				currentHost?.ClearErrors();
+			}
+			catch
+			{
+				// Ignored - best effort cleanup during shutdown
+			}
 			if (nullDepthMap != 0)
 			{
 				GL.DeleteTexture(nullDepthMap);
@@ -575,32 +641,26 @@ namespace LibRender2
 
 		public void Reset()
 		{
-			currentHost.AnimatedObjectCollectionCache.Clear();
-			List<ValueTuple<string, bool, DateTime>> keys = currentHost.StaticObjectCache.Keys.ToList();
-			for (int i = 0; i < keys.Count; i++)
-			{
-				if (!File.Exists(keys[i].Item1) || File.GetLastWriteTime(keys[i].Item1) != keys[i].Item3)
-				{
-					currentHost.StaticObjectCache.Remove(keys[i]);
-				}
-			}
+			currentHost.ClearAnimatedObjectCache();
+			currentHost.PruneStaleStaticObjects();
 			TextureManager.UnloadAllTextures(true);
 			VisibleObjects.Clear();
 		}
 
 		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectDisposalMode AccurateObjectDisposal, ObjectCreationParameters Parameters, double BlockLength)
 		{
-			Matrix4D Translate = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
 			Matrix4D Rotate = (Matrix4D)new Transformation(LocalTransformation ?? Transformation.NullTransformation, WorldTransformation);
-			return CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Translate, AccurateObjectDisposal, Parameters, BlockLength);
+			return CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, AccurateObjectDisposal, Parameters, BlockLength);
 		}
 
-		public int CreateStaticObject(Vector3 Position, StaticObject Prototype, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, ObjectDisposalMode AccurateObjectDisposal, ObjectCreationParameters Parameters, double BlockLength)
+		public int CreateStaticObject(Vector3 Position, StaticObject Prototype, Transformation LocalTransformation, Matrix4D Rotate, ObjectDisposalMode AccurateObjectDisposal, ObjectCreationParameters Parameters, double BlockLength)
 		{
 			if (Prototype == null)
 			{
 				return -1;
 			}
+
+			Matrix4D Translate = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
 
 			if (Prototype.Mesh.Faces.Length == 0)
 			{
@@ -719,7 +779,7 @@ namespace LibRender2
 		{
 			for (int i = 0; i < StaticObjectStates.Count; i++)
 			{
-				VAOExtensions.CreateVAO(StaticObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
+				VAOExtensions.CreateOrUpdateVAO(StaticObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
 				/*
 				 * n.b.
 				 * Only create the actual matrix buffer at first frame render time
@@ -731,7 +791,7 @@ namespace LibRender2
 			}
 			for (int i = 0; i < DynamicObjectStates.Count; i++)
 			{
-				VAOExtensions.CreateVAO(DynamicObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
+				VAOExtensions.CreateOrUpdateVAO(DynamicObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
 			}
             ObjectsSortedByStart = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.StartingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
 			ObjectsSortedByEnd = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.EndingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
@@ -1187,7 +1247,7 @@ namespace LibRender2
 		}
 
 
-		// Cached object state and matricies for shader drawing
+		// Cached object state and matrices for shader drawing
 		protected internal ObjectState lastObjectState;
 		private Matrix4D lastModelMatrix;
 		private Matrix4D lastModelViewMatrix;
@@ -1201,7 +1261,7 @@ namespace LibRender2
 			RenderFace(CurrentShader as Shader, state.Object, state.Face, isDebugTouchMode);
 		}
 
-		/// <summary>Draws a face using the specified shader and matricies</summary>
+		/// <summary>Draws a face using the specified shader and matrices</summary>
 		/// <param name="shader">The shader to use</param>
 		/// <param name="state">The ObjectState to draw</param>
 		/// <param name="face">The Face within the ObjectState</param>
@@ -1429,10 +1489,28 @@ namespace LibRender2
 				shader.DisableTexturing();
 				shader.SetBrightness(1.0f);
 				shader.SetOpacity(1.0f);
-				VertexArrayObject normalsVao = (VertexArrayObject)state.Prototype.Mesh.NormalsVAO;
-				normalsVao.Bind();
-				lastVAO = normalsVao.handle;
-				normalsVao.Draw(PrimitiveType.Lines, face.NormalsIboStartIndex, face.Vertices.Length * 2);
+				Mesh normalsMesh = state.Prototype.Mesh;
+				if (normalsMesh.NormalsVAO == null)
+				{
+					// Build the normals VAO lazily on first use to avoid holding a duplicate vertex buffer in RAM
+					VAOExtensions.CreateNormalsVAO(normalsMesh, state.Prototype.Dynamic, DefaultShader.VertexLayout, this);
+				}
+				VertexArrayObject normalsVao = (VertexArrayObject)normalsMesh.NormalsVAO;
+				if (normalsVao != null && face.IboStartIndex == 0)
+				{
+					// Draw all normals for this mesh in a single call (the normals VAO is a contiguous list of line pairs).
+					// Solid purple overlay: disable lighting and force a white, emissive material so the shader
+					// outputs the baked per-vertex purple colour unchanged (finalColor *= oLightResult == white).
+					shader.SetIsLight(false);
+					shader.SetMaterialAmbient(Color32.White);
+					shader.SetMaterialFlags(MaterialFlags.Emissive);
+					normalsVao.Bind();
+					lastVAO = normalsVao.handle;
+					normalsVao.DrawArrays(PrimitiveType.Lines, 0, normalsMesh.Vertices.Length > 0 ? normalsMesh.Faces.Sum(f => f.Vertices.Length) * 2 : 0);
+					shader.SetIsLight(OptionLighting);
+					shader.SetMaterialFlags(material.Flags);
+					shader.SetMaterialAmbient(material.Color);
+				}
 			}
 
 			// finalize

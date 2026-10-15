@@ -74,17 +74,7 @@ namespace OpenBve.Formats.DirectX
 
 		/// <summary>Returns the position of the reader within the block</summary>
 		public abstract long Position();
-
-		/// <summary>Creates a new block from the supplied string</summary>
-		/// <param name="text">The string</param>
-		/// <param name="token">The token for the new block</param>
-		/// <returns>The new block</returns>
-		/// <remarks>Always creates a TextualBlock</remarks>
-		public static Block ReadBlock(string text, TemplateID token)
-		{
-			return new TextualBlock(text, token);
-		}
-
+		
 		/// <summary>Reads a sub-block from the enclosing block</summary>
 		/// <param name="newToken">The expected token for the new block</param>
 		/// <returns>The new block</returns>
@@ -213,7 +203,7 @@ namespace OpenBve.Formats.DirectX
 				currentPosition++;
 				startPosition++;
 			}
-			string s = String.Empty;
+			string s = string.Empty;
 			while (currentPosition < myText.Length)
 			{
 				if (myText[currentPosition] == '{')
@@ -297,7 +287,7 @@ namespace OpenBve.Formats.DirectX
 				currentPosition++;
 				startPosition++;
 			}
-			string s = String.Empty;
+			string s = string.Empty;
 			while (currentPosition < myText.Length)
 			{
 				if (myText[currentPosition] == '{')
@@ -408,9 +398,12 @@ namespace OpenBve.Formats.DirectX
 				s = s.Substring(0, ws).Trim();
 			}
 
-			if (!Enum.TryParse(s, true, out TemplateID currentToken))
+			bool recognisedToken = Enum.TryParse(s, true, out TemplateID currentToken);
+			if (!recognisedToken)
 			{
-				throw new Exception("Unrecognised token " + s);
+				// Unknown (e.g. app-defined template) data block: consume it and return
+				// null so the caller skips it. Custom templates are legal in X files
+				// (3ds Max KeyValuePair metadata); throwing made such objects unloadable.
 			}
 			
 			int level = 0;
@@ -426,6 +419,10 @@ namespace OpenBve.Formats.DirectX
 					currentPosition++;
 					if (level == 0)
 					{
+						if (!recognisedToken)
+						{
+							return null;
+						}
 						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(), currentToken);
 					}
 
@@ -550,55 +547,44 @@ namespace OpenBve.Formats.DirectX
 			}
 
 			startPosition = currentPosition;
-			if (myText[currentPosition] == '"')
+			int l;
+			switch (myText[currentPosition])
 			{
-				//Quote enclosed string
-				currentPosition++;
-				startPosition++;
-				while (myText[currentPosition] != '"')
-				{
+				case '"':
+					//Quote enclosed string
 					currentPosition++;
-				}
+					startPosition++;
+					while (myText[currentPosition] != '"')
+					{
+						currentPosition++;
+					}
 
-				int l = currentPosition - startPosition;
-				currentPosition++;
-				if (l > 0)
-				{
-					return myText.Substring(startPosition, l).Trim();
-				}
-			}
-			else if (myText[currentPosition] == '<')
-			{
-				//Template GUID
-				currentPosition++;
-				startPosition++;
-				while (myText[currentPosition] != '>')
-				{
+					l = currentPosition - startPosition;
 					currentPosition++;
-				}
-
-				int l = currentPosition - startPosition;
-				currentPosition++;
-				if (l > 0)
-				{
-					return myText.Substring(startPosition, l).Trim();
-				}
-			}
-			else
-			{
-				while (char.IsDigit(myText[currentPosition]) || myText[currentPosition] == '.' || myText[currentPosition] == '+' || myText[currentPosition] == '-')
-				{
+					break;
+				case '<':
+					//Template GUID
 					currentPosition++;
-				}
+					startPosition++;
+					while (myText[currentPosition] != '>')
+					{
+						currentPosition++;
+					}
 
-				int l = currentPosition - startPosition;
-				if (l > 0)
-				{
-					return myText.Substring(startPosition, l).Trim();
-				}
+					l = currentPosition - startPosition;
+					currentPosition++;
+					break;
+				default:
+					while (char.IsDigit(myText[currentPosition]) || myText[currentPosition] == '.' || myText[currentPosition] == '+' || myText[currentPosition] == '-')
+					{
+						currentPosition++;
+					}
+
+					l = currentPosition - startPosition;
+					break;
 			}
 
-			return string.Empty;
+			return l > 0 ? myText.Substring(startPosition, l).Trim() : string.Empty;
 		}
 	}
 

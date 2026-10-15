@@ -26,11 +26,8 @@ namespace Texture.Dds
             if (ddsImage == null) return;
             if (ddsImage.Length == 0) return;
 
-            using (MemoryStream stream = new MemoryStream(ddsImage.Length))
+            using (MemoryStream stream = new MemoryStream(ddsImage))
             {
-                stream.Write(ddsImage, 0, ddsImage.Length);
-                stream.Seek(0, SeekOrigin.Begin);
-
                 using (BinaryReader reader = new BinaryReader(stream))
                 {
                     this.Parse(reader);
@@ -73,17 +70,19 @@ namespace Texture.Dds
 
         private void CreateTexture(int width, int height, byte[] rawData)
         {
-            
-            int size = width * height * 4;
-			byte[] textureData = new byte[size];
-	        for (int i = 0; i < size; i += 4)
+	        int expected = width * height * 4;
+	        if (rawData == null || rawData.Length < expected)
 	        {
-		        textureData[i] = rawData[i]; // red
-		        textureData[i + 1] = rawData[i + 1]; // green
-		        textureData[i + 2] = rawData[i + 2]; // blue
-		        textureData[i + 3] = rawData[i + 3]; // alpha
+		        throw new InvalidDataException("Decompressed DDS data is shorter than expected.");
 	        }
-	        myTexture = new OpenBveApi.Textures.Texture(width, height, OpenBveApi.Textures.PixelFormat.RGBAlpha, textureData, null);
+	        byte[] textureData = rawData;
+	        if (rawData.Length != expected)
+	        {
+		        // Decompressors allocate a single plane; guard against any overallocation
+		        textureData = new byte[expected];
+		        Buffer.BlockCopy(rawData, 0, textureData, 0, expected);
+	        }
+	        myTexture = new OpenBveApi.Textures.Texture(width, height, OpenBveApi.Textures.PixelFormat.RGBAlpha, textureData, (OpenBveApi.Colors.Color24[])null);
         }
 
         private static PixelFormat GetFormat(DdsHeader header, out int blocksize)
@@ -507,7 +506,7 @@ namespace Texture.Dds
             int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbBitCount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
-            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane];
 
             Color32[] colours = new Color32[4];
             colours[0].A = 0xFF;
@@ -590,7 +589,7 @@ namespace Texture.Dds
             int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbBitCount);
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
-            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane];
             Color32[] colours = new Color32[4];
             fixed (byte* bytePtr = data)
             {
@@ -669,7 +668,7 @@ namespace Texture.Dds
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
 
-            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane];
             Color32[] colours = new Color32[4];
             ushort[] alphas = new ushort[8];
 
@@ -790,7 +789,7 @@ namespace Texture.Dds
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
 
-            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane];
 	        uint valMask;
 	        unchecked
 	        {
@@ -833,7 +832,7 @@ namespace Texture.Dds
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
             
-            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane];
 	        uint valMask;
 	        unchecked
 	        {
@@ -880,7 +879,7 @@ namespace Texture.Dds
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
             
-            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane];
             byte[] yColours = new byte[8];
             byte[] xColours = new byte[8];
 
@@ -984,7 +983,7 @@ namespace Texture.Dds
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
 
-            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane];
             byte[] colours = new byte[8];
 
             uint offset = 0;
@@ -1053,7 +1052,7 @@ namespace Texture.Dds
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
 
-            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane];
 
             int lShift1; int lMul; int lShift2;
             ComputeMaskParams(header.pixelFormat.rBitmask, out lShift1, out lMul, out lShift2);
@@ -1083,7 +1082,7 @@ namespace Texture.Dds
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
 
-            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane];
 
             Color32 color_0 = new Color32();
             Color32 color_1 = new Color32();
@@ -1226,7 +1225,7 @@ namespace Texture.Dds
             int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
             int sizeOfPlane = bps * header.height;
 
-            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane];
             
             fixed (byte* bytePtr = data)
             {
@@ -1293,7 +1292,7 @@ namespace Texture.Dds
                 return DecompressARGB16(header, data, pixelFormat);
 
             int sizeOfData = (header.width * header.pixelFormat.rgbBitCount / 8) * header.height * header.depth;
-            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane];
 
             if ((pixelFormat == PixelFormat.LUMINANCE) && (header.pixelFormat.rgbBitCount == 16) && (header.pixelFormat.rBitmask == 0xFFFF))
             {
@@ -1384,7 +1383,7 @@ namespace Texture.Dds
             int sizeOfPlane = bps * header.height;
 
             int sizeOfData = (header.width * header.pixelFormat.rgbBitCount / 8) * header.height * header.depth;
-            byte[] rawData = new byte[header.depth * sizeOfPlane + header.height * bps + header.width * bpp];
+            byte[] rawData = new byte[header.depth * sizeOfPlane];
 
             uint readI = 0;
             uint redL, redR;

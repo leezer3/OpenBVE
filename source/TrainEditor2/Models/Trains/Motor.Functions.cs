@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using LibRender2.Screens;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
@@ -1062,10 +1063,14 @@ namespace TrainEditor2.Models.Trains
 			GL.Viewport(0, 0, GlControlWidth, GlControlHeight);
 			GL.ClearColor(Color.Black);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+			Program.Renderer.Screen.Width = GlControlWidth;
+			Program.Renderer.Screen.Height = GlControlHeight;
+			Program.Renderer.Rectangle.Update();
+			Program.Renderer.OpenGlString.Update();
+			Program.Renderer.CurrentShader.Deactivate(); // TE2 is still mixed-mode, so deactivate shader
 
 			Matrix4D.CreateOrthographic(MaxVelocity - MinVelocity, MaxPitch - MinPitch, float.Epsilon, 1.0, out Matrix4D projPitch);
 			Matrix4D.CreateOrthographic(MaxVelocity - MinVelocity, MaxVolume - MinVolume, float.Epsilon, 1.0, out Matrix4D projVolume);
-			Matrix4D.CreateOrthographicOffCenter(0.0, GlControlWidth, GlControlHeight, 0.0, -1.0, 1.0, out Matrix4D projString);
 			Matrix4D lookPitch = Matrix4D.LookAt(new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, float.Epsilon), new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, 0.0), new Vector3(0,1,0));
 			Matrix4D lookVolume = Matrix4D.LookAt(new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, float.Epsilon), new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, 0.0), new Vector3(0,1,0));
 
@@ -1091,9 +1096,6 @@ namespace TrainEditor2.Models.Trains
 				}
 
 				GL.End();
-
-				Program.Renderer.CurrentProjectionMatrix = projString;
-				Program.Renderer.CurrentViewMatrix = Matrix4D.Identity;
 
 				for (double v = 0.0; v < MaxVelocity; v += 10.0)
 				{
@@ -1128,9 +1130,6 @@ namespace TrainEditor2.Models.Trains
 
 					GL.End();
 
-					Program.Renderer.CurrentProjectionMatrix = projString;
-					Program.Renderer.CurrentViewMatrix = Matrix4D.Identity;
-
 					for (double p = 0.0; p < MaxPitch; p += 100.0)
 					{
 						Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, p.ToString("0", culture), new Vector2(1, PitchToY(p) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
@@ -1159,9 +1158,6 @@ namespace TrainEditor2.Models.Trains
 					}
 
 					GL.End();
-
-					Program.Renderer.CurrentProjectionMatrix = projString;
-					Program.Renderer.CurrentViewMatrix = Matrix4D.Identity;
 
 					for (double v = 0.0; v < MaxVolume; v += 128.0)
 					{

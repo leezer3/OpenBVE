@@ -76,12 +76,8 @@ namespace OpenBveApi
 		 */
 		/// <summary>The minimum number of vertices for basic optimisation to be performed on an object</summary>
 		public int ObjectOptimizationBasicThreshold;
-		/// <summary>The minimum number of vertices for full optimisation to be performed on an object</summary>
-		public int ObjectOptimizationFullThreshold;
 		/// <summary>The maximum number of sounds playing at any one time</summary>
 		public int SoundNumber;
-		/// <summary>Whether to use the new rendering method.</summary>
-		public bool IsUseNewRenderer;
 		/// <summary>Shadow map resolution per cascade. Off disables shadows.</summary>
 		public ShadowMapResolution ShadowResolution = ShadowMapResolution.Off;
 		/// <summary>Maximum distance from the camera at which shadows appear.</summary>
@@ -92,8 +88,8 @@ namespace OpenBveApi
 		public double ShadowStrength = 0.7;
 		/// <summary>Shadow bias to prevent shadow acne.</summary>
 		public double ShadowBias = 0.000005; // default synced to 0.000005
-		/// <summary>Shadow normal bias (slope scale multiplier) to perfectly cure acne on curved/thin meshes.</summary>
-		public double ShadowNormalBias = 2.0;
+		/// <summary>Shadow normal bias in shadow-map texels (Unity-style). Typical 0.3-1.0; higher detaches shadows.</summary>
+		public double ShadowNormalBias = 0.8;
 		/// <summary>Whether to filter shadow casters per cascade to improve performance.</summary>
 		public bool ShadowFilterCascades = true;
 		/// <summary>Whether to show the loading progress bar</summary>
@@ -102,6 +98,10 @@ namespace OpenBveApi
 		public bool LoadingLogo = true;
 		/// <summary>Whether to show the loading background</summary>
 		public bool LoadingBackground = true;
+		/// <summary>Whether smooth (Vogel disk + IGN) shadow filtering is enabled. If false, sharp 4-tap grid is used.</summary>
+		public bool ShadowSmooth = true;
+		/// <summary>Shadow filter radius in texels for smooth mode (1.0 = sharper, 2.5 = softer).</summary>
+		public double ShadowFilterRadius = 1.5;
 
 
 		/// <summary>The sun azimuth in degrees</summary>

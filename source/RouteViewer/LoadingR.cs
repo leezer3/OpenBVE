@@ -6,6 +6,8 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using System.Diagnostics;
+using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -49,16 +51,46 @@ namespace RouteViewer {
 		private static string CurrentRouteFile;
 		private static Encoding CurrentRouteEncoding;
 
+		/// <summary>Time taken to parse the route file, in milliseconds.</summary>
+		internal static long RouteParseTime;
+		/// <summary>Time taken to set up the route after parsing, in milliseconds.</summary>
+		internal static long PostParseTime;
+		/// <summary>Time spent parsing route data (ms)</summary>
+		internal static long ParserParseTime;
+		/// <summary>Time spent applying route data (ms)</summary>
+		internal static long ParserApplyTime;
+
 		// load
 		internal static void Load(string routeFile, Encoding routeEncoding, byte[] textureBytes)
 		{
 			Program.Renderer.GameWindow.TargetRenderFrequency = 0;
+			// Switching to a different route must fully release the previous route:
+			// object caches, decoded textures and sound buffers. Same-file reload
+			// keeps the partial reset so unchanged textures stay resident.
+			bool routeSwitch = CurrentRouteFile != null && !CurrentRouteFile.Equals(routeFile, StringComparison.OrdinalIgnoreCase);
 			// reset
 			Game.Reset();
+			if (routeSwitch)
+			{
+				// Ordered, synchronous teardown of the previous route before the
+				// new one starts loading: sounds stopped above, so drain queued
+				// loads, release buffers, caches and pixel bytes, then collect
+				// (compacting LOH, twice across finalizers) so RAM actually drops.
+				LogSwitchMemory("before", CurrentRouteFile, routeFile);
+				Program.CurrentHost.ClearObjectCaches();
+				Program.Renderer.TextureManager.UnloadAllTextures(false, releaseBytes: true);
+				Program.Sounds.CancelPendingLoads();
+				Program.Sounds.UnloadAllBuffers();
+				GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+				GC.Collect();
+				GC.WaitForPendingFinalizers();
+				GC.Collect();
+				LogSwitchMemory("after", CurrentRouteFile, routeFile);
+			}
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString(), Interface.CurrentOptions.LoadingLogo, Interface.CurrentOptions.LoadingProgressBar);
 			if (textureBytes != null && textureBytes.Length > 0)
 			{
-				Texture t = new Texture(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, PixelFormat.RGBAlpha, textureBytes, null);
+				Texture t = new Texture(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, PixelFormat.RGBAlpha, textureBytes, (OpenBveApi.Colors.Color24[])null);
 				Program.Renderer.Loading.SetLoadingBkg(t);
 			}
 			// members
@@ -72,8 +104,25 @@ namespace RouteViewer {
 		}
 		
 		// load threaded
-		private static async Task LoadThreaded()
+		private static void LogSwitchMemory(string stage, string oldFile, string newFile)
 		{
+			try
+			{
+				long managed = GC.GetTotalMemory(false);
+				Program.FileSystem.AppendToLogFile(
+					"Route switch " + stage + ": " + oldFile + " -> " + newFile +
+					" managed=" + (managed / 1048576) + "MB" +
+					" staticCache=" + Program.CurrentHost.StaticObjectCache.Count +
+					" animatedCache=" + Program.CurrentHost.AnimatedObjectCollectionCache.Count +
+					" textures=" + Program.Renderer.TextureManager.RegisteredTexturesCount);
+			}
+			catch
+			{
+				// Diagnostics must never break loading.
+			}
+		}
+
+		private static async Task LoadThreaded()		{
 			try
 			{
 				await Task.Run(() => LoadEverythingThreaded());
@@ -107,6 +156,7 @@ namespace RouteViewer {
 			string SoundFolder = Path.CombineDirectory(RailwayFolder, "Sound");
 			Program.Renderer.Camera.CurrentMode = CameraViewMode.Track;
 			// load route
+			Stopwatch parseTimer = Stopwatch.StartNew();
 			bool loaded = false;
 			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 			{
@@ -123,11 +173,16 @@ namespace RouteViewer {
 					throw Program.CurrentHost.Plugins[i].Route.LastException;
 				}
 			}
+			parseTimer.Stop();
+			RouteParseTime = parseTimer.ElapsedMilliseconds;
+			ParserParseTime = Program.CurrentHost.PluginParseTime;
+			ParserApplyTime = Program.CurrentHost.PluginApplyTime;
 
 			if (!loaded)
 			{
 				throw new Exception("No plugins capable of loading routefile " + CurrentRouteFile + " were found.");
 			}
+			Stopwatch postTimer = Stopwatch.StartNew();
 			Program.Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			Program.CurrentRoute.Atmosphere.CalculateSeaLevelConstants();
@@ -166,6 +221,8 @@ namespace RouteViewer {
 			Program.Renderer.CameraTrackFollower.UpdateAbsolute(FirstStationPosition, true, false);
 			Program.Renderer.Camera.Alignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
 			World.UpdateAbsoluteCamera(0.0);
+			postTimer.Stop();
+			PostParseTime = postTimer.ElapsedMilliseconds;
 			Complete = true;
 		}
 

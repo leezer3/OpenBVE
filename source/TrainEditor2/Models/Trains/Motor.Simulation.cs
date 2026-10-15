@@ -127,7 +127,7 @@ namespace TrainEditor2.Models.Trains
 			}
 			Simulation.TrainManager.TrainManager.PlayerTrain.Car.TractionModel.MotorSounds.Update(0.0);
 
-			Program.SoundApi.Update(deltaTime, SoundModels.Inverse);
+			Program.SoundApi.Update(deltaTime);
 
 			oldElapsedTime = nowElapsedTime;
 

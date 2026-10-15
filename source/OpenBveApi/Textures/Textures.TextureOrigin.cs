@@ -30,6 +30,14 @@ namespace OpenBveApi.Textures
 			{
 				return (PathOrigin)a == (PathOrigin)b;
 			}
+			if (a is ByteArrayOrigin && b is ByteArrayOrigin)
+			{
+				return (ByteArrayOrigin)a == (ByteArrayOrigin)b;
+			}
+			if (a is StreamingGifOrigin && b is StreamingGifOrigin)
+			{
+				return (StreamingGifOrigin)a == (StreamingGifOrigin)b;
+			}
 			if (a is BitmapOrigin && b is BitmapOrigin)
 			{
 				return (BitmapOrigin)a == (BitmapOrigin)b;
@@ -60,6 +68,14 @@ namespace OpenBveApi.Textures
 			{
 				return (PathOrigin)a != (PathOrigin)b;
 			}
+			if (a is ByteArrayOrigin && b is ByteArrayOrigin)
+			{
+				return (ByteArrayOrigin)a != (ByteArrayOrigin)b;
+			}
+			if (a is StreamingGifOrigin && b is StreamingGifOrigin)
+			{
+				return (StreamingGifOrigin)a != (StreamingGifOrigin)b;
+			}
 			if (a is BitmapOrigin && b is BitmapOrigin)
 			{
 				return (BitmapOrigin)a != (BitmapOrigin)b;
@@ -78,26 +94,41 @@ namespace OpenBveApi.Textures
 		{
 			if (obj is null)
 			{
-				return false; //Two nulls are always equal
+				return false;
 			}
 			if (ReferenceEquals(this, obj))
 			{
-				return false;
+				return true;
 			}
 
 			if (this is PathOrigin && obj is PathOrigin)
 			{
-				return (PathOrigin)this != (PathOrigin)obj;
+				return (PathOrigin)this == (PathOrigin)obj;
+			}
+			if (this is ByteArrayOrigin && obj is ByteArrayOrigin)
+			{
+				return (ByteArrayOrigin)this == (ByteArrayOrigin)obj;
+			}
+			if (this is StreamingGifOrigin && obj is StreamingGifOrigin)
+			{
+				return (StreamingGifOrigin)this == (StreamingGifOrigin)obj;
 			}
 			if (this is BitmapOrigin && obj is BitmapOrigin)
 			{
-				return (BitmapOrigin)this != (BitmapOrigin)obj;
+				return ReferenceEquals(this, obj);
 			}
 			if (this is RawOrigin && obj is RawOrigin)
 			{
-				return (RawOrigin)this != (RawOrigin)obj;
+				return ReferenceEquals(this, obj);
 			}
-			return true;
+			return false;
+		}
+
+		/// <summary>Returns the hash code for this origin.</summary>
+		/// <returns>A 32-bit signed integer hash code.</returns>
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
 		}
 	}
 }

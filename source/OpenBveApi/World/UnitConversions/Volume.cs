@@ -31,9 +31,10 @@ namespace OpenBveApi.World
 	{
 		/// <summary>Litres</summary>
 		Litres,
-
 		/// <summary>Gallons (US)</summary>
 		Gallons,
+		/// <summary>Meters cubed</summary>
+		MetersCubed
 	}
 
 	/// <summary>Implements the volume convertor</summary>
@@ -43,9 +44,10 @@ namespace OpenBveApi.World
 		{
 			BaseUnit = UnitOfVolume.Litres;
 			RegisterConversion(UnitOfVolume.Gallons, v => v / 3.78541, v => v * 3.78541);
+			RegisterConversion(UnitOfVolume.MetersCubed, v => v * 1000, v => v / 1000);
 			KnownUnits = new Dictionary<string, UnitOfVolume>
 			{
-				{ "l", UnitOfVolume.Litres }, { "litres", UnitOfVolume.Litres }, { "gal", UnitOfVolume.Gallons }, { "gals", UnitOfVolume.Gallons }, { "gallons", UnitOfVolume.Gallons }
+				{ "l", UnitOfVolume.Litres }, { "litres", UnitOfVolume.Litres }, { "gal", UnitOfVolume.Gallons }, { "gals", UnitOfVolume.Gallons }, { "gallons", UnitOfVolume.Gallons }, {"m3", UnitOfVolume.MetersCubed}, {"meterscubed", UnitOfVolume.MetersCubed}
 			};
 		}
 

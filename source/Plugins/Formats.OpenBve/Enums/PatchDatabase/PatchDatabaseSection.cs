@@ -4,6 +4,6 @@
 	{
 		RoutePatches,
 		PatchList = RoutePatches,
-		Patch,
+		Patch
 	}
 }

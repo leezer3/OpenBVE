@@ -73,7 +73,7 @@ namespace LibRender2.ShadowMapping
             GL.TexImage2D(TextureTarget.Texture2D, 0,
                 PixelInternalFormat.DepthComponent24,
                 Resolution, Resolution, 0,
-                PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
+                PixelFormat.DepthComponent, PixelType.UnsignedInt, IntPtr.Zero);
             GL.TexParameter(TextureTarget.Texture2D,
                 TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D,

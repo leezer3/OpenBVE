@@ -1,6 +1,7 @@
 using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Hosts;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenTK;
 using OpenTK.Graphics;
@@ -18,22 +19,44 @@ namespace RouteViewer
         //Deliberately specify the default constructor with various overrides
         public RouteViewer(int width, int height, GraphicsMode currentGraphicsMode, string windowTitle, GameWindowFlags @default): base (width, height, currentGraphicsMode, windowTitle, @default)
         {
+            Init();
+        }
+
+        public RouteViewer(int width, int height, GraphicsMode currentGraphicsMode, string windowTitle, GameWindowFlags @default, GraphicsContextFlags flags): base(width, height, currentGraphicsMode, windowTitle, @default, DisplayDevice.Default, 3, 3, flags)
+        {
+            if (IsApple64)
+            {
+	            Interface.CurrentOptions.ForceForwardsCompatibleContext = true;
+            }
+            Init();
+        }
+
+        private static bool IsApple64 => Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4;
+
+        private void Init()
+        {
             try
             {
-                System.Drawing.Icon ico = new System.Drawing.Icon("data\\icon.ico");
-                Icon = ico;
+                Icon = new System.Drawing.Icon("data\\icon.ico");
             }
             catch
             {
 				// Ignored- Just an icon
             }
 
-            if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+            if (IsApple64)
             {
 	            // attempted workaround for massive CPU usage when idle
 	            TargetRenderFrequency = 5.0;
 			}
-			
+        }
+
+        // OS-X needs an explicit GL3 forward-compatible context, otherwise it falls back to GL 2.1 and the 410 shaders fail
+        public static RouteViewer Create(int width, int height, GraphicsMode mode, string title)
+        {
+            return IsApple64 || Interface.CurrentOptions.ForceForwardsCompatibleContext
+	            ? new RouteViewer(width, height, mode, title, GameWindowFlags.Default, GraphicsContextFlags.ForwardCompatible)
+	            : new RouteViewer(width, height, mode, title, GameWindowFlags.Default);
         }
 
         //Default Properties
@@ -42,6 +65,35 @@ namespace RouteViewer
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
 	        base.OnUpdateFrame(e);
+
+	        // Modeless options dialog pump (cross-platform realtime preview):
+	        // the dialog only writes plain memory. WinForms messages need
+	        // explicit pumping while the GameWindow loop owns the thread
+	        // (Mono/X11 has a separate event queue, so a modeless form would
+	        // otherwise freeze), and GPU shadow reallocs run here on the GL
+	        // thread, never inside a WinForms dispatch.
+	        if (Program.OptionsDialog != null && !Program.OptionsDialog.IsDisposed)
+	        {
+		        try
+		        {
+			        System.Windows.Forms.Application.DoEvents();
+		        }
+		        catch
+		        {
+			        // Best-effort; the dialog may be mid-close
+		        }
+	        }
+	        if (Program.PendingOptionsCommit)
+	        {
+		        Program.PendingOptionsCommit = false;
+		        Program.ApplyOptionsCommit();
+	        }
+	        else if (Program.ShadowSettingsDirty && !Program.CurrentlyLoading)
+	        {
+		        Program.ShadowSettingsDirty = false;
+		        Program.Renderer.ReloadShadowSettings();
+		        Program.PreviewDirty = true;
+	        }
 
 	        if (Loading.Complete && currentlyLoading)
 	        {
@@ -69,6 +121,31 @@ namespace RouteViewer
 	            }
 	            Program.Renderer.RenderThreadJobWaiting = false;
             }
+
+            // Paused (options dialog open): freeze animations, camera, sounds
+            // and route time; present a single frame only when the preview
+            // state changed. Input events are still processed so the window
+            // and dialog stay responsive.
+            if (Program.OptionsPaused)
+            {
+	            ProcessEvents();
+	            double PausedElapsed = CPreciseTimer.GetElapsedTime();
+	            MessageManager.UpdateMessages(PausedElapsed);
+	            if (Program.ShadowSettingsDirty && !Program.CurrentlyLoading)
+	            {
+		            Program.ShadowSettingsDirty = false;
+		            Program.Renderer.ReloadShadowSettings();
+		            Program.PreviewDirty = true;
+	            }
+	            if (Program.PreviewDirty)
+	            {
+		            Program.PreviewDirty = false;
+		            Program.Renderer.RenderScene(PausedElapsed);
+		            SwapBuffers();
+	            }
+	            return;
+            }
+
 			ProcessEvents();
             double TimeElapsed = CPreciseTimer.GetElapsedTime();
 
@@ -78,7 +155,7 @@ namespace RouteViewer
 	            Game.SecondsSinceMidnight = 3600 * d.Hour + 60 * d.Minute + d.Second + 0.001 * d.Millisecond;
 	            ObjectManager.UpdateAnimatedWorldObjects(TimeElapsed, false);
 	            World.UpdateAbsoluteCamera(TimeElapsed);
-	            Program.Sounds.Update(TimeElapsed, SoundModels.Linear);
+	            Program.Sounds.Update(TimeElapsed);
             }
             Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight, Program.CurrentRoute.LightDefinitions);
             Program.Renderer.RenderScene(TimeElapsed);
@@ -93,7 +170,11 @@ namespace RouteViewer
 	        Program.Renderer.Screen.Height = Height;
 	        Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 			Game.Menu.ComputePosition();
-        }
+			Program.Renderer.Rectangle.Update();
+			Program.Renderer.OpenGlString.Update();
+			// A resize behind an open dialog must present itself (paused loop renders on-demand only).
+			Program.PreviewDirty = true;
+		}
 
         protected override void OnLoad(EventArgs e)
         {
@@ -112,7 +193,30 @@ namespace RouteViewer
 
             Program.Renderer.Initialize();
             Program.Renderer.Lighting.Initialize();
-			Program.Sounds.Initialize(SoundRange.Low);
+			try
+			{
+				Program.Sounds.Initialize(SoundRange.Low);
+			}
+			catch (DllNotFoundException ex)
+			{
+				// Missing native audio library or a corrupt install
+				// (OpenTK.dll.config not deployed): report plainly instead of
+				// dying with a stack trace (mirrors OpenBVE/Program.cs).
+				if (ex.Message == "libopenal.so.1")
+				{
+					System.Windows.Forms.MessageBox.Show(@"openAL was not found on this system." + Environment.NewLine + @"Please install libopenal1 via your distribution's package management system.", @"OpenBVE", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+				}
+				else if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows)
+				{
+					System.Windows.Forms.MessageBox.Show(@"This installation of OpenBVE is corrupt (OpenTK.dll.config could not be found)." + Environment.NewLine + @"Please reinstall OpenBVE.", @"OpenBVE", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+				}
+				else
+				{
+					System.Windows.Forms.MessageBox.Show(@"The required system library " + ex.Message + @" was not found on this system.", @"OpenBVE", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+				}
+				Exit();
+				return;
+			}
 			Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
             if (Program.processCommandLineArgs)
             {
@@ -132,18 +236,17 @@ namespace RouteViewer
 	    {
 			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_rv.cfg"));
 			// Minor hack:
-			// If we are currently loading, catch the first close event, and terminate the loader threads
-			// before actually closing the game-window.
-			if (Loading.Cancel)
-			{
-				return;
-			}
-			Program.Renderer.VisibilityThreadShouldRun = false;
+			// If we are currently loading, catch the close event, and terminate the loader threads
+			// before actually closing the game-window. DeInitialize (which flushes caches)
+			// must only run on the final close, otherwise GL resources are disposed
+			// while the window / loader is still alive.
 			if (!Loading.Complete && Program.CurrentRouteFile != null)
 			{
 				e.Cancel = true;
 				Loading.Cancel = true;
+				return;
 			}
+			Program.Renderer.VisibilityThreadShouldRun = false;
 			Program.Renderer.DeInitialize();
 			if (Program.CurrentHost.MonoRuntime)
 			{
@@ -207,6 +310,7 @@ namespace RouteViewer
 				Program.Renderer.PopMatrix(MatrixMode.Projection);
 				// Reinitialize shadows after route loading completes
 				Program.Renderer.ReloadShadowSettings();
+				Program.ShadowSettingsDirty = false;
 			}
 			else
 			{

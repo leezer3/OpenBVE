@@ -12,10 +12,41 @@ namespace RouteViewer
 	/// <summary>Holds the program specific options</summary>
 	internal class Options : BaseOptions
 	{
+		private ObjectOptimizationMode objectOptimizationMode;
+
 		internal string RouteSearchDirectory;
+		internal int FPSLimit;
+
+		/// <summary>
+		/// The mode of optimization to be performed on an object
+		/// </summary>
+		internal ObjectOptimizationMode ObjectOptimizationMode
+		{
+			get => objectOptimizationMode;
+			set
+			{
+				objectOptimizationMode = value;
+
+				switch (value)
+				{
+					case ObjectOptimizationMode.None:
+						ObjectOptimizationBasicThreshold = 0;
+						break;
+					case ObjectOptimizationMode.Low:
+						ObjectOptimizationBasicThreshold = 1000;
+						break;
+					case ObjectOptimizationMode.High:
+						ObjectOptimizationBasicThreshold = 10000;
+						break;
+				}
+			}
+		}
 
 		internal Options()
 		{
+			VerticalSynchronization = true;
+			FPSLimit = 0;
+			ObjectOptimizationMode = ObjectOptimizationMode.Low;
 			ViewingDistance = 600;
 			SoundNumber = 16;
 		}
@@ -33,6 +64,7 @@ namespace RouteViewer
 				Builder.AppendLine();
 				Builder.AppendLine("[display]");
 				Builder.AppendLine("vsync = " + (VerticalSynchronization ? "true" : "false"));
+				Builder.AppendLine("fpslimit = " + FPSLimit.ToString(Culture));
 				Builder.AppendLine("windowWidth = " + Program.Renderer.Screen.Width.ToString(Culture));
 				Builder.AppendLine("windowHeight = " + Program.Renderer.Screen.Height.ToString(Culture));
 				Builder.AppendLine("viewingdistance = " + ViewingDistance);
@@ -53,6 +85,9 @@ namespace RouteViewer
 				Builder.AppendLine("shadowstrength = " + ShadowStrength.ToString("0.00", Culture));
 				Builder.AppendLine("shadowbias = " + ShadowBias.ToString("0.000000", Culture));
 				Builder.AppendLine("shadownormalbias = " + ShadowNormalBias.ToString("0.00", Culture));
+				Builder.AppendLine("shadowfiltercascades = " + (ShadowFilterCascades ? "true" : "false"));
+				Builder.AppendLine("shadowsmooth = " + (ShadowSmooth ? "true" : "false"));
+				Builder.AppendLine("shadowfilterradius = " + ShadowFilterRadius.ToString(Culture));
 				Builder.AppendLine("lightazimuth = " + LightAzimuth.ToString(Culture));
 				Builder.AppendLine("lightelevation = " + LightElevation.ToString(Culture));
 				Builder.AppendLine();
@@ -60,11 +95,14 @@ namespace RouteViewer
 				Builder.AppendLine("showlogo = " + (LoadingLogo ? "true" : "false"));
 				Builder.AppendLine("showprogressbar = " + (LoadingProgressBar ? "true" : "false"));
 				Builder.AppendLine("showbackground = " + (LoadingBackground ? "true" : "false"));
-				Builder.AppendLine("[parsers]");
-				Builder.AppendLine("xObject = " + (int)CurrentXParser);
-				Builder.AppendLine("objObject = " + (int)CurrentObjParser);
-				Builder.AppendLine();
-				Builder.AppendLine("[Folders]");
+			Builder.AppendLine("[objectOptimization]");
+			Builder.AppendLine($"mode = {ObjectOptimizationMode}");
+			Builder.AppendLine();
+			Builder.AppendLine("[parsers]");
+			Builder.AppendLine("xObject = " + (int)CurrentXParser);
+			Builder.AppendLine("objObject = " + (int)CurrentObjParser);
+			Builder.AppendLine();
+			Builder.AppendLine("[Folders]");
 				Builder.AppendLine($"routesearch = {RouteSearchDirectory}");
 				File.WriteAllText(fileName, Builder.ToString(), new System.Text.UTF8Encoding(true));
 			}
@@ -111,6 +149,11 @@ namespace RouteViewer
 							block.TryGetValue(OptionsKey.WindowWidth, ref Interface.CurrentOptions.WindowWidth, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.WindowHeight, ref Interface.CurrentOptions.WindowHeight, NumberRange.Positive);
 							block.GetValue(OptionsKey.VSync, out Interface.CurrentOptions.VerticalSynchronization);
+							block.GetValue(OptionsKey.FPSLimit, out Interface.CurrentOptions.FPSLimit);
+							if (Interface.CurrentOptions.FPSLimit < 0)
+							{
+								Interface.CurrentOptions.FPSLimit = 0;
+							}
 							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.QuadLeafSize, ref Interface.CurrentOptions.QuadTreeLeafSize, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.NearClipBase, ref Interface.CurrentOptions.NearClipBase, NumberRange.Positive);
@@ -142,6 +185,19 @@ namespace RouteViewer
 							block.TryGetValue(OptionsKey.ShadowStrength, ref Interface.CurrentOptions.ShadowStrength, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.ShadowBias, ref Interface.CurrentOptions.ShadowBias);
 							block.TryGetValue(OptionsKey.ShadowNormalBias, ref Interface.CurrentOptions.ShadowNormalBias);
+							if (Interface.CurrentOptions.ShadowNormalBias < 0.0) Interface.CurrentOptions.ShadowNormalBias = 0.0;
+							if (Interface.CurrentOptions.ShadowNormalBias > 4.0) Interface.CurrentOptions.ShadowNormalBias = 4.0;
+							if (block.GetValue(OptionsKey.ShadowFilterCascades, out string sfcVal))
+							{
+								Interface.CurrentOptions.ShadowFilterCascades = sfcVal.Trim().Equals("true", StringComparison.OrdinalIgnoreCase) || sfcVal.Trim() == "1";
+							}
+							if (block.GetValue(OptionsKey.ShadowSmooth, out string smoothVal))
+							{
+								Interface.CurrentOptions.ShadowSmooth = smoothVal.Trim().Equals("true", StringComparison.OrdinalIgnoreCase) || smoothVal.Trim() == "1";
+							}
+							block.TryGetValue(OptionsKey.ShadowFilterRadius, ref Interface.CurrentOptions.ShadowFilterRadius);
+							if (Interface.CurrentOptions.ShadowFilterRadius < 0.5) Interface.CurrentOptions.ShadowFilterRadius = 0.5;
+							if (Interface.CurrentOptions.ShadowFilterRadius > 3.0) Interface.CurrentOptions.ShadowFilterRadius = 3.0;
 							block.TryGetValue(OptionsKey.LightAzimuth, ref Interface.CurrentOptions.LightAzimuth);
 							block.TryGetValue(OptionsKey.LightElevation, ref Interface.CurrentOptions.LightElevation);
 							break;
@@ -150,12 +206,16 @@ namespace RouteViewer
 							block.GetValue(OptionsKey.ShowProgressBar, out Interface.CurrentOptions.LoadingProgressBar);
 							block.GetValue(OptionsKey.ShowBackground, out Interface.CurrentOptions.LoadingBackground);
 							break;
-						case OptionsSection.Parsers:
-							block.GetEnumValue(OptionsKey.XObject, out Interface.CurrentOptions.CurrentXParser);
-							block.GetEnumValue(OptionsKey.ObjObject, out Interface.CurrentOptions.CurrentObjParser);
-							block.GetValue(OptionsKey.GDIPlus, out Interface.CurrentOptions.UseGDIDecoders);
-							break;
-						case OptionsSection.Folders:
+					case OptionsSection.Parsers:
+						block.GetEnumValue(OptionsKey.XObject, out Interface.CurrentOptions.CurrentXParser);
+						block.GetEnumValue(OptionsKey.ObjObject, out Interface.CurrentOptions.CurrentObjParser);
+						block.GetValue(OptionsKey.GDIPlus, out Interface.CurrentOptions.UseGDIDecoders);
+						break;
+					case OptionsSection.ObjectOptimization:
+						block.GetEnumValue(OptionsKey.Mode, out ObjectOptimizationMode mode);
+						Interface.CurrentOptions.ObjectOptimizationMode = mode;
+						break;
+					case OptionsSection.Folders:
 							block.GetValue(OptionsKey.RouteSearch, out string folder);
 							if (Directory.Exists(folder))
 							{

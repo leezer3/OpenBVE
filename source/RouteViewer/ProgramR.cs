@@ -9,6 +9,7 @@ using LibRender2.Cameras;
 using LibRender2.Menu;
 using LibRender2.Overlays;
 using LibRender2.Screens;
+using LibRender2.Textures;
 using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -23,6 +24,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using RouteManager2;
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Runtime;
@@ -48,7 +50,6 @@ namespace RouteViewer
 		private static bool ShiftPressed = false;
 		private static bool ControlPressed = false;
 		private static bool AltPressed = false;
-		private static bool RPressed = false;
 
 		// mouse
 		private static int MouseButton;
@@ -65,6 +66,27 @@ namespace RouteViewer
 		internal static TrainManager TrainManager;
 
 		internal static formRailPaths pathForm;
+
+		// Live options-preview state. The modeless options dialog only writes
+		// plain memory; GPU work (shadow realloc) is flagged here and executed
+		// at the top of the render-loop frame, on the GL thread.
+		internal static volatile bool ShadowSettingsDirty = false;
+		internal static volatile bool PendingOptionsCommit = false;
+		// Set by the modeless options dialog on every sun / shadow change.
+		// While paused the scene renders only when this is set (one frame per
+		// change) instead of continuously.
+		internal static volatile bool PreviewDirty = false;
+		internal static FormOptions OptionsDialog = null;
+		// Pre-dialog shadow snapshot for the deferred post-OK path.
+		internal static ShadowMapResolution PrevShadowResolution;
+		internal static ShadowDistance PrevShadowDistance;
+		internal static ShadowCascadeCount PrevShadowCascades;
+		internal static double PrevShadowStrength;
+		internal static double PrevShadowBias;
+		internal static double PrevShadowNormalBias;
+		internal static bool PrevShadowFilterCascades;
+		internal static bool PrevShadowSmooth;
+		internal static double PrevShadowFilterRadius;
 
 		[System.Runtime.InteropServices.DllImport("user32.dll")]
 		private static extern bool SetProcessDPIAware();
@@ -96,6 +118,20 @@ namespace RouteViewer
 
 			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
 			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
+			// Apply persistent sun direction (same formula as options dialog)
+			try
+			{
+				double savedAzimuthRad = Interface.CurrentOptions.LightAzimuth * Math.PI / 180.0;
+				double savedElevationRad = Interface.CurrentOptions.LightElevation * Math.PI / 180.0;
+				float slx = (float)(-Math.Cos(savedElevationRad) * Math.Sin(savedAzimuthRad));
+				float sly = (float)Math.Sin(savedElevationRad);
+				float slz = (float)(-Math.Cos(savedElevationRad) * Math.Cos(savedAzimuthRad));
+				Renderer.Lighting.OptionLightPosition = new OpenBveApi.Math.Vector3(slx, sly, slz);
+			}
+			catch
+			{
+				// Keep default lighting on failure
+			}
 			TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
 			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, TrainManager, Renderer))
 			{
@@ -174,10 +210,8 @@ namespace RouteViewer
 				SetProcessDPIAware();
 			}
 
-			string folder = Program.FileSystem.GetDataFolder("Languages");
+			string folder = FileSystem.GetDataFolder("Languages");
 			Translations.LoadLanguageFiles(folder);
-			Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
-			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// application
 			Renderer.GraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
 			if (Renderer.Screen.Width == 0 || Renderer.Screen.Height == 0)
@@ -186,12 +220,17 @@ namespace RouteViewer
 				Renderer.Screen.Width = 1024;
 				Renderer.Screen.Height = 768;
 			}
-			Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
-			Renderer.GameWindow = new RouteViewer(Renderer.Screen.Width, Renderer.Screen.Height, Renderer.GraphicsMode, "Route Viewer", GameWindowFlags.Default);
+			Renderer.CameraTrackFollower = new TrackFollower(CurrentHost);
+			Renderer.GameWindow = RouteViewer.Create(Renderer.Screen.Width, Renderer.Screen.Height, Renderer.GraphicsMode, "Route Viewer");
 			Renderer.GameWindow.Visible = true;
 			Renderer.GameWindow.TargetUpdateFrequency = 0;
 			Renderer.GameWindow.TargetRenderFrequency = 0;
 			Renderer.GameWindow.Title = "Route Viewer";
+			Renderer.GameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? VSyncMode.On : VSyncMode.Off;
+			if (Interface.CurrentOptions.FPSLimit > 0)
+			{
+				Renderer.GameWindow.TargetRenderFrequency = Interface.CurrentOptions.FPSLimit;
+			}
 			processCommandLineArgs = true;
 			Renderer.GameWindow.Run();
 			//Unload
@@ -205,6 +244,10 @@ namespace RouteViewer
 				return false;
 			}
 			Renderer.UpdateViewport(ViewportChangeMode.NoChange);
+			bool isReload = Loading.Complete;
+			Host.TextureRegistrationTime = 0;
+			TextureManager.TextureDecodeTime = 0;
+			Stopwatch loadTimer = Stopwatch.StartNew();
 			bool result;
 			try
 			{
@@ -223,10 +266,26 @@ namespace RouteViewer
 				result = false;
 				CurrentRouteFile = null;
 			}
+			loadTimer.Stop();
 
 			Renderer.Camera.QuadTreeLeaf = null;
 			Renderer.Lighting.Initialize();
+			Stopwatch visibilityTimer = Stopwatch.StartNew();
 			Renderer.InitializeVisibility();
+			visibilityTimer.Stop();
+
+			if (result)
+			{
+				Interface.AddMessage(MessageType.Information, false,
+					(isReload ? "Route reloaded" : "Route loaded") + " in " + loadTimer.ElapsedMilliseconds + " ms" +
+					" | parser: " + Loading.RouteParseTime + " ms (parse: " + Loading.ParserParseTime + " ms, apply: " + Loading.ParserApplyTime + " ms)" +
+					" | textures: " + Host.TextureRegistrationTime + " ms (decode: " + TextureManager.TextureDecodeTime + " ms)" +
+					" | setup: " + Loading.PostParseTime + " ms, visibility: " + visibilityTimer.ElapsedMilliseconds + " ms.");
+			}
+			else if (Loading.Cancel)
+			{
+				Interface.AddMessage(MessageType.Information, false, "Route load cancelled after " + loadTimer.ElapsedMilliseconds + " ms.");
+			}
 			for (int i = 0; i < CurrentRoute.Tracks.Count; i++)
 			{
 				int key = CurrentRoute.Tracks.ElementAt(i).Key;
@@ -240,11 +299,10 @@ namespace RouteViewer
 					}
 					else
 					{
-						Random randomGenerator = new Random();
 						int colorIdx = 5; // known value already in list to make our while loop easy
 						while (Renderer.usedTrackColors.Contains(colorIdx))
 						{
-							colorIdx = randomGenerator.Next(0, 255);
+							colorIdx = CurrentHost.Random.Next(0, 255);
 						}
 						Renderer.usedTrackColors.Add(colorIdx);
 						Renderer.trackColors.Add(key, new RailPath(CurrentHost, Renderer, key, CurrentRoute.BlockLength, ColorPalettes.Windows256ColorPalette[colorIdx])); //use the 256 color Windows palette for a decent set of contrasting colors	
@@ -254,7 +312,115 @@ namespace RouteViewer
 			}
 
 			Renderer.CurrentInterface = InterfaceType.Normal;
+			if (result)
+			{
+				// Initial sun must follow the route file, not the persisted options.
+				// Sync in-memory options from the route so the dialog sliders open at the correct position.
+				// No .cfg write here. User slider moves remain a free in-memory override (see FormOptions).
+				SyncSunFromRoute();
+			}
+			// A reload behind an open dialog must present itself (paused loop renders on-demand only).
+			PreviewDirty = true;
 			return result;
+		}
+
+		/// <summary>Whether the options dialog is open (scene updates paused, preview on-demand).</summary>
+		internal static bool OptionsPaused => OptionsDialog != null && !OptionsDialog.IsDisposed;
+
+		/// <summary>Freezes camera drift and flags one preview frame (dialog opened).</summary>
+		internal static void EnterOptionsPause()
+		{
+			ResetCameraDrift();
+			PreviewDirty = true;
+		}
+
+		/// <summary>Clears any input accumulated while paused and flags one preview frame (dialog closed).</summary>
+		internal static void ExitOptionsPause()
+		{
+			ResetCameraDrift();
+			PreviewDirty = true;
+		}
+
+		/// <summary>Zeroes held camera velocities so keys pressed while paused never jump on resume.</summary>
+		private static void ResetCameraDrift()
+		{
+			if (Renderer == null)
+			{
+				return;
+			}
+			Renderer.Camera.AlignmentDirection.TrackPosition = 0;
+			Renderer.Camera.AlignmentDirection.Position.X = 0;
+			Renderer.Camera.AlignmentDirection.Position.Y = 0;
+			Renderer.Camera.AlignmentDirection.Yaw = 0.0;
+			Renderer.Camera.AlignmentDirection.Pitch = 0.0;
+			Renderer.Camera.AlignmentDirection.Roll = 0.0;
+			Renderer.Camera.AlignmentDirection.Zoom = 0.0;
+			MouseButton = 0;
+		}
+
+		/// <summary>Captures pre-dialog shadow state for the deferred post-OK compare.</summary>
+		internal static void CaptureOptionsSnapshot()
+		{
+			PrevShadowResolution = Interface.CurrentOptions.ShadowResolution;
+			PrevShadowDistance = Interface.CurrentOptions.ShadowDrawDistance;
+			PrevShadowCascades = Interface.CurrentOptions.ShadowCascades;
+			PrevShadowStrength = Interface.CurrentOptions.ShadowStrength;
+			PrevShadowBias = Interface.CurrentOptions.ShadowBias;
+			PrevShadowNormalBias = Interface.CurrentOptions.ShadowNormalBias;
+			PrevShadowFilterCascades = Interface.CurrentOptions.ShadowFilterCascades;
+			PrevShadowSmooth = Interface.CurrentOptions.ShadowSmooth;
+			PrevShadowFilterRadius = Interface.CurrentOptions.ShadowFilterRadius;
+		}
+
+		/// <summary>Runs the post-OK reload. Called at the top of a render-loop
+		/// frame, never nested inside a WinForms dispatch.</summary>
+		internal static void ApplyOptionsCommit()
+		{
+			UpdateGraphicsSettings();
+			if (PrevShadowResolution != Interface.CurrentOptions.ShadowResolution ||
+			    PrevShadowDistance != Interface.CurrentOptions.ShadowDrawDistance ||
+			    PrevShadowCascades != Interface.CurrentOptions.ShadowCascades ||
+			    Math.Abs(PrevShadowStrength - Interface.CurrentOptions.ShadowStrength) > 0.01f ||
+			    Math.Abs(PrevShadowBias - Interface.CurrentOptions.ShadowBias) > 0.000001f ||
+			    Math.Abs(PrevShadowNormalBias - Interface.CurrentOptions.ShadowNormalBias) > 0.01f ||
+			    PrevShadowSmooth != Interface.CurrentOptions.ShadowSmooth ||
+			    Math.Abs(PrevShadowFilterRadius - Interface.CurrentOptions.ShadowFilterRadius) > 0.000001f)
+			{
+				Renderer.ReloadShadowSettings();
+			}
+			ShadowSettingsDirty = false;
+		}
+
+		/// <summary>Syncs in-memory sun options from the loaded route (route is the source of truth on load).</summary>
+		internal static void SyncSunFromRoute()
+		{
+			try
+			{
+				if (Renderer == null || Interface.CurrentOptions == null || CurrentRoute == null)
+				{
+					return;
+				}
+				// Reproduce exactly what the render loop will show: interpolate dynamic lighting
+				// at the route's current time; falls back to Atmosphere value when static.
+				Renderer.Lighting.UpdateLighting(CurrentRoute.SecondsSinceMidnight, CurrentRoute.LightDefinitions);
+				var pos = Renderer.Lighting.OptionLightPosition;
+				double len = Math.Sqrt(pos.X * pos.X + pos.Y * pos.Y + pos.Z * pos.Z);
+				if (len < 1e-6)
+				{
+					return;
+				}
+				double ny = Math.Max(-1.0, Math.Min(1.0, pos.Y / len));
+				double elevation = Math.Asin(ny) * 180.0 / Math.PI;
+				double azimuth = Math.Atan2(-pos.X / len, -pos.Z / len) * 180.0 / Math.PI;
+				if (azimuth > 180.0) azimuth -= 360.0;
+				if (azimuth < -180.0) azimuth += 360.0;
+				Interface.CurrentOptions.LightAzimuth = Math.Max(-180.0, Math.Min(180.0, azimuth));
+				Interface.CurrentOptions.LightElevation = Math.Max(-90.0, Math.Min(90.0, elevation));
+			}
+			catch
+			{
+				// Best-effort
+			}
 		}
 
 		// jump to station
@@ -316,7 +482,7 @@ namespace RouteViewer
 
 		internal static void MouseWheelEvent(object sender, MouseWheelEventArgs e)
 		{
-			switch (Program.Renderer.CurrentInterface)
+			switch (Renderer.CurrentInterface)
 			{
 				case InterfaceType.Menu:
 				case InterfaceType.GLMainMenu:
@@ -362,18 +528,19 @@ namespace RouteViewer
 					}
 					break;
 				default:
-					if (e.Button == OpenTK.Input.MouseButton.Left)
+					switch (e.Button)
 					{
-						MouseButton = e.Mouse.LeftButton == ButtonState.Pressed ? 1 : 0;
+						case OpenTK.Input.MouseButton.Left:
+							MouseButton = e.Mouse.LeftButton == ButtonState.Pressed ? 1 : 0;
+							break;
+						case OpenTK.Input.MouseButton.Right:
+							MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 2 : 0;
+							break;
+						case OpenTK.Input.MouseButton.Middle:
+							MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 3 : 0;
+							break;
 					}
-					if (e.Button == OpenTK.Input.MouseButton.Right)
-					{
-						MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 2 : 0;
-					}
-					if (e.Button == OpenTK.Input.MouseButton.Middle)
-					{
-						MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 3 : 0;
-					}
+
 					previousMouseState = Mouse.GetState();
 					if (MouseButton == 0)
 					{
@@ -392,7 +559,7 @@ namespace RouteViewer
 
 		internal static void MouseMovement()
 		{
-			if (MouseButton == 0 || Program.Renderer.CurrentInterface != InterfaceType.Normal) return;
+			if (MouseButton == 0 || Renderer.CurrentInterface != InterfaceType.Normal) return;
 
 			currentMouseState = Mouse.GetState();
 			if (currentMouseState != previousMouseState)
@@ -641,31 +808,12 @@ namespace RouteViewer
 						break;
 					}
 
-					// Shadows
-					var prevShadowRes = Interface.CurrentOptions.ShadowResolution;
-					var prevShadowDist = Interface.CurrentOptions.ShadowDrawDistance;
-					var prevShadowCasc = Interface.CurrentOptions.ShadowCascades;
-					var prevShadowStr = Interface.CurrentOptions.ShadowStrength;
-					var prevShadowBias = Interface.CurrentOptions.ShadowBias;
-					var prevShadowNormalBias = Interface.CurrentOptions.ShadowNormalBias;
-
-					if (FormOptions.ShowOptions() == DialogResult.OK)
-					{
-						UpdateGraphicsSettings();
-						if (prevShadowRes != Interface.CurrentOptions.ShadowResolution ||
-						    prevShadowDist != Interface.CurrentOptions.ShadowDrawDistance ||
-						    prevShadowCasc != Interface.CurrentOptions.ShadowCascades ||
-						    Math.Abs(prevShadowStr - Interface.CurrentOptions.ShadowStrength) > 0.01f ||
-						    Math.Abs(prevShadowBias - Interface.CurrentOptions.ShadowBias) > 0.000001f ||
-						    Math.Abs(prevShadowNormalBias - Interface.CurrentOptions.ShadowNormalBias) > 0.01f)
-						{
-							Program.Renderer.ReloadShadowSettings();
-                        }
-					}
+					// Modeless: returns immediately, preview stays live behind
+					// the dialog; the post-OK reload runs deferred via
+					// PendingOptionsCommit in the render loop. Camera drift
+					// reset lives in EnterOptionsPause (called by ShowOptions).
+					FormOptions.ShowOptions();
 					Application.DoEvents();
-					Renderer.Camera.AlignmentDirection.TrackPosition = 0;
-					Renderer.Camera.AlignmentDirection.Position.X = 0;
-					Renderer.Camera.AlignmentDirection.Position.Y = 0;
 					break;
 				case Key.F9:
 					if (CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
@@ -675,7 +823,7 @@ namespace RouteViewer
 						return;
 					}
 
-					if (Interface.LogMessages.Count != 0)
+					if (Interface.GetLogSnapshot().Count != 0)
 					{
 						formMessages.ShowMessages();
 						Application.DoEvents();
@@ -689,17 +837,17 @@ namespace RouteViewer
 					break;
 				case Key.A:
 				case Key.Keypad4:
-					Renderer.Camera.AlignmentDirection.Position.X = -CameraProperties.ExteriorTopSpeed * speedModified;
+					Renderer.Camera.Move(Translations.Command.CameraMoveLeft, speedModified);
 					break;
 				case Key.D:
 				case Key.Keypad6:
-					Renderer.Camera.AlignmentDirection.Position.X = CameraProperties.ExteriorTopSpeed * speedModified;
+					Renderer.Camera.Move(Translations.Command.CameraMoveRight, speedModified);
 					break;
 				case Key.Keypad2:
-					Renderer.Camera.AlignmentDirection.Position.Y = -CameraProperties.ExteriorTopSpeed * speedModified;
+					Renderer.Camera.Move(Translations.Command.CameraMoveDown, speedModified);
 					break;
 				case Key.Keypad8:
-					Renderer.Camera.AlignmentDirection.Position.Y = CameraProperties.ExteriorTopSpeed * speedModified;
+					Renderer.Camera.Move(Translations.Command.CameraMoveUp, speedModified);
 					break;
 				case Key.W:
 				case Key.Keypad9:
@@ -777,9 +925,6 @@ namespace RouteViewer
 				case Key.I:
 					Renderer.OptionInterface = !Renderer.OptionInterface;
 					break;
-				case Key.M:
-					//SoundManager.Mute = !SoundManager.Mute;
-					break;
 				case Key.Plus:
 				case Key.KeypadPlus:
 					if (!JumpToPositionEnabled)
@@ -841,19 +986,19 @@ namespace RouteViewer
 						if (JumpToPositionValue.Length != 0)
 						{
 							int direction;
-							if (JumpToPositionValue[0] == '-')
+							switch (JumpToPositionValue[0])
 							{
-								JumpToPositionValue = JumpToPositionValue.Substring(1);
-								direction = -1;
-							}
-							else if (JumpToPositionValue[0] == '+')
-							{
-								JumpToPositionValue = JumpToPositionValue.Substring(1);
-								direction = 1;
-							}
-							else
-							{
-								direction = 0;
+								case '-':
+									JumpToPositionValue = JumpToPositionValue.Substring(1);
+									direction = -1;
+									break;
+								case '+':
+									JumpToPositionValue = JumpToPositionValue.Substring(1);
+									direction = 1;
+									break;
+								default:
+									direction = 0;
+									break;
 							}
 							if (double.TryParse(JumpToPositionValue, NumberStyles.Float, CultureInfo.InvariantCulture, out double value))
 							{
@@ -918,8 +1063,6 @@ namespace RouteViewer
 						}
 
 					}
-					
-					//pathForm.ShowDialog();
 					break;
 			}
 		}
@@ -972,9 +1115,6 @@ namespace RouteViewer
 				case Key.KeypadPeriod:
 					Renderer.Camera.AlignmentDirection.Zoom = 0.0;
 					break;
-				case Key.R:
-					RPressed = false;
-					break;
 			}
 		}
 
@@ -982,7 +1122,7 @@ namespace RouteViewer
 		internal static void UpdateCaption() {
 			if (CurrentRouteFile != null)
 			{
-				Renderer.GameWindow.Title = Program.CurrentlyLoading ? @"Loading: " + System.IO.Path.GetFileName(CurrentRouteFile) + " - " + Application.ProductName : System.IO.Path.GetFileName(CurrentRouteFile) + " - " + Application.ProductName;
+				Renderer.GameWindow.Title = CurrentlyLoading ? @"Loading: " + System.IO.Path.GetFileName(CurrentRouteFile) + " - " + Application.ProductName : System.IO.Path.GetFileName(CurrentRouteFile) + " - " + Application.ProductName;
 			} else
 			{
 				Renderer.GameWindow.Title = Application.ProductName;

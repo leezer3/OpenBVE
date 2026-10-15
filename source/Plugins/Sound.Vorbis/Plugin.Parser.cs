@@ -11,6 +11,7 @@ namespace Plugin
 		/// <returns>The raw sound data.</returns>
 		private static Sound LoadFromFile(string fileName)
 		{
+			
 			using (VorbisWaveReader reader = new VorbisWaveReader(fileName))
 			{
 				int sampleCount = (int)reader.Length / (reader.WaveFormat.Channels * sizeof(float));

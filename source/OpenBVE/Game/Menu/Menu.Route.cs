@@ -267,7 +267,7 @@ namespace OpenBve
 					}
 				}
 
-				routeMapTexture = new Texture(Illustrations.CreateRouteMap((int)routePictureBox.Size.X, (int)routePictureBox.Size.Y, false, out _));
+				routeMapTexture = new Texture(Illustrations.CreateRouteMap((int)routePictureBox.Size.X, (int)routePictureBox.Size.Y, false, out _, font: Program.Renderer.Fonts.NormalFont.Font));
 				nextImageButton.IsVisible = true;
 				previousImageButton.IsVisible = true;
 				routePictureBox.Texture = routeImageTexture;

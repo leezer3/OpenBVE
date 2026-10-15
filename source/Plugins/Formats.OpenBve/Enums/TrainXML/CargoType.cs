@@ -4,6 +4,6 @@
 	{
 		Passengers,
 		Freight,
-		None,
+		None
 	}
 }

@@ -22,6 +22,8 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+// ReSharper disable CompareOfFloatsByEqualityOperator
+
 using OpenBveApi.Math;
 
 namespace OpenBveApi.Objects
@@ -90,8 +92,8 @@ namespace OpenBveApi.Objects
 
 			Vertex v = obj as Vertex;
 			if (v == null) return false;
-			if (v.Coordinates.X != Coordinates.X | v.Coordinates.Y != Coordinates.Y | v.Coordinates.Z != Coordinates.Z) return false;
-			if (v.TextureCoordinates.X != TextureCoordinates.X | v.TextureCoordinates.Y != TextureCoordinates.Y) return false;
+			if (v.Coordinates.X != Coordinates.X || v.Coordinates.Y != Coordinates.Y || v.Coordinates.Z != Coordinates.Z) return false;
+			if (v.TextureCoordinates.X != TextureCoordinates.X || v.TextureCoordinates.Y != TextureCoordinates.Y) return false;
 			return true;
 		}
 

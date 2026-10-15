@@ -75,7 +75,7 @@ namespace Route.Bve5
 			newStation.ReopenDoor = ReopenDoor;
 			newStation.ReopenStationLimit = 5;
 			newStation.InterferenceInDoor = InterferenceInDoor;
-			newStation.MaxInterferingObjectRate = Plugin.RandomNumberGenerator.Next(1, 99);
+			newStation.MaxInterferingObjectRate = Plugin.CurrentHost.Random.Next(1, 99);
 		}
 	}
 }

@@ -39,16 +39,18 @@ namespace RouteManager2
 
 		public int RouteMinX, RouteMaxX, RouteMinZ, RouteMaxZ;
 
+		public Font Font;
+
 		public void LoadInformation()
 		{
 			lock (BaseRenderer.GdiPlusLock)
 			{
-				RouteMap = Illustrations.CreateRouteMap(500, 500, true, out _);
+				RouteMap = Illustrations.CreateRouteMap(500, 500, true, out _, font: Font);
 				RouteMinX = Illustrations.LastRouteMinX;
 				RouteMaxX = Illustrations.LastRouteMaxX;
 				RouteMinZ = Illustrations.LastRouteMinZ;
 				RouteMaxZ = Illustrations.LastRouteMaxZ;
-				GradientProfile = Illustrations.CreateRouteGradientProfile(500, 500, true);
+				GradientProfile = Illustrations.CreateRouteGradientProfile(500, 500, true, font: Font);
 				GradientMinTrack = Illustrations.LastGradientMinTrack;
 				GradientMaxTrack = Illustrations.LastGradientMaxTrack;
 			}

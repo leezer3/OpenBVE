@@ -1389,6 +1389,12 @@
 						<source>Enabled</source>
 						<target>Ligado</target>
 					</trans-unit>
+					<trans-unit id="display_fpslimit">
+						<source>FPS Limit:</source>
+					</trans-unit>
+					<trans-unit id="display_fpslimit_unlimited">
+						<source>Unlimited</source>
+					</trans-unit>
 					<trans-unit id="display_window">
 						<source>Window mode</source>
 						<target>Modo de janela</target>
@@ -1612,10 +1618,6 @@
 					<trans-unit id="advanced_load_advance">
 						<source>Load in advance</source>
 						<target>Carregar antecipadamente</target>
-					</trans-unit>
-					<trans-unit id="advanced_is_use_new_renderer">
-						<source>Enable the new renderer</source>
-						<target>Activar o novo renderizador</target>
 					</trans-unit>
 					<trans-unit id="advanced_disable_displaylists">
 						<source>Disable OpenGL display lists</source>

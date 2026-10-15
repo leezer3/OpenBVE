@@ -175,7 +175,7 @@ namespace OpenBve
 										break;
 									case Translations.Command.MiscMute:
 										Program.Sounds.GlobalMute = !Program.Sounds.GlobalMute;
-										Program.Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
+										Program.Sounds.Update(TimeElapsed);
 										break;
 									case Translations.Command.SwitchMenu:
 										Program.Renderer.CurrentInterface = InterfaceType.SwitchChangeMap;

@@ -23,8 +23,10 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -34,6 +36,12 @@ namespace Route.Bve5
 {
 	internal static partial class Bve5ScenarioParser
 	{
+		/// <summary>A single deferred structure load collected from the structure list.</summary>
+		private struct PendingStructureEntry
+		{
+			internal string Key;
+			internal string FilePath;
+		}
 		private static void LoadStructureList(string FileName, bool PreviewOnly, string StructureListPath, RouteData RouteData)
 		{
 			RouteData.Objects = new ObjectDictionary();
@@ -63,6 +71,9 @@ namespace Route.Bve5
 				// Some routes with badly optimized objects- Use a much lower threshold to avoid killing the renderer
 				Plugin.CurrentOptions.ObjectOptimizationBasicThreshold = 2000;
 			}
+			// Pass 1 (sequential, cheap): parse lines and emit warnings / errors in file order,
+			// collecting the entries whose object files actually need decoding.
+			List<PendingStructureEntry> entries = new List<PendingStructureEntry>();
 			for (int i = 1; i < Lines.Length; i++)
 			{
 				//Cycle through the list of objects
@@ -114,9 +125,127 @@ namespace Route.Bve5
 					continue;
 				}
 
-				System.Text.Encoding ObjectEncoding = TextEncoding.GetSystemEncodingFromFile(FilePath);
-				Plugin.CurrentHost.LoadObject(FilePath, ObjectEncoding, out UnifiedObject obj);
-				RouteData.Objects.Add(Key, obj);
+				entries.Add(new PendingStructureEntry { Key = Key, FilePath = FilePath });
+			}
+			// Pass 2: decode the (deduplicated) object files in parallel, then commit per key
+			// in file order with the old loop's semantics (failed loads still store null).
+			LoadAndCommitStructureEntries(RouteData, entries);
+		}
+
+		/// <summary>Computes worker count from machine capability, reserving one thread for the loading screen on small machines.</summary>
+		private static int ComputeStructureLoadDop()
+		{
+			int cpu = Environment.ProcessorCount;
+			if (cpu <= 4)
+			{
+				return Math.Max(1, cpu - 1);
+			}
+			return Math.Min(8, cpu);
+		}
+
+		/// <summary>Decodes pending structure objects in parallel, then commits them per key in file order.</summary>
+		private static void LoadAndCommitStructureEntries(RouteData routeData, List<PendingStructureEntry> entries)
+		{
+			int n = entries.Count;
+			if (n == 0 || plugin.Cancel)
+			{
+				return;
+			}
+
+			// Dedupe by exact path: each unique file is decoded once, shared files are cloned per key below.
+			List<string> uniquePaths = new List<string>();
+			Dictionary<string, int> uniqueIndex = new Dictionary<string, int>(StringComparer.Ordinal);
+			int[] prototypeIndex = new int[n];
+			for (int i = 0; i < n; i++)
+			{
+				if (!uniqueIndex.TryGetValue(entries[i].FilePath, out int u))
+				{
+					u = uniquePaths.Count;
+					uniqueIndex.Add(entries[i].FilePath, u);
+					uniquePaths.Add(entries[i].FilePath);
+				}
+				prototypeIndex[i] = u;
+			}
+
+			int m = uniquePaths.Count;
+			UnifiedObject[] prototypes = new UnifiedObject[m];
+			int dop = ComputeStructureLoadDop();
+
+			if (dop <= 1 || m < 2)
+			{
+				for (int u = 0; u < m && !plugin.Cancel; u++)
+				{
+					prototypes[u] = LoadSingleStructure(uniquePaths[u]);
+				}
+			}
+			else
+			{
+				// Workers handle distinct files via thread-safe host loads (caches, messages and
+				// object parsers are all lock-protected, as in the CSV route parser).
+				ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = dop };
+				Parallel.For(0, m, options, u =>
+				{
+					if (plugin.Cancel)
+					{
+						return;
+					}
+					prototypes[u] = LoadSingleStructure(uniquePaths[u]);
+				});
+			}
+
+			if (plugin.Cancel)
+			{
+				return;
+			}
+
+			// Commit in file order; each key gets its own instance.
+			int[] useCount = new int[m];
+			for (int i = 0; i < n; i++)
+			{
+				useCount[prototypeIndex[i]]++;
+			}
+			for (int i = 0; i < n; i++)
+			{
+				UnifiedObject prototype = prototypes[prototypeIndex[i]];
+				if (prototype == null)
+				{
+					// Mirrors the old loop, which ignored LoadObject's return value and stored null.
+					routeData.Objects.Add(entries[i].Key, null);
+					continue;
+				}
+				if (useCount[prototypeIndex[i]] < 2)
+				{
+					routeData.Objects.Add(entries[i].Key, prototype);
+					continue;
+				}
+				try
+				{
+					routeData.Objects.Add(entries[i].Key, prototype.Clone());
+				}
+				catch
+				{
+					// Fall back to a sequential host load (served from the host cache populated above).
+					Plugin.CurrentHost.LoadObject(entries[i].FilePath, TextEncoding.GetSystemEncodingFromFile(entries[i].FilePath), out UnifiedObject fallback);
+					routeData.Objects.Add(entries[i].Key, fallback);
+				}
+			}
+		}
+
+		/// <summary>Decodes a single structure file, returning null on any failure.</summary>
+		private static UnifiedObject LoadSingleStructure(string filePath)
+		{
+			try
+			{
+				System.Text.Encoding objectEncoding = TextEncoding.GetSystemEncodingFromFile(filePath);
+				if (Plugin.CurrentHost.LoadObject(filePath, objectEncoding, out UnifiedObject obj))
+				{
+					return obj;
+				}
+				return null;
+			}
+			catch
+			{
+				return null;
 			}
 		}
 	}

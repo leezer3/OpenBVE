@@ -25,6 +25,7 @@ namespace LibRender2.Text
 		/// <summary>Represents the largest sans serif font.</summary>
 		public readonly OpenGlFont EvenLargerFont;
 
+
 		private static HostInterface currentHost;
 
 		/// <summary>Gets the next smallest font</summary>
@@ -83,7 +84,6 @@ namespace LibRender2.Text
 				try
 				{
 					FontFamily newFont = new FontFamily(fontName);
-					uiFont = newFont;
 				}
 				catch
 				{

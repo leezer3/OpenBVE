@@ -59,9 +59,9 @@ namespace OpenBveApi.Routes
 
 		public override bool GetLeafNode(Vector3 position, out QuadTreeLeafNode leaf)
 		{
-			if (position.X >= Rectangle.Left &
-			    position.X <= Rectangle.Right &
-			    position.Z >= Rectangle.Near &
+			if (position.X >= Rectangle.Left &&
+			    position.X <= Rectangle.Right &&
+			    position.Z >= Rectangle.Near &&
 			    position.Z <= Rectangle.Far)
 			{
 				for (int i = 0; i < Children.Length; i++)

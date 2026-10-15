@@ -47,6 +47,7 @@
 		ReadhesionDevice,
 		Type,
 		Rate,
+		RestartPressure,
 		SandLevel,
 		NumberOfShots,
 		ApplicationTime,

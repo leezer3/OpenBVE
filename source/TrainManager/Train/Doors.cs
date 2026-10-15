@@ -12,13 +12,13 @@ namespace TrainManager.Trains
 			bool sl = false, sr = false;
 			for (int i = 0; i < Cars.Length; i++)
 			{
-				if (Left & !Cars[i].Doors[0].AnticipatedOpen & (SafetySystems.DoorInterlockState == DoorInterlockStates.Left | SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
+				if (Left && !Cars[i].Doors[0].AnticipatedOpen && (SafetySystems.DoorInterlockState == DoorInterlockStates.Left || SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
 				{
 					Cars[i].Doors[0].AnticipatedOpen = true;
 					sl = true;
 				}
 
-				if (Right & !Cars[i].Doors[1].AnticipatedOpen & (SafetySystems.DoorInterlockState == DoorInterlockStates.Right | SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
+				if (Right && !Cars[i].Doors[1].AnticipatedOpen && (SafetySystems.DoorInterlockState == DoorInterlockStates.Right || SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
 				{
 					Cars[i].Doors[1].AnticipatedOpen = true;
 					sr = true;
@@ -62,13 +62,13 @@ namespace TrainManager.Trains
 			bool sl = false, sr = false;
 			for (int i = 0; i < Cars.Length; i++)
 			{
-				if (Left & Cars[i].Doors[0].AnticipatedOpen & (SafetySystems.DoorInterlockState == DoorInterlockStates.Left | SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
+				if (Left && Cars[i].Doors[0].AnticipatedOpen && (SafetySystems.DoorInterlockState == DoorInterlockStates.Left || SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
 				{
 					Cars[i].Doors[0].AnticipatedOpen = false;
 					sl = true;
 				}
 
-				if (Right & Cars[i].Doors[1].AnticipatedOpen & (SafetySystems.DoorInterlockState == DoorInterlockStates.Right | SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
+				if (Right && Cars[i].Doors[1].AnticipatedOpen && (SafetySystems.DoorInterlockState == DoorInterlockStates.Right || SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
 				{
 					Cars[i].Doors[1].AnticipatedOpen = false;
 					sr = true;
@@ -103,7 +103,7 @@ namespace TrainManager.Trains
 			{
 				for (int j = 0; j < Cars[i].Doors.Length; j++)
 				{
-					if (Left & Cars[i].Doors[j].Direction == -1 | Right & Cars[i].Doors[j].Direction == 1)
+					if ((Left && Cars[i].Doors[j].Direction == -1) || (Right && Cars[i].Doors[j].Direction == 1))
 					{
 						if (Cars[i].Doors[j].State == 0.0)
 						{
@@ -175,7 +175,7 @@ namespace TrainManager.Trains
 
 				for (int j = 0; j < Cars[i].Doors.Length; j++)
 				{
-					if (Cars[i].Doors[j].Direction == -1 | Cars[i].Doors[j].Direction == 1)
+					if (Cars[i].Doors[j].Direction == -1 || Cars[i].Doors[j].Direction == 1)
 					{
 						bool shouldBeOpen = Cars[i].Doors[j].Direction == -1 ? ld : rd;
 						if (Cars[i].Doors[j].State > 0.0)

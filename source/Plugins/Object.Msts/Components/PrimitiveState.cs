@@ -32,7 +32,7 @@ namespace Plugin
 		/// <summary>The shader name to be applied when drawing this primitive</summary>
 		/// <remarks>Controls alpha blending etc.</remarks>
 		internal int Shader;
-		/// <summary>The texture indicies used by this primitive</summary>
+		/// <summary>The texture indices used by this primitive</summary>
 		internal int[] Textures;
 		/*
 		 * Unlikely to be able to support these at present

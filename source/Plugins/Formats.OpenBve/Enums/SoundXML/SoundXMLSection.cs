@@ -12,6 +12,7 @@
 		Flange,
 		Horn,
 		MasterController,
+		PowerHandle = MasterController,
 		Motor,
 		PilotLamp,
 		SwitchFrontAxle,
@@ -86,6 +87,6 @@
 		Switch,
 		Raise,
 		Lower,
-		Toggle,
+		Toggle
 	}
 }

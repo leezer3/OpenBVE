@@ -22,7 +22,9 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using OpenBveApi;
 using OpenBveApi.Motor;
+using System.Linq;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Power;
@@ -54,8 +56,10 @@ namespace TrainManager.Motor
 		public override void Update(double timeElapsed)
 		{
 			IsRunning = true;
-			Boiler boiler = Components[EngineComponent.Boiler] as Boiler;
-			boiler.Update(timeElapsed);
+			for (int i = 0; i < Components.Count; i++)
+			{
+				Components.ElementAt(i).Value.Update(timeElapsed);
+			}
 		}
 
 		// TODO: PLACEHOLDER VALUES
@@ -69,12 +73,26 @@ namespace TrainManager.Motor
 					// HACK: TFO AI doesn't update power properly
 					return BaseCar.CurrentSpeed == 0 ? 0 : 1;
 				}
+
+				double power = 0;
 				if (BaseCar.baseTrain.Handles.Power is VariableHandle variableHandle)
 				{
-					Message = @"Power " + variableHandle.GetPowerModifier;
-					return variableHandle.GetPowerModifier;
+					power = variableHandle.GetPowerModifier;
 				}
-				Message = @"Power " + (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
+				else
+				{
+					power = (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
+				}
+
+				if (Components.TryGetTypedValue(EngineComponent.CylinderCocks, out CylinderCocks c))
+				{
+					if (c.Opened)
+					{
+						power *= c.PowerModifier;
+					}
+				}
+
+				Message = @"Power " + power;
 				return (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
 			}
 		}

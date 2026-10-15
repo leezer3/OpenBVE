@@ -18,15 +18,15 @@ namespace Formats.OpenBve
 		/// <summary>Compressor sounds</summary>
 		Compressor,
 		/// <summary>Air suspension sounds</summary>
-		Suspension = 7,
-		Spring = 7,
+		Suspension,
+		Spring = Suspension,
 		/// <summary>Horn sounds</summary>
 		Horn,
 		/// <summary>Door open / close sounds</summary>
 		Door,
 		/// <summary>ATS Plugin sounds</summary>
-		ATS = 10,
-		Plugin = 10,
+		ATS,
+		Plugin = ATS,
 		/// <summary>Train ready to start buzzer sound</summary>
 		Buzzer,
 		/// <summary>Pilot lamp switch sound</summary>
@@ -34,11 +34,11 @@ namespace Formats.OpenBve
 		/// <summary>Sounds played when the brake handle is moved</summary>
 		BrakeHandle,
 		/// <summary>Sounds played when the power handle is moved</summary>
-		MasterController = 14,
-		PowerHandle = 14,
-		/// <summary>Sounds played when the reverseer is moved</summary>
-		Reverser = 15,
-		ReverserHandle = 15,
+		MasterController,
+		PowerHandle = MasterController,
+		/// <summary>Sounds played when the reverser is moved</summary>
+		Reverser,
+		ReverserHandle = Reverser,
 		/// <summary>Breaker sounds</summary>
 		Breaker,
 		/// <summary>Miscellaneous sounds</summary>
@@ -46,17 +46,17 @@ namespace Formats.OpenBve
 		/// <summary>Windscreen / raindrop sounds</summary>
 		Windscreen,
 		/// <summary>Sounds to be played in a loop during the simulation</summary>
-		Loop = 19,
-		Noise = 19,
+		Loop,
+		Noise = Loop,
 		/// <summary>Front axle point sounds</summary>
-		PointFrontAxle = 20,
-		SwitchFrontAxle = 20,
+		PointFrontAxle,
+		SwitchFrontAxle = PointFrontAxle,
 		/// <summary>Rear axle point sounds</summary>
-		PointRearAxle = 21,
-		SwitchRearAxle = 21,
+		PointRearAxle,
+		SwitchRearAxle = PointRearAxle,
 		/// <summary>Sounds relating to the brake shoe rubbing on the wheel</summary>
-		Shoe = 22,
-		Rub = 22,
+		Shoe,
+		Rub = Shoe,
 		/// <summary>Sounds relating to stop requests</summary>
 		RequestStop,
 		/// <summary>Sounds relating to panel touch elements</summary>

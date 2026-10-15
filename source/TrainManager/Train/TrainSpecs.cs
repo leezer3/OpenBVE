@@ -21,6 +21,8 @@ namespace TrainManager.Trains
 		public DoorMode DoorCloseMode;
 		/// <summary>Whether door closure has been attempted</summary>
 		public bool DoorClosureAttempted;
+		/// <summary>Whether the use of the horn also triggers the bell (music horn)</summary>
+		public bool HornTriggersBell;
 		/// <summary>Whether the pressure distribution uses the legacy averages algorithm</summary>
 		public bool AveragesPressureDistribution;
 		/// <summary>The pantograph state for the train</summary>

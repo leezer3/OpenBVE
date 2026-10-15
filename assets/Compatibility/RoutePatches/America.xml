@@ -98,5 +98,17 @@
 		<FileName>NYCT-M [To Essex St] Nassau St LCL.csv</FileName>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
+	<!-- Flesh Street -->
+	<Patch>
+		<Hash>DA00C8FC31435FBFE5BD9B39CCC096C99902634AE05AA141D87353D36CCF4C89</Hash>
+		<FileName>Flesh Central Street - Comfortably Numb Square.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>9634D8BAA48F6E6E87AA667E2A3D75E26744BBD7D96928A60B04B1AA9934E120</Hash>
+		<FileName>Flesh Central Street - Mother Avenue.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	
   </RoutePatches>
 </openBVE>

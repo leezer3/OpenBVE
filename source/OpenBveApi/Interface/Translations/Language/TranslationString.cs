@@ -45,12 +45,12 @@ namespace OpenBveApi.Interface
 
 			if (source != null)
 			{
-				Source = ((string)source).Replace("\\r\\n", Environment.NewLine).Replace("\\x20", " ");
+				Source = ((string)source).Replace("\\r\\n", Environment.NewLine).Replace("\\n", Environment.NewLine).Replace("\\x20", " ");
 			}
 
 			if (target != null)
 			{
-				Translation =  ((string)target).Replace("\\r\\n", Environment.NewLine).Replace("\\x20", " ");
+				Translation =  ((string)target).Replace("\\r\\n", Environment.NewLine).Replace("\\n", Environment.NewLine).Replace("\\x20", " ");
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
@@ -10,11 +10,15 @@ namespace LibRender2.Text
 	{
 		// --- members ---
 		/// <summary>The underlying font.</summary>
-		private readonly Font Font;
+		public readonly Font Font;
 		/// <summary>The size of the underlying font in pixels.</summary>
 		public readonly float FontSize;
 		/// <summary>The 4352 tables containing 256 character each to make up 1114112 code points (U+0000...U+10FFFF).</summary>
 		private readonly OpenGlFontTable[] Tables;
+
+		private readonly StringFormat Default;
+
+		private readonly StringFormat Typographic;
 
 		private bool disposed;
 
@@ -27,6 +31,8 @@ namespace LibRender2.Text
 			Font = new Font(family, size, FontStyle.Regular, GraphicsUnit.Pixel);
 			FontSize = size;
 			Tables = new OpenGlFontTable[4352];
+			Default = StringFormat.GenericDefault;
+			Typographic = StringFormat.GenericTypographic;
 		}
 
 		// --- functions ---
@@ -46,7 +52,7 @@ namespace LibRender2.Text
 			{
 				lock (BaseRenderer.GdiPlusLock)
 				{
-					Tables[hi] = new OpenGlFontTable(Font, hi << 8);
+					Tables[hi] = new OpenGlFontTable(Font, hi << 8, Default, Typographic);
 				}
 			}
 

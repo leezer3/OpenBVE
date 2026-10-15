@@ -85,8 +85,7 @@ namespace RouteViewer {
                             //Generates a random number between two given doubles
                             double min = Function.Stack[s - 2];
                             double max = Function.Stack[s - 1];
-                            Random randomGenerator = new Random();
-                            Function.Stack[s - 2] = min + randomGenerator.NextDouble() * (max - min);
+                            Function.Stack[s - 2] = min + Program.CurrentHost.Random.NextDouble() * (max - min);
                             s--;
                         }
                         break;
@@ -95,8 +94,7 @@ namespace RouteViewer {
                             //Generates a random number between two given doubles
                             int min = (int)Function.Stack[s - 2];
                             int max = (int)Function.Stack[s - 1];
-                            Random randomGenerator = new Random();
-                            Function.Stack[s - 2] = randomGenerator.Next(min, max);
+                            Function.Stack[s - 2] = Program.CurrentHost.Random.Next(min, max);
                             s--;
                         }
                         break;
@@ -1025,7 +1023,7 @@ namespace RouteViewer {
 						}
 						s++; break;
 						case Instructions.Panel2Timetable:
-						throw new InvalidOperationException("The instruction " + Function.InstructionSet[i].ToString() + " is for internal use only, and should not be added to objects.");
+						throw new InvalidOperationException("The instruction " + Function.InstructionSet[i] + " is for internal use only, and should not be added to objects.");
 					case Instructions.TrainCarNumber:
 						if (!IsPartOfTrain)
 						{
@@ -1194,6 +1192,8 @@ namespace RouteViewer {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					case Instructions.TrainMotorDecelerationOfCar:
+					case Instructions.TrainMotorDeceleration:
 					case Instructions.WheelRadiusOfCar:
 					case Instructions.EngineRPM:
 					case Instructions.EngineRPMCar:
@@ -1225,8 +1225,52 @@ namespace RouteViewer {
 					case Instructions.Amps:
 					case Instructions.AmpsCar:
 						throw new NotImplementedException(Function.InstructionSet[i] + " is not currently supported in Route Viewer. Please test using the main game.");
+					case Instructions.TrackNumber:
+						Function.Stack[s] = 0.0;
+						if (Train != null)
+						{
+							if (Train.Cars.Length > 0)
+							{
+								Function.Stack[s] = Train.Cars[0].FrontAxle.Follower.TrackIndex;
+							}
+						}
+						s++; break;
+					case Instructions.TrackNumberIndex:
+						Function.Stack[s - 1] = 0.0;
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].FrontAxle.Follower.TrackIndex;
+							}
+						}
+						break;
+					case Instructions.TrainCarMassIndex:
+						if (Train == null)
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						else
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].CurrentMass;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						break;
+					case Instructions.TotalStates:
+						Function.Stack[s] = Function.TotalStates;
+						s++; break;
 					default:
-						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
+						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i] + " was encountered in ExecuteFunctionScript.");
 				}
 			}
 			Function.LastResult = Function.Stack[s - 1];

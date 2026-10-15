@@ -67,7 +67,7 @@ namespace TrainManager.SafetySystems
 					currentStep++;
 					return;
 				case 2:
-					if (Plugin.Sound[2] == 0 || Plugin.Sound[2] == -1000)
+					if (Plugin.Sound[2] == 0 || Plugin.Sound[2] == -10000)
 					{
 						data.Response = AIResponse.Medium;
 						currentStep++;
@@ -323,14 +323,13 @@ namespace TrainManager.SafetySystems
 					{
 						Plugin.KeyDown(VirtualKeys.B1);
 						Plugin.KeyUp(VirtualKeys.B1);
-						data.Response = AIResponse.Short;
 					}
 					else
 					{
 						Plugin.KeyDown(VirtualKeys.B2);
 						Plugin.KeyUp(VirtualKeys.B2);
-						data.Response = AIResponse.Short;
 					}
+					data.Response = AIResponse.Short;
 					return;
 				case 2:
 					if (currentRainIntensity < 60)

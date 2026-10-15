@@ -60,11 +60,11 @@ namespace TrainManager.Handles
 				baseTrain.Plugin?.UpdateReverser();
 				TrainManagerBase.currentHost.AddBlackBoxEntry();
 				// sound
-				if (a == 0 & r != 0)
+				if (a == 0 && r != 0)
 				{
 					EngageSound.Play(baseTrain.Cars[baseTrain.DriverCar], false);
 				}
-				else if (a != 0 & r == 0)
+				else if (a != 0 && r == 0)
 				{
 					ReleaseSound.Play(baseTrain.Cars[baseTrain.DriverCar], false);
 				}

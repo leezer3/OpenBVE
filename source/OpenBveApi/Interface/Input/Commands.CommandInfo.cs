@@ -202,6 +202,8 @@ namespace OpenBveApi.Interface
 			{ Command.DecreaseCutoff, new CommandInfo(Command.DecreaseCutoff, CommandType.Digital, "DECREASE_CUTOFF") },
 			{ Command.Blowers, new CommandInfo(Command.Blowers, CommandType.Digital, "BLOWERS") },
 			{ Command.CylinderCocks, new CommandInfo(Command.CylinderCocks, CommandType.Digital, "CYLINDER_COCKS") },
+			{ Command.FireboxDoorOpen, new CommandInfo(Command.FireboxDoorOpen, CommandType.Digital, "FIREBOX_DOOR_OPEN") },
+			{ Command.FireboxDoorClose, new CommandInfo(Command.FireboxDoorClose, CommandType.Digital, "FIREBOX_DOOR_CLOSE") },
 			//Diesel Locomotive
 			{ Command.EngineStart, new CommandInfo(Command.EngineStart, CommandType.Digital, "ENGINE_START") },
 			{ Command.EngineStop, new CommandInfo(Command.EngineStop, CommandType.Digital, "ENGINE_STOP") },

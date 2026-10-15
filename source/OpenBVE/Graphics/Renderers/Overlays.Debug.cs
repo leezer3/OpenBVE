@@ -215,7 +215,7 @@ namespace OpenBve.Graphics.Renderers
 				"=sound",
 				"sound buffers: " + soundBuffersLoaded.ToString(Culture) + " loaded / " + soundBuffersRegistered.ToString(Culture) + " total",
 				"sound sources: " + soundSourcesPlaying.ToString(Culture) + " playing / " + Interface.CurrentOptions.SoundNumber + " max playing / " + soundSourcesRegistered.ToString(Culture) + " total",
-				(Interface.CurrentOptions.SoundModel == SoundModels.Inverse ? "log clamp factor: " + Program.Sounds.LogClampFactor.ToString("0.00") : "outer radius factor: " + Program.Sounds.OuterRadiusFactor.ToString("0.00", Culture)),
+				"log clamp factor: " + Program.Sounds.LogClampFactor.ToString("0.00"),
 				"",
 				"=debug",
 				"bvets hacks: " + (Interface.CurrentOptions.EnableBveTsHacks ? "enabled" : "disabled"),

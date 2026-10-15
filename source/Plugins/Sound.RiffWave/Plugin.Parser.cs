@@ -1,4 +1,5 @@
 using NAudio.Wave;
+using NLayer.NAudioSupport;
 using OpenBveApi;
 using OpenBveApi.Math;
 using OpenBveApi.Sounds;
@@ -64,7 +65,8 @@ namespace Plugin
 		/// <returns>The raw sound data</returns>
 		private static Sound Mp3LoadFromStream(Stream stream)
 		{
-			using (Mp3FileReader reader = new Mp3FileReader(stream))
+			// Managed NLayer decoder, as above: the default reader needs Windows ACM (Msacm32.dll)
+			using (Mp3FileReaderBase reader = new Mp3FileReaderBase(stream, new Mp3FileReaderBase.FrameDecompressorBuilder(wf => new Mp3FrameDecompressor(wf))))
 			{
 				byte[] dataBytes = new byte[reader.Length];
 

@@ -14,15 +14,16 @@ namespace OpenBveApi.Routes
 		/// <summary>The side length of a leaf node.</summary>
 		internal readonly double SideLength;
 
-		internal readonly List<ObjectState> Objects;
+		internal readonly HashSet<ObjectState> Objects;
 
 		/// <summary>Creates an empty quad with a null root node.</summary>
 		/// <param name="sideLength">The side length of a leaf node.</param>
 		public QuadTree(double sideLength)
 		{
 			Root = null;
-			SideLength = sideLength;
-			Objects = new List<ObjectState>();
+			// ensure that we're using a sensible side length
+			SideLength = System.Math.Min(sideLength, 500);
+			Objects = new HashSet<ObjectState>();
 		}
 
 		/// <summary>Clears the quad tree</summary>

@@ -37,6 +37,18 @@ namespace OpenBve {
 			Interface.CurrentOptions.TimeTableStyle = (TimeTableMode)comboBoxTimeTableDisplayMode.SelectedIndex;
 		}
 
+		private void UpdateFPSLimitEnabled()
+		{
+			bool vsyncEnabled = comboboxVSync.SelectedIndex == 1;
+			comboBoxFPSLimit.Enabled = !vsyncEnabled;
+			labelFPSLimit.ForeColor = vsyncEnabled ? System.Drawing.SystemColors.GrayText : System.Drawing.SystemColors.ControlText;
+		}
+
+		private void comboBoxVSync_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			UpdateFPSLimitEnabled();
+		}
+
 
 		private void updownTimeAccelerationFactor_ValueChanged(object sender, EventArgs e)
 		{
@@ -54,6 +66,10 @@ namespace OpenBve {
 			updownShadowBias.Enabled = shadowEnabled;
 			updownShadowNormalBias.Enabled = shadowEnabled;
 			checkboxShadowFilterCascades.Enabled = shadowEnabled;
+			checkboxShadowSmooth.Enabled = shadowEnabled;
+			bool softnessEnabled = shadowEnabled && checkboxShadowSmooth.Checked;
+			labelShadowSoftness.Enabled = softnessEnabled;
+			comboboxShadowFilterRadius.Enabled = softnessEnabled;
 
 			if (!shadowEnabled)
 			{
@@ -79,6 +95,22 @@ namespace OpenBve {
 		private void updownShadowNormalBias_ValueChanged(object sender, EventArgs e)
 		{
 			Interface.CurrentOptions.ShadowNormalBias = (double)updownShadowNormalBias.Value;
+		}
+
+		private void comboboxShadowFilterRadius_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			double[] presets = { 1.0, 1.5, 2.5 };
+			int idx = comboboxShadowFilterRadius.SelectedIndex;
+			if (idx >= 0 && idx < presets.Length) Interface.CurrentOptions.ShadowFilterRadius = presets[idx];
+		}
+
+		private void checkboxShadowSmooth_CheckedChanged(object sender, EventArgs e)
+		{
+			Interface.CurrentOptions.ShadowSmooth = checkboxShadowSmooth.Checked;
+			bool shadowEnabled = comboboxShadowResolution.SelectedIndex != 0;
+			bool softnessEnabled = shadowEnabled && checkboxShadowSmooth.Checked;
+			labelShadowSoftness.Enabled = softnessEnabled;
+			comboboxShadowFilterRadius.Enabled = softnessEnabled;
 		}
 
 		

@@ -329,6 +329,7 @@ namespace OpenBveApi.FunctionScripting
 				case "cylindercocksstate":
 				case "blowersstate":
 				case "tenderwaterstate":
+				case "tracknumber":
 				// station index functions
 				case "distancestation":
 				case "stopsstation":

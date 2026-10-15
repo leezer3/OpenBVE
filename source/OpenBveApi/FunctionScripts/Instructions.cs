@@ -11,6 +11,7 @@ namespace OpenBveApi.FunctionScripting
 		MathExp, MathLog, MathSqrt, MathSin, MathCos, MathTan, MathArcTan, MathPi,
 		CompareEqual, CompareUnequal, CompareLess, CompareGreater, CompareLessEqual, CompareGreaterEqual, CompareConditional,
 		LogicalNot, LogicalAnd, LogicalOr, LogicalNand, LogicalNor, LogicalXor,
+		TotalStates,
 		/*
 		 * Functions after this point may not return the same result when itinerated twice
 		 */
@@ -51,7 +52,8 @@ namespace OpenBveApi.FunctionScripting
 		CarIndexDependant = 1000,
 		TrainDistanceToCar, TrainTrackDistanceToCar, CurveRadiusOfCar, FrontAxleCurveRadiusOfCar, RearAxleCurveRadiusOfCar, CurveCantOfCar, PitchOfCar, OdometerOfCar, BrightnessOfCar,
 		FrontCouplerIndex, RearCouplerIndex,
-		TrainSpeedOfCar, TrainSpeedometerOfCar, TrainAccelerationOfCar, TrainAccelerationMotorOfCar,
+		TrackNumber, TrackNumberIndex,
+		TrainSpeedOfCar, TrainSpeedometerOfCar, TrainAccelerationOfCar, TrainAccelerationMotorOfCar, TrainMotorDeceleration, TrainMotorDecelerationOfCar, TrainCarMass, TrainCarMassIndex,
 		LeftDoorsIndex, RightDoorsIndex,
 		LeftDoorsTargetIndex, RightDoorsTargetIndex,
 		BrakeMainReservoirOfCar, BrakeEqualizingReservoirOfCar, BrakeBrakePipeOfCar, BrakeBrakeCylinderOfCar, BrakeStraightAirPipeOfCar,

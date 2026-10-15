@@ -35,22 +35,30 @@ namespace Plugin
 {
 	internal class AssimpXParser
 	{
-		private static string currentFolder;
-		private static string currentFile;
-		private static Matrix4D rootMatrix;
+		private string currentFolder;
+		private string currentFile;
+		private Matrix4D rootMatrix;
 
 		internal static StaticObject ReadObject(string fileName)
 		{
-			currentFolder = Path.GetDirectoryName(fileName);
-			currentFile = fileName;
-			rootMatrix = Matrix4D.NoTransformation;
+			// Per-file instance: route Structure objects load in parallel, so no static mutable state.
+			var parser = new AssimpXParser
+			{
+				currentFolder = Path.GetDirectoryName(fileName),
+				currentFile = fileName,
+				rootMatrix = Matrix4D.NoTransformation
+			};
+			return parser.ReadObjectInner(fileName);
+		}
 
+		private StaticObject ReadObjectInner(string fileName)
+		{
 #if !DEBUG
 			try
 			{
 #endif
 			byte[] buffer = File.ReadAllBytes(fileName);
-				if (buffer.Length < 16 || buffer[0] != 120 | buffer[1] != 111 | buffer[2] != 102 | buffer[3] != 32)
+				if (buffer.Length < 16 || buffer[0] != 120 || buffer[1] != 111 | buffer[2] != 102 || buffer[3] != 32)
 				{
 					// Object is actually a single line text file containing relative path to the 'real' X
 					// Found in BRSigs\Night
@@ -119,7 +127,7 @@ namespace Plugin
 				}
 
 				builder.Apply(ref obj, false, false);
-				obj.Mesh.CreateNormals();
+				obj.Mesh.FinalizeMesh();
 				if (rootMatrix != Matrix4D.NoTransformation)
 				{
 					for (int i = 0; i < obj.Mesh.Vertices.Length; i++)
@@ -160,7 +168,7 @@ namespace Plugin
 			
 		}
 
-		private static void  MeshBuilder(ref StaticObject obj, ref MeshBuilder builder, AssimpNET.X.Mesh mesh)
+		private void MeshBuilder(ref StaticObject obj, ref MeshBuilder builder, AssimpNET.X.Mesh mesh)
 		{
 			if (builder.Vertices.Count != 0)
 			{
@@ -212,6 +220,7 @@ namespace Plugin
 				Array.Resize(ref builder.Materials, m + 1);
 				builder.Materials[m] = new OpenBveApi.Objects.Material();
 				builder.Materials[m].Color = new Color32(mesh.Materials[i].Diffuse);
+				// ReSharper disable once UnusedVariable
 				double mPower = mesh.Materials[i].SpecularExponent; //TODO: Unsure what this does...
 				builder.Materials[m].SpecularColor = new Color24(mesh.Materials[i].Specular);
 				if (builder.Materials[m].SpecularColor != Color24.Black)
@@ -326,7 +335,7 @@ namespace Plugin
 			}
 		}
 
-		private static void ChildrenNode(ref StaticObject obj, ref MeshBuilder builder, Node child)
+		private void ChildrenNode(ref StaticObject obj, ref MeshBuilder builder, Node child)
 		{
 			foreach (var mesh in child.Meshes)
 			{

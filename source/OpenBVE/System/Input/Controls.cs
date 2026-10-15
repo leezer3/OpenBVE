@@ -175,13 +175,29 @@ namespace OpenBve
 									{
 										Program.ShowMessageBox(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","warning"}) + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_default_missing"}),
 											Application.ProductName);
-										Controls = new Control[0];
+										Controls = Array.Empty<Control>();
 									}
 
 									return;
 								}
 
-								if (Enum.TryParse(Terms[2], true, out Key CurrentKey))
+								if (Terms[2].Equals("Disabled", StringComparison.OrdinalIgnoreCase) &&
+									int.TryParse(Terms[3], NumberStyles.Integer, Culture, out int DisabledModifiers))
+								{
+									Controls[Length].Method = Method;
+									Controls[Length].Device = Guid.Empty;
+									Controls[Length].Component = JoystickComponent.Invalid;
+									Controls[Length].Key = OpenBveApi.Input.Key.Disabled;
+									Controls[Length].Direction = 0;
+									Controls[Length].Modifier = (KeyboardModifier)DisabledModifiers;
+									if (Terms.Length >= 5 && int.TryParse(Terms[4], NumberStyles.Integer, Culture, out int DisabledOption))
+									{
+										Controls[Length].Option = DisabledOption;
+									}
+
+									Valid = true;
+								}
+								else if (Enum.TryParse(Terms[2], true, out Key CurrentKey))
 								{
 									if (int.TryParse(Terms[3], NumberStyles.Integer, Culture, out int Modifiers))
 									{

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using LibRender2;
 using LibRender2.Camera;
 using LibRender2.Cameras;
@@ -15,6 +12,9 @@ using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TrainManager.Brake;
 using TrainManager.BrakeSystems;
 using TrainManager.Car.Systems;
@@ -70,8 +70,6 @@ namespace TrainManager.Car
 		public Windscreen Windscreen;
 		/// <summary>The hold brake for this car</summary>
 		public CarHoldBrake HoldBrake;
-		/// <summary>The constant speed device for this car</summary>
-		public CarConstSpeed ConstSpeed;
 		/// <summary>The readhesion device for this car</summary>
 		public AbstractReAdhesionDevice ReAdhesionDevice;
 		/// <summary>The position of the beacon receiver within the car</summary>
@@ -362,10 +360,7 @@ namespace TrainManager.Car
 
 					for (int i = 0; i < sectionToReverse.Groups.Length; i++)
 					{
-						if (sectionToReverse.Groups[i].Keyframes != null)
-						{
-							sectionToReverse.Groups[i].Keyframes.Reverse();
-						}
+						sectionToReverse.Groups[i].Keyframes?.Reverse();
 					}
 				}	
 			}
@@ -529,7 +524,7 @@ namespace TrainManager.Car
 							 * Set the eye position to something vaguely sensible, rather than leaving it on the rails
 							 * Whilst there will be no cab, at least it's a bit more usable like this
 							 */
-							baseTrain.Cars[i - 1].InteriorCamera = new CameraAlignment()
+							baseTrain.Cars[i - 1].InteriorCamera = new CameraAlignment
 							{
 								Position = new Vector3(0, 2, 0.5 * Length)
 							};
@@ -861,7 +856,7 @@ namespace TrainManager.Car
 			CarSection.Groups[GroupIndex].Elements[ElementIndex].Update(baseTrain, Index, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, false, CarSection.Type == ObjectType.Overlay ? TrainManagerBase.Renderer.Camera : null);
 			if (CarSection.Groups[GroupIndex].Elements[ElementIndex].UpdateVAO)
 			{
-				VAOExtensions.CreateVAO(CarSection.Groups[GroupIndex].Elements[ElementIndex].internalObject.Prototype.Mesh, true, TrainManagerBase.Renderer.DefaultShader.VertexLayout, TrainManagerBase.Renderer);
+				VAOExtensions.CreateOrUpdateVAO(CarSection.Groups[GroupIndex].Elements[ElementIndex].internalObject.Prototype.Mesh, true, TrainManagerBase.Renderer.DefaultShader.VertexLayout, TrainManagerBase.Renderer);
 			}
 		}
 
@@ -909,7 +904,7 @@ namespace TrainManager.Car
 			CarSection.Groups[GroupIndex].TouchElements[ElementIndex].Element.Update(baseTrain, Index, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, true, CarSection.Type == ObjectType.Overlay ? TrainManagerBase.Renderer.Camera : null);
 			if (CarSection.Groups[GroupIndex].TouchElements[ElementIndex].Element.UpdateVAO)
 			{
-				VAOExtensions.CreateVAO(CarSection.Groups[GroupIndex].TouchElements[ElementIndex].Element.internalObject.Prototype.Mesh, true, TrainManagerBase.Renderer.DefaultShader.VertexLayout, TrainManagerBase.Renderer);
+				VAOExtensions.CreateOrUpdateVAO(CarSection.Groups[GroupIndex].TouchElements[ElementIndex].Element.internalObject.Prototype.Mesh, true, TrainManagerBase.Renderer.DefaultShader.VertexLayout, TrainManagerBase.Renderer);
 			}
 		}
 
@@ -1063,7 +1058,7 @@ namespace TrainManager.Car
 				if (Derailed)
 				{
 					double sab = Math.Sign(ab);
-					ta = 0.5 * Math.PI * (sab == 0.0 ? TrainManagerBase.RandomNumberGenerator.NextDouble() < 0.5 ? -1.0 : 1.0 : sab);
+					ta = 0.5 * Math.PI * (sab == 0.0 ? TrainManagerBase.currentHost.Random.NextDouble() < 0.5 ? -1.0 : 1.0 : sab);
 				}
 				else
 				{
@@ -1289,9 +1284,11 @@ namespace TrainManager.Car
 						}
 
 						TractionModel.MaximumCurrentAcceleration = a;
-						// Update constant speed device
-						ConstSpeed?.Update(ref a);
-
+						if (SafetySystems.TryGetTypedValue(SafetySystem.ConstantSpeedDevice, out CarConstSpeed constantSpeed))
+						{
+							constantSpeed.Update(ref a);
+						}
+						
 						// finalize
 						if (wheelspin != 0.0) a = 0.0;
 					}
@@ -1584,8 +1581,8 @@ namespace TrainManager.Car
 
 			const double f = 0.015;
 			const double g = 2.75;
-			Specs.DoorOpenPitch = Math.Exp(f * Math.Tan(g * (TrainManagerBase.RandomNumberGenerator.NextDouble() - 0.5)));
-			Specs.DoorClosePitch = Math.Exp(f * Math.Tan(g * (TrainManagerBase.RandomNumberGenerator.NextDouble() - 0.5)));
+			Specs.DoorOpenPitch = Math.Exp(f * Math.Tan(g * (TrainManagerBase.currentHost.Random.NextDouble() - 0.5)));
+			Specs.DoorClosePitch = Math.Exp(f * Math.Tan(g * (TrainManagerBase.currentHost.Random.NextDouble() - 0.5)));
 			Specs.DoorOpenFrequency /= Specs.DoorOpenPitch;
 			Specs.DoorCloseFrequency /= Specs.DoorClosePitch;
 			/* 

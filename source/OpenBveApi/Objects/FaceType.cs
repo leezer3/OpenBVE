@@ -19,7 +19,7 @@ namespace OpenBveApi.Objects
 		/// <summary>NotSet</summary>
 		/// <remarks>The FaceType will be calculated when the mesh is loaded by OpenGL (used internally, not as a flag)</remarks>
 		NotSet = 5,
-		/// <summary>The mask used for unidirectonal Face commands</summary>
+		/// <summary>The mask used for unidirectional Face commands</summary>
 		FaceTypeMask = 7,
 		/// <summary>The mask used for bidirectional Face2 commands</summary>
 		Face2Mask = 8

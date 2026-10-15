@@ -16,6 +16,8 @@ namespace OpenBveApi.Objects
 		public List<MeshFace> Faces;
 		/// <summary>The materials present</summary>
 		public Material[] Materials;
+		/// <summary>Returns the current material</summary>
+		public Material CurrentMaterial => Materials[Materials.Length - 1];
 		/// <summary>The transform matrix to be applied</summary>
 		public Matrix4D TransformMatrix = Matrix4D.NoTransformation;
 		/// <summary>
@@ -51,6 +53,16 @@ namespace OpenBveApi.Objects
 					Vertices[i].Coordinates.Transform(TransformMatrix, IgnoreW);
 				}
 			}
+			
+			
+			for (int i = Faces.Count - 1; i >= 0; i--)
+			{
+				if (Faces[i].Vertices.Length == 0)
+				{
+					Faces.RemoveAt(i);
+				}
+			}
+
 			if (Faces.Count != 0)
 			{
 				int mf = Object.Mesh.Faces.Length;
@@ -109,7 +121,7 @@ namespace OpenBveApi.Objects
 					}
 
 					parameters.FirstColorTransparent = Materials[i].FirstColorTransparent;
-					if (Materials[i].DaytimeTexture != null || Materials[i].Text != null)
+					if (!string.IsNullOrWhiteSpace(Materials[i].DaytimeTexture) || Materials[i].Text != null)
 					{
 						Texture tday;
 						if (Materials[i].Text != null)
@@ -136,7 +148,7 @@ namespace OpenBveApi.Objects
 					}
 
 					Object.Mesh.Materials[mm + i].EmissiveColor = Materials[i].EmissiveColor;
-					if (Materials[i].NighttimeTexture != null)
+					if (!string.IsNullOrWhiteSpace(Materials[i].NighttimeTexture))
 					{
 						currentHost.RegisterTexture(Materials[i].NighttimeTexture, parameters, out Texture tnight);
 						Object.Mesh.Materials[mm + i].NighttimeTexture = tnight;
@@ -160,13 +172,11 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Translates the MeshBuilder by the given values</summary>
-		public void ApplyTranslation(double x, double y, double z)
+		public void ApplyTranslation(Vector3 translationVector)
 		{
 			for (int i = 0; i < Vertices.Count; i++)
 			{
-				Vertices[i].Coordinates.X += x;
-				Vertices[i].Coordinates.Y += y;
-				Vertices[i].Coordinates.Z += z;
+				Vertices[i].Coordinates += translationVector;
 			}
 		}
 

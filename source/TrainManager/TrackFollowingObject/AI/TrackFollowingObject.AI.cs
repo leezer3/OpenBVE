@@ -168,7 +168,7 @@ namespace TrainManager.Trains
 					p.Raise();
 				}
 
-				if (Car.TractionModel.Components.TryGetTypedValue(EngineComponent.CylinderCocks, out CylinderCocks c))
+				if (Car.TractionModel.Components.TryGetTypedValue(EngineComponent.CylinderCocks, out CylinderCocks c) && !c.Automatic)
 				{
 					if (Car.CurrentSpeed == 0 && c.Opened == false)
 					{

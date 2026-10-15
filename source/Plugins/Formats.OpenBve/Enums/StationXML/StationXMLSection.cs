@@ -9,6 +9,6 @@
 		RequestStop,
 		StopMessage,
 		PassMessage,
-		Probability,
+		Probability
 	}
 }

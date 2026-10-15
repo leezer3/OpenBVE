@@ -31,6 +31,7 @@
 		<FileName>montserrat.rw</FileName>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<RailEndedObject>true</RailEndedObject>
 	</Patch>
 	<!-- Some Sanford Mace demo stuff -->
 	<Patch>

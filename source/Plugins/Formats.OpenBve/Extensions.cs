@@ -15,7 +15,7 @@ namespace Formats.OpenBve
 				}
 			}
 
-			theEnum = default(T);
+			theEnum = default;
 			return false;
 		}
 	}
