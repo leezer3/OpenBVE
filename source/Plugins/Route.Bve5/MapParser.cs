@@ -48,6 +48,9 @@ namespace Route.Bve5
 			private readonly string FileName;
 			private readonly bool IsDisplayErrors;
 			private MapGrammarParser Parser;
+			private string bveExTempRoot;
+			private string bveExOriginalDir;
+			private int suppressedBveExErrors;
 
 			internal MapParser(string fileName, bool isDisplayErrors)
 			{
@@ -63,12 +66,47 @@ namespace Route.Bve5
 
 				if (Parser != null)
 				{
-					Data = Parser.ParseFromFile(FileName, MapGrammarParserOption.ParseIncludeSyntaxRecursively);
-					RecoverIncludesWithoutDetectableEncoding(Data);
-
-					if (IsDisplayErrors)
+					string parseFile = FileName;
+					bveExTempRoot = null;
+					bveExOriginalDir = null;
+					suppressedBveExErrors = 0;
+					bool tempActive = false;
+					try
 					{
-						DisplayErrors();
+						// BveEX map plugins extend the grammar with custom syntax.
+						// Parse a sanitised copy so the static route still loads;
+						// plugin behaviour itself cannot be reproduced here.
+						if (BveExCompat.TryCreateSanitizedCopy(FileName, out string sanitizedFile, out string tempRoot, out bool hadBveEx) && hadBveEx)
+						{
+							parseFile = sanitizedFile;
+							bveExTempRoot = tempRoot;
+							bveExOriginalDir = Path.GetDirectoryName(Path.GetFullPath(FileName));
+							tempActive = true;
+							Plugin.CurrentHost.AddMessage(MessageType.Information, false,
+								"BveEX map plugin syntax detected. Plugin behaviour is not supported and will be skipped; loading the static route instead.");
+						}
+					}
+					catch
+					{
+						parseFile = FileName;
+						tempActive = false;
+					}
+					try
+					{
+						Data = Parser.ParseFromFile(parseFile, MapGrammarParserOption.ParseIncludeSyntaxRecursively);
+						RecoverIncludesWithoutDetectableEncoding(Data);
+
+						if (IsDisplayErrors)
+						{
+							DisplayErrors();
+						}
+					}
+					finally
+					{
+						if (tempActive)
+						{
+							BveExCompat.Cleanup(bveExTempRoot);
+						}
 					}
 				}
 
@@ -85,6 +123,15 @@ namespace Route.Bve5
 			/// Re-reads includes the library found but couldn't decode (no BOM, no :encoding suffix).
 			/// Otherwise the whole include and its statements are lost.
 			/// </summary>
+			private string DisplayPath(string path)
+			{
+				if (bveExTempRoot != null)
+				{
+					return BveExCompat.UnmapTempPath(path, bveExTempRoot, bveExOriginalDir);
+				}
+				return path;
+			}
+
 			private void RecoverIncludesWithoutDetectableEncoding(MapData Data)
 			{
 				// Assume the route shares its top-level encoding; real BVE5 falls back to Shift-JIS.
@@ -139,7 +186,7 @@ namespace Route.Bve5
 						else
 						{
 							Plugin.CurrentHost.AddMessage(error.ErrorLevel == ParseErrorLevel.Error ? MessageType.Error : MessageType.Warning, false,
-								$"[{error.Line}:{error.Column}] {error.ErrorLevel}: {error.Message} in {path}");
+								$"[{error.Line}:{error.Column}] {error.ErrorLevel}: {error.Message} in {DisplayPath(path)}");
 						}
 					}
 				}
@@ -213,16 +260,32 @@ namespace Route.Bve5
 					{
 						continue; // already recovered above
 					}
+					string message = error.Message;
+					if (bveExTempRoot != null)
+					{
+						if (BveExCompat.IsBveExError(message))
+						{
+							// BveEX-only syntax that survived sanitising: count and skip.
+							suppressedBveExErrors++;
+							continue;
+						}
+						message = BveExCompat.UnmapTempPath(message, bveExTempRoot, bveExOriginalDir);
+					}
 					// ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 					switch (error.ErrorLevel)
 					{
 						case ParseErrorLevel.Error:
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"[{error.Line}:{error.Column}] {error.ErrorLevel}: {error.Message} in {FileName}");
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"[{error.Line}:{error.Column}] {error.ErrorLevel}: {message} in {FileName}");
 							break;
 						case ParseErrorLevel.Warning:
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, $"[{error.Line}:{error.Column}] {error.ErrorLevel}: {error.Message} in {FileName}");
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, $"[{error.Line}:{error.Column}] {error.ErrorLevel}: {message} in {FileName}");
 							break;
 					}
+				}
+				if (suppressedBveExErrors != 0)
+				{
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false,
+						$"Suppressed {suppressedBveExErrors} BveEX plugin message(s). Plugin behaviour is not supported; the static route was loaded instead.");
 				}
 			}
 		}
