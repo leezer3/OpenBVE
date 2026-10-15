@@ -113,6 +113,120 @@ namespace LibRender2.Menu
 		/// <summary>The tab container for the options panel</summary>
 		public GLTabContainer OptionsTabContainer;
 
+		/// <summary>The index of the options row which currently holds keyboard focus</summary>
+		private int optionsFocusRow = 0;
+
+		/// <summary>The container holding the rows of the currently selected options tab</summary>
+		private GLContainer CurrentOptionsContent
+		{
+			get { return OptionsTabContainer != null ? OptionsTabContainer.SelectedContent as GLContainer : null; }
+		}
+
+		/// <summary>Gets the interactive control within the currently focused options row</summary>
+		private GLControl FocusedOptionsControl()
+		{
+			GLContainer content = CurrentOptionsContent;
+			if (content == null || optionsFocusRow < 0 || optionsFocusRow >= content.Children.Count)
+			{
+				return null;
+			}
+			GLControl row = content.Children[optionsFocusRow];
+			if (row is GLContainer rowContainer && rowContainer.Children.Count >= 2)
+			{
+				return rowContainer.Children[rowContainer.Children.Count - 1];
+			}
+			return row;
+		}
+
+		/// <summary>Moves keyboard focus between options rows, scrolling the focused row into view</summary>
+		private void MoveOptionsFocus(int direction)
+		{
+			GLContainer content = CurrentOptionsContent;
+			if (content == null || content.Children.Count == 0)
+			{
+				return;
+			}
+			optionsFocusRow += direction;
+			if (optionsFocusRow < 0) optionsFocusRow = 0;
+			if (optionsFocusRow > content.Children.Count - 1) optionsFocusRow = content.Children.Count - 1;
+			if (content is GLScrollContainer scroll && optionsFocusRow < scroll.Children.Count)
+			{
+				scroll.EnsureVisible(scroll.Children[optionsFocusRow]);
+			}
+			UpdateOptionsFocus();
+		}
+
+		/// <summary>Applies the keyboard focus highlight to the focused options control</summary>
+		private void UpdateOptionsFocus()
+		{
+			GLContainer content = CurrentOptionsContent;
+			if (content == null) return;
+			for (int i = 0; i < content.Children.Count; i++)
+			{
+				GLControl row = content.Children[i];
+				// Highlight the focused row itself, and ring the interactive control inside it
+				row.KeyboardFocused = (i == optionsFocusRow);
+				if (row is GLContainer rowContainer)
+				{
+					for (int j = 0; j < rowContainer.Children.Count; j++)
+					{
+						rowContainer.Children[j].KeyboardFocused = (i == optionsFocusRow && j == rowContainer.Children.Count - 1);
+					}
+				}
+			}
+		}
+
+		/// <summary>Handles keyboard navigation of the options panel</summary>
+		/// <returns>True if the key was consumed by the options panel</returns>
+		private bool ProcessOptionsKey(OpenTK.Input.Key key)
+		{
+			if (OptionsTabContainer == null || !OptionsTabContainer.IsVisible)
+			{
+				return false;
+			}
+			switch (key)
+			{
+				case OpenTK.Input.Key.Up:
+					if (FocusedOptionsControl() is GLDropdown upDropdown && upDropdown.Expanded)
+					{
+						upDropdown.OnAdjust(-1);
+						return true;
+					}
+					MoveOptionsFocus(-1);
+					return true;
+				case OpenTK.Input.Key.Down:
+					if (FocusedOptionsControl() is GLDropdown downDropdown && downDropdown.Expanded)
+					{
+						downDropdown.OnAdjust(1);
+						return true;
+					}
+					MoveOptionsFocus(1);
+					return true;
+				case OpenTK.Input.Key.Left:
+					FocusedOptionsControl()?.OnAdjust(-1);
+					UpdateOptionsFocus();
+					return true;
+				case OpenTK.Input.Key.Right:
+					FocusedOptionsControl()?.OnAdjust(1);
+					UpdateOptionsFocus();
+					return true;
+				case OpenTK.Input.Key.Enter:
+				case OpenTK.Input.Key.Space:
+					FocusedOptionsControl()?.OnActivate();
+					UpdateOptionsFocus();
+					return true;
+				case OpenTK.Input.Key.Tab:
+					if (OptionsTabContainer.TabTitles.Count > 0)
+					{
+						OptionsTabContainer.SelectTab((OptionsTabContainer.SelectedTab + 1) % OptionsTabContainer.TabTitles.Count);
+						optionsFocusRow = 0;
+						UpdateOptionsFocus();
+					}
+					return true;
+			}
+			return false;
+		}
+
 		public void InitializeOptionsTabContainer(HostApplication host)
 		{
 			if (OptionsTabContainer != null) return;
@@ -122,9 +236,9 @@ namespace LibRender2.Menu
 
 			menuControls.Add(OptionsTabContainer);
 
-			var displayTab = new GLVBoxContainer(Renderer) { Spacing = 8f };
-			var qualityTab = new GLVBoxContainer(Renderer) { Spacing = 8f };
-			var otherTab = new GLVBoxContainer(Renderer) { Spacing = 8f };
+			var displayTab = new GLScrollContainer(Renderer) { Spacing = 8f, Padding = 12f };
+			var qualityTab = new GLScrollContainer(Renderer) { Spacing = 8f, Padding = 12f };
+			var otherTab = new GLScrollContainer(Renderer) { Spacing = 8f, Padding = 12f };
 
 			OptionsTabContainer.AddTab("Display", displayTab);
 			OptionsTabContainer.AddTab("Quality", qualityTab);
@@ -351,6 +465,7 @@ namespace LibRender2.Menu
 		{
 			var row = new GLHBoxContainer(Renderer) { Spacing = 12f };
 			row.Size = new Vector2(300f, 24f);
+			row.DrawBackground = true;
 			var label = new Label(Renderer, name);
 			label.BackgroundColor = new Color128(0, 0, 0, 0);
 			// Let the label keep its natural measured width so long text never overflows
@@ -538,38 +653,36 @@ namespace LibRender2.Menu
 			if (OptionsTabContainer != null)
 			{
 				OptionsTabContainer.Location = new Vector2((float)menuMin.X + 16f, 50f);
-				float containerWidth = (float)SidebarWidth - 32f;
-				OptionsTabContainer.Size = new Vector2(containerWidth, (float)Renderer.Screen.Height - 100f);
+				float panelWidth = (float)SidebarWidth - 32f;
+				OptionsTabContainer.Size = new Vector2(panelWidth, (float)Renderer.Screen.Height - 100f);
+				// Inner width available to a row after the scroll container's padding and scrollbar
+				float innerWidth = panelWidth - 24f - 8f;
 
 				foreach (var tab in OptionsTabContainer.TabContents)
 				{
 					if (tab is GLContainer container)
 					{
-						container.Size = new Vector2(containerWidth, container.Size.Y);
 						foreach (var child in container.Children)
 						{
 							if (child is GLHBoxContainer row)
 							{
 								// Row height follows the current UI font so labels/controls never clip
 								float rowHeight = Renderer.Fonts.NormalFont.FontSize + 10f;
-								row.Size = new Vector2(containerWidth, rowHeight);
+								row.Size = new Vector2(innerWidth, rowHeight);
 								if (row.Children.Count >= 2)
 								{
 									var label = row.Children[0] as Label;
 									var control = row.Children[1];
-									if (label != null) label.Size = new Vector2(label.Size.X, rowHeight);
-									control.Size = new Vector2(control.Size.X, rowHeight);
-									// Use the label's cached natural width so we don't re-measure every frame
-									float labelWidth = label != null ? (float)label.Size.X : (float)row.Children[0].Size.X;
-									float controlWidth = (float)(containerWidth - labelWidth - row.Spacing);
-									if (controlWidth < 60f)
+									// Fixed two-column layout: labels on the left, controls right-aligned
+									float labelWidth = (float)System.Math.Round(innerWidth * 0.45f);
+									const float minControl = 120f;
+									if (innerWidth - labelWidth - row.Spacing < minControl)
 									{
-										// Not enough room: shrink the label so the control stays usable
-										labelWidth = containerWidth - 60f - row.Spacing;
-										controlWidth = 60f;
+										labelWidth = System.Math.Max(0f, innerWidth - minControl - row.Spacing);
 									}
-									label.Size = new Vector2(labelWidth, row.Size.Y);
-									control.Size = new Vector2(controlWidth, row.Size.Y);
+									float controlWidth = innerWidth - labelWidth - row.Spacing;
+									label.Size = new Vector2(labelWidth, rowHeight);
+									control.Size = new Vector2(controlWidth, rowHeight);
 								}
 							}
 						}
@@ -630,6 +743,11 @@ namespace LibRender2.Menu
 					ToggleSidebar();
 					return;
 				}
+			}
+			if (GLControl.FocusedControl is GLNumericUpDown focusedNumber && !focusedNumber.HitTest(x, y))
+			{
+				// Clicking away from a numeric field commits the value and releases keyboard focus
+				focusedNumber.CommitEdit();
 			}
 			if (CurrMenu >= 0 && Menus.Length > 0 && Menus[CurrMenu].Type == MenuType.Options)
 			{
@@ -926,6 +1044,10 @@ namespace LibRender2.Menu
 			if (GLControl.FocusedControl != null && GLControl.FocusedControl.IsVisible)
 			{
 				GLControl.FocusedControl.KeyDown(key);
+				return;
+			}
+			if (CurrMenu >= 0 && Menus.Length > 0 && Menus[CurrMenu].Type == MenuType.Options && ProcessOptionsKey(key))
+			{
 				return;
 			}
 			if (CurrMenu < 0 || Menus.Length == 0) return;

@@ -51,9 +51,28 @@ namespace LibRender2.Primitives
 
 		public override void Draw()
 		{
-			Renderer.Rectangle.Draw(Texture, Location, Size, BackgroundColor);
-			float textY = (float)(Location.Y + (Size.Y - Font.MeasureString(Text).Y) / 2.0f);
-			Renderer.OpenGlString.Draw(Font, Text, new Vector2(Location.X, textY), TextAlignment.TopLeft, TextColor);
+			if (!IsVisible) return;
+			if (BackgroundColor.A > 0.001f)
+			{
+				Renderer.Rectangle.Draw(Texture, Location, Size, BackgroundColor);
+			}
+			string toDraw = Text;
+			Vector2 measured = Font.MeasureString(Text);
+			if (Size.X > 0 && measured.X > Size.X)
+			{
+				// Truncate with an ellipsis so long labels never spill over the adjacent control
+				for (int n = Text.Length - 1; n >= 0; n--)
+				{
+					string candidate = Text.Substring(0, n) + "...";
+					if (Font.MeasureString(candidate).X <= Size.X)
+					{
+						toDraw = candidate;
+						break;
+					}
+				}
+			}
+			float textY = (float)(Location.Y + (Size.Y - Font.MeasureString(toDraw).Y) / 2.0f);
+			Renderer.OpenGlString.Draw(Font, toDraw, new Vector2(Location.X, textY), TextAlignment.TopLeft, TextColor);
 		}
 	}
 }
