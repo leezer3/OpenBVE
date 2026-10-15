@@ -91,40 +91,49 @@ namespace OpenBveApi.Routes
 					}
 				}
 
-				// sort, as no guarantee the verticies are actually in clock-order
-				vertexIndicies = vertexIndicies.OrderBy(x => System.Math.Atan2(newObject.Mesh.Vertices[x].Coordinates.X, newObject.Mesh.Vertices[x].Coordinates.Z)).ToList();
-
-				int v = newObject.Mesh.Vertices.Length;
-
-				List<int> finalVertexIndicies = new List<int>();
-				for (int i = 0; i < vertexIndicies.Count; i++)
+				if (vertexIndicies.Count == 0)
 				{
-					finalVertexIndicies.Add(vertexIndicies[i]);
-					finalVertexIndicies.Add(v);
-					finalVertexIndicies.Add(i == vertexIndicies.Count - 1 ? vertexIndicies[0] : vertexIndicies[i + 1]);
+					// No vertices above the horizon (e.g. a flat ground-level backdrop):
+					// there is no rim to cap, so use the object unchanged.
+					Object = staticObject;
 				}
-
-				Array.Resize(ref newObject.Mesh.Vertices, v + 1);
-				newObject.Mesh.Vertices[v] = new Vertex(0, newObject.Mesh.Vertices[vertexIndicies[0]].Coordinates.Y + 100, 0);
-
-				// build initial texture coordinate- use the top 35% (as the bottom half of the skydome often has distant scenery)
-				newObject.Mesh.Vertices[v].TextureCoordinates = newObject.Mesh.Vertices[vertexIndicies[0]].TextureCoordinates - ((newObject.Mesh.Vertices[vertexIndicies[0]].TextureCoordinates - referenceCoords) * 0.35);
-				// no guarantee that the X or Y will be the vertical texture coordinate, so zero the other based on what we found earlier
-				if (wrapX)
+				else
 				{
-					newObject.Mesh.Vertices[v].TextureCoordinates.X = 0;
-				}
-				if (wrapY)
-				{
-					newObject.Mesh.Vertices[v].TextureCoordinates.Y = 0;
-				}
+					// sort, as no guarantee the verticies are actually in clock-order
+					vertexIndicies = vertexIndicies.OrderBy(x => System.Math.Atan2(newObject.Mesh.Vertices[x].Coordinates.X, newObject.Mesh.Vertices[x].Coordinates.Z)).ToList();
+
+					int v = newObject.Mesh.Vertices.Length;
+
+					List<int> finalVertexIndicies = new List<int>();
+					for (int i = 0; i < vertexIndicies.Count; i++)
+					{
+						finalVertexIndicies.Add(vertexIndicies[i]);
+						finalVertexIndicies.Add(v);
+						finalVertexIndicies.Add(i == vertexIndicies.Count - 1 ? vertexIndicies[0] : vertexIndicies[i + 1]);
+					}
+
+					Array.Resize(ref newObject.Mesh.Vertices, v + 1);
+					newObject.Mesh.Vertices[v] = new Vertex(0, newObject.Mesh.Vertices[vertexIndicies[0]].Coordinates.Y + 100, 0);
+
+					// build initial texture coordinate- use the top 35% (as the bottom half of the skydome often has distant scenery)
+					newObject.Mesh.Vertices[v].TextureCoordinates = newObject.Mesh.Vertices[vertexIndicies[0]].TextureCoordinates - ((newObject.Mesh.Vertices[vertexIndicies[0]].TextureCoordinates - referenceCoords) * 0.35);
+					// no guarantee that the X or Y will be the vertical texture coordinate, so zero the other based on what we found earlier
+					if (wrapX)
+					{
+						newObject.Mesh.Vertices[v].TextureCoordinates.X = 0;
+					}
+					if (wrapY)
+					{
+						newObject.Mesh.Vertices[v].TextureCoordinates.Y = 0;
+					}
 
 
-				int f = newObject.Mesh.Faces.Length;
-				Array.Resize(ref newObject.Mesh.Faces, f + 1);
-				newObject.Mesh.Faces[f] = new MeshFace(finalVertexIndicies.ToArray(), FaceFlags.Triangles);
-				newObject.Mesh.Faces[f].Flags |= FaceFlags.Triangles;
-				Object = newObject;
+					int f = newObject.Mesh.Faces.Length;
+					Array.Resize(ref newObject.Mesh.Faces, f + 1);
+					newObject.Mesh.Faces[f] = new MeshFace(finalVertexIndicies.ToArray(), FaceFlags.Triangles);
+					newObject.Mesh.Faces[f].Flags |= FaceFlags.Triangles;
+					Object = newObject;
+				}
 			}
 			else
 			{
