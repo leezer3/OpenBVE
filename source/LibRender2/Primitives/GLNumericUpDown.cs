@@ -55,6 +55,26 @@ namespace LibRender2.Primitives
                         float minusX = (float)(downLoc.X + (15 - 7) / 2);
                         float minusY = (float)(downLoc.Y + (Size.Y - 1) / 2);
                         Renderer.Rectangle.Draw(null, new Vector2(minusX, minusY), new Vector2(7, 1), Color128.White);
+
+                        DrawFocusRing();
+                }
+
+                public override void OnActivate()
+                {
+                        if (!IsEditing)
+                        {
+                                IsEditing = true;
+                                currentInputString = Value.ToString("0.##");
+                                FocusedControl = this;
+                        }
+                }
+
+                public override bool OnAdjust(int direction)
+                {
+                        CommitEdit();
+                        Value = System.Math.Max(Minimum, System.Math.Min(Maximum, Value + direction * Increment));
+                        ValueChanged?.Invoke(this, EventArgs.Empty);
+                        return true;
                 }
 
                 public override void MouseMove(int x, int y)

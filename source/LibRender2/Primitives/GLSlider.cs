@@ -34,6 +34,17 @@ namespace LibRender2.Primitives
                         double knobX = Location.X + ratio * (Size.X - 12.0);
                         Color128 knobColor = dragging ? new Color128(1.0f, 0.7f, 0.2f, 1f) : Color128.Orange;
                         Renderer.Rectangle.Draw(null, new Vector2(knobX, Location.Y + 2.0), new Vector2(12.0, Size.Y - 4.0), knobColor);
+
+                        DrawFocusRing();
+                }
+
+                public override bool OnAdjust(int direction)
+                {
+                        double step = (Maximum - Minimum) / 100.0;
+                        if (step <= 0.0) step = 1.0;
+                        Value = System.Math.Max(Minimum, System.Math.Min(Maximum, Value + direction * step));
+                        ValueChanged?.Invoke(this, EventArgs.Empty);
+                        return true;
                 }
 
                 public override void MouseMove(int x, int y)

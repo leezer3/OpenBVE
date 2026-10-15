@@ -9,7 +9,6 @@ namespace LibRender2.Primitives
         public class GLButton : GLControl
         {
                 public string Text = "";
-                public EventHandler OnClick;
 
                 /// <summary>The normal background color</summary>
                 public Color128 NormalColor = new Color128(0.0f, 0.47f, 0.83f, 1.0f);
@@ -19,8 +18,6 @@ namespace LibRender2.Primitives
                 public Color128 PressColor = new Color128(0.0f, 0.37f, 0.65f, 1.0f);
                 /// <summary>The disabled background color</summary>
                 public Color128 DisabledColor = new Color128(0.2f, 0.2f, 0.2f, 1.0f);
-                /// <summary>Whether the button is enabled</summary>
-                public bool Enabled = true;
                 /// <summary>Whether this is a flat/minimal style button</summary>
                 public bool Flat = false;
                 /// <summary>Border radius in pixels (0 = sharp corners)</summary>
@@ -36,6 +33,8 @@ namespace LibRender2.Primitives
                 public override void Draw()
                 {
                         if (!IsVisible) return;
+
+                        DrawFocusRing();
 
                         if (!Enabled)
                         {
@@ -98,6 +97,12 @@ namespace LibRender2.Primitives
                                 OnClick?.Invoke(this, EventArgs.Empty);
                         }
                         IsPressed = false;
+                }
+
+                public override void OnActivate()
+                {
+                        if (!Enabled) return;
+                        OnClick?.Invoke(this, EventArgs.Empty);
                 }
         }
 }

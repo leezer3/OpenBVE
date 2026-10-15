@@ -28,22 +28,41 @@ namespace LibRender2.Primitives
                 public override void Draw()
                 {
                         if (!IsVisible) return;
-                        // Draw toggle switch track
+                        // Draw toggle switch track, right-aligned within the control's bounds
                         Color128 track = CurrentlySelected
                                 ? new Color128(0.35f, 0.35f, 0.4f, 1f)
                                 : TrackColor;
-                        Renderer.Rectangle.Draw(null, Location, new Vector2(36, 18), track);
+                        float trackWidth = 36f;
+                        float trackHeight = 18f;
+                        float trackX = (float)(Location.X + Size.X - trackWidth);
+                        float trackY = (float)(Location.Y + (Size.Y - trackHeight) / 2.0);
+                        Renderer.Rectangle.Draw(null, new Vector2(trackX, trackY), new Vector2(trackWidth, trackHeight), track);
 
                         // Draw knob
-                        float knobX = Checked ? (float)Location.X + 18f : (float)Location.X + 3f;
+                        float knobX = Checked ? trackX + 18f : trackX + 3f;
                         Color128 knobColor = Checked ? KnobCheckedColor : KnobUncheckedColor;
-                        Renderer.Rectangle.Draw(null, new Vector2(knobX, (float)Location.Y + 2f), new Vector2(14, 14), knobColor);
+                        Renderer.Rectangle.Draw(null, new Vector2(knobX, trackY + 2f), new Vector2(14, 14), knobColor);
 
                         // Draw label text
                         if (!string.IsNullOrEmpty(Text))
                         {
                                 Renderer.OpenGlString.Draw(Renderer.Fonts.NormalFont, Text, new Vector2(Location.X + 44, Location.Y + 1), TextAlignment.TopLeft, Color128.White);
                         }
+
+                        DrawFocusRing();
+                }
+
+                public override void OnActivate()
+                {
+                        Checked = !Checked;
+                        ValueChanged?.Invoke(this, EventArgs.Empty);
+                        OnClick?.Invoke(this, EventArgs.Empty);
+                }
+
+                public override bool OnAdjust(int direction)
+                {
+                        OnActivate();
+                        return true;
                 }
 
                 public override void MouseMove(int x, int y)

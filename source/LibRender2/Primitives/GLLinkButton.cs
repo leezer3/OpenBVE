@@ -11,7 +11,6 @@ namespace LibRender2.Primitives
                 public Color128 NormalColor = new Color128(0.2f, 0.6f, 1f, 1f);
                 public Color128 HoverColor = new Color128(0.4f, 0.8f, 1f, 1f);
                 public Color128 PressColor = new Color128(0.15f, 0.5f, 0.85f, 1f);
-                public EventHandler OnClick;
 
                 public GLLinkButton(BaseRenderer renderer) : base(renderer)
                 {
