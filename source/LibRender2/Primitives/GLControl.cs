@@ -55,6 +55,12 @@ namespace LibRender2.Primitives
                 /// <summary>The currently globally focused control for keyboard input</summary>
                 public static GLControl FocusedControl;
 
+                /// <summary>Whether the control is currently enabled for mouse and keyboard interaction</summary>
+                public bool Enabled = true;
+
+                /// <summary>Whether the control currently holds keyboard focus (drawn as a highlight ring)</summary>
+                public bool KeyboardFocused = false;
+
                 protected GLControl(BaseRenderer renderer)
                 {
                         Renderer = renderer;
@@ -97,6 +103,46 @@ namespace LibRender2.Primitives
                 public virtual void MouseWheel(int delta)
                 {
 
+                }
+
+                /// <summary>Tests whether a given screen point lies within this control's interactive bounds</summary>
+                public virtual bool HitTest(int x, int y)
+                {
+                        return IsVisible && Enabled && x >= Location.X && x <= Location.X + Size.X && y >= Location.Y && y <= Location.Y + Size.Y;
+                }
+
+                /// <summary>Clears transient hover (CurrentlySelected) state from this control</summary>
+                public virtual void ClearHover()
+                {
+                        CurrentlySelected = false;
+                }
+
+                /// <summary>Runs a layout pass for this control (and any children)</summary>
+                public virtual void PerformLayout()
+                {
+                }
+
+                /// <summary>Invoked when this control is activated via keyboard navigation</summary>
+                public virtual void OnActivate()
+                {
+                }
+
+                /// <summary>Draws a highlight ring around the control when it holds keyboard focus</summary>
+                protected void DrawFocusRing()
+                {
+                        if (!KeyboardFocused) return;
+                        Color128 c = new Color128(0.0f, 0.47f, 0.83f, 1f);
+                        Renderer.Rectangle.Draw(null, Location, new Vector2(Size.X, 1f), c);
+                        Renderer.Rectangle.Draw(null, new Vector2(Location.X, Location.Y + Size.Y - 1f), new Vector2(Size.X, 1f), c);
+                        Renderer.Rectangle.Draw(null, Location, new Vector2(1f, Size.Y), c);
+                        Renderer.Rectangle.Draw(null, new Vector2(Location.X + Size.X - 1f, Location.Y), new Vector2(1f, Size.Y), c);
+                }
+
+                /// <summary>Invoked when this control is adjusted via the keyboard; direction is -1 (decrease) or +1 (increase)</summary>
+                /// <returns>True if the control handled the adjustment</returns>
+                public virtual bool OnAdjust(int direction)
+                {
+                        return false;
                 }
         }
 }

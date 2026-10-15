@@ -61,6 +61,51 @@ namespace LibRender2.Primitives
                         {
                                 Renderer.OpenGlString.Draw(Renderer.Fonts.NormalFont, Items[SelectedIndex], new Vector2(Location.X + 8, Location.Y + 2), TextAlignment.TopLeft, Color128.White);
                         }
+
+                        DrawFocusRing();
+                }
+
+                public override bool HitTest(int x, int y)
+                {
+                        if (!IsVisible || !Enabled) return false;
+                        if (x >= Location.X && x <= Location.X + Size.X && y >= Location.Y && y <= Location.Y + Size.Y) return true;
+                        if (Expanded && Items.Count > 0)
+                        {
+                                float itemHeight = 24f;
+                                float overlayHeight = Items.Count * itemHeight;
+                                bool expandUp = ShouldExpandUpward();
+                                Vector2 overlayLoc = expandUp ? new Vector2(Location.X, Location.Y - overlayHeight) : new Vector2(Location.X, Location.Y + Size.Y);
+                                if (x >= overlayLoc.X && x <= overlayLoc.X + Size.X && y >= overlayLoc.Y && y <= overlayLoc.Y + overlayHeight) return true;
+                        }
+                        return false;
+                }
+
+                public override void OnActivate()
+                {
+                        Expanded = !Expanded;
+                        if (Expanded)
+                        {
+                                if (ActiveDropdown != null && ActiveDropdown != this) ActiveDropdown.Expanded = false;
+                                ActiveDropdown = this;
+                        }
+                        else if (ActiveDropdown == this)
+                        {
+                                ActiveDropdown = null;
+                        }
+                }
+
+                public override bool OnAdjust(int direction)
+                {
+                        if (Items.Count == 0) return false;
+                        int newIndex = SelectedIndex + direction;
+                        if (newIndex < 0) newIndex = 0;
+                        if (newIndex > Items.Count - 1) newIndex = Items.Count - 1;
+                        if (newIndex != SelectedIndex)
+                        {
+                                SelectedIndex = newIndex;
+                                SelectionChanged?.Invoke(this, EventArgs.Empty);
+                        }
+                        return true;
                 }
 
                 public void DrawOverlay()
