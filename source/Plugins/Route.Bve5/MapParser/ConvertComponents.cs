@@ -440,12 +440,14 @@ namespace Route.Bve5
 				{
 					railStatements = new List<Statement>();
 				}
+
+				// NOTE: Where two InterpolateX / InterpolateY statements are at the same distance, BVETS takes the first
+				double lastInterpolateXDistance = double.MinValue, lastInterpolateYDistance = double.MinValue;
 				foreach (Statement Statement in railStatements)
 				{
-
 					dynamic d = Statement;
 
-					if (Statement.FunctionName == MapFunctionName.Position || (Statement.HasSubElement && Statement.SubElementName == MapSubElementName.X))
+					if ((Statement.FunctionName == MapFunctionName.Position || (Statement.HasSubElement && Statement.SubElementName == MapSubElementName.X)) && lastInterpolateXDistance != Statement.Distance)
 					{
 						int Index = RouteData.FindOrAddBlock(Statement.Distance);
 						int LastInterpolateIndex = -1;
@@ -492,9 +494,10 @@ namespace Route.Bve5
 						RouteData.Blocks[Index].Rails[railKey].Position.X = Convert.ToDouble(X);
 						RouteData.Blocks[Index].Rails[railKey].RadiusH = Convert.ToDouble(RadiusH);
 						RouteData.Blocks[Index].Rails[railKey].InterpolateX = true;
+						lastInterpolateXDistance = Statement.Distance;
 					}
 
-					if (Statement.FunctionName == MapFunctionName.Position || (Statement.HasSubElement && Statement.SubElementName == MapSubElementName.Y))
+					if ((Statement.FunctionName == MapFunctionName.Position || (Statement.HasSubElement && Statement.SubElementName == MapSubElementName.Y)) && lastInterpolateYDistance != Statement.Distance)
 					{
 						int Index = RouteData.FindOrAddBlock(Statement.Distance);
 						int LastInterpolateIndex = -1;
@@ -540,6 +543,7 @@ namespace Route.Bve5
 						RouteData.Blocks[Index].Rails[railKey].Position.Y = Convert.ToDouble(Y);
 						RouteData.Blocks[Index].Rails[railKey].RadiusV = Convert.ToDouble(RadiusV);
 						RouteData.Blocks[Index].Rails[railKey].InterpolateY = true;
+						lastInterpolateYDistance = Statement.Distance;
 					}
 
 					if (Statement.HasSubElement && Statement.SubElementName == MapSubElementName.Cant)
