@@ -254,13 +254,13 @@ namespace LibRender2.Menu
 
 			menuControls.Add(OptionsTabContainer);
 
-			var displayTab = new GLScrollContainer(Renderer) { Spacing = 8f, Padding = 12f };
-			var qualityTab = new GLScrollContainer(Renderer) { Spacing = 8f, Padding = 12f };
-			var otherTab = new GLScrollContainer(Renderer) { Spacing = 8f, Padding = 12f };
+			var displayTab = new GLScrollContainer(Renderer) { Spacing = 6f, Padding = 8f };
+			var qualityTab = new GLScrollContainer(Renderer) { Spacing = 6f, Padding = 8f };
+			var otherTab = new GLScrollContainer(Renderer) { Spacing = 6f, Padding = 8f };
 			GLScrollContainer lightingTab = null;
 			if (host == HostApplication.RouteViewer || host == HostApplication.ObjectViewer)
 			{
-				lightingTab = new GLScrollContainer(Renderer) { Spacing = 8f, Padding = 12f };
+				lightingTab = new GLScrollContainer(Renderer) { Spacing = 6f, Padding = 8f };
 			}
 
 			OptionsTabContainer.AddTab("Display", displayTab);
@@ -510,7 +510,7 @@ namespace LibRender2.Menu
 
 			if (host == HostApplication.ObjectViewer)
 			{
-				var reloadRow = CreateRow("Automatically Reload Changed Objects");
+				var reloadRow = CreateRow("Auto Reload Changed Object");
 				var reloadToggle = new GLToggle(Renderer) { Checked = CurrentOptions.AutoReloadObjects, Text = "" };
 				reloadToggle.ValueChanged += (s, e) =>
 				{
@@ -539,6 +539,50 @@ namespace LibRender2.Menu
 				barToggle.ValueChanged += (s, e) => { CurrentOptions.LoadingProgressBar = barToggle.Checked; };
 				barRow.Children.Add(barToggle);
 				otherTab.Children.Add(barRow);
+			}
+
+			if (host == HostApplication.ObjectViewer)
+			{
+				var progressRow = CreateRow("Show Loading Progress Bar");
+				var progressToggle = new GLToggle(Renderer) { Checked = CurrentOptions.LoadingProgressBar, Text = "" };
+				progressToggle.ValueChanged += (s, e) => { CurrentOptions.LoadingProgressBar = progressToggle.Checked; };
+				progressRow.Children.Add(progressToggle);
+				otherTab.Children.Add(progressRow);
+			}
+
+			// Ground reference plane (ObjectViewer F8 parity)
+			if (SupportsGroundSettings)
+			{
+				var groundRow = CreateRow("Show Ground");
+				var groundToggle = new GLToggle(Renderer) { Checked = GroundVisible, Text = "" };
+				groundToggle.ValueChanged += (s, e) =>
+				{
+					GroundVisible = groundToggle.Checked;
+					RefreshGround();
+				};
+				groundRow.Children.Add(groundToggle);
+				otherTab.Children.Add(groundRow);
+
+				var groundHeightRow = CreateRow("Height (m)");
+				var groundHeightNum = new GLNumericUpDown(Renderer) { Minimum = -100f, Maximum = 100f, Increment = 0.5f, ValueFormat = "0.0", Value = (float)GroundHeightValue };
+				groundHeightNum.ValueChanged += (s, e) =>
+				{
+					GroundHeightValue = groundHeightNum.Value;
+					RefreshGround();
+				};
+				groundHeightRow.Children.Add(groundHeightNum);
+				otherTab.Children.Add(groundHeightRow);
+
+				var groundColorRow = CreateRow("Ground Color");
+				var groundPicker = new GLColorPicker(Renderer);
+				groundPicker.SetColor(GroundColorValue);
+				groundPicker.SelectionChanged += (s, e) =>
+				{
+					GroundColorValue = groundPicker.SelectedColor;
+					RefreshGround();
+				};
+				groundColorRow.Children.Add(groundPicker);
+				otherTab.Children.Add(groundColorRow);
 			}
 
 			// Populate Lighting Tab (F8 Shadow & Lighting parity, viewers only)
@@ -736,6 +780,21 @@ namespace LibRender2.Menu
 
 		/// <summary>FPS limit preset value, or -1 when unsupported by this host</summary>
 		public virtual int FPSLimitValue { get => -1; set { } }
+
+		/// <summary>Whether this host has flat-ground reference plane settings (ObjectViewer)</summary>
+		public virtual bool SupportsGroundSettings => false;
+
+		/// <summary>Whether the flat ground reference plane is shown</summary>
+		public virtual bool GroundVisible { get => false; set { } }
+
+		/// <summary>Height of the ground plane in meters</summary>
+		public virtual double GroundHeightValue { get => 0.0; set { } }
+
+		/// <summary>Color of the ground plane</summary>
+		public virtual Color24 GroundColorValue { get => new Color24(128, 128, 128); set { } }
+
+		/// <summary>Rebuilds the ground plane after a ground setting changed</summary>
+		public virtual void RefreshGround() { }
 
 		/// <summary>Applies a changed sun direction (hosts add route-specific propagation)</summary>
 		public virtual void ApplySunDirection()
@@ -943,11 +1002,11 @@ namespace LibRender2.Menu
 		{
 			if (OptionsTabContainer != null)
 			{
-				OptionsTabContainer.Location = new Vector2((float)menuMin.X + 16f, 50f);
-				float panelWidth = (float)SidebarWidth - 32f;
-				OptionsTabContainer.Size = new Vector2(panelWidth, (float)Renderer.Screen.Height - 100f);
+				OptionsTabContainer.Location = new Vector2((float)menuMin.X + 8f, 16f);
+				float panelWidth = (float)SidebarWidth - 16f;
+				OptionsTabContainer.Size = new Vector2(panelWidth, (float)Renderer.Screen.Height - 32f);
 				// Inner width available to a row after the scroll container's padding and scrollbar
-				float innerWidth = panelWidth - 24f - 8f;
+				float innerWidth = panelWidth - 16f - 8f;
 
 				foreach (var tab in OptionsTabContainer.TabContents)
 				{
@@ -1118,7 +1177,9 @@ namespace LibRender2.Menu
 			if (isResizingSidebar)
 			{
 				double ratio = (double)x / Renderer.Screen.Width;
-				SidebarWidthRatio = System.Math.Max(0.15, System.Math.Min(ratio, 0.5));
+				// Keep at least 280px so the tab bar and rows never collapse into ellipsis
+				double minRatio = 280.0 / System.Math.Max(1, Renderer.Screen.Width);
+				SidebarWidthRatio = System.Math.Max(System.Math.Min(minRatio, 0.5), System.Math.Min(ratio, 0.5));
 				ComputePosition();
 				SetSidebarResizeCursor(true);
 				return true;
@@ -1283,7 +1344,7 @@ namespace LibRender2.Menu
 		{
 			if (!IsSidebarMode) return;
 			Vector4 rect = GetToggleButtonRect();
-			Renderer.Rectangle.Draw(null, new Vector2(rect.X, rect.Y), new Vector2(rect.Z, rect.W), backgroundColor);
+			Renderer.Rectangle.DrawRoundedCorners(null, new Vector2(rect.X, rect.Y), new Vector2(rect.Z, rect.W), 8f, new Vector4(0.0, 1.0, 1.0, 0.0), backgroundColor);
 			var icon = SidebarVisible ? Renderer.SidebarCollapseTexture : Renderer.SidebarExpandTexture;
 			if (icon != null)
 			{
