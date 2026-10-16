@@ -54,6 +54,7 @@ namespace OpenBve
 				{
 					OptionsTabContainer.Draw();
 					LibRender2.Primitives.GLDropdown.ActiveDropdown?.DrawOverlay();
+					LibRender2.Primitives.GLColorPicker.ActivePicker?.DrawOverlay();
 				}
 				// Draw the grip first so the toggle tab cuts a clean gap in the line
 				DrawSidebarResizeGrip();

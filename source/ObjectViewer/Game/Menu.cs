@@ -41,6 +41,31 @@ namespace ObjectViewer
 			set => Interface.CurrentOptions.FPSLimit = value;
 		}
 
+		public override bool SupportsGroundSettings => true;
+
+		public override bool GroundVisible
+		{
+			get => Interface.CurrentOptions.ShowGround;
+			set => Interface.CurrentOptions.ShowGround = value;
+		}
+
+		public override double GroundHeightValue
+		{
+			get => Interface.CurrentOptions.GroundHeight;
+			set => Interface.CurrentOptions.GroundHeight = value;
+		}
+
+		public override OpenBveApi.Colors.Color24 GroundColorValue
+		{
+			get => Interface.CurrentOptions.GroundColor;
+			set => Interface.CurrentOptions.GroundColor = value;
+		}
+
+		public override void RefreshGround()
+		{
+			Program.Renderer.RefreshGround();
+		}
+
 		public override void Initialize()
 		{
 			filePictureBox = new Picturebox(Renderer);
@@ -350,6 +375,7 @@ namespace ObjectViewer
 				{
 					OptionsTabContainer.Draw();
 					LibRender2.Primitives.GLDropdown.ActiveDropdown?.DrawOverlay();
+					LibRender2.Primitives.GLColorPicker.ActivePicker?.DrawOverlay();
 				}
 				// Draw the grip first so the toggle tab cuts a clean gap in the line
 				DrawSidebarResizeGrip();

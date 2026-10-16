@@ -109,6 +109,7 @@
     <Compile Include="Primitives\GLToggle.cs" />
     <Compile Include="Primitives\GLLinkButton.cs" />
     <Compile Include="Primitives\GLDropdown.cs" />
+    <Compile Include="Primitives\GLColorPicker.cs" />
     <Compile Include="Primitives\GLSlider.cs" />
     <Compile Include="Primitives\GLNumericUpDown.cs" />
     <Compile Include="Primitives\GLTabContainer.cs" />
