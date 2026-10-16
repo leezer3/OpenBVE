@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using OpenBveApi.Math;
 using OpenBveApi.Colors;
@@ -19,8 +20,17 @@ namespace LibRender2.Primitives
                 public Color128 ContentBackgroundColor = new Color128(0.1f, 0.1f, 0.12f, 1.0f);
                 /// <summary>Horizontal padding on each side of a tab title (tabs are content-sized, Blender-style)</summary>
                 public float TabPadding = 12f;
+                /// <summary>Height of the back row above the tab bar</summary>
+                public float BackRowHeight = 28f;
+                /// <summary>Gap between the back row and the tab bar</summary>
+                public float BackGap = 6f;
+                /// <summary>Whether a back button is shown (when another menu sits below this panel)</summary>
+                public bool ShowBackButton = false;
+                /// <summary>Fired when the back button is activated</summary>
+                public EventHandler BackClicked;
 
                 private int hoveredTab = -1;
+                private bool hoveredBack;
 
                 public GLTabContainer(BaseRenderer renderer) : base(renderer)
                 {
@@ -38,8 +48,9 @@ namespace LibRender2.Primitives
                 /// <summary>The content control for the currently selected tab, if any</summary>
                 public GLControl SelectedContent => SelectedTab >= 0 && SelectedTab < TabContents.Count ? TabContents[SelectedTab] : null;
 
-                private Vector2 ContentLocation => new Vector2(Location.X, Location.Y + TabHeaderHeight);
-                private Vector2 ContentSize => new Vector2(Size.X, Size.Y - TabHeaderHeight);
+                private float HeaderY => (float)(Location.Y + (ShowBackButton ? BackRowHeight + BackGap : 0f));
+                private Vector2 ContentLocation => new Vector2(Location.X, HeaderY + TabHeaderHeight);
+                private Vector2 ContentSize => new Vector2(Size.X, Size.Y - TabHeaderHeight - (ShowBackButton ? BackRowHeight + BackGap : 0f));
 
                 /// <summary>Measures each tab title for content-sized (Blender-style) header layout</summary>
                 private float[] GetTabWidths()
@@ -52,9 +63,10 @@ namespace LibRender2.Primitives
                                 total += widths[i];
                         }
                         // Shrink proportionally when the bar is narrower than the tabs (narrow sidebar)
-                        if (total > Size.X && total > 0f)
+                        float avail = (float)Size.X;
+                        if (total > avail && total > 0f)
                         {
-                                float scale = (float)Size.X / total;
+                                float scale = avail > 0f ? avail / total : 0f;
                                 for (int i = 0; i < widths.Length; i++) widths[i] *= scale;
                         }
                         return widths;
@@ -89,6 +101,31 @@ namespace LibRender2.Primitives
                         return -1;
                 }
 
+                /// <summary>Draws the back row (chevron + label) above the tab bar</summary>
+                private void DrawBackRow()
+                {
+                        float hitW = BackHitWidth();
+                        Vector2 backLoc = new Vector2(Location.X, Location.Y);
+                        if (hoveredBack)
+                        {
+                                Renderer.Rectangle.DrawRounded(null, backLoc, new Vector2(hitW, BackRowHeight), 6f, HoverTabColor);
+                        }
+                        var icon = Renderer.SidebarCollapseTexture;
+                        float iconY = (float)(Location.Y + (BackRowHeight - 16) / 2);
+                        if (icon != null)
+                        {
+                                Renderer.Rectangle.Draw(icon, new Vector2(backLoc.X + 12, iconY), new Vector2(16.0, 16.0), Color128.White);
+                        }
+                        Vector2 textSize = Renderer.Fonts.NormalFont.MeasureString("Back");
+                        Renderer.OpenGlString.Draw(Renderer.Fonts.NormalFont, "Back", new Vector2(backLoc.X + 12 + 16 + 8, (float)(Location.Y + (BackRowHeight - textSize.Y) / 2f)), TextAlignment.TopLeft, Color128.White);
+                }
+
+                /// <summary>Width of the clickable back row content (chevron + label + padding)</summary>
+                private float BackHitWidth()
+                {
+                        return 12f + 16f + 8f + (float)Renderer.Fonts.NormalFont.MeasureString("Back").X + 12f;
+                }
+
                 public override void PerformLayout()
                 {
                         Vector2 contentLoc = ContentLocation;
@@ -114,11 +151,15 @@ namespace LibRender2.Primitives
 
                         // Blender-style headers: content-sized tabs aligned left; only the
                         // active tab gets a rounded background with an accent underline
+                        if (ShowBackButton)
+                        {
+                                DrawBackRow();
+                        }
                         float[] tabWidths = GetTabWidths();
                         float tabX = (float)Location.X;
                         for (int i = 0; i < TabTitles.Count; i++)
                         {
-                                Vector2 headerLoc = new Vector2(tabX, Location.Y);
+                                Vector2 headerLoc = new Vector2(tabX, HeaderY);
                                 Vector2 headerSize = new Vector2(tabWidths[i], TabHeaderHeight);
 
                                 bool isSelected = (i == SelectedTab);
@@ -163,13 +204,15 @@ namespace LibRender2.Primitives
                 {
                         if (!IsVisible || TabTitles.Count == 0) return;
 
-                        if (x >= Location.X && x <= Location.X + Size.X && y >= Location.Y && y <= Location.Y + TabHeaderHeight)
+                        hoveredTab = -1;
+                        hoveredBack = false;
+                        if (ShowBackButton && x >= Location.X && x <= Location.X + BackHitWidth() && y >= Location.Y && y <= Location.Y + BackRowHeight)
+                        {
+                                hoveredBack = true;
+                        }
+                        else if (x >= Location.X && x <= Location.X + Size.X && y >= HeaderY && y <= HeaderY + TabHeaderHeight)
                         {
                                 hoveredTab = TabAtX(x);
-                        }
-                        else
-                        {
-                                hoveredTab = -1;
                         }
 
                         base.MouseMove(x, y);
@@ -179,7 +222,12 @@ namespace LibRender2.Primitives
                 {
                         if (!IsVisible || TabTitles.Count == 0) return;
 
-                        if (x >= Location.X && x <= Location.X + Size.X && y >= Location.Y && y <= Location.Y + TabHeaderHeight)
+                        if (ShowBackButton && x >= Location.X && x <= Location.X + BackHitWidth() && y >= Location.Y && y <= Location.Y + BackRowHeight)
+                        {
+                                BackClicked?.Invoke(this, EventArgs.Empty);
+                                return;
+                        }
+                        if (x >= Location.X && x <= Location.X + Size.X && y >= HeaderY && y <= HeaderY + TabHeaderHeight)
                         {
                                 int clickedTab = TabAtX(x);
                                 if (clickedTab >= 0 && clickedTab < TabTitles.Count)
@@ -203,6 +251,11 @@ namespace LibRender2.Primitives
 
                 public override void KeyDown(Key key)
                 {
+                        if (key == Key.BackSpace)
+                        {
+                                if (ShowBackButton) BackClicked?.Invoke(this, EventArgs.Empty);
+                                return;
+                        }
                         if (key == Key.Left)
                         {
                                 SelectTab(SelectedTab - 1);

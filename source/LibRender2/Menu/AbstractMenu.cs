@@ -251,6 +251,7 @@ namespace LibRender2.Menu
 
 			OptionsTabContainer = new GLTabContainer(Renderer);
 			OptionsTabContainer.IsVisible = false;
+			OptionsTabContainer.BackClicked += (s, e) => PopMenu();
 
 			menuControls.Add(OptionsTabContainer);
 
@@ -1002,6 +1003,8 @@ namespace LibRender2.Menu
 		{
 			if (OptionsTabContainer != null)
 			{
+				// Back chevron only when another menu sits below the options panel
+				OptionsTabContainer.ShowBackButton = CurrMenu > 0;
 				OptionsTabContainer.Location = new Vector2((float)menuMin.X + 8f, 16f);
 				float panelWidth = (float)SidebarWidth - 16f;
 				OptionsTabContainer.Size = new Vector2(panelWidth, (float)Renderer.Screen.Height - 32f);
@@ -1204,8 +1207,8 @@ namespace LibRender2.Menu
 			float screenHeight = (float)Renderer.Screen.Height;
 			// Leave a clean gap where the toggle tab sits, so it reads as a handle plugged into the edge
 			Vector4 tab = GetToggleButtonRect();
-			float gapTop = (float)System.Math.Max(0.0, tab.Y);
-			float gapBottom = (float)System.Math.Min((double)screenHeight, tab.Y + tab.W);
+			gapTop = (float)System.Math.Max(0.0, tab.Y);
+			gapBottom = (float)System.Math.Min((double)screenHeight, tab.Y + tab.W);
 			float upperHeight = gapTop;
 			float lowerHeight = screenHeight - gapBottom;
 			// Always-visible grip line so the user knows the edge is draggable
