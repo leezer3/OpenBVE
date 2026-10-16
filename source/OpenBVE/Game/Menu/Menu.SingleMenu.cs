@@ -426,16 +426,17 @@ namespace OpenBve
 								jump = 1;
 								break;
 							}
-						Items = new MenuEntry[4 + jump];
+						Items = new MenuEntry[5 + jump];
 						Items[0] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","resume"}), MenuTag.BackToSim, 0);
 						if (jump > 0)
 							Items[1] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","jump"}), MenuTag.MenuJumpToStation, 0);
+						Items[1 + jump] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","title"}), MenuTag.Options, 0);
 						if (!Interface.CurrentOptions.KioskMode)
 						{
 							//Don't allow quitting or customisation of the controls in kiosk mode
-							Items[1 + jump] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","exit"}), MenuTag.MenuExitToMainMenu, 0);
-							Items[2 + jump] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","customize_controls"}), MenuTag.MenuControls, 0);
-							Items[3 + jump] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","quit"}), MenuTag.MenuQuit, 0);
+							Items[2 + jump] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","exit"}), MenuTag.MenuExitToMainMenu, 0);
+							Items[3 + jump] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","customize_controls"}), MenuTag.MenuControls, 0);
+							Items[4 + jump] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","quit"}), MenuTag.MenuQuit, 0);
 						}
 						else
 						{

@@ -116,6 +116,9 @@ namespace OpenBve
 			LogoPictureBox.Size = new Vector2(size, size / 2);
 		}
 
+		/// <summary>In-game sidebar opens via ESC only, so the collapse tab is hidden</summary>
+		public override bool ShowSidebarToggle => false;
+
 		/// <summary>Should be called when the screen resolution changes to re-position all items on the menu appropriately</summary>
 		internal void OnResize()
 		{

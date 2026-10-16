@@ -886,6 +886,9 @@ namespace LibRender2.Menu
 		/// <summary>Whether the menu system is configured as a sliding sidebar on the left</summary>
 		public bool IsSidebarMode = true;
 
+		/// <summary>Whether the sidebar collapse tab is shown (OpenBVE in-game opens via ESC instead)</summary>
+		public virtual bool ShowSidebarToggle => true;
+
 		/// <summary>Whether the sidebar is currently open/visible</summary>
 		public bool SidebarVisible = false;
 
@@ -1103,11 +1106,14 @@ namespace LibRender2.Menu
 					isResizingSidebar = true;
 					return;
 				}
-				Vector4 rect = GetToggleButtonRect();
-				if (x >= rect.X && x <= rect.X + rect.Z && y >= rect.Y && y <= rect.Y + rect.W)
+				if (ShowSidebarToggle)
 				{
-					ToggleSidebar();
-					return;
+					Vector4 rect = GetToggleButtonRect();
+					if (x >= rect.X && x <= rect.X + rect.Z && y >= rect.Y && y <= rect.Y + rect.W)
+					{
+						ToggleSidebar();
+						return;
+					}
 				}
 			}
 			if (GLControl.FocusedControl is GLNumericUpDown focusedNumber && !focusedNumber.HitTest(x, y))
@@ -1206,9 +1212,15 @@ namespace LibRender2.Menu
 			float alpha = (0.5f + 0.5f * sidebarResizeHover) * fade;
 			float screenHeight = (float)Renderer.Screen.Height;
 			// Leave a clean gap where the toggle tab sits, so it reads as a handle plugged into the edge
-			Vector4 tab = GetToggleButtonRect();
-			gapTop = (float)System.Math.Max(0.0, tab.Y);
-			gapBottom = (float)System.Math.Min((double)screenHeight, tab.Y + tab.W);
+			// (no gap when the toggle tab is hidden)
+			float gapTop = 0f;
+			float gapBottom = 0f;
+			if (ShowSidebarToggle)
+			{
+				Vector4 tab = GetToggleButtonRect();
+				gapTop = (float)System.Math.Max(0.0, tab.Y);
+				gapBottom = (float)System.Math.Min((double)screenHeight, tab.Y + tab.W);
+			}
 			float upperHeight = gapTop;
 			float lowerHeight = screenHeight - gapBottom;
 			// Always-visible grip line so the user knows the edge is draggable
@@ -1345,7 +1357,7 @@ namespace LibRender2.Menu
 
 		public void DrawSidebarToggleButton(double RealTimeElapsed)
 		{
-			if (!IsSidebarMode) return;
+			if (!IsSidebarMode || !ShowSidebarToggle) return;
 			Vector4 rect = GetToggleButtonRect();
 			Renderer.Rectangle.DrawRoundedCorners(null, new Vector2(rect.X, rect.Y), new Vector2(rect.Z, rect.W), 8f, new Vector4(0.0, 1.0, 1.0, 0.0), backgroundColor);
 			var icon = SidebarVisible ? Renderer.SidebarCollapseTexture : Renderer.SidebarExpandTexture;
