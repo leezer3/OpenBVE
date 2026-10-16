@@ -59,7 +59,7 @@ namespace LibRender2.Primitives
                                 Color128 bg = KeyboardFocused ? FocusColor : (CurrentlySelected ? HoverColor : BackgroundColor);
                                 if (bg.A > 0.001f)
                                 {
-                                        Renderer.Rectangle.Draw(null, Location, Size, bg);
+                                        Renderer.Rectangle.DrawRounded(null, Location, Size, 6f, bg);
                                 }
                         }
                         base.Draw();

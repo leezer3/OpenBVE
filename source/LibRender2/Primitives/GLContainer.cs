@@ -110,6 +110,19 @@ namespace LibRender2.Primitives
                                 dropdown.Expanded = false;
                                 GLDropdown.ActiveDropdown = null;
                         }
+                        // Same capture for an expanded color picker popup
+                        if (GLColorPicker.ActivePicker != null)
+                        {
+                                GLColorPicker picker = GLColorPicker.ActivePicker;
+                                if (picker.HitTest(x, y))
+                                {
+                                        picker.MouseDown(x, y);
+                                        return;
+                                }
+                                // Clicking outside an expanded picker closes it
+                                picker.Expanded = false;
+                                GLColorPicker.ActivePicker = null;
+                        }
                         // Topmost child (last added) wins
                         for (int i = Children.Count - 1; i >= 0; i--)
                         {

@@ -17,6 +17,8 @@ namespace LibRender2.Primitives
                 public Color128 InactiveTabColor = new Color128(0.15f, 0.15f, 0.15f, 1.0f);
                 public Color128 HoverTabColor = new Color128(0.2f, 0.2f, 0.24f, 1.0f);
                 public Color128 ContentBackgroundColor = new Color128(0.1f, 0.1f, 0.12f, 1.0f);
+                /// <summary>Horizontal padding on each side of a tab title (tabs are content-sized, Blender-style)</summary>
+                public float TabPadding = 12f;
 
                 private int hoveredTab = -1;
 
@@ -38,6 +40,54 @@ namespace LibRender2.Primitives
 
                 private Vector2 ContentLocation => new Vector2(Location.X, Location.Y + TabHeaderHeight);
                 private Vector2 ContentSize => new Vector2(Size.X, Size.Y - TabHeaderHeight);
+
+                /// <summary>Measures each tab title for content-sized (Blender-style) header layout</summary>
+                private float[] GetTabWidths()
+                {
+                        float[] widths = new float[TabTitles.Count];
+                        float total = 0f;
+                        for (int i = 0; i < TabTitles.Count; i++)
+                        {
+                                widths[i] = (float)Renderer.Fonts.NormalFont.MeasureString(TabTitles[i]).X + TabPadding * 2f;
+                                total += widths[i];
+                        }
+                        // Shrink proportionally when the bar is narrower than the tabs (narrow sidebar)
+                        if (total > Size.X && total > 0f)
+                        {
+                                float scale = (float)Size.X / total;
+                                for (int i = 0; i < widths.Length; i++) widths[i] *= scale;
+                        }
+                        return widths;
+                }
+
+                /// <summary>Trims a tab title with an ellipsis so it fits the given tab width</summary>
+                private string FitTitle(string title, float width)
+                {
+                        float avail = width - TabPadding * 2f;
+                        if (avail <= 0f) return "";
+                        if ((float)Renderer.Fonts.NormalFont.MeasureString(title).X <= avail) return title;
+                        const string dots = "...";
+                        if ((float)Renderer.Fonts.NormalFont.MeasureString(dots).X > avail) return "";
+                        string trimmed = title;
+                        while (trimmed.Length > 1 && (float)Renderer.Fonts.NormalFont.MeasureString(trimmed + dots).X > avail)
+                        {
+                                trimmed = trimmed.Substring(0, trimmed.Length - 1);
+                        }
+                        return trimmed + dots;
+                }
+
+                /// <summary>Returns the tab index under the given x co-ordinate, or -1</summary>
+                private int TabAtX(float x)
+                {
+                        float[] widths = GetTabWidths();
+                        float cx = (float)Location.X;
+                        for (int i = 0; i < widths.Length; i++)
+                        {
+                                if (x >= cx && x <= cx + widths[i]) return i;
+                                cx += widths[i];
+                        }
+                        return -1;
+                }
 
                 public override void PerformLayout()
                 {
@@ -62,44 +112,41 @@ namespace LibRender2.Primitives
                         if (!IsVisible || TabTitles.Count == 0) return;
                         PerformLayout();
 
-                        // Draw tab headers
-                        float tabWidth = (float)(Size.X / TabTitles.Count);
+                        // Blender-style headers: content-sized tabs aligned left; only the
+                        // active tab gets a rounded background with an accent underline
+                        float[] tabWidths = GetTabWidths();
+                        float tabX = (float)Location.X;
                         for (int i = 0; i < TabTitles.Count; i++)
                         {
-                                Vector2 headerLoc = new Vector2(Location.X + i * tabWidth, Location.Y);
-                                Vector2 headerSize = new Vector2(tabWidth, TabHeaderHeight);
+                                Vector2 headerLoc = new Vector2(tabX, Location.Y);
+                                Vector2 headerSize = new Vector2(tabWidths[i], TabHeaderHeight);
 
                                 bool isSelected = (i == SelectedTab);
                                 bool isHovered = (i == hoveredTab);
-                                Color128 headerBg;
                                 if (isSelected)
                                 {
-                                        headerBg = new Color128(0.2f, 0.22f, 0.25f, 0.9f);
+                                        Color128 tabBg = new Color128(0.2f, 0.22f, 0.25f, 0.9f);
+                                        Renderer.Rectangle.DrawRounded(null, headerLoc, headerSize, 6f, tabBg);
+                                        // Square off the bottom corners so the tab merges into the content below
+                                        Renderer.Rectangle.Draw(null, new Vector2(headerLoc.X, headerLoc.Y + TabHeaderHeight - 6f), new Vector2(headerSize.X, 6f), tabBg);
+                                        // Draw active underline
+                                        Renderer.Rectangle.Draw(null, new Vector2(headerLoc.X, headerLoc.Y + TabHeaderHeight - 3f), new Vector2(headerSize.X, 3f), SelectedTabColor);
                                 }
                                 else if (isHovered)
                                 {
-                                        headerBg = HoverTabColor;
-                                }
-                                else
-                                {
-                                        headerBg = InactiveTabColor;
-                                }
-                                Renderer.Rectangle.Draw(null, headerLoc, headerSize, headerBg);
-
-                                // Draw active underline
-                                if (isSelected)
-                                {
-                                        Renderer.Rectangle.Draw(null, new Vector2(headerLoc.X, headerLoc.Y + TabHeaderHeight - 3f), new Vector2(tabWidth, 3f), SelectedTabColor);
+                                        Renderer.Rectangle.DrawRounded(null, headerLoc, headerSize, 6f, HoverTabColor);
                                 }
 
-                                // Draw text title centered
-                                Vector2 textSize = Renderer.Fonts.NormalFont.MeasureString(TabTitles[i]);
-                                Vector2 textPos = new Vector2(headerLoc.X + (tabWidth - textSize.X) / 2f, headerLoc.Y + (TabHeaderHeight - textSize.Y) / 2f);
-                                Renderer.OpenGlString.Draw(Renderer.Fonts.NormalFont, TabTitles[i], textPos, TextAlignment.TopLeft, Color128.White);
+                                // Draw text title left-aligned with padding (trimmed on narrow bars)
+                                string title = FitTitle(TabTitles[i], tabWidths[i]);
+                                Vector2 textSize = Renderer.Fonts.NormalFont.MeasureString(title);
+                                Vector2 textPos = new Vector2(headerLoc.X + TabPadding, headerLoc.Y + (TabHeaderHeight - textSize.Y) / 2f);
+                                Renderer.OpenGlString.Draw(Renderer.Fonts.NormalFont, title, textPos, TextAlignment.TopLeft, Color128.White);
+                                tabX += tabWidths[i];
                         }
 
                         // Draw content area background
-                        Renderer.Rectangle.Draw(null, ContentLocation, ContentSize, ContentBackgroundColor);
+                        Renderer.Rectangle.DrawRounded(null, ContentLocation, ContentSize, 10f, ContentBackgroundColor);
 
                         // Children hold the tab contents; only the selected one is visible
                         base.Draw();
@@ -118,9 +165,7 @@ namespace LibRender2.Primitives
 
                         if (x >= Location.X && x <= Location.X + Size.X && y >= Location.Y && y <= Location.Y + TabHeaderHeight)
                         {
-                                float tabWidth = (float)(Size.X / TabTitles.Count);
-                                hoveredTab = (int)((x - Location.X) / tabWidth);
-                                if (hoveredTab < 0 || hoveredTab >= TabTitles.Count) hoveredTab = -1;
+                                hoveredTab = TabAtX(x);
                         }
                         else
                         {
@@ -136,8 +181,7 @@ namespace LibRender2.Primitives
 
                         if (x >= Location.X && x <= Location.X + Size.X && y >= Location.Y && y <= Location.Y + TabHeaderHeight)
                         {
-                                float tabWidth = (float)(Size.X / TabTitles.Count);
-                                int clickedTab = (int)((x - Location.X) / tabWidth);
+                                int clickedTab = TabAtX(x);
                                 if (clickedTab >= 0 && clickedTab < TabTitles.Count)
                                 {
                                         SelectTab(clickedTab);

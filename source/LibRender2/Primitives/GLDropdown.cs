@@ -52,10 +52,10 @@ namespace LibRender2.Primitives
                         // Draw main box
                         Color128 boxBg = dimmed ? new Color128(0.08f, 0.08f, 0.08f, 1f)
                                 : Expanded ? new Color128(0.22f, 0.22f, 0.26f, 1f) : BackgroundColor;
-                        Renderer.Rectangle.Draw(null, Location, Size, boxBg);
+                        Renderer.Rectangle.DrawRounded(null, Location, Size, 6f, boxBg);
                         // Draw border
                         Color128 border = dimmed ? new Color128(0.25f, 0.25f, 0.25f, 1f) : new Color128(0.0f, 0.47f, 0.83f, 1f);
-                        Renderer.Rectangle.Draw(null, Location, new Vector2(Size.X, 1.0), border);
+                        Renderer.Rectangle.DrawRounded(null, Location, new Vector2(Size.X, 1.0), 4f, border);
                         // Draw arrow indicator
                         Color128 arrowColor = dimmed ? new Color128(0.45f, 0.45f, 0.45f, 1f) : Color128.White;
                         float arrowX = (float)(Location.X + Size.X - 18);
@@ -144,9 +144,9 @@ namespace LibRender2.Primitives
                                 : new Vector2(Location.X, Location.Y + Size.Y);
 
                         // Draw overlay background
-                        Renderer.Rectangle.Draw(null, overlayLoc, new Vector2(Size.X, overlayHeight), new Color128(0.1f, 0.1f, 0.1f, 0.95f));
+                        Renderer.Rectangle.DrawRounded(null, overlayLoc, new Vector2(Size.X, overlayHeight), 4f, new Color128(0.1f, 0.1f, 0.1f, 0.95f));
                         // Draw overlay border
-                        Renderer.Rectangle.Draw(null, overlayLoc, new Vector2(Size.X, overlayHeight), new Color128(0.0f, 0.35f, 0.65f, 1f));
+                        Renderer.Rectangle.DrawRounded(null, overlayLoc, new Vector2(Size.X, overlayHeight), 4f, new Color128(0.0f, 0.35f, 0.65f, 1f));
 
                         for (int i = 0; i < Items.Count; i++)
                         {
@@ -233,6 +233,11 @@ namespace LibRender2.Primitives
                                                 ActiveDropdown.Expanded = false;
                                         }
                                         ActiveDropdown = this;
+                                        if (GLColorPicker.ActivePicker != null)
+                                        {
+                                                GLColorPicker.ActivePicker.Expanded = false;
+                                                GLColorPicker.ActivePicker = null;
+                                        }
                                 }
                                 else
                                 {

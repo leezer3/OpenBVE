@@ -46,12 +46,12 @@ namespace LibRender2.Primitives
                         bool dimmed = !Enabled;
                         Color128 fieldBg = dimmed ? new Color128(0.08f, 0.08f, 0.08f, 1f)
                                 : IsPressed ? new Color128(0.22f, 0.22f, 0.26f, 1f) : BackgroundColor;
-                        Renderer.Rectangle.Draw(null, Location, new Vector2(Size.X - 34, Size.Y), fieldBg);
+                        Renderer.Rectangle.DrawRounded(null, Location, new Vector2(Size.X - 34, Size.Y), 6f, fieldBg);
 
                         // Draw active/edit border
                         Color128 borderColor = dimmed ? new Color128(0.25f, 0.25f, 0.25f, 1f)
                                 : IsEditing ? Color128.Orange : new Color128(0.0f, 0.47f, 0.83f, 1f);
-                        Renderer.Rectangle.Draw(null, Location, new Vector2(Size.X - 34, 1.0), borderColor);
+                        Renderer.Rectangle.DrawRounded(null, Location, new Vector2(Size.X - 34, 1.0), 4f, borderColor);
 
                         string textToDraw = IsEditing ? currentInputString + "|" : Value.ToString(ValueFormat);
                         Color128 numTextColor = dimmed ? new Color128(0.45f, 0.45f, 0.45f, 1f) : Color128.White;
