@@ -42,6 +42,8 @@ namespace LibRender2.Primitives
                 public Vector2 Location;
                 /// <summary>The stored size for the control</summary>
                 public Vector2 Size;
+                /// <summary>The width this control needs to display its content without clipping</summary>
+                public virtual float DesiredWidth => (float)Size.X;
                 /// <summary>Whether the control is currently selected by the mouse</summary>
                 public bool CurrentlySelected;
                 /// <summary>The event handler for the OnClick event</summary>

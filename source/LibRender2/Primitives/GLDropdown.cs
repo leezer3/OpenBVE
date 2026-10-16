@@ -21,6 +21,22 @@ namespace LibRender2.Primitives
                         BackgroundColor = new Color128(0.15f, 0.15f, 0.15f, 1f);
                 }
 
+                /// <summary>Wide enough for the longest item plus the arrow indicator</summary>
+                public override float DesiredWidth
+                {
+                        get
+                        {
+                                float maxItem = 0f;
+                                var font = Renderer.Fonts.NormalFont;
+                                foreach (string item in Items)
+                                {
+                                        float w = (float)font.MeasureString(item).X;
+                                        if (w > maxItem) maxItem = w;
+                                }
+                                return 8f + maxItem + 22f;
+                        }
+                }
+
                 /// <summary>Checks whether the dropdown should expand upward to avoid overflowing the screen</summary>
                 private bool ShouldExpandUpward()
                 {
@@ -32,37 +48,42 @@ namespace LibRender2.Primitives
                 public override void Draw()
                 {
                         if (!IsVisible) return;
+                        bool dimmed = !Enabled;
                         // Draw main box
-                        Color128 boxBg = Expanded ? new Color128(0.22f, 0.22f, 0.26f, 1f) : BackgroundColor;
+                        Color128 boxBg = dimmed ? new Color128(0.08f, 0.08f, 0.08f, 1f)
+                                : Expanded ? new Color128(0.22f, 0.22f, 0.26f, 1f) : BackgroundColor;
                         Renderer.Rectangle.Draw(null, Location, Size, boxBg);
                         // Draw border
-                        Renderer.Rectangle.Draw(null, Location, new Vector2(Size.X, 1.0), new Color128(0.0f, 0.47f, 0.83f, 1f));
+                        Color128 border = dimmed ? new Color128(0.25f, 0.25f, 0.25f, 1f) : new Color128(0.0f, 0.47f, 0.83f, 1f);
+                        Renderer.Rectangle.Draw(null, Location, new Vector2(Size.X, 1.0), border);
                         // Draw arrow indicator
+                        Color128 arrowColor = dimmed ? new Color128(0.45f, 0.45f, 0.45f, 1f) : Color128.White;
                         float arrowX = (float)(Location.X + Size.X - 18);
                         float arrowY = (float)(Location.Y + (Size.Y - 5) / 2);
                         if (Expanded)
                         {
-                                Renderer.Rectangle.Draw(null, new Vector2(arrowX + 4, arrowY), new Vector2(1, 1), Color128.White);
-                                Renderer.Rectangle.Draw(null, new Vector2(arrowX + 3, arrowY + 1), new Vector2(3, 1), Color128.White);
-                                Renderer.Rectangle.Draw(null, new Vector2(arrowX + 2, arrowY + 2), new Vector2(5, 1), Color128.White);
-                                Renderer.Rectangle.Draw(null, new Vector2(arrowX + 1, arrowY + 3), new Vector2(7, 1), Color128.White);
-                                Renderer.Rectangle.Draw(null, new Vector2(arrowX, arrowY + 4), new Vector2(9, 1), Color128.White);
+                                Renderer.Rectangle.Draw(null, new Vector2(arrowX + 4, arrowY), new Vector2(1, 1), arrowColor);
+                                Renderer.Rectangle.Draw(null, new Vector2(arrowX + 3, arrowY + 1), new Vector2(3, 1), arrowColor);
+                                Renderer.Rectangle.Draw(null, new Vector2(arrowX + 2, arrowY + 2), new Vector2(5, 1), arrowColor);
+                                Renderer.Rectangle.Draw(null, new Vector2(arrowX + 1, arrowY + 3), new Vector2(7, 1), arrowColor);
+                                Renderer.Rectangle.Draw(null, new Vector2(arrowX, arrowY + 4), new Vector2(9, 1), arrowColor);
                         }
                         else
                         {
-                                Renderer.Rectangle.Draw(null, new Vector2(arrowX, arrowY), new Vector2(9, 1), Color128.White);
-                                Renderer.Rectangle.Draw(null, new Vector2(arrowX + 1, arrowY + 1), new Vector2(7, 1), Color128.White);
-                                Renderer.Rectangle.Draw(null, new Vector2(arrowX + 2, arrowY + 2), new Vector2(5, 1), Color128.White);
-                                Renderer.Rectangle.Draw(null, new Vector2(arrowX + 3, arrowY + 3), new Vector2(3, 1), Color128.White);
-                                Renderer.Rectangle.Draw(null, new Vector2(arrowX + 4, arrowY + 4), new Vector2(1, 1), Color128.White);
+                                Renderer.Rectangle.Draw(null, new Vector2(arrowX, arrowY), new Vector2(9, 1), arrowColor);
+                                Renderer.Rectangle.Draw(null, new Vector2(arrowX + 1, arrowY + 1), new Vector2(7, 1), arrowColor);
+                                Renderer.Rectangle.Draw(null, new Vector2(arrowX + 2, arrowY + 2), new Vector2(5, 1), arrowColor);
+                                Renderer.Rectangle.Draw(null, new Vector2(arrowX + 3, arrowY + 3), new Vector2(3, 1), arrowColor);
+                                Renderer.Rectangle.Draw(null, new Vector2(arrowX + 4, arrowY + 4), new Vector2(1, 1), arrowColor);
                         }
 
                         if (SelectedIndex >= 0 && SelectedIndex < Items.Count)
                         {
-                                Renderer.OpenGlString.Draw(Renderer.Fonts.NormalFont, Items[SelectedIndex], new Vector2(Location.X + 8, Location.Y + 2), TextAlignment.TopLeft, Color128.White);
+                                Color128 textColor = dimmed ? new Color128(0.45f, 0.45f, 0.45f, 1f) : Color128.White;
+                                Renderer.OpenGlString.Draw(Renderer.Fonts.NormalFont, Items[SelectedIndex], new Vector2(Location.X + 8, Location.Y + 2), TextAlignment.TopLeft, textColor);
                         }
 
-                        DrawFocusRing();
+                        if (!dimmed) DrawFocusRing();
                 }
 
                 public override bool HitTest(int x, int y)
@@ -82,6 +103,7 @@ namespace LibRender2.Primitives
 
                 public override void OnActivate()
                 {
+                        if (!Enabled) return;
                         Expanded = !Expanded;
                         if (Expanded)
                         {
@@ -96,6 +118,7 @@ namespace LibRender2.Primitives
 
                 public override bool OnAdjust(int direction)
                 {
+                        if (!Enabled) return false;
                         if (Items.Count == 0) return false;
                         int newIndex = SelectedIndex + direction;
                         if (newIndex < 0) newIndex = 0;
@@ -174,7 +197,7 @@ namespace LibRender2.Primitives
 
                 public override void MouseDown(int x, int y)
                 {
-                        if (!IsVisible) return;
+                        if (!IsVisible || !Enabled) return;
                         if (Expanded)
                         {
                                 float itemHeight = 24f;

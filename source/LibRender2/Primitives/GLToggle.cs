@@ -25,13 +25,18 @@ namespace LibRender2.Primitives
                         BackgroundColor = new Color128(0.1f, 0.1f, 0.1f, 1f);
                 }
 
+                /// <summary>The toggle needs its 36px right-aligned track, plus any label text</summary>
+                public override float DesiredWidth => string.IsNullOrEmpty(Text)
+                        ? 40f
+                        : 44f + (float)Renderer.Fonts.NormalFont.MeasureString(Text).X;
+
                 public override void Draw()
                 {
                         if (!IsVisible) return;
+                        bool dimmed = !Enabled;
                         // Draw toggle switch track, right-aligned within the control's bounds
-                        Color128 track = CurrentlySelected
-                                ? new Color128(0.35f, 0.35f, 0.4f, 1f)
-                                : TrackColor;
+                        Color128 track = dimmed ? new Color128(0.12f, 0.12f, 0.12f, 1f)
+                                : CurrentlySelected ? new Color128(0.35f, 0.35f, 0.4f, 1f) : TrackColor;
                         float trackWidth = 36f;
                         float trackHeight = 18f;
                         float trackX = (float)(Location.X + Size.X - trackWidth);
@@ -40,20 +45,23 @@ namespace LibRender2.Primitives
 
                         // Draw knob
                         float knobX = Checked ? trackX + 18f : trackX + 3f;
-                        Color128 knobColor = Checked ? KnobCheckedColor : KnobUncheckedColor;
+                        Color128 knobColor = dimmed ? new Color128(0.35f, 0.35f, 0.35f, 1f)
+                                : Checked ? KnobCheckedColor : KnobUncheckedColor;
                         Renderer.Rectangle.Draw(null, new Vector2(knobX, trackY + 2f), new Vector2(14, 14), knobColor);
 
                         // Draw label text
                         if (!string.IsNullOrEmpty(Text))
                         {
-                                Renderer.OpenGlString.Draw(Renderer.Fonts.NormalFont, Text, new Vector2(Location.X + 44, Location.Y + 1), TextAlignment.TopLeft, Color128.White);
+                                Color128 labelColor = dimmed ? new Color128(0.45f, 0.45f, 0.45f, 1f) : Color128.White;
+                                Renderer.OpenGlString.Draw(Renderer.Fonts.NormalFont, Text, new Vector2(Location.X + 44, Location.Y + 1), TextAlignment.TopLeft, labelColor);
                         }
 
-                        DrawFocusRing();
+                        if (!dimmed) DrawFocusRing();
                 }
 
                 public override void OnActivate()
                 {
+                        if (!Enabled) return;
                         Checked = !Checked;
                         ValueChanged?.Invoke(this, EventArgs.Empty);
                         OnClick?.Invoke(this, EventArgs.Empty);
@@ -61,6 +69,7 @@ namespace LibRender2.Primitives
 
                 public override bool OnAdjust(int direction)
                 {
+                        if (!Enabled) return false;
                         OnActivate();
                         return true;
                 }
@@ -73,7 +82,7 @@ namespace LibRender2.Primitives
 
                 public override void MouseDown(int x, int y)
                 {
-                        if (!IsVisible) return;
+                        if (!IsVisible || !Enabled) return;
                         if (x >= Location.X && x <= Location.X + Size.X && y >= Location.Y && y <= Location.Y + Size.Y)
                         {
                                 IsPressed = true;

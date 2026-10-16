@@ -11,6 +11,8 @@ namespace LibRender2.Primitives
                 public float Minimum = 0f;
                 public float Maximum = 100f;
                 public float Increment = 1f;
+                /// <summary>Numeric format string for the displayed and edited value</summary>
+                public string ValueFormat = "0.##";
                 public EventHandler ValueChanged;
 
                 private bool upPressed = false;
@@ -25,52 +27,71 @@ namespace LibRender2.Primitives
                         BackgroundColor = new Color128(0.15f, 0.15f, 0.15f, 1f);
                 }
 
+                /// <summary>Wide enough for the value text plus the +/- buttons</summary>
+                public override float DesiredWidth
+                {
+                        get
+                        {
+                                var font = Renderer.Fonts.NormalFont;
+                                float w = (float)font.MeasureString(Value.ToString(ValueFormat)).X;
+                                w = System.Math.Max(w, (float)font.MeasureString(Minimum.ToString(ValueFormat)).X);
+                                w = System.Math.Max(w, (float)font.MeasureString(Maximum.ToString(ValueFormat)).X);
+                                return 8f + w + 8f + 34f;
+                        }
+                }
+
                 public override void Draw()
                 {
                         if (!IsVisible) return;
-                        Color128 fieldBg = IsPressed ? new Color128(0.22f, 0.22f, 0.26f, 1f) : BackgroundColor;
+                        bool dimmed = !Enabled;
+                        Color128 fieldBg = dimmed ? new Color128(0.08f, 0.08f, 0.08f, 1f)
+                                : IsPressed ? new Color128(0.22f, 0.22f, 0.26f, 1f) : BackgroundColor;
                         Renderer.Rectangle.Draw(null, Location, new Vector2(Size.X - 34, Size.Y), fieldBg);
 
                         // Draw active/edit border
-                        Color128 borderColor = IsEditing ? Color128.Orange : new Color128(0.0f, 0.47f, 0.83f, 1f);
+                        Color128 borderColor = dimmed ? new Color128(0.25f, 0.25f, 0.25f, 1f)
+                                : IsEditing ? Color128.Orange : new Color128(0.0f, 0.47f, 0.83f, 1f);
                         Renderer.Rectangle.Draw(null, Location, new Vector2(Size.X - 34, 1.0), borderColor);
 
-                        string textToDraw = IsEditing ? currentInputString + "|" : Value.ToString("0.##");
-                        Renderer.OpenGlString.Draw(Renderer.Fonts.NormalFont, textToDraw, new Vector2(Location.X + 8, Location.Y + 2), TextAlignment.TopLeft, Color128.White);
+                        string textToDraw = IsEditing ? currentInputString + "|" : Value.ToString(ValueFormat);
+                        Color128 numTextColor = dimmed ? new Color128(0.45f, 0.45f, 0.45f, 1f) : Color128.White;
+                        Renderer.OpenGlString.Draw(Renderer.Fonts.NormalFont, textToDraw, new Vector2(Location.X + 8, Location.Y + 2), TextAlignment.TopLeft, numTextColor);
 
                         Vector2 upLoc = new Vector2(Location.X + Size.X - 32, Location.Y);
                         Vector2 downLoc = new Vector2(Location.X + Size.X - 16, Location.Y);
 
                         // Draw Up (+) button
-                        Color128 upBg = upPressed ? Color128.Orange : new Color128(0.25f, 0.25f, 0.25f, 1f);
+                        Color128 upBg = dimmed ? new Color128(0.12f, 0.12f, 0.12f, 1f) : upPressed ? Color128.Orange : new Color128(0.25f, 0.25f, 0.25f, 1f);
                         Renderer.Rectangle.Draw(null, upLoc, new Vector2(15, Size.Y), upBg);
                         float plusX = (float)(upLoc.X + (15 - 7) / 2);
                         float plusY = (float)(upLoc.Y + (Size.Y - 7) / 2);
-                        Renderer.Rectangle.Draw(null, new Vector2(plusX, plusY + 3), new Vector2(7, 1), Color128.White);
-                        Renderer.Rectangle.Draw(null, new Vector2(plusX + 3, plusY), new Vector2(1, 7), Color128.White);
+                        Renderer.Rectangle.Draw(null, new Vector2(plusX, plusY + 3), new Vector2(7, 1), numTextColor);
+                        Renderer.Rectangle.Draw(null, new Vector2(plusX + 3, plusY), new Vector2(1, 7), numTextColor);
 
                         // Draw Down (-) button
-                        Color128 downBg = downPressed ? Color128.Orange : new Color128(0.25f, 0.25f, 0.25f, 1f);
+                        Color128 downBg = dimmed ? new Color128(0.12f, 0.12f, 0.12f, 1f) : downPressed ? Color128.Orange : new Color128(0.25f, 0.25f, 0.25f, 1f);
                         Renderer.Rectangle.Draw(null, downLoc, new Vector2(15, Size.Y), downBg);
                         float minusX = (float)(downLoc.X + (15 - 7) / 2);
                         float minusY = (float)(downLoc.Y + (Size.Y - 1) / 2);
-                        Renderer.Rectangle.Draw(null, new Vector2(minusX, minusY), new Vector2(7, 1), Color128.White);
+                        Renderer.Rectangle.Draw(null, new Vector2(minusX, minusY), new Vector2(7, 1), numTextColor);
 
-                        DrawFocusRing();
+                        if (!dimmed) DrawFocusRing();
                 }
 
                 public override void OnActivate()
                 {
+                        if (!Enabled) return;
                         if (!IsEditing)
                         {
                                 IsEditing = true;
-                                currentInputString = Value.ToString("0.##");
+                                currentInputString = Value.ToString(ValueFormat);
                                 FocusedControl = this;
                         }
                 }
 
                 public override bool OnAdjust(int direction)
                 {
+                        if (!Enabled) return false;
                         CommitEdit();
                         Value = System.Math.Max(Minimum, System.Math.Min(Maximum, Value + direction * Increment));
                         ValueChanged?.Invoke(this, EventArgs.Empty);
@@ -85,7 +106,7 @@ namespace LibRender2.Primitives
 
                 public override void MouseDown(int x, int y)
                 {
-                        if (!IsVisible) return;
+                        if (!IsVisible || !Enabled) return;
                         Vector2 upLoc = new Vector2(Location.X + Size.X - 32, Location.Y);
                         Vector2 downLoc = new Vector2(Location.X + Size.X - 16, Location.Y);
 
@@ -116,7 +137,7 @@ namespace LibRender2.Primitives
                                                 otherNum.CommitEdit();
                                         }
                                         IsEditing = true;
-                                        currentInputString = Value.ToString("0.##");
+                                        currentInputString = Value.ToString(ValueFormat);
                                         FocusedControl = this;
                                 }
                         }
