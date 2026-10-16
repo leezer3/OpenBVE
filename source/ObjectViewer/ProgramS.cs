@@ -186,6 +186,8 @@ namespace ObjectViewer {
 	        // --- load language ---
 	        string folder = FileSystem.GetDataFolder("Languages");
 	        Translations.LoadLanguageFiles(folder);
+	        folder = FileSystem.GetDataFolder("Cursors");
+	        LibRender2.AvailableCursors.LoadCursorImages(Renderer, folder);
 			GameMenu.Instance = new GameMenu();
 			// initialize camera
 			Renderer.GraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);
@@ -240,6 +242,15 @@ namespace ObjectViewer {
 
 		internal static void MouseEvent(object sender, MouseButtonEventArgs e)
 	    {
+			if (e.IsPressed && Game.Menu != null && Game.Menu.IsSidebarMode)
+			{
+				OpenBveApi.Math.Vector4 rect = Game.Menu.GetToggleButtonRect();
+				if (e.X >= rect.X && e.X <= rect.X + rect.Z && e.Y >= rect.Y && e.Y <= rect.Y + rect.W)
+				{
+					Game.Menu.ProcessMouseDown(e.X, e.Y);
+					return;
+				}
+			}
 		    switch (Renderer.CurrentInterface)
 		    {
 				case InterfaceType.Menu:
@@ -248,6 +259,10 @@ namespace ObjectViewer {
 					{
 						// viewer hooks up and down to same event
 						Game.Menu.ProcessMouseDown(e.X, e.Y);
+					}
+					else
+					{
+						Game.Menu.ProcessMouseUp(e.X, e.Y);
 					}
 					break;
 				default:
@@ -1309,7 +1324,14 @@ namespace ObjectViewer {
 	    // process events
 	    internal static void KeyDown(object sender, KeyboardKeyEventArgs e)
 	    {
-
+			if (Renderer.CurrentInterface != InterfaceType.Normal)
+			{
+				Game.Menu.ProcessKeyDown(e.Key);
+				if (e.Key != Key.Up && e.Key != Key.Down && e.Key != Key.Enter && e.Key != Key.Escape && e.Key != Key.Left && e.Key != Key.Right)
+				{
+					return;
+				}
+			}
 	        switch (e.Key)
 	        {
 	            case Key.LShift:
