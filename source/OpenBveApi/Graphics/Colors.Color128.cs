@@ -1,6 +1,8 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MergeCastWithTypeCheck
 
+using System.IO;
+
 namespace OpenBveApi.Colors
 {
 	/// <summary>Represents a 128-bit color with red, green, blue and alpha channels at 32 bits each.</summary>
@@ -21,10 +23,30 @@ namespace OpenBveApi.Colors
 		/// <param name="b">The blue component.</param>
 		/// <param name="a">The alpha component.</param>
 		public Color128(float r, float g, float b, float a) {
-			this.R = r;
-			this.G = g;
-			this.B = b;
-			this.A = a;
+			if (r > 1 || r < 0)
+			{
+				throw new InvalidDataException("Red must be between 0 and 1");
+			}
+
+			if (g > 1 || g < 0)
+			{
+				throw new InvalidDataException("Green must be between 0 and 1");
+			}
+
+			if (b > 1 || b < 0)
+			{
+				throw new InvalidDataException("Blue must be between 0 and 1");
+			}
+
+			if (a > 1 || a < 0)
+			{
+				throw new InvalidDataException("Blue must be between 0 and 1");
+			}
+
+			R = r;
+			G = g;
+			B = b;
+			A = a;
 		}
 		/// <summary>Creates a new color.</summary>
 		/// <param name="r">The red component.</param>
@@ -32,9 +54,24 @@ namespace OpenBveApi.Colors
 		/// <param name="b">The blue component.</param>
 		/// <remarks>The alpha component is set to full opacity.</remarks>
 		public Color128(float r, float g, float b) {
-			this.R = r;
-			this.G = g;
-			this.B = b;
+			if (r > 1 || r < 0)
+			{
+				throw new InvalidDataException("Red must be between 0 and 1");
+			}
+
+			if (g > 1 || g < 0)
+			{
+				throw new InvalidDataException("Green must be between 0 and 1");
+			}
+
+			if (b > 1 || b < 0)
+			{
+				throw new InvalidDataException("Blue must be between 0 and 1");
+			}
+
+			this.R = System.Math.Min(1.0f, r);
+			this.G = System.Math.Min(1.0f, g);
+			this.B = System.Math.Min(1.0f, b);
 			this.A = 1.0f;
 		}
 		/// <summary>Creates a new color.</summary>

@@ -38,12 +38,241 @@ using RouteManager2.SignalManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Route.Bve5
 {
 	internal static partial class Bve5ScenarioParser
 	{
 		internal static Plugin plugin;
+
+		private static double GetTrackCoordinateAtDistance(RouteData Data, string RailKey, double Distance)
+		{
+			IList<Block> Blocks = Data.Blocks;
+			if (Blocks.Count == 0)
+			{
+				return 0.0;
+			}
+
+			if (Distance <= Blocks[0].StartingDistance)
+			{
+				return Blocks[0].Rails[RailKey].Position.X;
+			}
+
+			int BlockIndex = Data.sortedBlocks.FindBlockIndex(Distance);
+			if (BlockIndex >= Blocks.Count - 1)
+			{
+				return Blocks[Blocks.Count - 1].Rails[RailKey].Position.X;
+			}
+
+			int NextBlockIndex = BlockIndex + 1;
+			return GetTrackCoordinate(Blocks[BlockIndex].StartingDistance, Blocks[BlockIndex].Rails[RailKey].Position.X, Blocks[NextBlockIndex].StartingDistance, Blocks[NextBlockIndex].Rails[RailKey].Position.X, Blocks[BlockIndex].Rails[RailKey].RadiusH, Distance);
+		}
+
+		/// <summary>Progress slice reserved for Pass 1+2, right before the commit loop takes over at 0.6667.</summary>
+		private const double PrecomputeProgressStart = 0.60;
+		private const double PrecomputeProgressEnd = 0.6667;
+		/// <summary>Share of the precompute slice spent in the sequential Pass 1 walk (the rest is Pass 2).</summary>
+		private const double PrecomputePass1Share = 0.2;
+
+		/// <summary>Where a block starts: its world position and travel direction.</summary>
+		/// <remarks>Recorded by the sequential geometry walk (Pass 1) so that placement math (Pass 2) can run in parallel.</remarks>
+		private struct BlockStart
+		{
+			internal Vector3 Position;
+			internal Vector2 Direction;
+		}
+
+		/// <summary>Precomputed placement math for a non-spanning structure.</summary>
+		private struct StructureTransform
+		{
+			internal Vector3 WorldPosition;
+			internal Transformation RailTransformation;
+			internal bool IsValid;
+			internal ObjectState PreparedState;
+		}
+
+		/// <summary>Per-block placement math, shaped like the block data so the commit loop can index it directly.</summary>
+		private sealed class BlockTransforms
+		{
+			internal Dictionary<string, List<StructureTransform>> StructureTransformsByRailKey;
+		}
+
+		/// <summary>
+		/// Pass 1+2: walks the track geometry sequentially to record where each block starts,
+		/// then computes structure placement math (position, rail transform and prepared renderer state).
+		/// The math phase runs in parallel when there is enough work; it only reads block
+		/// data and performs pure math, so it has no observable side effects.
+		/// </summary>
+		private static BlockTransforms[] PrecomputeObjectTransforms(RouteData Data, bool PreviewOnly)
+		{
+			BlockTransforms[] blockTransforms = new BlockTransforms[Data.Blocks.Count];
+			if (PreviewOnly || plugin.Cancel || Data.Blocks.Count == 0)
+			{
+				return blockTransforms;
+			}
+
+			// Find the blocks that actually place structures. Routes with little work skip
+			// precomputing entirely, so the commit loop uses the original direct path
+			// with zero added overhead.
+			List<int> blocksWithObjects = new List<int>();
+			long placeableObjectCount = 0;
+			for (int i = 0; i < Data.Blocks.Count; i++)
+			{
+				Block block = Data.Blocks[i];
+				long blockObjects = 0;
+				if (block.FreeObjects != null)
+				{
+					foreach (List<FreeObj> objects in block.FreeObjects.Values)
+					{
+						blockObjects += objects.Count;
+					}
+				}
+				if (blockObjects != 0)
+				{
+					blocksWithObjects.Add(i);
+					placeableObjectCount += blockObjects;
+				}
+			}
+			if (Environment.ProcessorCount <= 1 || placeableObjectCount < 1000 || plugin.Cancel)
+			{
+				return blockTransforms;
+			}
+
+			// Pass 1: sequential geometry walk (mirrors the Direction/Position walk of the commit loop)
+			BlockStart[] blockStarts = new BlockStart[Data.Blocks.Count];
+			if (!CaptureBlockStarts(Data, blockStarts))
+			{
+				return blockTransforms;
+			}
+			if (plugin.Cancel)
+			{
+				return blockTransforms;
+			}
+
+			// Pass 2: placement math, over non-empty blocks only
+			ObjectDisposalMode disposalMode = Plugin.CurrentRoute.AccurateObjectDisposal;
+			double blockLength = Plugin.CurrentRoute.BlockLength;
+			int finishedBlocks = 0;
+			int reportEvery = Math.Max(1, blocksWithObjects.Count / 40);
+			int dop = ComputeStructureLoadDop();
+			ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = dop };
+			Parallel.For(0, blocksWithObjects.Count, options, n =>
+			{
+				int i = blocksWithObjects[n];
+				if (!plugin.Cancel)
+				{
+					blockTransforms[i] = ComputeBlockObjectTransforms(Data, blockStarts, i, disposalMode, blockLength);
+				}
+				int doneBlocks = Interlocked.Increment(ref finishedBlocks);
+				if (doneBlocks % reportEvery == 0 || doneBlocks == blocksWithObjects.Count)
+				{
+					ReportPrecomputeProgress(doneBlocks, blocksWithObjects.Count);
+				}
+			});
+			return blockTransforms;
+		}
+
+		/// <summary>Moves the progress bar through the Pass 2 share of the precompute slice.</summary>
+		private static void ReportPrecomputeProgress(int doneBlocks, int totalBlocks)
+		{
+			double pass2Fraction = (double)doneBlocks / totalBlocks;
+			plugin.CurrentProgress = PrecomputeProgressStart + (PrecomputeProgressEnd - PrecomputeProgressStart) * (PrecomputePass1Share + (1.0 - PrecomputePass1Share) * pass2Fraction);
+		}
+
+		/// <summary>Repeats the commit loop's Direction/Position walk to record where each block starts.</summary>
+		/// <returns>False when cancelled midway, true when every block was recorded.</returns>
+		private static bool CaptureBlockStarts(RouteData Data, BlockStart[] blockStarts)
+		{
+			Vector3 position = Vector3.Zero;
+			Vector2 direction = new Vector2(0.0, 1.0);
+			for (int i = 0; i < Data.Blocks.Count; i++)
+			{
+				if ((i & 1023) == 0)
+				{
+					if (plugin.Cancel)
+					{
+						return false;
+					}
+					plugin.CurrentProgress = PrecomputeProgressStart + (PrecomputeProgressEnd - PrecomputeProgressStart) * PrecomputePass1Share * i / Data.Blocks.Count;
+				}
+				direction.Normalize();
+				blockStarts[i].Position = position;
+				blockStarts[i].Direction = direction;
+
+				double startingDistance = Data.Blocks[i].StartingDistance;
+				double endingDistance = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].StartingDistance : startingDistance + InterpolateInterval;
+				double blockInterval = endingDistance - startingDistance;
+
+				if (Data.Blocks[i].Turn != 0.0)
+				{
+					direction.Rotate(-Math.Atan(Data.Blocks[i].Turn));
+				}
+				CalcTransformation(Data.Blocks[i].CurrentTrackState.CurveRadius, Data.Blocks[i].Pitch, blockInterval, ref direction, out double a, out double c, out double h);
+				position.X += direction.X * c;
+				position.Y += h;
+				position.Z += direction.Y * c;
+				direction.Rotate(-a);
+			}
+			return true;
+		}
+
+		/// <summary>Computes placement math for a single block. Read-only: safe to run on any thread.</summary>
+		private static BlockTransforms ComputeBlockObjectTransforms(RouteData Data, BlockStart[] blockStarts, int index, ObjectDisposalMode disposalMode, double blockLength)
+		{
+			Block block = Data.Blocks[index];
+			BlockTransforms blockTransforms = null;
+
+			if (block.FreeObjects != null && block.FreeObjects.Count != 0)
+			{
+				double startingDistance = block.StartingDistance;
+				double endingDistance = index < Data.Blocks.Count - 1 ? Data.Blocks[index + 1].StartingDistance : startingDistance + InterpolateInterval;
+				foreach (KeyValuePair<string, List<FreeObj>> pair in block.FreeObjects)
+				{
+					string railKey = pair.Key;
+					List<FreeObj> objects = pair.Value;
+					List<StructureTransform> transforms = new List<StructureTransform>(objects.Count);
+					for (int k = 0; k < objects.Count; k++)
+					{
+						StructureTransform transform = new StructureTransform();
+						FreeObj freeObj = objects[k];
+						if (freeObj.Span <= 0.0)
+						{
+							Vector3 wpos;
+							Transformation railTransformation;
+							transform.IsValid = GetRailTransformation(railKey, blockStarts[index].Position, Data.Blocks, index, freeObj, blockStarts[index].Direction, out wpos, out railTransformation);
+							if (transform.IsValid)
+							{
+								transform.WorldPosition = wpos;
+								transform.RailTransformation = railTransformation;
+								if (Data.Objects.TryGetValue(freeObj.Key, out UnifiedObject prototype) && prototype is StaticObject staticPrototype)
+								{
+									Vector3 finalPosition = wpos + freeObj.Position * railTransformation;
+									Transformation localTransformation = new Transformation(freeObj.Yaw, freeObj.Pitch, freeObj.Roll);
+									ObjectCreationParameters parameters = new ObjectCreationParameters(freeObj.TrackPosition, freeObj.Position.Z, startingDistance, endingDistance);
+									transform.PreparedState = Plugin.CurrentHost.PrepareStaticObject(staticPrototype, finalPosition, railTransformation, localTransformation, parameters, disposalMode, blockLength);
+								}
+							}
+						}
+						// Spanning entries keep the default value; the commit loop queues them before reading the placement.
+						transforms.Add(transform);
+					}
+					if (blockTransforms == null)
+					{
+						blockTransforms = new BlockTransforms();
+					}
+					if (blockTransforms.StructureTransformsByRailKey == null)
+					{
+						blockTransforms.StructureTransformsByRailKey = new Dictionary<string, List<StructureTransform>>();
+					}
+					blockTransforms.StructureTransformsByRailKey.Add(railKey, transforms);
+				}
+			}
+
+			return blockTransforms;
+		}
+
 		private static void ApplyRouteData(string FileName, bool PreviewOnly, RouteData Data)
 		{
 			Plugin.CurrentOptions.UnitOfSpeed = "km/h";
@@ -129,13 +358,21 @@ namespace Route.Bve5
 			}
 
 			// process blocks
-			double progressFactor = Data.Blocks.Count == 0 ? 0.5 : 0.5 / Data.Blocks.Count;
+			// The commit loop owns the 0.6667-0.95 slice; spans/repeaters below own 0.95-1.0.
+			// (0.5/count overshoots past 1.0, so the bar visibly jumps back at the spans phase.)
+			double progressFactor = Data.Blocks.Count == 0 ? 0.2833 : 0.2833 / Data.Blocks.Count;
+			List<SpanJob> deferredSpans = new List<SpanJob>();
+			// Pass 1+2 (see PrecomputeObjectTransforms): structure placement math is computed up-front,
+			// in parallel when worthwhile. The commit loop below stays sequential to preserve event order.
+			BlockTransforms[] precomputedTransforms = PrecomputeObjectTransforms(Data, PreviewOnly);
 			for (int i = 0; i < Data.Blocks.Count; i++)
 			{
 				plugin.CurrentProgress = 0.6667 + i * progressFactor;
 				if ((i & 15) == 0)
 				{
-					System.Threading.Thread.Sleep(1);
+					// Yield the remainder of the quantum without forcing a timer-tick wait:
+					// Sleep(1) costs ~11ms per call at the default Windows timer resolution.
+					System.Threading.Thread.Sleep(0);
 					if (plugin.Cancel) return;
 				}
 
@@ -165,6 +402,10 @@ namespace Route.Bve5
 				Plugin.CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition = StartingDistance;
 				Plugin.CurrentRoute.Tracks[0].Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
 				Plugin.CurrentRoute.Tracks[0].Elements[n].CsvRwAccuracyLevel = Data.Blocks[i].Accuracy;
+				if (Data.Blocks[i].Rails["0"].CurveIsLegacy)
+				{
+					Plugin.CurrentRoute.Tracks[0].Elements[n].ReturnsRawCant = true;
+				}
 				for (int k = 0; k < Plugin.CurrentRoute.Tracks.Count; k++)
 				{
 					int j = Plugin.CurrentRoute.Tracks.ElementAt(k).Key;
@@ -308,24 +549,53 @@ namespace Route.Bve5
 				{
 					for (int j = 0; j < Data.Blocks[i].Rails.Count; j++)
 					{
-						// free objects (including placed repeaters)
+						// free objects (repeaters are queued separately)
 						string railKey = Data.Blocks[i].Rails.ElementAt(j).Key;
+						List<StructureTransform> railStructureTransforms = null;
+						if (precomputedTransforms[i] != null && precomputedTransforms[i].StructureTransformsByRailKey != null)
+						{
+							precomputedTransforms[i].StructureTransformsByRailKey.TryGetValue(railKey, out railStructureTransforms);
+						}
 						if (Data.Blocks[i].FreeObjects.ContainsKey(railKey))
 						{
 							for (int k = 0; k < Data.Blocks[i].FreeObjects[railKey].Count; k++)
 							{
-								string key = Data.Blocks[i].FreeObjects[railKey][k].Key;
+								FreeObj freeObj = Data.Blocks[i].FreeObjects[railKey][k];
+								if (freeObj.Span > 0.0)
+								{
+									// Spans walk the finished track like BVE5 does; placed after the walk.
+									Data.Objects.TryGetValue(freeObj.Key, out UnifiedObject spanObj);
+									deferredSpans.Add(new SpanJob(railKey, freeObj.TrackPosition, freeObj.Span, freeObj.Type, freeObj.Position, freeObj.Yaw, freeObj.Pitch, freeObj.Roll, spanObj, StartingDistance, EndingDistance));
+									continue;
+								}
+								string key = freeObj.Key;
 								Vector3 wpos;
 								Transformation Transformation;
-								if (!GetRailTransformation(railKey, Position, Data.Blocks, i, Data.Blocks[i].FreeObjects[railKey][k], Direction, out wpos, out Transformation))
+								if (railStructureTransforms != null && k < railStructureTransforms.Count && railStructureTransforms[k].IsValid)
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unknown transform type encountered for object " + Data.Blocks[i].FreeObjects[railKey][k].Key + " at track position " + StartingDistance);
+									StructureTransform precomputed = railStructureTransforms[k];
+									if (precomputed.PreparedState != null)
+									{
+										Plugin.CurrentHost.CommitStaticObject(precomputed.PreparedState);
+										continue;
+									}
+									wpos = precomputed.WorldPosition;
+									Transformation = precomputed.RailTransformation;
+								}
+								else if (railStructureTransforms != null && k < railStructureTransforms.Count)
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unknown transform type encountered for object " + freeObj.Key + " at track position " + StartingDistance);
+									continue;
+								}
+								else if (!GetRailTransformation(railKey, Position, Data.Blocks, i, freeObj, Direction, out wpos, out Transformation))
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unknown transform type encountered for object " + freeObj.Key + " at track position " + StartingDistance);
 									continue;
 								}
 
-								wpos += Data.Blocks[i].FreeObjects[railKey][k].Position * Transformation;
+								wpos += freeObj.Position * Transformation;
 								Data.Objects.TryGetValue(key, out UnifiedObject obj);
-								obj?.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].FreeObjects[railKey][k].Yaw, Data.Blocks[i].FreeObjects[railKey][k].Pitch, Data.Blocks[i].FreeObjects[railKey][k].Roll), new ObjectCreationParameters(Data.Blocks[i].FreeObjects[railKey][k].TrackPosition, StartingDistance, EndingDistance));
+								obj?.CreateObject(wpos, Transformation, new Transformation(freeObj.Yaw, freeObj.Pitch, freeObj.Roll), new ObjectCreationParameters(freeObj.TrackPosition, freeObj.Position.Z, StartingDistance, EndingDistance));
 							}
 						}
 
@@ -334,35 +604,36 @@ namespace Route.Bve5
 						{
 							if (Data.Blocks[i].Cracks[k].PrimaryRail == railKey)
 							{
-								double nextStartingDistance = StartingDistance + BlockInterval;
 								string p = Data.Blocks[i].Cracks[k].PrimaryRail;
-								double px0 = Data.Blocks[i].Rails[p].Position.X;
-								double pRadiusH = Data.Blocks[i].Rails[p].RadiusH;
-								double px1 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[p].Position.X : px0;
 								string s = Data.Blocks[i].Cracks[k].SecondaryRail;
-								double sx0 = Data.Blocks[i].Rails[s].Position.X;
-								double sRadiusH = Data.Blocks[i].Rails[s].RadiusH;
-								double sx1 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[s].Position.X : sx0;
 
-								Vector3 wpos;
-								Transformation railTransformation;
-								if (!GetRailTransformation(railKey, Position, Data.Blocks, i, Data.Blocks[i].Cracks[k], Direction, out wpos, out railTransformation))
+								if (!GetRailTransformation(railKey, Position, Data.Blocks, i, Data.Blocks[i].Cracks[k], Direction, out Vector3 wpos, out Transformation railTransformation))
 								{
 
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unknown transform type encountered for crack " + Data.Blocks[i].Cracks[k].Key + " at track position " + StartingDistance);
 									continue;
 								}
 
-								double pInterpolateX0 = GetTrackCoordinate(StartingDistance, px0, nextStartingDistance, px1, pRadiusH, Data.Blocks[i].Cracks[k].TrackPosition);
-								double pInterpolateX1 = GetTrackCoordinate(StartingDistance, px0, nextStartingDistance, px1, pRadiusH, Data.Blocks[i].Cracks[k].TrackPosition + InterpolateInterval);
-								double sInterpolateX0 = GetTrackCoordinate(StartingDistance, sx0, nextStartingDistance, sx1, sRadiusH, Data.Blocks[i].Cracks[k].TrackPosition);
-								double sInterpolateX1 = GetTrackCoordinate(StartingDistance, sx0, nextStartingDistance, sx1, sRadiusH, Data.Blocks[i].Cracks[k].TrackPosition + InterpolateInterval);
+								double pInterpolateX0 = GetTrackCoordinateAtDistance(Data, p, Data.Blocks[i].Cracks[k].TrackPosition);
+								double pInterpolateX1 = GetTrackCoordinateAtDistance(Data, p, Data.Blocks[i].Cracks[k].TrackPosition + Data.Blocks[i].Cracks[k].Span);
+								double sInterpolateX0 = GetTrackCoordinateAtDistance(Data, s, Data.Blocks[i].Cracks[k].TrackPosition);
+								double sInterpolateX1 = GetTrackCoordinateAtDistance(Data, s, Data.Blocks[i].Cracks[k].TrackPosition + Data.Blocks[i].Cracks[k].Span);
 								double d0 = sInterpolateX0 - pInterpolateX0;
 								double d1 = sInterpolateX1 - pInterpolateX1;
 
-								if(Data.Objects.TryGetValue(Data.Blocks[i].Cracks[k].Key, out UnifiedObject obj) && obj != null)
+								if (!Data.Objects.TryGetValue(Data.Blocks[i].Cracks[k].Key, out UnifiedObject obj) || obj == null)
 								{
-									UnifiedObject crack = d0 < 0.0 ? obj.TransformRight(d0, d1) : obj.TransformLeft(d0, d1);
+									continue;
+								}
+
+								UnifiedObject crack = d0 < 0.0 ? obj.TransformRight(d0, d1) : obj.TransformLeft(d0, d1);
+
+								if (Data.Blocks[i].Cracks[k].Span != 0)
+								{
+									deferredSpans.Add(new SpanJob(Data.Blocks[i].Cracks[k].PrimaryRail, Data.Blocks[i].Cracks[k].TrackPosition, Data.Blocks[i].Cracks[k].Span, ObjectTransformType.FollowsGradient, Vector3.Zero, 0,0,0, crack, StartingDistance, EndingDistance));
+								}
+								else
+								{
 									crack.CreateObject(wpos, railTransformation, new ObjectCreationParameters(Data.Blocks[i].Cracks[k].TrackPosition, StartingDistance, EndingDistance));
 								}
 							}
@@ -373,9 +644,7 @@ namespace Route.Bve5
 						{
 							for (int k = 0; k < Data.Blocks[i].Signals[j].Count; k++)
 							{
-								Vector3 wpos;
-								Transformation railTransformation;
-								if (!GetRailTransformation(railKey, Position, Data.Blocks, i, Data.Blocks[i].Signals[j][k], Direction, out wpos, out railTransformation))
+								if (!GetRailTransformation(railKey, Position, Data.Blocks, i, Data.Blocks[i].Signals[j][k], Direction, out Vector3 wpos, out Transformation railTransformation))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unknown transform type encountered for signal " + Data.Blocks[i].Signals[j][k].Key + " at track position " + StartingDistance);
 									continue;
@@ -643,6 +912,319 @@ namespace Route.Bve5
 			{
 				ComputeCantTangents();
 			}
+
+			// Spans go last via TrackFollower: the track must exist first so they
+			// walk the real alignment instead of one block's guess, as in BveTs.
+			if (!PreviewOnly && (deferredSpans.Count != 0 || Data.Repeaters.Count != 0))
+			{
+				PlaceSpans(Data, deferredSpans);
+				for (int i = 0; i < Data.Repeaters.Count; i++)
+				{
+					plugin.CurrentProgress = 0.95 + i * (0.05 / Math.Max(1, Data.Repeaters.Count));
+					if ((i & 15) == 0)
+					{
+						System.Threading.Thread.Sleep(1);
+						if (plugin.Cancel) return;
+					}
+
+					List<SpanJob> jobs = new List<SpanJob>();
+					QueueRepeaterJobs(Data, Data.Repeaters[i], jobs);
+					PlaceSpans(Data, jobs);
+				}
+			}
+		}
+
+		/// <summary>One spanning object to place: a repeater instance or a deferred structure.</summary>
+		private struct SpanJob
+		{
+			internal readonly string RailKey;
+			internal readonly double Distance;
+			internal readonly double Span;
+			internal readonly ObjectTransformType Type;
+			internal readonly Vector3 Offset;
+			internal readonly double Yaw;
+			internal readonly double Pitch;
+			internal readonly double Roll;
+			internal readonly UnifiedObject UnifiedObject;
+			internal readonly double ParamStart;
+			internal readonly double ParamEnd;
+
+			internal SpanJob(string railKey, double distance, double span, ObjectTransformType type, Vector3 offset, double yaw, double pitch, double roll, UnifiedObject staticObject, double paramStart, double paramEnd)
+			{
+				RailKey = railKey;
+				Distance = distance;
+				Span = span;
+				Type = type;
+				Offset = offset;
+				Yaw = yaw;
+				Pitch = pitch;
+				Roll = roll;
+				UnifiedObject = staticObject;
+				ParamStart = paramStart;
+				ParamEnd = paramEnd;
+			}
+		}
+
+		private struct SpanPlacement
+		{
+			internal UnifiedObject Obj;
+			internal Vector3 Position;
+			internal Transformation World;
+			internal double Distance;
+			internal double ParamStart;
+			internal double ParamEnd;
+			internal double Yaw;
+			internal double Pitch;
+			internal double Roll;
+		}
+
+		/// <summary>Expands a repeater run into span jobs, same distance sequence as before.</summary>
+		private static void QueueRepeaterJobs(RouteData Data, Repeater Repeater, List<SpanJob> jobs)
+		{
+			if (Repeater.Interval <= 0.0 || Repeater.ObjectKeys == null || Repeater.ObjectKeys.Length == 0)
+			{
+				return;
+			}
+
+			int trackIndex = Data.TrackKeyList.IndexOf(Repeater.TrackKey, StringComparison.OrdinalIgnoreCase);
+			if (trackIndex < 0)
+			{
+				return;
+			}
+			string railKey = Data.TrackKeyList[trackIndex];
+
+			if (Repeater.EndingDistance <= Repeater.StartingDistance)
+			{
+				return;
+			}
+
+			int loopCount = 0;
+			for (double distance = Repeater.StartingDistance; distance < Repeater.EndingDistance; distance += Repeater.Interval)
+			{
+				string key = Repeater.ObjectKeys[loopCount];
+				loopCount = (loopCount + 1) % Repeater.ObjectKeys.Length;
+				if (string.IsNullOrEmpty(key))
+				{
+					continue;
+				}
+				Data.Objects.TryGetValue(key, out UnifiedObject repeaterObj);
+				jobs.Add(new SpanJob(railKey, distance, Repeater.Span, Repeater.Type, Repeater.Position, Repeater.Yaw, Repeater.Pitch, Repeater.Roll, repeaterObj, distance, distance));
+			}
+		}
+
+		/// <summary>Rail lateral/vertical offset at a distance, interpolated between neighbours.</summary>
+		private static Vector2 GetRailOffsetAtDistance(RouteData Data, string railKey, double distance)
+		{
+			IList<Block> blocks = Data.Blocks;
+			if (blocks.Count == 0)
+			{
+				return Vector2.Null;
+			}
+			if (distance <= blocks[0].StartingDistance)
+			{
+				return new Vector2(blocks[0].Rails[railKey].Position.X, blocks[0].Rails[railKey].Position.Y);
+			}
+			int index = Data.sortedBlocks.FindBlockIndex(distance);
+			if (index >= blocks.Count - 1)
+			{
+				Rail last = blocks[blocks.Count - 1].Rails[railKey];
+				return new Vector2(last.Position.X, last.Position.Y);
+			}
+			Block first = blocks[index];
+			Block second = blocks[index + 1];
+			double x = GetTrackCoordinate(first.StartingDistance, first.Rails[railKey].Position.X, second.StartingDistance, second.Rails[railKey].Position.X, first.Rails[railKey].RadiusH, distance);
+			double y = GetTrackCoordinate(first.StartingDistance, first.Rails[railKey].Position.Y, second.StartingDistance, second.Rails[railKey].Position.Y, first.Rails[railKey].RadiusV, distance);
+			return new Vector2(x, y);
+		}
+
+		/// <summary>Rail cant at a distance, lerped between neighbours.</summary>
+		private static double GetRailCantAtDistance(RouteData Data, string railKey, double distance)
+		{
+			IList<Block> blocks = Data.Blocks;
+			if (blocks.Count == 0)
+			{
+				return 0.0;
+			}
+			if (distance <= blocks[0].StartingDistance)
+			{
+				return blocks[0].Rails[railKey].CurveCant;
+			}
+			int index = Data.sortedBlocks.FindBlockIndex(distance);
+			if (index >= blocks.Count - 1)
+			{
+				return blocks[blocks.Count - 1].Rails[railKey].CurveCant;
+			}
+			Block first = blocks[index];
+			Block second = blocks[index + 1];
+			if (second.StartingDistance <= first.StartingDistance)
+			{
+				return first.Rails[railKey].CurveCant;
+			}
+			double t = (distance - first.StartingDistance) / (second.StartingDistance - first.StartingDistance);
+			return first.Rails[railKey].CurveCant + (second.Rails[railKey].CurveCant - first.Rails[railKey].CurveCant) * t;
+		}
+
+		/// <summary>Places span jobs: math in parallel, renderer commits in order.</summary>
+		private static void PlaceSpans(RouteData Data, List<SpanJob> jobs)
+		{
+			int count = jobs.Count;
+			if (count == 0 || !Plugin.CurrentRoute.Tracks.TryGetValue(0, out Track track) || track.Elements == null || track.Elements.Length == 0)
+			{
+				return;
+			}
+
+			SpanPlacement[] placements = new SpanPlacement[count];
+			if (count < 1024 || Environment.ProcessorCount < 2)
+			{
+				TrackFollower follower = new TrackFollower(Plugin.CurrentHost);
+				for (int idx = 0; idx < count; idx++)
+				{
+					if (plugin.Cancel)
+					{
+						return;
+					}
+					ComputeSpan(Data, jobs[idx], follower, placements, idx);
+				}
+			}
+			else
+			{
+				ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = ComputeStructureLoadDop() };
+				Parallel.For(0, count, options, () => new TrackFollower(Plugin.CurrentHost),
+					(idx, state, follower) =>
+					{
+						if (plugin.Cancel)
+						{
+							state.Stop();
+							return follower;
+						}
+						ComputeSpan(Data, jobs[idx], follower, placements, idx);
+						return follower;
+					},
+					follower => { });
+				if (plugin.Cancel)
+				{
+					return;
+				}
+			}
+
+			for (int idx = 0; idx < count; idx++)
+			{
+				if (placements[idx].Obj == null)
+				{
+					continue;
+				}
+				placements[idx].Obj.CreateObject(placements[idx].Position, placements[idx].World, new Transformation(placements[idx].Yaw, placements[idx].Pitch, placements[idx].Roll), new ObjectCreationParameters(placements[idx].Distance, jobs[idx].Offset.Z, placements[idx].ParamStart, placements[idx].ParamEnd));
+			}
+		}
+
+		private static void ComputeSpan(RouteData Data, SpanJob job, TrackFollower follower, SpanPlacement[] placements, int idx)
+		{
+			if (job.UnifiedObject == null)
+			{
+				return;
+			}
+
+			bool isMain = job.RailKey.Equals("0", StringComparison.OrdinalIgnoreCase);
+			bool followGradient = job.Type == ObjectTransformType.FollowsGradient || job.Type == ObjectTransformType.FollowsGradientAndCant;
+			bool followCant = job.Type == ObjectTransformType.FollowsCant || job.Type == ObjectTransformType.FollowsGradientAndCant;
+
+			// Orientation looks ahead max(span, 1.0), as in BveTs.
+			double span = Math.Max(job.Span, 1.0);
+
+			follower.TrackIndex = 0;
+			follower.UpdateAbsolute(job.Distance, true, false);
+			Vector3 start = new Vector3(follower.WorldPosition);
+			Vector3 side = new Vector3(follower.WorldSide);
+			Vector3 up = new Vector3(follower.WorldUp);
+			if (!isMain)
+			{
+				Vector2 offset = GetRailOffsetAtDistance(Data, job.RailKey, job.Distance);
+				start += side * offset.X + up * offset.Y;
+			}
+
+			follower.UpdateAbsolute(job.Distance + span, true, false);
+			Vector3 finish = new Vector3(follower.WorldPosition);
+			if (!isMain)
+			{
+				Vector2 offset = GetRailOffsetAtDistance(Data, job.RailKey, job.Distance + span);
+				finish += new Vector3(follower.WorldSide) * offset.X + new Vector3(follower.WorldUp) * offset.Y;
+			}
+
+			// BveTs samples cant for orientation at the span midpoint.
+			double cant;
+			if (followCant)
+			{
+				cant = isMain ? MidMainCant(follower, job.Distance + span / 2.0) : GetRailCantAtDistance(Data, job.RailKey, job.Distance + span / 2.0);
+			}
+			else
+			{
+				cant = 0.0;
+			}
+
+			// Level span when not following the gradient.
+			Vector3 r = followGradient ? new Vector3(finish.X - start.X, finish.Y - start.Y, finish.Z - start.Z) : new Vector3(finish.X - start.X, 0.0, finish.Z - start.Z);
+
+			if (r == Vector3.Zero)
+			{
+				return;
+			}
+			r.Normalize();
+
+			Transformation world = new Transformation
+			{
+				Z = r,
+				X = new Vector3(r.Z, 0.0, -r.X)
+			};
+			Normalize(ref world.X.X, ref world.X.Z);
+			world.Y = Vector3.Cross(world.Z, world.X);
+			if (followCant)
+			{
+				world = new Transformation(world, 0.0, 0.0, Math.Atan(cant));
+			}
+
+			placements[idx].Obj = job.UnifiedObject;
+			placements[idx].Position = start + job.Offset * world;
+			placements[idx].World = world;
+			placements[idx].Distance = job.Distance;
+			placements[idx].ParamStart = job.ParamStart;
+			placements[idx].ParamEnd = job.ParamEnd + span;
+			placements[idx].Yaw = job.Yaw;
+			placements[idx].Pitch = job.Pitch;
+			placements[idx].Roll = job.Roll;
+		}
+
+		private static double MidMainCant(TrackFollower follower, double distance)
+		{
+			follower.UpdateAbsolute(distance, true, false);
+
+			int element = follower.LastTrackElement;
+			int trackIndex = follower.TrackIndex;
+			if (element <= Plugin.CurrentRoute.Tracks[trackIndex].Elements.Length - 2)
+			{
+				/*
+				 * Handle the mix between legacy and non-legacy here
+				 *--------------------------------------------------
+				 *
+				 * Cant interpolation is not performed when going from non-legacy to legacy
+				 * However, it is performed when going from legacy to non-legacy
+				 * In this case, we take the raw cant value from the track element (as opposed to the follower's interpolated value)
+				 *
+				 * This 'works' as the BVE5 parser doesn't use fixed length track elements
+				 * and each legacy element encompasses the whole of the track segment
+				 * Non-legacy on the other hand creates elements as needed, which don't set the ReturnsRawCant value
+				 *
+				 * Note that the default TrackFollower cant value is always interpolated between two positions
+				 * (which is good assuming you want a rail car, but not necessarily for these purposes)
+				 *
+				 */
+				if (Plugin.CurrentRoute.Tracks[trackIndex].Elements[element + 1].ReturnsRawCant)
+				{
+					return follower.RawCant;
+				}
+			}
+
+			
+			return follower.CurveCant;
 		}
 
 		private static void ComputeCantTangents()
