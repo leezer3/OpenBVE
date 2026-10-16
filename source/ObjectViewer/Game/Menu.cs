@@ -29,6 +29,18 @@ namespace ObjectViewer
 		{
 		}
 
+		public override int ObjectOptimizationIndex
+		{
+			get => (int)Interface.CurrentOptions.ObjectOptimizationMode;
+			set => Interface.CurrentOptions.ObjectOptimizationMode = (Graphics.ObjectOptimizationMode)value;
+		}
+
+		public override int FPSLimitValue
+		{
+			get => Interface.CurrentOptions.FPSLimit;
+			set => Interface.CurrentOptions.FPSLimit = value;
+		}
+
 		public override void Initialize()
 		{
 			filePictureBox = new Picturebox(Renderer);
@@ -329,17 +341,18 @@ namespace ObjectViewer
 			}
 
 			MenuBase menu = Menus[CurrMenu];
-			// overlay background
-			Renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(Renderer.Screen.Width, Renderer.Screen.Height), overlayColor);
+			// No fullscreen dim: the sidebar leaves the scene undimmed
 
 			if (menu.Type == MenuType.Options)
 			{
-				Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(menuMax.X - menuMin.X + 2.0f * Border.X, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
+				Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(MenuBackgroundWidth, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
 				if (OptionsTabContainer != null)
 				{
 					OptionsTabContainer.Draw();
 					LibRender2.Primitives.GLDropdown.ActiveDropdown?.DrawOverlay();
 				}
+				// Draw the grip first so the toggle tab cuts a clean gap in the line
+				DrawSidebarResizeGrip();
 				DrawSidebarToggleButton(RealTimeElapsed);
 				return;
 			}
@@ -350,7 +363,7 @@ namespace ObjectViewer
 			{
 				itemLeft = menuMin.X;
 				itemX = menuMin.X + 16;
-				Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(menuMax.X - menuMin.X + 2.0f * Border.X, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
+				Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(MenuBackgroundWidth, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
 			}
 			else
 			{
@@ -458,8 +471,9 @@ namespace ObjectViewer
 				Renderer.OpenGlString.Draw(MenuFont, @"...", new Vector2(itemX, itemY),
 					menu.Align, ColourDimmed, false);
 
-			DrawSidebarToggleButton(RealTimeElapsed);
+			// Draw the grip first so the toggle tab cuts a clean gap in the line
 			DrawSidebarResizeGrip();
+			DrawSidebarToggleButton(RealTimeElapsed);
 		}
 	}
 }

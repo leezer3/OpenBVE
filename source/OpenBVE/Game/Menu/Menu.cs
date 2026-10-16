@@ -313,6 +313,10 @@ namespace OpenBve
 
 		public override bool ProcessMouseMove(int x, int y)
 		{
+			if (HandleSidebarResizeMove(x, y))
+			{
+				return true;
+			}
 			Program.Renderer.GameWindow.CursorVisible = true;
 			if (CurrMenu < 0)
 			{

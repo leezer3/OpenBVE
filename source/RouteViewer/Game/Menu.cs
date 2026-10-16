@@ -49,6 +49,47 @@ namespace RouteViewer
 			}
 		}
 
+		public override int ObjectOptimizationIndex
+		{
+			get => (int)Interface.CurrentOptions.ObjectOptimizationMode;
+			set => Interface.CurrentOptions.ObjectOptimizationMode = (ObjectOptimizationMode)value;
+		}
+
+		public override int FPSLimitValue
+		{
+			get => Interface.CurrentOptions.FPSLimit;
+			set => Interface.CurrentOptions.FPSLimit = value;
+		}
+
+		public override void ApplySunDirection()
+		{
+			base.ApplySunDirection();
+			// RouteViewer recomputes lighting every frame from the route definitions,
+			// so propagate the manual sun there too or the next frame overwrites it
+			try
+			{
+				Vector3 pos = Renderer.Lighting.OptionLightPosition;
+				if (Program.CurrentRoute != null)
+				{
+					if (Program.CurrentRoute.LightDefinitions != null)
+					{
+						for (int i = 0; i < Program.CurrentRoute.LightDefinitions.Length; i++)
+						{
+							Program.CurrentRoute.LightDefinitions[i].LightPosition = pos;
+						}
+					}
+					if (Program.CurrentRoute.Atmosphere != null)
+					{
+						Program.CurrentRoute.Atmosphere.LightPosition = pos;
+					}
+				}
+			}
+			catch
+			{
+				// Best-effort
+			}
+		}
+
 		public override void Initialize()
 		{
 			routePictureBox = new Picturebox(Renderer);
@@ -360,17 +401,18 @@ namespace RouteViewer
 			}
 
 			MenuBase menu = Menus[CurrMenu];
-			// overlay background (fades in/out with the sidebar)
-			Renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(Renderer.Screen.Width, Renderer.Screen.Height), new Color128(overlayColor.R, overlayColor.G, overlayColor.B, (float)(overlayColor.A * SidebarFade)));
+			// No fullscreen dim: the sidebar leaves the scene undimmed
 
 			if (menu.Type == MenuType.Options)
 			{
-				Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(menuMax.X - menuMin.X + 2.0f * Border.X, menuMax.Y - menuMin.Y + 2.0f * Border.Y), new Color128(backgroundColor.R, backgroundColor.G, backgroundColor.B, (float)(backgroundColor.A * SidebarFade)));
+				Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(MenuBackgroundWidth, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
 				if (OptionsTabContainer != null)
 				{
 					OptionsTabContainer.Draw();
 					LibRender2.Primitives.GLDropdown.ActiveDropdown?.DrawOverlay();
 				}
+				// Draw the grip first so the toggle tab cuts a clean gap in the line
+				DrawSidebarResizeGrip();
 				DrawSidebarToggleButton(RealTimeElapsed);
 				return;
 			}
@@ -381,7 +423,7 @@ namespace RouteViewer
 			{
 				itemLeft = menuMin.X;
 				itemX = menuMin.X + 16;
-				Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(menuMax.X - menuMin.X + 2.0f * Border.X, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
+				Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(MenuBackgroundWidth, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
 			}
 			else
 			{
@@ -508,8 +550,9 @@ namespace RouteViewer
 				}
 			}
 
-			DrawSidebarToggleButton(RealTimeElapsed);
+			// Draw the grip first so the toggle tab cuts a clean gap in the line
 			DrawSidebarResizeGrip();
+			DrawSidebarToggleButton(RealTimeElapsed);
 		}
 
 		private static void routeWorkerThread_doWork(object sender, DoWorkEventArgs e)

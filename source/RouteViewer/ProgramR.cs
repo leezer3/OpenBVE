@@ -212,6 +212,8 @@ namespace RouteViewer
 
 			string folder = FileSystem.GetDataFolder("Languages");
 			Translations.LoadLanguageFiles(folder);
+			folder = FileSystem.GetDataFolder("Cursors");
+			LibRender2.AvailableCursors.LoadCursorImages(Renderer, folder);
 			// application
 			Renderer.GraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
 			if (Renderer.Screen.Width == 0 || Renderer.Screen.Height == 0)

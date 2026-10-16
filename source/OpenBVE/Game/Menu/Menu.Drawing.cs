@@ -45,17 +45,18 @@ namespace OpenBve
 			}
 
 			MenuBase menu = Menus[CurrMenu];
-			// overlay background
-			Program.Renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height), overlayColor);
+			// No fullscreen dim: the sidebar leaves the scene undimmed
 
 			if (menu.Type == MenuType.Options)
 			{
-				Program.Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(menuMax.X - menuMin.X + 2.0f * Border.X, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
+				Program.Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(MenuBackgroundWidth, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
 				if (OptionsTabContainer != null)
 				{
 					OptionsTabContainer.Draw();
 					LibRender2.Primitives.GLDropdown.ActiveDropdown?.DrawOverlay();
 				}
+				// Draw the grip first so the toggle tab cuts a clean gap in the line
+				DrawSidebarResizeGrip();
 				DrawSidebarToggleButton(RealTimeElapsed);
 				Renderer.PopMatrix(MatrixMode.Modelview);
 				Renderer.PopMatrix(MatrixMode.Projection);
@@ -68,7 +69,7 @@ namespace OpenBve
 			{
 				itemLeft = menuMin.X;
 				itemX = menuMin.X + 16;
-				Program.Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(menuMax.X - menuMin.X + 2.0f * Border.X, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
+				Program.Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(MenuBackgroundWidth, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
 			}
 			else
 			{
@@ -302,6 +303,8 @@ namespace OpenBve
 					switchMapPictureBox.Draw();
 					break;
 			}
+			// Draw the grip first so the toggle tab cuts a clean gap in the line
+			DrawSidebarResizeGrip();
 			DrawSidebarToggleButton(RealTimeElapsed);
 			Renderer.PopMatrix(MatrixMode.Modelview);
 			Renderer.PopMatrix(MatrixMode.Projection);

@@ -340,6 +340,10 @@ namespace LibRender2
 		public Texture MasconTexture;
 		/// <summary>A raildriver icon</summary>
 		public Texture RailDriverTexture;
+		/// <summary>Sidebar collapse icon (chevron pointing into the panel)</summary>
+		public Texture SidebarCollapseTexture;
+		/// <summary>Sidebar expand icon (chevron pointing out of the panel)</summary>
+		public Texture SidebarExpandTexture;
 		/// <summary>The game window</summary>
 		public GameWindow GameWindow;
 		/// <summary>The graphics mode in use</summary>
@@ -487,6 +491,8 @@ namespace LibRender2
 			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "zuki.png"), TextureParameters.NoChange, out MasconTexture);
 			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "joystick.png"), TextureParameters.NoChange, out JoystickTexture);
 			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "raildriver.png"), TextureParameters.NoChange, out RailDriverTexture);
+			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder(), "Cursors\\Symbols\\navigation_w.png"), TextureParameters.NoChange, out SidebarCollapseTexture);
+			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder(), "Cursors\\Symbols\\navigation_e.png"), TextureParameters.NoChange, out SidebarExpandTexture);
 
 			Lighting.Initialize();
 			Shadows.Initialize();

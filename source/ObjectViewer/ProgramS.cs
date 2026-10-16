@@ -186,6 +186,8 @@ namespace ObjectViewer {
 	        // --- load language ---
 	        string folder = FileSystem.GetDataFolder("Languages");
 	        Translations.LoadLanguageFiles(folder);
+	        folder = FileSystem.GetDataFolder("Cursors");
+	        LibRender2.AvailableCursors.LoadCursorImages(Renderer, folder);
 			GameMenu.Instance = new GameMenu();
 			// initialize camera
 			Renderer.GraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);
