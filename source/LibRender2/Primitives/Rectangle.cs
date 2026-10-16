@@ -147,6 +147,43 @@ namespace LibRender2.Primitives
 			}
 		}
 
+		/// <summary>Draws a 2D rectangle with rounded corners.</summary>
+		/// <param name="texture">The texture, or a null reference.</param>
+		/// <param name="point">The top-left coordinates in pixels.</param>
+		/// <param name="size">The size in pixels.</param>
+		/// <param name="radius">The corner radius in pixels (clamped to half the smallest side).</param>
+		/// <param name="color">The color, or a null reference.</param>
+		/// <param name="textureCoordinates">The texture coordinates to be applied</param>
+		/// <param name="wrapMode">A wrap mode if overriding that of the texture</param>
+		public void DrawRounded(Texture texture, Vector2 point, Vector2 size, float radius, Color128? color = null, Vector2? textureCoordinates = null, OpenGlTextureWrapMode? wrapMode = null)
+		{
+			DrawRoundedCorners(texture, point, size, radius, new Vector4(1.0, 1.0, 1.0, 1.0), color, textureCoordinates, wrapMode);
+		}
+
+		/// <summary>Draws a 2D rectangle with selected rounded corners.</summary>
+		/// <param name="texture">The texture, or a null reference.</param>
+		/// <param name="point">The top-left coordinates in pixels.</param>
+		/// <param name="size">The size in pixels.</param>
+		/// <param name="radius">The corner radius in pixels (clamped to half the smallest side).</param>
+		/// <param name="corners">Per-corner mask (x=TL y=TR z=BR w=BL, 1=round 0=square).</param>
+		/// <param name="color">The color, or a null reference.</param>
+		/// <param name="textureCoordinates">The texture coordinates to be applied</param>
+		/// <param name="wrapMode">A wrap mode if overriding that of the texture</param>
+		public void DrawRoundedCorners(Texture texture, Vector2 point, Vector2 size, float radius, Vector4 corners, Color128? color = null, Vector2? textureCoordinates = null, OpenGlTextureWrapMode? wrapMode = null)
+		{
+			if (radius <= 0.5f || Shader == null)
+			{
+				Draw(texture, point, size, color, textureCoordinates, wrapMode);
+				return;
+			}
+			Shader.Activate();
+			Shader.SetRadius(radius);
+			Shader.SetCorners(corners);
+			Draw(texture, point, size, color, textureCoordinates, wrapMode);
+			Shader.SetRadius(0f);
+			Shader.SetCorners(Vector4.Zero);
+		}
+
 		private void DrawWithShader(Texture texture, Vector2 point, Vector2 size, Color128? color, Vector2 coordinates, OpenGlTextureWrapMode? wrapMode = null)
 		{
 			Shader.Activate();
