@@ -138,6 +138,16 @@ namespace LibRender2.Menu
 			return row;
 		}
 
+		/// <summary>Whether the interactive control of an options row can receive input</summary>
+		private static bool IsRowInteractive(GLControl row)
+		{
+			if (row is GLContainer rowContainer && rowContainer.Children.Count >= 2)
+			{
+				return rowContainer.Children[rowContainer.Children.Count - 1].Enabled;
+			}
+			return row.Enabled;
+		}
+
 		/// <summary>Moves keyboard focus between options rows, scrolling the focused row into view</summary>
 		private void MoveOptionsFocus(int direction)
 		{
@@ -146,9 +156,16 @@ namespace LibRender2.Menu
 			{
 				return;
 			}
-			optionsFocusRow += direction;
-			if (optionsFocusRow < 0) optionsFocusRow = 0;
-			if (optionsFocusRow > content.Children.Count - 1) optionsFocusRow = content.Children.Count - 1;
+			// Skip rows whose control is disabled (e.g. FPS limit while VSync is on)
+			int next = optionsFocusRow + direction;
+			while (next >= 0 && next < content.Children.Count && !IsRowInteractive(content.Children[next]))
+			{
+				next += direction;
+			}
+			if (next >= 0 && next < content.Children.Count)
+			{
+				optionsFocusRow = next;
+			}
 			if (content is GLScrollContainer scroll && optionsFocusRow < scroll.Children.Count)
 			{
 				scroll.EnsureVisible(scroll.Children[optionsFocusRow]);
@@ -165,12 +182,13 @@ namespace LibRender2.Menu
 			{
 				GLControl row = content.Children[i];
 				// Highlight the focused row itself, and ring the interactive control inside it
+				// (no control ring when the focused row's control is disabled)
 				row.KeyboardFocused = (i == optionsFocusRow);
 				if (row is GLContainer rowContainer)
 				{
 					for (int j = 0; j < rowContainer.Children.Count; j++)
 					{
-						rowContainer.Children[j].KeyboardFocused = (i == optionsFocusRow && j == rowContainer.Children.Count - 1);
+						rowContainer.Children[j].KeyboardFocused = (i == optionsFocusRow && j == rowContainer.Children.Count - 1 && IsRowInteractive(row));
 					}
 				}
 			}
@@ -239,10 +257,19 @@ namespace LibRender2.Menu
 			var displayTab = new GLScrollContainer(Renderer) { Spacing = 8f, Padding = 12f };
 			var qualityTab = new GLScrollContainer(Renderer) { Spacing = 8f, Padding = 12f };
 			var otherTab = new GLScrollContainer(Renderer) { Spacing = 8f, Padding = 12f };
+			GLScrollContainer lightingTab = null;
+			if (host == HostApplication.RouteViewer || host == HostApplication.ObjectViewer)
+			{
+				lightingTab = new GLScrollContainer(Renderer) { Spacing = 8f, Padding = 12f };
+			}
 
 			OptionsTabContainer.AddTab("Display", displayTab);
 			OptionsTabContainer.AddTab("Quality", qualityTab);
 			OptionsTabContainer.AddTab("Other", otherTab);
+			if (lightingTab != null)
+			{
+				OptionsTabContainer.AddTab("Lighting", lightingTab);
+			}
 
 			// Populate Display Tab
 			var resRow = CreateRow("Resolution");
@@ -311,6 +338,41 @@ namespace LibRender2.Menu
 			fsRow.Children.Add(fsToggle);
 			displayTab.Children.Add(fsRow);
 
+			if (host == HostApplication.RouteViewer || host == HostApplication.ObjectViewer)
+			{
+				var vsyncRow = CreateRow("Vertical Synchronization");
+				var vsyncToggle = new GLToggle(Renderer) { Checked = CurrentOptions.VerticalSynchronization, Text = "" };
+				var fpsRow = CreateRow("FPS Limit");
+				var fpsDropdown = new GLDropdown(Renderer);
+				fpsDropdown.Items.AddRange(new[] { "Unlimited", "30", "60", "120", "240" });
+				int[] fpsPresets = { 0, 30, 60, 120, 240 };
+				switch (FPSLimitValue)
+				{
+					case 30: fpsDropdown.SelectedIndex = 1; break;
+					case 60: fpsDropdown.SelectedIndex = 2; break;
+					case 120: fpsDropdown.SelectedIndex = 3; break;
+					case 240: fpsDropdown.SelectedIndex = 4; break;
+					default: fpsDropdown.SelectedIndex = 0; break;
+				}
+				fpsDropdown.Enabled = !vsyncToggle.Checked;
+				vsyncToggle.ValueChanged += (s, e) =>
+				{
+					CurrentOptions.VerticalSynchronization = vsyncToggle.Checked;
+					Renderer.GameWindow.VSync = vsyncToggle.Checked ? OpenTK.VSyncMode.On : OpenTK.VSyncMode.Off;
+					fpsDropdown.Enabled = !vsyncToggle.Checked;
+				};
+				fpsDropdown.SelectionChanged += (s, e) =>
+				{
+					if (fpsDropdown.SelectedIndex < 0 || fpsDropdown.SelectedIndex >= fpsPresets.Length) return;
+					FPSLimitValue = fpsPresets[fpsDropdown.SelectedIndex];
+					Renderer.GameWindow.TargetRenderFrequency = FPSLimitValue > 0 ? FPSLimitValue : 0;
+				};
+				vsyncRow.Children.Add(vsyncToggle);
+				displayTab.Children.Add(vsyncRow);
+				fpsRow.Children.Add(fpsDropdown);
+				displayTab.Children.Add(fpsRow);
+			}
+
 			if (host == HostApplication.OpenBve)
 			{
 				var scaleRow = CreateRow("UI Scale");
@@ -326,20 +388,22 @@ namespace LibRender2.Menu
 			}
 
 			// Populate Quality Tab
-			var interpRow = CreateRow("Interpolation");
+			var interpRow = CreateRow("Mode");
 			var interpDropdown = new GLDropdown(Renderer);
 			interpDropdown.Items.AddRange(new[] { "Nearest", "Bilinear", "NearestMipmap", "BilinearMipmap", "TrilinearMipmap", "Anisotropic" });
 			interpDropdown.SelectedIndex = (int)CurrentOptions.Interpolation;
 			interpDropdown.SelectionChanged += (s, e) =>
 			{
-				CurrentOptions.Interpolation = (InterpolationMode)interpDropdown.SelectedIndex;
-				Renderer.TextureManager.UnloadAllTextures(true);
+				var newInterpolation = (InterpolationMode)interpDropdown.SelectedIndex;
+				if (newInterpolation == CurrentOptions.Interpolation) return;
+				CurrentOptions.Interpolation = newInterpolation;
+				Renderer.TextureManager.UnloadAllTextures(false);
 				Renderer.TextureManager.LoadAllTextures();
 			};
 			interpRow.Children.Add(interpDropdown);
 			qualityTab.Children.Add(interpRow);
 
-			var anisoRow = CreateRow("Anisotropic Level");
+			var anisoRow = CreateRow("Anisotropic Filtering Level");
 			var anisoDropdown = new GLDropdown(Renderer);
 			anisoDropdown.Items.AddRange(new[] { "0", "2", "4", "8", "16" });
 			int currentAniso = CurrentOptions.AnisotropicFilteringLevel;
@@ -347,8 +411,10 @@ namespace LibRender2.Menu
 			if (selectAnisoIdx >= 0) anisoDropdown.SelectedIndex = selectAnisoIdx;
 			anisoDropdown.SelectionChanged += (s, e) =>
 			{
-				CurrentOptions.AnisotropicFilteringLevel = int.Parse(anisoDropdown.Items[anisoDropdown.SelectedIndex]);
-				Renderer.TextureManager.UnloadAllTextures(true);
+				int newAniso = int.Parse(anisoDropdown.Items[anisoDropdown.SelectedIndex]);
+				if (newAniso == CurrentOptions.AnisotropicFilteringLevel) return;
+				CurrentOptions.AnisotropicFilteringLevel = newAniso;
+				Renderer.TextureManager.UnloadAllTextures(false);
 				Renderer.TextureManager.LoadAllTextures();
 			};
 			anisoRow.Children.Add(anisoDropdown);
@@ -378,7 +444,7 @@ namespace LibRender2.Menu
 			transRow.Children.Add(transDropdown);
 			qualityTab.Children.Add(transRow);
 
-			var distRow = CreateRow("Viewing Distance");
+			var distRow = CreateRow("Viewing Distance (m)");
 			var distUpDown = new GLNumericUpDown(Renderer) { Minimum = 10f, Maximum = 9999f, Increment = 50f, Value = CurrentOptions.ViewingDistance };
 			distUpDown.ValueChanged += (s, e) =>
 			{
@@ -393,8 +459,8 @@ namespace LibRender2.Menu
 			distRow.Children.Add(distUpDown);
 			qualityTab.Children.Add(distRow);
 
-			var clipRow = CreateRow("Near Clip");
-			var clipUpDown = new GLNumericUpDown(Renderer) { Minimum = 0.001f, Maximum = 1f, Increment = 0.01f, Value = (float)CurrentOptions.NearClipBase };
+			var clipRow = CreateRow("Near Clip (m)");
+			var clipUpDown = new GLNumericUpDown(Renderer) { Minimum = 0.01f, Maximum = 100f, Increment = 0.01f, ValueFormat = "0.###", Value = (float)CurrentOptions.NearClipBase };
 			clipUpDown.ValueChanged += (s, e) =>
 			{
 				CurrentOptions.NearClipBase = clipUpDown.Value;
@@ -404,8 +470,23 @@ namespace LibRender2.Menu
 			clipRow.Children.Add(clipUpDown);
 			qualityTab.Children.Add(clipRow);
 
+			if (host == HostApplication.RouteViewer || host == HostApplication.ObjectViewer)
+			{
+				var optimizeRow = CreateRow("Object Optimization Mode");
+				var optimizeDropdown = new GLDropdown(Renderer);
+				optimizeDropdown.Items.AddRange(new[] { "None", "Low", "High" });
+				int optimizeIndex = ObjectOptimizationIndex;
+				optimizeDropdown.SelectedIndex = optimizeIndex >= 0 && optimizeIndex < optimizeDropdown.Items.Count ? optimizeIndex : 1;
+				optimizeDropdown.SelectionChanged += (s, e) =>
+				{
+					if (optimizeDropdown.SelectedIndex >= 0) ObjectOptimizationIndex = optimizeDropdown.SelectedIndex;
+				};
+				optimizeRow.Children.Add(optimizeDropdown);
+				qualityTab.Children.Add(optimizeRow);
+			}
+
 			// Populate Other Tab
-			var xParserRow = CreateRow("X Parser");
+			var xParserRow = CreateRow("Use New X Parser");
 			var xParserDropdown = new GLDropdown(Renderer);
 			xParserDropdown.Items.AddRange(new[] { "Original", "NewXParser", "Assimp" });
 			xParserDropdown.SelectedIndex = (int)CurrentOptions.CurrentXParser;
@@ -416,7 +497,7 @@ namespace LibRender2.Menu
 			xParserRow.Children.Add(xParserDropdown);
 			otherTab.Children.Add(xParserRow);
 
-			var objParserRow = CreateRow("Obj Parser");
+			var objParserRow = CreateRow("Use New Obj Parser");
 			var objParserDropdown = new GLDropdown(Renderer);
 			objParserDropdown.Items.AddRange(new[] { "Original", "Assimp" });
 			objParserDropdown.SelectedIndex = (int)CurrentOptions.CurrentObjParser;
@@ -429,7 +510,7 @@ namespace LibRender2.Menu
 
 			if (host == HostApplication.ObjectViewer)
 			{
-				var reloadRow = CreateRow("Auto Reload Obj");
+				var reloadRow = CreateRow("Automatically Reload Changed Objects");
 				var reloadToggle = new GLToggle(Renderer) { Checked = CurrentOptions.AutoReloadObjects, Text = "" };
 				reloadToggle.ValueChanged += (s, e) =>
 				{
@@ -459,6 +540,182 @@ namespace LibRender2.Menu
 				barRow.Children.Add(barToggle);
 				otherTab.Children.Add(barRow);
 			}
+
+			// Populate Lighting Tab (F8 Shadow & Lighting parity, viewers only)
+			if (lightingTab != null)
+			{
+				var shadowResRow = CreateRow("Resolution");
+				var shadowResDropdown = new GLDropdown(Renderer);
+				shadowResDropdown.Items.AddRange(new[] { "Off", "Low (512)", "Medium (1024)", "High (2048)", "Ultra (4096)" });
+				switch (CurrentOptions.ShadowResolution)
+				{
+					case ShadowMapResolution.Off: shadowResDropdown.SelectedIndex = 0; break;
+					case ShadowMapResolution.Low: shadowResDropdown.SelectedIndex = 1; break;
+					case ShadowMapResolution.Medium: shadowResDropdown.SelectedIndex = 2; break;
+					case ShadowMapResolution.High: shadowResDropdown.SelectedIndex = 3; break;
+					case ShadowMapResolution.Ultra: shadowResDropdown.SelectedIndex = 4; break;
+					default: shadowResDropdown.SelectedIndex = 3; break;
+				}
+				shadowResDropdown.SelectionChanged += (s, e) =>
+				{
+					ShadowMapResolution res;
+					switch (shadowResDropdown.SelectedIndex)
+					{
+						case 0: res = ShadowMapResolution.Off; break;
+						case 1: res = ShadowMapResolution.Low; break;
+						case 2: res = ShadowMapResolution.Medium; break;
+						case 3: res = ShadowMapResolution.High; break;
+						case 4: res = ShadowMapResolution.Ultra; break;
+						default: return;
+					}
+					if (res == CurrentOptions.ShadowResolution) return;
+					CurrentOptions.ShadowResolution = res;
+					Renderer.ReloadShadowSettings();
+				};
+				shadowResRow.Children.Add(shadowResDropdown);
+				lightingTab.Children.Add(shadowResRow);
+
+				var shadowDistRow = CreateRow("Draw Distance");
+				var shadowDistDropdown = new GLDropdown(Renderer);
+				shadowDistDropdown.Items.AddRange(new[] { "Near (150m)", "Medium (300m)", "Far (500m)", "Very Far (800m)", "Viewing Distance" });
+				switch (CurrentOptions.ShadowDrawDistance)
+				{
+					case ShadowDistance.Near: shadowDistDropdown.SelectedIndex = 0; break;
+					case ShadowDistance.Medium: shadowDistDropdown.SelectedIndex = 1; break;
+					case ShadowDistance.Far: shadowDistDropdown.SelectedIndex = 2; break;
+					case ShadowDistance.VeryFar: shadowDistDropdown.SelectedIndex = 3; break;
+					case ShadowDistance.ViewingDistance: shadowDistDropdown.SelectedIndex = 4; break;
+					default: shadowDistDropdown.SelectedIndex = 1; break;
+				}
+				shadowDistDropdown.SelectionChanged += (s, e) =>
+				{
+					ShadowDistance dist;
+					switch (shadowDistDropdown.SelectedIndex)
+					{
+						case 0: dist = ShadowDistance.Near; break;
+						case 1: dist = ShadowDistance.Medium; break;
+						case 2: dist = ShadowDistance.Far; break;
+						case 3: dist = ShadowDistance.VeryFar; break;
+						case 4: dist = ShadowDistance.ViewingDistance; break;
+						default: return;
+					}
+					if (dist == CurrentOptions.ShadowDrawDistance) return;
+					CurrentOptions.ShadowDrawDistance = dist;
+					Renderer.ReloadShadowSettings();
+				};
+				shadowDistRow.Children.Add(shadowDistDropdown);
+				lightingTab.Children.Add(shadowDistRow);
+
+				var shadowCascadeRow = CreateRow("Cascades");
+				var shadowCascadeDropdown = new GLDropdown(Renderer);
+				shadowCascadeDropdown.Items.AddRange(new[] { "2 Cascades", "3 Cascades", "4 Cascades" });
+				switch (CurrentOptions.ShadowCascades)
+				{
+					case ShadowCascadeCount.Two: shadowCascadeDropdown.SelectedIndex = 0; break;
+					case ShadowCascadeCount.Three: shadowCascadeDropdown.SelectedIndex = 1; break;
+					case ShadowCascadeCount.Four: shadowCascadeDropdown.SelectedIndex = 2; break;
+					default: shadowCascadeDropdown.SelectedIndex = 1; break;
+				}
+				shadowCascadeDropdown.SelectionChanged += (s, e) =>
+				{
+					ShadowCascadeCount cascades;
+					switch (shadowCascadeDropdown.SelectedIndex)
+					{
+						case 0: cascades = ShadowCascadeCount.Two; break;
+						case 1: cascades = ShadowCascadeCount.Three; break;
+						case 2: cascades = ShadowCascadeCount.Four; break;
+						default: return;
+					}
+					if (cascades == CurrentOptions.ShadowCascades) return;
+					CurrentOptions.ShadowCascades = cascades;
+					Renderer.ReloadShadowSettings();
+				};
+				shadowCascadeRow.Children.Add(shadowCascadeDropdown);
+				lightingTab.Children.Add(shadowCascadeRow);
+
+				var shadowStrengthRow = CreateRow("Strength (0 - 100%)");
+				var shadowStrengthNum = new GLNumericUpDown(Renderer) { Minimum = 1f, Maximum = 100f, Increment = 1f, ValueFormat = "0", Value = (float)System.Math.Max(1.0, System.Math.Min(100.0, System.Math.Round(CurrentOptions.ShadowStrength * 100.0))) };
+				shadowStrengthNum.ValueChanged += (s, e) =>
+				{
+					CurrentOptions.ShadowStrength = shadowStrengthNum.Value / 100.0;
+				};
+				shadowStrengthRow.Children.Add(shadowStrengthNum);
+				lightingTab.Children.Add(shadowStrengthRow);
+
+				var shadowBiasRow = CreateRow("Shadow Bias");
+				var shadowBiasNum = new GLNumericUpDown(Renderer) { Minimum = 0f, Maximum = 1f, Increment = 0.000001f, ValueFormat = "0.000000", Value = (float)CurrentOptions.ShadowBias };
+				shadowBiasNum.ValueChanged += (s, e) =>
+				{
+					CurrentOptions.ShadowBias = shadowBiasNum.Value;
+				};
+				shadowBiasRow.Children.Add(shadowBiasNum);
+				lightingTab.Children.Add(shadowBiasRow);
+
+				var shadowNormalBiasRow = CreateRow("Normal Bias");
+				var shadowNormalBiasNum = new GLNumericUpDown(Renderer) { Minimum = 0f, Maximum = 10f, Increment = 0.1f, ValueFormat = "0.0", Value = (float)CurrentOptions.ShadowNormalBias };
+				shadowNormalBiasNum.ValueChanged += (s, e) =>
+				{
+					CurrentOptions.ShadowNormalBias = shadowNormalBiasNum.Value;
+				};
+				shadowNormalBiasRow.Children.Add(shadowNormalBiasNum);
+				lightingTab.Children.Add(shadowNormalBiasRow);
+
+				var shadowFilterRow = CreateRow("Per-cascade culling");
+				var shadowFilterToggle = new GLToggle(Renderer) { Checked = CurrentOptions.ShadowFilterCascades, Text = "" };
+				shadowFilterToggle.ValueChanged += (s, e) =>
+				{
+					CurrentOptions.ShadowFilterCascades = shadowFilterToggle.Checked;
+				};
+				shadowFilterRow.Children.Add(shadowFilterToggle);
+				lightingTab.Children.Add(shadowFilterRow);
+
+				var shadowSmoothRow = CreateRow("Smooth shadow");
+				var shadowSmoothToggle = new GLToggle(Renderer) { Checked = CurrentOptions.ShadowSmooth, Text = "" };
+				shadowSmoothToggle.ValueChanged += (s, e) =>
+				{
+					CurrentOptions.ShadowSmooth = shadowSmoothToggle.Checked;
+				};
+				shadowSmoothRow.Children.Add(shadowSmoothToggle);
+				lightingTab.Children.Add(shadowSmoothRow);
+
+				var shadowRadiusRow = CreateRow("Smooth Radius");
+				var shadowRadiusDropdown = new GLDropdown(Renderer);
+				shadowRadiusDropdown.Items.AddRange(new[] { "Low", "Medium", "High" });
+				if (CurrentOptions.ShadowFilterRadius >= 2.5) shadowRadiusDropdown.SelectedIndex = 2;
+				else if (CurrentOptions.ShadowFilterRadius <= 1.0) shadowRadiusDropdown.SelectedIndex = 0;
+				else shadowRadiusDropdown.SelectedIndex = 1;
+				shadowRadiusDropdown.SelectionChanged += (s, e) =>
+				{
+					switch (shadowRadiusDropdown.SelectedIndex)
+					{
+						case 0: CurrentOptions.ShadowFilterRadius = 1.0; break;
+						case 2: CurrentOptions.ShadowFilterRadius = 2.5; break;
+						default: CurrentOptions.ShadowFilterRadius = 1.5; break;
+					}
+				};
+				shadowRadiusRow.Children.Add(shadowRadiusDropdown);
+				lightingTab.Children.Add(shadowRadiusRow);
+
+				var sunAzRow = CreateRow("Azimuth (Phi)");
+				var sunAzSlider = new GLSlider(Renderer) { Minimum = -180.0, Maximum = 180.0, ShowValue = true, ValueFormat = "0°", Value = System.Math.Max(-180.0, System.Math.Min(180.0, CurrentOptions.LightAzimuth)) };
+				sunAzSlider.ValueChanged += (s, e) =>
+				{
+					CurrentOptions.LightAzimuth = sunAzSlider.Value;
+					ApplySunDirection();
+				};
+				sunAzRow.Children.Add(sunAzSlider);
+				lightingTab.Children.Add(sunAzRow);
+
+				var sunElRow = CreateRow("Elevation (Theta)");
+				var sunElSlider = new GLSlider(Renderer) { Minimum = -90.0, Maximum = 90.0, ShowValue = true, ValueFormat = "0°", Value = System.Math.Max(-90.0, System.Math.Min(90.0, CurrentOptions.LightElevation)) };
+				sunElSlider.ValueChanged += (s, e) =>
+				{
+					CurrentOptions.LightElevation = sunElSlider.Value;
+					ApplySunDirection();
+				};
+				sunElRow.Children.Add(sunElSlider);
+				lightingTab.Children.Add(sunElRow);
+			}
 		}
 
 		private GLHBoxContainer CreateRow(string name)
@@ -472,6 +729,23 @@ namespace LibRender2.Menu
 			label.Size = new Vector2(System.Math.Max(label.Size.X, 24f), 24f);
 			row.Children.Add(label);
 			return row;
+		}
+
+		/// <summary>Object optimization mode index (None/Low/High), or -1 when unsupported by this host</summary>
+		public virtual int ObjectOptimizationIndex { get => -1; set { } }
+
+		/// <summary>FPS limit preset value, or -1 when unsupported by this host</summary>
+		public virtual int FPSLimitValue { get => -1; set { } }
+
+		/// <summary>Applies a changed sun direction (hosts add route-specific propagation)</summary>
+		public virtual void ApplySunDirection()
+		{
+			double azimuthRad = CurrentOptions.LightAzimuth * System.Math.PI / 180.0;
+			double elevationRad = CurrentOptions.LightElevation * System.Math.PI / 180.0;
+			Renderer.Lighting.OptionLightPosition = new Vector3(
+				(float)(-System.Math.Cos(elevationRad) * System.Math.Sin(azimuthRad)),
+				(float)System.Math.Sin(elevationRad),
+				(float)(-System.Math.Cos(elevationRad) * System.Math.Cos(azimuthRad)));
 		}
 
 		/// <summary>Whether the menu system is initialized</summary>
@@ -587,8 +861,25 @@ namespace LibRender2.Menu
 		/// <summary>Whether the mouse is currently hovering the sidebar resize edge (0..1 for highlight fade)</summary>
 		public float sidebarResizeHover = 0f;
 
+		/// <summary>Whether the sidebar resize cursor is currently applied (avoids redundant OS cursor updates)</summary>
+		private bool sidebarResizeCursorActive = false;
+
+		/// <summary>Shows the horizontal-resize cursor while on the sidebar edge, restoring the default otherwise</summary>
+		private void SetSidebarResizeCursor(bool onEdge)
+		{
+			if (onEdge == sidebarResizeCursorActive) return;
+			sidebarResizeCursorActive = onEdge;
+			Renderer.SetCursor(onEdge ? AvailableCursors.GetResizeCursor() : OpenTK.MouseCursor.Default);
+		}
+
 		/// <summary>The screen X co-ordinate of the sidebar's right edge, or -1 if not currently shown</summary>
 		public double SidebarEdgeX => IsSidebarMode && SidebarVisible ? (currentOffset < -90000.0 ? (SidebarVisible ? SidebarWidth : 0) : (currentOffset + SidebarWidth)) : -1;
+
+		/// <summary>The background width of the current menu panel</summary>
+		/// <remarks>In sidebar mode the panel ends exactly at the resize edge, so no
+		/// border overhang is drawn past the grip line. Classic menus keep the border padding.</remarks>
+		public double MenuBackgroundWidth =>
+			IsSidebarMode ? menuMax.X - menuMin.X : menuMax.X - menuMin.X + 2.0f * Border.X;
 
 		/// <summary>Tests whether the given point is within the sidebar resize grip</summary>
 		private bool IsOnResizeEdge(int x, int y)
@@ -662,6 +953,19 @@ namespace LibRender2.Menu
 				{
 					if (tab is GLContainer container)
 					{
+						// First pass: the widest control in this tab sets the column width,
+						// so every control in the tab lines up on both edges.
+						const float minLabelWidth = 40f;
+						float maxControlWidth = 0f;
+						foreach (var child in container.Children)
+						{
+							if (child is GLHBoxContainer row && row.Children.Count >= 2)
+							{
+								var control = row.Children[1];
+								float need = System.Math.Min(control.DesiredWidth, System.Math.Max(0f, innerWidth - row.Spacing - minLabelWidth));
+								if (need > maxControlWidth) maxControlWidth = need;
+							}
+						}
 						foreach (var child in container.Children)
 						{
 							if (child is GLHBoxContainer row)
@@ -673,16 +977,15 @@ namespace LibRender2.Menu
 								{
 									var label = row.Children[0] as Label;
 									var control = row.Children[1];
-									// Fixed two-column layout: labels on the left, controls right-aligned
-									float labelWidth = (float)System.Math.Round(innerWidth * 0.45f);
-									const float minControl = 120f;
-									if (innerWidth - labelWidth - row.Spacing < minControl)
+									// Fixed two-column layout: labels on the left, controls right-aligned.
+									// Every control uses the tab's widest need; the label takes the rest,
+									// so narrow panels no longer starve the label while the control cell sits empty.
+									float labelWidth = System.Math.Max(0f, innerWidth - row.Spacing - maxControlWidth);
+									if (label != null)
 									{
-										labelWidth = System.Math.Max(0f, innerWidth - minControl - row.Spacing);
+										label.Size = new Vector2(labelWidth, rowHeight);
 									}
-									float controlWidth = innerWidth - labelWidth - row.Spacing;
-									label.Size = new Vector2(labelWidth, rowHeight);
-									control.Size = new Vector2(controlWidth, rowHeight);
+									control.Size = new Vector2(maxControlWidth, rowHeight);
 								}
 							}
 						}
@@ -721,6 +1024,7 @@ namespace LibRender2.Menu
 			else
 			{
 				Renderer.CurrentInterface = InterfaceType.Normal;
+				SetSidebarResizeCursor(false);
 			}
 			ComputePosition();
 		}
@@ -808,6 +1112,7 @@ namespace LibRender2.Menu
 			if (!IsSidebarMode || !SidebarVisible)
 			{
 				sidebarResizeHover = 0f;
+				SetSidebarResizeCursor(false);
 				return false;
 			}
 			if (isResizingSidebar)
@@ -815,10 +1120,12 @@ namespace LibRender2.Menu
 				double ratio = (double)x / Renderer.Screen.Width;
 				SidebarWidthRatio = System.Math.Max(0.15, System.Math.Min(ratio, 0.5));
 				ComputePosition();
+				SetSidebarResizeCursor(true);
 				return true;
 			}
 			bool onEdge = IsOnResizeEdge(x, y);
 			sidebarResizeHover = onEdge ? 1f : 0f;
+			SetSidebarResizeCursor(onEdge);
 			return false;
 		}
 
@@ -826,16 +1133,29 @@ namespace LibRender2.Menu
 		public void DrawSidebarResizeGrip()
 		{
 			if (!IsSidebarMode || !SidebarVisible) return;
-			double edge = Renderer.Screen.Width * SidebarWidthRatio;
+			// Use the same edge as the hit-test and toggle button, so the grip
+			// stays under the mouse while dragging / animating
+			double edge = SidebarEdgeX;
+			if (edge < 0) return;
 			float fade = (float)System.Math.Max(SidebarFade, 0.001);
 			float baseAlpha = 0.5f * fade;
 			float alpha = (0.5f + 0.5f * sidebarResizeHover) * fade;
+			float screenHeight = (float)Renderer.Screen.Height;
+			// Leave a clean gap where the toggle tab sits, so it reads as a handle plugged into the edge
+			Vector4 tab = GetToggleButtonRect();
+			float gapTop = (float)System.Math.Max(0.0, tab.Y);
+			float gapBottom = (float)System.Math.Min((double)screenHeight, tab.Y + tab.W);
+			float upperHeight = gapTop;
+			float lowerHeight = screenHeight - gapBottom;
 			// Always-visible grip line so the user knows the edge is draggable
-			Renderer.Rectangle.Draw(null, new Vector2((float)(edge - 1), 0f), new Vector2(2f, (float)Renderer.Screen.Height), new Color128(0.0f, 0.47f, 0.83f, baseAlpha));
+			Renderer.Rectangle.Draw(null, new Vector2((float)(edge - 1), 0f), new Vector2(2f, upperHeight), new Color128(0.0f, 0.47f, 0.83f, baseAlpha));
+			Renderer.Rectangle.Draw(null, new Vector2((float)(edge - 1), gapBottom), new Vector2(2f, lowerHeight), new Color128(0.0f, 0.47f, 0.83f, baseAlpha));
 			if (sidebarResizeHover > 0f)
 			{
-				Renderer.Rectangle.Draw(null, new Vector2((float)(edge - 3), 0f), new Vector2(6f, (float)Renderer.Screen.Height), new Color128(0.0f, 0.47f, 0.83f, 0.4f * alpha));
-				Renderer.Rectangle.Draw(null, new Vector2((float)edge - 0.5f, 0f), new Vector2(1.5f, (float)Renderer.Screen.Height), new Color128(0.0f, 0.47f, 0.83f, alpha));
+				Renderer.Rectangle.Draw(null, new Vector2((float)(edge - 3), 0f), new Vector2(6f, upperHeight), new Color128(0.0f, 0.47f, 0.83f, 0.4f * alpha));
+				Renderer.Rectangle.Draw(null, new Vector2((float)(edge - 3), gapBottom), new Vector2(6f, lowerHeight), new Color128(0.0f, 0.47f, 0.83f, 0.4f * alpha));
+				Renderer.Rectangle.Draw(null, new Vector2((float)edge - 0.5f, 0f), new Vector2(1.5f, upperHeight), new Color128(0.0f, 0.47f, 0.83f, alpha));
+				Renderer.Rectangle.Draw(null, new Vector2((float)edge - 0.5f, gapBottom), new Vector2(1.5f, lowerHeight), new Color128(0.0f, 0.47f, 0.83f, alpha));
 			}
 		}
 
@@ -844,6 +1164,7 @@ namespace LibRender2.Menu
 			isScrubbing = false;
 			scrubbingOption = null;
 			isResizingSidebar = false;
+			SetSidebarResizeCursor(IsOnResizeEdge(x, y));
 			if (CurrMenu >= 0 && Menus.Length > 0 && Menus[CurrMenu].Type == MenuType.Options)
 			{
 				if (OptionsTabContainer != null && OptionsTabContainer.IsVisible)
@@ -963,6 +1284,13 @@ namespace LibRender2.Menu
 			if (!IsSidebarMode) return;
 			Vector4 rect = GetToggleButtonRect();
 			Renderer.Rectangle.Draw(null, new Vector2(rect.X, rect.Y), new Vector2(rect.Z, rect.W), backgroundColor);
+			var icon = SidebarVisible ? Renderer.SidebarCollapseTexture : Renderer.SidebarExpandTexture;
+			if (icon != null)
+			{
+				// 16px icon centered in the 24x40 tab; fall back to a text glyph if the asset is missing
+				Renderer.Rectangle.Draw(icon, new Vector2(rect.X + 4.0, rect.Y + 12.0), new Vector2(16.0, 16.0), Color128.White);
+				return;
+			}
 			string arrow = SidebarVisible ? "<" : ">";
 			if (MenuFont == null)
 			{
