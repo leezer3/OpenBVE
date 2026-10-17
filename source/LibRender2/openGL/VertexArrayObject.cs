@@ -119,6 +119,18 @@ namespace LibRender2
 		}
 
 		/// <summary>
+		/// Draw using VAO, rendering multiple instances in a single call
+		/// </summary>
+		/// <param name="DrawMode">Specifies the primitive or primitives that will be created from vertices</param>
+		/// <param name="Start">Start position of vertex index</param>
+		/// <param name="Count">Number of vertex indices to use</param>
+		/// <param name="InstanceCount">The number of instances to draw</param>
+		public void DrawInstanced(PrimitiveType DrawMode, int Start, int Count, int InstanceCount)
+		{
+			ibo.DrawInstanced(DrawMode, Start, Count, InstanceCount);
+		}
+
+		/// <summary>
 		/// Draws the VAO using non-indexed rendering (no IBO required).</summary>
 		/// <param name="DrawMode">Specifies the primitive or primitives that will be created from vertices.</param>
 		/// <param name="Start">Start position of the first vertex.</param>

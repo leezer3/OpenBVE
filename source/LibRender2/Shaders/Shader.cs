@@ -48,6 +48,7 @@ namespace LibRender2.Shaders
 		private readonly int uShadowSmoothLocation;
 		private readonly int uShadowFilterRadiusLocation;
 		private readonly int uCurrentViewMatrixLocation;
+		private readonly int uInstancedLocation;
 		private readonly int[] uLightSpaceMatrixLocations;
 		private readonly int[] uShadowMapLocations;
 		private readonly int[] uShadowSplitLocations;
@@ -95,6 +96,18 @@ namespace LibRender2.Shaders
 			int uLightSpaceMatrix2Location = GL.GetUniformLocation(Handle, "uLightSpaceMatrix2");
 			int uLightSpaceMatrix3Location = GL.GetUniformLocation(Handle, "uLightSpaceMatrix3");
 			uCurrentViewMatrixLocation = GL.GetUniformLocation(Handle, "uCurrentViewMatrix");
+			uInstancedLocation = GL.GetUniformLocation(Handle, "uInstanced");
+			/*
+			 * The instance matrix block is assigned an explicit uniform buffer binding point, so that it
+			 * does not collide with the animation matrices which default to binding point 0. The block may
+			 * be optimised out if instanced rendering is never referenced by the shader, in which case the
+			 * index is GL_INVALID_INDEX (-1) and the binding call must be skipped.
+			 */
+			int instanceMatrixBlockIndex = GL.GetUniformBlockIndex(Handle, "uInstanceMatricies");
+			if (instanceMatrixBlockIndex != -1)
+			{
+				GL.UniformBlockBinding(Handle, instanceMatrixBlockIndex, 1);
+			}
 			uLightSpaceMatrixLocations = new[] { uLightSpaceMatrix0Location, uLightSpaceMatrix1Location, uLightSpaceMatrix2Location, uLightSpaceMatrix3Location };
 			uShadowMapLocations = new[] { uShadowMap0Location1, uShadowMap1Location1, uShadowMap2Location1, uShadowMap3Location1 };
 			uShadowSplitLocations = new[] { uShadowSplit0Location1, uShadowSplit1Location1, uShadowSplit2Location1, uShadowSplit3Location };
@@ -520,6 +533,15 @@ namespace LibRender2.Shaders
 		{
 			Matrix4 matrix = ConvertToMatrix4(viewMatrix);
 			GL.ProgramUniformMatrix4(Handle, uCurrentViewMatrixLocation, false, ref matrix);
+		}
+
+		/// <summary>Selects whether the vertex shader should read the per-instance matrix block (via gl_InstanceID) instead of the uniform modelview matrix.</summary>
+		public void SetInstanced(bool enabled)
+		{
+			if (uInstancedLocation != -1)
+			{
+				GL.ProgramUniform1(Handle, uInstancedLocation, enabled ? 1 : 0);
+			}
 		}
 		#endregion
 	}
