@@ -98,7 +98,7 @@ namespace LibRender2.Objects
 			}
 
 			// Per-material cache: avoid repeated textureCache lookups for faces sharing the same material
-			Dictionary<int, bool> materialAlphaCache = new Dictionary<int, bool>();
+			Dictionary<int, AlphaFaceClassification> materialCache = new Dictionary<int, AlphaFaceClassification>();
 
 			foreach (MeshFace face in State.Prototype.Mesh.Faces)
 			{
@@ -107,65 +107,14 @@ namespace LibRender2.Objects
 					// defensive, may occur if ObjectOptimisation is disabled or object is too big to optimise
 					continue;
 				}
-				if (!materialAlphaCache.TryGetValue(face.Material, out bool alpha))
+
+				if (!materialCache.TryGetValue(face.Material, out AlphaFaceClassification classification))
 				{
-					alpha = false;
-
-					if (Type == ObjectType.Overlay && renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
-					{
-						alpha = true;
-					}
-					else if (State.Prototype.Mesh.Materials[face.Material].Color.A != 255)
-					{
-						alpha = true;
-					}
-					else if (State.Prototype.Mesh.Materials[face.Material].BlendMode == MeshMaterialBlendMode.Additive)
-					{
-						alpha = true;
-					}
-					else if (State.Prototype.Mesh.Materials[face.Material].GlowAttenuationData != 0)
-					{
-						alpha = true;
-					}
-					else
-					{
-						Texture daytimeTexture = GetTransparencySourceTexture(State.Prototype.Mesh.Materials[face.Material].DaytimeTexture);
-
-						TextureTransparencyType transparencyType = TextureTransparencyType.Opaque;
-						if (daytimeTexture != null)
-						{
-							// as loading the cached texture may have failed, e.g. corrupt file etc
-							transparencyType = daytimeTexture.GetTransparencyType();
-						}
-
-						if (transparencyType == TextureTransparencyType.Alpha)
-						{
-							alpha = true;
-						}
-						// Partial means the texture is binary, it's either fully solid or fully clear.
-						// (This covers textures that use a colour key to make things transparent.)
-						// So we clip it with a simple alpha test - blending would only smear the edge.
-					}
-
-					if (!alpha)
-					{
-						Texture nighttimeTexture = GetTransparencySourceTexture(State.Prototype.Mesh.Materials[face.Material].NighttimeTexture);
-						TextureTransparencyType transparencyType = TextureTransparencyType.Opaque;
-						if (nighttimeTexture != null)
-						{
-							// as loading the cached texture may have failed, e.g. corrupt file etc
-							transparencyType = nighttimeTexture.GetTransparencyType();
-						}
-						if (transparencyType == TextureTransparencyType.Alpha)
-						{
-							alpha = true;
-						}
-						// Same thing here binary texture, so just clip it.
-						// Blending would create a faint, unwanted edge.
-					}
-					materialAlphaCache[face.Material] = alpha;
+					classification = ClassifyFace(State, face, Type);
+					materialCache[face.Material] = classification;
 				}
-				
+
+				bool alpha = classification.Alpha;
 				List<FaceState> list;
 
 				switch (Type)
@@ -194,7 +143,7 @@ namespace LibRender2.Objects
 						 */
 						if (list.Count == 0)
 						{
-							list.Add(new FaceState(State, face, renderer));
+							list.Add(new FaceState(State, face, renderer, classification.AdditiveBlend, classification.BinaryAlpha));
 						}
 						else
 						{
@@ -203,13 +152,13 @@ namespace LibRender2.Objects
 
 								if (list[i].Object.Prototype == State.Prototype)
 								{
-									list.Insert(i, new FaceState(State, face, renderer));
+									list.Insert(i, new FaceState(State, face, renderer, classification.AdditiveBlend, classification.BinaryAlpha));
 									break;
 								}
 
 								if (i == list.Count - 1)
 								{
-									list.Add(new FaceState(State, face, renderer));
+									list.Add(new FaceState(State, face, renderer, classification.AdditiveBlend, classification.BinaryAlpha));
 									break;
 								}
 							}
@@ -220,10 +169,89 @@ namespace LibRender2.Objects
 						/*
 						 * Alpha faces should be inserted at the end of the list- We're going to sort it anyway so it makes no odds
 						 */
-						list.Add(new FaceState(State, face, renderer));
+						list.Add(new FaceState(State, face, renderer, classification.AdditiveBlend, classification.BinaryAlpha));
 					}
 				}
 			}
+		}
+
+		/// <summary>Describes how a single face of an object is drawn</summary>
+		private struct AlphaFaceClassification
+		{
+			/// <summary>Whether the face is drawn in the blended alpha pass</summary>
+			public bool Alpha;
+			/// <summary>Whether the face is additively blended, and so independent of the draw order in every pass</summary>
+			public bool AdditiveBlend;
+			/// <summary>Whether the face's alpha is binary and it has no distinct nighttime texture</summary>
+			public bool BinaryAlpha;
+		}
+
+		/// <summary>Determines how a single face of an object is drawn</summary>
+		private AlphaFaceClassification ClassifyFace(ObjectState State, MeshFace face, ObjectType Type)
+		{
+			AlphaFaceClassification classification = new AlphaFaceClassification();
+			MeshMaterial material = State.Prototype.Mesh.Materials[face.Material];
+
+			if (Type == ObjectType.Overlay && renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
+			{
+				classification.Alpha = true;
+			}
+			else if (material.Color.A != 255)
+			{
+				classification.Alpha = true;
+			}
+			else if (material.BlendMode == MeshMaterialBlendMode.Additive)
+			{
+				classification.Alpha = true;
+				// Additive blending is commutative, so the draw order never matters
+				classification.AdditiveBlend = true;
+			}
+			else if (material.GlowAttenuationData != 0)
+			{
+				classification.Alpha = true;
+			}
+			else
+			{
+				TextureTransparencyType transparencyType = GetTextureTransparencyType(material.DaytimeTexture);
+
+				if (transparencyType == TextureTransparencyType.Alpha)
+				{
+					classification.Alpha = true;
+					// A binary alpha contains only fully transparent or fully opaque pixels. A distinct nighttime
+					// texture is drawn as a second blended polygon which may contribute partially transparent
+					// pixels however, so such a face does not qualify.
+					classification.BinaryAlpha = material.NighttimeTexture == null || material.NighttimeTexture == material.DaytimeTexture;
+				}
+				else if (transparencyType == TextureTransparencyType.Partial && renderer.currentOptions.TransparencyMode == TransparencyMode.Quality)
+				{
+					classification.Alpha = true;
+				}
+			}
+
+			if (!classification.Alpha)
+			{
+				TextureTransparencyType transparencyType = GetTextureTransparencyType(material.NighttimeTexture);
+
+				if (transparencyType == TextureTransparencyType.Alpha)
+				{
+					classification.Alpha = true;
+				}
+				else if (transparencyType == TextureTransparencyType.Partial && renderer.currentOptions.TransparencyMode == TransparencyMode.Quality)
+				{
+					classification.Alpha = true;
+				}
+			}
+
+			return classification;
+		}
+
+		/// <summary>Gets the transparency type of a material texture, defaulting to opaque if it cannot be decoded</summary>
+		private TextureTransparencyType GetTextureTransparencyType(Texture handle)
+		{
+			Texture texture = GetTransparencySourceTexture(handle);
+
+			// as loading the cached texture may have failed, e.g. corrupt file etc
+			return texture == null ? TextureTransparencyType.Opaque : texture.GetTransparencyType();
 		}
 
 		public void HideObject(ObjectState State)
@@ -274,7 +302,6 @@ namespace LibRender2.Objects
 		{
 			// calculate distance
 			double[] distances = new double[faces.Count];
-			double[] facings = new double[faces.Count];
 
 			Parallel.For(0, faces.Count, i =>
 			{
@@ -303,23 +330,11 @@ namespace LibRender2.Objects
 						Vector3 w0 = v0.Xyz - renderer.Camera.AbsolutePosition;
 						t = Vector3.Dot(d, w0);
 						distances[i] = -t * t;
-
-						//  Keep the sign of t (t > 0 is back-facing, t < 0 is front-facing) to break ties 
-						//  between overlapping transparent surfaces. Without this, equal distances result 
-						//  in random draw order and visible seam artifacts along shared edges.
- 
-						facings[i] = t;
 					}
 				}
 			});
 			// sort
-			
-			// Primary sort: distance (far -> near). Secondary sort: back faces before front faces.
-			// Putting back faces first keeps double-sided transparent meshes blending in the right 
-			// order no matter how they were inserted. The sort must stay stable so coplanar triangles 
-			// in the same face don't get scrambled.
-
-			return faces.Select((face, index) => new { Face = face, Distance = distances[index], Facing = facings[index] }).OrderBy(list => list.Distance).ThenByDescending(list => list.Facing).Select(list => list.Face).ToList();
+			return faces.Select((face, index) => new { Face = face, Distance = distances[index] }).OrderBy(list => list.Distance).Select(list => list.Face).ToList();
 		}
 	}
 }
