@@ -151,6 +151,8 @@ namespace LibRender2
 		/// <summary>Holds the last openGL error</summary>
 		/// <remarks>Is only used in debug builds, hence the pragma</remarks>
 		private ErrorCode lastError;
+		/// <summary>The last openGL error which was reported to the user / log</summary>
+		private ErrorCode lastReportedError = ErrorCode.NoError;
 #if RELEASE
 #pragma warning restore 0219, CS0169
 #endif
@@ -1143,9 +1145,23 @@ namespace LibRender2
 			{
 				lastError = GL.GetError();
 
-				if (lastError != ErrorCode.NoError)
+				if (lastError != ErrorCode.NoError && lastError != lastReportedError)
 				{
-					throw new InvalidOperationException($"OpenGL Error: {lastError}");
+					// Report the error once per distinct code instead of throwing:
+					// throwing here killed the process with nothing at all written to
+					// disk, which made GL state bugs impossible to diagnose from a
+					// user report (see RouteViewer event markers hanging / vanishing)
+					lastReportedError = lastError;
+					const string message = "OpenGL error detected whilst resetting shader state: ";
+					try
+					{
+						fileSystem?.AppendToLogFile(message + lastError);
+					}
+					catch
+					{
+						// ignored- logging must never be able to throw
+					}
+					currentHost.AddMessage(MessageType.Warning, false, message + lastError);
 				}
 			}
 #endif
