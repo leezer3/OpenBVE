@@ -1801,6 +1801,92 @@ namespace LibRender2
 #pragma warning restore CS0618
 		}
 
+		/// <summary>Draws a batch of marker cubes sharing a texture and an orientation in as few instanced calls as possible</summary>
+		/// <param name="positions">The world-space positions of the markers</param>
+		/// <param name="direction">The direction vector used for every marker</param>
+		/// <param name="up">The up vector used for every marker</param>
+		/// <param name="side">The side vector used for every marker</param>
+		/// <param name="size">The size of every marker in metres</param>
+		/// <param name="camera">The camera position</param>
+		/// <param name="texture">The texture applied to every marker</param>
+		/// <returns>The number of draw calls issued</returns>
+		/// <remarks>Visually equivalent to calling Cube.Draw for every position (the positions are drawn in the same order), but the shader is
+		/// reset and the texture loaded once per batch and the markers are drawn MaxInstancesPerBatch at a time.</remarks>
+		public int DrawMarkerCubes(IList<Vector3> positions, Vector3 direction, Vector3 up, Vector3 side, double size, Vector3 camera, Texture texture)
+		{
+			if (positions == null || positions.Count == 0)
+			{
+				return 0;
+			}
+
+			DefaultShader.Activate();
+			ResetShader(DefaultShader);
+			DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
+
+			if (texture != null && currentHost.LoadTexture(ref texture, OpenGlTextureWrapMode.ClampClamp))
+			{
+				GL.Enable(EnableCap.Texture2D);
+				GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
+			}
+			else
+			{
+				GL.Disable(EnableCap.Texture2D);
+			}
+
+			EnsureInstanceMatrixBuffer();
+
+			Shader shader = DefaultShader;
+			Matrix4D orientation = Matrix4D.Scale(size) * (Matrix4D)new Transformation(direction, up, side);
+			int drawCalls = 0;
+			shader.SetInstanced(true);
+			// The uniform modelview matrices are unused whilst instancing, so ensure they are recomputed afterwards
+			lastObjectState = null;
+
+			try
+			{
+				for (int start = 0; start < positions.Count; start += MaxInstancesPerBatch)
+				{
+					int count = Math.Min(MaxInstancesPerBatch, positions.Count - start);
+
+					for (int i = 0; i < count; i++)
+					{
+						Vector3 p = positions[start + i];
+						Matrix4D modelView = orientation * Matrix4D.CreateTranslation(p.X - camera.X, p.Y - camera.Y, -p.Z + camera.Z) * CurrentViewMatrix;
+						int offset = i * 16;
+						instanceMatrixData[offset] = (float)modelView.Row0.X;
+						instanceMatrixData[offset + 1] = (float)modelView.Row0.Y;
+						instanceMatrixData[offset + 2] = (float)modelView.Row0.Z;
+						instanceMatrixData[offset + 3] = (float)modelView.Row0.W;
+						instanceMatrixData[offset + 4] = (float)modelView.Row1.X;
+						instanceMatrixData[offset + 5] = (float)modelView.Row1.Y;
+						instanceMatrixData[offset + 6] = (float)modelView.Row1.Z;
+						instanceMatrixData[offset + 7] = (float)modelView.Row1.W;
+						instanceMatrixData[offset + 8] = (float)modelView.Row2.X;
+						instanceMatrixData[offset + 9] = (float)modelView.Row2.Y;
+						instanceMatrixData[offset + 10] = (float)modelView.Row2.Z;
+						instanceMatrixData[offset + 11] = (float)modelView.Row2.W;
+						instanceMatrixData[offset + 12] = (float)modelView.Row3.X;
+						instanceMatrixData[offset + 13] = (float)modelView.Row3.Y;
+						instanceMatrixData[offset + 14] = (float)modelView.Row3.Z;
+						instanceMatrixData[offset + 15] = (float)modelView.Row3.W;
+					}
+
+					UploadInstanceMatrices(count);
+					Cube.DrawInstanced(count);
+					drawCalls++;
+				}
+			}
+			finally
+			{
+				shader.SetInstanced(false);
+				lastObjectState = null;
+			}
+
+			GL.Disable(EnableCap.Texture2D);
+
+			return drawCalls;
+		}
+
 		/// <summary>Draws a single face for every instance in the currently uploaded batch</summary>
 		/// <returns>The number of draw calls issued</returns>
 		/// <remarks>Mirrors the per-face portion of RenderFace, minus the model matrix handling (supplied per instance) and glow/normals debug output (batched faces never use them).</remarks>
