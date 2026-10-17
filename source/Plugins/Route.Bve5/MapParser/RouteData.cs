@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using Bve5_Parsing.MapGrammar.EvaluateData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,9 @@ namespace Route.Bve5
 		internal List<Bve5ScenarioParser.SignalData> SignalObjects;
 		internal readonly Bve5ScenarioParser.SoundDictionary Sounds;
 		internal readonly Bve5ScenarioParser.SoundDictionary Sound3Ds;
+		/// <summary>Finished repeater runs, placed once the track exists.</summary>
+		internal readonly List<Repeater> Repeaters;
+		internal readonly Dictionary<string, List<Statement>> trackStatementsByKey;
 
 		internal RouteData(HashSet<string> trackKeys)
 		{
@@ -46,6 +50,8 @@ namespace Route.Bve5
 			TrackKeyList = trackKeys.ToList();
 			Sounds = new Bve5ScenarioParser.SoundDictionary();
 			Sound3Ds = new Bve5ScenarioParser.SoundDictionary();
+			Repeaters = new List<Repeater>();
+			trackStatementsByKey = new Dictionary<string, List<Statement>>(StringComparer.InvariantCultureIgnoreCase);
 		}
 
 		//Set units of speed initially to km/h
@@ -54,39 +60,10 @@ namespace Route.Bve5
 
 		internal double[] SignalSpeeds;
 
-		internal void TryAddBlock(double Distance)
-		{
-			if (sortedBlocks.ContainsKey(Distance))
-			{
-				return;
-			}
-			Bve5ScenarioParser.Block NewBlock = new Bve5ScenarioParser.Block
-			{
-				Rails = TrackKeyList.ToDictionary(x => x, x => new Rail()),
-				StartingDistance = Distance,
-				CurrentTrackState =
-				{
-					StartingTrackPosition = Distance
-				},
-				FreeObjects = new Dictionary<string, List<FreeObj>>(StringComparer.InvariantCultureIgnoreCase),
-				Cracks = new List<Crack>(),
-				Sections = new List<Section>(),
-				Signals = new List<Signal>[TrackKeyList.Count],
-				Transponders = new List<Transponder>(),
-				Limits = new List<Limit>(),
-				BrightnessChanges = new List<Brightness>(),
-				SoundEvents = new List<Sound>(),
-				RunSounds = new List<RunSound>(),
-				FlangeSounds = new List<FlangeSound>()
-			};
-			sortedBlocks.Add(Distance, NewBlock);
-			int newIndex = sortedBlocks.IndexOfKey(Distance);
-			if (newIndex > 0)
-			{
-				Blocks[newIndex].Fog = Blocks[newIndex - 1].Fog;
-			}
-		}
 
+		/// <summary>Creates a new block, if not present at the specified distance and returns the index</summary>
+		/// <param name="Distance">The distance</param>
+		/// <returns>The new block index</returns>
 		internal int FindOrAddBlock(double Distance)
 		{
 			if (sortedBlocks.ContainsKey(Distance))
@@ -119,6 +96,18 @@ namespace Route.Bve5
 				Blocks[newIndex].Fog = Blocks[newIndex - 1].Fog;
 			}
 			return newIndex;
+		}
+
+		/// <summary>Creates the missing blocks between two distances</summary>
+		/// <param name="startDistance">The starting distance</param>
+		/// <param name="endDistance">The ending distance</param>
+		/// <param name="blockInterval">The block interval</param>
+		internal void CreateMissingBlocks(double startDistance, double endDistance, double blockInterval)
+		{
+			for (double k = startDistance; k < endDistance; k += blockInterval)
+			{
+				FindOrAddBlock(k);
+			}
 		}
 	}
 }

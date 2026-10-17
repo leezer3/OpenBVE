@@ -36,6 +36,8 @@ namespace Route.Bve5
 		internal double RadiusH;
 		/// <summary>The vertical radius</summary>
 		internal double RadiusV;
+		/// <summary>Whether the curve is legacy</summary>
+		internal bool CurveIsLegacy;
 		/// <summary>Whether interpolation of the curve values has started</summary>
 		internal bool CurveInterpolateStart;
 		/// <summary>Whether interpolation of the curve values has ended</summary>

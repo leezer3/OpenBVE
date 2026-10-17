@@ -79,7 +79,21 @@ namespace Route.Bve5
 		    FileSystem.AppendToLogFile("Loading route file: " + path);
 		    FileSystem.AppendToLogFile("INFO: Route file hash " + Path.GetChecksum(path));
 		    CurrentRoute = (CurrentRoute)route;
-		    try
+
+		    CompatabilityHacks EnabledHacks = new CompatabilityHacks();
+		    EnabledHacks.BveTsHacks = CurrentOptions.EnableBveTsHacks;
+
+			// YUCK: Turn OFF transparency hack first of all (may be on if we've loaded something else)
+			for (int i = 0; i < CurrentHost.Plugins.Length; i++)
+		    {
+			    if (CurrentHost.Plugins[i].Object != null)
+			    {
+				    EnabledHacks.BlackTransparency = false;
+				    CurrentHost.Plugins[i].Object.SetCompatibilityHacks(EnabledHacks);
+			    }
+		    }
+
+			try
 		    {
 			    Bve5ScenarioParser.ParseScenario(path, previewOnly);
 			    route = CurrentRoute;
@@ -95,7 +109,6 @@ namespace Route.Bve5
 		    {
 			    if (CurrentHost.Plugins[i].Object != null)
 			    {
-				    CompatabilityHacks EnabledHacks = new CompatabilityHacks();
 				    EnabledHacks.BlackTransparency = true;
 				    EnabledHacks.BveTsHacks = CurrentOptions.EnableBveTsHacks;
 					CurrentHost.Plugins[i].Object.SetCompatibilityHacks(EnabledHacks);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
@@ -33,6 +34,8 @@ namespace RouteViewer
 		// options
 		internal bool OptionInterface = true;
 		internal bool OptionEvents = false;
+		/// <summary>The largest viewing distance the event markers are ever drawn at, in metres</summary>
+		private const double MaximumEventMarkerDistance = 1000.0;
 		internal bool OptionPaths = false;
 
 		// textures
@@ -194,13 +197,11 @@ namespace RouteViewer
 				alphaFaces = VisibleObjects.GetSortedPolygons();
 			}
 			
-			foreach (FaceState face in opaqueFaces)
-			{
-				face.Draw();
-			}
+			RenderOpaqueFaces(opaqueFaces);
 
 			// alpha face
 			ResetOpenGlState();
+			AlphaDrawCalls = 0;
 
 			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 			{
@@ -208,10 +209,7 @@ namespace RouteViewer
 				SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 				GL.DepthMask(false);
 
-				foreach (FaceState face in alphaFaces)
-				{
-					face.Draw();
-				}
+				RenderAlphaFaces(alphaFaces);
 			}
 			else
 			{
@@ -219,42 +217,12 @@ namespace RouteViewer
 				SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 				GL.DepthMask(true);
 
-				foreach (FaceState face in alphaFaces)
-				{
-					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Normal && face.Object.Prototype.Mesh.Materials[face.Face.Material].GlowAttenuationData == 0)
-					{
-						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
-						{
-							face.Draw();
-						}
-					}
-				}
+				RenderAlphaFaces(alphaFaces, true);
 
 				SetBlendFunc();
 				SetAlphaFunc(AlphaFunction.Less, 1.0f);
 				GL.DepthMask(false);
-				bool additive = false;
-
-				foreach (FaceState face in alphaFaces)
-				{
-					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
-					{
-						if (!additive)
-						{
-							UnsetAlphaFunc();
-							additive = true;
-						}
-					}
-					else
-					{
-						if (additive)
-						{
-							SetAlphaFunc();
-							additive = false;
-						}
-					}
-					face.Draw();
-				}
+				RenderAlphaFaces(alphaFaces, qualityBlendPass: true);
 			}
 
 			if (OptionPaths)
@@ -301,27 +269,78 @@ namespace RouteViewer
 
 			if (OptionEvents)
 			{
-				if (Math.Abs(CameraTrackFollower.TrackPosition - lastTrackPosition) > 50)
+				try
 				{
-					lastTrackPosition = CameraTrackFollower.TrackPosition;
-					CubesToDraw.Clear();
-					for (int i = 0; i < Program.CurrentRoute.Tracks.Count; i++)
+					if (Math.Abs(CameraTrackFollower.TrackPosition - lastTrackPosition) > 50)
 					{
-						int railIndex = Program.CurrentRoute.Tracks.ElementAt(i).Key;
-						FindEvents(railIndex);
+						lastTrackPosition = CameraTrackFollower.TrackPosition;
+						CubesToDraw.Clear();
+						markerGrid.Clear();
+						markerCandidates = 0;
+						int scannedElements = 0;
+						Stopwatch rebuildTimer = Stopwatch.StartNew();
+						for (int i = 0; i < Program.CurrentRoute.Tracks.Count; i++)
+						{
+							int railIndex = Program.CurrentRoute.Tracks.ElementAt(i).Key;
+							TrackElement[] elements = Program.CurrentRoute.Tracks[railIndex].Elements;
+							if (elements != null)
+							{
+								scannedElements += elements.Length;
+							}
+							FindEvents(railIndex);
+						}
+						rebuildTimer.Stop();
+						eventRebuildTime = rebuildTimer.ElapsedMilliseconds;
+						// Cache the markers grouped by texture, so that drawing them costs one
+						// instanced call per texture instead of one call (and one full shader
+						// reset) per marker
+						markerBatches.Clear();
+						markerCount = 0;
+						foreach (KeyValuePair<Texture, HashSet<Vector3>> cubes in CubesToDraw)
+						{
+							if (cubes.Value.Count == 0)
+							{
+								continue;
+							}
+
+							Vector3[] positions = new Vector3[cubes.Value.Count];
+							cubes.Value.CopyTo(positions);
+							markerBatches.Add(new KeyValuePair<Texture, Vector3[]>(cubes.Key, positions));
+							markerCount += positions.Length;
+						}
+						Program.FileSystem.AppendToLogFile("[Events] Rebuilt event markers: rails=" + Program.CurrentRoute.Tracks.Count + ", scannedElements=" + scannedElements + ", markerDistance=" + EventMarkerDistanceName + ", candidates=" + markerCandidates + ", markers=" + markerCount + " in " + eventRebuildTime + " ms");
+					}
+
+					Stopwatch drawTimer = Stopwatch.StartNew();
+					markerDrawCalls = 0;
+					for (int i = 0; i < markerBatches.Count; i++)
+					{
+						markerDrawCalls += DrawMarkerCubes(markerBatches[i].Value, Camera.AbsoluteDirection, Camera.AbsoluteUp, Camera.AbsoluteSide, 0.2, Camera.AbsolutePosition, markerBatches[i].Key);
+					}
+					drawTimer.Stop();
+					if (markerCount > 0)
+					{
+						// Report stalls immediately, plus an occasional heartbeat so that
+						// a hard crash mid-draw still leaves the last marker count behind
+						if (drawTimer.ElapsedMilliseconds >= 100 || eventMarkerDrawReportCountdown <= 0)
+						{
+							eventMarkerDrawReportCountdown = 600;
+							Program.FileSystem.AppendToLogFile("[Events] Drew " + markerCount + " event markers in " + markerDrawCalls + " draw calls, " + drawTimer.ElapsedMilliseconds + " ms (last rebuild took " + eventRebuildTime + " ms)");
+						}
+						else
+						{
+							eventMarkerDrawReportCountdown--;
+						}
 					}
 				}
-				
-
-				for (int i = 0; i < CubesToDraw.Count; i++)
+				catch (Exception ex)
 				{
-					Texture T = CubesToDraw.ElementAt(i).Key;
-					foreach (Vector3 v in CubesToDraw[T])
-					{
-						Cube.Draw(v, Camera.AbsoluteDirection, Camera.AbsoluteUp, Camera.AbsoluteSide, 0.2, Camera.AbsolutePosition, T);
-					}
+					// Never allow the debug markers to take the renderer down: log what
+					// happened, switch them off and carry on rendering
+					OptionEvents = false;
+					Program.FileSystem.AppendToLogFile("ERROR: Disabling event markers after the following exception: " + ex);
+					Interface.AddMessage(MessageType.Error, false, "Event markers have been disabled after an error: " + ex.Message);
 				}
-
 			}
 
             // render overlays
@@ -338,6 +357,33 @@ namespace RouteViewer
 		}
 
 		private double lastTrackPosition;
+		/// <summary>The time taken by the last event marker rebuild, in milliseconds</summary>
+		private long eventRebuildTime;
+		/// <summary>Frames remaining before the event marker draw time is next reported</summary>
+		private int eventMarkerDrawReportCountdown;
+		/// <summary>The event markers to draw, grouped by texture and cached when the markers are rebuilt</summary>
+		private readonly List<KeyValuePair<Texture, Vector3[]>> markerBatches = new List<KeyValuePair<Texture, Vector3[]>>();
+		/// <summary>The number of event markers currently held in markerBatches</summary>
+		private int markerCount;
+		/// <summary>The number of draw calls used by the event markers in the last frame</summary>
+		private int markerDrawCalls;
+		/// <summary>The grid size, in metres, onto which markers of the same texture are collapsed</summary>
+		/// <remarks>Map events are repeated on every automatically interpolated block (and often on every
+		/// track), so without this the viewer would draw tens of thousands of cubes on top of each other.</remarks>
+		private const double MarkerGridSize = 5.0;
+		/// <summary>The grid cells already claimed by each marker texture in the current rebuild</summary>
+		private readonly Dictionary<Texture, HashSet<long>> markerGrid = new Dictionary<Texture, HashSet<long>>();
+		/// <summary>The number of marker candidates considered in the current rebuild, before collapsing</summary>
+		private int markerCandidates;
+
+		/// <summary>Gets the distance in metres in front of the camera that event markers are drawn at</summary>
+		/// <remarks>The markers do not follow a long main draw distance: on a route viewed at several kilometres the
+		/// overlay would otherwise have to build and draw tens of thousands of cubes. A shorter draw distance is
+		/// simply followed, otherwise the markers stop at MaximumEventMarkerDistance.</remarks>
+		private double EventMarkerDistance => System.Math.Min(Camera.ForwardViewingDistance + Camera.ExtraViewingDistance, MaximumEventMarkerDistance);
+
+		/// <summary>The event marker viewing distance, as shown on the statistics overlay</summary>
+		internal string EventMarkerDistanceName => EventMarkerDistance.ToString("0", System.Globalization.CultureInfo.InvariantCulture) + " m";
 
 		/// <summary>Finds visible events on a rail index</summary>
 		/// <param name="railIndex">The rail index</param>
@@ -353,9 +399,18 @@ namespace RouteViewer
 			GL.DepthMask(true);
 			OptionLighting = false;
 
-			double da = -Camera.BackwardViewingDistance - Camera.ExtraViewingDistance;
-			double db = Camera.ForwardViewingDistance + Camera.ExtraViewingDistance;
+			double markerDistance = EventMarkerDistance;
+			double da = -System.Math.Min(Camera.BackwardViewingDistance + Camera.ExtraViewingDistance, markerDistance);
+			double db = markerDistance;
 			bool[] sta = new bool[Program.CurrentRoute.Stations.Length];
+			// A single follower is reused for every marker: creating a fresh one per event forces
+			// UpdateAbsolute to walk the track from the start of the route every single time, which
+			// makes the rebuild take tens of seconds on a long route
+			TrackFollower markerFollower = new TrackFollower(Program.CurrentHost)
+			{
+				TriggerType = EventTriggerType.None,
+				TrackIndex = railIndex
+			};
 
 			// events
 			for (int i = 0; i < Program.CurrentRoute.Tracks[railIndex].Elements.Length; i++)
@@ -441,18 +496,29 @@ namespace RouteViewer
 
 						if (t != null)
 						{
-							TrackFollower f = new TrackFollower(Program.CurrentHost)
-							{
-								TriggerType = EventTriggerType.None,
-								TrackPosition = p,
-								TrackIndex = railIndex
-							};
+							markerCandidates++;
+							// The format repeats an event on every automatically interpolated block (and
+							// frequently on every track as well), so collapse the markers of a given type
+							// onto a coarse grid: a cube for every single copy is neither readable nor
+							// affordable to draw
+							long cell = (long)System.Math.Floor((p + e.TrackPositionDelta) / MarkerGridSize);
 
-							f.UpdateAbsolute(p + e.TrackPositionDelta, true, false);
-							Vector3 cubePos = new Vector3(f.WorldPosition);
-							cubePos.X += dx * f.WorldSide.X + dy * f.WorldUp.X + dz * f.WorldDirection.X;
-							cubePos.Y += dx * f.WorldSide.Y + dy * f.WorldUp.Y + dz * f.WorldDirection.Y;
-							cubePos.Z += dx * f.WorldSide.Z + dy * f.WorldUp.Z + dz * f.WorldDirection.Z;
+							if (!markerGrid.TryGetValue(t, out HashSet<long> cells))
+							{
+								cells = new HashSet<long>();
+								markerGrid.Add(t, cells);
+							}
+
+							if (!cells.Add(cell))
+							{
+								continue;
+							}
+
+							markerFollower.UpdateAbsolute(p + e.TrackPositionDelta, true, false);
+							Vector3 cubePos = new Vector3(markerFollower.WorldPosition);
+							cubePos.X += dx * markerFollower.WorldSide.X + dy * markerFollower.WorldUp.X + dz * markerFollower.WorldDirection.X;
+							cubePos.Y += dx * markerFollower.WorldSide.Y + dy * markerFollower.WorldUp.Y + dz * markerFollower.WorldDirection.Y;
+							cubePos.Z += dx * markerFollower.WorldSide.Z + dy * markerFollower.WorldUp.Z + dz * markerFollower.WorldDirection.Z;
 
 							if (!CubesToDraw.ContainsKey(t))
 							{
@@ -749,14 +815,42 @@ namespace RouteViewer
 
 					if (RenderStatsOverlay)
 					{
-						Keys.Render(4, Screen.Height - 126, 116, Fonts.SmallFont, new[] { new[] { "Renderer Statistics" } });
+						int additiveAlpha = 0;
+						int binaryAlpha = 0;
+
 						lock (VisibleObjects.LockObject)
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Total static objects: {VisibleObjects.Objects.Count}", new Vector2(4, Screen.Height - 112), TextAlignment.TopLeft, Color128.White, true);
-							OpenGlString.Draw(Fonts.SmallFont, $"Total animated objects: {ObjectManager.AnimatedWorldObjectsUsed}", new Vector2(4, Screen.Height - 100), TextAlignment.TopLeft, Color128.White, true);
-							OpenGlString.Draw(Fonts.SmallFont, $"Current frame rate: {FrameRate.ToString("0.0", culture)}fps", new Vector2(4, Screen.Height - 88), TextAlignment.TopLeft, Color128.White, true);
-							OpenGlString.Draw(Fonts.SmallFont, $"Total opaque faces: {VisibleObjects.OpaqueFaces.Count}", new Vector2(4, Screen.Height - 76), TextAlignment.TopLeft, Color128.White, true);
-							OpenGlString.Draw(Fonts.SmallFont, $"Total alpha faces: {VisibleObjects.AlphaFaces.Count}", new Vector2(4, Screen.Height - 64), TextAlignment.TopLeft, Color128.White, true);
+							for (int i = 0; i < VisibleObjects.AlphaFaces.Count; i++)
+							{
+								if (VisibleObjects.AlphaFaces[i].AdditiveBlend)
+								{
+									additiveAlpha++;
+								}
+
+								if (VisibleObjects.AlphaFaces[i].BinaryAlpha)
+								{
+									binaryAlpha++;
+								}
+							}
+						}
+
+						string alphaInstancingMode = OptionAlphaInstancing == 0 ? "Off" : OptionAlphaInstancing == 1 ? "Order independent" : "All (approximate)";
+
+						Keys.Render(4, Screen.Height - 198, 188, Fonts.SmallFont, new[] { new[] { "Renderer Statistics" } });
+						lock (VisibleObjects.LockObject)
+						{
+							OpenGlString.Draw(Fonts.SmallFont, $"Total static objects: {VisibleObjects.Objects.Count}", new Vector2(4, Screen.Height - 184), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Total animated objects: {ObjectManager.AnimatedWorldObjectsUsed}", new Vector2(4, Screen.Height - 172), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Current frame rate: {FrameRate.ToString("0.0", culture)}fps", new Vector2(4, Screen.Height - 160), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Total opaque faces: {VisibleObjects.OpaqueFaces.Count}", new Vector2(4, Screen.Height - 148), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Total alpha faces: {VisibleObjects.AlphaFaces.Count} (additive: {additiveAlpha}, binary: {binaryAlpha})", new Vector2(4, Screen.Height - 136), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Unique meshes: {OpaqueUniqueMeshes}", new Vector2(4, Screen.Height - 124), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Opaque draw calls (actual): {OpaqueDrawCalls}", new Vector2(4, Screen.Height - 112), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Alpha draw calls (actual): {AlphaDrawCalls}", new Vector2(4, Screen.Height - 100), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Transparency: {(Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance ? "Performance" : "Quality")}", new Vector2(4, Screen.Height - 88), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Instanced opaque: {(OptionInstancing ? "On" : "Off")} (F6)", new Vector2(4, Screen.Height - 76), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Instanced alpha: {alphaInstancingMode} (F4)", new Vector2(4, Screen.Height - 64), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Event markers: {markerCount} of {markerCandidates} ({markerDrawCalls} draw calls, {EventMarkerDistanceName})", new Vector2(4, Screen.Height - 52), TextAlignment.TopLeft, Color128.White, true);
 						}
 						
 					}
