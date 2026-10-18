@@ -85,6 +85,7 @@ namespace LibRender2.ShadowMapping
 
 				Caster.ShadowDistance = shadowDistance;
 				Caster.Resolution = resolution;
+				Caster.Resolutions = Map.Resolutions;
 				Caster.SplitLambda = 0.75;
 				Caster.DepthMargin = 150.0;
 
@@ -131,7 +132,7 @@ namespace LibRender2.ShadowMapping
 			// 2. Update cascade matrices
 			// NOTE: We pass renderer.CurrentViewMatrix here which reflects the camera's rotation.
 			// The Caster will use this to align the shadow frustums with the view direction.
-			Caster.Resolution = Map.Resolution;
+			Caster.Resolutions = Map.Resolutions;
 			if (renderer.currentOptions.ShadowDrawDistance == ShadowDistance.ViewingDistance)
 			{
 				Caster.ShadowDistance = renderer.currentOptions.ViewingDistance;
@@ -172,8 +173,8 @@ namespace LibRender2.ShadowMapping
 					double maxDistance = renderer.currentOptions.ShadowFilterCascades ? Caster.SplitDistances[i] + 150.0 : double.MaxValue;
 					double maxDistanceSquared = maxDistance * maxDistance;
 
-					RenderFacesFiltered(renderer.VisibleObjects.OpaqueFaces, ref lastVAO, maxDistanceSquared);
-					RenderFacesFiltered(renderer.VisibleObjects.AlphaFaces, ref lastVAO, maxDistanceSquared); 
+					renderer.RenderShadowFaces(DepthShader, renderer.VisibleObjects.OpaqueFaces, maxDistanceSquared, ref lastVAO);
+					renderer.RenderShadowFaces(DepthShader, renderer.VisibleObjects.AlphaFaces, maxDistanceSquared, ref lastVAO);
 				}
 				Map.Unbind();
 			}
