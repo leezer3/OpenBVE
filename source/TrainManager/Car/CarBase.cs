@@ -1180,6 +1180,13 @@ namespace TrainManager.Car
 			return (worldPosition, worldDirection, new Vector3(Up), worldSide, trackPosition);
 		}
 
+		/// <summary>Returns a usable jerk value, falling back to the default if unset or invalid</summary>
+		/// <remarks>A jerk of zero would prevent the acceleration from ever changing</remarks>
+		private static double GetJerkValue(double jerk)
+		{
+			return jerk > 0.0 ? jerk : 10.0;
+		}
+
 		public void UpdateSpeed(double TimeElapsed, double DecelerationDueToMotor, double DecelerationDueToBrake, out double Speed)
 		{
 
@@ -1315,11 +1322,11 @@ namespace TrainManager.Car
 					{
 						if (TractionModel.CurrentAcceleration < 0.0)
 						{
-							TractionModel.CurrentAcceleration += Math.Max(CarBrake.JerkDown, 10) * TimeElapsed;
+							TractionModel.CurrentAcceleration += GetJerkValue(CarBrake.JerkDown) * TimeElapsed;
 						}
 						else
 						{
-							TractionModel.CurrentAcceleration += Math.Max(Specs.JerkPowerUp, 10) * TimeElapsed;
+							TractionModel.CurrentAcceleration += GetJerkValue(Specs.JerkPowerUp) * TimeElapsed;
 						}
 
 						if (TractionModel.CurrentAcceleration > a)
@@ -1329,7 +1336,7 @@ namespace TrainManager.Car
 					}
 					else
 					{
-						TractionModel.CurrentAcceleration -= Math.Max(Specs.JerkPowerDown, 10) * TimeElapsed;
+						TractionModel.CurrentAcceleration -= GetJerkValue(Specs.JerkPowerDown) * TimeElapsed;
 						if (TractionModel.CurrentAcceleration < a)
 						{
 							TractionModel.CurrentAcceleration = a;
@@ -1356,11 +1363,11 @@ namespace TrainManager.Car
 					{
 						if (TractionModel.CurrentAcceleration > 0.0)
 						{
-							TractionModel.CurrentAcceleration -= Math.Max(Specs.JerkPowerDown, 10) * TimeElapsed;
+							TractionModel.CurrentAcceleration -= GetJerkValue(Specs.JerkPowerDown) * TimeElapsed;
 						}
 						else
 						{
-							TractionModel.CurrentAcceleration -= Math.Max(CarBrake.JerkUp, 10) * TimeElapsed;
+							TractionModel.CurrentAcceleration -= GetJerkValue(CarBrake.JerkUp) * TimeElapsed;
 						}
 
 						if (TractionModel.CurrentAcceleration < a)
@@ -1370,7 +1377,7 @@ namespace TrainManager.Car
 					}
 					else
 					{
-						TractionModel.CurrentAcceleration += Math.Max(CarBrake.JerkDown, 10) * TimeElapsed;
+						TractionModel.CurrentAcceleration += GetJerkValue(CarBrake.JerkDown) * TimeElapsed;
 						if (TractionModel.CurrentAcceleration > a)
 						{
 							TractionModel.CurrentAcceleration = a;

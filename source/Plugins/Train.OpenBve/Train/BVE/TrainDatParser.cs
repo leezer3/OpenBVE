@@ -1337,7 +1337,16 @@ namespace Train.OpenBve
 				Train.Handles.HandleType = HandleType.TwinHandle;
 				Train.Handles.HasHoldBrake = false;
 			}
-			Train.Cars[Train.DriverCar].SafetySystems.Add(SafetySystem.OverspeedMessage, new OverspeedMessage(Train.Cars[Train.DriverCar]));
+			/*
+			 * Register the overspeed message on every car, rather than just the current driver car.
+			 * The driver car changes when the train is reversed (e.g. reverse-direction routes or
+			 * an initially reversed consist), and only the current driver car's safety systems are
+			 * updated. Without this, the route speed limit warning disappears after reversing.
+			 */
+			for (int i = 0; i < Train.Cars.Length; i++)
+			{
+				Train.Cars[i].SafetySystems.Add(SafetySystem.OverspeedMessage, new OverspeedMessage(Train.Cars[i]));
+			}
 			Train.SafetySystems.PassAlarm = new PassAlarm(passAlarm, Train.Cars[DriverCar]);
 			Train.SafetySystems.PilotLamp = new PilotLamp(Train.Cars[DriverCar]);
 			Train.SafetySystems.StationAdjust = new StationAdjustAlarm(Train);
