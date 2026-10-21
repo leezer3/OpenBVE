@@ -30,6 +30,8 @@ using OpenBveApi.Objects;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using AssimpNET.X;
+using OpenBveApi;
+using Path = System.IO.Path;
 
 namespace Plugin
 {
@@ -234,10 +236,17 @@ namespace Plugin
 					builder.Materials[m].Flags |= MaterialFlags.Emissive;
 				}
 				
-				if (Plugin.EnabledHacks.BlackTransparency)
+				if (Plugin.EnabledHacks.TransparencyMode != BlackTransparencyMode.None)
 				{
 					builder.Materials[m].TransparentColor = Color24.Black; //TODO: Check, also can we optimise which faces have the transparent color set?
-					builder.Materials[m].Flags |= MaterialFlags.TransparentColor;
+					if (Plugin.EnabledHacks.TransparencyMode == BlackTransparencyMode.AllFiles)
+					{
+						builder.Materials[m].Flags |= MaterialFlags.TransparentColor;
+					}
+					else
+					{
+						builder.Materials[m].Flags |= MaterialFlags.TransparentColorBmp;
+					}
 				}
 				
 				if (mesh.Materials[i].Textures.Count > 0)

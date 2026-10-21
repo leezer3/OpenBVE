@@ -88,7 +88,7 @@ namespace Route.Bve5
 		    {
 			    if (CurrentHost.Plugins[i].Object != null)
 			    {
-				    EnabledHacks.BlackTransparency = false;
+				    EnabledHacks.TransparencyMode = BlackTransparencyMode.BMPOnly;
 				    CurrentHost.Plugins[i].Object.SetCompatibilityHacks(EnabledHacks);
 			    }
 		    }
@@ -109,7 +109,7 @@ namespace Route.Bve5
 		    {
 			    if (CurrentHost.Plugins[i].Object != null)
 			    {
-				    EnabledHacks.BlackTransparency = true;
+				    EnabledHacks.TransparencyMode = BlackTransparencyMode.AllFiles;
 				    EnabledHacks.BveTsHacks = CurrentOptions.EnableBveTsHacks;
 					CurrentHost.Plugins[i].Object.SetCompatibilityHacks(EnabledHacks);
 			    }

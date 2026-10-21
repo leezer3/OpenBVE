@@ -29,10 +29,12 @@ using System.Linq;
 using System.Text;
 using Object.DirectX;
 using OpenBve.Formats.DirectX;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using Path = System.IO.Path;
 
 namespace Plugin
 {
@@ -481,10 +483,17 @@ namespace Plugin
 						newMaterial.Flags |= MaterialFlags.Emissive;
 					}
 					
-					if (Plugin.EnabledHacks.BlackTransparency)
+					if (Plugin.EnabledHacks.TransparencyMode != BlackTransparencyMode.None)
 					{
 						newMaterial.TransparentColor = Color24.Black; //TODO: Check, also can we optimise which faces have the transparent color set?
-						newMaterial.Flags |= MaterialFlags.TransparentColor;
+						if (Plugin.EnabledHacks.TransparencyMode == BlackTransparencyMode.AllFiles)
+						{
+							newMaterial.Flags |= MaterialFlags.TransparentColor;
+						}
+						else
+						{
+							newMaterial.Flags |= MaterialFlags.TransparentColorBmp;
+						}
 					}
 					
 					if (block.Position() < block.Length() - 5)
