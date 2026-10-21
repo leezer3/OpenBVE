@@ -19,7 +19,7 @@ namespace TrainManager.SafetySystems
 		{
 		}
 
-		public void Update()
+		public override void Update(double timeElapsed)
 		{
 			if (!baseCar.baseTrain.IsPlayerTrain)
 			{
