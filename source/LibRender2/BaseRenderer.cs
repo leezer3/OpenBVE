@@ -1614,7 +1614,7 @@ namespace LibRender2
 
 				Mesh mesh = state.Prototype.Mesh;
 
-				if (state.Prototype.Dynamic || (state.Matricies != null && state.Matricies.Length > 0) || !IsIdentityMatrix(state.TextureTranslation))
+				if ((state.Matricies != null && state.Matricies.Length > 0) || !IsIdentityMatrix(state.TextureTranslation))
 				{
 					// The per-instance state which is not carried by the model matrix differs from the rest of the batch
 					ineligibleMeshes.Add(mesh);
@@ -1770,7 +1770,7 @@ namespace LibRender2
 
 				if (seenInstances.Add(state))
 				{
-					if (state.Prototype.Dynamic || (state.Matricies != null && state.Matricies.Length > 0) || !IsIdentityMatrix(state.TextureTranslation))
+					if ((state.Matricies != null && state.Matricies.Length > 0) || !IsIdentityMatrix(state.TextureTranslation))
 					{
 						ineligibleMeshes.Add(mesh);
 					}
@@ -2419,7 +2419,7 @@ namespace LibRender2
 
 				Mesh mesh = state.Prototype.Mesh;
 
-				if (state.Prototype.Dynamic || (state.Matricies != null && state.Matricies.Length > 0) || !IsIdentityMatrix(state.TextureTranslation))
+				if ((state.Matricies != null && state.Matricies.Length > 0) || !IsIdentityMatrix(state.TextureTranslation))
 				{
 					ineligibleMeshes.Add(mesh);
 					continue;
@@ -2522,6 +2522,22 @@ namespace LibRender2
 			// are drawn individually, as before
 			foreach (FaceState face in fallbackFaces)
 			{
+				if (qualityBlendPass)
+				{
+					// Mirrors the per-face handling of additively blended faces, which are drawn
+					// without an alpha test. This also covers faces which could not be batched.
+					Mesh mesh = face.Object?.Prototype?.Mesh;
+
+					if (mesh != null && face.Face.Material >= 0 && face.Face.Material < mesh.Materials.Length && mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
+					{
+						UnsetAlphaFunc();
+					}
+					else
+					{
+						SetAlphaFunc();
+					}
+				}
+
 				AlphaDrawCalls++;
 				face.Draw();
 			}
