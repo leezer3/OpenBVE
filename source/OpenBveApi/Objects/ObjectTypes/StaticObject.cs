@@ -332,7 +332,8 @@ namespace OpenBveApi.Objects
 				}
 			}
 
-			if (FlipFaces)
+			// if RHS vertex is less than zero, object must be to the L of the rail
+			if (FlipFaces && xRight0 < 0)
 			{
 				for (int i = 0; i < transformResult.Mesh.Faces.Length; i++)
 				{
@@ -403,7 +404,8 @@ namespace OpenBveApi.Objects
 				}
 			}
 
-			if (FlipFaces)
+			// if LHS vertex is greater than zero, object must be to the R of the rail
+			if (FlipFaces && xLeft0 > 0)
 			{
 				for (int i = 0; i < transformResult.Mesh.Faces.Length; i++)
 				{
