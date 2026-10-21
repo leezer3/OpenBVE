@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Formats.OpenBve;
 using OpenBveApi;
@@ -55,6 +56,39 @@ namespace Train.OpenBve
 				return;
 			}
 			ConfigFile<ExtensionCfgSection, ExtensionCfgKey> cfg = new ConfigFile<ExtensionCfgSection, ExtensionCfgKey>(Lines, fileName, Plugin.CurrentHost);
+			// LoadObject returns a deep clone from the cache. Reuse static objects within the train so that
+			// repeated car / bogie / coupler references share a mesh and can be drawn using instancing.
+			Dictionary<string, StaticObject> sharedStaticObjects = new Dictionary<string, StaticObject>(StringComparer.OrdinalIgnoreCase);
+			Dictionary<StaticObject, StaticObject> reversedStaticObjects = new Dictionary<StaticObject, StaticObject>();
+
+			UnifiedObject LoadSharedObject(string path)
+			{
+				if (sharedStaticObjects.TryGetValue(path, out StaticObject shared))
+				{
+					return shared;
+				}
+
+				Plugin.CurrentHost.LoadObject(path, trainEncoding, out UnifiedObject loaded);
+
+				if (loaded is StaticObject staticObject)
+				{
+					sharedStaticObjects.Add(path, staticObject);
+				}
+
+				return loaded;
+			}
+
+			StaticObject GetReversedStaticObject(StaticObject source)
+			{
+				if (!reversedStaticObjects.TryGetValue(source, out StaticObject reversed))
+				{
+					reversed = (StaticObject)source.Clone();
+					reversed.ApplyScale(-1.0, 1.0, -1.0);
+					reversedStaticObjects.Add(source, reversed);
+				}
+
+				return reversed;
+			}
 
 			double perBlockProgress = cfg.RemainingSubBlocks == 0 ? 0.25 : 0.25 / cfg.RemainingSubBlocks;
 			int readBlocks = 0;
@@ -67,7 +101,7 @@ namespace Train.OpenBve
 					case ExtensionCfgSection.Exterior:
 						while (block.RemainingDataValues > 0 && block.GetIndexedPath(trainPath, out var carIndex, out string exteriorObject))
 						{
-							Plugin.CurrentHost.LoadObject(exteriorObject, trainEncoding, out CarObjects[carIndex]);
+							CarObjects[carIndex] = LoadSharedObject(exteriorObject);
 						}
 						break;
 					case ExtensionCfgSection.Car:
@@ -91,7 +125,7 @@ namespace Train.OpenBve
 						CarsDefined[block.Index] = true;
 						if (block.GetPath(ExtensionCfgKey.Object, trainPath, out string carObject))
 						{
-							Plugin.CurrentHost.LoadObject(carObject, trainEncoding, out CarObjects[block.Index]);
+							CarObjects[block.Index] = LoadSharedObject(carObject);
 						}
 
 						bool definedLength = false;
@@ -147,7 +181,7 @@ namespace Train.OpenBve
 						}
 						if (block.GetPath(ExtensionCfgKey.Object, trainPath, out string couplerObject))
 						{
-							Plugin.CurrentHost.LoadObject(couplerObject, trainEncoding, out CouplerObjects[block.Index]);
+							CouplerObjects[block.Index] = LoadSharedObject(couplerObject);
 						}
 						break;
 					case ExtensionCfgSection.Bogie:
@@ -174,7 +208,7 @@ namespace Train.OpenBve
 
 						if (block.GetPath(ExtensionCfgKey.Object, trainPath, out string bogieObject))
 						{
-							Plugin.CurrentHost.LoadObject(bogieObject, trainEncoding, out BogieObjects[block.Index]);
+							BogieObjects[block.Index] = LoadSharedObject(bogieObject);
 						}
 						block.GetValue(ExtensionCfgKey.Reversed, out BogieObjectsReversed[block.Index]);
 						if (block.GetVector2(ExtensionCfgKey.Axles, ',', out Vector2 bogieAxles))
@@ -230,10 +264,8 @@ namespace Train.OpenBve
 							Train.Cars[i].FrontAxle.Position = -Train.Cars[i].RearAxle.Position;
 							Train.Cars[i].RearAxle.Position = -temp;
 						}
-						if (CarObjects[i] is StaticObject) {
-							StaticObject obj = (StaticObject)CarObjects[i].Clone();
-							obj.ApplyScale(-1.0, 1.0, -1.0);
-							CarObjects[i] = obj;
+						if (CarObjects[i] is StaticObject staticObject) {
+							CarObjects[i] = GetReversedStaticObject(staticObject);
 						} else if (CarObjects[i] is AnimatedObjectCollection) {
 							AnimatedObjectCollection obj = (AnimatedObjectCollection)CarObjects[i].Clone();
 							obj.Reverse();
@@ -272,10 +304,8 @@ namespace Train.OpenBve
 							Train.Cars[CarIndex].RearBogie.FrontAxle.Position = -Train.Cars[CarIndex].RearBogie.RearAxle.Position;
 							Train.Cars[CarIndex].RearBogie.RearAxle.Position = -temp;
 						}
-						if (BogieObjects[i] is StaticObject) {
-							StaticObject obj = (StaticObject)BogieObjects[i].Clone();
-							obj.ApplyScale(-1.0, 1.0, -1.0);
-							BogieObjects[i] = obj;
+						if (BogieObjects[i] is StaticObject staticObject) {
+							BogieObjects[i] = GetReversedStaticObject(staticObject);
 						} else if (BogieObjects[i] is AnimatedObjectCollection) {
 							AnimatedObjectCollection obj = (AnimatedObjectCollection)BogieObjects[i].Clone();
 							obj.Reverse();
