@@ -184,13 +184,13 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <inheritdoc/>
-		public override UnifiedObject TransformLeft(double NearDistance, double FarDistance)
+		public override UnifiedObject TransformLeft(double NearDistance, double FarDistance, bool FlipFaces = false)
 		{
 			throw new NotSupportedException();
 		}
 
 		/// <inheritdoc/>
-		public override UnifiedObject TransformRight(double NearDistance, double FarDistance)
+		public override UnifiedObject TransformRight(double NearDistance, double FarDistance, bool FlipFaces = false)
 		{
 			throw new NotSupportedException();
 		}

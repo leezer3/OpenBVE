@@ -273,7 +273,7 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <inheritdoc/>
-		public override UnifiedObject TransformLeft(double nearDistance, double farDistance)
+		public override UnifiedObject TransformLeft(double nearDistance, double farDistance, bool FlipFaces = false)
 		{
 			// If we have less than 4 vertices, we cannot perform the interpolation based on the standard reference quad
 			if (Mesh.Vertices.Length < 4)
@@ -331,11 +331,20 @@ namespace OpenBveApi.Objects
 					transformResult.Mesh.Vertices[i].Coordinates.X = faceX + ((x - faceX) / range) * (backX - faceX);
 				}
 			}
+
+			if (FlipFaces)
+			{
+				for (int i = 0; i < transformResult.Mesh.Faces.Length; i++)
+				{
+					Array.Reverse(transformResult.Mesh.Faces[i].Vertices, 0, transformResult.Mesh.Faces[i].Vertices.Length);
+				}
+			}
+			
 			return transformResult;
 		}
 
 		/// <inheritdoc/>
-		public override UnifiedObject TransformRight(double nearDistance, double farDistance)
+		public override UnifiedObject TransformRight(double nearDistance, double farDistance, bool FlipFaces = false)
 		{
 			// If we have less than 4 vertices, we cannot perform the interpolation based on the standard reference quad
 			if (Mesh.Vertices.Length < 4)
@@ -391,6 +400,14 @@ namespace OpenBveApi.Objects
 				if (System.Math.Abs(range) > 0.001)
 				{
 					transformResult.Mesh.Vertices[i].Coordinates.X = faceX + ((x - faceX) / range) * (backX - faceX);
+				}
+			}
+
+			if (FlipFaces)
+			{
+				for (int i = 0; i < transformResult.Mesh.Faces.Length; i++)
+				{
+					Array.Reverse(transformResult.Mesh.Faces[i].Vertices, 0, transformResult.Mesh.Faces[i].Vertices.Length);
 				}
 			}
 			return transformResult;

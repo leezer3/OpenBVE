@@ -392,7 +392,15 @@ namespace Route.Bve5
 									continue;
 								}
 
-								UnifiedObject crack = d0 < 0.0 ? obj.TransformRight(d0, d1) : obj.TransformLeft(d0, d1);
+								bool flipFaces = false;
+								
+								if (pInterpolateX0 - sInterpolateX0 < 0 || pInterpolateX1 - sInterpolateX1 < 0)
+								{
+									// where the distance between the primary and secondary is negative, flips the object's faces
+									flipFaces = true;
+								}
+
+								UnifiedObject crack = d0 < 0.0 ? obj.TransformRight(d0, d1, flipFaces) : obj.TransformLeft(d0, d1, flipFaces);
 
 								if (Data.Blocks[i].Cracks[k].Span != 0)
 								{
