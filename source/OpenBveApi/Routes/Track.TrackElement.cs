@@ -8,6 +8,9 @@ namespace OpenBveApi.Routes
 	{
 		/// <summary>Whether the element is invalid</summary>
 		public bool InvalidElement;
+		/// <summary>Whether the element returns raw cant values</summary>
+		/// <remarks>Used by the BVE5 route parser</remarks>
+		public bool ReturnsRawCant;
 		/// <summary>The starting linear track position of this element</summary>
 		public double StartingTrackPosition;
 		/// <summary>The curve radius applying to this element</summary>
@@ -65,6 +68,7 @@ namespace OpenBveApi.Routes
 			IsDriveable = false;
 			ContainsSwitch = false;
 			PowerSupplies = new Dictionary<PowerSupplyTypes, PowerSupply>();
+			ReturnsRawCant = false;
 		}
 	}
 }

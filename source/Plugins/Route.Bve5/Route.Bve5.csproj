@@ -67,6 +67,7 @@
     <Compile Include="ListExtensions.cs" />
     <Compile Include="MapParser.cs" />
     <Compile Include="MapParser\ApplyRouteData.cs" />
+    <Compile Include="MapParser\BveExCompat.cs" />
     <Compile Include="MapParser\ConfirmComponents.cs" />
     <Compile Include="MapParser\ConvertComponents.cs" />
     <Compile Include="MapParser\CustomDictionary.cs" />
