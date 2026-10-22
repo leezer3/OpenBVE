@@ -851,6 +851,7 @@ namespace Route.Bve5
 			if (count < 1024 || Environment.ProcessorCount < 2)
 			{
 				TrackFollower follower = new TrackFollower(Plugin.CurrentHost);
+				follower.TriggerType = EventTriggerType.None;
 				for (int idx = 0; idx < count; idx++)
 				{
 					if (plugin.Cancel)
@@ -866,6 +867,7 @@ namespace Route.Bve5
 				Parallel.For(0, count, options, () => new TrackFollower(Plugin.CurrentHost),
 					(idx, state, follower) =>
 					{
+						follower.TriggerType = EventTriggerType.None;
 						if (plugin.Cancel)
 						{
 							state.Stop();
