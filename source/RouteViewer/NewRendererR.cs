@@ -597,7 +597,7 @@ namespace RouteViewer
 					OpenGlString.Draw(Fonts.SmallFont, "WireFrame:", new Vector2(Screen.Width - (32 * scaleFactor), 4), TextAlignment.TopRight, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, "Normals:", new Vector2(Screen.Width - (32 * scaleFactor), 24), TextAlignment.TopRight, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, "Events:", new Vector2(Screen.Width - (32 * scaleFactor), 44), TextAlignment.TopRight, Color128.White, true);
-					OpenGlString.Draw(Fonts.SmallFont, "Mute:", new Vector2(Screen.Width - (32 * scaleFactor), 64), TextAlignment.TopRight, Color128.White, true);
+					OpenGlString.Draw(Fonts.SmallFont, $"Mute: {(Program.Sounds.GlobalMute ? "on" : "off")}", new Vector2(Screen.Width - (32 * scaleFactor), 64), TextAlignment.TopRight, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, "Hide interface:", new Vector2(Screen.Width - (32 * scaleFactor), 84), TextAlignment.TopRight, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, $"{(RenderStatsOverlay ? "Hide" : "Show")} renderer statistics", new Vector2(Screen.Width - 32, 104), TextAlignment.TopRight, Color128.White, true);
 					if (Program.CurrentHost.Platform != HostPlatform.AppleOSX || IntPtr.Size == 4)
@@ -618,8 +618,8 @@ namespace RouteViewer
 					keys = new[] { new[] { null, "↑", null }, new[] { "←", "↓", "→" } };
 					Keys.Render((int)(0.5 * Screen.Width - (48 * scaleFactor)), Screen.Height - 40, 16, Fonts.SmallFont, keys);
 
-					keys = new[] { new[] { "P↑" }, new[] { "P↓" } };
-					Keys.Render((int)(0.5 * Screen.Width + 32), Screen.Height - 40, 24, Fonts.SmallFont, keys);
+					keys = new[] { new[] { "PgUp" }, new[] { "PgDn" } };
+					Keys.Render((int)(0.5 * Screen.Width + 32 - 8 * scaleFactor), Screen.Height - 40, 40, Fonts.SmallFont, keys);
 
 					keys = new[] { new[] { null, "/", "*" }, new[] { "7", "8", "9" }, new[] { "4", "5", "6" }, new[] { "1", "2", "3" }, new[] { null, "0", "." } };
 					Keys.Render(Screen.Width - (int)(60 * scaleFactor), Screen.Height - 100, 16, Fonts.SmallFont, keys);
