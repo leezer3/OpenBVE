@@ -89,7 +89,7 @@ namespace Route.Bve5
 					case MapFunctionName.Curve:
 						{
 							double Radius = d.Radius;
-							double Cant = Statement.GetArgumentValueAsDouble(ArgumentName.Cant) / 1000.0;
+							double Cant = Statement.GetArgumentValueAsDouble(ArgumentName.Cant);
 							int Index = RouteData.FindOrAddBlock(Statement.Distance);
 							RouteData.Blocks[Index].CurrentTrackState.CurveRadius = Radius;
 							RouteData.Blocks[Index].CurrentTrackState.CurveCant = Cant;
