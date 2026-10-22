@@ -895,6 +895,9 @@ namespace RouteViewer
 				case Key.I:
 					Renderer.OptionInterface = !Renderer.OptionInterface;
 					break;
+				case Key.M:
+					Sounds.GlobalMute = !Sounds.GlobalMute;
+					break;
 				case Key.Plus:
 				case Key.KeypadPlus:
 					if (!JumpToPositionEnabled)

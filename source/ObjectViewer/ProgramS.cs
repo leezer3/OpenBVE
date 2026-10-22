@@ -1479,19 +1479,15 @@ namespace ObjectViewer {
 	                Renderer.Camera.Reset(new Vector3(-5.0, 2.5, -25.0));
 	                break;
 	            case Key.F:
-	            case Key.F1:
 		            Renderer.OptionWireFrame = !Renderer.OptionWireFrame;
 	                break;
 	            case Key.N:
-	            case Key.F2:
 		            Renderer.OptionNormals = !Renderer.OptionNormals;
 	                break;
 	            case Key.L:
-	            case Key.F3:
 	                LightingTarget = 1 - LightingTarget;
 	                break;
 	            case Key.I:
-	            case Key.F4:
 	                Renderer.OptionInterface = !Renderer.OptionInterface;
 	                break;
                 case Key.F8:
@@ -1521,7 +1517,6 @@ namespace ObjectViewer {
 					formTrain.ShowTrainSettings();
                     break;
 	            case Key.G:
-	            case Key.C:
 	                Renderer.OptionCoordinateSystem = !Renderer.OptionCoordinateSystem;
 	                break;
 	            case Key.B:
@@ -1536,6 +1531,8 @@ namespace ObjectViewer {
 				                Renderer.ApplyBackgroundColor(dialog.Color.R, dialog.Color.G, dialog.Color.B);
 			                }
 		                }
+		                //The dialog takes the focus, so the shift key-up never reaches us
+		                ShiftPressed = false;
 	                }
 	                else
 	                {
