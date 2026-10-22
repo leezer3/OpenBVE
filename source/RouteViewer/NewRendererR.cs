@@ -618,8 +618,8 @@ namespace RouteViewer
 					keys = new[] { new[] { null, "↑", null }, new[] { "←", "↓", "→" } };
 					Keys.Render((int)(0.5 * Screen.Width - (48 * scaleFactor)), Screen.Height - 40, 16, Fonts.SmallFont, keys);
 
-					keys = new[] { new[] { "P↑" }, new[] { "P↓" } };
-					Keys.Render((int)(0.5 * Screen.Width + 32), Screen.Height - 40, 24, Fonts.SmallFont, keys);
+					keys = new[] { new[] { "PgUp" }, new[] { "PgDn" } };
+					Keys.Render((int)(0.5 * Screen.Width + 32 - 8 * scaleFactor), Screen.Height - 40, 40, Fonts.SmallFont, keys);
 
 					keys = new[] { new[] { null, "/", "*" }, new[] { "7", "8", "9" }, new[] { "4", "5", "6" }, new[] { "1", "2", "3" }, new[] { null, "0", "." } };
 					Keys.Render(Screen.Width - (int)(60 * scaleFactor), Screen.Height - 100, 16, Fonts.SmallFont, keys);
