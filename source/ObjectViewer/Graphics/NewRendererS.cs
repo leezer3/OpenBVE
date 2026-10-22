@@ -315,18 +315,23 @@ List<FaceState> opaqueFaces, alphaFaces;
 					}
 					
 
-					keys = new[] { new[] { "F" }, new[] { "N" }, new[] { "L" }, new[] { "G" }, new[] { "B" }, new[] { "I" }, new[] { "R" } };
+					keys = new[] { new[] { "F" }, new[] { "N" }, new[] { "L" }, new[] { "G" }, new[] { "B" } };
 					Keys.Render(Screen.Width - 20, 4, 16, Fonts.SmallFont, keys);
+					keys = new[] { new[] { "Shift+B" } };
+					Keys.Render(Screen.Width - 60, 104, 56, Fonts.SmallFont, keys);
+					keys = new[] { new[] { "I" } };
+					Keys.Render(Screen.Width - 20, 124, 16, Fonts.SmallFont, keys);
 					keys = new[] { new[] { "F11" } };
-					Keys.Render(Screen.Width - 36, 124, 32, Fonts.SmallFont, keys);
+					Keys.Render(Screen.Width - 36, 144, 32, Fonts.SmallFont, keys);
 					
 					OpenGlString.Draw(Fonts.SmallFont, $"WireFrame: {(OptionWireFrame ? "on" : "off")}", new Vector2(Screen.Width - (28 * scaleFactor), 4), TextAlignment.TopRight, Interface.CurrentOptions.TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, $"Normals: {(OptionNormals ? "on" : "off")}", new Vector2(Screen.Width - (28 * scaleFactor), 24), TextAlignment.TopRight, Interface.CurrentOptions.TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, $"Lighting: {(Program.LightingTarget == 0 ? "night" : "day")}", new Vector2(Screen.Width - (28 * scaleFactor), 44), TextAlignment.TopRight, Interface.CurrentOptions.TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, $"Grid: {(OptionCoordinateSystem ? "on" : "off")}", new Vector2(Screen.Width - (28 * scaleFactor), 64), TextAlignment.TopRight, Interface.CurrentOptions.TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, $"Background: {Interface.CurrentOptions.BackgroundColor}", new Vector2(Screen.Width - (28 * scaleFactor), 84), TextAlignment.TopRight, Interface.CurrentOptions.TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, "Hide interface:", new Vector2(Screen.Width - (28 * scaleFactor), 104), TextAlignment.TopRight, Interface.CurrentOptions.TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, $"{(RenderStatsOverlay ? "Hide" : "Show")} renderer statistics", new Vector2(Screen.Width - (44 * scaleFactor), 124), TextAlignment.TopRight, Interface.CurrentOptions.TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, "Custom BG color", new Vector2(Screen.Width - (68 * scaleFactor), 104), TextAlignment.TopRight, Interface.CurrentOptions.TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, "Hide interface:", new Vector2(Screen.Width - (28 * scaleFactor), 124), TextAlignment.TopRight, Interface.CurrentOptions.TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, $"{(RenderStatsOverlay ? "Hide" : "Show")} renderer statistics", new Vector2(Screen.Width - (44 * scaleFactor), 144), TextAlignment.TopRight, Interface.CurrentOptions.TextColor);
 					
 					keys = new[] { new[] { null, "W", null }, new[] { "A", "S", "D" } };
 					Keys.Render(4, Screen.Height - 40, 16, Fonts.SmallFont, keys);
