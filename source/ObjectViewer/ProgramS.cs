@@ -1531,6 +1531,8 @@ namespace ObjectViewer {
 				                Renderer.ApplyBackgroundColor(dialog.Color.R, dialog.Color.G, dialog.Color.B);
 			                }
 		                }
+		                //The dialog takes the focus, so the shift key-up never reaches us
+		                ShiftPressed = false;
 	                }
 	                else
 	                {
