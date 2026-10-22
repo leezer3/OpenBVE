@@ -90,6 +90,11 @@ namespace Route.Bve5
 						{
 							double Radius = d.Radius;
 							double Cant = Statement.GetArgumentValueAsDouble(ArgumentName.Cant);
+							if (Math.Abs(Cant) > 1)
+							{
+								// If Abs(Cant) is less than 1, it's in m not mm
+								Cant /= 1000.0;
+							}
 							int Index = RouteData.FindOrAddBlock(Statement.Distance);
 							RouteData.Blocks[Index].CurrentTrackState.CurveRadius = Radius;
 							RouteData.Blocks[Index].CurrentTrackState.CurveCant = Cant;
@@ -132,7 +137,12 @@ namespace Route.Bve5
 							}
 							else
 							{
-								Cant = d.Cant / 1000.0;
+								Cant = d.Cant;
+								if (Math.Abs(Cant) > 1)
+								{
+									// If Abs(Cant) is less than 1, it's in m not mm
+									Cant /= 1000.0;
+								}
 							}
 
 							RouteData.Blocks[Index].CurrentTrackState.CurveRadius = Convert.ToDouble(Radius);
