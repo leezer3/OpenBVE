@@ -181,7 +181,7 @@ namespace RouteViewer
 								{
 									BveTsHacks = true, 
 									CylinderHack = false,
-									BlackTransparency =  true
+									TransparencyMode = BlackTransparencyMode.AllFiles
 								};
 								CurrentHost.Plugins[j].Object.SetCompatibilityHacks(enabledHacks);
 							}

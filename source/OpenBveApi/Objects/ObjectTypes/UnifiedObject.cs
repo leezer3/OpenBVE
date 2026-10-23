@@ -53,14 +53,16 @@ namespace OpenBveApi.Objects
 		/// <summary>Creates a left-handed transformed clone of this object</summary>
 		/// <param name="NearDistance">The object's width at the start of the block</param>
 		/// <param name="FarDistance">The object's width at the end of the block</param>
+		/// <param name="FlipFaces">Whether the object's faces should be flipped</param>
 		/// <returns>The transformed clone</returns>
-		public abstract UnifiedObject TransformLeft(double NearDistance, double FarDistance);
+		public abstract UnifiedObject TransformLeft(double NearDistance, double FarDistance, bool FlipFaces = false);
 
 		/// <summary>Creates a right-handed transformed clone of this object</summary>
 		/// <param name="NearDistance">The object's width at the start of the block</param>
 		/// <param name="FarDistance">The object's width at the end of the block</param>
+		/// <param name="FlipFaces">Whether the object's faces should be flipped</param>
 		/// <returns>The transformed clone</returns>
-		public abstract UnifiedObject TransformRight(double NearDistance, double FarDistance);
+		public abstract UnifiedObject TransformRight(double NearDistance, double FarDistance, bool FlipFaces = false);
 
 		/// <summary>Applies translation</summary>
 		/// <param name="translationVector">The translation vector</param>

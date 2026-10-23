@@ -167,13 +167,13 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <inheritdoc />
-		public override UnifiedObject TransformLeft(double nearDistance, double farDistance)
+		public override UnifiedObject TransformLeft(double nearDistance, double farDistance, bool FlipFaces = false)
 		{
 			throw new NotSupportedException("Cannot transform a KeyframeObject");
 		}
 
 		/// <inheritdoc />
-		public override UnifiedObject TransformRight(double nearDistance, double farDistance)
+		public override UnifiedObject TransformRight(double nearDistance, double farDistance, bool FlipFaces = false)
 		{
 			throw new NotSupportedException("Cannot transform a KeyframeObject");
 		}

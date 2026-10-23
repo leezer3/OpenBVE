@@ -784,9 +784,8 @@ namespace Texture.Dds
 
         private unsafe byte[] DecompressRGB(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
-            // allocate bitmap
-            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbBitCount);
-            int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
+            // allocate bitmap (output is always RGBA, whatever the source depth)
+            int bps = header.width * 4;
             int sizeOfPlane = bps * header.height;
 
             byte[] rawData = new byte[header.depth * sizeOfPlane];
@@ -808,9 +807,24 @@ namespace Texture.Dds
             fixed (byte* bytePtr = data)
             {
                 byte* temp = bytePtr;
+                byte* dataEnd = bytePtr + data.Length;
                 while (pixnum-- > 0)
                 {
-                    uint px = *((uint*)temp) & valMask;
+                    uint px;
+                    if (temp + 4 <= dataEnd)
+                    {
+                        px = *((uint*)temp);
+                    }
+                    else
+                    {
+                        // final pixel of a sub-32-bit image: never read past the buffer
+                        px = 0;
+                        for (int e = 0; e < (int)pixSize && temp + e < dataEnd; e++)
+                        {
+                            px |= (uint)(*(temp + e)) << (8 * e);
+                        }
+                    }
+                    px &= valMask;
                     temp += pixSize;
                     uint pxc = px & header.pixelFormat.rBitmask;
                     rawData[offset + 0] = (byte)(((pxc >> rShift1) * rMul) >> rShift2);
@@ -1047,9 +1061,8 @@ namespace Texture.Dds
 
         private unsafe byte[] DecompressLum(DdsHeader header, byte[] data, PixelFormat pixelFormat)
         {
-            // allocate bitmap
-            int bpp = PixelFormatToBpp(pixelFormat, header.pixelFormat.rgbBitCount);
-            int bps = header.width * bpp * PixelFormatToBpc(pixelFormat);
+            // allocate bitmap (output is always RGBA, whatever the source depth)
+            int bps = header.width * 4;
             int sizeOfPlane = bps * header.height;
 
             byte[] rawData = new byte[header.depth * sizeOfPlane];

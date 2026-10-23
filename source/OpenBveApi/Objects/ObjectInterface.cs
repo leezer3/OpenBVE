@@ -75,7 +75,7 @@ namespace OpenBveApi.Objects
 		public bool CylinderHack;
 		/// <summary>Pure black is used as a transparent color</summary>
 		/// <remarks>Used to provide color-key transparency in BVE4 X format files</remarks>
-		public bool BlackTransparency;
+		public BlackTransparencyMode TransparencyMode;
 		/// <summary>Semi-transparent faces are disabled</summary>
 		/// <remarks>BVE2 did not support semi-transparent faces</remarks>
 		public bool DisableSemiTransparentFaces;
