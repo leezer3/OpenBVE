@@ -23,6 +23,13 @@ namespace Formats.OpenBve
 			{
 				return true;
 			}
+
+			if (Enum.TryParse(value, true, out result))
+			{
+				return true;
+			}
+
+			value = value?.Replace("_", "");
 			return Enum.TryParse(value, true, out result);
 		}
 	}
