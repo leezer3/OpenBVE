@@ -40,6 +40,7 @@ using TrainManager.Car.Systems;
 using TrainManager.Motor;
 using TrainManager.MsTsSounds;
 using TrainManager.SafetySystems;
+using TrainManager.SteamEngine;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace Train.MsTs
@@ -574,8 +575,8 @@ namespace Train.MsTs
 								{
 									if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
 									{
-										cylinderCocks.OpenSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
-										cylinderCocks.CloseSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+										cylinderCocks.ActivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+										cylinderCocks.DeactivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
 									}
 									else
 									{
@@ -594,6 +595,28 @@ namespace Train.MsTs
 									else
 									{
 										blowers.LoopSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+									}
+								}
+								break;
+							case SoundTrigger.SteamSafetyValveOn:
+								if (car.TractionModel.Components.TryGetTypedValue(EngineComponent.SafetyValve, out SafetyValve safetyValve))
+								{
+									if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
+									{
+										safetyValve.ActivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+									}
+									else
+									{
+										safetyValve.LoopSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+									}
+								}
+								break;
+							case SoundTrigger.SteamSafetyValveOff:
+								if (car.TractionModel.Components.TryGetTypedValue(EngineComponent.SafetyValve, out safetyValve))
+								{
+									if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
+									{
+										safetyValve.DeactivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
 									}
 								}
 								break;
