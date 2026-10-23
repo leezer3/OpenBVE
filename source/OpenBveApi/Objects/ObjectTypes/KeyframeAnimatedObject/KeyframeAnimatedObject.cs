@@ -101,7 +101,6 @@ namespace OpenBveApi.Objects
 				Objects[i].WorldPosition = position;
 				Objects[i].Rotate = Matrix4D.NoTransformation;
 				Objects[i].Translation = Matrix4D.NoTransformation;
-				currentHost.ShowObject(Objects[i], ObjectType.Dynamic);
 				Objects[i].Matricies = matriciesToShader;
 			}
 			int a = currentHost.AnimatedWorldObjectsUsed;
