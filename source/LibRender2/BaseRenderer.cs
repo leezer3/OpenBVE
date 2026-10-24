@@ -279,6 +279,17 @@ namespace LibRender2
 		/// <summary>The current AlphaFunc comparison value</summary>
 		private float alphaFuncValue;
 
+		/// <summary>Whether the multisample sample count has been queried yet</summary>
+		private bool alphaToCoverageQueried;
+
+		/// <summary>Whether multisampled rendering (and hence alpha-to-coverage) is active</summary>
+		private bool alphaToCoverageAvailable;
+
+		/// <summary>Stores the alpha test state saved by BeginAlphaToCoverage</summary>
+		private bool alphaToCoveragePreviousAlphaTestEnabled;
+		private AlphaFunction alphaToCoveragePreviousCompare;
+		private float alphaToCoveragePreviousValue;
+
 		/// <summary>Stores the most recently bound texture</summary>
 		public OpenGlTexture LastBoundTexture;
 
@@ -1244,6 +1255,84 @@ namespace LibRender2
 			{
 				CurrentShader.SetAlphaTest(false);
             }
+		}
+
+		/// <summary>Gets whether alpha-to-coverage may be used, i.e. multisampled rendering is active.</summary>
+		/// <remarks>
+		/// Alpha-to-coverage converts the fragment alpha into a per-sample coverage mask. This
+		/// smooths the silhouettes of clipped (colour-keyed / binary alpha) textures without
+		/// blending their colour against the transparent key colour. It has no effect when only
+		/// one sample is present, which is harmless as nearest filtering already yields a
+		/// strictly binary alpha there.
+		/// </remarks>
+		public bool AlphaToCoverageAvailable
+		{
+			get
+			{
+				if (!alphaToCoverageQueried)
+				{
+					alphaToCoverageQueried = true;
+					int samples = 0;
+					try
+					{
+						// GL_SAMPLES returns the sample count of the current draw framebuffer.
+						samples = GL.GetInteger(GetPName.Samples);
+					}
+					catch
+					{
+						samples = 0;
+					}
+					alphaToCoverageAvailable = samples > 1;
+				}
+				return alphaToCoverageAvailable;
+			}
+		}
+
+		/// <summary>
+		/// Begins drawing clipped (alpha-tested) geometry with alpha-to-coverage enabled.
+		/// </summary>
+		/// <returns>
+		/// A token to pass to <see cref="EndAlphaToCoverage"/>, or <c>false</c> if alpha-to-coverage
+		/// is unavailable and nothing was changed.
+		/// </returns>
+		public bool BeginAlphaToCoverage()
+		{
+			if (!AlphaToCoverageAvailable)
+			{
+				return false;
+			}
+
+			alphaToCoveragePreviousAlphaTestEnabled = alphaTestEnabled;
+			alphaToCoveragePreviousCompare = alphaFuncComparison;
+			alphaToCoveragePreviousValue = alphaFuncValue;
+
+			GL.Enable(EnableCap.SampleAlphaToCoverage);
+			// With alpha-to-coverage, fragment alpha drives per-sample coverage directly, so the
+			// hard alpha test must be removed: otherwise the bilinear-filtering ramp at the edge
+			// of a clipped texture would be discarded before coverage is computed.
+			UnsetAlphaFunc();
+			return true;
+		}
+
+		/// <summary>Ends alpha-to-coverage drawing started by <see cref="BeginAlphaToCoverage"/>.</summary>
+		/// <param name="token">The token returned by <see cref="BeginAlphaToCoverage"/>.</param>
+		public void EndAlphaToCoverage(bool token)
+		{
+			if (!token)
+			{
+				return;
+			}
+
+			GL.Disable(EnableCap.SampleAlphaToCoverage);
+
+			if (alphaToCoveragePreviousAlphaTestEnabled)
+			{
+				SetAlphaFunc(alphaToCoveragePreviousCompare, alphaToCoveragePreviousValue);
+			}
+			else
+			{
+				UnsetAlphaFunc();
+			}
 		}
 
 

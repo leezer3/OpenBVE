@@ -194,10 +194,12 @@ namespace RouteViewer
 				alphaFaces = VisibleObjects.GetSortedPolygons();
 			}
 			
+			bool alphaToCoverage = BeginAlphaToCoverage();
 			foreach (FaceState face in opaqueFaces)
 			{
 				face.Draw();
 			}
+			EndAlphaToCoverage(alphaToCoverage);
 
 			// alpha face
 			ResetOpenGlState();
