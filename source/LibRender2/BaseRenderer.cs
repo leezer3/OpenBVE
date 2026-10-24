@@ -279,11 +279,8 @@ namespace LibRender2
 		/// <summary>The current AlphaFunc comparison value</summary>
 		private float alphaFuncValue;
 
-		/// <summary>Whether the multisample sample count has been queried yet</summary>
-		private bool alphaToCoverageQueried;
-
-		/// <summary>Whether multisampled rendering (and hence alpha-to-coverage) is active</summary>
-		private bool alphaToCoverageAvailable;
+		/// <summary>Whether SampleAlphaToCoverage is currently enabled between Begin/EndAlphaToCoverage</summary>
+		private bool alphaToCoverageActive;
 
 		/// <summary>Stores the alpha test state saved by BeginAlphaToCoverage</summary>
 		private bool alphaToCoveragePreviousAlphaTestEnabled;
@@ -1269,22 +1266,20 @@ namespace LibRender2
 		{
 			get
 			{
-				if (!alphaToCoverageQueried)
+				int samples = 0;
+				try
 				{
-					alphaToCoverageQueried = true;
-					int samples = 0;
-					try
-					{
-						// GL_SAMPLES returns the sample count of the current draw framebuffer.
-						samples = GL.GetInteger(GetPName.Samples);
-					}
-					catch
-					{
-						samples = 0;
-					}
-					alphaToCoverageAvailable = samples > 1;
+					// GL_SAMPLES returns the sample count of the current draw framebuffer.
+					// Queried every time rather than cached: the sample count changes when the
+					// window is recreated or the antialiasing option is toggled, and a stale
+					// value would permanently enable or disable alpha-to-coverage.
+					samples = GL.GetInteger(GetPName.Samples);
 				}
-				return alphaToCoverageAvailable;
+				catch
+				{
+					samples = 0;
+				}
+				return samples > 1;
 			}
 		}
 
@@ -1307,9 +1302,13 @@ namespace LibRender2
 			alphaToCoveragePreviousValue = alphaFuncValue;
 
 			GL.Enable(EnableCap.SampleAlphaToCoverage);
+			alphaToCoverageActive = true;
+			CurrentShader.SetAlphaToCoverage(true);
 			// With alpha-to-coverage, fragment alpha drives per-sample coverage directly, so the
 			// hard alpha test must be removed: otherwise the bilinear-filtering ramp at the edge
-			// of a clipped texture would be discarded before coverage is computed.
+			// of a clipped texture would be discarded before coverage is computed. Clipping of
+			// fully clear texels is instead guaranteed by the discard in the sharpened
+			// alpha-to-coverage path of the fragment shader.
 			UnsetAlphaFunc();
 			return true;
 		}
@@ -1324,6 +1323,8 @@ namespace LibRender2
 			}
 
 			GL.Disable(EnableCap.SampleAlphaToCoverage);
+			alphaToCoverageActive = false;
+			CurrentShader.SetAlphaToCoverage(false);
 
 			if (alphaToCoveragePreviousAlphaTestEnabled)
 			{
@@ -1333,6 +1334,33 @@ namespace LibRender2
 			{
 				UnsetAlphaFunc();
 			}
+		}
+
+		/// <summary>
+		/// Temporarily disables alpha-to-coverage for a draw that attenuates by blending rather
+		/// than by coverage (e.g. cross-fading or nighttime textures). Applying coverage masking
+		/// on top of blending would attenuate those fragments twice.
+		/// </summary>
+		/// <returns><c>true</c> if alpha-to-coverage was active and has been suspended; otherwise <c>false</c>.</returns>
+		public bool SuspendAlphaToCoverage()
+		{
+			if (!alphaToCoverageActive)
+			{
+				return false;
+			}
+
+			GL.Disable(EnableCap.SampleAlphaToCoverage);
+			alphaToCoverageActive = false;
+			CurrentShader.SetAlphaToCoverage(false);
+			return true;
+		}
+
+		/// <summary>Restores alpha-to-coverage after a call to <see cref="SuspendAlphaToCoverage"/> returned <c>true</c>.</summary>
+		public void RestoreAlphaToCoverage()
+		{
+			GL.Enable(EnableCap.SampleAlphaToCoverage);
+			alphaToCoverageActive = true;
+			CurrentShader.SetAlphaToCoverage(true);
 		}
 
 
@@ -1539,8 +1567,35 @@ namespace LibRender2
 
 				shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
 
+				/*
+				 * Cross-fading materials attenuate the daytime texture by opacity, which is
+				 * meant to be resolved by blending, not by coverage masking. Alpha-to-coverage
+				 * would turn the partial opacity into a dithered stipple, so suspend it and
+				 * fall back to the hard clip for this draw. RestoreAlphaFunc returns the alpha
+				 * test to the disabled state of the alpha-to-coverage window.
+				 */
+				bool crossFading = alphaFactor < 1.0f && material.NighttimeTexture != null && (material.Flags & MaterialFlags.CrossFadeTexture) != 0;
+				bool a2cSuspended = false;
+				if (crossFading)
+				{
+					a2cSuspended = SuspendAlphaToCoverage();
+					if (a2cSuspended)
+					{
+						// Set directly on the shader (as the nighttime polygon below does) so
+						// the saved alpha func state is untouched.
+						shader.SetAlphaTest(true);
+						shader.SetAlphaFunction(AlphaFunction.Greater, 0.9f);
+					}
+				}
+
 				// render polygon
 				VAO.Draw(drawMode, face.IboStartIndex, face.Vertices.Length);
+
+				if (a2cSuspended)
+				{
+					RestoreAlphaFunc();
+					RestoreAlphaToCoverage();
+				}
 			}
 
 			// nighttime polygon
@@ -1556,6 +1611,13 @@ namespace LibRender2
 
 				GL.Enable(EnableCap.Blend);
 
+				/*
+				 * This draw attenuates by blending; coverage masking on top would darken and
+				 * stipple the result, so suspend alpha-to-coverage for its duration. The
+				 * alpha test set below provides the clip as before.
+				 */
+				bool a2cSuspendedNight = SuspendAlphaToCoverage();
+
 				// alpha test
 				shader.SetAlphaTest(true);
 				shader.SetAlphaFunction(AlphaFunction.Greater, 0.0f);
@@ -1569,6 +1631,10 @@ namespace LibRender2
 				VAO.Draw(drawMode, face.IboStartIndex, face.Vertices.Length);
 				RestoreBlendFunc();
 				RestoreAlphaFunc();
+				if (a2cSuspendedNight)
+				{
+					RestoreAlphaToCoverage();
+				}
 			}
 
 
