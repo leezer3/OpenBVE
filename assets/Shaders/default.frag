@@ -287,6 +287,7 @@ void main(void)
 	 * edge like regular MSAA, with solid interiors and a one pixel dither
 	 * ring. Clear texels are discarded so clipping is guaranteed even if
 	 * coverage masking is unavailable.
+     * blog source reference https://bgolus.medium.com/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f
 	 */
 	if(uAlphaToCoverage)
 	{
