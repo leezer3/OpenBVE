@@ -41,6 +41,7 @@ namespace Train.MsTs
 		internal double ShovelCoalMass = 0.5;
 		internal double StartingFireTemp = 500;
 		internal double StartingFireMass = 1000;
+		internal double BlowerSteamUsage = 0.0625; // 500lbs /hr
 		internal bool cylinderCocksAutomatic = false;
 		internal InjectorProperties[] Injectors = new InjectorProperties[2];
 		internal BoilerProperties Boiler = new BoilerProperties();
@@ -52,7 +53,7 @@ namespace Train.MsTs
 			Injectors[0].Create(model, EngineComponent.SteamInjector1);
 			Injectors[1].Create(model, EngineComponent.SteamInjector2);
 			Cylinders.Create(model);
-			model.Components.Add(EngineComponent.Blowers, new Blowers(model));
+			model.Components.Add(EngineComponent.Blowers, new Blowers(model, BlowerSteamUsage));
 			model.Components.Add(EngineComponent.Firebox, new Firebox(model, MaxFireMass, ShovelCoalMass, Math.Min(MaxFireMass, StartingFireMass), IdealFireMass, Math.Max(StartingFireTemp, 500)));
 		}
 	}
