@@ -20,7 +20,7 @@ namespace TrainManager.Trains
 		{
 			if (direction < 0)
 			{
-				if (Handles.Reverser.Actual == ReverserPosition.Forwards && Handles.Power.Driver != 0 && TrainManagerBase.currentHost.SimulationState != SimulationState.MinimalisticSimulation && stationIndex == Station)
+				if (Handles.Reverser.Actual == (int)ReverserPosition.Forwards && Handles.Power.Driver != 0 && TrainManagerBase.currentHost.SimulationState != SimulationState.MinimalisticSimulation && stationIndex == Station)
 				{
 					//Our reverser and power are in F, but we are rolling backwards
 					//Leave the station index alone, and we won't trigger again when we actually move forwards

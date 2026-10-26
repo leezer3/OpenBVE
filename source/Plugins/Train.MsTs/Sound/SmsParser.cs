@@ -37,6 +37,7 @@ using System.IO;
 using System.Text;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
+using TrainManager.Handles;
 using TrainManager.Motor;
 using TrainManager.MsTsSounds;
 using TrainManager.SafetySystems;
@@ -405,6 +406,7 @@ namespace Train.MsTs
 					{
 						// n.b. MSTS does not distinguish between increase / decrease sounds for handles etc.
 						// sound radii are also fudged based upon BVE values; most MSTS content just seems to use massive radii
+						ReverserHandle rH = car.baseTrain.Handles.Reverser as ReverserHandle;
 						switch (currentSoundSet.CurrentTrigger)
 						{
 							case SoundTrigger.VariableControlled:
@@ -413,29 +415,29 @@ namespace Train.MsTs
 								currentSoundSet.SoundBuffers[currentSoundSet.CurrentBuffer] = soundHandle as SoundBuffer;
 								break;
 							case SoundTrigger.ReverserToForwardBackward:
-								if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
+								if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot && rH != null)
 								{
-									car.baseTrain.Handles.Reverser.EngageSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Reverser.Max = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
 								}
 								break;
 							case SoundTrigger.ReverserToNeutral:
-								if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
+								if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot && rH != null)
 								{
-									car.baseTrain.Handles.Reverser.ReleaseSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Reverser.Min = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
 								}
 								break;
 							case SoundTrigger.ReverserChange:
-								if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
+								if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot && rH != null)
 								{
 									// as we don't know the order these may be presented in, check the buffer
-									if (car.baseTrain.Handles.Reverser.EngageSound.Buffer == null)
+									if (car.baseTrain.Handles.Reverser.Max.Buffer == null)
 									{
-										car.baseTrain.Handles.Reverser.EngageSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+										car.baseTrain.Handles.Reverser.Max = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
 									}
 
-									if (car.baseTrain.Handles.Reverser.ReleaseSound.Buffer == null)
+									if (car.baseTrain.Handles.Reverser.Min.Buffer == null)
 									{
-										car.baseTrain.Handles.Reverser.ReleaseSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+										car.baseTrain.Handles.Reverser.Min = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
 									}
 								}
 								break;

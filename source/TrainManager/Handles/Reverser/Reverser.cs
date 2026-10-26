@@ -9,38 +9,20 @@ using TrainManager.Trains;
 namespace TrainManager.Handles
 {
 	/// <summary>Represents a reverser handle</summary>
-	public class ReverserHandle
+	public class ReverserHandle : AbstractReverser
 	{
-		/// <summary>The notch set by the driver</summary>
-		public ReverserPosition Driver;
-		/// <summary>The actual notch</summary>
-		public ReverserPosition Actual;
-		/// <summary>Played when the reverser is moved to F or R</summary>
-		public CarSound EngageSound;
-		/// <summary>Played when the reverser is moved to N</summary>
-		public CarSound ReleaseSound;
-		/// <summary>Contains the notch descriptions to be displayed on the in-game UI</summary>
-		public string[] NotchDescriptions;
-		/// <summary>The max width used in px for the reverser HUD string</summary>
-		public double MaxWidth = 48;
-
-		private readonly TrainBase baseTrain;
-
-		public ReverserHandle(TrainBase train)
+		public ReverserHandle(TrainBase train) : base(train)
 		{
-			Driver = ReverserPosition.Neutral;
-			Actual = ReverserPosition.Neutral;
-			EngageSound = new CarSound();
-			ReleaseSound = new CarSound();
-			baseTrain = train;
+			Driver = (int)ReverserPosition.Neutral;
+			Actual = (int)ReverserPosition.Neutral;
 		}
 
-		public void ApplyState(ReverserPosition Value)
+		public override void ApplyState(ReverserPosition Value)
 		{
 			ApplyState((int)Value, false);
 		}
 
-		public void ApplyState(int Value, bool Relative)
+		public override void ApplyState(int Value, bool Relative)
 		{
 			if (baseTrain.Handles.HandleType == HandleType.InterlockedReverserHandle && baseTrain.Handles.Power.Driver != 0)
 			{
@@ -56,17 +38,17 @@ namespace TrainManager.Handles
 			}
 			if (a != r)
 			{
-				Driver = (ReverserPosition)r;
+				Driver = r;
 				baseTrain.Plugin?.UpdateReverser();
 				TrainManagerBase.currentHost.AddBlackBoxEntry();
 				// sound
 				if (a == 0 && r != 0)
 				{
-					EngageSound.Play(baseTrain.Cars[baseTrain.DriverCar], false);
+					Max.Play(baseTrain.Cars[baseTrain.DriverCar], false);
 				}
 				else if (a != 0 && r == 0)
 				{
-					ReleaseSound.Play(baseTrain.Cars[baseTrain.DriverCar], false);
+					Min.Play(baseTrain.Cars[baseTrain.DriverCar], false);
 				}
 			}
 
@@ -75,18 +57,18 @@ namespace TrainManager.Handles
 			if (!TrainManagerBase.CurrentOptions.Accessibility) return;
 			TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, 10.0, null);
 		}
-
+		
 		/// <summary>Gets the description string for this notch</summary>
 		/// <param name="color">The on-screen display color</param>
 		/// <returns>The notch description</returns>
-		public string GetNotchDescription(out MessageColor color)
+		public override string GetNotchDescription(out MessageColor color)
 		{
 			color = MessageColor.Gray;
 			if (NotchDescriptions == null || NotchDescriptions.Length < 3)
 			{
 				switch (Driver)
 				{
-					case ReverserPosition.Reverse:
+					case (int)ReverserPosition.Reverse:
 						if (baseTrain.CurrentDirection == TrackDirection.Reverse)
 						{
 							color = MessageColor.Blue;
@@ -94,9 +76,9 @@ namespace TrainManager.Handles
 						}
 						color = MessageColor.Orange;
 						return Translations.QuickReferences.HandleBackward;
-					case ReverserPosition.Neutral:
+					case (int)ReverserPosition.Neutral:
 						return Translations.QuickReferences.HandleNeutral;
-					case ReverserPosition.Forwards:
+					case (int)ReverserPosition.Forwards:
 						if (baseTrain.CurrentDirection == TrackDirection.Reverse)
 						{
 							color = MessageColor.Orange;
@@ -110,7 +92,7 @@ namespace TrainManager.Handles
 			{
 				switch (Driver)
 				{
-					case ReverserPosition.Reverse:
+					case (int)ReverserPosition.Reverse:
 						if (baseTrain.CurrentDirection == TrackDirection.Reverse)
 						{
 							color = MessageColor.Blue;
@@ -118,9 +100,9 @@ namespace TrainManager.Handles
 						}
 						color = MessageColor.Orange;
 						return NotchDescriptions[2];
-					case ReverserPosition.Neutral:
+					case (int)ReverserPosition.Neutral:
 						return NotchDescriptions[0];
-					case ReverserPosition.Forwards:
+					case (int)ReverserPosition.Forwards:
 						if (baseTrain.CurrentDirection == TrackDirection.Reverse)
 						{
 							color = MessageColor.Orange;

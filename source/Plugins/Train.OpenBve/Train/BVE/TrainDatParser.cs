@@ -1369,8 +1369,7 @@ namespace Train.OpenBve
 					Train.Handles.EmergencyBrake.Driver = false;
 					Train.Handles.EmergencyBrake.Safety = false;
 					Train.Handles.EmergencyBrake.Actual = false;
-					Train.Handles.Reverser.Driver = ReverserPosition.Forwards;
-					Train.Handles.Reverser.Actual = ReverserPosition.Forwards;
+					Train.Handles.Reverser.ApplyState(ReverserPosition.Forwards);
 					break;
 				case TrainStartMode.EmergencyBrakesAts:
 					if (trainBrakeType == BrakeSystemType.AutomaticAirBrake)
