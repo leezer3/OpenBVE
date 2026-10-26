@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
+using TrainManager.Handles;
 using TrainManager.Motor;
 using TrainManager.SafetySystems;
 using TrainManager.Trains;
@@ -316,13 +317,14 @@ namespace Train.OpenBve
 						while (subBlock.RemainingSubBlocks > 0)
 						{
 							Block<SoundXMLSection, SoundXMLKey> reverserSubBlock = subBlock.ReadNextBlock();
+							ReverserHandle rH = Train.Handles.Reverser as ReverserHandle;
 							switch (reverserSubBlock.Key)
 							{
 								case SoundXMLSection.On:
-									ParseBlock(reverserSubBlock, out Train.Handles.Reverser.EngageSound, panel, SoundCfgParser.tinyRadius);
+									ParseBlock(reverserSubBlock, out rH.EngageSound, panel, SoundCfgParser.tinyRadius);
 									break;
 								case SoundXMLSection.Off:
-									ParseBlock(reverserSubBlock, out Train.Handles.Reverser.ReleaseSound, panel, SoundCfgParser.tinyRadius);
+									ParseBlock(reverserSubBlock, out rH.ReleaseSound, panel, SoundCfgParser.tinyRadius);
 									break;
 							}
 						}

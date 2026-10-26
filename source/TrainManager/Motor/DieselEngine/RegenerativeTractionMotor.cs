@@ -47,7 +47,7 @@ namespace TrainManager.Motor
 			if (baseEngine is DieselEngine dieselEngine)
 			{
 				// n.b. assume that the engine makes no current at idle and when stopped
-				if (baseEngine.BaseCar.baseTrain.Handles.Reverser.Actual != ReverserPosition.Neutral && Math.Abs(baseEngine.BaseCar.CurrentSpeed) > 0)
+				if (baseEngine.BaseCar.baseTrain.Handles.Reverser.Actual != (int)ReverserPosition.Neutral && Math.Abs(baseEngine.BaseCar.CurrentSpeed) > 0)
 				{
 					if (baseEngine.BaseCar.baseTrain.Handles.Brake.Actual > 0)
 					{

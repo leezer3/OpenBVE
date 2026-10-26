@@ -9,38 +9,31 @@ using TrainManager.Trains;
 namespace TrainManager.Handles
 {
 	/// <summary>Represents a reverser handle</summary>
-	public class ReverserHandle
+	public class ReverserHandle : AbstractReverser
 	{
 		/// <summary>The notch set by the driver</summary>
-		public ReverserPosition Driver;
+		public new ReverserPosition Driver;
 		/// <summary>The actual notch</summary>
-		public ReverserPosition Actual;
+		public new ReverserPosition Actual;
 		/// <summary>Played when the reverser is moved to F or R</summary>
 		public CarSound EngageSound;
 		/// <summary>Played when the reverser is moved to N</summary>
 		public CarSound ReleaseSound;
-		/// <summary>Contains the notch descriptions to be displayed on the in-game UI</summary>
-		public string[] NotchDescriptions;
-		/// <summary>The max width used in px for the reverser HUD string</summary>
-		public double MaxWidth = 48;
 
-		private readonly TrainBase baseTrain;
-
-		public ReverserHandle(TrainBase train)
+		public ReverserHandle(TrainBase train) : base(train)
 		{
 			Driver = ReverserPosition.Neutral;
 			Actual = ReverserPosition.Neutral;
 			EngageSound = new CarSound();
 			ReleaseSound = new CarSound();
-			baseTrain = train;
 		}
 
-		public void ApplyState(ReverserPosition Value)
+		public override void ApplyState(ReverserPosition Value)
 		{
 			ApplyState((int)Value, false);
 		}
 
-		public void ApplyState(int Value, bool Relative)
+		public override void ApplyState(int Value, bool Relative)
 		{
 			if (baseTrain.Handles.HandleType == HandleType.InterlockedReverserHandle && baseTrain.Handles.Power.Driver != 0)
 			{
@@ -75,11 +68,11 @@ namespace TrainManager.Handles
 			if (!TrainManagerBase.CurrentOptions.Accessibility) return;
 			TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, 10.0, null);
 		}
-
+		
 		/// <summary>Gets the description string for this notch</summary>
 		/// <param name="color">The on-screen display color</param>
 		/// <returns>The notch description</returns>
-		public string GetNotchDescription(out MessageColor color)
+		public override string GetNotchDescription(out MessageColor color)
 		{
 			color = MessageColor.Gray;
 			if (NotchDescriptions == null || NotchDescriptions.Length < 3)
