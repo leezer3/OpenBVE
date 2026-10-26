@@ -23,7 +23,6 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using OpenBveApi.Interface;
-using SoundManager;
 using TrainManager.Motor;
 
 namespace TrainManager.SteamEngine
@@ -31,7 +30,7 @@ namespace TrainManager.SteamEngine
 	public class CylinderCocks : AbstractComponent
 	{
 		/// <summary>The power modifier applied when the cylinder cocks are open</summary>
-		public readonly double PowerModifier = 1.0;
+		public readonly double PowerModifier;
 		
 		private double timer;
 

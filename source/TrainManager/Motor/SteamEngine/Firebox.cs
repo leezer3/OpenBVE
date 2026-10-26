@@ -38,6 +38,8 @@ namespace TrainManager.SteamEngine
 		public double FuelLevel;
 		/// <summary>The state of the firebox door</summary>
 		public double DoorState;
+		/// <summary>The base mass of one shovel of coal</summary>
+		public readonly double ShovelMass;
 
 		/// <summary>The current heat output ratio</summary>
 		/// <remarks>Assumed coal combustion temperature</remarks>
@@ -47,7 +49,7 @@ namespace TrainManager.SteamEngine
 
 		private bool doorClosePressed;
 
-		public Firebox(TractionModel engine, double maxFuelLevel, double currentFuelLevel, double idealFuelLevel,
+		public Firebox(TractionModel engine, double maxFuelLevel, double shovelMass, double currentFuelLevel, double idealFuelLevel,
 			double currentTemperature) : base(engine)
 		{
 			MaxFuelLevel = maxFuelLevel;
@@ -57,6 +59,7 @@ namespace TrainManager.SteamEngine
 			DoorState = 1; // fully open
 			doorOpenPressed = false;
 			doorClosePressed = false;
+			ShovelMass = shovelMass;
 		}
 
 		public override void Update(double timeElapsed)
@@ -83,6 +86,14 @@ namespace TrainManager.SteamEngine
 					break;
 				case Translations.Command.FireboxDoorClose:
 					doorClosePressed = true;
+					break;
+				case Translations.Command.AddFuel:
+					if (FuelLevel < MaxFuelLevel)
+					{
+						// one shovel per keypress, but use a little randomisation for the mass
+						FuelLevel += ShovelMass * (TrainManagerBase.currentHost.Random.Next(9, 11) / 10.0);
+						FuelLevel = Math.Min(FuelLevel, MaxFuelLevel);
+					}
 					break;
 			}
 		}

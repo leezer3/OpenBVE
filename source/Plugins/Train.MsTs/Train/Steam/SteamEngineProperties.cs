@@ -29,10 +29,18 @@ namespace Train.MsTs
 {
 	internal class SteamEngineProperties
 	{
-		internal double MaxFireMass;
-		internal double IdealFireMass;
-		internal double StartingFireTemp;
-		internal double StartingFireMass;
+		/* NOTE:
+		 * -----
+		 * steam properties in the ENG actually default to imperial units
+		 * but let's use some close metric values as our defaults, just
+		 * to cut down on the number of conversions
+		 */
+		     
+		internal double MaxFireMass = 1000;
+		internal double IdealFireMass = 770;
+		internal double ShovelCoalMass = 0.5;
+		internal double StartingFireTemp = 500;
+		internal double StartingFireMass = 1000;
 		internal bool cylinderCocksAutomatic = false;
 		internal InjectorProperties[] Injectors = new InjectorProperties[2];
 		internal BoilerProperties Boiler = new BoilerProperties();
@@ -45,7 +53,7 @@ namespace Train.MsTs
 			Injectors[1].Create(model, EngineComponent.SteamInjector2);
 			Cylinders.Create(model);
 			model.Components.Add(EngineComponent.Blowers, new Blowers(model));
-			model.Components.Add(EngineComponent.Firebox, new Firebox(model, MaxFireMass, Math.Min(MaxFireMass, StartingFireMass), IdealFireMass, Math.Max(StartingFireTemp, 500)));
+			model.Components.Add(EngineComponent.Firebox, new Firebox(model, MaxFireMass, ShovelCoalMass, Math.Min(MaxFireMass, StartingFireMass), IdealFireMass, Math.Max(StartingFireTemp, 500)));
 		}
 	}
 }
