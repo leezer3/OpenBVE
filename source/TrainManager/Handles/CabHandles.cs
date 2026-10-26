@@ -6,7 +6,7 @@ namespace TrainManager.Handles
 	public struct CabHandles
 	{
 		/// <summary>The Reverser</summary>
-		public ReverserHandle Reverser;
+		public AbstractReverser Reverser;
 		/// <summary>The Power</summary>
 		public AbstractHandle Power;
 		/// <summary>The Brake</summary>
@@ -354,17 +354,10 @@ namespace TrainManager.Handles
 					}
 					break;
 				case Translations.Command.ReverserForward:
-					if (Reverser.Driver < ReverserPosition.Forwards)
-					{
-						Reverser.ApplyState(1, true);
-					}
+					Reverser.ApplyState(1, true);
 					break;
 				case Translations.Command.ReverserBackward:
-					// reverser backward
-					if (Reverser.Driver > ReverserPosition.Reverse)
-					{
-						Reverser.ApplyState(-1, true);
-					}
+					Reverser.ApplyState(-1, true);
 					break;
 			}
 		}

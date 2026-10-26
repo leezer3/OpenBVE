@@ -21,7 +21,7 @@ namespace OpenBve.Graphics.Renderers
 			// debug
 			renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(renderer.Screen.Width, renderer.Screen.Height), Color128.SemiTransparentGrey);
 			// actual handles
-			string t = "actual: " + (TrainManager.PlayerTrain.Handles.Reverser.Actual == ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Actual == ReverserPosition.Forwards ? "F" : "N");
+			string t = "actual: " + (TrainManager.PlayerTrain.Handles.Reverser.Actual == (int)ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Actual == (int)ReverserPosition.Forwards ? "F" : "N");
 			if (TrainManager.PlayerTrain.Handles.HandleType == HandleType.SingleHandle)
 			{
 				t += " - " + (TrainManager.PlayerTrain.Handles.EmergencyBrake.Actual ? "EMG" : TrainManager.PlayerTrain.Handles.Brake.Actual != 0 ? "B" + TrainManager.PlayerTrain.Handles.Brake.Actual.ToString(Culture) : TrainManager.PlayerTrain.Handles.HoldBrake.Actual ? "HLD" : TrainManager.PlayerTrain.Handles.Power.Actual != 0 ? "P" + TrainManager.PlayerTrain.Handles.Power.Actual.ToString(Culture) : "N");
@@ -52,11 +52,11 @@ namespace OpenBve.Graphics.Renderers
 			t = "safety: ";
 			if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
 			{
-				t += (TrainManager.PlayerTrain.Handles.Reverser.Actual == ReverserPosition.Reverse ? "F" : TrainManager.PlayerTrain.Handles.Reverser.Actual == ReverserPosition.Forwards ? "B" : "N");
+				t += (TrainManager.PlayerTrain.Handles.Reverser.Actual == (int)ReverserPosition.Reverse ? "F" : TrainManager.PlayerTrain.Handles.Reverser.Actual == (int)ReverserPosition.Forwards ? "B" : "N");
 			}
 			else
 			{
-				t += (TrainManager.PlayerTrain.Handles.Reverser.Actual == ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Actual == ReverserPosition.Forwards ? "F" : "N");
+				t += (TrainManager.PlayerTrain.Handles.Reverser.Actual == (int)ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Actual == (int)ReverserPosition.Forwards ? "F" : "N");
 			}
 			if (TrainManager.PlayerTrain.Handles.HandleType == HandleType.SingleHandle)
 			{
@@ -89,11 +89,26 @@ namespace OpenBve.Graphics.Renderers
 			t = "driver: ";
 			if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
 			{
-				t += (TrainManager.PlayerTrain.Handles.Reverser.Driver == ReverserPosition.Reverse ? "F" : TrainManager.PlayerTrain.Handles.Reverser.Driver == ReverserPosition.Forwards ? "B" : "N");
+				if (TrainManager.PlayerTrain.Handles.Reverser is Cutoff)
+				{
+					t += -TrainManager.PlayerTrain.Handles.Reverser.Driver + "%";
+				}
+				else
+				{
+					t += (TrainManager.PlayerTrain.Handles.Reverser.Driver == (int)ReverserPosition.Reverse ? "F" : TrainManager.PlayerTrain.Handles.Reverser.Driver == (int)ReverserPosition.Forwards ? "B" : "N");
+				}
+					
 			}
 			else
 			{
-				t += (TrainManager.PlayerTrain.Handles.Reverser.Driver == ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Driver == ReverserPosition.Forwards ? "F" : "N");
+				if (TrainManager.PlayerTrain.Handles.Reverser is Cutoff)
+				{
+					t += TrainManager.PlayerTrain.Handles.Reverser.Driver + "%";
+				}
+				else
+				{
+					t += (TrainManager.PlayerTrain.Handles.Reverser.Driver == (int)ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Driver == (int)ReverserPosition.Forwards ? "F" : "N");
+				}
 			}
 
 			if (TrainManager.PlayerTrain.Handles.HandleType == HandleType.SingleHandle)
