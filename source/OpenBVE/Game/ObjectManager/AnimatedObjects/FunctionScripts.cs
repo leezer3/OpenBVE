@@ -928,8 +928,28 @@ namespace OpenBve {
 						s++; break;
 						// handles
 					case Instructions.ReverserNotch:
-						if (Train != null) {
-							Function.Stack[s] = (double)Train.Handles.Reverser.Driver;
+						if (Train != null)
+						{
+							if (Train.Handles.Reverser is Cutoff co)
+							{
+								if (co.Actual == 0)
+								{
+									Function.Stack[s] = 0;
+								}
+								else if (co.Actual > 0)
+								{
+									Function.Stack[s] = (double)co.Driver / co.ForwardMax;
+								}
+								else
+								{
+									Function.Stack[s] = (double)co.Driver / -co.ReverseMax;
+								}
+							}
+							else
+							{
+								Function.Stack[s] = (double)Train.Handles.Reverser.Driver;
+							}
+							
 						} else {
 							Function.Stack[s] = 0.0;
 						}

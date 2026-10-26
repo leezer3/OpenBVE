@@ -244,6 +244,7 @@ namespace Train.MsTs
 							currentCar.TractionModel = new TankEngine(currentCar, new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) }, MaxFuelLevel, MaxWaterLevel);
 						}
 
+						currentCar.baseTrain.Handles.Reverser = new Cutoff(currentCar.baseTrain, 75, -75, 10);
 						SteamProperties.CreateModel(currentCar.TractionModel);
 						break;
 					case EngineType.NoEngine:
