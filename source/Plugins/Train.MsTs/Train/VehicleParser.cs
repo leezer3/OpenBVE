@@ -1480,6 +1480,9 @@ namespace Train.MsTs
 				case KujuTokenID.IdealFireMass:
 					SteamProperties.IdealFireMass = block.ReadSingle(UnitOfWeight.Kilograms);
 					break;
+				case KujuTokenID.ShovelCoalMass:
+					SteamProperties.ShovelCoalMass = block.ReadSingle(UnitOfWeight.Kilograms);
+					break;
 				case KujuTokenID.NumCylinders:
 					SteamProperties.Cylinders.TotalNumber = block.ReadInt32();
 					if (SteamProperties.Cylinders.TotalNumber <= 0)
