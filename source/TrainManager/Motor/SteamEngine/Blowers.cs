@@ -20,15 +20,20 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using OpenBveApi;
 using OpenBveApi.Interface;
-using SoundManager;
+using OpenBveApi.Motor;
+using TrainManager.SteamEngine;
 
 namespace TrainManager.Motor
 {
 	public class Blowers : AbstractComponent
 	{
-		public Blowers(TractionModel engine) : base(engine)
+		public readonly double SteamUsage;
+
+		public Blowers(TractionModel engine, double steamUsage) : base(engine)
 		{
+			SteamUsage = steamUsage;
 		}
 
 		public override void ControlDown(Translations.Command command)
@@ -50,9 +55,17 @@ namespace TrainManager.Motor
 		
 		public override void Update(double timeElapsed)
 		{
-			if (Active && !ActivationSound.IsPlaying)
+			if (Active)
 			{
-				LoopSound?.Play(baseEngine.BaseCar, true);
+				if (!ActivationSound.IsPlaying)
+				{
+					LoopSound?.Play(baseEngine.BaseCar, true);
+				}
+
+				if (baseEngine.Components.TryGetTypedValue(EngineComponent.Boiler, out Boiler boiler))
+				{
+					boiler.CurrentSteamMass -= SteamUsage * timeElapsed;
+				}
 			}
 		}
 	}
