@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.IO;
+using FontStashSharp;
 using OpenBveApi.Hosts;
 
 namespace LibRender2.Text
@@ -93,14 +94,15 @@ namespace LibRender2.Text
 				
 			}
 
+			FontSystem fontSystem = OpenGlFont.CreateFontSystem(FontFileResolver.GetFontData(fontName));
 			float scaleFactor = (float)renderer.ScaleFactor.X;
 			
-			VerySmallFont = new OpenGlFont(uiFont, 9.0f * scaleFactor);
-			SmallFont = new OpenGlFont(uiFont, 12.0f * scaleFactor);
-			NormalFont = new OpenGlFont(uiFont, 16.0f * scaleFactor);
-			LargeFont = new OpenGlFont(uiFont, 21.0f * scaleFactor);
-			VeryLargeFont = new OpenGlFont(uiFont, 27.0f * scaleFactor);
-			EvenLargerFont = new OpenGlFont(uiFont, 34.0f * scaleFactor);
+			VerySmallFont = new OpenGlFont(uiFont, 9.0f * scaleFactor, fontSystem.GetFont(9.0f * scaleFactor));
+			SmallFont = new OpenGlFont(uiFont, 12.0f * scaleFactor, fontSystem.GetFont(12.0f * scaleFactor));
+			NormalFont = new OpenGlFont(uiFont, 16.0f * scaleFactor, fontSystem.GetFont(16.0f * scaleFactor));
+			LargeFont = new OpenGlFont(uiFont, 21.0f * scaleFactor, fontSystem.GetFont(21.0f * scaleFactor));
+			VeryLargeFont = new OpenGlFont(uiFont, 27.0f * scaleFactor, fontSystem.GetFont(27.0f * scaleFactor));
+			EvenLargerFont = new OpenGlFont(uiFont, 34.0f * scaleFactor, fontSystem.GetFont(34.0f * scaleFactor));
 		}
 	}
 }

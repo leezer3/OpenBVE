@@ -48,13 +48,35 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Cyotek.Drawing.BitmapFont">
+      <HintPath>..\..\packages\Cyotek.Drawing.BitmapFont.2.0.4\lib\net48\Cyotek.Drawing.BitmapFont.dll</HintPath>
+    </Reference>
+    <Reference Include="FontStashSharp">
+      <HintPath>..\..\packages\FontStashSharp.1.3.10\lib\netstandard2.0\FontStashSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="FontStashSharp.Base">
+      <HintPath>..\..\packages\FontStashSharp.Base.1.1.9\lib\net471\FontStashSharp.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="FontStashSharp.Rasterizers.StbTrueTypeSharp">
+      <HintPath>..\..\packages\FontStashSharp.Rasterizers.StbTrueTypeSharp.1.1.9\lib\net471\FontStashSharp.Rasterizers.StbTrueTypeSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="OpenTK, Version=3.3.3.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\..\packages\OpenTK-OpenBVE.1.0.7\lib\net20\OpenTK.dll</HintPath>
     </Reference>
+    <Reference Include="StbImageSharp">
+      <HintPath>..\..\packages\StbImageSharp.2.30.15\lib\net471\StbImageSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="StbTrueTypeSharp">
+      <HintPath>..\..\packages\StbTrueTypeSharp.1.26.12\lib\net471\StbTrueTypeSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Numerics.Vectors.4.6.1\lib\net462\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Backgrounds\Background.cs" />
@@ -120,6 +142,8 @@
     <Compile Include="Shadows\FrustumUtils.cs" />
     <Compile Include="Shadows\Shadows.cs" />
     <Compile Include="Textures\TextureManager.cs" />
+    <Compile Include="Text\FontFileResolver.cs" />
+    <Compile Include="Text\FontStash.cs" />
     <Compile Include="Text\Fonts.BlockedFonts.cs" />
     <Compile Include="Text\Fonts.cs" />
     <Compile Include="Text\OpenGlFont.cs" />
@@ -140,8 +164,13 @@
     <EmbeddedResource Include="..\..\assets\Shaders\rectangle.frag" />
     <EmbeddedResource Include="..\..\assets\Shaders\rectangle.vert" />
     <EmbeddedResource Include="..\..\assets\Shaders\text.vert" />
+    <EmbeddedResource Include="..\..\assets\Shaders\fontstash.vert" />
+    <EmbeddedResource Include="..\..\assets\Shaders\fontstash.frag" />
     <EmbeddedResource Include="..\..\assets\Shaders\shadow_depth.vert" />
     <EmbeddedResource Include="..\..\assets\Shaders\shadow_depth.frag" />
+    <EmbeddedResource Include="..\..\assets\Fonts\NotoSans-Regular.ttf">
+      <LogicalName>LibRender2.NotoSans-Regular.ttf</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
