@@ -171,7 +171,8 @@ List<FaceState> opaqueFaces, alphaFaces;
 			OptionLighting = false;
 			UnsetAlphaFunc();
 			GL.Disable(EnableCap.DepthTest);
-			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
+			// Overlays use this as the ambient blend state, which they restore after drawing
+			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			RenderOverlays(timeElapsed);
 			OptionLighting = true;
 		}
