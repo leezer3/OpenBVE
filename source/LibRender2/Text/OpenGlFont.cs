@@ -15,9 +15,9 @@ namespace LibRender2.Text
 		public readonly Font Font;
 
 		/// <summary>The size of the underlying font in pixels.</summary>
-		public readonly float FontSize;
+		public float FontSize { get; private set; }
 
-		internal readonly DynamicSpriteFont SpriteFont;
+		internal DynamicSpriteFont SpriteFont { get; private set; }
 
 		private bool disposed;
 
@@ -66,6 +66,12 @@ namespace LibRender2.Text
 
 			System.Numerics.Vector2 size = SpriteFont.MeasureString(text);
 			return new Vector2(size.X, size.Y);
+		}
+
+		internal void SetFont(float size, DynamicSpriteFont spriteFont)
+		{
+			FontSize = size;
+			SpriteFont = spriteFont;
 		}
 
 		internal void DrawString(BaseRenderer renderer, string text, double left, double top, Color128 color)
