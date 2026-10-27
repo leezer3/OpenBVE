@@ -27,6 +27,15 @@ namespace LibRender2.Overlays
 
 		public bool Display;
 
+		/// <summary>The VAO holding the line strip vertices.</summary>
+		private VertexArrayObject pathVao;
+		/// <summary>The number of vertices the current VAO can hold.</summary>
+		private int pathVaoCapacity;
+		/// <summary>Reusable vertex buffer matching the VAO capacity.</summary>
+		private LibRenderVertex[] pathVertices = new LibRenderVertex[0];
+		private readonly List<int> sectionStarts = new List<int>();
+		private readonly List<int> sectionCounts = new List<int>();
+
 		/// <summary>Whether the path is visible at the current camera location</summary>
 		public bool CurrentlyVisible()
 		{
@@ -98,23 +107,83 @@ namespace LibRender2.Overlays
 				}
 			}
 
-			foreach (var points in sections)
+			// The shader and its matrices are set up by the renderer; calling Render
+			// without it (e.g. during route loading) has nothing to draw.
+			if (Renderer.LineShader == null || Renderer.CurrentShader != Renderer.LineShader)
 			{
-				if (points.Count == 0) continue;
-				
-				GL.LineWidth(LineWidth);
-				GL.Begin(PrimitiveType.LineStrip);
-				
-				
-				for (int j = 0; j < points.Count; j++)
+				return;
+			}
+
+			int vertexCount = 0;
+			sectionStarts.Clear();
+			sectionCounts.Clear();
+			foreach (List<Vector3> points in sections)
+			{
+				if (points.Count < 2)
 				{
-					GL.Color3(Color.R, Color.G, Color.B);
-					GL.Vertex3(points[j].X, points[j].Y, -points[j].Z);
+					continue;
 				}
 
-				GL.End();
-				GL.LineWidth(1);
+				sectionStarts.Add(vertexCount);
+				sectionCounts.Add(points.Count);
+				vertexCount += points.Count;
 			}
+
+			if (vertexCount == 0)
+			{
+				return;
+			}
+
+			EnsurePathVao(vertexCount);
+
+			int vertexIndex = 0;
+			foreach (List<Vector3> points in sections)
+			{
+				if (points.Count < 2)
+				{
+					continue;
+				}
+
+				for (int j = 0; j < points.Count; j++)
+				{
+					pathVertices[vertexIndex++] = new LibRenderVertex(new Vector3f(points[j].X, points[j].Y, points[j].Z));
+				}
+			}
+
+			pathVao.Bind();
+			Renderer.lastVAO = pathVao.handle;
+			pathVao.UpdateVBO(pathVertices);
+			Renderer.LineShader.SetColor(new Color128(Color));
+
+			GL.LineWidth(LineWidth);
+			for (int i = 0; i < sectionStarts.Count; i++)
+			{
+				pathVao.DrawArrays(PrimitiveType.LineStrip, sectionStarts[i], sectionCounts[i]);
+			}
+			GL.LineWidth(1);
+		}
+
+		/// <summary>Creates or grows the VAO used to draw the line strips.</summary>
+		private void EnsurePathVao(int vertexCount)
+		{
+			if (pathVao != null && pathVaoCapacity >= vertexCount)
+			{
+				return;
+			}
+
+			if (pathVao != null)
+			{
+				pathVao.UnBind();
+				pathVao.Dispose();
+			}
+
+			pathVaoCapacity = Math.Max(vertexCount, 64);
+			pathVertices = new LibRenderVertex[pathVaoCapacity];
+			pathVao = new VertexArrayObject();
+			pathVao.Bind();
+			pathVao.SetVBO(new VertexBufferObject(pathVertices, BufferUsageHint.DynamicDraw));
+			pathVao.SetAttributes(Renderer.LineShader.VertexLayout);
+			Renderer.lastVAO = -1;
 		}
 
 
