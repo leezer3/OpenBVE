@@ -161,7 +161,12 @@ namespace LibRender2
 		public AbstractShader CurrentShader;
 
 		public Shader DefaultShader;
-		
+
+		/// <summary>Shader used by the rail path overlay, created on first use.</summary>
+		public LineShader LineShader;
+		/// <summary>Set if the rail path shader could not be created, to avoid retrying every frame.</summary>
+		private bool lineShaderFailed;
+
 		/// <summary>Manages the Cascaded Shadow Mapping (CSM) system.</summary>
 		public Shadows Shadows;
 
@@ -1562,6 +1567,57 @@ namespace LibRender2
 				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 			}
 			lastObjectState = state;
+		}
+
+		/// <summary>Renders the rail path overlay using the line shader.</summary>
+		/// <param name="keys">The rail keys to render.</param>
+		public void RenderRailPaths(IEnumerable<int> keys)
+		{
+			if (LineShader == null)
+			{
+				if (lineShaderFailed)
+				{
+					return;
+				}
+
+				try
+				{
+					LineShader = new LineShader(this);
+				}
+				catch (Exception ex)
+				{
+					// A broken rail path shader must not take the renderer down
+					lineShaderFailed = true;
+					fileSystem?.AppendToLogFile("ERROR: Disabling rail path rendering after the following exception: " + ex);
+					currentHost.AddMessage(MessageType.Error, false, "Rail paths have been disabled after an error: " + ex.Message);
+					return;
+				}
+			}
+
+			LineShader.Activate();
+			LineShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
+			/*
+			 * Matches the fixed-function setup this replaces: load the view matrix, then
+			 * multiply by the camera translation. The shader negates Z to match the
+			 * convention used by the other world-space shaders.
+			 */
+			LineShader.SetCurrentModelViewMatrix(Camera.TranslationMatrix * CurrentViewMatrix);
+
+			foreach (int key in keys)
+			{
+				if (trackColors.TryGetValue(key, out RailPath path))
+				{
+					path.Render();
+				}
+			}
+
+			LineShader.Deactivate();
+			/*
+			 * Deactivate does not clear CurrentShader, and the rest of the frame expects
+			 * the default shader to be current even while it is not bound (alpha
+			 * functions and ResetOpenGlState are applied through it).
+			 */
+			CurrentShader = DefaultShader;
 		}
 
 		/// <summary>

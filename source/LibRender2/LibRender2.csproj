@@ -110,6 +110,7 @@
     <Compile Include="Screen\Resolution.cs" />
     <Compile Include="Screen\Screen.cs" />
     <Compile Include="Shaders\AbstractShader.cs" />
+    <Compile Include="Shaders\LineShader.cs" />
     <Compile Include="Shaders\Shader.cs" />
     <Compile Include="Shaders\ShadowDepthShader.cs" />
     <Compile Include="Smoke\Particle.cs" />
@@ -136,6 +137,8 @@
   <ItemGroup>
     <EmbeddedResource Include="..\..\assets\Shaders\default.frag" />
     <EmbeddedResource Include="..\..\assets\Shaders\default.vert" />
+    <EmbeddedResource Include="..\..\assets\Shaders\line.frag" />
+    <EmbeddedResource Include="..\..\assets\Shaders\line.vert" />
     <EmbeddedResource Include="..\..\assets\Shaders\picking.frag" />
     <EmbeddedResource Include="..\..\assets\Shaders\rectangle.frag" />
     <EmbeddedResource Include="..\..\assets\Shaders\rectangle.vert" />

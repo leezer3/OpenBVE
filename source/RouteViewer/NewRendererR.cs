@@ -228,44 +228,9 @@ namespace RouteViewer
 
 			if (OptionPaths)
 			{
-				// TODO: Write a shader to draw point list....
-				ResetOpenGlState();
-
 				DefaultShader.Deactivate();
-
-                unsafe
-				{
-					GL.MatrixMode(MatrixMode.Projection);
-					GL.PushMatrix();
-					fixed (double* matrixPointer = &CurrentProjectionMatrix.Row0.X)
-					{
-						GL.LoadMatrix(matrixPointer);
-					}
-
-					GL.MatrixMode(MatrixMode.Modelview);
-					GL.PushMatrix();
-
-					fixed (double* matrixPointer = &CurrentViewMatrix.Row0.X)
-					{
-						GL.LoadMatrix(matrixPointer);
-					}
-
-					Matrix4D m = Camera.TranslationMatrix;
-					double* matrixPointer2 = &m.Row0.X;
-					{
-						GL.MultMatrix(matrixPointer2);
-					}
-				}
-
-				// render track paths
-				for (int i = 0; i < Program.CurrentRoute.Tracks.Count; i++)
-				{
-					int key = Program.CurrentRoute.Tracks.ElementAt(i).Key;
-					trackColors[key].Render();
-				}
-				GL.PopMatrix();
-				GL.MatrixMode(MatrixMode.Projection);
-				GL.PopMatrix();
+				ResetOpenGlState();
+				RenderRailPaths(Program.CurrentRoute.Tracks.Keys);
 			}
 
 			if (OptionEvents)
@@ -352,7 +317,8 @@ namespace RouteViewer
 			Fog.Enabled = false;
 			UnsetAlphaFunc();
 			GL.Disable(EnableCap.DepthTest);
-			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
+			// Overlays use this as the ambient blend state, which they restore after drawing
+			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			RenderOverlays(timeElapsed);
 			OptionLighting = true;
 		}
