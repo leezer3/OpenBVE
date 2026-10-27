@@ -1578,8 +1578,6 @@ namespace LibRender2
 		/// </remarks>
 		public void RenderOpaqueFaces(List<FaceState> opaqueFaces)
 		{
-			OpaqueDrawCalls = 0;
-
 			if (opaqueFaces == null || opaqueFaces.Count == 0)
 			{
 				return;

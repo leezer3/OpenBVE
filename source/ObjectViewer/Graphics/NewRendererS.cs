@@ -134,6 +134,7 @@ List<FaceState> opaqueFaces, alphaFaces;
 				alphaFaces = VisibleObjects.GetSortedPolygons();
 			}
 
+			OpaqueDrawCalls = 0;
 			RenderOpaqueFaces(opaqueFaces);
 
 			// alpha face

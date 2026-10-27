@@ -215,11 +215,12 @@ namespace OpenBve.Graphics
 				overlayAlphaFaces = VisibleObjects.GetSortedPolygons(true);
 			}
 
+			OpaqueDrawCalls = 0;
+			AlphaDrawCalls = 0;
 			RenderOpaqueFaces(opaqueFaces);
 
 			// alpha face
 			ResetOpenGlState();
-			AlphaDrawCalls = 0;
 
 			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 			{
@@ -338,7 +339,6 @@ namespace OpenBve.Graphics
 
 				// overlay alpha face
 				ResetOpenGlState();
-				AlphaDrawCalls = 0;
 				if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 				{
 					SetBlendFunc();
