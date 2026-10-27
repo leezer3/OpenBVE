@@ -214,12 +214,13 @@ namespace OpenBve.Graphics
 			}
 
 			bool alphaToCoverage = BeginAlphaToCoverage();
+			OpaqueDrawCalls = 0;
+			AlphaDrawCalls = 0;
 			RenderOpaqueFaces(opaqueFaces);
 			EndAlphaToCoverage(alphaToCoverage);
 
 			// alpha face
 			ResetOpenGlState();
-			AlphaDrawCalls = 0;
 
 			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 			{
@@ -340,7 +341,6 @@ namespace OpenBve.Graphics
 
 				// overlay alpha face
 				ResetOpenGlState();
-				AlphaDrawCalls = 0;
 				if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 				{
 					SetBlendFunc();

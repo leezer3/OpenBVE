@@ -198,6 +198,7 @@ namespace RouteViewer
 			}
 			
 			bool alphaToCoverage = BeginAlphaToCoverage();
+			OpaqueDrawCalls = 0;
 			RenderOpaqueFaces(opaqueFaces);
 			EndAlphaToCoverage(alphaToCoverage);
 
