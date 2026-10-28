@@ -1,4 +1,4 @@
-﻿//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
+//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -24,6 +24,7 @@ using System;
 using OpenBveApi;
 using OpenBveApi.Motor;
 using OpenBveApi.Trains;
+using TrainManager.Handles;
 using TrainManager.Motor;
 
 namespace TrainManager.SteamEngine
@@ -47,12 +48,20 @@ namespace TrainManager.SteamEngine
 
 		private readonly double CylinderVolume;
 
-		public Cylinders(TractionModel engine, double diameter, double strokeLength, double totalNumber) : base(engine)
+		public Cylinders(TractionModel engine, double diameter, double strokeLength, int totalNumber) : base(engine)
 		{
 			Diameter = diameter;
 			StrokeLength = strokeLength;
 			TotalNumber = totalNumber;
-			CylinderVolume = Math.PI * (Diameter / 2) * StrokeLength;
+			CylinderVolume = (Math.PI * (Diameter / 2) * StrokeLength) * totalNumber;
+		}
+
+		public Cylinders(TractionModel engine, double diameter, double strokeLength, double volume) : base(engine)
+		{
+			Diameter = diameter;
+			StrokeLength = strokeLength;
+			TotalNumber = 1;
+			CylinderVolume = volume;
 		}
 
 		public override void Update(double timeElapsed)

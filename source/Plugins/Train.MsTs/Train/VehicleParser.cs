@@ -1507,6 +1507,9 @@ namespace Train.MsTs
 						SteamProperties.Cylinders.StrokeLength = 65;
 					}
 					break;
+				case KujuTokenID.CylinderVolume:
+					SteamProperties.Cylinders.Volume = block.ReadSingle(UnitOfVolume.MetersCubed);
+					break;
 				case KujuTokenID.SteamBlowerMaxSteamUsageRate:
 					// actually in lbs / hr but with no mass unit
 					SteamProperties.BlowerSteamUsage = block.ReadSingle(UnitOfWeight.Pounds) / 3600; 
