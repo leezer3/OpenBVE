@@ -50,11 +50,11 @@ namespace Train.MsTs
 			//       Keep diameter and stroke length (if set) so we can use a value approaching OK in other stuff
 			if (Volume != -1)
 			{
-				model.Components.Add(EngineComponent.Cylinders, new Cylinders(model, Diameter, StrokeLength, Volume));
+				model.Components.Add(EngineComponent.CylinderChest, new CylinderChest(model, Diameter, StrokeLength, Volume));
 			}
 			else
 			{
-				model.Components.Add(EngineComponent.Cylinders, new Cylinders(model, Diameter, StrokeLength, TotalNumber));
+				model.Components.Add(EngineComponent.CylinderChest, new CylinderChest(model, Diameter, StrokeLength, TotalNumber));
 			}
 				
 		}
