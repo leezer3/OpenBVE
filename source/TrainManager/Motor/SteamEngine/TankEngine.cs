@@ -73,7 +73,7 @@ namespace TrainManager.SteamEngine
 				Message[messageIdx++] = "Current Steam Mass: " + Math.Round(b.CurrentSteamMass, 2);
 				Message[messageIdx++] = "Steam Generation Rate: " + Math.Round(b.MaxOutput, 2);
 			}
-			if (Components.TryGetTypedValue(EngineComponent.Cylinders, out Cylinders c))
+			if (Components.TryGetTypedValue(EngineComponent.CylinderChest, out CylinderChest c))
 			{
 				Message[messageIdx++] = "Cylinders Flow Rate: " + Math.Round(c.SteamMassFlow, 2);
 			}

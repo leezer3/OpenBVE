@@ -29,7 +29,7 @@ using TrainManager.Motor;
 
 namespace TrainManager.SteamEngine
 {
-	public class Cylinders : AbstractComponent
+	public class CylinderChest : AbstractComponent
 	{
 		/// <summary>The diameter of the cylinder port</summary>
 		public readonly double Diameter;
@@ -48,7 +48,7 @@ namespace TrainManager.SteamEngine
 
 		private readonly double CylinderVolume;
 
-		public Cylinders(TractionModel engine, double diameter, double strokeLength, int totalNumber) : base(engine)
+		public CylinderChest(TractionModel engine, double diameter, double strokeLength, int totalNumber) : base(engine)
 		{
 			Diameter = diameter;
 			StrokeLength = strokeLength;
@@ -56,7 +56,7 @@ namespace TrainManager.SteamEngine
 			CylinderVolume = (Math.PI * (Diameter / 2) * StrokeLength) * totalNumber;
 		}
 
-		public Cylinders(TractionModel engine, double diameter, double strokeLength, double volume) : base(engine)
+		public CylinderChest(TractionModel engine, double diameter, double strokeLength, double volume) : base(engine)
 		{
 			Diameter = diameter;
 			StrokeLength = strokeLength;

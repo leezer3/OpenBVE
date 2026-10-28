@@ -139,8 +139,10 @@
     <Compile Include="Motor\SteamEngine\Blowers.cs" />
     <Compile Include="Motor\SteamEngine\Boiler.cs" />
     <Compile Include="Motor\SteamEngine\Boiler.WaterTable.cs" />
+    <Compile Include="Motor\SteamEngine\BypassValve.cs" />
+    <Compile Include="Motor\SteamEngine\BypassValve.Types.cs" />
     <Compile Include="Motor\SteamEngine\CylinderCocks.cs" />
-    <Compile Include="Motor\SteamEngine\Cylinders.cs" />
+    <Compile Include="Motor\SteamEngine\CylinderChest.cs" />
     <Compile Include="Motor\SteamEngine\Firebox.cs" />
     <Compile Include="Motor\SteamEngine\Firebox.Fuels.cs" />
     <Compile Include="Motor\SteamEngine\Injector.cs" />
