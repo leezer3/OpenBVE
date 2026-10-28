@@ -142,6 +142,7 @@
     <Compile Include="Motor\SteamEngine\CylinderCocks.cs" />
     <Compile Include="Motor\SteamEngine\Cylinders.cs" />
     <Compile Include="Motor\SteamEngine\Firebox.cs" />
+    <Compile Include="Motor\SteamEngine\Firebox.Fuels.cs" />
     <Compile Include="Motor\SteamEngine\Injector.cs" />
     <Compile Include="Motor\SteamEngine\Boiler.SteamTable.cs" />
     <Compile Include="Motor\SteamEngine\SafetyValve.cs" />
