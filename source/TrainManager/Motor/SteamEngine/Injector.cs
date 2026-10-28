@@ -111,7 +111,7 @@ namespace TrainManager.SteamEngine
 
 		public override void Update(double timeElapsed)
 		{
-			if (Active && baseEngine.Components.TryGetTypedValue(EngineComponent.Boiler, out Boiler boiler) && baseEngine.Components.TryGetTypedValue(EngineComponent.Cylinders, out Cylinders cylinders))
+			if (Active && baseEngine.Components.TryGetTypedValue(EngineComponent.Boiler, out Boiler boiler) && baseEngine.Components.TryGetTypedValue(EngineComponent.CylinderChest, out CylinderChest cylinders))
 			{
 				if (boiler.CurrentPressure < minimumBoilerPressure || boiler.WaterLevel < minimumBoilerWaterLevel ||
 				    boiler.WaterLevel > maximumBoilerWaterLevel || Diameter == 0)
