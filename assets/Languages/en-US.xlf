@@ -1360,6 +1360,24 @@
 					<trans-unit id="hud_size_large">
 						<source>Large</source>
 					</trans-unit>
+					<trans-unit id="hud_theme">
+						<source>HUD Theme:</source>
+					</trans-unit>
+					<trans-unit id="hud_theme_invalid">
+						<source>The selected folder is not a valid HUD theme.</source>
+					</trans-unit>
+					<trans-unit id="hud_theme_install">
+						<source>Install theme from zip...</source>
+					</trans-unit>
+					<trans-unit id="hud_theme_select_folder">
+						<source>Select theme folder...</source>
+					</trans-unit>
+					<trans-unit id="hud_theme_install_invalid">
+						<source>The selected zip file is not a valid HUD theme.</source>
+					</trans-unit>
+					<trans-unit id="hud_theme_installed">
+						<source>HUD theme installed.</source>
+					</trans-unit>
 					<trans-unit id="font">
 						<source>Font:</source>
 					</trans-unit>

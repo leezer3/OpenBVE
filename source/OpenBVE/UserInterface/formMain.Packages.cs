@@ -197,6 +197,10 @@ namespace OpenBve
 				{
 					ShowPackageToInstall();
 				}
+				else if (TryInstallHudThemeZip(openPackageFileDialog.FileName, true))
+				{
+					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","hud_theme_installed"}), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Information);
+				}
 				else
 				{
 					//ReadPackage returns null if the file is not a package.....
@@ -218,6 +222,11 @@ namespace OpenBve
 				if (currentPackage != null)
 				{
 					ShowPackageToInstall();
+					return;
+				}
+				if (TryInstallHudThemeZip(dropped[i], true))
+				{
+					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","hud_theme_installed"}), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Information);
 					return;
 				}
 			}

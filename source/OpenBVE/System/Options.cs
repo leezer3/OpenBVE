@@ -22,6 +22,8 @@ namespace OpenBve
 		{
 			/// <summary>The on disk folder in which user interface components are stored</summary>
 			internal string UserInterfaceFolder;
+			/// <summary>The selected HUD theme</summary>
+			internal string UserInterfaceTheme;
 			/// <summary>The accelerated time factor (1x to 5x)</summary>
 			internal int TimeAccelerationFactor;
 			///// <summary>The current type of motion blur</summary>
@@ -123,6 +125,7 @@ namespace OpenBve
 				FullscreenHeight = 768;
 				FullscreenBits = 32;
 				UserInterfaceFolder = "Default";
+				UserInterfaceTheme = "Default";
 				Interpolation = InterpolationMode.BilinearMipmapped;
 				TransparencyMode = TransparencyMode.Quality;
 				AnisotropicFilteringLevel = 0;
@@ -274,6 +277,7 @@ namespace OpenBve
 				Builder.AppendLine();
 				Builder.AppendLine("[interface]");
 				Builder.AppendLine("folder = " + UserInterfaceFolder);
+				Builder.AppendLine("theme = " + UserInterfaceTheme);
 				Builder.AppendLine("timetablemode = " + TimeTableStyle);
 				Builder.AppendLine("kioskMode = " + (KioskMode ? "true" : "false"));
 				Builder.AppendLine("kioskModeTimer = " + KioskModeTimer);
@@ -451,6 +455,7 @@ namespace OpenBve
 							break;
 						case OptionsSection.Interface:
 							block.TryGetValue(OptionsKey.Folder, ref CurrentOptions.UserInterfaceFolder);
+							block.TryGetValue(OptionsKey.Theme, ref CurrentOptions.UserInterfaceTheme);
 							block.GetEnumValue(OptionsKey.TimetableMode, out CurrentOptions.TimeTableStyle);
 							block.GetValue(OptionsKey.KioskMode, out Interface.CurrentOptions.KioskMode);
 							block.TryGetValue(OptionsKey.KioskModeTimer, ref CurrentOptions.KioskModeTimer, NumberRange.NonNegative);

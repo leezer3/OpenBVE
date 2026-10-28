@@ -108,6 +108,8 @@ namespace OpenBve {
             this.labelHUDSmall = new System.Windows.Forms.Label();
             this.trackBarHUDSize = new System.Windows.Forms.TrackBar();
             this.labelHUDScale = new System.Windows.Forms.Label();
+            this.labelHUDTheme = new System.Windows.Forms.Label();
+            this.comboBoxHUDTheme = new System.Windows.Forms.ComboBox();
             this.comboboxVSync = new System.Windows.Forms.ComboBox();
             this.labelVSync = new System.Windows.Forms.Label();
             this.comboBoxFPSLimit = new System.Windows.Forms.ComboBox();
@@ -1610,6 +1612,8 @@ namespace OpenBve {
             this.groupboxDisplayMode.Controls.Add(this.labelHUDSmall);
             this.groupboxDisplayMode.Controls.Add(this.trackBarHUDSize);
             this.groupboxDisplayMode.Controls.Add(this.labelHUDScale);
+            this.groupboxDisplayMode.Controls.Add(this.labelHUDTheme);
+            this.groupboxDisplayMode.Controls.Add(this.comboBoxHUDTheme);
             this.groupboxDisplayMode.Controls.Add(this.comboboxVSync);
             this.groupboxDisplayMode.Controls.Add(this.labelVSync);
             this.groupboxDisplayMode.Controls.Add(this.comboBoxFPSLimit);
@@ -1619,7 +1623,7 @@ namespace OpenBve {
             this.groupboxDisplayMode.ForeColor = System.Drawing.Color.Black;
             this.groupboxDisplayMode.Location = new System.Drawing.Point(0, 0);
             this.groupboxDisplayMode.Name = "groupboxDisplayMode";
-            this.groupboxDisplayMode.Size = new System.Drawing.Size(316, 215);
+            this.groupboxDisplayMode.Size = new System.Drawing.Size(316, 266);
             this.groupboxDisplayMode.TabIndex = 4;
             this.groupboxDisplayMode.TabStop = false;
             this.groupboxDisplayMode.Text = "Display mode";
@@ -1629,7 +1633,7 @@ namespace OpenBve {
             this.comboBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxFont.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFont.FormattingEnabled = true;
-            this.comboBoxFont.Location = new System.Drawing.Point(45, 181);
+            this.comboBoxFont.Location = new System.Drawing.Point(45, 239);
             this.comboBoxFont.Name = "comboBoxFont";
             this.comboBoxFont.Size = new System.Drawing.Size(264, 21);
             this.comboBoxFont.TabIndex = 14;
@@ -1637,7 +1641,7 @@ namespace OpenBve {
             // 
             // labelFontName
             // 
-            this.labelFontName.Location = new System.Drawing.Point(8, 174);
+            this.labelFontName.Location = new System.Drawing.Point(8, 232);
             this.labelFontName.Name = "labelFontName";
             this.labelFontName.Size = new System.Drawing.Size(50, 36);
             this.labelFontName.TabIndex = 13;
@@ -1680,6 +1684,27 @@ namespace OpenBve {
             this.trackBarHUDSize.Size = new System.Drawing.Size(220, 45);
             this.trackBarHUDSize.TabIndex = 9;
             this.trackBarHUDSize.Value = 1;
+            this.trackBarHUDSize.ValueChanged += new System.EventHandler(this.trackBarHUDSize_ValueChanged);
+            // 
+            // labelHUDTheme
+            // 
+            this.labelHUDTheme.Location = new System.Drawing.Point(8, 202);
+            this.labelHUDTheme.Name = "labelHUDTheme";
+            this.labelHUDTheme.Size = new System.Drawing.Size(74, 20);
+            this.labelHUDTheme.TabIndex = 15;
+            this.labelHUDTheme.Text = "HUD Theme:";
+            this.labelHUDTheme.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // comboBoxHUDTheme
+            // 
+            this.comboBoxHUDTheme.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxHUDTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxHUDTheme.FormattingEnabled = true;
+            this.comboBoxHUDTheme.Location = new System.Drawing.Point(129, 201);
+            this.comboBoxHUDTheme.Name = "comboBoxHUDTheme";
+            this.comboBoxHUDTheme.Size = new System.Drawing.Size(180, 21);
+            this.comboBoxHUDTheme.TabIndex = 16;
+            this.comboBoxHUDTheme.SelectedIndexChanged += new System.EventHandler(this.comboBoxHUDTheme_SelectedIndexChanged);
             // 
             // labelHUDScale
             // 
@@ -1773,7 +1798,7 @@ namespace OpenBve {
             this.groupboxWindow.Controls.Add(this.updownWindowWidth);
             this.groupboxWindow.Controls.Add(this.labelWindowWidth);
             this.groupboxWindow.ForeColor = System.Drawing.Color.Black;
-            this.groupboxWindow.Location = new System.Drawing.Point(0, 218);
+            this.groupboxWindow.Location = new System.Drawing.Point(0, 269);
             this.groupboxWindow.Name = "groupboxWindow";
             this.groupboxWindow.Size = new System.Drawing.Size(316, 80);
             this.groupboxWindow.TabIndex = 5;
@@ -1861,7 +1886,7 @@ namespace OpenBve {
             this.groupboxFullscreen.Controls.Add(this.updownFullscreenWidth);
             this.groupboxFullscreen.Controls.Add(this.labelFullscreenWidth);
             this.groupboxFullscreen.ForeColor = System.Drawing.Color.Black;
-            this.groupboxFullscreen.Location = new System.Drawing.Point(0, 301);
+            this.groupboxFullscreen.Location = new System.Drawing.Point(0, 352);
             this.groupboxFullscreen.Name = "groupboxFullscreen";
             this.groupboxFullscreen.Size = new System.Drawing.Size(316, 104);
             this.groupboxFullscreen.TabIndex = 6;
@@ -7075,6 +7100,8 @@ namespace OpenBve {
 		private System.Windows.Forms.Label labelHUDSmall;
 		private System.Windows.Forms.TrackBar trackBarHUDSize;
 		private System.Windows.Forms.Label labelHUDScale;
+		private System.Windows.Forms.Label labelHUDTheme;
+		private System.Windows.Forms.ComboBox comboBoxHUDTheme;
 		private System.Windows.Forms.GroupBox groupBoxObjectParser;
 		private System.Windows.Forms.Label labelXparser;
 		private System.Windows.Forms.ComboBox comboBoxXparser;
