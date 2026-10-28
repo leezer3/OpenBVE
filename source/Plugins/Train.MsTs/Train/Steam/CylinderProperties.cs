@@ -34,16 +34,29 @@ namespace Train.MsTs
 
 		internal int TotalNumber;
 
+		internal double Volume;
+
 		internal CylinderProperties()
 		{
 			TotalNumber = 1;
 			Diameter = 48.5;
 			StrokeLength = 65;
+			Volume = -1;
 		}
 
 		internal void Create(TractionModel model)
 		{
-			model.Components.Add(EngineComponent.Cylinders, new Cylinders(model, Diameter, StrokeLength, TotalNumber));
+			// NOTE: MSTS-Damflokomotive.de.doc - NumCylinders and CylinderVolume are not compatible
+			//       Keep diameter and stroke length (if set) so we can use a value approaching OK in other stuff
+			if (Volume != -1)
+			{
+				model.Components.Add(EngineComponent.Cylinders, new Cylinders(model, Diameter, StrokeLength, Volume));
+			}
+			else
+			{
+				model.Components.Add(EngineComponent.Cylinders, new Cylinders(model, Diameter, StrokeLength, TotalNumber));
+			}
+				
 		}
 	}
 }
