@@ -21,7 +21,10 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using OpenBveApi;
 using OpenBveApi.Interface;
+using OpenBveApi.Motor;
+using TrainManager.Handles;
 using TrainManager.Motor;
 
 namespace TrainManager.SteamEngine
@@ -89,14 +92,38 @@ namespace TrainManager.SteamEngine
 
 			DoorState = Math.Min(Math.Max(DoorState, 0), 1.0);
 
+			double efficiencyModifier;
+
+			// Blast effect: best efficiency and combustion when at max cutoff / throttle
+			if (baseEngine.BaseCar.baseTrain.Handles.Reverser is Cutoff cutoff)
+			{
+				efficiencyModifier = cutoff.Ratio;
+			}
+			else
+			{
+				efficiencyModifier = 1.0;
+			}
+
+			efficiencyModifier *= baseEngine.BaseCar.baseTrain.Handles.Power.Actual / (double)baseEngine.BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
+			// assume that combustion is at approx 50% efficiency minimum
+			efficiencyModifier = Math.Max(0.5, efficiencyModifier);
+
+			if (baseEngine.Components.TryGetTypedValue(EngineComponent.Blowers, out Blowers blowers) && blowers.Active)
+			{
+				efficiencyModifier = Math.Max(efficiencyModifier, blowers.EfficiencyModifier);
+			}
+
+
 			// Some figure fudging: coal will take ~30 minutes to get to full combustion temperature
 			// thus an increase of ~0.544c per second in overall fire temp when below max
 			if (Temperature < CombustionTemp)
 			{
-				Temperature += 0.544 * timeElapsed;
+				Temperature += 0.544 * efficiencyModifier * timeElapsed;
 			}
+
+			double finalBurnRate = burnRate;
 			
-			FuelLevel -= burnRate * timeElapsed;
+			FuelLevel -= finalBurnRate * efficiencyModifier * timeElapsed;
 		}
 
 		public override void ControlDown(Translations.Command command)
@@ -114,7 +141,16 @@ namespace TrainManager.SteamEngine
 					{
 						// one shovel per keypress, but use a little randomisation for the mass
 						double fuelAdded = ShovelMass * (TrainManagerBase.currentHost.Random.Next(9, 11) / 10.0);
-						Temperature = (Temperature * (FuelLevel * SpecificHeat) - AmbientTemp * (fuelAdded * SpecificHeat)) / (FuelLevel * fuelAdded * SpecificHeat * SpecificHeat);
+						if (BurnTime == 1.0)
+						{
+							// instant burn gets to temperature, e.g. oil
+							Temperature = CombustionTemp;
+						}
+						else
+						{
+							Temperature = (Temperature * (FuelLevel * SpecificHeat) - AmbientTemp * (fuelAdded * SpecificHeat)) / (FuelLevel * fuelAdded * SpecificHeat * SpecificHeat);
+						}
+							
 						FuelLevel += fuelAdded;
 						FuelLevel = Math.Min(FuelLevel, MaxFuelLevel);
 						// we assume 1 / BurnTime of the fire mass burns per second

@@ -1514,6 +1514,15 @@ namespace Train.MsTs
 					// actually in lbs / hr but with no mass unit
 					SteamProperties.BlowerSteamUsage = block.ReadSingle(UnitOfWeight.Pounds) / 3600; 
 					break;
+				case KujuTokenID.SteamBlowerEffectExponent:
+					// note: SteamBlowerEfficiencyExponent also present in ENG files, but broken in MSTS...
+					SteamProperties.BlowerEfficiencyModifier = block.ReadSingle();
+					if (SteamProperties.BlowerEfficiencyModifier <= 0 || SteamProperties.BlowerEfficiencyModifier > 2)
+					{
+						Plugin.CurrentHost.AddMessage("MSTS Vehicle Parser: SteamBlowerEffectExponent must be greater than 0");
+						SteamProperties.BlowerEfficiencyModifier = 1.0;
+					}
+					break;
 				case KujuTokenID.PassengerCapacity:
 					double numPassengers = block.ReadSingle();
 					// NOTE: ENG files may declare a passenger capacity, so assume they have doors too
