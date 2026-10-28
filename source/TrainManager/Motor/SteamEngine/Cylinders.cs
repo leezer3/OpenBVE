@@ -1,4 +1,4 @@
-//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
+﻿//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -105,8 +105,12 @@ namespace TrainManager.SteamEngine
 					// however return here so we keep the flow number in the debug
 					return;
 				}
-				SteamMassFlow = SteamTable.GetSteamDensity(boiler.CurrentPressure) * CylinderVolume; // TODO: Multiply by Abs(Cutoff)
+				SteamMassFlow = SteamTable.GetSteamDensity(boiler.CurrentPressure) * CylinderVolume;
 				SteamMassFlow *= ascendingStrokes;
+				if (baseEngine.BaseCar.baseTrain.Handles.Reverser is Cutoff cutoff)
+				{
+					SteamMassFlow *= cutoff.Ratio;
+				}
 
 				boiler.CurrentSteamMass -= SteamMassFlow;
 			}
