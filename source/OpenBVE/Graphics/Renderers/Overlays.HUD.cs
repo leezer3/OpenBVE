@@ -65,6 +65,11 @@ namespace OpenBve.Graphics.Renderers
 			double y = Element.Alignment.Y < 0 ? 0.0 : Element.Alignment.Y == 0 ? 0.5 * (Program.Renderer.Screen.Height - h) : Program.Renderer.Screen.Height - h;
 			x += Element.Position.X;
 			y += Element.Position.Y;
+			if (Element.GaugeType != HUD.GaugeType.None)
+			{
+				RenderHUDGauge(Element, x, y);
+				return;
+			}
 			// command
 			const double speed = 1.0;
 			MessageColor sc = MessageColor.None;

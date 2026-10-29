@@ -29,6 +29,44 @@ value = VALUE
 transition = TRANSITION
 transitionvector = X, Y
 
+[needle]
+subject = SUBJECT
+image = NEEDLE
+position = X, Y
+alignment = HORIZONTAL, VERTICAL
+origin = X, Y
+radius = RADIUS
+initialangle = DEGREES
+lastangle = DEGREES
+minimum = MINIMUM
+maximum = MAXIMUM
+color = R, G, B, A
+
+[lineargauge]
+subject = SUBJECT
+image = IMAGE
+position = X, Y
+alignment = HORIZONTAL, VERTICAL
+direction = X, Y
+width = PIXELS
+minimum = MINIMUM
+maximum = MAXIMUM
+color = R, G, B, A
+
+[digitalgauge]
+subject = SUBJECT
+position = X, Y
+alignment = HORIZONTAL, VERTICAL
+radius = RADIUS
+initialangle = DEGREES
+lastangle = DEGREES
+minimum = MINIMUM
+maximum = MAXIMUM
+step = STEP
+textcolor = R, G, B, A
+textsize = SIZE
+textshadow = SHADOW
+
 
 parameters
 ----------
@@ -48,6 +86,22 @@ SHADOW = 0 (no), 1 (yes)
 TEXT = text literal
 TRANSITION = 0 (none), 1 (move), 2 (fade), 3 (move+fade)
 VALUE1[, VALUE2] = specific to the subject
+
+
+gauges
+------
+
+Gauges are driven by SUBJECT, mapped between MINIMUM and MAXIMUM. The element position is the gauge anchor.
+Supported gauge subjects: speed, power, brake, single, locobrake, reverser, doorsleft, doorsright, gradient, fps.
+
+needle:
+IMAGE is rotated around ORIGIN (pixels within the image, default is the image center). INITIALANGLE and LASTANGLE are in degrees, 0 is up and positive is clockwise. If RADIUS is non-zero, the image is scaled so that the distance from ORIGIN to the top of the image is RADIUS pixels.
+
+lineargauge:
+IMAGE is moved along DIRECTION by up to WIDTH pixels as the subject goes from MINIMUM to MAXIMUM.
+
+digitalgauge:
+Draws the subject as text at RADIUS pixels from the anchor, at the angle between INITIALANGLE and LASTANGLE. STEP rounds the displayed value; 0 shows whole numbers.
 
 
 subjects
