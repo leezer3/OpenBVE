@@ -174,6 +174,8 @@ namespace OpenBveApi.Packages
 		Other = 3,
 		/// <summary>The package contains imported Loksim3D content.</summary>
 		Loksim3D = 4,
+		/// <summary>The package is a shareable HUD theme</summary>
+		HudTheme = 5,
 	}
 
 	/// <summary>Holds the properties of a file, used during creation of a package.</summary>
@@ -224,7 +226,9 @@ namespace OpenBveApi.Packages
 		/// <param name="extractionDirectory">The directory to extract to</param>
 		/// <param name="databaseFolder">The root package database folder</param>
 		/// <param name="packageFiles">Returns via 'ref' a string containing a list of files in the package (Used to update the dialog)</param>
-		public static void ExtractPackage(Package currentPackage, string extractionDirectory, string databaseFolder, ref string packageFiles)
+		/// <param name="targetSubFolder">An optional sub-folder of the extraction directory to extract into (Used when the archive root is the package content itself)</param>
+		/// <param name="stripPrefix">An optional leading folder to remove from the archived paths, so the folder can be replaced by 'targetSubFolder'</param>
+		public static void ExtractPackage(Package currentPackage, string extractionDirectory, string databaseFolder, ref string packageFiles, string targetSubFolder = null, string stripPrefix = null)
 		{
 			int i = 0;
 			int j = 0;
@@ -234,6 +238,11 @@ namespace OpenBveApi.Packages
 				if (!Directory.Exists(extractionDirectory))
 				{
 					Directory.CreateDirectory(extractionDirectory);
+				}
+				string targetDirectory = string.IsNullOrEmpty(targetSubFolder) ? extractionDirectory : Path.CombineDirectory(extractionDirectory, targetSubFolder);
+				if (!Directory.Exists(targetDirectory))
+				{
+					Directory.CreateDirectory(targetDirectory);
 				}
 				using (Stream stream = File.OpenRead(currentPackage.PackageFile))
 				{
@@ -254,12 +263,24 @@ namespace OpenBveApi.Packages
 						}
 						else
 						{
-							//Extract everything else, preserving directory structure
-							archiveEntry.WriteToDirectory(extractionDirectory, new ExtractionOptions(true, true));
-							//We don't want to add directories to the list of files
-							if (!archiveEntry.IsDirectory)
+							string entryKey = archiveEntry.Key.Replace('\\', '/').TrimStart('/');
+							if (!string.IsNullOrEmpty(stripPrefix) && entryKey.StartsWith(stripPrefix + "/", StringComparison.OrdinalIgnoreCase))
 							{
-								PackageFiles.Add(Path.CombineFile(extractionDirectory, archiveEntry.Key));
+								//Extract the contents of the stripped folder directly into the target directory
+								string destination = Path.CombineFile(targetDirectory, entryKey.Substring(stripPrefix.Length + 1));
+								Directory.CreateDirectory(System.IO.Path.GetDirectoryName(destination));
+								archiveEntry.WriteToFile(destination);
+								PackageFiles.Add(destination);
+							}
+							else
+							{
+								//Extract everything else, preserving directory structure
+								archiveEntry.WriteToDirectory(targetDirectory, new ExtractionOptions(true, true));
+								//We don't want to add directories to the list of files
+								if (!archiveEntry.IsDirectory)
+								{
+									PackageFiles.Add(Path.CombineFile(targetDirectory, archiveEntry.Key));
+								}
 							}
 						}
 						i++;
@@ -372,9 +393,14 @@ namespace OpenBveApi.Packages
 							listWriter.Serialize(sw, new SerializedPackage {Package = currentPackage});
 						}
 						//Write out XML
-						zipWriter.Write("Package.xml", tempXML);
+						//HUD themes use hud.xml as their manifest, so no package.xml is written
+						if (currentPackage.PackageType != PackageType.HudTheme)
+						{
+							zipWriter.Write("Package.xml", tempXML);
+						}
 						//Write out image
-						if (File.Exists(packageImage))
+						//HUD themes point to their preview image from hud.xml, so no package.png is written
+						if (currentPackage.PackageType != PackageType.HudTheme && File.Exists(packageImage))
 						{
 							zipWriter.Write("Package.png", packageImage);
 						}

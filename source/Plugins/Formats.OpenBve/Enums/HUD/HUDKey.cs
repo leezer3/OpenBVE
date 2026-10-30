@@ -26,6 +26,17 @@
 		Text,
 		Value,
 		Transition,
-		TransitionVector
+		TransitionVector,
+		Image,
+		Origin,
+		Radius,
+		Direction,
+		InitialAngle,
+		LastAngle,
+		Minimum,
+		Maximum,
+		Step,
+		Width,
+		Color
 	}
 }

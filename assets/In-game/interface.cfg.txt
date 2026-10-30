@@ -29,6 +29,44 @@ value = VALUE
 transition = TRANSITION
 transitionvector = X, Y
 
+[needle]
+subject = SUBJECT
+image = NEEDLE
+position = X, Y
+alignment = HORIZONTAL, VERTICAL
+origin = X, Y
+radius = RADIUS
+initialangle = DEGREES
+lastangle = DEGREES
+minimum = MINIMUM
+maximum = MAXIMUM
+color = R, G, B, A
+
+[lineargauge]
+subject = SUBJECT
+image = IMAGE
+position = X, Y
+alignment = HORIZONTAL, VERTICAL
+direction = X, Y
+width = PIXELS
+minimum = MINIMUM
+maximum = MAXIMUM
+color = R, G, B, A
+
+[digitalgauge]
+subject = SUBJECT
+position = X, Y
+alignment = HORIZONTAL, VERTICAL
+radius = RADIUS
+initialangle = DEGREES
+lastangle = DEGREES
+minimum = MINIMUM
+maximum = MAXIMUM
+step = STEP
+textcolor = R, G, B, A
+textsize = SIZE
+textshadow = SHADOW
+
 
 parameters
 ----------
@@ -48,6 +86,22 @@ SHADOW = 0 (no), 1 (yes)
 TEXT = text literal
 TRANSITION = 0 (none), 1 (move), 2 (fade), 3 (move+fade)
 VALUE1[, VALUE2] = specific to the subject
+
+
+gauges
+------
+
+Gauges are driven by SUBJECT, mapped between MINIMUM and MAXIMUM. The element position is the gauge anchor.
+Supported gauge subjects: speed, power, brake, single, locobrake, reverser, doorsleft, doorsright, gradient, fps.
+
+needle:
+IMAGE is rotated around ORIGIN (pixels within the image, default is the image center). INITIALANGLE and LASTANGLE are in degrees, 0 is up and positive is clockwise. If RADIUS is non-zero, the image is scaled so that the distance from ORIGIN to the top of the image is RADIUS pixels.
+
+lineargauge:
+IMAGE is moved along DIRECTION by up to WIDTH pixels as the subject goes from MINIMUM to MAXIMUM.
+
+digitalgauge:
+Draws the subject as text at RADIUS pixels from the anchor, at the angle between INITIALANGLE and LASTANGLE. STEP rounds the displayed value; 0 shows whole numbers.
 
 
 subjects
@@ -84,3 +138,34 @@ No special meaning. Displays the element as-is.
 -----
 
 In order to create a custom interface, create a new folder with an interface.cfg file inside it and edit the [interface] section inside the options.cfg file accordingly in order to load the interface.
+
+hud.xml manifest
+----------------
+
+A shareable HUD theme may include a hud.xml manifest file inside the theme root
+folder. The manifest identifies the folder as a HUD theme and provides the
+package metadata used when the theme is installed via the package manager:
+
+name         The display name of the theme (Also used as the package name)
+version      The package version (Optional, defaults to 1.0.0)
+author       The package author (Optional)
+website      The package website (Optional)
+image        The preview image file inside the theme folder (Optional)
+description  The package description (Optional)
+
+Themes installed through the package manager are tracked in the package
+database, and can be uninstalled or upgraded from the packages tab in the
+same way as routes, trains and other add-ons.
+
+To share a theme, use the package creator and select the HUD Theme package
+type, then select the folder containing the interface.cfg file. The hud.xml
+manifest is the only package description used for themes, so no package.xml
+is written; the package GUID is generated when the theme is installed.
+
+Example:
+<Hud>
+    <name>My Theme</name>
+    <version>1.1</version>
+    <author>OpenBVE</author>
+    <image>preview.png</image>
+</Hud>
