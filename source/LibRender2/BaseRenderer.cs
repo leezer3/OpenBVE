@@ -655,9 +655,21 @@ namespace LibRender2
 
 		public int CreateStaticObject(Vector3 Position, StaticObject Prototype, Transformation LocalTransformation, Matrix4D Rotate, ObjectDisposalMode AccurateObjectDisposal, ObjectCreationParameters Parameters, double BlockLength)
 		{
-			if (Prototype == null)
+			ObjectState state = ComputeStaticObjectState(Position, Prototype, LocalTransformation, Rotate, AccurateObjectDisposal, Parameters, BlockLength);
+			if (state == null)
 			{
 				return -1;
+			}
+			return CommitStaticObjectState(state);
+		}
+
+		/// <summary>Computes everything a static object placement needs except registering it.</summary>
+		/// <remarks>Pure math over the prototype mesh: safe to call from any thread.</remarks>
+		public static ObjectState ComputeStaticObjectState(Vector3 Position, StaticObject Prototype, Transformation LocalTransformation, Matrix4D Rotate, ObjectDisposalMode AccurateObjectDisposal, ObjectCreationParameters Parameters, double BlockLength)
+		{
+			if (Prototype == null)
+			{
+				return null;
 			}
 
 			Matrix4D Translate = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
@@ -665,7 +677,7 @@ namespace LibRender2
 			if (Prototype.Mesh.Faces.Length == 0)
 			{
 				//Null object- Waste of time trying to calculate anything for these
-				return -1;
+				return null;
 			}
 
 			float startingDistance = float.MaxValue;
@@ -724,7 +736,7 @@ namespace LibRender2
 					}
 					break;
 			}
-			StaticObjectStates.Add(new ObjectState
+			return new ObjectState
 			{
 				Prototype = Prototype,
 				Translation = Translate,
@@ -733,9 +745,20 @@ namespace LibRender2
 				EndingDistance = endingDistance,
 				WorldPosition = Position,
 				DisableShadowCasting = Parameters.DisableShadowCasting
-			});
-			
-			foreach (MeshFace face in Prototype.Mesh.Faces)
+			};
+		}
+
+		/// <summary>Registers a precomputed object state, preserving insertion order.</summary>
+		/// <remarks>Must be called sequentially in placement order; the parallel part is <see cref="ComputeStaticObjectState"/>.</remarks>
+		public int CommitStaticObjectState(ObjectState state)
+		{
+			if (state == null || state.Prototype == null)
+			{
+				return -1;
+			}
+			StaticObjectStates.Add(state);
+
+			foreach (MeshFace face in state.Prototype.Mesh.Faces)
 			{
 				switch (face.Flags & FaceFlags.FaceTypeMask)
 				{
