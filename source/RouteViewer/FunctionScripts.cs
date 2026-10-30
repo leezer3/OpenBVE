@@ -158,6 +158,105 @@ namespace RouteViewer {
 					case Instructions.MathPi:
 						Function.Stack[s] = Math.PI;
 						s++; break;
+					case Instructions.MathLerp:
+						Function.Stack[s - 3] = Easing.Lerp(Function.Stack[s - 3], Function.Stack[s - 2], Function.Stack[s - 1]);
+						s -= 2; break;
+					case Instructions.MathSmoothstep:
+						Function.Stack[s - 3] = Easing.Smoothstep(Function.Stack[s - 3], Function.Stack[s - 2], Function.Stack[s - 1]);
+						s -= 2; break;
+					case Instructions.MathSlerp:
+						Function.Stack[s - 3] = Easing.Slerp(Function.Stack[s - 3], Function.Stack[s - 2], Function.Stack[s - 1]);
+						s -= 2; break;
+					case Instructions.MathEaseInSine:
+						Function.Stack[s - 1] = Easing.EaseInSine(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseOutSine:
+						Function.Stack[s - 1] = Easing.EaseOutSine(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseInOutSine:
+						Function.Stack[s - 1] = Easing.EaseInOutSine(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseInQuad:
+						Function.Stack[s - 1] = Easing.EaseInQuad(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseOutQuad:
+						Function.Stack[s - 1] = Easing.EaseOutQuad(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseInOutQuad:
+						Function.Stack[s - 1] = Easing.EaseInOutQuad(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseInCubic:
+						Function.Stack[s - 1] = Easing.EaseInCubic(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseOutCubic:
+						Function.Stack[s - 1] = Easing.EaseOutCubic(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseInOutCubic:
+						Function.Stack[s - 1] = Easing.EaseInOutCubic(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseInQuart:
+						Function.Stack[s - 1] = Easing.EaseInQuart(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseOutQuart:
+						Function.Stack[s - 1] = Easing.EaseOutQuart(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseInOutQuart:
+						Function.Stack[s - 1] = Easing.EaseInOutQuart(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseInQuint:
+						Function.Stack[s - 1] = Easing.EaseInQuint(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseOutQuint:
+						Function.Stack[s - 1] = Easing.EaseOutQuint(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseInOutQuint:
+						Function.Stack[s - 1] = Easing.EaseInOutQuint(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseInExpo:
+						Function.Stack[s - 1] = Easing.EaseInExpo(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseOutExpo:
+						Function.Stack[s - 1] = Easing.EaseOutExpo(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseInOutExpo:
+						Function.Stack[s - 1] = Easing.EaseInOutExpo(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseInCirc:
+						Function.Stack[s - 1] = Easing.EaseInCirc(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseOutCirc:
+						Function.Stack[s - 1] = Easing.EaseOutCirc(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseInOutCirc:
+						Function.Stack[s - 1] = Easing.EaseInOutCirc(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseInBack:
+						Function.Stack[s - 1] = Easing.EaseInBack(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseOutBack:
+						Function.Stack[s - 1] = Easing.EaseOutBack(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseInOutBack:
+						Function.Stack[s - 1] = Easing.EaseInOutBack(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseInElastic:
+						Function.Stack[s - 1] = Easing.EaseInElastic(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseOutElastic:
+						Function.Stack[s - 1] = Easing.EaseOutElastic(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseInOutElastic:
+						Function.Stack[s - 1] = Easing.EaseInOutElastic(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseInBounce:
+						Function.Stack[s - 1] = Easing.EaseInBounce(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseOutBounce:
+						Function.Stack[s - 1] = Easing.EaseOutBounce(Function.Stack[s - 1]);
+						break;
+					case Instructions.MathEaseInOutBounce:
+						Function.Stack[s - 1] = Easing.EaseInOutBounce(Function.Stack[s - 1]);
+						break;
 						// comparisons
 					case Instructions.CompareEqual:
 						Function.Stack[s - 2] = Function.Stack[s - 2] == Function.Stack[s - 1] ? 1.0 : 0.0;
