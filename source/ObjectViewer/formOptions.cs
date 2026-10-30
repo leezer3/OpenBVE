@@ -47,7 +47,7 @@ namespace ObjectViewer
 			InitializeComponent();
 			InterpolationMode.SelectedIndex = (int) Interface.CurrentOptions.Interpolation;
 			AnisotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
-			AntialiasingLevel.Value = Interface.CurrentOptions.AntiAliasingLevel;
+			BaseOptions.SelectAntiAliasingLevel(AntialiasingLevel, Interface.CurrentOptions.AntiAliasingLevel);
 			nearClip.Value = (decimal)Interface.CurrentOptions.NearClipBase;
 			if (Translations.CurrentLanguageCode != "en-US")
 			{
@@ -575,7 +575,7 @@ namespace ObjectViewer
 			//Anisotropic filtering level
 			Interface.CurrentOptions.AnisotropicFilteringLevel = (int) AnisotropicLevel.Value;
 			//Antialiasing level
-			Interface.CurrentOptions.AntiAliasingLevel = (int) AntialiasingLevel.Value;
+			Interface.CurrentOptions.AntiAliasingLevel = BaseOptions.GetAntiAliasingLevel(AntialiasingLevel);
 			if (Interface.CurrentOptions.AntiAliasingLevel != previousAntialiasingLevel)
 			{
 				Program.Renderer.GraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);

@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using LibRender2.Screens;
+using OpenBveApi;
 using OpenTK;
 using System.Collections.Generic;
 using System.Globalization;
@@ -43,6 +44,14 @@ namespace LibRender2.Menu
 		public object CurrentOption => Entries[CurrentlySelectedOption];
 
 		private int CurrentlySelectedOption;
+
+		/// <summary>Gets the sample count an antialiasing entry stands for</summary>
+		/// <param name="entry">The entry, which is either a sample count or a label for having antialiasing off</param>
+		/// <remarks>Anything that isn't a number is the 'off' entry, so that we can label it nicely</remarks>
+		private static int ParseAntiAliasingLevel(string entry)
+		{
+			return int.TryParse(entry, NumberStyles.Integer, CultureInfo.InvariantCulture, out int level) ? level : 0;
+		}
 
 		public MenuOption(AbstractMenu menu, OptionType type, string text, object[] entries) : base(menu)
 		{
@@ -91,10 +100,11 @@ namespace LibRender2.Menu
 					}
 					break;
 				case OptionType.AntialiasingLevel:
+					//n.b. Snap anything we no longer offer onto the nearest level we do, or this silently falls through to 'None' below
+					BaseMenu.CurrentOptions.AntiAliasingLevel = BaseOptions.NormalizeAntiAliasingLevel(BaseMenu.CurrentOptions.AntiAliasingLevel);
 					for (int i = 0; i < Entries.Length; i++)
 					{
-						int level = int.Parse(entries[i] as string ?? string.Empty, NumberStyles.Integer);
-						if (level == BaseMenu.CurrentOptions.AntiAliasingLevel)
+						if (ParseAntiAliasingLevel(entries[i] as string) == BaseMenu.CurrentOptions.AntiAliasingLevel)
 						{
 							CurrentlySelectedOption = i;
 							return;
@@ -276,7 +286,7 @@ namespace LibRender2.Menu
 					BaseMenu.CurrentOptions.AnisotropicFilteringLevel = int.Parse((string)CurrentOption, NumberStyles.Integer);
 					break;
 				case OptionType.AntialiasingLevel:
-					BaseMenu.CurrentOptions.AntiAliasingLevel = int.Parse((string)CurrentOption, NumberStyles.Integer);
+					BaseMenu.CurrentOptions.AntiAliasingLevel = ParseAntiAliasingLevel((string)CurrentOption);
 					break;
 				case OptionType.ViewingDistance:
 					BaseMenu.CurrentOptions.ViewingDistance = int.Parse((string)CurrentOption, NumberStyles.Integer);

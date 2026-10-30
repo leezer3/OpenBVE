@@ -508,6 +508,8 @@ namespace OpenBve
 							block.TryGetValue(OptionsKey.AnisotropicFilteringMaximum, ref CurrentOptions.AnisotropicFilteringMaximum);
 							block.TryGetValue(OptionsKey.AnisotropicFilteringLevel, ref Interface.CurrentOptions.AnisotropicFilteringLevel);
 							block.TryGetValue(OptionsKey.AntiAliasingLevel, ref Interface.CurrentOptions.AntiAliasingLevel);
+							//16x was offered by older versions, so snap anything unfamiliar onto a level we still have
+							Interface.CurrentOptions.AntiAliasingLevel = BaseOptions.NormalizeAntiAliasingLevel(Interface.CurrentOptions.AntiAliasingLevel);
 							block.GetEnumValue(OptionsKey.TransparencyMode, out Interface.CurrentOptions.TransparencyMode);
 							block.GetValue(OptionsKey.OldTransparencyMode, out CurrentOptions.OldTransparencyMode);
 							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance, NumberRange.Positive);

@@ -238,7 +238,7 @@ namespace OpenBve
 							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_interpolation_mode_anisotropic"})
 						});
 						Items[4] = new MenuOption(menu, OptionType.AnisotropicLevel, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_interpolation_anisotropic_level"}), new[] { "0", "2", "4", "8", "16" });
-						Items[5] = new MenuOption(menu, OptionType.AntialiasingLevel, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_interpolation_antialiasing_level"}), new[] { "0", "2", "4", "8", "16" });
+						Items[5] = new MenuOption(menu, OptionType.AntialiasingLevel, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_interpolation_antialiasing_level"}), new[] { Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "quality_interpolation_antialiasing_off" }), "2", "4", "8" });
 						Items[6] = new MenuOption(menu, OptionType.ViewingDistance, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_distance_viewingdistance"}), new[] { "400", "600", "800", "1000", "1500", "2000" });
 						Items[7] = new MenuOption(menu, OptionType.UIScaleFactor, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "ui_scalefactor" }), new[] { "1x", "2x", "3x", "4x", "5x", "6x" });
 						Items[8] = new MenuOption(menu, OptionType.NumberOfSounds, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "misc_sound_number" }), new[] { "16", "32", "64", "128"});

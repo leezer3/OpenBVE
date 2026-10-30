@@ -41,7 +41,7 @@ namespace ObjectViewer
             this.labelOtherSettings = new System.Windows.Forms.Label();
             this.labelTransparencyQuality = new System.Windows.Forms.Label();
             this.TransparencyQuality = new System.Windows.Forms.ComboBox();
-            this.AntialiasingLevel = new System.Windows.Forms.NumericUpDown();
+            this.AntialiasingLevel = new System.Windows.Forms.ComboBox();
             this.AnisotropicLevel = new System.Windows.Forms.NumericUpDown();
             this.labelHeight = new System.Windows.Forms.Label();
             this.labelWidth = new System.Windows.Forms.Label();
@@ -113,7 +113,7 @@ namespace ObjectViewer
             this.buttonGroundColor = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPageOptions.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.AntialiasingLevel)).BeginInit();
+            //AntialiasingLevel is a ComboBox, so there's nothing to Begin/EndInit here
             ((System.ComponentModel.ISupportInitialize)(this.AnisotropicLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.height)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.width)).BeginInit();
@@ -351,12 +351,8 @@ namespace ObjectViewer
             // AntialiasingLevel
             // 
             this.AntialiasingLevel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AntialiasingLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.AntialiasingLevel.Location = new System.Drawing.Point(160, 77);
-            this.AntialiasingLevel.Maximum = new decimal(new int[] {
-            16,
-            0,
-            0,
-            0});
             this.AntialiasingLevel.Name = "AntialiasingLevel";
             this.AntialiasingLevel.Size = new System.Drawing.Size(120, 20);
             this.AntialiasingLevel.TabIndex = 38;
@@ -1205,7 +1201,7 @@ namespace ObjectViewer
             this.tabControl1.ResumeLayout(false);
             this.tabPageOptions.ResumeLayout(false);
             this.tabPageOptions.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.AntialiasingLevel)).EndInit();
+            //AntialiasingLevel is a ComboBox, so there's nothing to Begin/EndInit here
             ((System.ComponentModel.ISupportInitialize)(this.AnisotropicLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.height)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.width)).EndInit();
@@ -1237,7 +1233,7 @@ namespace ObjectViewer
 		private System.Windows.Forms.Label labelOtherSettings;
 		private System.Windows.Forms.Label labelTransparencyQuality;
 		private System.Windows.Forms.ComboBox TransparencyQuality;
-		private System.Windows.Forms.NumericUpDown AntialiasingLevel;
+		private System.Windows.Forms.ComboBox AntialiasingLevel;
 		private System.Windows.Forms.NumericUpDown AnisotropicLevel;
 		private System.Windows.Forms.Label labelHeight;
 		private System.Windows.Forms.Label labelWidth;
