@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
@@ -36,9 +36,9 @@ namespace TrainManager.SteamEngine
 {
 	public class TankEngine : TractionModel
 	{
-		/// <summary>The maximum water level</summary>
+		/// <summary>The maximum water level in the tanks</summary>
 		public readonly double TankMaxWaterLevel;
-		/// <summary>The current water level</summary>
+		/// <summary>The current water level in the tanks</summary>
 		public double TankWaterLevel;
 
 		public TankEngine(CarBase baseCar, AccelerationCurve[] accelerationCurves, double maxFuelLevel, double maxWaterLevel) : base(baseCar, accelerationCurves, true)
