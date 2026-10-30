@@ -37,9 +37,11 @@ using System.IO;
 using System.Text;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
+using TrainManager.Handles;
 using TrainManager.Motor;
 using TrainManager.MsTsSounds;
 using TrainManager.SafetySystems;
+using TrainManager.SteamEngine;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace Train.MsTs
@@ -405,6 +407,7 @@ namespace Train.MsTs
 					{
 						// n.b. MSTS does not distinguish between increase / decrease sounds for handles etc.
 						// sound radii are also fudged based upon BVE values; most MSTS content just seems to use massive radii
+						ReverserHandle rH = car.baseTrain.Handles.Reverser as ReverserHandle;
 						switch (currentSoundSet.CurrentTrigger)
 						{
 							case SoundTrigger.VariableControlled:
@@ -413,29 +416,29 @@ namespace Train.MsTs
 								currentSoundSet.SoundBuffers[currentSoundSet.CurrentBuffer] = soundHandle as SoundBuffer;
 								break;
 							case SoundTrigger.ReverserToForwardBackward:
-								if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
+								if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot && rH != null)
 								{
-									car.baseTrain.Handles.Reverser.EngageSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									rH.EngageSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
 								}
 								break;
 							case SoundTrigger.ReverserToNeutral:
-								if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
+								if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot && rH != null)
 								{
-									car.baseTrain.Handles.Reverser.ReleaseSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									rH.ReleaseSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
 								}
 								break;
 							case SoundTrigger.ReverserChange:
-								if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
+								if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot && rH != null)
 								{
 									// as we don't know the order these may be presented in, check the buffer
-									if (car.baseTrain.Handles.Reverser.EngageSound.Buffer == null)
+									if (rH.EngageSound.Buffer == null)
 									{
-										car.baseTrain.Handles.Reverser.EngageSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+										rH.EngageSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
 									}
 
-									if (car.baseTrain.Handles.Reverser.ReleaseSound.Buffer == null)
+									if (rH.ReleaseSound.Buffer == null)
 									{
-										car.baseTrain.Handles.Reverser.ReleaseSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+										rH.ReleaseSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
 									}
 								}
 								break;
@@ -574,8 +577,8 @@ namespace Train.MsTs
 								{
 									if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
 									{
-										cylinderCocks.OpenSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
-										cylinderCocks.CloseSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+										cylinderCocks.ActivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+										cylinderCocks.DeactivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
 									}
 									else
 									{
@@ -594,6 +597,28 @@ namespace Train.MsTs
 									else
 									{
 										blowers.LoopSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+									}
+								}
+								break;
+							case SoundTrigger.SteamSafetyValveOn:
+								if (car.TractionModel.Components.TryGetTypedValue(EngineComponent.SafetyValve, out SafetyValve safetyValve))
+								{
+									if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
+									{
+										safetyValve.ActivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+									}
+									else
+									{
+										safetyValve.LoopSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+									}
+								}
+								break;
+							case SoundTrigger.SteamSafetyValveOff:
+								if (car.TractionModel.Components.TryGetTypedValue(EngineComponent.SafetyValve, out safetyValve))
+								{
+									if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
+									{
+										safetyValve.DeactivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
 									}
 								}
 								break;

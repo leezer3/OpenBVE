@@ -34,7 +34,10 @@ using TrainManager.Motor;
 using OpenBveApi.Hosts;
 using SoundManager;
 using TrainManager.Car;
+using TrainManager.Handles;
 using TrainManager.SafetySystems;
+using TrainManager.SteamEngine;
+
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 
 namespace Train.MsTs
@@ -176,8 +179,33 @@ namespace Train.MsTs
 					lastResult = (int)dynamicTrain.Handles.Reverser.Actual + 1;
 					break;
 				case PanelSubject.Cutoff:
-					// TODO: Implement properly
-					lastResult = (int)dynamicTrain.Handles.Reverser.Actual + 1;
+					if (dynamicTrain.Handles.Reverser is Cutoff c)
+					{
+						// 0- full reverse, 1- full forwards
+						double value = 1;
+						if (c.Actual > 0)
+						{
+							value += (double)c.Driver / c.ForwardMax;
+						}
+						else if(c.Actual < 0)
+						{
+							value -= (double)c.Driver / c.ReverseMax;
+						}
+						
+						value /= 2;
+						for (int i = 0; i < FrameMapping.Length; i++)
+						{
+							if (FrameMapping[i].MappingValue >= value)
+							{
+								lastResult = FrameMapping[i].FrameKey;
+								break;
+							}
+						}
+					}
+					else
+					{
+						lastResult = (int)dynamicTrain.Handles.Reverser.Actual + 1;
+					}
 					break;
 				case PanelSubject.Speedlim_Display:
 					double speedLim = Math.Min(train.CurrentRouteLimit, train.CurrentSectionLimit) * UnitConversionFactor;
@@ -425,7 +453,7 @@ namespace Train.MsTs
 					int cylinderCocksState = 0;
 					if (tractionModel.Components.TryGetTypedValue(EngineComponent.CylinderCocks, out CylinderCocks cylinderCocks))
 					{
-						cylinderCocksState = cylinderCocks.Opened ? 1 : 0;
+						cylinderCocksState = cylinderCocks.Active ? 1 : 0;
 					}
 					lastResult = cylinderCocksState;
 					break;

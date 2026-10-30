@@ -107,6 +107,8 @@
     <Compile Include="Handles\Brake\Handles.HoldBrake.cs" />
     <Compile Include="Handles\Brake\Handles.LocoBrake.cs" />
     <Compile Include="Handles\Brake\Handles.LocoBrake.Types.cs" />
+    <Compile Include="Handles\Reverser\AbstractReverser.cs" />
+    <Compile Include="Handles\Reverser\Cutoff.cs" />
     <Compile Include="Handles\VariableHandle.cs" />
     <Compile Include="Handles\Power\PowerHandle.cs" />
     <Compile Include="Handles\Reverser\Reverser.cs" />
@@ -136,9 +138,16 @@
     <Compile Include="Motor\Fuel\FuelTank.cs" />
     <Compile Include="Motor\SteamEngine\Blowers.cs" />
     <Compile Include="Motor\SteamEngine\Boiler.cs" />
+    <Compile Include="Motor\SteamEngine\Boiler.WaterTable.cs" />
+    <Compile Include="Motor\SteamEngine\BypassValve.cs" />
+    <Compile Include="Motor\SteamEngine\BypassValve.Types.cs" />
     <Compile Include="Motor\SteamEngine\CylinderCocks.cs" />
+    <Compile Include="Motor\SteamEngine\CylinderChest.cs" />
     <Compile Include="Motor\SteamEngine\Firebox.cs" />
+    <Compile Include="Motor\SteamEngine\Firebox.Fuels.cs" />
     <Compile Include="Motor\SteamEngine\Injector.cs" />
+    <Compile Include="Motor\SteamEngine\Boiler.SteamTable.cs" />
+    <Compile Include="Motor\SteamEngine\SafetyValve.cs" />
     <Compile Include="Motor\SteamEngine\TankEngine.cs" />
     <Compile Include="Motor\SteamEngine\TenderEngine.cs" />
     <Compile Include="Motor\SteamEngine\Tender.cs" />

@@ -21,9 +21,13 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using OpenBveApi;
 using OpenBveApi.Interface;
+using OpenBveApi.Motor;
+using TrainManager.Handles;
+using TrainManager.Motor;
 
-namespace TrainManager.Motor
+namespace TrainManager.SteamEngine
 {
 	public class Firebox : AbstractComponent
 	{
@@ -37,18 +41,33 @@ namespace TrainManager.Motor
 		public double FuelLevel;
 		/// <summary>The state of the firebox door</summary>
 		public double DoorState;
+		/// <summary>The base mass of one shovel of coal</summary>
+		public readonly double ShovelMass;
+		/// <summary>The specific heat value for the fuel</summary>
+		public readonly double SpecificHeat;
+		/// <summary>The ambient temperature value of the fuel</summary>
+		public const double AmbientTemp = 20;
+		/// <summary>Combustion temperature for standard anthracite coal</summary>
+		public readonly double CombustionTemp;
 
+		private readonly double BurnTime;
 		/// <summary>The current heat output ratio</summary>
-		/// <remarks>Assumed coal combustion temperature</remarks>
-		public double HeatOutput => (FuelLevel / IdealFuelLevel) * (Temperature / 1000);
+		public double HeatOutput => (FuelLevel / IdealFuelLevel) * (Temperature / CombustionTemp);
+
+
 
 		private bool doorOpenPressed;
 
 		private bool doorClosePressed;
 
-		public Firebox(TractionModel engine, double maxFuelLevel, double currentFuelLevel, double idealFuelLevel,
+		private double burnRate;
+
+		public Firebox(TractionModel engine, FireboxFuel fuel, double maxFuelLevel, double shovelMass, double currentFuelLevel, double idealFuelLevel,
 			double currentTemperature) : base(engine)
 		{
+			SpecificHeat = FuelTable.Values[fuel].SpecificHeat;
+			CombustionTemp = FuelTable.Values[fuel].CombustionTemperature;
+			BurnTime = FuelTable.Values[fuel].BurnTime;
 			MaxFuelLevel = maxFuelLevel;
 			FuelLevel = currentFuelLevel;
 			IdealFuelLevel = idealFuelLevel;
@@ -56,6 +75,8 @@ namespace TrainManager.Motor
 			DoorState = 1; // fully open
 			doorOpenPressed = false;
 			doorClosePressed = false;
+			ShovelMass = shovelMass;
+			burnRate = FuelLevel / BurnTime;
 		}
 
 		public override void Update(double timeElapsed)
@@ -71,6 +92,39 @@ namespace TrainManager.Motor
 			}
 
 			DoorState = Math.Min(Math.Max(DoorState, 0), 1.0);
+
+			double efficiencyModifier;
+
+			// Blast effect: best efficiency and combustion when at max cutoff / throttle
+			if (baseEngine.BaseCar.baseTrain.Handles.Reverser is Cutoff cutoff)
+			{
+				efficiencyModifier = cutoff.Ratio;
+			}
+			else
+			{
+				efficiencyModifier = 1.0;
+			}
+
+			efficiencyModifier *= baseEngine.BaseCar.baseTrain.Handles.Power.Actual / (double)baseEngine.BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
+			// assume that combustion is at approx 50% efficiency minimum
+			efficiencyModifier = Math.Max(0.5, efficiencyModifier);
+
+			if (baseEngine.Components.TryGetTypedValue(EngineComponent.Blowers, out Blowers blowers) && blowers.Active)
+			{
+				efficiencyModifier = Math.Max(efficiencyModifier, blowers.EfficiencyModifier);
+			}
+
+
+			// Some figure fudging: coal will take ~30 minutes to get to full combustion temperature
+			// thus an increase of ~0.544c per second in overall fire temp when below max
+			if (Temperature < CombustionTemp)
+			{
+				Temperature += 0.544 * efficiencyModifier * timeElapsed;
+			}
+
+			double finalBurnRate = burnRate;
+			
+			FuelLevel -= finalBurnRate * efficiencyModifier * timeElapsed;
 		}
 
 		public override void ControlDown(Translations.Command command)
@@ -82,6 +136,37 @@ namespace TrainManager.Motor
 					break;
 				case Translations.Command.FireboxDoorClose:
 					doorClosePressed = true;
+					break;
+				case Translations.Command.AddFuel:
+					if (FuelLevel < MaxFuelLevel)
+					{
+						// one shovel per keypress, but use a little randomisation for the mass
+						double fuelAdded = ShovelMass * (TrainManagerBase.currentHost.Random.Next(9, 11) / 10.0);
+						if (BurnTime == 1.0)
+						{
+							// instant burn gets to temperature, e.g. oil
+							Temperature = CombustionTemp;
+						}
+						else
+						{
+							Temperature = (Temperature * (FuelLevel * SpecificHeat) - AmbientTemp * (fuelAdded * SpecificHeat)) / (FuelLevel * fuelAdded * SpecificHeat * SpecificHeat);
+						}
+							
+						FuelLevel += fuelAdded;
+
+						if (baseEngine is TenderEngine tenderEngine)
+						{
+							tenderEngine.Tender.FuelTank.CurrentLevel -= fuelAdded;
+						}
+						else if (baseEngine is TankEngine tankEngine)
+						{
+							tankEngine.FuelTank.CurrentLevel -= fuelAdded;
+						}
+
+						FuelLevel = Math.Min(FuelLevel, MaxFuelLevel);
+						// we assume 1 / BurnTime of the fire mass burns per second
+						burnRate = FuelLevel / BurnTime;
+					}
 					break;
 			}
 		}

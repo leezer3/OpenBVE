@@ -32,6 +32,7 @@ using OpenBveApi.Trains;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Motor;
+using TrainManager.SteamEngine;
 
 namespace TrainManager.Trains
 {
@@ -106,11 +107,11 @@ namespace TrainManager.Trains
 			// Set the state quantity of the train.
 			if (DeltaPosition < 0)
 			{
-				Train.Handles.Reverser.Driver = ReverserPosition.Reverse;
+				Train.Handles.Reverser.ApplyState(ReverserPosition.Reverse);
 			}
 			else if (DeltaPosition > 0)
 			{
-				Train.Handles.Reverser.Driver = ReverserPosition.Forwards;
+				Train.Handles.Reverser.ApplyState(ReverserPosition.Forwards);
 			}
 
 			Train.Handles.Reverser.Actual = Train.Handles.Reverser.Driver;
@@ -170,12 +171,12 @@ namespace TrainManager.Trains
 
 				if (Car.TractionModel.Components.TryGetTypedValue(EngineComponent.CylinderCocks, out CylinderCocks c) && !c.Automatic)
 				{
-					if (Car.CurrentSpeed == 0 && c.Opened == false)
+					if (Car.CurrentSpeed == 0 && c.Active == false)
 					{
 						c.ControlDown(Translations.Command.CylinderCocks);
 					}
 
-					if (Car.CurrentSpeed > 5 && c.Opened)
+					if (Car.CurrentSpeed > 5 && c.Active)
 					{
 						c.ControlDown(Translations.Command.CylinderCocks);
 					}

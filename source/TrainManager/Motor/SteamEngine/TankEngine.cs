@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
@@ -22,21 +22,23 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
 using OpenBveApi;
 using OpenBveApi.Motor;
 using System.Linq;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Motor;
 using TrainManager.Power;
 using TrainManager.Trains;
 
-namespace TrainManager.Motor
+namespace TrainManager.SteamEngine
 {
 	public class TankEngine : TractionModel
 	{
-		/// <summary>The maximum water level</summary>
+		/// <summary>The maximum water level in the tanks</summary>
 		public readonly double TankMaxWaterLevel;
-		/// <summary>The current water level</summary>
+		/// <summary>The current water level in the tanks</summary>
 		public double TankWaterLevel;
 
 		public TankEngine(CarBase baseCar, AccelerationCurve[] accelerationCurves, double maxFuelLevel, double maxWaterLevel) : base(baseCar, accelerationCurves, true)
@@ -44,6 +46,7 @@ namespace TrainManager.Motor
 			FuelTank = new FuelTank(maxFuelLevel, 0, maxFuelLevel);
 			TankMaxWaterLevel = maxWaterLevel;
 			TankWaterLevel = maxWaterLevel;
+			Message = new string[8];
 		}
 
 		public TankEngine(CarBase baseCar, AccelerationCurve[] accelerationCurves, double maxFuelLevel, double fuelLevel, double maxWaterLevel, double waterLevel) : base(baseCar, accelerationCurves, true)
@@ -59,6 +62,36 @@ namespace TrainManager.Motor
 			for (int i = 0; i < Components.Count; i++)
 			{
 				Components.ElementAt(i).Value.Update(timeElapsed);
+			}
+
+			Array.Clear(Message, 0, 7);
+			int messageIdx = 0;
+
+			if (Components.TryGetTypedValue(EngineComponent.Boiler, out Boiler b))
+			{
+				Message[messageIdx++] = "Boiler Pressure: " + Math.Round(b.CurrentPressure, 2) + " psi";
+				Message[messageIdx++] = "Current Steam Mass: " + Math.Round(b.CurrentSteamMass, 2) + " kg";
+				Message[messageIdx++] = "Steam Generation Rate: " + Math.Round(b.MaxOutput, 2) + " kg/s";
+			}
+			if (Components.TryGetTypedValue(EngineComponent.CylinderChest, out CylinderChest c))
+			{
+				Message[messageIdx++] = "Cylinders Flow Rate: " + Math.Round(c.SteamMassFlow, 2) + " kg/s";
+			}
+			if (Components.TryGetTypedValue(EngineComponent.SteamInjector1, out Injector inj1) && inj1.Active)
+			{
+				Message[messageIdx++] = "Injector 1 Flow Rate: " + Math.Round(inj1.WaterFlowRate, 2);
+			}
+			if (Components.TryGetTypedValue(EngineComponent.SteamInjector2, out Injector inj2) && inj2.Active)
+			{
+				Message[messageIdx++] = "Injector 2 Flow Rate: " + Math.Round(inj2.WaterFlowRate, 2);
+			}
+			if (Components.TryGetTypedValue(EngineComponent.Blowers, out Blowers blowers))
+			{
+				Message[messageIdx++] = "Blowers: " + blowers.Active;
+			}
+			if (Components.TryGetTypedValue(EngineComponent.Firebox, out Firebox firebox))
+			{
+				Message[messageIdx] = "Firebox Fuel: " + Math.Round(firebox.FuelLevel, 2) + " kg, Temp: " + Math.Round(firebox.Temperature, 2) + " °c";
 			}
 		}
 
@@ -86,13 +119,13 @@ namespace TrainManager.Motor
 
 				if (Components.TryGetTypedValue(EngineComponent.CylinderCocks, out CylinderCocks c))
 				{
-					if (c.Opened)
+					if (c.Active)
 					{
 						power *= c.PowerModifier;
 					}
 				}
 
-				Message = @"Power " + power;
+//				Message = @"Power " + power;
 				return (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
 			}
 		}

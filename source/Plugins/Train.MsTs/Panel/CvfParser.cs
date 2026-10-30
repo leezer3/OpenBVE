@@ -548,6 +548,19 @@ namespace Train.MsTs
 				case PanelSubject.RPM:
 					Code = car.Index + " enginerpmindex";
 					break;
+				case PanelSubject.Traction_Braking:
+					switch (subjectUnits)
+					{
+						// F = ma
+						case Units.Kilo_Newtons:
+							Code = car.Index + " decelerationmotorindex carmass *";							
+							break;
+					}
+					break;
+				case PanelSubject.Steamchest_Pr:
+				case PanelSubject.Steamheat_Pressure:
+					Code = "0";
+					break;
 				default:
 					Code = "0";
 					break;
