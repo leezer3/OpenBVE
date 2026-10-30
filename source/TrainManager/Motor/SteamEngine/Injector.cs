@@ -86,6 +86,15 @@ namespace TrainManager.SteamEngine
 
 				boiler.WaterLevel += WaterFlowRate * timeElapsed;
 				boiler.CurrentSteamMass -= steamMassFlow * timeElapsed;
+
+				if (baseEngine is TenderEngine tenderEngine)
+				{
+					tenderEngine.Tender.WaterLevel -= WaterFlowRate * timeElapsed;
+				}
+				else if(baseEngine is TankEngine tankEngine)
+				{
+					tankEngine.TankWaterLevel -= WaterFlowRate * timeElapsed;
+				}
 			}
 			else
 			{
