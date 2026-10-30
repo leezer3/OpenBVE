@@ -99,12 +99,13 @@ namespace TrainManager.SteamEngine
 
 				CurrentPistonPosition %= 1;
 				
-				if (ascendingStrokes == 0)
+				if (ascendingStrokes == 0 || baseEngine.BaseCar.baseTrain.Handles.Power.Actual == 0)
 				{
-					// no ascending strokes this frame, so steam mass flow is zero
+					// no ascending strokes this frame or zero regulator, so steam mass flow is zero
 					// however return here so we keep the flow number in the debug
 					return;
 				}
+
 				SteamMassFlow = SteamTable.GetSteamDensity(boiler.CurrentPressure) * CylinderVolume;
 				SteamMassFlow *= ascendingStrokes;
 				if (baseEngine.BaseCar.baseTrain.Handles.Reverser is Cutoff cutoff)

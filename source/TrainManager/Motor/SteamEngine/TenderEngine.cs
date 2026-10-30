@@ -41,7 +41,7 @@ namespace TrainManager.SteamEngine
 
 		public TenderEngine(CarBase baseCar, AccelerationCurve[] accelerationCurves) : base(baseCar, accelerationCurves, true)
 		{
-			Message = new string[7];
+			Message = new string[8];
 		}
 
 		public override void Update(double timeElapsed)
@@ -57,13 +57,13 @@ namespace TrainManager.SteamEngine
 
 			if (Components.TryGetTypedValue(EngineComponent.Boiler, out Boiler b))
 			{
-				Message[messageIdx++] = "Boiler Pressure: " + Math.Round(b.CurrentPressure, 2);
-				Message[messageIdx++] = "Current Steam Mass: " + Math.Round(b.CurrentSteamMass, 2);
-				Message[messageIdx++] = "Steam Generation Rate: " + Math.Round(b.MaxOutput, 2);
+				Message[messageIdx++] = "Boiler Pressure: " + Math.Round(b.CurrentPressure, 2) + " psi";
+				Message[messageIdx++] = "Current Steam Mass: " + Math.Round(b.CurrentSteamMass, 2) + " kg";
+				Message[messageIdx++] = "Steam Generation Rate: " + Math.Round(b.MaxOutput, 2) + " kg/s";
 			}
 			if (Components.TryGetTypedValue(EngineComponent.CylinderChest, out CylinderChest c))
 			{
-				Message[messageIdx++] = "Cylinders Flow Rate: " + Math.Round(c.SteamMassFlow, 2);
+				Message[messageIdx++] = "Cylinders Flow Rate: " + Math.Round(c.SteamMassFlow, 2) + " kg/s";
 			}
 			if (Components.TryGetTypedValue(EngineComponent.SteamInjector1, out Injector inj1) && inj1.Active)
 			{
@@ -75,7 +75,11 @@ namespace TrainManager.SteamEngine
 			}
 			if (Components.TryGetTypedValue(EngineComponent.Blowers, out Blowers blowers))
 			{
-				Message[messageIdx] = "Blowers: " + blowers.Active;
+				Message[messageIdx++] = "Blowers: " + blowers.Active;
+			}
+			if (Components.TryGetTypedValue(EngineComponent.Firebox, out Firebox firebox))
+			{
+				Message[messageIdx] = "Firebox Fuel: " + Math.Round(firebox.FuelLevel, 2) + " kg, Temp: " + Math.Round(firebox.Temperature, 2) + " °c";
 			}
 		}
 
