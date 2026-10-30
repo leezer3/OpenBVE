@@ -469,6 +469,7 @@ namespace OpenBve {
             this.buttonCreateProceed = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.radioButtonQ2Other = new System.Windows.Forms.RadioButton();
+            this.radioButtonQ2HudTheme = new System.Windows.Forms.RadioButton();
             this.radioButtonQ2Train = new System.Windows.Forms.RadioButton();
             this.radioButtonQ2Route = new System.Windows.Forms.RadioButton();
             this.labelPackageType = new System.Windows.Forms.Label();
@@ -5732,7 +5733,8 @@ namespace OpenBve {
             this.comboBoxPackageType.Items.AddRange(new object[] {
             "Routes",
             "Trains",
-            "Other"});
+            "Other",
+            "HUD Themes"});
             this.comboBoxPackageType.Location = new System.Drawing.Point(8, 61);
             this.comboBoxPackageType.Name = "comboBoxPackageType";
             this.comboBoxPackageType.Size = new System.Drawing.Size(221, 21);
@@ -6169,11 +6171,12 @@ namespace OpenBve {
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.radioButtonQ2Other);
+            this.groupBox1.Controls.Add(this.radioButtonQ2HudTheme);
             this.groupBox1.Controls.Add(this.radioButtonQ2Train);
             this.groupBox1.Controls.Add(this.radioButtonQ2Route);
             this.groupBox1.Location = new System.Drawing.Point(8, 69);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(265, 24);
+            this.groupBox1.Size = new System.Drawing.Size(360, 24);
             this.groupBox1.TabIndex = 19;
             this.groupBox1.TabStop = false;
             // 
@@ -6189,6 +6192,19 @@ namespace OpenBve {
             this.radioButtonQ2Other.Text = "Other";
             this.radioButtonQ2Other.UseVisualStyleBackColor = true;
             this.radioButtonQ2Other.CheckedChanged += new System.EventHandler(this.Q2_CheckedChanged);
+            // 
+            // radioButtonQ2HudTheme
+            // 
+            this.radioButtonQ2HudTheme.AutoSize = true;
+            this.radioButtonQ2HudTheme.ForeColor = System.Drawing.Color.Black;
+            this.radioButtonQ2HudTheme.Location = new System.Drawing.Point(176, 1);
+            this.radioButtonQ2HudTheme.Name = "radioButtonQ2HudTheme";
+            this.radioButtonQ2HudTheme.Size = new System.Drawing.Size(83, 17);
+            this.radioButtonQ2HudTheme.TabIndex = 20;
+            this.radioButtonQ2HudTheme.TabStop = true;
+            this.radioButtonQ2HudTheme.Text = "HUD Theme";
+            this.radioButtonQ2HudTheme.UseVisualStyleBackColor = true;
+            this.radioButtonQ2HudTheme.CheckedChanged += new System.EventHandler(this.Q2_CheckedChanged);
             // 
             // radioButtonQ2Train
             // 
@@ -6976,6 +6992,7 @@ namespace OpenBve {
 		private System.Windows.Forms.RadioButton radioButtonQ2Route;
 		private System.Windows.Forms.Label labelPackageType;
 		private System.Windows.Forms.RadioButton radioButtonQ2Other;
+		private System.Windows.Forms.RadioButton radioButtonQ2HudTheme;
 		private System.Windows.Forms.Panel panelReplacePackage;
 		private System.Windows.Forms.Label packageToReplaceLabel;
 		private System.Windows.Forms.DataGridView dataGridViewReplacePackage;

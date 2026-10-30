@@ -138,3 +138,34 @@ No special meaning. Displays the element as-is.
 -----
 
 In order to create a custom interface, create a new folder with an interface.cfg file inside it and edit the [interface] section inside the options.cfg file accordingly in order to load the interface.
+
+hud.xml manifest
+----------------
+
+A shareable HUD theme may include a hud.xml manifest file inside the theme root
+folder. The manifest identifies the folder as a HUD theme and provides the
+package metadata used when the theme is installed via the package manager:
+
+name         The display name of the theme (Also used as the package name)
+version      The package version (Optional, defaults to 1.0.0)
+author       The package author (Optional)
+website      The package website (Optional)
+image        The preview image file inside the theme folder (Optional)
+description  The package description (Optional)
+
+Themes installed through the package manager are tracked in the package
+database, and can be uninstalled or upgraded from the packages tab in the
+same way as routes, trains and other add-ons.
+
+To share a theme, use the package creator and select the HUD Theme package
+type, then select the folder containing the interface.cfg file. The hud.xml
+manifest is the only package description used for themes, so no package.xml
+is written; the package GUID is generated when the theme is installed.
+
+Example:
+<Hud>
+    <name>My Theme</name>
+    <version>1.1</version>
+    <author>OpenBVE</author>
+    <image>preview.png</image>
+</Hud>

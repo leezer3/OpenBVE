@@ -696,7 +696,7 @@ namespace OpenBve {
 			string inGameFolder = Program.FileSystem.GetDataFolder("In-game");
 			AddHudThemes(inGameFolder, themes, true);
 			AddHudThemes(Path.CombineDirectory(inGameFolder, "Themes"), themes, false);
-			AddHudThemes(GetUserHudThemesFolder(), themes, false);
+			AddHudThemes(Program.FileSystem.HudThemeInstallationDirectory, themes, false);
 			return themes;
 		}
 
@@ -854,6 +854,12 @@ namespace OpenBve {
 
 		private static string GetHudManifestName(string folder)
 		{
+			return GetHudManifestValue(folder, "name");
+		}
+
+		/// <summary>Reads a single element from the hud.xml manifest of a theme folder</summary>
+		private static string GetHudManifestValue(string folder, string key)
+		{
 			string manifest = GetHudManifest(folder);
 			if (manifest != null)
 			{
@@ -867,20 +873,20 @@ namespace OpenBve {
 					}
 					foreach (XmlNode node in xml.DocumentElement.ChildNodes)
 					{
-						if (!(node is XmlElement element) || !string.Equals(element.LocalName, "name", StringComparison.OrdinalIgnoreCase))
+						if (!(node is XmlElement element) || !string.Equals(element.LocalName, key, StringComparison.OrdinalIgnoreCase))
 						{
 							continue;
 						}
-						string name = element.InnerText.Trim();
-						if (name.Length > 0)
+						string value = element.InnerText.Trim();
+						if (value.Length > 0)
 						{
-							return name;
+							return value;
 						}
 					}
 				}
 				catch
 				{
-					// Fall back to the folder name if the manifest cannot be read
+					// Return null if the manifest cannot be read
 				}
 			}
 			return null;
@@ -1017,43 +1023,65 @@ namespace OpenBve {
 			SetHudTheme(theme, trackBarHUDSize.Value);
 		}
 
-		private bool TryInstallHudThemeZip(string zipFile, bool requireManifest)
+		/// <summary>Reads a HUD theme zip archive and builds a package for the standard installer, or returns null if the file is not a valid HUD theme</summary>
+		private Package ReadHudThemePackage(string zipFile)
 		{
 			string tempFolder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "openbve-hud-" + Guid.NewGuid().ToString("N"));
 			try
 			{
 				Directory.CreateDirectory(tempFolder);
 				ExtractHudThemeZip(zipFile, tempFolder);
-				string themeFolder = FindHudThemeRoot(tempFolder, requireManifest);
+				string themeFolder = FindHudThemeRoot(tempFolder, true);
 				if (themeFolder == null)
 				{
-					return false;
+					return null;
 				}
-				string userThemesFolder = GetUserHudThemesFolder();
-				if (string.IsNullOrEmpty(userThemesFolder))
-				{
-					userThemesFolder = Path.CombineDirectory(Program.FileSystem.GetDataFolder("In-game"), "Themes");
-				}
-				Directory.CreateDirectory(userThemesFolder);
 				string name = GetHudManifestName(themeFolder);
 				if (string.IsNullOrEmpty(name))
 				{
 					name = System.IO.Path.GetFileNameWithoutExtension(zipFile);
 				}
-				string destination = GetUniqueFolder(userThemesFolder, SanitizeHudThemeFolderName(name));
-				CopyDirectory(themeFolder, destination);
-				HudTheme theme = CreateHudTheme(destination);
-				if (theme == null)
+				Package package = new Package
 				{
-					Directory.Delete(destination, true);
-					return false;
+					Name = name,
+					Author = GetHudManifestValue(themeFolder, "author"),
+					Website = GetHudManifestValue(themeFolder, "website"),
+					Description = GetHudManifestValue(themeFolder, "description"),
+					PackageType = PackageType.HudTheme,
+					PackageFile = zipFile,
+					//These lists must never be null, otherwise the installer throws when checking dependancies
+					Dependancies = new List<Package>(),
+					Reccomendations = new List<Package>(),
+					DependantPackages = new List<string>()
+				};
+				/*
+				 * Raw theme zips get a generated GUID on first import; reinstalling keeps the existing one.
+				 * The author is part of the identity so two different themes which share a name do not
+				 * get merged into one package.
+				 */
+				Package installedTheme = Database.currentDatabase.InstalledHudThemes.FirstOrDefault(x =>
+					string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase) &&
+					string.Equals(x.Author ?? string.Empty, package.Author ?? string.Empty, StringComparison.OrdinalIgnoreCase));
+				package.GUID = installedTheme == null ? Guid.NewGuid().ToString() : installedTheme.GUID;
+				string version = GetHudManifestValue(themeFolder, "version");
+				package.PackageVersion = Version.TryParse(version, out Version parsedVersion) ? parsedVersion : new Version(1, 0, 0);
+				string image = GetHudManifestValue(themeFolder, "image");
+				if (!string.IsNullOrEmpty(image))
+				{
+					try
+					{
+						package.PackageImage = ImageExtensions.FromFile(Path.CombineFile(themeFolder, image));
+					}
+					catch
+					{
+						// Ignore preview images which cannot be read
+					}
 				}
-				AddHudThemeToSelection(theme);
-				return true;
+				return package;
 			}
 			catch
 			{
-				return false;
+				return null;
 			}
 			finally
 			{
@@ -1069,46 +1097,6 @@ namespace OpenBve {
 					// Ignore temporary folders which cannot be removed
 				}
 			}
-		}
-
-		private void AddHudThemeToSelection(HudTheme theme)
-		{
-			updatingHudStyle = true;
-			int index = -1;
-			for (int i = 0; i < comboBoxHUDTheme.Items.Count; i++)
-			{
-				if (string.Equals(((HudTheme)comboBoxHUDTheme.Items[i]).Id, theme.Id, StringComparison.OrdinalIgnoreCase))
-				{
-					index = i;
-					break;
-				}
-			}
-			if (index >= 0)
-			{
-				comboBoxHUDTheme.Items[index] = theme;
-			}
-			else
-			{
-				comboBoxHUDTheme.Items.Add(theme);
-			}
-			updatingHudStyle = false;
-			SetHudTheme(theme, trackBarHUDSize.Value);
-		}
-
-		private static string GetUserHudThemesFolder()
-		{
-			string settingsFolder = Program.FileSystem.SettingsFolder;
-			if (string.IsNullOrEmpty(settingsFolder))
-			{
-				return null;
-			}
-			char[] trailingSeparators = { System.IO.Path.DirectorySeparatorChar, System.IO.Path.AltDirectorySeparatorChar };
-			string parent = System.IO.Path.GetDirectoryName(settingsFolder.TrimEnd(trailingSeparators));
-			if (string.IsNullOrEmpty(parent))
-			{
-				return null;
-			}
-			return Path.CombineDirectory(parent, "Themes");
 		}
 
 		private static void ExtractHudThemeZip(string zipFile, string destinationFolder)
@@ -1178,31 +1166,6 @@ namespace OpenBve {
 			}
 			name = name.Trim().TrimEnd('.');
 			return name.Length == 0 ? "Theme" : name;
-		}
-
-		private static string GetUniqueFolder(string parent, string name)
-		{
-			string folder = Path.CombineDirectory(parent, name);
-			int suffix = 2;
-			while (Directory.Exists(folder))
-			{
-				folder = Path.CombineDirectory(parent, name + " (" + suffix + ")");
-				suffix++;
-			}
-			return folder;
-		}
-
-		private static void CopyDirectory(string source, string destination)
-		{
-			Directory.CreateDirectory(destination);
-			foreach (string file in Directory.GetFiles(source))
-			{
-				File.Copy(file, System.IO.Path.Combine(destination, System.IO.Path.GetFileName(file)));
-			}
-			foreach (string directory in Directory.GetDirectories(source))
-			{
-				CopyDirectory(directory, System.IO.Path.Combine(destination, System.IO.Path.GetFileName(directory)));
-			}
 		}
 
 		private void comboBoxFont_DrawItem(object sender, DrawItemEventArgs e)
