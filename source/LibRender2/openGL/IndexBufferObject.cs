@@ -50,6 +50,15 @@ namespace LibRender2
 		internal abstract void Draw(PrimitiveType DrawMode, int Start, int Count);
 
 		/// <summary>
+		/// Draws multiple instances of the object in a single call
+		/// </summary>
+		/// <param name="DrawMode">Specifies the primitive or primitives that will be created from vertices</param>
+		/// <param name="Start">Start position of vertex index</param>
+		/// <param name="Count">Number of vertex indices to use</param>
+		/// <param name="InstanceCount">The number of instances to draw</param>
+		internal abstract void DrawInstanced(PrimitiveType DrawMode, int Start, int Count, int InstanceCount);
+
+		/// <summary>
 		/// Dispose method to clean up the IBO/EBO releases the OpenGL Buffer
 		/// </summary>
 		public void Dispose()
@@ -113,6 +122,11 @@ namespace LibRender2
 		{
 			GL.DrawElements(DrawMode, Count, DrawElementsType.UnsignedShort, Start * sizeof(ushort));
 		}
+
+		internal override void DrawInstanced(PrimitiveType DrawMode, int Start, int Count, int InstanceCount)
+		{
+			GL.DrawElementsInstanced(DrawMode, Count, DrawElementsType.UnsignedShort, new IntPtr(Start * sizeof(ushort)), InstanceCount);
+		}
 	}
 
 	public class IndexBufferObjectUI : IndexBufferObject<uint>
@@ -134,6 +148,11 @@ namespace LibRender2
 		internal override void Draw(PrimitiveType DrawMode, int Start, int Count)
 		{
 			GL.DrawElements(DrawMode, Count, DrawElementsType.UnsignedInt, Start * sizeof(uint));
+		}
+
+		internal override void DrawInstanced(PrimitiveType DrawMode, int Start, int Count, int InstanceCount)
+		{
+			GL.DrawElementsInstanced(DrawMode, Count, DrawElementsType.UnsignedInt, new IntPtr(Start * sizeof(uint)), InstanceCount);
 		}
 	}
 }
