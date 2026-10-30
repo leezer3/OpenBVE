@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2022, Christopher Lees, The OpenBVE Project
 //
@@ -25,6 +25,7 @@
 using LibRender2.Text;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Math;
 
 namespace LibRender2.Primitives
 {
@@ -40,17 +41,38 @@ namespace LibRender2.Primitives
 		public Label(BaseRenderer renderer, string text) : base(renderer)
 		{
 			Text = text;
-			Font = Renderer.Fonts.LargeFont;
-			Size = Font.MeasureString(Text) * 1.5;
+			Font = Renderer.Fonts.NormalFont;
+			Size = Font.MeasureString(Text);
 			// default colors to match GLMenu
 			BackgroundColor = Color128.Black;
 			TextColor = Color128.White;
+			IsVisible = true;
 		}
 
 		public override void Draw()
 		{
-			Renderer.Rectangle.Draw(Texture, Location, Size, BackgroundColor);
-			Renderer.OpenGlString.Draw(Font, Text, Location + (Size * 0.15), TextAlignment.TopLeft, TextColor);
+			if (!IsVisible) return;
+			if (BackgroundColor.A > 0.001f)
+			{
+				Renderer.Rectangle.Draw(Texture, Location, Size, BackgroundColor);
+			}
+			string toDraw = Text;
+			Vector2 measured = Font.MeasureString(Text);
+			if (Size.X > 0 && measured.X > Size.X)
+			{
+				// Truncate with an ellipsis so long labels never spill over the adjacent control
+				for (int n = Text.Length - 1; n >= 0; n--)
+				{
+					string candidate = Text.Substring(0, n) + "...";
+					if (Font.MeasureString(candidate).X <= Size.X)
+					{
+						toDraw = candidate;
+						break;
+					}
+				}
+			}
+			float textY = (float)(Location.Y + (Size.Y - Font.MeasureString(toDraw).Y) / 2.0f);
+			Renderer.OpenGlString.Draw(Font, toDraw, new Vector2(Location.X, textY), TextAlignment.TopLeft, TextColor);
 		}
 	}
 }

@@ -189,6 +189,16 @@ namespace LibRender2
 		public short Coordinates;
 
 		/// <summary>
+		/// The handle of "uRadius" (rounded-corner radius in pixels, 0 = square) within the shader
+		/// </summary>
+		public short Radius = -1;
+
+		/// <summary>
+		/// The handle of "uCorners" (per-corner round mask: x=TL y=TR z=BR w=BL) within the shader
+		/// </summary>
+		public short Corners = -1;
+
+		/// <summary>
 		/// The handle of "uAtlasLocation" within the shader
 		/// </summary>
 		public short AtlasLocation;

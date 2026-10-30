@@ -194,6 +194,7 @@ namespace RouteViewer
 	        Program.Renderer.Screen.Width = Width;
 	        Program.Renderer.Screen.Height = Height;
 	        Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
+			Game.Menu.ComputePosition();
 			Program.Renderer.Rectangle.Update();
 			Program.Renderer.OpenGlString.Update();
 			// A resize behind an open dialog must present itself (paused loop renders on-demand only).

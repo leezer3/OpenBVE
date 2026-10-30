@@ -23,26 +23,46 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using LibRender2.Screens;
+using LibRender2.Viewports;
 using OpenTK;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
+using OpenBveApi.Objects;
 
 namespace LibRender2.Menu
 {
 	public class MenuOption : MenuEntry
 	{
-		private readonly OptionType Type;
+		internal readonly OptionType Type;
 
 		/// <summary>Holds the entries for all options</summary>
 		private readonly object[] Entries;
 
 		/// <summary>Gets the current option</summary>
-		public object CurrentOption => Entries[CurrentlySelectedOption];
+		public object CurrentOption => customValue ?? Entries[CurrentlySelectedOption];
 
 		private int CurrentlySelectedOption;
+		private string customValue = null;
+
+		public string DisplayValue
+		{
+			get
+			{
+				string val = CurrentOption.ToString();
+				if ((Type == OptionType.ViewingDistance || Type == OptionType.NearClip) && 
+				    BaseMenu.CurrMenu >= 0 && BaseMenu.CurrMenu < BaseMenu.Menus.Length &&
+				    BaseMenu.Menus[BaseMenu.CurrMenu].Selection >= 0 &&
+				    BaseMenu.Menus[BaseMenu.CurrMenu].Selection < BaseMenu.Menus[BaseMenu.CurrMenu].Items.Length &&
+				    BaseMenu.Menus[BaseMenu.CurrMenu].Items[BaseMenu.Menus[BaseMenu.CurrMenu].Selection] == this)
+				{
+					return val + "_";
+				}
+				return val;
+			}
+		}
 
 		public MenuOption(AbstractMenu menu, OptionType type, string text, object[] entries) : base(menu)
 		{
@@ -102,6 +122,7 @@ namespace LibRender2.Menu
 					}
 					break;
 				case OptionType.ViewingDistance:
+					customValue = BaseMenu.CurrentOptions.ViewingDistance.ToString();
 					switch (BaseMenu.CurrentOptions.ViewingDistance)
 					{
 						case 400:
@@ -172,6 +193,36 @@ namespace LibRender2.Menu
 				case OptionType.ShadowFilterCascades:
 					CurrentlySelectedOption = BaseMenu.CurrentOptions.ShadowFilterCascades ? 0 : 1;
 					return;
+				case OptionType.TransparencyQuality:
+					CurrentlySelectedOption = (int)BaseMenu.CurrentOptions.TransparencyMode;
+					return;
+				case OptionType.NewXParser:
+					CurrentlySelectedOption = (int)BaseMenu.CurrentOptions.CurrentXParser;
+					return;
+				case OptionType.NewObjParser:
+					CurrentlySelectedOption = (int)BaseMenu.CurrentOptions.CurrentObjParser;
+					return;
+				case OptionType.NearClip:
+					customValue = BaseMenu.CurrentOptions.NearClipBase.ToString(CultureInfo.InvariantCulture);
+					for (int i = 0; i < Entries.Length; i++)
+					{
+						double clip = double.Parse(entries[i] as string ?? string.Empty, NumberStyles.Float, CultureInfo.InvariantCulture);
+						if (System.Math.Abs(clip - BaseMenu.CurrentOptions.NearClipBase) < 0.001)
+						{
+							CurrentlySelectedOption = i;
+							return;
+						}
+					}
+					break;
+				case OptionType.ShowLogo:
+					CurrentlySelectedOption = BaseMenu.CurrentOptions.LoadingLogo ? 0 : 1;
+					return;
+				case OptionType.ShowBackgrounds:
+					CurrentlySelectedOption = BaseMenu.CurrentOptions.LoadingBackground ? 0 : 1;
+					return;
+				case OptionType.ShowProgressBar:
+					CurrentlySelectedOption = BaseMenu.CurrentOptions.LoadingProgressBar ? 0 : 1;
+					return;
 			}
 			CurrentlySelectedOption = 0;
 		}
@@ -179,6 +230,7 @@ namespace LibRender2.Menu
 		/// <summary>Flips to the next option</summary>
 		public void Flip()
 		{
+			customValue = null;
 			if (CurrentlySelectedOption < Entries.Length - 1)
 			{
 				CurrentlySelectedOption++;
@@ -267,6 +319,8 @@ namespace LibRender2.Menu
 					break;
 				case OptionType.Interpolation:
 					BaseMenu.CurrentOptions.Interpolation = (InterpolationMode)CurrentlySelectedOption;
+					BaseMenu.Renderer.TextureManager.UnloadAllTextures(true);
+					BaseMenu.Renderer.TextureManager.LoadAllTextures();
 					break;
 				case OptionType.AutoReloadObjects:
 					BaseMenu.CurrentOptions.AutoReloadObjects = !BaseMenu.CurrentOptions.AutoReloadObjects;
@@ -274,12 +328,20 @@ namespace LibRender2.Menu
 				//HACK: We can't store plain ints due to to boxing, so store strings and parse instead
 				case OptionType.AnisotropicLevel:
 					BaseMenu.CurrentOptions.AnisotropicFilteringLevel = int.Parse((string)CurrentOption, NumberStyles.Integer);
+					BaseMenu.Renderer.TextureManager.UnloadAllTextures(true);
+					BaseMenu.Renderer.TextureManager.LoadAllTextures();
 					break;
 				case OptionType.AntialiasingLevel:
 					BaseMenu.CurrentOptions.AntiAliasingLevel = int.Parse((string)CurrentOption, NumberStyles.Integer);
 					break;
 				case OptionType.ViewingDistance:
 					BaseMenu.CurrentOptions.ViewingDistance = int.Parse((string)CurrentOption, NumberStyles.Integer);
+					BaseMenu.Renderer.UpdateViewport(ViewportChangeMode.ChangeToScenery);
+					if (BaseMenu.Renderer.CameraTrackFollower != null)
+					{
+						BaseMenu.Renderer.UpdateViewingDistances(BaseMenu.CurrentOptions.ViewingDistance);
+					}
+					BaseMenu.OnOptionChanged(Type);
 					break;
 				case OptionType.UIScaleFactor:
 					string currentOption = (string)CurrentOption;
@@ -322,9 +384,148 @@ namespace LibRender2.Menu
 				case OptionType.ShadowFilterCascades:
 					BaseMenu.CurrentOptions.ShadowFilterCascades = !BaseMenu.CurrentOptions.ShadowFilterCascades;
 					break;
+				case OptionType.TransparencyQuality:
+					BaseMenu.CurrentOptions.TransparencyMode = (TransparencyMode)CurrentlySelectedOption;
+					break;
+				case OptionType.NewXParser:
+					BaseMenu.CurrentOptions.CurrentXParser = (XParsers)CurrentlySelectedOption;
+					break;
+				case OptionType.NewObjParser:
+					BaseMenu.CurrentOptions.CurrentObjParser = (ObjParsers)CurrentlySelectedOption;
+					break;
+				case OptionType.NearClip:
+					BaseMenu.CurrentOptions.NearClipBase = double.Parse((string)CurrentOption, NumberStyles.Float, CultureInfo.InvariantCulture);
+					BaseMenu.Renderer.UpdateViewport(ViewportChangeMode.ChangeToScenery);
+					BaseMenu.OnOptionChanged(Type);
+					break;
+				case OptionType.ShowLogo:
+					BaseMenu.CurrentOptions.LoadingLogo = !BaseMenu.CurrentOptions.LoadingLogo;
+					break;
+				case OptionType.ShowBackgrounds:
+					BaseMenu.CurrentOptions.LoadingBackground = !BaseMenu.CurrentOptions.LoadingBackground;
+					break;
+				case OptionType.ShowProgressBar:
+					BaseMenu.CurrentOptions.LoadingProgressBar = !BaseMenu.CurrentOptions.LoadingProgressBar;
+					break;
 
 			}
 
+		}
+
+		public void ProcessKeyDown(OpenTK.Input.Key key)
+		{
+			if (Type != OptionType.ViewingDistance && Type != OptionType.NearClip)
+			{
+				return;
+			}
+
+			if (customValue == null)
+			{
+				customValue = Entries[CurrentlySelectedOption].ToString();
+			}
+
+			if (key >= OpenTK.Input.Key.Number0 && key <= OpenTK.Input.Key.Number9)
+			{
+				int digit = (int)key - (int)OpenTK.Input.Key.Number0;
+				if (customValue == Entries[CurrentlySelectedOption].ToString())
+				{
+					customValue = digit.ToString();
+				}
+				else
+				{
+					customValue += digit.ToString();
+				}
+				ApplyCustomValue();
+			}
+			else if (key >= OpenTK.Input.Key.Keypad0 && key <= OpenTK.Input.Key.Keypad9)
+			{
+				int digit = (int)key - (int)OpenTK.Input.Key.Keypad0;
+				if (customValue == Entries[CurrentlySelectedOption].ToString())
+				{
+					customValue = digit.ToString();
+				}
+				else
+				{
+					customValue += digit.ToString();
+				}
+				ApplyCustomValue();
+			}
+			else if (key == OpenTK.Input.Key.Period || key == OpenTK.Input.Key.KeypadPeriod)
+			{
+				if (!customValue.Contains("."))
+				{
+					customValue += ".";
+					ApplyCustomValue();
+				}
+			}
+			else if (key == OpenTK.Input.Key.BackSpace)
+			{
+				if (customValue.Length > 0)
+				{
+					customValue = customValue.Substring(0, customValue.Length - 1);
+					ApplyCustomValue();
+				}
+			}
+		}
+
+		private void ApplyCustomValue()
+		{
+			if (string.IsNullOrEmpty(customValue))
+			{
+				return;
+			}
+
+			if (Type == OptionType.ViewingDistance)
+			{
+				if (double.TryParse(customValue, NumberStyles.Float, CultureInfo.InvariantCulture, out double val))
+				{
+					BaseMenu.CurrentOptions.ViewingDistance = (int)val;
+					BaseMenu.Renderer.UpdateViewport(ViewportChangeMode.ChangeToScenery);
+					if (BaseMenu.Renderer.CameraTrackFollower != null)
+					{
+						BaseMenu.Renderer.UpdateViewingDistances(BaseMenu.CurrentOptions.ViewingDistance);
+					}
+					BaseMenu.OnOptionChanged(Type);
+				}
+			}
+			else if (Type == OptionType.NearClip)
+			{
+				if (double.TryParse(customValue, NumberStyles.Float, CultureInfo.InvariantCulture, out double val))
+				{
+					BaseMenu.CurrentOptions.NearClipBase = val;
+					BaseMenu.Renderer.UpdateViewport(ViewportChangeMode.ChangeToScenery);
+					BaseMenu.OnOptionChanged(Type);
+				}
+			}
+		}
+
+		public void ApplyScrubDelta(int deltaX)
+		{
+			if (customValue == null)
+			{
+				customValue = Entries[CurrentlySelectedOption].ToString();
+			}
+
+			if (Type == OptionType.ViewingDistance)
+			{
+				if (double.TryParse(customValue, NumberStyles.Float, CultureInfo.InvariantCulture, out double val))
+				{
+					val += deltaX * 2;
+					if (val < 10) val = 10;
+					customValue = ((int)val).ToString();
+					ApplyCustomValue();
+				}
+			}
+			else if (Type == OptionType.NearClip)
+			{
+				if (double.TryParse(customValue, NumberStyles.Float, CultureInfo.InvariantCulture, out double val))
+				{
+					val += deltaX * 0.002;
+					if (val < 0.001) val = 0.001;
+					customValue = val.ToString("0.000", CultureInfo.InvariantCulture);
+					ApplyCustomValue();
+				}
+			}
 		}
 	}
 }
