@@ -76,6 +76,7 @@ namespace TrainManager.SteamEngine
 			doorOpenPressed = false;
 			doorClosePressed = false;
 			ShovelMass = shovelMass;
+			burnRate = FuelLevel / BurnTime;
 		}
 
 		public override void Update(double timeElapsed)
@@ -152,6 +153,16 @@ namespace TrainManager.SteamEngine
 						}
 							
 						FuelLevel += fuelAdded;
+
+						if (baseEngine is TenderEngine tenderEngine)
+						{
+							tenderEngine.Tender.FuelTank.CurrentLevel -= fuelAdded;
+						}
+						else if (baseEngine is TankEngine tankEngine)
+						{
+							tankEngine.FuelTank.CurrentLevel -= fuelAdded;
+						}
+
 						FuelLevel = Math.Min(FuelLevel, MaxFuelLevel);
 						// we assume 1 / BurnTime of the fire mass burns per second
 						burnRate = FuelLevel / BurnTime;
