@@ -112,6 +112,36 @@ namespace TrainManager.Handles
 			}
 			return Driver + "%";
 		}
+
+		public override string GetDebugDescription(HandleState state)
+		{
+			switch (state)
+			{
+				case HandleState.Actual:
+					if (Actual == 0)
+					{
+						return "N";
+					}
+
+					return Actual + "%";
+				case HandleState.Driver:
+					if (Driver == 0)
+					{
+						return "N";
+					}
+
+					return Driver + "%";
+				case HandleState.Safety:
+					if (Safety == 0)
+					{
+						return "N";
+					}
+
+					return Safety + "%";
+			}
+
+			return string.Empty;
+		}
 	}
 }
 

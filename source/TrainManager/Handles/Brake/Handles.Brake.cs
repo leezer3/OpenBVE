@@ -1,8 +1,10 @@
-using System.Globalization;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
+using OpenBveApi.Routes;
 using RouteManager2.MessageManager;
+using System.Globalization;
+using System.Runtime.InteropServices.WindowsRuntime;
 using TrainManager.Trains;
 
 namespace TrainManager.Handles
@@ -207,6 +209,52 @@ namespace TrainManager.Handles
 
 			return NotchDescriptions[offset];
 
+		}
+
+		public override string GetDebugDescription(HandleState state)
+		{
+			switch (state)
+			{
+				case HandleState.Actual:
+					if (baseTrain.Handles.EmergencyBrake.Actual)
+					{
+						return "EMG";
+					}
+					if (baseTrain.Handles.HoldBrake.Actual)
+					{
+						return "HLD";
+					}
+					if (Actual == 0)
+					{
+						return "N";
+					}
+					return "B" + Actual;
+				case HandleState.Safety:
+					if (baseTrain.Handles.EmergencyBrake.Safety)
+					{
+						return "EMG";
+					}
+					if (Safety == 0)
+					{
+						return "N";
+					}
+					return "B" + Safety;
+				case HandleState.Driver:
+					if (baseTrain.Handles.EmergencyBrake.Driver)
+					{
+						return "EMG";
+					}
+					if (baseTrain.Handles.HoldBrake.Driver)
+					{
+						return "HLD";
+					}
+					if (Driver == 0)
+					{
+						return "N";
+					}
+					return "B" + Safety;
+			}
+			return string.Empty;
 		}
 	}
 }
