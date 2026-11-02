@@ -523,9 +523,13 @@ namespace Train.MsTs
 					}
 					break;
 				case PanelSubject.Fuel_Gauge:
-					if (tractionModel is DieselEngine dE)
+					if (tractionModel is TenderEngine tEf)
 					{
-						lastResult = dE.FuelTank.CurrentLevel;
+						lastResult = tEf.Tender.FuelTank.CurrentLevel;
+					}
+					else
+					{
+						lastResult = tractionModel.FuelTank.CurrentLevel;
 					}
 					break;
 				case PanelSubject.Firehole:

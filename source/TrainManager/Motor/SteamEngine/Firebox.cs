@@ -49,17 +49,16 @@ namespace TrainManager.SteamEngine
 		public const double AmbientTemp = 20;
 		/// <summary>Combustion temperature for standard anthracite coal</summary>
 		public readonly double CombustionTemp;
-
+		/// <summary>The time taken for the current fuel to completely burn</summary>
 		private readonly double BurnTime;
 		/// <summary>The current heat output ratio</summary>
 		public double HeatOutput => (FuelLevel / IdealFuelLevel) * (Temperature / CombustionTemp);
-
-
-
+		
 		private bool doorOpenPressed;
 
 		private bool doorClosePressed;
-
+		/// <summary>Stores the current base burn rate for the firebox</summary>
+		/// <remarks>Updated whenever fuel is added to the fire</remarks>
 		private double burnRate;
 
 		public Firebox(TractionModel engine, FireboxFuel fuel, double maxFuelLevel, double shovelMass, double currentFuelLevel, double idealFuelLevel,
