@@ -115,5 +115,27 @@ namespace TrainManager.Handles
 
 			return string.Empty;
 		}
+
+		public override string GetDebugDescription(HandleState state)
+		{
+			switch (state)
+			{
+				case HandleState.Actual:
+				case HandleState.Safety:
+					if (baseTrain.CurrentDirection == TrackDirection.Reverse)
+					{
+						return Actual == (int)ReverserPosition.Reverse ? "B" : Actual == (int)ReverserPosition.Forwards ? "F" : "N";
+					}
+
+					return Actual == (int)ReverserPosition.Reverse ? "F" : Actual == (int)ReverserPosition.Forwards ? "B" : "N";
+				case HandleState.Driver:
+					if (baseTrain.CurrentDirection == TrackDirection.Reverse)
+					{
+						return Driver == (int)ReverserPosition.Reverse ? "B" : Driver == (int)ReverserPosition.Forwards ? "F" : "N";
+					}
+					return Driver == (int)ReverserPosition.Reverse ? "F" : Driver == (int)ReverserPosition.Forwards ? "B" : "N";
+			}
+			return string.Empty;
+		}
 	}
 }

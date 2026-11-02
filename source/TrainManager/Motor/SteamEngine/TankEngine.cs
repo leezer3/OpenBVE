@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
@@ -44,6 +44,7 @@ namespace TrainManager.Motor
 			FuelTank = new FuelTank(maxFuelLevel, 0, maxFuelLevel);
 			TankMaxWaterLevel = maxWaterLevel;
 			TankWaterLevel = maxWaterLevel;
+			Message = new string[1];
 		}
 
 		public TankEngine(CarBase baseCar, AccelerationCurve[] accelerationCurves, double maxFuelLevel, double fuelLevel, double maxWaterLevel, double waterLevel) : base(baseCar, accelerationCurves, true)
@@ -92,7 +93,7 @@ namespace TrainManager.Motor
 					}
 				}
 
-				Message = @"Power " + power;
+				Message[0] = @"Power " + power;
 				return (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
 			}
 		}

@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
@@ -39,6 +39,7 @@ namespace TrainManager.Motor
 
 		public TenderEngine(CarBase baseCar, AccelerationCurve[] accelerationCurves) : base(baseCar, accelerationCurves, true)
 		{
+			Message = new string[1];
 		}
 
 		public override void Update(double timeElapsed)
@@ -80,7 +81,7 @@ namespace TrainManager.Motor
 					}
 				}
 
-				Message = @"Power " + power;
+				Message[0] = @"Power " + power;
 				return (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
 			}
 		}

@@ -35,18 +35,19 @@ namespace TrainManager.Motor
 	{
 		public ElectricEngine(CarBase car, AccelerationCurve[] accelerationCurves) : base(car, accelerationCurves, true)
 		{
+			Message = new string[1];
 		}
 
 		public override void Update(double timeElapsed)
 		{
 			if (BaseCar.baseTrain.Specs.PantographState != PantographState.Raised)
 			{
-				Message = @"Pantograph not raised";
+				Message[0] = @"Pantograph not raised";
 				MaximumPossibleAcceleration = 0;
 			}
 			else
 			{
-				Message = @"n/a";
+				Message[0] = @"n/a";
 				MaximumPossibleAcceleration = AccelerationCurves[0].MaximumAcceleration;
 			}
 		}
@@ -68,11 +69,11 @@ namespace TrainManager.Motor
 
 				if (BaseCar.baseTrain.Handles.Power is VariableHandle variableHandle)
 				{
-					Message = @"Power " + variableHandle.GetPowerModifier;
+					Message[0] = @"Power " + variableHandle.GetPowerModifier;
 					return variableHandle.GetPowerModifier;
 				}
 
-				Message = @"Power " + (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
+				Message[0] = @"Power " + (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
 				return (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
 			}
 		}
