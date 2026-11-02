@@ -245,6 +245,7 @@ namespace Train.MsTs
 						}
 
 						currentCar.baseTrain.Handles.Reverser = new Cutoff(currentCar.baseTrain, 75, -75, 10);
+						currentCar.baseTrain.Handles.Power = new Regulator(currentCar.baseTrain);
 						SteamProperties.CreateModel(currentCar.TractionModel);
 						break;
 					case EngineType.NoEngine:
