@@ -55,36 +55,7 @@ namespace TrainManager.Handles
 				return (double)Driver / ForwardMax;
 			}
 		}
-
-		public new int MaximumNotch
-		{
-			get
-			{
-				double absCurrent = Math.Abs(Driver);
-				if (Driver != absCurrent)
-				{
-					return ReverseMax;
-				}
-
-				return ForwardMax;
-			}
-		}
-
-		public new int MaximumDriverNotch
-		{
-			get
-			{
-				double absCurrent = Math.Abs(Driver);
-				if (Driver != absCurrent)
-				{
-					return ReverseMax;
-				}
-
-				return ForwardMax;
-			}
-		}
-
-
+		
 		public Cutoff(TrainBase Train, int forwardsMax, int reverseMax, int ineffectiveRange) : base(Train)
 		{
 			ForwardMax = forwardsMax;

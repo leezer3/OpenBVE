@@ -127,11 +127,27 @@ namespace TrainManager.SteamEngine
 					}
 				}
 
-//				Message = @"Power " + power;
 				return (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
 			}
 		}
 
-		public override double TargetAcceleration => AccelerationCurves[0].GetAccelerationOutput(BaseCar.CurrentSpeed);
+		public override double TargetAcceleration
+		{
+			get
+			{
+				if (BaseCar.baseTrain.Handles.Reverser is Cutoff cutoff)
+				{
+					if (Math.Abs(cutoff.Actual) < cutoff.IneffectiveRange)
+					{
+						// within ineffective range, return zero
+						return 0;
+					}
+					// otherwise, return Acceleration curve output multiplied by ratio
+					// so max power is only attained at full cutoff / regulator
+					return AccelerationCurves[0].GetAccelerationOutput(BaseCar.CurrentSpeed) * cutoff.Ratio;
+				}
+				return AccelerationCurves[0].GetAccelerationOutput(BaseCar.CurrentSpeed);
+			}
+		}
 	}
 }
