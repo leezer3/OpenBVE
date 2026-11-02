@@ -22,8 +22,9 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using System;
 using OpenBveApi.Colors;
+using OpenBveApi.Routes;
+using System;
 using TrainManager.Trains;
 
 namespace TrainManager.Handles
@@ -131,6 +132,28 @@ namespace TrainManager.Handles
 
 
 			return Driver + "%";
+		}
+
+		public override string GetDebugDescription(HandleState state)
+		{
+			switch (state)
+			{
+				case HandleState.Actual:
+				case HandleState.Safety:
+					if (baseTrain.CurrentDirection == TrackDirection.Reverse)
+					{
+						return -Actual + "%";
+					}
+
+					return Actual + "%";
+				case HandleState.Driver:
+					if (baseTrain.CurrentDirection == TrackDirection.Reverse)
+					{
+						return -Driver + "%";
+					}
+					return Driver + "%";
+			}
+			return string.Empty;
 		}
 	}
 }
