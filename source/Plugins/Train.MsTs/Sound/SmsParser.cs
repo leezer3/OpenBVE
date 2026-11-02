@@ -622,6 +622,32 @@ namespace Train.MsTs
 									}
 								}
 								break;
+							case SoundTrigger.SteamEjector1On:
+							case SoundTrigger.SteamEjector2On:
+							case SoundTrigger.SteamEjector1Off:
+							case SoundTrigger.SteamEjector2Off:
+								// Despite the name in the SMS, these are the injectors....
+								AbstractComponent injector = car.TractionModel.Components[currentSoundSet.CurrentTrigger == SoundTrigger.SteamEjector1On || currentSoundSet.CurrentTrigger == SoundTrigger.SteamEjector1Off ? EngineComponent.SteamInjector1 : EngineComponent.SteamInjector2];
+								if (injector == null)
+								{
+									break;
+								}
+								if (currentSoundSet.CurrentTrigger == SoundTrigger.SteamEjector1On || currentSoundSet.CurrentTrigger == SoundTrigger.SteamEjector2On)
+								{
+									if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
+									{
+										injector.ActivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+									}
+									else
+									{
+										injector.LoopSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+									}
+								}
+								else
+								{
+									injector.DeactivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+								}
+								break;
 							case SoundTrigger.DoorOpen:
 								car.Doors[0].OpenSound = new CarSound(Plugin.CurrentHost, soundFile, 5.0, new Vector3(-1.3, 0.0, 0.0));
 								car.Doors[1].OpenSound = new CarSound(Plugin.CurrentHost, soundFile, 5.0, new Vector3(1.3, 0.0, 0.0));
