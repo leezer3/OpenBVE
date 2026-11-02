@@ -189,6 +189,16 @@ namespace LibRender2
 		public short Coordinates;
 
 		/// <summary>
+		/// The handle of "uRotationOrigin" within the shader
+		/// </summary>
+		public short RotationOrigin;
+
+		/// <summary>
+		/// The handle of "uRotation" within the shader
+		/// </summary>
+		public short Rotation;
+
+		/// <summary>
 		/// The handle of "uAtlasLocation" within the shader
 		/// </summary>
 		public short AtlasLocation;

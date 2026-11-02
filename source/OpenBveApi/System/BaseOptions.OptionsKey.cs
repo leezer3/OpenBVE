@@ -10,6 +10,7 @@ namespace OpenBveApi
 		Code,
 		// Interface
 		Folder,
+		Theme,
 		TimetableMode,
 		KioskMode,
 		KioskModeTimer,

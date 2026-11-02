@@ -197,6 +197,8 @@ namespace LibRender2.Shaders
 				Size = (short)GL.GetUniformLocation(Handle, "uSize"),
 				Color = (short)GL.GetUniformLocation(Handle, "uColor"),
 				Coordinates = (short)GL.GetUniformLocation(Handle, "uCoordinates"),
+				RotationOrigin = (short)GL.GetUniformLocation(Handle, "uRotationOrigin"),
+				Rotation = (short)GL.GetUniformLocation(Handle, "uRotation"),
 				AtlasLocation = (short)GL.GetUniformLocation(Handle, "uAtlasLocation"),
 				AlphaFunction = (short)GL.GetUniformLocation(Handle, "uAlphaTest"),
 				LightSpaceMatrix0 = (short)GL.GetUniformLocation(Handle, "uLightSpaceMatrix0"),
@@ -440,6 +442,12 @@ namespace LibRender2.Shaders
 		public void SetCoordinates(Vector2 coordinates)
 		{
 			GL.ProgramUniform2(Handle, UniformLayout.Coordinates, (float)coordinates.X, (float)coordinates.Y);
+		}
+
+		public void SetRotation(Vector2 origin, double rotation)
+		{
+			GL.ProgramUniform2(Handle, UniformLayout.RotationOrigin, (float)origin.X, (float)origin.Y);
+			GL.ProgramUniform1(Handle, UniformLayout.Rotation, (float)rotation);
 		}
 
 		public void SetAtlasLocation(Vector4 atlasLocation)

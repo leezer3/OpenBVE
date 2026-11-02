@@ -147,6 +147,9 @@ namespace OpenBve
 				case PackageType.Train:
 					Info = Information.CheckVersion(currentPackage, Database.currentDatabase.InstalledTrains, ref oldPackage);
 					break;
+				case PackageType.HudTheme:
+					Info = Information.CheckVersion(currentPackage, Database.currentDatabase.InstalledHudThemes, ref oldPackage);
+					break;
 				default:
 					Info = Information.CheckVersion(currentPackage, Database.currentDatabase.InstalledOther, ref oldPackage);
 					break;
@@ -192,7 +195,7 @@ namespace OpenBve
 		{
 			if (openPackageFileDialog.ShowDialog() == DialogResult.OK)
 			{
-				currentPackage = Manipulation.ReadPackage(openPackageFileDialog.FileName);
+				currentPackage = Manipulation.ReadPackage(openPackageFileDialog.FileName) ?? ReadHudThemePackage(openPackageFileDialog.FileName);
 				if (currentPackage != null)
 				{
 					ShowPackageToInstall();
@@ -214,7 +217,7 @@ namespace OpenBve
 			}
 			for (int i = 0; i < dropped.Length; i++)
 			{
-				currentPackage = Manipulation.ReadPackage(dropped[i]);
+				currentPackage = Manipulation.ReadPackage(dropped[i]) ?? ReadHudThemePackage(dropped[i]);
 				if (currentPackage != null)
 				{
 					ShowPackageToInstall();
@@ -284,6 +287,61 @@ namespace OpenBve
 			
 		}
 
+		/// <summary>Returns the folder inside the archive which holds the theme, an empty string if the theme sits at the archive root, or null if no theme was found</summary>
+		private static string GetHudThemeArchiveFolder(string packageFile)
+		{
+			try
+			{
+				using (Stream stream = File.OpenRead(packageFile))
+				using (var archive = SharpCompress.Archives.ArchiveFactory.OpenArchive(stream))
+				{
+					List<string> keys = archive.Entries.Where(e => !e.IsDirectory).Select(e => e.Key.Replace('\\', '/').TrimStart('/')).ToList();
+					if (IsHudThemeArchiveRoot(keys, string.Empty))
+					{
+						return string.Empty;
+					}
+					foreach (string folder in keys.Where(k => k.Contains('/')).Select(k => k.Substring(0, k.IndexOf('/'))).Distinct(StringComparer.OrdinalIgnoreCase))
+					{
+						if (IsHudThemeArchiveRoot(keys, folder))
+						{
+							return folder;
+						}
+					}
+				}
+			}
+			catch
+			{
+				// Fall back to the package name if the archive cannot be read
+			}
+			return null;
+		}
+
+		private static bool IsHudThemeArchiveRoot(List<string> keys, string prefix)
+		{
+			string root = prefix.Length == 0 ? string.Empty : prefix + "/";
+			string[] variants = { "Slim", "Normal", "Default", "Large" };
+			return variants.Any(variant => keys.Any(key => string.Equals(key, root + variant + "/interface.cfg", StringComparison.OrdinalIgnoreCase)));
+		}
+
+		/// <summary>Picks the install folder for a HUD theme, adding a suffix when a different theme already occupies the name</summary>
+		private static void GetHudThemeInstallTarget(Package package, bool replaceExisting, out string targetSubFolder, out string stripPrefix)
+		{
+			string archiveFolder = GetHudThemeArchiveFolder(package.PackageFile);
+			string folderName = SanitizeHudThemeFolderName(archiveFolder == null || archiveFolder.Length == 0 ? package.Name : archiveFolder);
+			if (!replaceExisting)
+			{
+				string baseName = folderName;
+				int suffix = 2;
+				while (Directory.Exists(Path.Combine(Program.FileSystem.HudThemeInstallationDirectory, folderName)))
+				{
+					folderName = baseName + " (" + suffix + ")";
+					suffix++;
+				}
+			}
+			targetSubFolder = folderName;
+			stripPrefix = archiveFolder == null || archiveFolder.Length == 0 ? null : archiveFolder;
+		}
+
 		private void Extract(Package packageToReplace = null)
 		{
 			if (workerThread.IsBusy)
@@ -307,12 +365,21 @@ namespace OpenBve
 					case PackageType.Loksim3D:
 						ExtractionDirectory = Program.FileSystem.LoksimPackageInstallationDirectory;
 						break;
+					case PackageType.HudTheme:
+						ExtractionDirectory = Program.FileSystem.HudThemeInstallationDirectory;
+						break;
 					default:
 						ExtractionDirectory = Program.FileSystem.OtherInstallationDirectory;
 						break;
 				}
 				string PackageFiles = "";
-				Manipulation.ExtractPackage(currentPackage, ExtractionDirectory, Program.FileSystem.PackageDatabaseFolder, ref PackageFiles);
+				string targetSubFolder = null;
+				string stripPrefix = null;
+				if (currentPackage.PackageType == PackageType.HudTheme)
+				{
+					GetHudThemeInstallTarget(currentPackage, packageToReplace != null, out targetSubFolder, out stripPrefix);
+				}
+				Manipulation.ExtractPackage(currentPackage, ExtractionDirectory, Program.FileSystem.PackageDatabaseFolder, ref PackageFiles, targetSubFolder, stripPrefix);
 				if (ProblemEncountered == false && PackageFiles != string.Empty)
 				{
 					textBoxFilesInstalled.Invoke((MethodInvoker) delegate
@@ -352,6 +419,19 @@ namespace OpenBve
 								}
 							}
 							Database.currentDatabase.InstalledTrains.Add(currentPackage);
+							break;
+						case PackageType.HudTheme:
+							if (packageToReplace != null)
+							{
+								for (int i = Database.currentDatabase.InstalledHudThemes.Count; i > 0; i--)
+								{
+									if (Database.currentDatabase.InstalledHudThemes[i - 1].GUID == currentPackage.GUID)
+									{
+										Database.currentDatabase.InstalledHudThemes.Remove(Database.currentDatabase.InstalledHudThemes[i - 1]);
+									}
+								}
+							}
+							Database.currentDatabase.InstalledHudThemes.Add(currentPackage);
 							break;
 						default:
 							if (packageToReplace != null)
@@ -541,6 +621,9 @@ namespace OpenBve
 				case PackageType.Other:
 					Packages = Database.currentDatabase.InstalledOther;
 					break;
+				case PackageType.HudTheme:
+					Packages = Database.currentDatabase.InstalledHudThemes;
+					break;
 				default:
 					throw new Exception("Unknown package type");
 			}
@@ -567,6 +650,9 @@ namespace OpenBve
 						break;
 					case PackageType.Train:
 						DatabaseFunctions.CleanDirectory(Program.FileSystem.TrainInstallationDirectory, ref uninstallResults);
+						break;
+					case PackageType.HudTheme:
+						DatabaseFunctions.CleanDirectory(Program.FileSystem.HudThemeInstallationDirectory, ref uninstallResults);
 						break;
 				}
 				labelUninstallSuccess.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","uninstall_success"});
@@ -653,6 +739,9 @@ namespace OpenBve
 					case 2:
 						currentPackage = Database.currentDatabase.InstalledOther.FirstOrDefault(x => x.GUID == key);
 						break;
+					case 3:
+						currentPackage = Database.currentDatabase.InstalledHudThemes.FirstOrDefault(x => x.GUID == key);
+						break;
 				}
 			}
 			catch
@@ -698,6 +787,9 @@ namespace OpenBve
 							break;
 						case PackageType.Train:
 							Database.currentDatabase.InstalledTrains.Remove(currentPackage);
+							break;
+						case PackageType.HudTheme:
+							Database.currentDatabase.InstalledHudThemes.Remove(currentPackage);
 							break;
 					}
 				}
@@ -866,6 +958,11 @@ namespace OpenBve
 				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","error_busy_thread"}), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
 				return;
 			}
+			if (string.IsNullOrWhiteSpace(currentPackage.FileName))
+			{
+				//Recover the destination chosen earlier if the package object lost it
+				currentPackage.FileName = textBoxPackageFileName.Text;
+			}
 			var directory = Path.GetDirectoryName(currentPackage.FileName);
 			try
 			{
@@ -963,6 +1060,16 @@ namespace OpenBve
 				return;
 			}
 			currentPackage.FileName = textBoxPackageFileName.Text;
+			if (string.IsNullOrWhiteSpace(currentPackage.FileName))
+			{
+				//Ask for a file name if one was never chosen
+				SaveFileNameButton_Click(null, null);
+				currentPackage.FileName = textBoxPackageFileName.Text;
+				if (string.IsNullOrWhiteSpace(currentPackage.FileName))
+				{
+					return;
+				}
+			}
 			FileInfo fi = null;
 			try
 			{
@@ -1003,6 +1110,11 @@ namespace OpenBve
 					break;
 			}
 			labelInstallText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","enter_details_header"});
+			//Default the package name to the file name if it was never entered
+			if (currentPackage.Name == Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"}))
+			{
+				currentPackage.Name = Path.GetFileNameWithoutExtension(currentPackage.FileName);
+			}
 			textBoxPackageName.Text = currentPackage.Name;
 			textBoxPackageVersion.Text = currentPackage.Version;
 			textBoxPackageAuthor.Text = currentPackage.Author;
@@ -1054,7 +1166,7 @@ namespace OpenBve
 			filesToPackageBox.Text = string.Empty;
 			if (radioButtonQ1Yes.Checked)
 			{
-				if (Database.currentDatabase.InstalledRoutes.Count == 0 && Database.currentDatabase.InstalledTrains.Count == 0 && Database.currentDatabase.InstalledOther.Count == 0)
+				if (Database.currentDatabase.InstalledRoutes.Count == 0 && Database.currentDatabase.InstalledTrains.Count == 0 && Database.currentDatabase.InstalledOther.Count == 0 && Database.currentDatabase.InstalledHudThemes.Count == 0)
 				{
 					//There are no packages available to replace....
 					string test = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","replace_noneavailable"});
@@ -1074,6 +1186,9 @@ namespace OpenBve
 						break;
 					case PackageType.Other:
 						PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewReplacePackage, true, false, false);
+						break;
+					case PackageType.HudTheme:
+						PopulatePackageList(Database.currentDatabase.InstalledHudThemes, dataGridViewReplacePackage, true, false, false);
 						break;
 				}
 				dataGridViewReplacePackage.ClearSelection();
@@ -1114,6 +1229,10 @@ namespace OpenBve
 			{
 				newPackageType = PackageType.Train;
 			}
+			else if (radioButtonQ2HudTheme.Checked)
+			{
+				newPackageType = PackageType.HudTheme;
+			}
 			else
 			{
 				newPackageType = PackageType.Other;
@@ -1132,6 +1251,9 @@ namespace OpenBve
 						break;
 					case PackageType.Other:
 						PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewReplacePackage, true, false, false);
+						break;
+					case PackageType.HudTheme:
+						PopulatePackageList(Database.currentDatabase.InstalledHudThemes, dataGridViewReplacePackage, true, false, false);
 						break;
 				}
 				dataGridViewReplacePackage.ClearSelection();
@@ -1201,6 +1323,12 @@ namespace OpenBve
 						currentPackage = new Package(Database.currentDatabase.InstalledOther.FirstOrDefault(x => x.GUID == key), false)
 						{
 							PackageType = PackageType.Other
+						};
+						break;
+					case PackageType.HudTheme:
+						currentPackage = new Package(Database.currentDatabase.InstalledHudThemes.FirstOrDefault(x => x.GUID == key), false)
+						{
+							PackageType = PackageType.HudTheme
 						};
 						break;
 				}
@@ -1462,7 +1590,8 @@ namespace OpenBve
 				{
 					filesToPackage = new List<PackageFile>();
 				}
-				filesToPackage.AddRange(DatabaseFunctions.FindFileLocations(tempList));
+				//HUD theme packages keep the selected folder as their installation folder
+				filesToPackage.AddRange(newPackageType == PackageType.HudTheme ? tempList : DatabaseFunctions.FindFileLocations(tempList));
 			}
 		}
 
@@ -1515,6 +1644,9 @@ namespace OpenBve
 					break;
 				case 2:
 					PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewPackages, true, false, false);
+					break;
+				case 3:
+					PopulatePackageList(Database.currentDatabase.InstalledHudThemes, dataGridViewPackages, true, false, false);
 					break;
 			}
 			currentPackage = null;
@@ -1580,6 +1712,15 @@ namespace OpenBve
 							}
 						}
 						break;
+					case PackageType.HudTheme:
+						for (int i = Database.currentDatabase.InstalledHudThemes.Count - 1; i >= 0; i--)
+						{
+							if (Database.currentDatabase.InstalledHudThemes[i].GUID == currentPackage.GUID)
+							{
+								Database.currentDatabase.InstalledHudThemes.RemoveAt(i);
+							}
+						}
+						break;
 				}
 				Extract();
 			}
@@ -1608,6 +1749,7 @@ namespace OpenBve
 			radioButtonQ2Route.Checked = false;
 			radioButtonQ2Train.Checked = false;
 			radioButtonQ2Other.Checked = false;
+			radioButtonQ2HudTheme.Checked = false;
 			//Reset picturebox
 			TryLoadImage(pictureBoxPackageImage, "route_unknown.png");
 			TryLoadImage(pictureBoxProcessing, "logo.png");
