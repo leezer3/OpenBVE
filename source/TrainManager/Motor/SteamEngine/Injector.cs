@@ -95,10 +95,12 @@ namespace TrainManager.SteamEngine
 				{
 					tankEngine.TankWaterLevel -= WaterFlowRate * timeElapsed;
 				}
+				LoopSound?.Play(baseEngine.BaseCar, true);
 			}
 			else
 			{
 				WaterFlowRate = 0;
+				LoopSound?.Stop();
 			}
 		}
 
@@ -107,6 +109,14 @@ namespace TrainManager.SteamEngine
 			if (command == Translations.Command.LiveSteamInjector)
 			{
 				Active = !Active;
+				if (Active)
+				{
+					ActivationSound?.Play(baseEngine.BaseCar, false);
+				}
+				else
+				{
+					DeactivationSound?.Play(baseEngine.BaseCar, false);
+				}
 			}
 		}
 	}
@@ -123,7 +133,7 @@ namespace TrainManager.SteamEngine
 			if (Active && baseEngine.Components.TryGetTypedValue(EngineComponent.Boiler, out Boiler boiler) && baseEngine.Components.TryGetTypedValue(EngineComponent.CylinderChest, out CylinderChest cylinders))
 			{
 				if (boiler.CurrentPressure < minimumBoilerPressure || boiler.WaterLevel < minimumBoilerWaterLevel ||
-				    boiler.WaterLevel > maximumBoilerWaterLevel || Diameter == 0)
+				    boiler.WaterLevel > maximumBoilerWaterLevel || Diameter == 0 || baseEngine.BaseCar.baseTrain.Handles.Power.Actual == 0)
 				{
 					// Can't inject if below minimum pressure in the boiler, or above max water level
 					WaterFlowRate = 0;
@@ -151,10 +161,12 @@ namespace TrainManager.SteamEngine
 				WaterFlowRate = steamMassFlow * (SteamTable.SteamEnthalpyNominal - SteamTable.InjectorWaterEnthalpyNominal) / (SteamTable.GetSteamEnthalpy(boiler.CurrentPressure) - SteamTable.InjectorWaterEnthalpyNominal);
 
 				boiler.WaterLevel += WaterFlowRate * timeElapsed;
+				LoopSound?.Play(baseEngine.BaseCar, true);
 			}
 			else
 			{
 				WaterFlowRate = 0;
+				LoopSound?.Stop();
 			}
 		}
 
@@ -163,6 +175,14 @@ namespace TrainManager.SteamEngine
 			if (command == Translations.Command.ExhaustSteamInjector)
 			{
 				Active = !Active;
+				if (Active)
+				{
+					ActivationSound?.Play(baseEngine.BaseCar, false);
+				}
+				else
+				{
+					DeactivationSound?.Play(baseEngine.BaseCar, false);
+				}
 			}
 		}
 	}
