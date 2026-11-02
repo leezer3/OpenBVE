@@ -37,10 +37,11 @@ namespace TrainManager.SteamEngine
 
 	internal struct FuelProperties
 	{
+		/// <summary>The combustion temperature of the fuel in degrees C</summary>
 		internal double CombustionTemperature;
-
+		/// <summary>The time taken for one unit of fuel to completely burn</summary>
 		internal double BurnTime;
-
+		/// <summary>The specific heat value of the fuel</summary>
 		internal double SpecificHeat;
 
 		internal FuelProperties(double combustionTemperature, double burnTime, double specificHeat)
@@ -54,8 +55,11 @@ namespace TrainManager.SteamEngine
 
 	public enum FireboxFuel
 	{
+		/// <summary>Standard anthracite steam coal</summary>
 		Coal,
+		/// <summary>Dried wood or similar</summary>
 		Wood,
+		/// <summary>Heavy fuel oil, e.g. kerosene</summary>
 		Oil
 	}
 }

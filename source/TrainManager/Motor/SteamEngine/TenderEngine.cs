@@ -41,7 +41,7 @@ namespace TrainManager.SteamEngine
 
 		public TenderEngine(CarBase baseCar, AccelerationCurve[] accelerationCurves) : base(baseCar, accelerationCurves, true)
 		{
-			Message = new string[8];
+			Message = new string[9];
 		}
 
 		public override void Update(double timeElapsed)
@@ -57,9 +57,10 @@ namespace TrainManager.SteamEngine
 
 			if (Components.TryGetTypedValue(EngineComponent.Boiler, out Boiler b))
 			{
-				Message[messageIdx++] = "Boiler Pressure: " + Math.Round(b.CurrentPressure, 2) + " psi";
+				Message[messageIdx++] = "Boiler Pressure: " + Math.Round(b.CurrentPressure, 2) + " psi, Water Level: " + Math.Round(b.WaterLevel * 100, 2) + "l";
 				Message[messageIdx++] = "Current Steam Mass: " + Math.Round(b.CurrentSteamMass, 2) + " kg";
 				Message[messageIdx++] = "Steam Generation Rate: " + Math.Round(b.MaxOutput, 2) + " kg/s";
+
 			}
 			if (Components.TryGetTypedValue(EngineComponent.CylinderChest, out CylinderChest c))
 			{
@@ -79,8 +80,9 @@ namespace TrainManager.SteamEngine
 			}
 			if (Components.TryGetTypedValue(EngineComponent.Firebox, out Firebox firebox))
 			{
-				Message[messageIdx] = "Firebox Fuel: " + Math.Round(firebox.FuelLevel, 2) + " kg, Temp: " + Math.Round(firebox.Temperature, 2) + " °c";
+				Message[messageIdx++] = "Firebox Fuel: " + Math.Round(firebox.FuelLevel, 2) + " kg, Temp: " + Math.Round(firebox.Temperature, 2) + " °c";
 			}
+			Message[messageIdx] = "Tanks Fuel Level: " + FuelTank.CurrentLevel + "kg, Tanks Water Level: " + TankWaterLevel + "l";
 		}
 
 		// TODO: PLACEHOLDER VALUES
