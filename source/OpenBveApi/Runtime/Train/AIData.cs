@@ -1,4 +1,6 @@
-﻿namespace OpenBveApi.Runtime
+#pragma warning disable IDE0044
+
+namespace OpenBveApi.Runtime
 {
 	/// <summary>Represents AI data.</summary>
 	public class AIData

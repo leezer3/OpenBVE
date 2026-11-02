@@ -83,7 +83,7 @@ namespace OpenBveApi.Objects
 			for (int i = 0; i < Animations.Count; i++)
 			{
 				int key = Animations.ElementAt(i).Key;
-				Animations[key].Update(null, IsReversed, position, parameters.TrackPosition, 0); // current state not applicable, no hand-crafted functions
+				Animations[key].Update(null, IsReversed, position, 0); // current state not applicable, no hand-crafted functions
 			}
 			Transformation finalTransformation = new Transformation(localTransformation, worldTransformation);
 			Matrix4D[] matriciesToShader = new Matrix4D[Matrices.Length];
@@ -201,7 +201,7 @@ namespace OpenBveApi.Objects
 			for (int i = 0; i < Animations.Count; i++)
 			{
 				int key = Animations.ElementAt(i).Key;
-				Animations[key].Update(BaseCar, IsReversed, position, trackPosition, timeElapsed); // current state not applicable, no hand-crafted functions
+				Animations[key].Update(BaseCar, IsReversed, position, timeElapsed); // current state not applicable, no hand-crafted functions
 			}
 			Matrix4D[] matriciesToShader = new Matrix4D[Matrices.Length];
 			for (int i = 0; i < matriciesToShader.Length; i++)

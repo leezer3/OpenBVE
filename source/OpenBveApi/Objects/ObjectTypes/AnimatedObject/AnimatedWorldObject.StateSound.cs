@@ -141,9 +141,8 @@ namespace OpenBveApi.Objects
 		/// <param name="worldPosition">The absolute position</param>
 		/// <param name="worldTransformation">The world transformation to apply (e.g. ground, rail)</param>
 		/// <param name="localTransformation">The local transformation to apply in order to rotate the model</param>
-		/// <param name="finalSectionIndex">The index of the section if placed using a SigF command</param>
-		/// <param name="finalTrackPosition">The absolute track position</param>
-		public void Create(Vector3 worldPosition, Transformation worldTransformation, Transformation localTransformation, int finalSectionIndex, double finalTrackPosition)
+		/// <param name="parameters">The object creation parameters</param>
+		public void Create(Vector3 worldPosition, Transformation worldTransformation, Transformation localTransformation, ObjectCreationParameters parameters)
 		{
 			int a = currentHost.AnimatedWorldObjectsUsed;
 			Transformation finalTransformation = new Transformation(localTransformation, worldTransformation);
@@ -153,8 +152,8 @@ namespace OpenBveApi.Objects
 			currentObject.Direction = finalTransformation.Z;
 			currentObject.Up = finalTransformation.Y;
 			currentObject.Side = finalTransformation.X;
-			currentObject.Object.SectionIndex = finalSectionIndex;
-			currentObject.TrackPosition = finalTrackPosition;
+			currentObject.Object.SectionIndex = parameters.SectionIndex;
+			currentObject.TrackPosition = parameters.TrackPosition;
 			for (int i = 0; i < currentObject.Object.States.Length; i++)
 			{
 				if (currentObject.Object.States[i].Prototype == null)

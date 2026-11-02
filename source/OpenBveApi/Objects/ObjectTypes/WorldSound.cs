@@ -48,17 +48,16 @@ namespace OpenBveApi.Objects
 
 		/// <summary>Creates the animated object within the game world</summary>
 		/// <param name="position">The absolute position</param>
-		/// <param name="SectionIndex">The index of the section if placed using a SigF command</param>
-		/// <param name="trackPosition">The absolute track position</param>
-		public void CreateSound(Vector3 position, int SectionIndex, double trackPosition)
+		/// <param name="parameters">The object creation parameters</param>
+		public void CreateSound(Vector3 position, ObjectCreationParameters parameters)
 		{
 			int a = currentHost.AnimatedWorldObjectsUsed;
 			WorldSound snd = (WorldSound)Clone();
 			snd.Position = position;
-			snd.TrackPosition = trackPosition;
-			snd.currentTrackPosition = trackPosition;
+			snd.TrackPosition = parameters.TrackPosition;
+			snd.currentTrackPosition = parameters.TrackPosition;
 			snd.Follower = new TrackFollower(currentHost);
-			snd.Follower.UpdateAbsolute(trackPosition, true, true);
+			snd.Follower.UpdateAbsolute(parameters.TrackPosition, true, true);
 
 			currentHost.AnimatedWorldObjects[a] = snd;
 			currentHost.AnimatedWorldObjectsUsed++;

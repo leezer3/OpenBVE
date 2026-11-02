@@ -105,8 +105,8 @@ namespace OpenBveApi.Objects
 				Vector3 v = Sounds[i].Position;
 				v.Rotate(LocalTransformation);
 				v.Rotate(WorldTransformation);
-				(Sounds[i] as WorldSound)?.CreateSound(Position + v, Parameters.SectionIndex, Parameters.TrackPosition);
-				(Sounds[i] as AnimatedWorldObjectStateSound)?.Create(Position + v, WorldTransformation, LocalTransformation, Parameters.SectionIndex, Parameters.TrackPosition);
+				(Sounds[i] as WorldSound)?.CreateSound(Position + v, Parameters);
+				(Sounds[i] as AnimatedWorldObjectStateSound)?.Create(Position + v, WorldTransformation, LocalTransformation, Parameters);
 			}
 		}
 

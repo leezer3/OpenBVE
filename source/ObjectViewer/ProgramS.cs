@@ -1079,10 +1079,7 @@ namespace ObjectViewer {
 						{
 							try
 							{
-								if (loadResults[i] != null)
-								{
-									loadResults[i].CreateObject(OpenBveApi.Math.Vector3.Zero, new ObjectCreationParameters());
-								}
+								loadResults[i]?.CreateObject(Vector3.Zero, new ObjectCreationParameters());
 							}
 							catch (Exception ex)
 							{
