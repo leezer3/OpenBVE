@@ -39,8 +39,8 @@ namespace Train.MsTs
 		internal CylinderProperties()
 		{
 			TotalNumber = 1;
-			Diameter = 48.5;
-			StrokeLength = 65;
+			Diameter = 0.485;
+			StrokeLength = 0.65;
 			Volume = -1;
 		}
 
@@ -48,6 +48,7 @@ namespace Train.MsTs
 		{
 			// NOTE: MSTS-Damflokomotive.de.doc - NumCylinders and CylinderVolume are not compatible
 			//       Keep diameter and stroke length (if set) so we can use a value approaching OK in other stuff
+			// ReSharper disable once CompareOfFloatsByEqualityOperator
 			if (Volume != -1)
 			{
 				model.Components.Add(EngineComponent.CylinderChest, new CylinderChest(model, Diameter, StrokeLength, Volume));

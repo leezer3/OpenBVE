@@ -517,6 +517,8 @@ namespace Train.MsTs
 								f += " " + s1.ToString(culture) + " * " + s0.ToString(culture) + " +";
 								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[e].ScaleYFunction = new FunctionScript(Plugin.CurrentHost, f, false);
 								break;
+							default:
+								throw new Exception(Style + " is not valid for a " + Type);
 						}
 						
 					}
@@ -535,6 +537,8 @@ namespace Train.MsTs
 								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[e].TranslateXFunction = new FunctionScript(Plugin.CurrentHost, f, false);
 								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[e].TranslateXDirection = new Vector3(1, 0, 0);
 								break;
+							default:
+								throw new Exception(Style + " is not valid for a " + Type);
 						}
 					}
 

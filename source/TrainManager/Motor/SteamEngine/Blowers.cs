@@ -29,9 +29,10 @@ namespace TrainManager.Motor
 {
 	public class Blowers : AbstractComponent
 	{
-		/// <summary>The steam used by the blowers per second</summary>
+		/// <summary>The steam used by the blowers in kg/s</summary>
 		public readonly double SteamUsage;
 		/// <summary>The efficiency modifier used when the blowers are active</summary>
+		/// <remarks>Range from 0 (no effect) to 1 (full blast effect)</remarks>
 		public readonly double EfficiencyModifier;
 
 		public Blowers(TractionModel engine, double steamUsage, double efficiencyModifier) : base(engine)

@@ -1,15 +1,12 @@
 using System;
 using System.Diagnostics;
-using OpenBveApi;
 using TrainManager.BrakeSystems;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
-using OpenBveApi.Motor;
 using OpenBveApi.Routes;
 using TrainManager.Handles;
 using TrainManager.Motor;
-using TrainManager.SteamEngine;
 
 namespace OpenBve.Graphics.Renderers
 {

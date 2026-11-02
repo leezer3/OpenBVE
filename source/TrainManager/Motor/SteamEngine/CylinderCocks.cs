@@ -30,6 +30,7 @@ namespace TrainManager.SteamEngine
 	public class CylinderCocks : AbstractComponent
 	{
 		/// <summary>The power modifier applied when the cylinder cocks are open</summary>
+		/// <remarks>From 0 (no effect on power) to 1 (complete power loss)</remarks>
 		public readonly double PowerModifier;
 		
 		private double timer;

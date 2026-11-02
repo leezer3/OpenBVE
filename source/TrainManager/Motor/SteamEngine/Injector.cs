@@ -31,7 +31,7 @@ namespace TrainManager.SteamEngine
 
 	public abstract class Injector : AbstractComponent
 	{
-		/// <summary>The diameter of the injector cone</summary>
+		/// <summary>The diameter of the injector cone in mm</summary>
 		internal readonly double Diameter;
 
 		/// <summary>The minimum boiler pressure at which the injector can operate</summary>

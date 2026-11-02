@@ -230,6 +230,7 @@ namespace Train.MsTs
 							if (currentCar.Index > 0)
 							{
 								CarBase previousCar = currentCar.baseTrain.Cars[currentCar.Index - 1];
+								// ReSharper disable once CompareOfFloatsByEqualityOperator
 								if (previousCar.TractionModel is Tender previousTender && previousTender.MaxWaterLevel == -1)
 								{
 									// recreate, as values are stored in the ENG
@@ -1499,7 +1500,7 @@ namespace Train.MsTs
 					if (SteamProperties.Cylinders.Diameter <= 0)
 					{
 						Plugin.CurrentHost.AddMessage("MSTS Vehicle Parser: CylinderDiameter must be greater than 0");
-						SteamProperties.Cylinders.Diameter = 48.5;
+						SteamProperties.Cylinders.Diameter = 0.485;
 					}
 					break;
 				case KujuTokenID.CylinderStroke:

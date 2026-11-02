@@ -32,7 +32,7 @@ namespace TrainManager.SteamEngine
 		public readonly double OperatingPressure;
 		/// <summary>The pressure at which the safety valve releases</summary>
 		public readonly double ReleasePressure;
-		/// <summary>The decrease in pressure per second</summary>
+		/// <summary>The decrease in pressure in kg/s</summary>
 		public readonly double PressureDecrease;
 
 		public SafetyValve(TractionModel engine, double operatingPressure, double releasePressure, double pressureDecrease) : base(engine)
