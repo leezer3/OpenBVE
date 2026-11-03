@@ -134,13 +134,12 @@ List<FaceState> opaqueFaces, alphaFaces;
 				alphaFaces = VisibleObjects.GetSortedPolygons();
 			}
 
-			foreach (FaceState face in opaqueFaces)
-			{
-				face.Draw();
-			}
+			OpaqueDrawCalls = 0;
+			RenderOpaqueFaces(opaqueFaces);
 
 			// alpha face
 			ResetOpenGlState();
+			AlphaDrawCalls = 0;
 
 			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 			{
@@ -148,10 +147,7 @@ List<FaceState> opaqueFaces, alphaFaces;
 				SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 				GL.DepthMask(false);
 
-				foreach (FaceState face in alphaFaces)
-				{
-					face.Draw();
-				}
+				RenderAlphaFaces(alphaFaces);
 			}
 			else
 			{
@@ -159,42 +155,12 @@ List<FaceState> opaqueFaces, alphaFaces;
 				SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 				GL.DepthMask(true);
 
-				foreach (FaceState face in alphaFaces)
-				{
-					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Normal && face.Object.Prototype.Mesh.Materials[face.Face.Material].GlowAttenuationData == 0)
-					{
-						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
-						{
-							face.Draw();
-						}
-					}
-				}
+				RenderAlphaFaces(alphaFaces, true);
 
 				SetBlendFunc();
 				SetAlphaFunc(AlphaFunction.Less, 1.0f);
 				GL.DepthMask(false);
-				bool additive = false;
-
-				foreach (FaceState face in alphaFaces)
-				{
-					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
-					{
-						if (!additive)
-						{
-							UnsetAlphaFunc();
-							additive = true;
-						}
-					}
-					else
-					{
-						if (additive)
-						{
-							SetAlphaFunc();
-							additive = false;
-						}
-					}
-					face.Draw();
-				}
+				RenderAlphaFaces(alphaFaces, qualityBlendPass: true);
 			}
 
 			DefaultShader.Deactivate();
@@ -205,7 +171,8 @@ List<FaceState> opaqueFaces, alphaFaces;
 			OptionLighting = false;
 			UnsetAlphaFunc();
 			GL.Disable(EnableCap.DepthTest);
-			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
+			// Overlays use this as the ambient blend state, which they restore after drawing
+			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			RenderOverlays(timeElapsed);
 			OptionLighting = true;
 		}
@@ -374,12 +341,20 @@ List<FaceState> opaqueFaces, alphaFaces;
 
 					if (RenderStatsOverlay)
 					{
-						Keys.Render(4, Screen.Height - 126, 116, Fonts.SmallFont, new[] { new[] { "Renderer Statistics" } });
-						OpenGlString.Draw(Fonts.SmallFont, $"Total static objects: {objectCount}", new Vector2(4, Screen.Height - 112), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Total animated objects: {animatedObjectsUsed}", new Vector2(4, Screen.Height - 100), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Current frame rate: {FrameRate.ToString("0.0", culture)}fps", new Vector2(4, Screen.Height - 88), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Total opaque faces: {opaqueFaces}", new Vector2(4, Screen.Height - 76), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Total alpha faces: {alphaFaces}", new Vector2(4, Screen.Height - 64), TextAlignment.TopLeft, Color128.White, true);
+						string alphaInstancingMode = OptionAlphaInstancing == 0 ? "Off" : OptionAlphaInstancing == 1 ? "Order independent" : "All (approximate)";
+
+						Keys.Render(4, Screen.Height - 198, 188, Fonts.SmallFont, new[] { new[] { "Renderer Statistics" } });
+						OpenGlString.Draw(Fonts.SmallFont, $"Total static objects: {objectCount}", new Vector2(4, Screen.Height - 184), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Total animated objects: {animatedObjectsUsed}", new Vector2(4, Screen.Height - 172), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Current frame rate: {FrameRate.ToString("0.0", culture)}fps", new Vector2(4, Screen.Height - 160), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Total opaque faces: {opaqueFaces}", new Vector2(4, Screen.Height - 148), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Total alpha faces: {alphaFaces}", new Vector2(4, Screen.Height - 136), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Unique meshes: {OpaqueUniqueMeshes}", new Vector2(4, Screen.Height - 124), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Opaque draw calls (actual): {OpaqueDrawCalls}", new Vector2(4, Screen.Height - 112), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Alpha draw calls (actual): {AlphaDrawCalls}", new Vector2(4, Screen.Height - 100), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Transparency: {(Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance ? "Performance" : "Quality")}", new Vector2(4, Screen.Height - 88), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Instanced opaque: {(OptionInstancing ? "On" : "Off")} (F6)", new Vector2(4, Screen.Height - 76), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Instanced alpha: {alphaInstancingMode} (F4)", new Vector2(4, Screen.Height - 64), TextAlignment.TopLeft, Color128.White, true);
 					}
 				}
 			}

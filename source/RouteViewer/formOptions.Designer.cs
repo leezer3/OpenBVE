@@ -516,7 +516,7 @@ namespace RouteViewer
             this.numericUpDownViewingDistance.AutoSize = false;
             this.numericUpDownViewingDistance.Location = new System.Drawing.Point(160, 391);
             this.numericUpDownViewingDistance.Maximum = new decimal(new int[] {
-            4096,
+            16384,
             0,
             0,
             0});

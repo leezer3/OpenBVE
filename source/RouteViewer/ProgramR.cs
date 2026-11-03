@@ -95,6 +95,14 @@ namespace RouteViewer
 		[STAThread]
 		internal static void Main(string[] args)
 		{
+			// RouteViewer has no crash handling of it's own: an exception thrown from
+			// inside the render loop used to terminate the process silently, with
+			// nothing whatsoever written to disk. Catch everything and produce a
+			// crash log instead.
+			AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+			Application.ThreadException += UIThreadException;
+			Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+
 			CurrentHost = new Host();
 			// file system
 			FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
@@ -237,6 +245,100 @@ namespace RouteViewer
 			Sounds.DeInitialize();
 		}
 		
+		// crash handling
+		private static string crashLog;
+
+		/// <summary>The path to the crash log file, computed on first access as the file system may not be initialised when a crash occurs</summary>
+		private static string CrashLog
+		{
+			get
+			{
+				if (crashLog == null)
+				{
+					string settingsFolder = FileSystem != null ? FileSystem.SettingsFolder : null;
+					string fileName = "RouteViewer Crash- " + DateTime.Now.ToString("yyyy.M.dd[HH.mm]") + ".log";
+					crashLog = string.IsNullOrEmpty(settingsFolder)
+						? OpenBveApi.Path.Combine(System.IO.Path.GetTempPath(), fileName)
+						: OpenBveApi.Path.CombineFile(settingsFolder, fileName);
+				}
+				return crashLog;
+			}
+		}
+
+		/// <summary>Catches all unhandled exceptions within the current appdomain</summary>
+		private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+		{
+			try
+			{
+				LogCrash(e.ExceptionObject + Environment.StackTrace);
+				MessageBox.Show("RouteViewer has encountered an unhandled exception and will now close:" + Environment.NewLine + Environment.NewLine + e.ExceptionObject + Environment.NewLine + Environment.NewLine + "A crash log has been written to:" + Environment.NewLine + CrashLog, "Route Viewer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+			catch
+			{
+				// A crash has already occurred- never throw from within the handler
+			}
+		}
+
+		/// <summary>Catches all unhandled exceptions within the current UI thread</summary>
+		private static void UIThreadException(object sender, System.Threading.ThreadExceptionEventArgs t)
+		{
+			try
+			{
+				LogCrash(t.Exception + Environment.NewLine + Environment.StackTrace);
+				MessageBox.Show("RouteViewer has encountered an unhandled exception and will now close:" + Environment.NewLine + Environment.NewLine + t.Exception.Message + Environment.NewLine + Environment.NewLine + "A crash log has been written to:" + Environment.NewLine + CrashLog, "Route Viewer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+			catch
+			{
+				// A crash has already occurred- never throw from within the handler
+			}
+			Environment.Exit(0);
+		}
+
+		/// <summary>Writes a crash log to disk</summary>
+		private static void LogCrash(string exceptionText)
+		{
+			string path = CrashLog;
+			try
+			{
+				FileSystem?.AppendToLogFile("WARNING: Program crashing. Creating CrashLog file: " + path);
+			}
+			catch
+			{
+				// ignored- logging must never be able to take the handler down
+			}
+
+			using (System.IO.StreamWriter outputFile = new System.IO.StreamWriter(path))
+			{
+				outputFile.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+				outputFile.WriteLine("OpenBVE Route Viewer " + Application.ProductVersion + " Crash Log");
+				outputFile.WriteLine("Currently loaded route: " + (CurrentRouteFile ?? "(none)"));
+				try
+				{
+					outputFile.WriteLine("Current screen resolution is: " + Renderer.Screen.Width + "px x " + Renderer.Screen.Height + "px");
+					outputFile.WriteLine("Current track position is: " + Renderer.CameraTrackFollower.TrackPosition.ToString("0.00", CultureInfo.InvariantCulture) + " m");
+					outputFile.WriteLine("Current viewing distance is: " + Interface.CurrentOptions.ViewingDistance);
+					outputFile.WriteLine("Event markers enabled: " + Renderer.OptionEvents + ", track paths enabled: " + Renderer.OptionPaths);
+				}
+				catch
+				{
+					// Most likely died before the renderer was initialised, or state was mutated whilst crashing
+				}
+				try
+				{
+					using (Process proc = Process.GetCurrentProcess())
+					{
+						outputFile.WriteLine("Current program memory usage: " + Math.Round(proc.PrivateMemorySize64 / 1024.0 / 1024.0, 2) + "mb");
+					}
+				}
+				catch
+				{
+					outputFile.WriteLine("Unable to determine the current memory usage figure.");
+				}
+				outputFile.WriteLine("The exception caught was as follows: ");
+				outputFile.WriteLine(exceptionText);
+			}
+		}
+
 		// load route
 		internal static bool LoadRoute(byte[] textureBytes = null) {
 			if (string.IsNullOrEmpty(CurrentRouteFile))
@@ -804,6 +906,12 @@ namespace RouteViewer
 					break;
 				case Key.F10:
 					Renderer.RenderStatsOverlay = !Renderer.RenderStatsOverlay;
+					break;
+				case Key.F6:
+					Renderer.OptionInstancing = !Renderer.OptionInstancing;
+					break;
+				case Key.F4:
+					Renderer.OptionAlphaInstancing = (Renderer.OptionAlphaInstancing + 1) % 3;
 					break;
 				case Key.A:
 				case Key.Keypad4:

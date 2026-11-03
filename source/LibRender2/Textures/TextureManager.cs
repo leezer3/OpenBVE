@@ -1109,41 +1109,36 @@ namespace LibRender2.Textures
 		/// <returns>The number of loaded textures.</returns>
 		public int GetNumberOfLoadedTextures()
 		{
-			int count = 0;
-
-			Texture[] snapshot = GetRegisteredSnapshot(out int registered);
-			for (int i = 0; i < registered && i < snapshot.Length; i++)
+			lock (TextureLookupLock)
 			{
-				if (snapshot[i] == null || snapshot[i].MultipleFrames)
+				int count = 0;
+				for (int i = 0; i < RegisteredTexturesCount && i < RegisteredTextures.Length; i++)
 				{
-					continue;
+					Texture texture = RegisteredTextures[i];
+					if (texture != null && !texture.MultipleFrames && texture.OpenGlTextures.Any(t => t.Valid))
+					{
+						count++;
+					}
 				}
-
-				if (snapshot[i].OpenGlTextures.Any(t => t.Valid))
-				{
-					count++;
-				}
+				return count;
 			}
-			return count;
 		}
 
 		public int GetNumberOfLoadedAnimatedTextures()
 		{
-			int count = 0;
-			Texture[] snapshot = GetRegisteredSnapshot(out int registered);
-			for (int i = 0; i < registered && i < snapshot.Length; i++)
+			lock (TextureLookupLock)
 			{
-				if (snapshot[i] == null || snapshot[i].MultipleFrames == false)
+				int count = 0;
+				for (int i = 0; i < RegisteredTexturesCount && i < RegisteredTextures.Length; i++)
 				{
-					continue;
+					Texture texture = RegisteredTextures[i];
+					if (texture != null && texture.MultipleFrames && texture.OpenGlTextures.Any(t => t.Valid))
+					{
+						count++;
+					}
 				}
-
-				if (snapshot[i].OpenGlTextures.Any(t => t.Valid))
-				{
-					count++;
-				}
+				return count;
 			}
-			return count;
 		}
 
 
@@ -1164,18 +1159,6 @@ namespace LibRender2.Textures
 
 			return RegisteredTexturesCount;
 		}
-
-		private Texture[] GetRegisteredSnapshot(out int count)
-		{
-			lock (TextureLookupLock)
-			{
-				count = RegisteredTexturesCount;
-				Texture[] copy = new Texture[RegisteredTextures.Length];
-				Array.Copy(RegisteredTextures, copy, RegisteredTextures.Length);
-				return copy;
-			}
-		}
-
 
 		// --- functions ---
 
