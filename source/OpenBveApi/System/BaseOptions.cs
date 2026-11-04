@@ -92,6 +92,12 @@ namespace OpenBveApi
 		public double ShadowNormalBias = 0.8;
 		/// <summary>Whether to filter shadow casters per cascade to improve performance.</summary>
 		public bool ShadowFilterCascades = true;
+		/// <summary>Whether to show the loading progress bar</summary>
+		public bool LoadingProgressBar = true;
+		/// <summary>Whether to show the loading logo</summary>
+		public bool LoadingLogo = true;
+		/// <summary>Whether to show the loading background</summary>
+		public bool LoadingBackground = true;
 		/// <summary>Whether smooth (Vogel disk + IGN) shadow filtering is enabled. If false, sharp 4-tap grid is used.</summary>
 		public bool ShadowSmooth = true;
 		/// <summary>Shadow filter radius in texels for smooth mode (1.0 = sharper, 2.5 = softer).</summary>

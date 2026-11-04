@@ -197,6 +197,8 @@ namespace LibRender2.Shaders
 				Size = (short)GL.GetUniformLocation(Handle, "uSize"),
 				Color = (short)GL.GetUniformLocation(Handle, "uColor"),
 				Coordinates = (short)GL.GetUniformLocation(Handle, "uCoordinates"),
+				Radius = (short)GL.GetUniformLocation(Handle, "uRadius"),
+				Corners = (short)GL.GetUniformLocation(Handle, "uCorners"),
 				AtlasLocation = (short)GL.GetUniformLocation(Handle, "uAtlasLocation"),
 				AlphaFunction = (short)GL.GetUniformLocation(Handle, "uAlphaTest"),
 				LightSpaceMatrix0 = (short)GL.GetUniformLocation(Handle, "uLightSpaceMatrix0"),
@@ -440,6 +442,24 @@ namespace LibRender2.Shaders
 		public void SetCoordinates(Vector2 coordinates)
 		{
 			GL.ProgramUniform2(Handle, UniformLayout.Coordinates, (float)coordinates.X, (float)coordinates.Y);
+		}
+
+		/// <summary>Sets the rounded-corner radius (pixels) for rectangle draws; 0 = square</summary>
+		public void SetRadius(float radius)
+		{
+			if (UniformLayout.Radius != -1)
+			{
+				GL.ProgramUniform1(Handle, UniformLayout.Radius, radius);
+			}
+		}
+
+		/// <summary>Sets the per-corner round mask (x=TL y=TR z=BR w=BL, 1=round 0=square)</summary>
+		public void SetCorners(Vector4 corners)
+		{
+			if (UniformLayout.Corners != -1)
+			{
+				GL.ProgramUniform4(Handle, UniformLayout.Corners, (float)corners.X, (float)corners.Y, (float)corners.Z, (float)corners.W);
+			}
 		}
 
 		public void SetAtlasLocation(Vector4 atlasLocation)

@@ -1,4 +1,5 @@
 using OpenBveApi.Colors;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using System;
 using System.Collections.Generic;
@@ -52,6 +53,18 @@ namespace OpenBve
 		{
 		}
 
+		public override void OnOptionChanged(OptionType type)
+		{
+			if (type == OptionType.ViewingDistance)
+			{
+				if (Program.CurrentRoute != null && Program.CurrentRoute.CurrentBackground != null)
+				{
+					Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = Interface.CurrentOptions.ViewingDistance;
+				}
+				Program.Renderer.UpdateViewingDistances(Interface.CurrentOptions.ViewingDistance);
+			}
+		}
+
 		/// <summary>Returns the current menu instance (If applicable)</summary>
 		public static readonly GameMenu Instance = new GameMenu();
 
@@ -86,7 +99,25 @@ namespace OpenBve
 			menuControls.Add(nextImageButton);
 			menuControls.Add(previousImageButton);
 			menuControls.Add(nextStepButton);
+			InitializeOptionsTabContainer(HostApplication.OpenBve);
 		}
+
+		public override void RepositionSidebarControls()
+		{
+			if (!IsInitialized) return;
+			base.RepositionSidebarControls();
+			double startX = menuMin.X;
+			double size = SidebarWidth - 32;
+			routePictureBox.Location = new Vector2(startX + 16, Renderer.Screen.Height - size - 150);
+			routePictureBox.Size = new Vector2(size, size);
+			routeDescriptionBox.Location = new Vector2(startX + 16, Renderer.Screen.Height - 140);
+			routeDescriptionBox.Size = new Vector2(size, 120);
+			LogoPictureBox.Location = new Vector2(startX + 16, 20);
+			LogoPictureBox.Size = new Vector2(size, size / 2);
+		}
+
+		/// <summary>In-game sidebar opens via ESC only, so the collapse tab is hidden</summary>
+		public override bool ShowSidebarToggle => false;
 
 		/// <summary>Should be called when the screen resolution changes to re-position all items on the menu appropriately</summary>
 		internal void OnResize()
@@ -192,6 +223,13 @@ namespace OpenBve
 				Menus[CurrMenu].Selection = 1;
 			}
 			ComputePosition();
+			if (IsSidebarMode)
+			{
+				SidebarVisible = true;
+				startOffset = currentOffset;
+				animationElapsed = 0.0;
+				isAnimating = true;
+			}
 			Program.Renderer.CurrentInterface = TrainManagerBase.PlayerTrain == null ? InterfaceType.GLMainMenu : InterfaceType.Menu;
 			
 		}
@@ -278,10 +316,32 @@ namespace OpenBve
 
 		public override bool ProcessMouseMove(int x, int y)
 		{
+			if (HandleSidebarResizeMove(x, y))
+			{
+				return true;
+			}
 			Program.Renderer.GameWindow.CursorVisible = true;
 			if (CurrMenu < 0)
 			{
 				return false;
+			}
+			if (Menus[CurrMenu].Type == MenuType.Options)
+			{
+				if (OptionsTabContainer != null && OptionsTabContainer.IsVisible)
+				{
+					OptionsTabContainer.MouseMove(x, y);
+					return true;
+				}
+			}
+			if (isScrubbing && scrubbingOption != null)
+			{
+				int deltaX = x - lastMouseX;
+				if (deltaX != 0)
+				{
+					scrubbingOption.ApplyScrubDelta(deltaX);
+					lastMouseX = x;
+				}
+				return true;
 			}
 			// if not in menu or during control customisation or down outside menu area, do nothing
 			if (Program.Renderer.CurrentInterface < InterfaceType.Menu ||

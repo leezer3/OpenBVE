@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using LibRender2.Menu;
 using LibRender2.Screens;
 using OpenTK.Input;
@@ -11,6 +11,21 @@ namespace OpenBve
 		/// <summary>Called when a KeyDown event is generated</summary>
 		internal static void KeyDownEvent(object sender, KeyboardKeyEventArgs e)
 		{
+			if (Program.Renderer.CurrentInterface != InterfaceType.Normal)
+			{
+				Game.Menu.ProcessKeyDown((OpenTK.Input.Key)e.Key);
+				if (e.Key != Key.Up && e.Key != Key.Down && e.Key != Key.Enter && e.Key != Key.Escape && e.Key != Key.Left && e.Key != Key.Right)
+				{
+					if (Game.Menu.IsCustomizingControl())
+					{
+						// let it fall through
+					}
+					else
+					{
+						return;
+					}
+				}
+			}
 			if (Interface.CurrentOptions.KioskMode && Program.Renderer.CurrentInterface != InterfaceType.GLMainMenu)
 			{
 				//If in kiosk mode, reset the timer and disable AI on keypress
