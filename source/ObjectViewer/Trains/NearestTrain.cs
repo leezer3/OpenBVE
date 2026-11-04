@@ -46,17 +46,7 @@ namespace ObjectViewer.Trains
 		private static TrainBase CreateDummyTrain()
 		{
 			TrainBase train = new TrainBase(TrainState.Available, TrainType.LocalPlayerTrain);
-			train.Handles.Power = new PowerHandle(Specs.PowerNotches, train);
-			if (Specs.IsAirBrake)
-			{
-				train.Handles.Brake = new AirBrakeHandle(train);
-			}
-			else
-			{
-				train.Handles.Brake = new BrakeHandle(Specs.BrakeNotches, null, train);
-				train.Handles.HasHoldBrake = Specs.HasHoldBrake;
-			}
-			train.Handles.HoldBrake = new HoldBrakeHandle(train);
+			
 			train.Specs.HasConstSpeed = Specs.HasConstSpeed;
 
 			Array.Resize(ref train.Cars, Specs.NumberOfCars);
@@ -88,6 +78,16 @@ namespace ObjectViewer.Trains
 				train.Cars[i].Doors[1] = new Door(1, 1000.0, 0.0);
 			}
 
+			train.Handles.Power = new PowerHandle(Specs.PowerNotches, train);
+			if (Specs.IsAirBrake)
+			{
+				train.Handles.Brake = new AirBrakeHandle(train);
+			}
+			else
+			{
+				train.Handles.Brake = new BrakeHandle(Specs.BrakeNotches, null, train);
+				train.Handles.HasHoldBrake = Specs.HasHoldBrake;
+			}
 			if (Specs.HasLocoBrake)
 			{
 				train.Handles.HasLocoBrake = true;
