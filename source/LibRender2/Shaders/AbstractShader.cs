@@ -187,6 +187,45 @@ namespace LibRender2.Shaders
 		{
 		}
 
+		/// <summary>Converts a row-major Matrix4D to an OpenTK Matrix4 for uniform upload.</summary>
+		protected static OpenTK.Matrix4 ConvertToMatrix4(OpenBveApi.Math.Matrix4D mat)
+		{
+			return new OpenTK.Matrix4(
+				(float)mat.Row0.X, (float)mat.Row0.Y, (float)mat.Row0.Z, (float)mat.Row0.W,
+				(float)mat.Row1.X, (float)mat.Row1.Y, (float)mat.Row1.Z, (float)mat.Row1.W,
+				(float)mat.Row2.X, (float)mat.Row2.Y, (float)mat.Row2.Z, (float)mat.Row2.W,
+				(float)mat.Row3.X, (float)mat.Row3.Y, (float)mat.Row3.Z, (float)mat.Row3.W
+			);
+		}
+
+		/// <summary>Uploads an object's animation matrices to its uniform buffer.</summary>
+		/// <remarks>
+		/// This deliberately does not touch Renderer.lastObjectState: only the scene
+		/// pass caches per-object state in RenderFace, while the depth pass tracks
+		/// its own lastVAO locally. Callers using the scene-pass cache must
+		/// invalidate it themselves (see Shader.SetCurrentAnimationMatricies).
+		/// </remarks>
+		protected static void UploadAnimationMatrices(OpenBveApi.Objects.ObjectState objectState)
+		{
+			OpenTK.Matrix4[] matriciesToShader = new OpenTK.Matrix4[objectState.Matricies.Length];
+
+			for (int i = 0; i < objectState.Matricies.Length; i++)
+			{
+				matriciesToShader[i] = ConvertToMatrix4(objectState.Matricies[i]);
+			}
+
+			unsafe
+			{
+				if (objectState.MatrixBufferIndex == 0)
+				{
+					objectState.MatrixBufferIndex = GL.GenBuffer();
+				}
+
+				GL.BindBuffer(BufferTarget.UniformBuffer, objectState.MatrixBufferIndex);
+				GL.BufferData(BufferTarget.UniformBuffer, sizeof(OpenTK.Matrix4) * matriciesToShader.Length, matriciesToShader, BufferUsageHint.StaticDraw);
+			}
+		}
+
 		private bool disposed;
 
 		/// <summary>Cleans up, releasing the underlying openTK/OpenGL shader program</summary>
