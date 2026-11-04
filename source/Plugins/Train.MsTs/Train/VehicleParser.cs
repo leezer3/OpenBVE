@@ -1497,7 +1497,7 @@ namespace Train.MsTs
 					if (SteamProperties.Cylinders.Diameter <= 0)
 					{
 						Plugin.CurrentHost.AddMessage("MSTS Vehicle Parser: CylinderDiameter must be greater than 0");
-						SteamProperties.Cylinders.Diameter = 48.5;
+						SteamProperties.Cylinders.Diameter = 0.485;
 					}
 					break;
 				case KujuTokenID.CylinderStroke:

@@ -39,8 +39,8 @@ namespace Train.MsTs
 		internal CylinderProperties()
 		{
 			TotalNumber = 1;
-			Diameter = 48.5;
-			StrokeLength = 65;
+			Diameter = 0.485;
+			StrokeLength = 0.65;
 			Volume = -1;
 		}
 

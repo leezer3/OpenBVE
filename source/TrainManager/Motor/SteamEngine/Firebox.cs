@@ -45,9 +45,9 @@ namespace TrainManager.SteamEngine
 		public readonly double ShovelMass;
 		/// <summary>The specific heat value for the fuel</summary>
 		public readonly double SpecificHeat;
-		/// <summary>The ambient temperature value of the fuel</summary>
+		/// <summary>The ambient temperature value of the fuel in °C</summary>
 		public const double AmbientTemp = 20;
-		/// <summary>Combustion temperature for standard anthracite coal</summary>
+		/// <summary>Combustion temperature for the fuel in °C</summary>
 		public readonly double CombustionTemp;
 		/// <summary>The time taken for the current fuel to completely burn</summary>
 		private readonly double BurnTime;
