@@ -519,6 +519,28 @@ namespace OpenBveApi.Hosts {
 			return -1;
 		}
 
+		/// <summary>Precomputes a static object placement without registering it, so the math can run on any thread.</summary>
+		/// <param name="Prototype">The prototype (un-transformed) static object</param>
+		/// <param name="Position">The world position</param>
+		/// <param name="WorldTransformation">The world transformation to apply (e.g. ground, rail)</param>
+		/// <param name="LocalTransformation">The local transformation to apply in order to rotate the model</param>
+		/// <param name="Parameters">The object creation parameters</param>
+		/// <param name="AccurateObjectDisposal">The object disposal mode in use</param>
+		/// <param name="BlockLength">The block length in use</param>
+		/// <returns>The prepared state, or null when the host does not support split creation (caller must use <see cref="CreateStaticObject"/> instead)</returns>
+		public virtual ObjectState PrepareStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectCreationParameters Parameters, ObjectDisposalMode AccurateObjectDisposal, double BlockLength)
+		{
+			return null;
+		}
+
+		/// <summary>Registers a state returned by <see cref="PrepareStaticObject"/>, preserving placement order.</summary>
+		/// <param name="state">The prepared state</param>
+		/// <returns>The index to the created object, or -1 if this call fails</returns>
+		public virtual int CommitStaticObject(ObjectState state)
+		{
+			return -1;
+		}
+
 		/// <summary>Creates a dynamic object</summary>
 		/// <param name="internalObject">The internal static object to be updated</param>
 		/// <returns>The index of the dynamic object</returns>
