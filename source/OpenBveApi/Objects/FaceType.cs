@@ -22,6 +22,7 @@ namespace OpenBveApi.Objects
 		/// <summary>The mask used for unidirectional Face commands</summary>
 		FaceTypeMask = 7,
 		/// <summary>The mask used for bidirectional Face2 commands</summary>
-		Face2Mask = 8
+		Face2Mask = 8,
+		DisableDepthWrite = 16,
 	}
 }
