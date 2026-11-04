@@ -31,7 +31,7 @@ namespace TrainManager.SteamEngine
 {
 	public class CylinderChest : AbstractComponent
 	{
-		/// <summary>The diameter of the cylinder port</summary>
+		/// <summary>The diameter of the cylinder port in m</summary>
 		public readonly double Diameter;
 		/// <summary>The length of the piston stroke</summary>
 		// ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable

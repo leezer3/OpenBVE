@@ -36,7 +36,7 @@ namespace TrainManager.SteamEngine
 		public CarSound PowerLoopSound;
 		/// <summary>The sound played when the bypass valve is active and idle</summary>
 		public CarSound IdleLoopSound;
-		/// <summary>The amount of steam used</summary>
+		/// <summary>The amount of steam used in kg/s</summary>
 		private readonly double SteamUse;
 
 		public BypassValve(TractionModel engine, BypassValveType type, double steamUse) : base(engine)
