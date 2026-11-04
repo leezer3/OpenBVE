@@ -104,7 +104,8 @@ namespace TrainManager.SteamEngine
 				efficiencyModifier = 1.0;
 			}
 
-			efficiencyModifier *= baseEngine.BaseCar.baseTrain.Handles.Power.Actual / (double)baseEngine.BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
+			// blast effect from regulator causes draft through firebox doors
+			efficiencyModifier *= baseEngine.BaseCar.baseTrain.Handles.Power.Actual / (double)baseEngine.BaseCar.baseTrain.Handles.Power.MaximumDriverNotch * DoorState;
 			// assume that combustion is at approx 50% efficiency minimum
 			efficiencyModifier = Math.Max(0.5, efficiencyModifier);
 
