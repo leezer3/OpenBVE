@@ -334,7 +334,11 @@ namespace OpenBveApi.Interface {
 			/// <summary>Opens the firebox door</summary>
 			FireboxDoorOpen,
 			/// <summary>Closes the firebox door</summary>
-			FireboxDoorClose
+			FireboxDoorClose,
+			/// <summary>Adds fuel</summary>
+			AddFuel,
+			/// <summary>Operates the Bypass Valve</summary>
+			BypassValve
 		}
 
 		/// <summary>Defines the possible command types</summary>

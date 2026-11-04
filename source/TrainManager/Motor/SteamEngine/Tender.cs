@@ -23,8 +23,9 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using TrainManager.Car;
+using TrainManager.Motor;
 
-namespace TrainManager.Motor
+namespace TrainManager.SteamEngine
 {
 	public class Tender : TractionModel
 	{
@@ -36,8 +37,7 @@ namespace TrainManager.Motor
 		public Tender(CarBase car, double maxFuelLevel, double maxWaterLevel) : base(car, null, false)
 		{
 			FuelTank = new FuelTank(maxFuelLevel, 0, maxFuelLevel);
-			// TODO: This just gives us a marginally sensible (fixed) reading on gauges
-			MaxWaterLevel = maxWaterLevel * 0.8;
+			MaxWaterLevel = maxWaterLevel;
 			WaterLevel = maxWaterLevel * 0.8;
 		}
 

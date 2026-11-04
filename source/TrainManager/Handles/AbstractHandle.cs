@@ -68,7 +68,10 @@ namespace TrainManager.Handles
 
 		internal readonly TrainBase baseTrain;
 
-		public abstract void Update(double timeElapsed);
+		public virtual void Update(double timeElapsed)
+		{
+
+		}
 
 		public virtual void ApplyState(int newState, bool relativeChange, bool isOverMaxDriverNotch = false)
 		{
@@ -80,7 +83,10 @@ namespace TrainManager.Handles
 
 		}
 
-		public abstract void ApplySafetyState(int newState);
+		public virtual void ApplySafetyState(int newState)
+		{
+
+		}
 
 		public virtual void ResetSpring()
 		{
@@ -107,6 +113,14 @@ namespace TrainManager.Handles
 		public virtual string GetNotchDescription(out MessageColor color)
 		{
 			color = MessageColor.Gray;
+			return string.Empty;
+		}
+
+		/// <summary>Gets the description string used on the debug display</summary>
+		/// <param name="state">The handle state to get</param>
+		/// <returns>The description</returns>
+		public virtual string GetDebugDescription(HandleState state)
+		{
 			return string.Empty;
 		}
 

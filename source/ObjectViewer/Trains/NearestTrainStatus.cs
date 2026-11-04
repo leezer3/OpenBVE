@@ -72,8 +72,7 @@ namespace ObjectViewer.Trains
 				car.Doors[1].AnticipatedOpen = RightDoorAnticipatedOpen;
 			}
 
-			train.Handles.Reverser.Driver = (ReverserPosition)Reverser;
-			train.Handles.Reverser.Actual = (ReverserPosition)Reverser;
+			train.Handles.Reverser.ApplyState((ReverserPosition)Reverser);
 			train.Handles.Power.Driver = PowerNotch;
 			train.Handles.Power.Actual = PowerNotch;
 			train.Handles.Brake.Driver = BrakeNotch;
@@ -132,8 +131,7 @@ namespace ObjectViewer.Trains
 				car.Doors[1].AnticipatedOpen = false;
 			}
 
-			train.Handles.Reverser.Driver = ReverserPosition.Neutral;
-			train.Handles.Reverser.Actual = ReverserPosition.Neutral;
+			train.Handles.Reverser.ApplyState(ReverserPosition.Neutral);
 			train.Handles.Power.Driver = 0;
 			train.Handles.Power.Actual = 0;
 			train.Handles.Brake.Driver = 0;

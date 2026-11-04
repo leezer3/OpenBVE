@@ -5,6 +5,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using SoundManager;
 using TrainManager.BrakeSystems;
+using TrainManager.Handles;
 using TrainManager.Motor;
 using TrainManager.Trains;
 
@@ -308,8 +309,9 @@ namespace Train.OpenBve
 					case SoundCfgSection.Reverser:
 						block.GetPath(SoundCfgKey.On, trainFolder, out string reverserOn);
 						block.GetPath(SoundCfgKey.Off, trainFolder, out string reverserOff);
-						train.Handles.Reverser.EngageSound = new CarSound(Plugin.CurrentHost, reverserOn, SoundCfgParser.tinyRadius, panel);
-						train.Handles.Reverser.ReleaseSound = new CarSound(Plugin.CurrentHost, reverserOff, SoundCfgParser.tinyRadius, panel);
+						ReverserHandle rH = train.Handles.Reverser as ReverserHandle;
+						rH.EngageSound = new CarSound(Plugin.CurrentHost, reverserOn, SoundCfgParser.tinyRadius, panel);
+						rH.ReleaseSound = new CarSound(Plugin.CurrentHost, reverserOff, SoundCfgParser.tinyRadius, panel);
 						break;
 					case SoundCfgSection.Breaker:
 						block.GetPath(SoundCfgKey.On, trainFolder, out string breakerOn);

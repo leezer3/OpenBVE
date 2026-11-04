@@ -158,5 +158,66 @@ namespace TrainManager.Handles
 			}
 			return string.Empty;
 		}
+
+		public override string GetDebugDescription(HandleState state)
+		{
+			switch (state)
+			{
+				case HandleState.Actual:
+					if (baseTrain.Handles.EmergencyBrake.Actual)
+					{
+						return "EMG";
+					}
+					if (baseTrain.Handles.HoldBrake.Actual)
+					{
+						return "HLD";
+					}
+					switch (Actual)
+					{
+						case 0:
+							return "REL";
+						case 1:
+							return "LAP";
+						case 2:
+							return "REL";
+					}
+					return string.Empty;
+				case HandleState.Safety:
+					if (baseTrain.Handles.EmergencyBrake.Safety)
+					{
+						return "EMG";
+					}
+					switch (Safety)
+					{
+						case 0:
+							return "REL";
+						case 1:
+							return "LAP";
+						case 2:
+							return "REL";
+					}
+					return string.Empty;
+				case HandleState.Driver:
+					if (baseTrain.Handles.EmergencyBrake.Driver)
+					{
+						return "EMG";
+					}
+					if (baseTrain.Handles.HoldBrake.Driver)
+					{
+						return "HLD";
+					}
+					switch (Driver)
+					{
+						case 0:
+							return "REL";
+						case 1:
+							return "LAP";
+						case 2:
+							return "REL";
+					}
+					return string.Empty;
+			}
+			return string.Empty;
+		}
 	}
 }
