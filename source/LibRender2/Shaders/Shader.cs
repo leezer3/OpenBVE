@@ -199,6 +199,7 @@ namespace LibRender2.Shaders
 				Coordinates = (short)GL.GetUniformLocation(Handle, "uCoordinates"),
 				AtlasLocation = (short)GL.GetUniformLocation(Handle, "uAtlasLocation"),
 				AlphaFunction = (short)GL.GetUniformLocation(Handle, "uAlphaTest"),
+				AlphaToCoverage = (short)GL.GetUniformLocation(Handle, "uAlphaToCoverage"),
 				LightSpaceMatrix0 = (short)GL.GetUniformLocation(Handle, "uLightSpaceMatrix0"),
 				LightSpaceMatrix1 = (short)GL.GetUniformLocation(Handle, "uLightSpaceMatrix1"),
 				LightSpaceMatrix2 = (short)GL.GetUniformLocation(Handle, "uLightSpaceMatrix2"),
@@ -459,6 +460,11 @@ namespace LibRender2.Shaders
 			{
 				GL.ProgramUniform2(Handle, UniformLayout.AlphaFunction, (int)AlphaFunction.Never, 1.0f);
 			}
+		}
+
+		public override void SetAlphaToCoverage(bool enabled)
+		{
+			GL.ProgramUniform1(Handle, UniformLayout.AlphaToCoverage, enabled ? 1 : 0);
 		}
 
 		public void SetShadowEnabled(bool enabled)
