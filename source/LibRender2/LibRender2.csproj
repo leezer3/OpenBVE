@@ -51,24 +51,24 @@
     <Reference Include="Cyotek.Drawing.BitmapFont">
       <HintPath>..\..\packages\Cyotek.Drawing.BitmapFont.2.0.4\lib\net48\Cyotek.Drawing.BitmapFont.dll</HintPath>
     </Reference>
-    <Reference Include="FontStashSharp">
-      <HintPath>..\..\packages\FontStashSharp.1.3.10\lib\netstandard2.0\FontStashSharp.dll</HintPath>
+    <Reference Include="FontStashSharp.PlatformAgnostic">
+      <HintPath>..\..\packages\FontStashSharp.PlatformAgnostic.1.6.2\lib\netstandard2.0\FontStashSharp.PlatformAgnostic.dll</HintPath>
     </Reference>
     <Reference Include="FontStashSharp.Base">
-      <HintPath>..\..\packages\FontStashSharp.Base.1.1.9\lib\net471\FontStashSharp.Base.dll</HintPath>
+      <HintPath>..\..\packages\FontStashSharp.Base.1.2.9\lib\net471\FontStashSharp.Base.dll</HintPath>
     </Reference>
     <Reference Include="FontStashSharp.Rasterizers.StbTrueTypeSharp">
-      <HintPath>..\..\packages\FontStashSharp.Rasterizers.StbTrueTypeSharp.1.1.9\lib\net471\FontStashSharp.Rasterizers.StbTrueTypeSharp.dll</HintPath>
+      <HintPath>..\..\packages\FontStashSharp.Rasterizers.StbTrueTypeSharp.1.2.9\lib\net471\FontStashSharp.Rasterizers.StbTrueTypeSharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="OpenTK, Version=3.3.3.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\..\packages\OpenTK-OpenBVE.1.0.7\lib\net20\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="StbImageSharp">
-      <HintPath>..\..\packages\StbImageSharp.2.30.15\lib\net471\StbImageSharp.dll</HintPath>
+      <HintPath>..\..\packages\StbImageSharp.2.30.16\lib\net471\StbImageSharp.dll</HintPath>
     </Reference>
     <Reference Include="StbTrueTypeSharp">
-      <HintPath>..\..\packages\StbTrueTypeSharp.1.26.12\lib\net471\StbTrueTypeSharp.dll</HintPath>
+      <HintPath>..\..\packages\StbTrueTypeSharp.1.26.13\lib\net471\StbTrueTypeSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
