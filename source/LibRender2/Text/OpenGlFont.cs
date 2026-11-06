@@ -1,24 +1,23 @@
 using System;
 using System.Drawing;
+using FontStashSharp;
+using OpenBveApi.Colors;
 using OpenBveApi.Math;
-using OpenBveApi.Textures;
 
 namespace LibRender2.Text
 {
 	/// <summary>Represents a font.</summary>
 	public sealed class OpenGlFont : IDisposable
 	{
-		// --- members ---
+		private static readonly Lazy<FontSystem> defaultFontSystem = new Lazy<FontSystem>(() => CreateFontSystem(null));
+
 		/// <summary>The underlying font.</summary>
-		public readonly Font Font;
+		public Font Font { get; private set; }
+
 		/// <summary>The size of the underlying font in pixels.</summary>
-		public readonly float FontSize;
-		/// <summary>The 4352 tables containing 256 character each to make up 1114112 code points (U+0000...U+10FFFF).</summary>
-		private readonly OpenGlFontTable[] Tables;
+		public float FontSize { get; private set; }
 
-		private readonly StringFormat Default;
-
-		private readonly StringFormat Typographic;
+		internal SpriteFontBase SpriteFont { get; private set; }
 
 		private bool disposed;
 
@@ -30,35 +29,31 @@ namespace LibRender2.Text
 		{
 			Font = new Font(family, size, FontStyle.Regular, GraphicsUnit.Pixel);
 			FontSize = size;
-			Tables = new OpenGlFontTable[4352];
-			Default = StringFormat.GenericDefault;
-			Typographic = StringFormat.GenericTypographic;
+			SpriteFont = defaultFontSystem.Value.GetFont(size);
 		}
 
-		// --- functions ---
-		/// <summary>Gets data associated with the specified codepoint.</summary>
-		/// <param name="text">The string containing the codepoint.</param>
-		/// <param name="offset">The offset at which to read the codepoint. For surrogate pairs, two characters are read, and one otherwise.</param>
-		/// <param name="texture">Receives the texture that contains the codepoint.</param>
-		/// <param name="data">Receives the data that describes the codepoint.</param>
-		/// <returns>The number of characters read.</returns>
-		public int GetCharacterData(string text, int offset, out Texture texture, out OpenGlFontChar data)
+		internal OpenGlFont(FontFamily family, float size, SpriteFontBase spriteFont)
 		{
-			int value = char.ConvertToUtf32(text, offset);
-			int hi = value >> 8;
-			int lo = value & 0xFF;
+			Font = new Font(family, size, FontStyle.Regular, GraphicsUnit.Pixel);
+			FontSize = size;
+			SpriteFont = spriteFont;
+		}
 
-			if (Tables[hi] == null || Tables[hi].Texture == null)
+		internal static FontSystem CreateFontSystem(byte[] fontData)
+		{
+			FontSystemSettings settings = new FontSystemSettings
 			{
-				lock (BaseRenderer.GdiPlusLock)
-				{
-					Tables[hi] = new OpenGlFontTable(Font, hi << 8, Default, Typographic);
-				}
-			}
+				FontResolutionFactor = 2,
+				KernelWidth = 2,
+				KernelHeight = 2,
+				PremultiplyAlpha = false,
+				// Size fonts by em square, not ascent→descent box, so all fonts render at the same visual size
+				UseEmToPixelsScale = true
+			};
 
-			texture = Tables[hi].Texture;
-			data = Tables[hi].Characters[lo];
-			return value >= 0x10000 ? 2 : 1;
+			FontSystem fontSystem = new FontSystem(settings);
+			fontSystem.AddFont(fontData ?? FontFileResolver.BundledFontData);
+			return fontSystem;
 		}
 
 		/// <summary>Measures the size of a string as it would be rendered using this font.</summary>
@@ -66,24 +61,57 @@ namespace LibRender2.Text
 		/// <returns>The size of the string.</returns>
 		public Vector2 MeasureString(string text)
 		{
-			double width = 0;
-			double height = 0;
-
-			if (text != null)
+			if (string.IsNullOrEmpty(text))
 			{
-				for (int i = 0; i < text.Length; i++)
-				{
-					i += GetCharacterData(text, i, out Texture _, out OpenGlFontChar data) - 1;
-					width += data.TypographicSize.X;
-
-					if (data.TypographicSize.Y > height)
-					{
-						height = data.TypographicSize.Y;
-					}
-				}
+				return new Vector2();
 			}
 
-			return new Vector2(width, height);
+			System.Numerics.Vector2 size = SpriteFont.MeasureString(text);
+			return new Vector2(size.X, size.Y);
+		}
+
+		internal void SetFont(float size, SpriteFontBase spriteFont)
+		{
+			FontSize = size;
+			SpriteFont = spriteFont;
+		}
+
+		/// <summary>Replaces the GDI+ font and the sprite font in place, keeping the current size.</summary>
+		/// <remarks>Everything that can throw happens before any state is changed.</remarks>
+		internal void ReplaceFont(FontFamily family, FontSystem fontSystem)
+		{
+			Font newGdi = new Font(family, FontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+			SpriteFontBase newSprite = fontSystem.GetFont(FontSize);
+			Font oldGdi = Font;
+			Font = newGdi;
+			oldGdi.Dispose();
+			SpriteFont = newSprite;
+		}
+
+		internal void DrawString(BaseRenderer renderer, string text, double left, double top, Color128 color)
+		{
+			if (string.IsNullOrEmpty(text) || renderer.FontStashRenderer == null)
+			{
+				return;
+			}
+
+			FSColor fontColor = new FSColor(ToByte(color.R), ToByte(color.G), ToByte(color.B), ToByte(color.A));
+			renderer.FontStashRenderer.Begin();
+			SpriteFont.DrawText(renderer.FontStashRenderer, text, new System.Numerics.Vector2((float)left, (float)top), fontColor);
+			renderer.FontStashRenderer.End();
+			renderer.RestoreBlendFunc();
+		}
+
+		private static byte ToByte(float value)
+		{
+			int result = (int)(value * 255.0f + 0.5f);
+
+			if (result < 0)
+			{
+				return 0;
+			}
+
+			return result > 255 ? (byte)255 : (byte)result;
 		}
 
 		private void Dispose(bool disposing)
