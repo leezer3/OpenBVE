@@ -241,7 +241,7 @@ namespace OpenBveApi.Objects
 			for (int i = 0; i < keyframeAnimatedObject.Animations.Count; i++)
 			{
 				int key = keyframeAnimatedObject.Animations.ElementAt(i).Key;
-				keyframeAnimatedObject.Animations[key].Update(null, keyframeAnimatedObject.IsReversed, Vector3.Zero, 0, 0.0); // current state not applicable, no hand-crafted functions
+				keyframeAnimatedObject.Animations[key].Update(null, keyframeAnimatedObject.IsReversed, Vector3.Zero, 0.0); // current state not applicable, no hand-crafted functions
 			}
 
 			for (int i = 0; i < matricies.Length; i++)
