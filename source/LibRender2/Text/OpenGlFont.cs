@@ -12,7 +12,7 @@ namespace LibRender2.Text
 		private static readonly Lazy<FontSystem> defaultFontSystem = new Lazy<FontSystem>(() => CreateFontSystem(null));
 
 		/// <summary>The underlying font.</summary>
-		public readonly Font Font;
+		public Font Font { get; private set; }
 
 		/// <summary>The size of the underlying font in pixels.</summary>
 		public float FontSize { get; private set; }
@@ -74,6 +74,18 @@ namespace LibRender2.Text
 		{
 			FontSize = size;
 			SpriteFont = spriteFont;
+		}
+
+		/// <summary>Replaces the GDI+ font and the sprite font in place, keeping the current size.</summary>
+		/// <remarks>Everything that can throw happens before any state is changed.</remarks>
+		internal void ReplaceFont(FontFamily family, FontSystem fontSystem)
+		{
+			Font newGdi = new Font(family, FontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+			SpriteFontBase newSprite = fontSystem.GetFont(FontSize);
+			Font oldGdi = Font;
+			Font = newGdi;
+			oldGdi.Dispose();
+			SpriteFont = newSprite;
 		}
 
 		internal void DrawString(BaseRenderer renderer, string text, double left, double top, Color128 color)
