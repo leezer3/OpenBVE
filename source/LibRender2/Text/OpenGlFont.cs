@@ -17,7 +17,7 @@ namespace LibRender2.Text
 		/// <summary>The size of the underlying font in pixels.</summary>
 		public float FontSize { get; private set; }
 
-		internal DynamicSpriteFont SpriteFont { get; private set; }
+		internal SpriteFontBase SpriteFont { get; private set; }
 
 		private bool disposed;
 
@@ -32,7 +32,7 @@ namespace LibRender2.Text
 			SpriteFont = defaultFontSystem.Value.GetFont(size);
 		}
 
-		internal OpenGlFont(FontFamily family, float size, DynamicSpriteFont spriteFont)
+		internal OpenGlFont(FontFamily family, float size, SpriteFontBase spriteFont)
 		{
 			Font = new Font(family, size, FontStyle.Regular, GraphicsUnit.Pixel);
 			FontSize = size;
@@ -46,7 +46,9 @@ namespace LibRender2.Text
 				FontResolutionFactor = 2,
 				KernelWidth = 2,
 				KernelHeight = 2,
-				PremultiplyAlpha = false
+				PremultiplyAlpha = false,
+				// Size fonts by em square, not ascent→descent box, so all fonts render at the same visual size
+				UseEmToPixelsScale = true
 			};
 
 			FontSystem fontSystem = new FontSystem(settings);
@@ -68,7 +70,7 @@ namespace LibRender2.Text
 			return new Vector2(size.X, size.Y);
 		}
 
-		internal void SetFont(float size, DynamicSpriteFont spriteFont)
+		internal void SetFont(float size, SpriteFontBase spriteFont)
 		{
 			FontSize = size;
 			SpriteFont = spriteFont;
