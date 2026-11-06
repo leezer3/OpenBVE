@@ -147,8 +147,6 @@
     <Compile Include="Text\Fonts.BlockedFonts.cs" />
     <Compile Include="Text\Fonts.cs" />
     <Compile Include="Text\OpenGlFont.cs" />
-    <Compile Include="Text\OpenGlFontChar.cs" />
-    <Compile Include="Text\OpenGlFontTable.cs" />
     <Compile Include="Text\OpenGlString.cs" />
     <Compile Include="Trains\CarSection.cs" />
     <Compile Include="Trains\CarSection.Type.cs" />
