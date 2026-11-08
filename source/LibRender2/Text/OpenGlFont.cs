@@ -52,7 +52,15 @@ namespace LibRender2.Text
 			};
 
 			FontSystem fontSystem = new FontSystem(settings);
-			fontSystem.AddFont(fontData ?? FontFileResolver.BundledFontData);
+			try
+			{
+				fontSystem.AddFont(fontData ?? FontFileResolver.BundledFontData);
+			}
+			catch
+			{
+				fontSystem.AddFont(FontFileResolver.BundledFontData);
+			}
+			
 			return fontSystem;
 		}
 
