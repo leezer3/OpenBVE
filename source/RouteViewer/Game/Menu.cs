@@ -43,16 +43,7 @@ namespace RouteViewer
 			routePictureBox = new Picturebox(Renderer);
 			routeDescriptionBox = new Textbox(Renderer, Renderer.Fonts.NormalFont, Color128.White, Color128.Black);
 			Reset();
-			// choose the text font size according to screen height
-			// the boundaries follow approximately the progression
-			// of font sizes defined in Graphics/Fonts.cs
-			if (Renderer.Screen.Height <= 512) MenuFont = Renderer.Fonts.SmallFont;
-			else if (Renderer.Screen.Height <= 680) MenuFont = Renderer.Fonts.NormalFont;
-			else if (Renderer.Screen.Height <= 890) MenuFont = Renderer.Fonts.LargeFont;
-			else if (Renderer.Screen.Height <= 1150) MenuFont = Renderer.Fonts.VeryLargeFont;
-			else MenuFont = Renderer.Fonts.EvenLargerFont;
-
-			LineHeight = (int)(MenuFont.FontSize * LineSpacing);
+			RefreshMenuFont();
 			MenuBackKey = Key.Escape; // fixed in viewers
 			int quarterWidth = (int)(Renderer.Screen.Width / 4.0);
 			int quarterHeight = (int)(Renderer.Screen.Height / 4.0);
@@ -74,6 +65,21 @@ namespace RouteViewer
 			IsInitialized = true;
 		}
 
+		/// <summary>Refreshes the menu font and row height for the current screen height</summary>
+		internal void RefreshMenuFont()
+		{
+			// choose the text font size according to screen height
+			// the boundaries follow approximately the progression
+			// of font sizes defined in Graphics / Fonts.cs
+			if (Renderer.Screen.Height <= 512) MenuFont = Renderer.Fonts.SmallFont;
+			else if (Renderer.Screen.Height <= 680) MenuFont = Renderer.Fonts.NormalFont;
+			else if (Renderer.Screen.Height <= 890) MenuFont = Renderer.Fonts.LargeFont;
+			else if (Renderer.Screen.Height <= 1150) MenuFont = Renderer.Fonts.VeryLargeFont;
+			else MenuFont = Renderer.Fonts.EvenLargerFont;
+
+			LineHeight = (int)(MenuFont.FontSize * LineSpacing);
+		}
+
 		public override void PushMenu(MenuType type, int data = 0, bool replace = false)
 		{
 			if (Renderer.CurrentInterface < InterfaceType.Menu)
@@ -83,6 +89,8 @@ namespace RouteViewer
 			}
 			if (!IsInitialized)
 				Initialize();
+			// The window may have been resized since the last menu, so re-pick the font tier for the current size
+			RefreshMenuFont();
 			if (!replace)
 			{
 				CurrMenu++;
