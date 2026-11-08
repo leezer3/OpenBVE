@@ -151,9 +151,9 @@ namespace OpenBve
 			controlTextBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0 + quarterWidth);
 			controlTextBox.Size = new Vector2(quarterWidth, quarterWidth);
 			controlTextBox.BackgroundColor = Color128.Black;
-			if (CurrMenu >= 0)
+			for (int m = 0; m < Menus.Length; m++)
 			{
-				Menus[CurrMenu].ComputeExtent(Menus[CurrMenu].Type, MenuFont, Renderer.Screen.Width / 2.0, LineHeight);
+				Menus[m].ComputeExtent(Menus[m].Type, MenuFont, Renderer.Screen.Width / 2.0, LineHeight);
 			}
 			ComputePosition();
 		}
