@@ -200,7 +200,7 @@ namespace Route.Bve5
 					for (int k = StartBlock; k < i; k++)
 					{
 						double CurrentDistance = Blocks[k].StartingDistance;
-						double CurrentPitch = LinearInterpolation(StartDistance, StartPitch, EndDistance, EndPitch, CurrentDistance);
+						double CurrentPitch = Extensions.LinearInterpolation(StartDistance, StartPitch, EndDistance, EndPitch, CurrentDistance);
 
 						Blocks[k].Pitch = CurrentPitch;
 					}
@@ -241,7 +241,7 @@ namespace Route.Bve5
 					for (int k = StartBlock + 1; k < i; k++)
 					{
 						double CurrentDistance = Blocks[k].StartingDistance;
-						double CurrentPitch = LinearInterpolation(StartDistance, StartPitch, EndDistance, EndPitch, CurrentDistance);
+						double CurrentPitch = Extensions.LinearInterpolation(StartDistance, StartPitch, EndDistance, EndPitch, CurrentDistance);
 
 						Blocks[k].Pitch = CurrentPitch;
 					}

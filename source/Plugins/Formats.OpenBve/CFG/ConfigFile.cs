@@ -39,12 +39,12 @@ namespace Formats.OpenBve
 	{
 		/// <summary>The version of the file (if set)</summary>
 		public readonly double Version;
-		public ConfigFile(string fileName, HostInterface currentHost, string expectedHeader = null, double minVersion = 0, double maxVersion = 0, bool defaultFirstBlock = false) 
-			: this(File.ReadAllLines(fileName, TextEncoding.GetSystemEncodingFromFile(fileName)), fileName, currentHost, expectedHeader, minVersion, maxVersion, defaultFirstBlock)
+		public ConfigFile(string fileName, HostInterface currentHost, string expectedHeader = null, double minVersion = 0, double maxVersion = 0, char commentSeparator = ';', bool defaultFirstBlock = false) 
+			: this(File.ReadAllLines(fileName, TextEncoding.GetSystemEncodingFromFile(fileName)), fileName, currentHost, expectedHeader, minVersion, maxVersion, commentSeparator, defaultFirstBlock)
 		{
 		}
 
-		public ConfigFile(string[] lines, string fileName, HostInterface currentHost, string expectedHeader = null, double minVersion = 0, double maxVersion = 0, bool defaultFirstBlock = false) : base(-1, default, fileName, currentHost)
+		public ConfigFile(string[] lines, string fileName, HostInterface currentHost, string expectedHeader = null, double minVersion = 0, double maxVersion = 0, char commentSeparator = ';', bool defaultFirstBlock = false) : base(-1, default, fileName, currentHost)
 		{
 			List<string> blockLines = new List<string>();
 			bool addToBlock = defaultFirstBlock;
@@ -61,14 +61,14 @@ namespace Formats.OpenBve
 
 			for (int i = 0; i < lines.Length; i++)
 			{
-				int j = lines[i].IndexOf(';');
+				int j = lines[i].IndexOf(commentSeparator);
 				if (j >= 0)
 				{
-					lines[i] = lines[i].Substring(0, j).Trim();
+					lines[i] = lines[i].Substring(0, j).Trim().Trim(',');
 				}
 				else
 				{
-					lines[i] = lines[i].Trim();
+					lines[i] = lines[i].Trim().Trim(',');
 				}
 				if (headerOK == false)
 				{

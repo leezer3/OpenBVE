@@ -1,6 +1,7 @@
 ﻿using System;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Motor;
 using TrainManager.Power;
 
 namespace TrainManager.BrakeSystems
@@ -15,6 +16,16 @@ namespace TrainManager.BrakeSystems
 			motorDecelerationDelayUp = 0;
 			motorDecelerationDelayDown = 0;
 		}
+
+		public ElectromagneticStraightAirBrake(EletropneumaticBrakeType type, CarBase car, Bve5PerformanceData performanceData) : base(car, performanceData)
+		{
+			electropneumaticBrakeType = type;
+			BrakeControlSpeed = 0;
+			motorDeceleration = 0;
+			motorDecelerationDelayUp = 0;
+			motorDecelerationDelayDown = 0;
+		}
+
 		public ElectromagneticStraightAirBrake(EletropneumaticBrakeType type, CarBase car, double brakeControlSpeed, double MotorDeceleration, double MotorDecelerationDelayUp, double MotorDecelerationDelayDown, AccelerationCurve[] decelerationCurves) : base(car, decelerationCurves)
 		{
 			electropneumaticBrakeType = type;

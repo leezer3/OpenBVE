@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using LibRender2.Screens;
 using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Interface;
@@ -1197,57 +1198,8 @@ namespace Train.OpenBve
 				}
 			}
 
-			bool[] motorCars = new bool[Train.Cars.Length];
+			bool[] motorCars = AssignMotorCars(MotorCars, TrailerCars, FrontCarIsMotorCar);
 
-			// assign motor cars
-			if (MotorCars == 1) {
-				if (FrontCarIsMotorCar | TrailerCars == 0) {
-					motorCars[0] = true;
-				} else {
-					motorCars[Cars - 1] = true;
-				}
-			} else if (MotorCars == 2) {
-				if (FrontCarIsMotorCar | TrailerCars == 0) {
-					motorCars[0] = true;
-					motorCars[Cars - 1] = true;
-				} else if (TrailerCars == 1) {
-					motorCars[1] = true;
-					motorCars[2] = true;
-				} else {
-					int i = (int)Math.Ceiling(0.25 * (Cars - 1));
-					int j = (int)Math.Floor(0.75 * (Cars - 1));
-					motorCars[i] = true;
-					motorCars[j] = true;
-				}
-			} else if (MotorCars > 0) {
-				if (FrontCarIsMotorCar) {
-					motorCars[0] = true;
-					double t = 1.0 + TrailerCars / (double)(MotorCars - 1);
-					double r = 0.0;
-					double x = 0.0;
-					while (true) {
-						double y = x + t - r;
-						x = Math.Ceiling(y);
-						r = x - y;
-						int i = (int)x;
-						if (i >= Cars) break;
-						motorCars[i] = true;
-					}
-				} else {
-					motorCars[1] = true;
-					double t = 1.0 + (TrailerCars - 1) / (double)(MotorCars - 1);
-					double r = 0.0;
-					double x = 1.0;
-					while (true) {
-						double y = x + t - r;
-						x = Math.Ceiling(y);
-						r = x - y;
-						int i = (int)x;
-						if (i >= Cars) break;
-						motorCars[i] = true;
-					}
-				}
-			}
 			double MotorDeceleration = Math.Sqrt(MaximumAcceleration * BrakeDeceleration);
 			// apply brake-specific attributes for all cars
 			for (int i = 0; i < Cars; i++) {
@@ -1459,7 +1411,7 @@ namespace Train.OpenBve
 			for (int i = 0; i < Cars; i++) {
 				Train.Cars[i].SafetySystems.Add(SafetySystem.ConstantSpeedDevice, new CarConstSpeed(Train.Cars[i]));
 				Train.Cars[i].HoldBrake = new CarHoldBrake(Train.Cars[i]);
-				Train.Cars[i].ReAdhesionDevice = new BveReAdhesionDevice(Train.Cars[i], ReAdhesionDevice);
+				Train.Cars[i].ReAdhesionDevice = new Bve4ReAdhesionDevice(Train.Cars[i], ReAdhesionDevice);
 				if (Train.Cars[i].TractionModel.ProvidesPower) {
 					// motor car
 					Train.Cars[i].EmptyMass = MotorCarMass;
@@ -1536,6 +1488,82 @@ namespace Train.OpenBve
 					Train.Handles.Brake.MaxWidth = rs.X;
 				}
 			}
+		}
+
+		internal static bool[] AssignMotorCars(int MotorCars, int TrailerCars, bool FrontCarIsMotorCar)
+		{
+			int Cars = MotorCars + TrailerCars;
+			bool[] motorCars = new bool[Cars];
+
+			// assign motor cars
+			if (MotorCars == 1)
+			{
+				if (FrontCarIsMotorCar | TrailerCars == 0)
+				{
+					motorCars[0] = true;
+				}
+				else
+				{
+					motorCars[Cars - 1] = true;
+				}
+			}
+			else if (MotorCars == 2)
+			{
+				if (FrontCarIsMotorCar | TrailerCars == 0)
+				{
+					motorCars[0] = true;
+					motorCars[Cars - 1] = true;
+				}
+				else if (TrailerCars == 1)
+				{
+					motorCars[1] = true;
+					motorCars[2] = true;
+				}
+				else
+				{
+					int i = (int)Math.Ceiling(0.25 * (Cars - 1));
+					int j = (int)Math.Floor(0.75 * (Cars - 1));
+					motorCars[i] = true;
+					motorCars[j] = true;
+				}
+			}
+			else if (MotorCars > 0)
+			{
+				if (FrontCarIsMotorCar)
+				{
+					motorCars[0] = true;
+					double t = 1.0 + TrailerCars / (double)(MotorCars - 1);
+					double r = 0.0;
+					double x = 0.0;
+					while (true)
+					{
+						double y = x + t - r;
+						x = Math.Ceiling(y);
+						r = x - y;
+						int i = (int)x;
+						if (i >= Cars) break;
+						motorCars[i] = true;
+					}
+				}
+				else
+				{
+					motorCars[1] = true;
+					double t = 1.0 + (TrailerCars - 1) / (double)(MotorCars - 1);
+					double r = 0.0;
+					double x = 1.0;
+					while (true)
+					{
+						double y = x + t - r;
+						x = Math.Ceiling(y);
+						r = x - y;
+						int i = (int)x;
+						if (i >= Cars) break;
+						motorCars[i] = true;
+					}
+				}
+			}
+
+			return motorCars;
 		}
 
 	}

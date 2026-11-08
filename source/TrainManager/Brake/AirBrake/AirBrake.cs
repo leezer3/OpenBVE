@@ -1,5 +1,6 @@
 ﻿using OpenBveApi.Trains;
 using TrainManager.Car;
+using TrainManager.Motor;
 using TrainManager.Power;
 
 namespace TrainManager.BrakeSystems
@@ -15,6 +16,10 @@ namespace TrainManager.BrakeSystems
 		public StraightAirPipe StraightAirPipe;
 
 		protected AirBrake(CarBase car, AccelerationCurve[] decelerationCurves) : base(car, decelerationCurves)
+		{
+		}
+
+		protected AirBrake(CarBase car, Bve5PerformanceData performanceData) : base(car, performanceData)
 		{
 		}
 

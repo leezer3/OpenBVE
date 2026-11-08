@@ -741,7 +741,11 @@ namespace OpenBve
 										{
 											File = Path.CombineFile(Folders[i], "train.xml");
 										}
-										Item.ImageKey = System.IO.File.Exists(File) ? "train" : "folder";
+										if (!System.IO.File.Exists(File))
+										{
+											File = Path.CombineFile(Folders[i], "vehicle.txt");
+										}
+                                        Item.ImageKey = System.IO.File.Exists(File) ? "train" : "folder";
 										Item.Tag = Folders[i];
 									}
 								}
@@ -817,8 +821,12 @@ namespace OpenBve
 							{
 								File = Path.CombineFile(t, "train.xml");
 							}
-							
-							if (System.IO.File.Exists(File))
+							if (!System.IO.File.Exists(File))
+							{
+								File = Path.CombineFile(t, "vehicle.txt");
+							}
+
+                            if (System.IO.File.Exists(File))
 							{
 								Result.TrainFolder = t;
 								ShowTrain(false);

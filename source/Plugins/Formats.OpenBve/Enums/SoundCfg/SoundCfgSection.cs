@@ -1,4 +1,4 @@
-﻿// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedMember.Global
 namespace Formats.OpenBve
 {
 	public enum SoundCfgSection
@@ -12,7 +12,8 @@ namespace Formats.OpenBve
 		/// <summary>Motor sounds</summary>
 		Motor,
 		/// <summary>Switch sounds</summary>
-		Switch,
+		Switch = 4,
+		Joint = 4,
 		/// <summary>Brake sounds</summary>
 		Brake,
 		/// <summary>Compressor sounds</summary>
@@ -20,6 +21,7 @@ namespace Formats.OpenBve
 		/// <summary>Air suspension sounds</summary>
 		Suspension,
 		Spring = Suspension,
+        AirSpring = Suspension,
 		/// <summary>Horn sounds</summary>
 		Horn,
 		/// <summary>Door open / close sounds</summary>

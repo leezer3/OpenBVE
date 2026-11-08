@@ -4,7 +4,7 @@ namespace TrainManager.Car
 {
 	/// <summary>Implements a BVE2 / BVE4 readhesion device</summary>
 	/// <remarks>Designed to simulate an electric motor control system reacting to wheelslip</remarks>
-	public class BveReAdhesionDevice : AbstractReAdhesionDevice
+	public class Bve4ReAdhesionDevice : AbstractReAdhesionDevice
 	{
 		/// <summary>The time between updates in seconds</summary>
 		public double UpdateInterval;
@@ -23,7 +23,7 @@ namespace TrainManager.Car
 		/// <summary>The type of device</summary>
 		public readonly ReadhesionDeviceType DeviceType;
 
-		public BveReAdhesionDevice(CarBase car, ReadhesionDeviceType type) : base(car)
+		public Bve4ReAdhesionDevice(CarBase car, ReadhesionDeviceType type) : base(car)
 		{
 			this.DeviceType = type;
 			this.MaximumAccelerationOutput = double.PositiveInfinity;
