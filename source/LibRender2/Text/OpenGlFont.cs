@@ -55,82 +55,16 @@ namespace LibRender2.Text
 			};
 
 			FontSystem fontSystem = new FontSystem(settings);
-			// StbTrueTypeSharp only ever loads the font at offset 0, so TrueType collections (.ttc, e.g. Noto Sans CJK on Linux)
-			// must be split into their individual faces first or they fail to load entirely
-			byte[] data = fontData ?? FontFileResolver.BundledFontData;
-			if (!AddFontFaces(fontSystem, data))
+			try
 			{
-				// Loading the selected font failed, so fall back to the bundled font
+				fontSystem.AddFont(fontData ?? FontFileResolver.BundledFontData);
+			}
+			catch
+			{
 				fontSystem.AddFont(FontFileResolver.BundledFontData);
 			}
-
+			
 			return fontSystem;
-		}
-
-		/// <summary>Adds every face of a font file to the font system, splitting TrueType collections first.</summary>
-		/// <returns>True if at least one face was loaded successfully.</returns>
-		private static bool AddFontFaces(FontSystem fontSystem, byte[] data)
-		{
-			bool addedFace = false;
-
-			if (IsFontCollection(data))
-			{
-				int faces = (int)ReadUInt32BE(data, 8);
-				for (int i = 0; i < faces; i++)
-				{
-					int faceOffset = (int)ReadUInt32BE(data, 12 + i * 4);
-					if (faceOffset <= 0 || faceOffset >= data.Length)
-					{
-						continue;
-					}
-
-					int faceEnd = data.Length;
-					if (i + 1 < faces)
-					{
-						int nextOffset = (int)ReadUInt32BE(data, 12 + (i + 1) * 4);
-						if (nextOffset > faceOffset && nextOffset <= data.Length)
-						{
-							faceEnd = nextOffset;
-						}
-					}
-
-					byte[] face = new byte[faceEnd - faceOffset];
-					Buffer.BlockCopy(data, faceOffset, face, 0, face.Length);
-					try
-					{
-						fontSystem.AddFont(face);
-						addedFace = true;
-					}
-					catch
-					{
-						// Skip faces the rasterizer cannot parse
-					}
-				}
-			}
-			else
-			{
-				try
-				{
-					fontSystem.AddFont(data);
-					addedFace = true;
-				}
-				catch
-				{
-					// Caller falls back to the bundled font
-				}
-			}
-
-			return addedFace;
-		}
-
-		private static bool IsFontCollection(byte[] data)
-		{
-			return data.Length >= 12 && data[0] == 't' && data[1] == 't' && data[2] == 'c' && data[3] == 'f';
-		}
-
-		private static uint ReadUInt32BE(byte[] data, int offset)
-		{
-			return ((uint)data[offset] << 24) | ((uint)data[offset + 1] << 16) | ((uint)data[offset + 2] << 8) | data[offset + 3];
 		}
 
 		/// <summary>Measures the size of a string as it would be rendered using this font.</summary>
