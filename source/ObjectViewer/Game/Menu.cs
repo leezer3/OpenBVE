@@ -310,7 +310,7 @@ namespace ObjectViewer
 			// if not starting from the top of the menu, draw a dimmed ellipsis item
 			if (menu.Selection == menu.TopItem - 1)
 			{
-				Renderer.Rectangle.Draw(null, new Vector2(itemLeft - ItemBorder.X, menuMin.Y /*-ItemBorder.Y*/), new Vector2(menu.ItemWidth + ItemBorder.X, MenuFont.FontSize + ItemBorder.Y * 2), highlightColor);
+				Renderer.Rectangle.Draw(null, new Vector2(itemLeft - ItemBorder.X, menuMin.Y - ItemBorder.Y), new Vector2(menu.ItemWidth + ItemBorder.X, MenuFont.LineHeight + ItemBorder.Y * 2), highlightColor);
 			}
 			if (menu.TopItem > 0)
 				Renderer.OpenGlString.Draw(MenuFont, @"...", new Vector2(itemX, menuMin.Y),
@@ -355,11 +355,11 @@ namespace ObjectViewer
 
 					if (itemLeft == 0)
 					{
-						Renderer.Rectangle.Draw(null, new Vector2(ItemBorder.X, itemY /*-ItemBorder.Y*/), new Vector2(menu.Width + 2.0f * ItemBorder.X, MenuFont.FontSize + ItemBorder.Y * 2), color);
+						Renderer.Rectangle.Draw(null, new Vector2(ItemBorder.X, itemY - ItemBorder.Y), new Vector2(menu.Width + 2.0f * ItemBorder.X, MenuFont.LineHeight + ItemBorder.Y * 2), color);
 					}
 					else
 					{
-						Renderer.Rectangle.Draw(null, new Vector2(itemLeft - ItemBorder.X, itemY /*-ItemBorder.Y*/), new Vector2(menu.ItemWidth + 2.0f * ItemBorder.X, MenuFont.FontSize + ItemBorder.Y * 2), color);
+						Renderer.Rectangle.Draw(null, new Vector2(itemLeft - ItemBorder.X, itemY - ItemBorder.Y), new Vector2(menu.ItemWidth + 2.0f * ItemBorder.X, MenuFont.LineHeight + ItemBorder.Y * 2), color);
 					}
 
 					// draw the text
@@ -389,7 +389,7 @@ namespace ObjectViewer
 
 			if (menu.Selection == menu.TopItem + visibleItems)
 			{
-				Renderer.Rectangle.Draw(null, new Vector2(itemLeft - ItemBorder.X, itemY /*-ItemBorder.Y*/), new Vector2(menu.ItemWidth + 2.0f * ItemBorder.X, MenuFont.FontSize + ItemBorder.Y * 2), highlightColor);
+				Renderer.Rectangle.Draw(null, new Vector2(itemLeft - ItemBorder.X, itemY - ItemBorder.Y), new Vector2(menu.ItemWidth + 2.0f * ItemBorder.X, MenuFont.LineHeight + ItemBorder.Y * 2), highlightColor);
 			}
 			// if not at the end of the menu, draw a dimmed ellipsis item at the bottom
 			if (i < menu.Items.Length - 1)

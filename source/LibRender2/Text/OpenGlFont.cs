@@ -17,6 +17,9 @@ namespace LibRender2.Text
 		/// <summary>The size of the underlying font in pixels.</summary>
 		public float FontSize { get; private set; }
 
+		/// <summary>The line height of the font in pixels, as measured by the rasterizer.</summary>
+		public float LineHeight => SpriteFont.LineHeight;
+
 		internal SpriteFontBase SpriteFont { get; private set; }
 
 		private bool disposed;
