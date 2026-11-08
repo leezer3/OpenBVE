@@ -10,7 +10,7 @@ namespace TrainManager.Motor
 		public Bve5PerformanceData BrakePerformanceData;
 
 		public Bve5MotorCar(CarBase car, Bve5PerformanceData powerPerformanceData,
-			Bve5PerformanceData brakePerformanceData) : base(car)
+			Bve5PerformanceData brakePerformanceData) : base(car, true)
 		{
 			PowerPerformanceData = powerPerformanceData;
 			BrakePerformanceData = brakePerformanceData;
@@ -18,6 +18,7 @@ namespace TrainManager.Motor
 
 		public override void Update(double timeElapsed)
 		{
+			MotorSounds?.Update(timeElapsed);
 		}
 
 		public override double TargetAcceleration
