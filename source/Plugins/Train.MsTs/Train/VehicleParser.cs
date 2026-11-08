@@ -257,7 +257,7 @@ namespace Train.MsTs
 				
 				if (currentCar.ReAdhesionDevice == null)
 				{
-					currentCar.ReAdhesionDevice = new BveReAdhesionDevice(currentCar, hasAntiSlipDevice ? ReadhesionDeviceType.TypeB : ReadhesionDeviceType.NotFitted);
+					currentCar.ReAdhesionDevice = new Bve4ReAdhesionDevice(currentCar, hasAntiSlipDevice ? ReadhesionDeviceType.TypeB : ReadhesionDeviceType.NotFitted);
 				}
 				
 				currentCar.Windscreen = new Windscreen(0, 0, currentCar);

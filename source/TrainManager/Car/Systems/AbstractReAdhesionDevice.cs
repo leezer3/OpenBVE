@@ -12,8 +12,8 @@
 		}
 
 		/// <summary>Called once a frame to update the re-adhesion device when powering</summary>
-		/// <param name="TimeElapsed">The elapsed time</param>
-		public virtual void Update(double TimeElapsed)
+		/// <param name="timeElapsed">The elapsed time</param>
+		public virtual void Update(double timeElapsed)
 		{
 
 		}

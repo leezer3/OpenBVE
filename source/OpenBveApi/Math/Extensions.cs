@@ -38,5 +38,18 @@
 		    }
 		    return System.Math.Tan(X);
 	    }
+
+		/// <summary>Linearly interpolates a value in a range, using keys</summary>
+		/// <param name="x0">The first number</param>
+		/// <param name="y0">The first key</param>
+		/// <param name="x1">The second number</param>
+		/// <param name="y1">The second key</param>
+		/// <param name="x">The interpolation value between keys</param>
+		/// <returns>The interpolated number</returns>
+	    public static double LinearInterpolation(double x0, double y0, double x1, double y1, double x)
+	    {
+		    // ReSharper disable once CompareOfFloatsByEqualityOperator
+		    return x0 == x1 ? y0 : y0 + (y1 - y0) * (x - x0) / (x1 - x0);
+	    }
 	}
 }

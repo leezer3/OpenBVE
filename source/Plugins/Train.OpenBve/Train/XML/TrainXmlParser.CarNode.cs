@@ -244,7 +244,7 @@ namespace Train.OpenBve
 			{
 				if (block.GetEnumValue(TrainXMLKey.ReadhesionDevice, out ReadhesionDeviceType readhesionDevice) || Train.Cars[Car].ReAdhesionDevice == null)
 				{
-					Train.Cars[Car].ReAdhesionDevice = new BveReAdhesionDevice(Train.Cars[Car], readhesionDevice);
+					Train.Cars[Car].ReAdhesionDevice = new Bve4ReAdhesionDevice(Train.Cars[Car], readhesionDevice);
 				}
 			}
 
