@@ -470,7 +470,11 @@ namespace Train.OpenBve
 				train.Cars[i].BeaconReceiverPosition = 0.5 * CarLength;
 				train.Cars[i].FrontAxle.Position = 0.4 * CarLength;
 				train.Cars[i].RearAxle.Position = -0.4 * CarLength;
-				train.Cars[i].ReAdhesionDevice = new Bve5ReadhesionDevice(train.Cars[i], SlipVelocity, SlipAcceleration, BalanceAcceleration, HoldingTime);
+				if (motorCars[i])
+				{
+					train.Cars[i].ReAdhesionDevice = new Bve5ReadhesionDevice(train.Cars[i], SlipVelocity, SlipAcceleration, BalanceAcceleration, HoldingTime);
+				}
+				
 				train.Cars[i].ChangeCarSection(CarSectionType.NotVisible);
 			}
 

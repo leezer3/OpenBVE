@@ -69,10 +69,10 @@ namespace TrainManager.Car
 			switch (currentStep)
 			{
 				case 0:
-					MaximumAccelerationOutput = Car.TractionModel.CurrentAcceleration;
+					MaximumAccelerationOutput = Car.TractionModel.TargetAcceleration;
 					break;
 				case 1:
-					MaximumAccelerationOutput = Car.TractionModel.CurrentAcceleration;
+					MaximumAccelerationOutput = Car.TractionModel.TargetAcceleration;
 					if (Math.Abs(Car.CurrentSpeed) - slipSpeed > SlipVelocity)
 					{
 						// car speed is at or greater than SlipVelocity from speed
@@ -82,11 +82,11 @@ namespace TrainManager.Car
 				case 2:
 					if (Car.TractionModel.CurrentAcceleration > 0)
 					{
-						MaximumAccelerationOutput = Car.TractionModel.CurrentAcceleration - BalanceAcceleration;
+						MaximumAccelerationOutput = Car.TractionModel.TargetAcceleration - BalanceAcceleration;
 					}
 					else
 					{
-						MaximumAccelerationOutput = Car.TractionModel.CurrentAcceleration + BalanceAcceleration;
+						MaximumAccelerationOutput = Car.TractionModel.TargetAcceleration + BalanceAcceleration;
 					}
 					holdingTimer += timeElapsed;
 
