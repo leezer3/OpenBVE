@@ -403,6 +403,7 @@ namespace Train.OpenBve
 				else if (train.Cars[c].TractionModel.MotorSounds is BVE5MotorSound motorSounds)
 				{
 					motorSounds.SoundBuffers = new SoundBuffer[maxMotorIndex + 1];
+					motorSounds.SoundSources = new SoundSource[maxMotorIndex + 1];
 					for (int i = 0; i < motorFiles.Count; i++)
 					{
 						int index = motorFiles.ElementAt(i).Key;
