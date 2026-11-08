@@ -74,7 +74,7 @@ namespace TrainManager.Car
 			}
 
 			NextUpdateTime = TrainManagerBase.currentHost.InGameTime + this.UpdateInterval;
-			if (Car.FrontAxle.CurrentWheelSlip | Car.RearAxle.CurrentWheelSlip)
+			if (Car.FrontAxle.CurrentWheelSlip || Car.RearAxle.CurrentWheelSlip)
 			{
 				MaximumAccelerationOutput = Car.TractionModel.MaximumCurrentAcceleration * this.ApplicationFactor;
 				TimeStable = 0.0;
@@ -85,7 +85,7 @@ namespace TrainManager.Car
 				if (TimeStable >= this.ReleaseInterval)
 				{
 					TimeStable -= this.ReleaseInterval;
-					if (this.ReleaseFactor != 0.0 & MaximumAccelerationOutput <= Car.TractionModel.MaximumCurrentAcceleration + 1.0)
+					if (this.ReleaseFactor != 0.0 && MaximumAccelerationOutput <= Car.TractionModel.MaximumCurrentAcceleration + 1.0)
 					{
 						if (MaximumAccelerationOutput < 0.025)
 						{
