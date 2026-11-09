@@ -197,40 +197,5 @@ namespace LibRender2
 		/// The handle of "uAlphaFunction" within the shader
 		/// </summary>
 		public short AlphaFunction;
-
-		/// <summary>
-		/// The handle of "uLightSpaceMatrix0" within the shader
-		/// </summary>
-		public short LightSpaceMatrix0 = -1;
-
-		/// <summary>
-		/// The handle of "uLightSpaceMatrix1" within the shader
-		/// </summary>
-		public short LightSpaceMatrix1 = -1;
-
-		/// <summary>
-		/// The handle of "uLightSpaceMatrix2" within the shader
-		/// </summary>
-		public short LightSpaceMatrix2 = -1;
-
-		/// <summary>
-		/// The handle of "uShadowMap0" within the shader
-		/// </summary>
-		public short ShadowMap0 = -1;
-
-		/// <summary>
-		/// The handle of "uShadowMap1" within the shader
-		/// </summary>
-		public short ShadowMap1 = -1;
-
-		/// <summary>
-		/// The handle of "uShadowMap2" within the shader
-		/// </summary>
-		public short ShadowMap2 = -1;
-
-		/// <summary>
-		/// The handle of "uCurrentViewMatrix" within the shader
-		/// </summary>
-		public short CurrentViewMatrix = -1;
 	}
 }
