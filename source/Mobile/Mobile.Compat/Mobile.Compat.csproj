@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>OpenBveMobileCompat</AssemblyName>
+    <RootNamespace>OpenBveMobileCompat</RootNamespace>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <Description>Minimal platform shims so the shared OpenBVE sources compile for net8.0 / mobile targets.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="WinFormsCompat.cs" />
+  </ItemGroup>
+
+</Project>

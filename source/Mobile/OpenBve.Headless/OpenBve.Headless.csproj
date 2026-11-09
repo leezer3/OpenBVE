@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>OpenBve.Headless</AssemblyName>
+    <RootNamespace>OpenBve.Headless</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OpenBveApi.Mobile\OpenBveApi.Mobile.csproj" />
+    <ProjectReference Include="..\Formats.OpenBve.Mobile\Formats.OpenBve.Mobile.csproj" />
+    <ProjectReference Include="..\LibRender2.Mobile\LibRender2.Mobile.csproj" />
+    <ProjectReference Include="..\SoundManager.Mobile\SoundManager.Mobile.csproj" />
+    <ProjectReference Include="..\RouteManager2.Mobile\RouteManager2.Mobile.csproj" />
+    <ProjectReference Include="..\TrainManager.Mobile\TrainManager.Mobile.csproj" />
+    <ProjectReference Include="..\Route.CsvRw.Mobile\Route.CsvRw.Mobile.csproj" />
+    <ProjectReference Include="..\Train.OpenBve.Mobile\Train.OpenBve.Mobile.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="TestData\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

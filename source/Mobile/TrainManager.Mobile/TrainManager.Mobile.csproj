@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>TrainManager</AssemblyName>
+    <RootNamespace>TrainManager</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- ProxyPlugin talks WCF to the Win32 32-bit plugin proxy: desktop-only -->
+    <Compile Include="..\..\TrainManager\**\*.cs"
+             Exclude="..\..\TrainManager\SafetySystems\Plugin\ProxyPlugin.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OpenBveApi.Mobile\OpenBveApi.Mobile.csproj" />
+    <ProjectReference Include="..\LibRender2.Mobile\LibRender2.Mobile.csproj" />
+    <ProjectReference Include="..\SoundManager.Mobile\SoundManager.Mobile.csproj" />
+    <ProjectReference Include="..\RouteManager2.Mobile\RouteManager2.Mobile.csproj" />
+    <ProjectReference Include="..\Formats.Msts.Mobile\Formats.Msts.Mobile.csproj" />
+    <ProjectReference Include="..\Formats.OpenBve.Mobile\Formats.OpenBve.Mobile.csproj" />
+  </ItemGroup>
+
+</Project>

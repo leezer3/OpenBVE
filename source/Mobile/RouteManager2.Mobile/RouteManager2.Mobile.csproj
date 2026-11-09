@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>RouteManager2</AssemblyName>
+    <RootNamespace>RouteManager2</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\RouteManager2\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OpenBveApi.Mobile\OpenBveApi.Mobile.csproj" />
+    <ProjectReference Include="..\LibRender2.Mobile\LibRender2.Mobile.csproj" />
+    <ProjectReference Include="..\SoundManager.Mobile\SoundManager.Mobile.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- TEMPORARY: GDI+ based route map illustration. To be replaced for Android. -->
+    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>

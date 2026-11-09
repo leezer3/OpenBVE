@@ -1,0 +1,10 @@
+0
+Track.Rail(1; 3.8; 0)
+0
+Track.Height(0)
+50
+Track.Curve(500; 0)
+100
+Track.Sta(Test Station; P;; 100; 0; 0; 0; 0; 0; 0)
+150
+Track.Buffer(0)

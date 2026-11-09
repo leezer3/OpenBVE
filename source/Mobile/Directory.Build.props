@@ -1,0 +1,26 @@
+<!--
+  Shared build settings for the mobile (Android / iOS / net8.0) port of the OpenBVE core.
+  These SDK-style projects compile the SAME sources as the desktop (net48) projects,
+  but target net8.0 so they can be consumed by net8.0-android / net8.0-ios apps.
+
+  Symbol semantics:
+    MOBILE - defined only for these mobile builds. Desktop (old-style csproj) builds do
+             not define it, so shared sources can guard desktop-only (WinForms/GDI/WCF)
+             code with #if !MOBILE and mobile replacements with #if MOBILE.
+-->
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>7.3</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <!-- Each component ships its own Properties/AssemblyInfo.cs (same as the desktop build) -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+    <!-- net20/net45 packages (OpenTK-OpenBVE, CS-Script.lib) are consumed via compat shims -->
+    <NoWarn>$(NoWarn);NU1701;NU1702;CS0618;CS1591;CS3021;CS3009</NoWarn>
+    <DefineConstants>$(DefineConstants);MOBILE</DefineConstants>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Train.OpenBve</AssemblyName>
+    <RootNamespace>Train.OpenBve</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\Plugins\Train.OpenBve\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OpenBveApi.Mobile\OpenBveApi.Mobile.csproj" />
+    <ProjectReference Include="..\Formats.OpenBve.Mobile\Formats.OpenBve.Mobile.csproj" />
+    <ProjectReference Include="..\LibRender2.Mobile\LibRender2.Mobile.csproj" />
+    <ProjectReference Include="..\SoundManager.Mobile\SoundManager.Mobile.csproj" />
+    <ProjectReference Include="..\TrainManager.Mobile\TrainManager.Mobile.csproj" />
+  </ItemGroup>
+
+</Project>

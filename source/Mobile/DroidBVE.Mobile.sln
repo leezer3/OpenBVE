@@ -1,0 +1,82 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mobile.Compat", "Mobile.Compat\Mobile.Compat.csproj", "{27721753-1146-44BE-9227-1120851E5E2F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenBveApi.Mobile", "OpenBveApi.Mobile\OpenBveApi.Mobile.csproj", "{DBAD4A82-24AA-42E5-A14C-00604F12B757}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Formats.OpenBve.Mobile", "Formats.OpenBve.Mobile\Formats.OpenBve.Mobile.csproj", "{2EEE1196-1644-4273-84BF-221B17F39442}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Formats.Msts.Mobile", "Formats.Msts.Mobile\Formats.Msts.Mobile.csproj", "{DD87AE1E-B87B-4D75-9FF8-D55EB46FD903}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibRender2.Mobile", "LibRender2.Mobile\LibRender2.Mobile.csproj", "{974C6734-4F6C-4423-8922-5B3DE31DEFFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoundManager.Mobile", "SoundManager.Mobile\SoundManager.Mobile.csproj", "{FF91420A-BD9A-4729-B22C-65B724988B3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouteManager2.Mobile", "RouteManager2.Mobile\RouteManager2.Mobile.csproj", "{90C0BC67-EC3D-4EF8-B8CB-6195DB304D11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainManager.Mobile", "TrainManager.Mobile\TrainManager.Mobile.csproj", "{2BC10832-B753-46B1-9249-516E56B45C55}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Route.CsvRw.Mobile", "Route.CsvRw.Mobile\Route.CsvRw.Mobile.csproj", "{6F66AC79-2730-4923-970F-F5C5928928F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Train.OpenBve.Mobile", "Train.OpenBve.Mobile\Train.OpenBve.Mobile.csproj", "{6F4D4639-A15C-4EA6-B296-EAA2AA4A1FF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenBve.Headless", "OpenBve.Headless\OpenBve.Headless.csproj", "{62FD71FB-E090-4010-9593-520D372FF6B2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{27721753-1146-44BE-9227-1120851E5E2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27721753-1146-44BE-9227-1120851E5E2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27721753-1146-44BE-9227-1120851E5E2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27721753-1146-44BE-9227-1120851E5E2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBAD4A82-24AA-42E5-A14C-00604F12B757}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBAD4A82-24AA-42E5-A14C-00604F12B757}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBAD4A82-24AA-42E5-A14C-00604F12B757}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBAD4A82-24AA-42E5-A14C-00604F12B757}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EEE1196-1644-4273-84BF-221B17F39442}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EEE1196-1644-4273-84BF-221B17F39442}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EEE1196-1644-4273-84BF-221B17F39442}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EEE1196-1644-4273-84BF-221B17F39442}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD87AE1E-B87B-4D75-9FF8-D55EB46FD903}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD87AE1E-B87B-4D75-9FF8-D55EB46FD903}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD87AE1E-B87B-4D75-9FF8-D55EB46FD903}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD87AE1E-B87B-4D75-9FF8-D55EB46FD903}.Release|Any CPU.Build.0 = Release|Any CPU
+		{974C6734-4F6C-4423-8922-5B3DE31DEFFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{974C6734-4F6C-4423-8922-5B3DE31DEFFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{974C6734-4F6C-4423-8922-5B3DE31DEFFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{974C6734-4F6C-4423-8922-5B3DE31DEFFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF91420A-BD9A-4729-B22C-65B724988B3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF91420A-BD9A-4729-B22C-65B724988B3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF91420A-BD9A-4729-B22C-65B724988B3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF91420A-BD9A-4729-B22C-65B724988B3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90C0BC67-EC3D-4EF8-B8CB-6195DB304D11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90C0BC67-EC3D-4EF8-B8CB-6195DB304D11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90C0BC67-EC3D-4EF8-B8CB-6195DB304D11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90C0BC67-EC3D-4EF8-B8CB-6195DB304D11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BC10832-B753-46B1-9249-516E56B45C55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BC10832-B753-46B1-9249-516E56B45C55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BC10832-B753-46B1-9249-516E56B45C55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BC10832-B753-46B1-9249-516E56B45C55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F66AC79-2730-4923-970F-F5C5928928F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F66AC79-2730-4923-970F-F5C5928928F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F66AC79-2730-4923-970F-F5C5928928F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F66AC79-2730-4923-970F-F5C5928928F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F4D4639-A15C-4EA6-B296-EAA2AA4A1FF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F4D4639-A15C-4EA6-B296-EAA2AA4A1FF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F4D4639-A15C-4EA6-B296-EAA2AA4A1FF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F4D4639-A15C-4EA6-B296-EAA2AA4A1FF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62FD71FB-E090-4010-9593-520D372FF6B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62FD71FB-E090-4010-9593-520D372FF6B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62FD71FB-E090-4010-9593-520D372FF6B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62FD71FB-E090-4010-9593-520D372FF6B2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>OpenBveApi</AssemblyName>
+    <RootNamespace>OpenBveApi</RootNamespace>
+    <AssemblyTitle>openBVE API Class Library</AssemblyTitle>
+    <Product>openBVE</Product>
+    <Copyright>the openBVE Project</Copyright>
+    <AssemblyVersion>1.5.5.0</AssemblyVersion>
+    <FileVersion>1.5.5.0</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Not part of the desktop build either (legacy leftovers) or desktop-only (WCF contract
+         for the Win32 32-bit plugin proxy) -->
+    <Compile Include="..\..\OpenBveApi\**\*.cs"
+             Exclude="..\..\OpenBveApi\System\Interop.cs;..\..\OpenBveApi\Sound.cs;..\..\OpenBveApi\Texture.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\OpenBveApi\Resource.resx">
+      <LogicalName>OpenBveApi.Resource.resources</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mobile.Compat\Mobile.Compat.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CS-Script.lib" Version="3.30.3" />
+    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
+    <PackageReference Include="SharpCompress" Version="0.50.4" />
+    <PackageReference Include="Ude.NetStandard" Version="1.2.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
+    <!-- TEMPORARY: GDI+ based bitmap handling. To be replaced with ImageSharp/SkiaSharp for Android. -->
+    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>
