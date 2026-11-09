@@ -55,6 +55,7 @@ namespace OpenBveApi.Interface {
 			CurrentLanguageCode = "en-US";
 		}
 
+#if !MOBILE
 		/// <summary>Populates a list of languages in a combobox</summary>
 		/// <param name="comboboxLanguages">The combobox to populate</param>
         public static void ListLanguages(ComboBox comboboxLanguages)
@@ -84,9 +85,11 @@ namespace OpenBveApi.Interface {
 
 			blockComboBox = false;
 		}
+#endif
 
 		private static bool blockComboBox = false;
 
+#if !MOBILE
 		/// <summary>Attempts to set the flag image for the selected language code</summary>
 		/// <param name="flagFolder">The folder containing flag images</param>
 		/// <param name="currentLanguageCodeArgument">The language code we wish to get the flag for</param>
@@ -133,6 +136,7 @@ namespace OpenBveApi.Interface {
 			
 			return true;
 		}
+#endif
 
 		internal static readonly Dictionary<string, NewLanguage> AvailableNewLanguages = new Dictionary<string, NewLanguage>();
 

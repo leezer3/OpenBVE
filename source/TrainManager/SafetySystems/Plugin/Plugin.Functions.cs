@@ -303,6 +303,11 @@ namespace TrainManager.Trains
 					if (IntPtr.Size != 4)
 					{
 						//We can't load the plugin directly on x64 Windows, so use the proxy interface
+#if MOBILE
+						//The WCF plugin proxy is a desktop (Windows) only feature
+						TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " requires the Windows plugin proxy, which is not available in the mobile build.");
+						return false;
+#else
 						Plugin = new ProxyPlugin(pluginFile, this);
 						if (Plugin.Load(GetVehicleSpecs(), mode))
 						{
@@ -312,6 +317,7 @@ namespace TrainManager.Trains
 						Plugin = null;
 						TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " failed to load.");
 						return false;
+#endif
 					}
 					break;
 				default:

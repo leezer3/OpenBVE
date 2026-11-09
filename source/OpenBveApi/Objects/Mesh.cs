@@ -2,7 +2,6 @@
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using System.Collections.Generic;
-using static System.Windows.Forms.AxHost;
 
 namespace OpenBveApi.Objects
 {

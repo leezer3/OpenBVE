@@ -381,11 +381,13 @@ namespace OpenBveApi.FileSystem {
 										* Check we have read / write access to the settings file
 										* https://bveworldwide.forumotion.com/t1998-access-denied-after-upgrade#20169
 										*/
+#if !MOBILE
 										if (!(Type.GetType("Mono.Runtime") != null))
 										{
 											//Mono doesn't reliably support AccessControl
 											Directory.GetAccessControl(folder);
 										}
+#endif
 
 										string settingsFile = Path.CombineFile(folder, "1.5.0\\options.cfg");
 										using (FileStream unused = File.OpenWrite(settingsFile))

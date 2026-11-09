@@ -374,6 +374,7 @@ namespace LibRender2
 			viewMatrixList = new List<Matrix4D>();
 			Fonts = new Fonts(currentHost, this, CurrentOptions.Font);
 			VisibilityThread = new Thread(RunVisibiliityThread);
+			VisibilityThread.IsBackground = true;
 			VisibilityThread.Start();
 			RenderThreadJobs = new ConcurrentQueue<ThreadStart>();
 		}
