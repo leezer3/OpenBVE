@@ -40,6 +40,8 @@ namespace LibRender2.Primitives
 	{
 		private readonly BaseRenderer renderer;
 		private readonly VertexArrayObject defaultVAO;
+		/// <summary>The number of vertices in the default cube geometry</summary>
+		private readonly int vertexCount;
 
 		/// <summary>Creates a new cube</summary>
 		public Cube(BaseRenderer renderer) : this(renderer, Color128.White)
@@ -318,6 +320,7 @@ namespace LibRender2.Primitives
 				},
 			};
 
+			vertexCount = vertexData.Length;
 			defaultVAO = new VertexArrayObject();
 			defaultVAO.Bind();
 			defaultVAO.SetVBO(new VertexBufferObject(vertexData, BufferUsageHint.StaticDraw));
@@ -399,6 +402,15 @@ namespace LibRender2.Primitives
 			defaultVAO.Bind();
 			defaultVAO.Draw(PrimitiveType.Triangles);
         }
+
+		/// <summary>Draws the default cube geometry once for every instance in the currently uploaded batch</summary>
+		/// <param name="instanceCount">The number of instances to draw</param>
+		/// <remarks>The caller is responsible for activating the default shader, binding the texture, enabling instancing and uploading the instance matrices</remarks>
+		internal void DrawInstanced(int instanceCount)
+		{
+			defaultVAO.Bind();
+			defaultVAO.DrawInstanced(PrimitiveType.Triangles, 0, vertexCount, instanceCount);
+		}
 
 		/// <summary>Draws a 3D cube</summary>
 		/// <param name="VAO"></param>

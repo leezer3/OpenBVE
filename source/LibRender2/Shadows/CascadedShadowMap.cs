@@ -12,8 +12,11 @@ namespace LibRender2.ShadowMapping
         /// <summary>Number of cascades (shadow splits).</summary>
         public int CascadeCount { get; private set; }
 
-        /// <summary>Shadow map resolution per cascade.</summary>
+        /// <summary>Base (highest) shadow map resolution requested for the nearest cascade.</summary>
         public int Resolution { get; private set; }
+
+        /// <summary>Per-cascade shadow map resolutions (near cascades are sharper, far cascades cheaper).</summary>
+        public int[] Resolutions { get; private set; }
 
         /// <summary>Per-cascade FBO handles.</summary>
         public int[] FBOs { get; private set; }
@@ -30,6 +33,7 @@ namespace LibRender2.ShadowMapping
         {
             CascadeCount = cascadeCount;
             Resolution = resolution;
+            Resolutions = BuildResolutions(cascadeCount, resolution);
             FBOs = new int[cascadeCount];
             DepthTextures = new int[cascadeCount];
 
@@ -53,6 +57,7 @@ namespace LibRender2.ShadowMapping
             // Reallocate
             CascadeCount = newCascadeCount;
             Resolution = newResolution;
+            Resolutions = BuildResolutions(newCascadeCount, newResolution);
             FBOs = new int[newCascadeCount];
             DepthTextures = new int[newCascadeCount];
 
@@ -70,9 +75,10 @@ namespace LibRender2.ShadowMapping
             // Generate depth texture
             DepthTextures[index] = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, DepthTextures[index]);
+            int cascadeResolution = Resolutions[index];
             GL.TexImage2D(TextureTarget.Texture2D, 0,
                 PixelInternalFormat.DepthComponent24,
-                Resolution, Resolution, 0,
+                cascadeResolution, cascadeResolution, 0,
                 PixelFormat.DepthComponent, PixelType.UnsignedInt, IntPtr.Zero);
             GL.TexParameter(TextureTarget.Texture2D,
                 TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
@@ -118,7 +124,7 @@ namespace LibRender2.ShadowMapping
         public void BindCascadeForWriting(int cascadeIndex)
         {
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, FBOs[cascadeIndex]);
-            GL.Viewport(0, 0, Resolution, Resolution);
+            GL.Viewport(0, 0, Resolutions[cascadeIndex], Resolutions[cascadeIndex]);
         }
 
         /// <summary>Unbinds shadow FBO.</summary>
@@ -140,6 +146,26 @@ namespace LibRender2.ShadowMapping
             }
             // Restore active texture to 0 so normal rendering isn't affected
             GL.ActiveTexture(TextureUnit.Texture0);
+        }
+
+        /// <summary>
+        /// Near cascades keep the requested resolution; farther cascades use progressively
+        /// lower resolutions to cut fill rate while preserving close-up shadow quality.
+        /// </summary>
+        private static int[] BuildResolutions(int cascadeCount, int baseResolution)
+        {
+            int[] resolutions = new int[cascadeCount];
+            for (int i = 0; i < cascadeCount; i++)
+            {
+                int scale = i == 0 ? 1 : (i == 1 ? 2 : 4);
+                int resolution = baseResolution / scale;
+                if (resolution < 512)
+                {
+                    resolution = 512;
+                }
+                resolutions[i] = resolution;
+            }
+            return resolutions;
         }
 
         public void Dispose()

@@ -82,6 +82,15 @@ layout (std140) uniform uAnimationMatricies {
     mat4 modelMatricies[128];
 };
 
+// Per-instance modelview matrices, indexed by gl_InstanceID when instanced rendering is active
+// (see BaseRenderer.RenderOpaqueFaces). Bound to uniform buffer binding point 1 so that it does
+// not collide with the animation matrices at binding point 0.
+layout (std140) uniform uInstanceMatricies {
+    mat4 instanceMatricies[256];
+};
+
+uniform int uInstanced;
+
 out vec4 oViewPos;
 out vec2 oUv;
 out vec4 oColor;
@@ -98,9 +107,9 @@ vec3 safeNormalizeVec3(vec3 v) {
 	return v * inversesqrt(l2);
 }
 
-vec4 getLightResult()
+vec4 getLightResult(mat4 mv)
 {
-	vNormal = safeNormalizeVec3(mat3(transpose(inverse(uCurrentModelViewMatrix))) * vec3(iNormal.x, iNormal.y, -iNormal.z));
+	vNormal = safeNormalizeVec3(mat3(transpose(inverse(mv))) * vec3(iNormal.x, iNormal.y, -iNormal.z));
 	float nDotVP = max(0.0, dot(vNormal, vec3(uLight.position))); // pre-normalized on CPU in SetLightPosition
 	float nDotHV = max(0.0, dot(vNormal, normalize(vec3(oViewPos.xyz + uLight.position))));
 	float pf = nDotVP == 0.0 ? 0.0 : pow(nDotHV, uMaterial.shininess);
@@ -222,12 +231,19 @@ void main()
 	pos.z = -pos.z;
 	vec4 transformedPosition = vec4(pos, 1.0);
 
-	oViewPos = uCurrentModelViewMatrix * transformedPosition;
+	/*
+	 * Instanced rendering supplies a per-instance modelview matrix selected by gl_InstanceID.
+	 * Every other draw (non-instanced faces, shadow depth pass, cubes, backgrounds) uses the
+	 * uniform modelview matrix, so the branch is neutral when instancing is not active.
+	 */
+	mat4 mv = (uInstanced == 1) ? instanceMatricies[gl_InstanceID] : uCurrentModelViewMatrix;
+
+	oViewPos = mv * transformedPosition;
 	gl_Position = uCurrentProjectionMatrix * oViewPos;
 	
 	// Pass normal to fragment shader (un-negated Z to match lighting expected convention)
 	// safeNormalize: Cube/ground and any VAO with zero normals must not produce NaN on Mesa.
-	vNormal = safeNormalizeVec3(mat3(transpose(inverse(uCurrentModelViewMatrix))) * vec3(iNormal.x, iNormal.y, -iNormal.z));
+	vNormal = safeNormalizeVec3(mat3(transpose(inverse(mv))) * vec3(iNormal.x, iNormal.y, -iNormal.z));
 
 	if (uShadowEnabled)
 	{
@@ -260,5 +276,5 @@ void main()
 
 	oUv = (uCurrentTextureMatrix * vec4(iUv, 1.0, 1.0)).xy;
 	
-	oLightResult = uIsLight && (uMaterialFlags & 4) == 0 ? getLightResult() : uMaterial.ambient;
+	oLightResult = uIsLight && (uMaterialFlags & 4) == 0 ? getLightResult(mv) : uMaterial.ambient;
 }

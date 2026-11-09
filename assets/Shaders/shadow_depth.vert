@@ -31,12 +31,19 @@ layout(location = 4) in ivec3 iMatrixChain;
 uniform mat4 uLightSpaceMatrix;
 uniform mat4 uModelMatrix;
 uniform mat4 uTextureMatrix;
+uniform int uInstanced;
 
 out vec2 vUv;
 
 layout(std140) uniform matrices
 {
 	mat4 uMatrix[128];
+};
+
+// Per-instance world matrices, indexed by gl_InstanceID when instanced rendering is active.
+// Bound to uniform buffer binding point 1, matching BaseRenderer's instance matrix buffer.
+layout(std140) uniform uInstanceMatricies {
+    mat4 instanceMatricies[256];
 };
 
 vec3 transformVector(vec3 vector, int index)
@@ -91,6 +98,7 @@ void main()
 	pos.z = -pos.z;
 
 	vUv = (uTextureMatrix * vec4(iUv, 1.0, 1.0)).xy;
-	gl_Position = uLightSpaceMatrix * uModelMatrix * vec4(pos, 1.0);
+	mat4 modelMatrix = (uInstanced == 1) ? instanceMatricies[gl_InstanceID] : uModelMatrix;
+	gl_Position = uLightSpaceMatrix * modelMatrix * vec4(pos, 1.0);
 }
 
