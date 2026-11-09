@@ -85,7 +85,7 @@ namespace LibRender2.ShadowMapping
 			double h = zFar * Math.Tan(fovYRad / 2.0);
 			double w = h * aspect;
 			
-			// The farthest corner of the subfrustum is on the far plane
+			// The farthest corner of the sub-frustum is on the far plane
 			// Vector3 farCorner = (w, h, zFar)
 			// Vector3 center = (0, 0, (zNear + zFar) / 2)
 			// radius = distance from center to farCorner

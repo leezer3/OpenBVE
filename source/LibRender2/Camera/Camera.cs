@@ -289,7 +289,7 @@ namespace LibRender2.Cameras
 		/// <summary>Adjusts the camera alignment based upon the specified parameters</summary>
 		public void AdjustAlignment(ref double Source, double Direction, ref double Speed, double TimeElapsed, bool Zoom = false, CameraRestriction? Restriction = null)
 		{
-			if (Direction == 0.0 && Speed == 0.0 || TimeElapsed == 0.0) return;
+			if ((Direction == 0.0 && Speed == 0.0) || TimeElapsed == 0.0) return;
 			if (Direction == 0.0)
 			{
 				double d = (0.025 + 5.0 * Math.Abs(Speed)) * TimeElapsed;
@@ -555,32 +555,32 @@ namespace LibRender2.Cameras
 			switch (rotationDirection)
 			{
 				case Translations.Command.CameraRotateLeft:
-					s = CurrentMode == CameraViewMode.Interior | CurrentMode == CameraViewMode.InteriorLookAhead ? InteriorTopAngularSpeed : ExteriorTopAngularSpeed;
+					s = CurrentMode == CameraViewMode.Interior || CurrentMode == CameraViewMode.InteriorLookAhead ? InteriorTopAngularSpeed : ExteriorTopAngularSpeed;
 					AlignmentDirection.Yaw = -s * rotation;
 					break;
 				case Translations.Command.CameraRotateRight:
-						s = CurrentMode == CameraViewMode.Interior | CurrentMode == CameraViewMode.InteriorLookAhead ? InteriorTopAngularSpeed : ExteriorTopAngularSpeed;
+						s = CurrentMode == CameraViewMode.Interior || CurrentMode == CameraViewMode.InteriorLookAhead ? InteriorTopAngularSpeed : ExteriorTopAngularSpeed;
 						AlignmentDirection.Yaw = s * rotation;
 					break;
 				case Translations.Command.CameraRotateUp:
-					s = CurrentMode == CameraViewMode.Interior | CurrentMode == CameraViewMode.InteriorLookAhead ? InteriorTopAngularSpeed : ExteriorTopAngularSpeed;
+					s = CurrentMode == CameraViewMode.Interior || CurrentMode == CameraViewMode.InteriorLookAhead ? InteriorTopAngularSpeed : ExteriorTopAngularSpeed;
 					AlignmentDirection.Pitch = s * rotation;
 					break;
 				case Translations.Command.CameraRotateDown:
-					s = CurrentMode == CameraViewMode.Interior | CurrentMode == CameraViewMode.InteriorLookAhead ? InteriorTopAngularSpeed : ExteriorTopAngularSpeed;
+					s = CurrentMode == CameraViewMode.Interior || CurrentMode == CameraViewMode.InteriorLookAhead ? InteriorTopAngularSpeed : ExteriorTopAngularSpeed;
 					AlignmentDirection.Pitch = -s * rotation;
 					break;
 			case Translations.Command.CameraRotateCCW:
-				if ((CurrentMode != CameraViewMode.Interior & CurrentMode != CameraViewMode.InteriorLookAhead) | CurrentRestriction != CameraRestrictionMode.On) 
+				if ((CurrentMode != CameraViewMode.Interior && CurrentMode != CameraViewMode.InteriorLookAhead) || CurrentRestriction != CameraRestrictionMode.On) 
 				{
-					s = CurrentMode == CameraViewMode.Interior | CurrentMode == CameraViewMode.InteriorLookAhead ? InteriorTopAngularSpeed : ExteriorTopAngularSpeed;
+					s = CurrentMode == CameraViewMode.Interior || CurrentMode == CameraViewMode.InteriorLookAhead ? InteriorTopAngularSpeed : ExteriorTopAngularSpeed;
 					AlignmentDirection.Roll = -s * rotation;
 				}
 				break;
 			case Translations.Command.CameraRotateCW:
-				if ((CurrentMode != CameraViewMode.Interior & CurrentMode != CameraViewMode.InteriorLookAhead) | CurrentRestriction != CameraRestrictionMode.On)
+				if ((CurrentMode != CameraViewMode.Interior && CurrentMode != CameraViewMode.InteriorLookAhead) || CurrentRestriction != CameraRestrictionMode.On)
 				{
-					s = CurrentMode == CameraViewMode.Interior | CurrentMode == CameraViewMode.InteriorLookAhead ? InteriorTopAngularSpeed : ExteriorTopAngularSpeed;
+					s = CurrentMode == CameraViewMode.Interior || CurrentMode == CameraViewMode.InteriorLookAhead ? InteriorTopAngularSpeed : ExteriorTopAngularSpeed;
 					AlignmentDirection.Roll = s * rotation;
 				}
 				break;

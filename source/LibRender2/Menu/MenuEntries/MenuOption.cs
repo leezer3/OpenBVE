@@ -317,7 +317,7 @@ namespace LibRender2.Menu
 							BaseMenu.CurrentOptions.ShadowCascades = ShadowCascadeCount.Four;
 							break;
 					}
-					BaseMenu.Renderer.InitializeShadows();
+					BaseMenu.Renderer.Shadows.Initialize();
 					break;
 				case OptionType.ShadowFilterCascades:
 					BaseMenu.CurrentOptions.ShadowFilterCascades = !BaseMenu.CurrentOptions.ShadowFilterCascades;
