@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Formats.OpenBve;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -51,6 +52,7 @@ namespace Train.OpenBve
 			Vector3 front = new Vector3(0.0, 0.0, 0.5 * train.Cars[train.DriverCar].Length);
 			// Positioned at the position of the panel / 3D cab (Remember that the panel is just an object in the world...)
 			Vector3 panel = new Vector3(train.Cars[train.DriverCar].Driver.X, train.Cars[train.DriverCar].Driver.Y, train.Cars[train.DriverCar].Driver.Z + 1.0);
+			int maxMotorIndex = 0;
 
 			// parse configuration file
 			Dictionary<int, string> motorFiles = new Dictionary<int, string>();
@@ -108,7 +110,7 @@ namespace Train.OpenBve
 						while (block.RemainingDataValues > 0 && block.GetIndexedPath(trainFolder, out var motorIndex, out var fileName))
 						{
 							motorFiles[motorIndex] = fileName;
-
+							maxMotorIndex = Math.Max(motorIndex, maxMotorIndex);
 							if (!System.IO.File.Exists(motorFiles[motorIndex]))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, true, "File " + motorFiles[motorIndex] + " does not exist in file " + FileName);
@@ -397,6 +399,17 @@ namespace Train.OpenBve
 					}
 
 					train.Cars[c].TractionModel.MotorSounds = motorSound;
+				}
+				else if (train.Cars[c].TractionModel.MotorSounds is BVE5MotorSound motorSounds)
+				{
+					motorSounds.SoundBuffers = new SoundBuffer[maxMotorIndex + 1];
+					motorSounds.SoundSources = new SoundSource[maxMotorIndex + 1];
+					for (int i = 0; i < motorFiles.Count; i++)
+					{
+						int index = motorFiles.ElementAt(i).Key;
+						Plugin.CurrentHost.RegisterSound(motorFiles[index], SoundCfgParser.mediumRadius, out var mS);
+						motorSounds.SoundBuffers[index] = mS as SoundBuffer;
+					}
 				}
 				else
 				{

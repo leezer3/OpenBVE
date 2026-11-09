@@ -356,9 +356,9 @@ namespace ObjectViewer {
 			return Program.Renderer.CreateStaticObject(Prototype, Position, WorldTransformation, LocalTransformation, ObjectDisposalMode.Accurate, parameters, 25.0);
 		}
 
-		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, ObjectCreationParameters parameters)
+		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, ObjectCreationParameters parameters)
 		{
-			return Program.Renderer.CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Translate, ObjectDisposalMode.Accurate, parameters, 25.0);
+			return Program.Renderer.CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, ObjectDisposalMode.Accurate, parameters, 25.0);
 		}
 
 		public override void CreateDynamicObject(ref ObjectState internalObject)

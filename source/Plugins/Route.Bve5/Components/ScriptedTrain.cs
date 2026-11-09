@@ -38,10 +38,10 @@ using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using SoundManager;
 using TrainManager.Car;
-using TrainManager.Handles;
 using TrainManager.Motor;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
+// ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 
 namespace Route.Bve5
 {
@@ -133,7 +133,6 @@ namespace Route.Bve5
 
 			foreach (Statement Statement in ParseData.Statements)
 			{
-				dynamic d = Statement;
 				if (Statement.ElementName != MapElementName.Train || Statement.FunctionName != MapFunctionName.SetTrack)
 				{
 					continue;
@@ -186,7 +185,6 @@ namespace Route.Bve5
 
 				TrainManager.Trains.ScriptedTrain Train = new TrainManager.Trains.ScriptedTrain(TrainState.Pending);
 				Train.Cars = new CarBase[OtherTrain.CarObjects.Count];
-				Train.Handles.Reverser = new ReverserHandle(Train);
 
 				for (int i = 0; i < Train.Cars.Length; i++)
 				{

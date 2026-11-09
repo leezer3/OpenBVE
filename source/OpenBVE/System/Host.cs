@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
@@ -365,10 +364,10 @@ namespace OpenBve {
 										// may be trying to load in different places, so leave
 										Interface.AddMessage(MessageType.Error, false, "Attempted to load " + path + " which is an animated object where only static objects are allowed.");
 									}
-										if (ReportFailure(FailedObjects, path))
-										{
-											Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject for file " + path);
-										}
+									if (ReportFailure(FailedObjects, path))
+									{
+										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject for file " + path);
+									}
 									
 								} catch (Exception ex) {
 									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " raised the following exception at LoadObject:" + ex.Message);
@@ -490,9 +489,9 @@ namespace OpenBve {
 			return Program.Renderer.CreateStaticObject(Prototype, Position, WorldTransformation, LocalTransformation, Program.CurrentRoute.AccurateObjectDisposal, Parameters, Program.CurrentRoute.BlockLength);
 		}
 
-		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, ObjectCreationParameters Parameters)
+		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, ObjectCreationParameters Parameters)
 		{
-			return Program.Renderer.CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Translate, Program.CurrentRoute.AccurateObjectDisposal, Parameters, Program.CurrentRoute.BlockLength);
+			return Program.Renderer.CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Program.CurrentRoute.AccurateObjectDisposal, Parameters, Program.CurrentRoute.BlockLength);
 		}
 
 		public override void CreateDynamicObject(ref ObjectState internalObject)

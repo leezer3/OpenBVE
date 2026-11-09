@@ -7,6 +7,6 @@
 		/// <summary>A smoke particle</summary>
 		Smoke,
 		/// <summary>A steam particle</summary>
-		Steam,
+		Steam
 	}
 }

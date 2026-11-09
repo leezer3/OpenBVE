@@ -75,7 +75,6 @@ namespace OpenBveApi.Objects
 	    /// <summary>The total number of frames in the animation</summary>
 	    public readonly int FrameCount;
 
-
 	    /// <summary>The controllers for the animation</summary>
 	    public AbstractAnimation[] AnimationControllers;
 		/// <summary>The matrix to send to the shader</summary>
@@ -107,7 +106,7 @@ namespace OpenBveApi.Objects
 	    }
 
 	    /// <summary>Updates the animation</summary>
-		public void Update(AbstractCar baseCar, bool isReversed, Vector3 position, double trackPosition, double timeElapsed)
+		public void Update(AbstractCar baseCar, bool isReversed, Vector3 position, double timeElapsed)
 		{
 			if (ParentAnimation != -1 && ParentObject.Animations.ContainsKey(ParentAnimation))
 			{

@@ -69,7 +69,7 @@ namespace OpenBveApi.Objects
 							mat *= Objects[i].States[0].Translation;
 							mat *= transformationMatrix;
 							Parameters.AccurateObjectDisposalZOffset = Objects[i].States[0].Translation.ExtractTranslation().Z * -1.0; //To calculate the Z-offset within the object, we want the untransformed co-ordinates, not the world co-ordinates
-							currentHost.CreateStaticObject(Objects[i].States[0].Prototype, Position, LocalTransformation, mat, Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z), Parameters);
+							currentHost.CreateStaticObject(Objects[i].States[0].Prototype, Position, LocalTransformation, mat, Parameters);
 						}
 						else
 						{
@@ -105,8 +105,8 @@ namespace OpenBveApi.Objects
 				Vector3 v = Sounds[i].Position;
 				v.Rotate(LocalTransformation);
 				v.Rotate(WorldTransformation);
-				(Sounds[i] as WorldSound)?.CreateSound(Position + v, Parameters.SectionIndex, Parameters.TrackPosition);
-				(Sounds[i] as AnimatedWorldObjectStateSound)?.Create(Position + v, WorldTransformation, LocalTransformation, Parameters.SectionIndex, Parameters.TrackPosition);
+				(Sounds[i] as WorldSound)?.CreateSound(Position + v, Parameters);
+				(Sounds[i] as AnimatedWorldObjectStateSound)?.Create(Position + v, WorldTransformation, LocalTransformation, Parameters);
 			}
 		}
 
@@ -184,13 +184,13 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <inheritdoc/>
-		public override UnifiedObject TransformLeft(double NearDistance, double FarDistance)
+		public override UnifiedObject TransformLeft(double NearDistance, double FarDistance, bool FlipFaces = false)
 		{
 			throw new NotSupportedException();
 		}
 
 		/// <inheritdoc/>
-		public override UnifiedObject TransformRight(double NearDistance, double FarDistance)
+		public override UnifiedObject TransformRight(double NearDistance, double FarDistance, bool FlipFaces = false)
 		{
 			throw new NotSupportedException();
 		}

@@ -102,13 +102,12 @@ namespace LibRender2.Objects
 
 			foreach (MeshFace face in State.Prototype.Mesh.Faces)
 			{
-				bool alpha;
 				if (face.Vertices.Length == 0)
 				{
 					// defensive, may occur if ObjectOptimisation is disabled or object is too big to optimise
 					continue;
 				}
-				if (!materialAlphaCache.TryGetValue(face.Material, out alpha))
+				if (!materialAlphaCache.TryGetValue(face.Material, out bool alpha))
 				{
 					alpha = false;
 
@@ -149,25 +148,24 @@ namespace LibRender2.Objects
 						}
 					}
 
-						if (!alpha)
+					if (!alpha)
+					{
+						Texture nighttimeTexture = GetTransparencySourceTexture(State.Prototype.Mesh.Materials[face.Material].NighttimeTexture);
+						TextureTransparencyType transparencyType = TextureTransparencyType.Opaque;
+						if (nighttimeTexture != null)
 						{
-							Texture nighttimeTexture = GetTransparencySourceTexture(State.Prototype.Mesh.Materials[face.Material].NighttimeTexture);
-							TextureTransparencyType transparencyType = TextureTransparencyType.Opaque;
-							if (nighttimeTexture != null)
-							{
-								// as loading the cached texture may have failed, e.g. corrupt file etc
-								transparencyType = nighttimeTexture.GetTransparencyType();
-							}
-							if (transparencyType == TextureTransparencyType.Alpha)
-							{
-								alpha = true;
-							}
-							else if (transparencyType == TextureTransparencyType.Partial && renderer.currentOptions.TransparencyMode == TransparencyMode.Quality)
-							{
-								alpha = true;
-							}
+							// as loading the cached texture may have failed, e.g. corrupt file etc
+							transparencyType = nighttimeTexture.GetTransparencyType();
 						}
-
+						if (transparencyType == TextureTransparencyType.Alpha)
+						{
+							alpha = true;
+						}
+						else if (transparencyType == TextureTransparencyType.Partial && renderer.currentOptions.TransparencyMode == TransparencyMode.Quality)
+						{
+							alpha = true;
+						}
+					}
 					materialAlphaCache[face.Material] = alpha;
 				}
 				

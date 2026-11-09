@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using OpenBveApi;
 using Path = OpenBveApi.Path;
 
 namespace CsvRwRouteParser {
@@ -196,7 +197,7 @@ namespace CsvRwRouteParser {
 					if (Plugin.CurrentHost.Plugins[i].Object != null)
 					{
 						EnabledHacks.BveTsHacks = Plugin.CurrentOptions.EnableBveTsHacks;
-						EnabledHacks.BlackTransparency = true;
+						EnabledHacks.TransparencyMode = BlackTransparencyMode.AllFiles;
 						Plugin.CurrentHost.Plugins[i].Object.SetCompatibilityHacks(EnabledHacks);
 						//Remember that these will be ignored if not the correct plugin
 						Plugin.CurrentHost.Plugins[i].Object.SetObjectParser(Plugin.CurrentOptions.CurrentXParser);

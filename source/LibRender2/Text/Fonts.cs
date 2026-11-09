@@ -84,6 +84,7 @@ namespace LibRender2.Text
 				try
 				{
 					FontFamily newFont = new FontFamily(fontName);
+					uiFont = newFont;
 				}
 				catch
 				{

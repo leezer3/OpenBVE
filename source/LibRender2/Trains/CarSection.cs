@@ -3,7 +3,6 @@ using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using System;
 using OpenBveApi.Math;
-using OpenBveApi.World;
 
 namespace LibRender2.Trains
 {
@@ -129,7 +128,7 @@ namespace LibRender2.Trains
 			CurrentAdditionalGroup = gl -1;
 		}
 
-		/// <summary>Initalizes the CarSection</summary>
+		/// <summary>Initializes the CarSection</summary>
 		/// <param name="CurrentlyVisible">Whether visible at the time of this call</param>
 		public void Initialize(bool CurrentlyVisible)
 		{

@@ -22,7 +22,6 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using System;
 using System.IO;
 using System.Threading;
 using OpenBveApi.FileSystem;
@@ -102,18 +101,18 @@ namespace Plugin
 		    return false;
 	    }
 
-	    if (Data[4] != 48 | Data[5] != 51 | Data[6] != 48 | Data[7] != 50 & Data[7] != 51)
+	    if (Data[4] != 48 || Data[5] != 51 || Data[6] != 48 || Data[7] != 50 && Data[7] != 51)
 	    {
 		    // unrecognized version
 		    return false;
 	    }
 
 	    // floating-point format
-	    if (Data[12] == 48 & Data[13] == 48 & Data[14] == 51 & Data[15] == 50)
+	    if (Data[12] == 48 && Data[13] == 48 && Data[14] == 51 && Data[15] == 50)
 	    {
 			//32-bit FP
 	    }
-	    else if (Data[12] == 48 & Data[13] == 48 & Data[14] == 54 & Data[15] == 52)
+	    else if (Data[12] == 48 && Data[13] == 48 && Data[14] == 54 && Data[15] == 52)
 	    {
 			//64-bit FP
 	    }

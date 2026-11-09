@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Math;
+﻿using System;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 
 namespace LibRender2.Trains
@@ -16,7 +17,8 @@ namespace LibRender2.Trains
 
 		public ElementsGroup()
 		{
-			Elements = new AnimatedObject[] {};
+			Elements = Array.Empty<AnimatedObject>();
+			TouchElements = Array.Empty<TouchElement>();
 		}
 
 		/// <summary>Initializes the ElementsGroup</summary>
@@ -51,11 +53,6 @@ namespace LibRender2.Trains
 				for (int i = 0; i < Elements.Length; i++)
 				{
 					Elements[i].Reverse(true);
-				}
-
-				if (TouchElements == null)
-				{
-					return;
 				}
 			
 				for (int i = 0; i < TouchElements.Length; i++)

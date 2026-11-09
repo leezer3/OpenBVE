@@ -175,7 +175,7 @@ namespace OpenBve
 									{
 										Program.ShowMessageBox(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","warning"}) + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_default_missing"}),
 											Application.ProductName);
-										Controls = new Control[0];
+										Controls = Array.Empty<Control>();
 									}
 
 									return;

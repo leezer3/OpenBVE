@@ -276,88 +276,90 @@ namespace LibRender2.Textures
 
 		private bool LoadTextureInternal(ref Texture handle, OpenGlTextureWrapMode wrap, int currentTicks, InterpolationMode Interpolation, int AnisotropicFilteringLevel)
 		{
-
 			Texture texture = null;
 			//Don't try to load a texture to a null handle, this is a seriously bad idea....
 			if (handle == null || handle.OpenGlTextures == null)
 			{
 				return false;
 			}
-			
+
 			if (handle.MultipleFrames)
 			{
-			bool animatedHit = false;
-			if (handle.Origin != null)
-			{
-				lock (TextureLookupLock)
-				{
-					animatedHit = animatedTextures.TryGetValue(handle.Origin, out texture) && texture != null;
-				}
-			}
-			if (!animatedHit)
-			{
-				texture = null;
-				// Reuse register-time decode from textureCache where possible to avoid decoding the same large animated GIF twice (2× memory). See RegisterTexture pre-seed at line 136.
-				// NOTE: textureCache may contain a null value cached by an older ObjectLibrary path (failed GetTexture); treat as a miss and purge it.
+				bool animatedHit = false;
 				if (handle.Origin != null)
 				{
 					lock (TextureLookupLock)
 					{
-						if (textureCache.TryGetValue(handle.Origin, out Texture cachedTexture))
+						animatedHit = animatedTextures.TryGetValue(handle.Origin, out texture) && texture != null;
+					}
+				}
+
+				if (!animatedHit)
+				{
+					// Reuse register-time decode from textureCache where possible to avoid decoding the same large animated GIF twice (2× memory). See RegisterTexture pre-seed at line 136.
+					// NOTE: textureCache may contain a null value cached by an older ObjectLibrary path (failed GetTexture); treat as a miss and purge it.
+					if (handle.Origin != null)
+					{
+						lock (TextureLookupLock)
 						{
-							if (cachedTexture == null)
+							if (textureCache.TryGetValue(handle.Origin, out Texture cachedTexture))
 							{
-								textureCache.Remove(handle.Origin);
-							}
-							else if (cachedTexture.MultipleFrames)
-							{
-								PathOrigin cachedPathOrigin = cachedTexture.Origin as PathOrigin;
-								PathOrigin handlePathOrigin = handle.Origin as PathOrigin;
-							// PathOrigin equality is path-only, so check Parameters explicitly; ByteArrayOrigin path never hits here (handled below)
-							if (cachedPathOrigin != null && handlePathOrigin != null)
-							{
-								if (cachedPathOrigin.Parameters == handlePathOrigin.Parameters)
-									texture = cachedTexture;
-							}
-							else if (handle.Origin is ByteArrayOrigin || cachedTexture.Origin is ByteArrayOrigin)
-							{
-								texture = cachedTexture;
-							}
-							else if (cachedPathOrigin == null && handlePathOrigin == null)
-							{
-								texture = cachedTexture;
+								if (cachedTexture == null)
+								{
+									textureCache.Remove(handle.Origin);
+								}
+								else if (cachedTexture.MultipleFrames)
+								{
+									PathOrigin cachedPathOrigin = cachedTexture.Origin as PathOrigin;
+									PathOrigin handlePathOrigin = handle.Origin as PathOrigin;
+									// PathOrigin equality is path-only, so check Parameters explicitly; ByteArrayOrigin path never hits here (handled below)
+									if (cachedPathOrigin != null && handlePathOrigin != null)
+									{
+										if (cachedPathOrigin.Parameters == handlePathOrigin.Parameters)
+											texture = cachedTexture;
+									}
+									else if (handle.Origin is ByteArrayOrigin || cachedTexture.Origin is ByteArrayOrigin)
+									{
+										texture = cachedTexture;
+									}
+									else if (cachedPathOrigin == null && handlePathOrigin == null)
+									{
+										texture = cachedTexture;
+									}
+								}
 							}
 						}
+					}
+
+					if (texture == null)
+					{
+						// Reuse the register-time decode when the on-disk file is unchanged (the caches
+						// were dropped by the unload): avoids decoding the same GIF into a 2nd pixel copy.
+						// (DecodedTexture already has this handle's parameters applied at registration.)
+						if (handle.Origin is PathOrigin && TextureFileUnchanged(handle.Origin) && handle.DecodedTexture != null && handle.DecodedTexture.MultipleFrames)
+						{
+							texture = handle.DecodedTexture;
+						}
+					}
+
+					if (texture == null)
+					{
+						if (handle.Origin == null || !handle.Origin.GetTexture(out texture))
+						{
+							//Loading animated texture barfed
+							return false;
+						}
+					}
+
+					if (handle.Origin != null && texture != null)
+					{
+						lock (TextureLookupLock)
+						{
+							animatedTextures[handle.Origin] = texture;
 						}
 					}
 				}
-				if (texture == null)
-				{
-					// Reuse the register-time decode when the on-disk file is unchanged (the caches
-					// were dropped by the unload): avoids decoding the same GIF into a 2nd pixel copy.
-					// (DecodedTexture already has this handle's parameters applied at registration.)
-					if (handle.Origin is PathOrigin && TextureFileUnchanged(handle.Origin) && handle.DecodedTexture != null && handle.DecodedTexture.MultipleFrames)
-					{
-						texture = handle.DecodedTexture;
-					}
-				}
-				if (texture == null)
-				{
-					if (handle.Origin == null || !handle.Origin.GetTexture(out texture))
-					{
-						//Loading animated texture barfed
-						return false;
-					}
-				}
-				if (handle.Origin != null && texture != null)
-				{
-					lock (TextureLookupLock)
-					{
-						animatedTextures[handle.Origin] = texture;
-					}
-				}
-			}
-				
+
 				double elapsedTime = CPreciseTimer.GetElapsedTime(handle.LastAccess, currentTicks);
 				int elapsedFrames = (int)(elapsedTime / texture.FrameInterval);
 				if (elapsedFrames > 0)
@@ -381,7 +383,8 @@ namespace LibRender2.Textures
 							// the lock before TexSubImage2D would let a concurrent upload corrupt the data.
 							lock (_expandLock)
 							{
-								if (_palettedExpandBuffer == null || _palettedExpandBuffer.Length < need) _palettedExpandBuffer = new byte[need];
+								if (_palettedExpandBuffer == null || _palettedExpandBuffer.Length < need)
+									_palettedExpandBuffer = new byte[need];
 								byte[] pooled = _palettedExpandBuffer;
 								var pal = texture.Palette32;
 								if (opaque)
@@ -389,9 +392,12 @@ namespace LibRender2.Textures
 									for (int p = 0; p < texture.Width * texture.Height; p++)
 									{
 										int idx = subBytes[p] & 0xFF;
-										var c = pal != null && idx < pal.Length ? pal[idx] : new OpenBveApi.Colors.Color32(0,0,0,255);
-										pooled[p*3] = c.R; pooled[p*3+1] = c.G; pooled[p*3+2] = c.B;
+										var c = pal != null && idx < pal.Length ? pal[idx] : new OpenBveApi.Colors.Color32(0, 0, 0, 255);
+										pooled[p * 3] = c.R;
+										pooled[p * 3 + 1] = c.G;
+										pooled[p * 3 + 2] = c.B;
 									}
+
 									GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
 									GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.Width, texture.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgb, PixelType.UnsignedByte, pooled);
 								}
@@ -400,13 +406,19 @@ namespace LibRender2.Textures
 									for (int p = 0; p < texture.Width * texture.Height; p++)
 									{
 										int idx = subBytes[p] & 0xFF;
-										var c = pal != null && idx < pal.Length ? pal[idx] : new OpenBveApi.Colors.Color32(0,0,0,255);
-										pooled[p*4] = c.R; pooled[p*4+1] = c.G; pooled[p*4+2] = c.B; pooled[p*4+3] = c.A;
+										var c = pal != null && idx < pal.Length ? pal[idx] : new OpenBveApi.Colors.Color32(0, 0, 0, 255);
+										pooled[p * 4] = c.R;
+										pooled[p * 4 + 1] = c.G;
+										pooled[p * 4 + 2] = c.B;
+										pooled[p * 4 + 3] = c.A;
 									}
+
 									GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
-									GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.Width, texture.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, pooled);
+									GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.Width, texture.Height,
+										OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, pooled);
 								}
 							}
+
 							GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 						}
 						else
@@ -427,8 +439,10 @@ namespace LibRender2.Textures
 								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
 								GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.Width, texture.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, subBytes);
 							}
+
 							GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 						}
+
 						// Keep the stable handle in sync without swapping identity: the handle keeps
 						// its origin so the animated cache keeps hitting every tick (swapping to the
 						// decoded texture gives it a fresh ByteArrayOrigin and the cache never hits again)
@@ -503,33 +517,37 @@ namespace LibRender2.Textures
 						}
 					}
 				}
-			if (texture == null && handle.Origin != null)
-			{
-				// Reuse a live animated decode (e.g. after a reload dropped the register-time
-				// pre-seed from the texture cache) instead of decoding the same GIF twice.
-				lock (TextureLookupLock)
+
+				if (texture == null && handle.Origin != null)
 				{
-					if (animatedTextures.TryGetValue(handle.Origin, out Texture animatedTexture) && animatedTexture != null && animatedTexture.MultipleFrames)
+					// Reuse a live animated decode (e.g. after a reload dropped the register-time
+					// pre-seed from the texture cache) instead of decoding the same GIF twice.
+					lock (TextureLookupLock)
 					{
-						texture = animatedTexture;
+						if (animatedTextures.TryGetValue(handle.Origin, out Texture animatedTexture) && animatedTexture != null && animatedTexture.MultipleFrames)
+						{
+							texture = animatedTexture;
+						}
 					}
 				}
-			}
-			if (texture == null && handle.Origin is PathOrigin && TextureFileUnchanged(handle.Origin) && handle.DecodedTexture != null)
-			{
-				// Reuse the register-time decode when the on-disk file is unchanged (the cache
-				// entry was dropped by the unload): same bytes GetTexture would decode, no 2nd copy.
-				texture = handle.DecodedTexture;
-			}
-			if (texture == null)
-			{
-				if (handle.Origin == null)
+
+				if (texture == null && handle.Origin is PathOrigin && TextureFileUnchanged(handle.Origin) && handle.DecodedTexture != null)
 				{
-					handle.Ignore = true;
-					return false;
+					// Reuse the register-time decode when the on-disk file is unchanged (the cache
+					// entry was dropped by the unload): same bytes GetTexture would decode, no 2nd copy.
+					texture = handle.DecodedTexture;
 				}
-				handle.Origin.GetTexture(out texture);
-			}
+
+				if (texture == null)
+				{
+					if (handle.Origin == null)
+					{
+						handle.Ignore = true;
+						return false;
+					}
+
+					handle.Origin.GetTexture(out texture);
+				}
 			}
 			if (texture != null)
 			{
@@ -863,34 +881,35 @@ namespace LibRender2.Textures
 				return;
 			}
 
-		if (handle.MultipleFrames)
-		{
-			// Single GL name design: one pass per frame slot, at least one pass.
-			// (TotalFrames is 0 on re-created handles, which previously skipped deletion
-			// entirely and leaked the live GL names with stale Valid flags.)
-			int passes = handle.TotalFrames > 0 ? handle.TotalFrames : 1;
-			for (int i = 0; i < passes; i++)
+			if (handle.MultipleFrames)
 			{
-				handle.CurrentFrame = i;
-				foreach (OpenGlTexture t in handle.OpenGlTextures)
+				// Single GL name design: one pass per frame slot, at least one pass.
+				// (TotalFrames is 0 on re-created handles, which previously skipped deletion
+				// entirely and leaked the live GL names with stale Valid flags.)
+				int passes = handle.TotalFrames > 0 ? handle.TotalFrames : 1;
+				for (int i = 0; i < passes; i++)
 				{
-					if (t.Valid)
+					handle.CurrentFrame = i;
+					foreach (OpenGlTexture t in handle.OpenGlTextures)
 					{
-						GL.DeleteTextures(1, new[] { t.Name });
-						t.Valid = false;
+						if (t.Valid)
+						{
+							GL.DeleteTextures(1, new[] { t.Name });
+							t.Valid = false;
+						}
 					}
 				}
-			}
-			/*
-			 * Clone the ref for the search and then re-create the original in the texturemanager array
-			 * This allows it to be re-loaded from disk
-			 */
-			var texture = handle;
-			// Preserve the origin directly so the texture can be re-loaded from disk.
-			// (Do not gate this on animatedTextures.ContainsKey: that cache may already have
-			// been cleared by UnloadAllTextures, which previously produced hollow handles with
-			// a null origin here and killed animated GIFs after a reload / filtering change.)
-			handle = new Texture(texture.Origin);
+
+				/*
+				 * Clone the ref for the search and then re-create the original in the texturemanager array
+				 * This allows it to be re-loaded from disk
+				 */
+				var texture = handle;
+				// Preserve the origin directly so the texture can be re-loaded from disk.
+				// (Do not gate this on animatedTextures.ContainsKey: that cache may already have
+				// been cleared by UnloadAllTextures, which previously produced hollow handles with
+				// a null origin here and killed animated GIFs after a reload / filtering change.)
+				handle = new Texture(texture.Origin);
 			}
 			else
 			{
@@ -916,6 +935,7 @@ namespace LibRender2.Textures
 						textureCache.Remove(handle.Origin);
 					}
 				}
+
 				if (releaseBytes)
 				{
 					// Drop decoded pixel bytes pinned by the handle itself

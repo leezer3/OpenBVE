@@ -25,8 +25,10 @@ namespace OpenBveApi.Routes
 		public double Pitch;
 		/// <summary>The curve radius at the current location</summary>
 		public double CurveRadius;
-		/// <summary>The curve cant at the current location</summary>
+		/// <summary>The interpolated curve cant at the current location</summary>
 		public double CurveCant;
+		/// <summary>The raw cant value at the current location</summary>
+		public double RawCant;
 		/// <summary>The distance the follower has travelled</summary>
 		public double Odometer;
 		/// <summary>The adjusted cant value due to the Route.Inaccuracy value</summary>
@@ -261,10 +263,12 @@ namespace OpenBveApi.Routes
 							(-2.0 * t3 + 3.0 * t2) * currentHost.Tracks[TrackIndex].Elements[i + 1].CurveCant +
 							(t3 - t2) * currentHost.Tracks[TrackIndex].Elements[i + 1].CurveCantTangent;
 						CurveRadius = currentHost.Tracks[TrackIndex].Elements[i].CurveRadius;
+						RawCant = currentHost.Tracks[TrackIndex].Elements[i].CurveCant;
 					}
 					else
 					{
 						CurveCant = currentHost.Tracks[TrackIndex].Elements[i].CurveCant;
+						RawCant = currentHost.Tracks[TrackIndex].Elements[i].CurveCant;
 					}
 
 

@@ -439,7 +439,7 @@ namespace LibRender2
 			StaticObjectStates = new List<ObjectState>();
 			DynamicObjectStates = new List<ObjectState>();
 			VisibleObjects = new VisibleObjectLibrary(this);
-			whitePixel = new Texture(new Texture(1, 1, PixelFormat.RGBAlpha, new byte[] {255, 255, 255, 255}, (OpenBveApi.Colors.Color24[])null));
+			whitePixel = new Texture(new Texture(1, 1, PixelFormat.RGBAlpha, new byte[] {255, 255, 255, 255}, (Color24[])null));
 			nullDepthMap = GL.GenTexture();
 			GL.BindTexture(TextureTarget.Texture2D, nullDepthMap);
 			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent16, 1, 1, 0, OpenTK.Graphics.OpenGL.PixelFormat.DepthComponent, PixelType.UnsignedShort, IntPtr.Zero);
@@ -492,12 +492,6 @@ namespace LibRender2
 			Shadows.Initialize();
         }
 
-		/// <summary>Initializes (or reinitializes) shadow mapping from current options.</summary>
-		public void InitializeShadows() => Shadows.Initialize();
-
-		/// <summary>Disposes all shadow GPU resources.</summary>
-		public void DisposeShadows() => Shadows.Dispose();
-
 		/// <summary>
 		/// Call this when the user changes shadow settings at runtime
 		/// (e.g. from an in-game options menu). This will recreate
@@ -506,7 +500,7 @@ namespace LibRender2
 		public void ReloadShadowSettings()
 		{
 			fileSystem.AppendToLogFile("[CSM] Reloading shadow settings from options...");
-			InitializeShadows();
+			Shadows.Initialize();
 		}
 
 		/// <summary>Deinitializes the renderer</summary>
@@ -649,17 +643,18 @@ namespace LibRender2
 
 		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectDisposalMode AccurateObjectDisposal, ObjectCreationParameters Parameters, double BlockLength)
 		{
-			Matrix4D Translate = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
 			Matrix4D Rotate = (Matrix4D)new Transformation(LocalTransformation ?? Transformation.NullTransformation, WorldTransformation);
-			return CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Translate, AccurateObjectDisposal, Parameters, BlockLength);
+			return CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, AccurateObjectDisposal, Parameters, BlockLength);
 		}
 
-		public int CreateStaticObject(Vector3 Position, StaticObject Prototype, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, ObjectDisposalMode AccurateObjectDisposal, ObjectCreationParameters Parameters, double BlockLength)
+		public int CreateStaticObject(Vector3 Position, StaticObject Prototype, Transformation LocalTransformation, Matrix4D Rotate, ObjectDisposalMode AccurateObjectDisposal, ObjectCreationParameters Parameters, double BlockLength)
 		{
 			if (Prototype == null)
 			{
 				return -1;
 			}
+
+			Matrix4D Translate = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
 
 			if (Prototype.Mesh.Faces.Length == 0)
 			{
@@ -809,7 +804,7 @@ namespace LibRender2
 			else
 			{
 				double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
-				foreach (ObjectState state in StaticObjectStates.Where(recipe => recipe.StartingDistance <= p + Camera.ForwardViewingDistance & recipe.EndingDistance >= p - Camera.BackwardViewingDistance))
+				foreach (ObjectState state in StaticObjectStates.Where(recipe => recipe.StartingDistance <= p + Camera.ForwardViewingDistance && recipe.EndingDistance >= p - Camera.BackwardViewingDistance))
 				{
 					VisibleObjects.ShowObject(state, ObjectType.Static);
 				}
@@ -1014,7 +1009,7 @@ namespace LibRender2
 			double a0 = c - 0.5 * Camera.HorizontalViewingAngle;
 			double a1 = c + 0.5 * Camera.HorizontalViewingAngle;
 			double max;
-			if (a0 <= 0.0 & a1 >= 0.0)
+			if (a0 <= 0.0 && a1 >= 0.0)
 			{
 				max = 1.0;
 			}
@@ -1027,7 +1022,7 @@ namespace LibRender2
 			}
 
 			double min;
-			if (a0 <= -Math.PI | a1 >= Math.PI)
+			if (a0 <= -Math.PI || a1 >= Math.PI)
 			{
 				min = -1.0;
 			}
@@ -1096,7 +1091,7 @@ namespace LibRender2
 				currentOptions.AnisotropicFilteringMaximum = 0;
 				currentOptions.AnisotropicFilteringLevel = 0;
 			}
-			else if (currentOptions.AnisotropicFilteringLevel == 0 & currentOptions.AnisotropicFilteringMaximum > 0)
+			else if (currentOptions.AnisotropicFilteringLevel == 0 && currentOptions.AnisotropicFilteringMaximum > 0)
 			{
 				currentOptions.AnisotropicFilteringLevel = currentOptions.AnisotropicFilteringMaximum;
 			}
@@ -1265,7 +1260,7 @@ namespace LibRender2
 		/// <param name="state">The ObjectState to draw</param>
 		/// <param name="face">The Face within the ObjectState</param>
 		/// <param name="modelMatrix">The model matrix to use</param>
-		/// <param name="modelViewMatrix">The modelview matrix to use</param>
+		/// <param name="modelViewMatrix">The model-view matrix to use</param>
 		public void RenderFace(Shader shader, ObjectState state, MeshFace face, Matrix4D modelMatrix, Matrix4D modelViewMatrix)
 		{
 			lastModelMatrix = modelMatrix;

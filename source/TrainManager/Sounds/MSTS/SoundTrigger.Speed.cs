@@ -40,7 +40,7 @@ namespace TrainManager.MsTsSounds
 			this.speedValue = speedValue;
 		}
 
-		public SpeedIncPast(CarBase car, SoundBuffer buffer, double speedValue, bool soundLoops) : base(buffer, soundLoops)
+		public SpeedIncPast(SoundBuffer buffer, double speedValue, bool soundLoops) : base(buffer, soundLoops)
 		{
 			this.speedValue = speedValue;
 		}

@@ -5,6 +5,8 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using OpenBveApi.Hosts;
+using Path = OpenBveApi.Path;
+
 // ReSharper disable LocalizableElement
 // Note: Crashes may occur before languages have been loaded, so this file cannot be localised
 namespace OpenBve
@@ -22,8 +24,8 @@ namespace OpenBve
                 {
                     var settingsFolder = Program.FileSystem != null ? Program.FileSystem.SettingsFolder : null;
                     crashLog = string.IsNullOrEmpty(settingsFolder)
-                        ? System.IO.Path.Combine(System.IO.Path.GetTempPath(), "OpenBVE Crash- " + DateTime.Now.ToString("yyyy.M.dd[HH.mm]") + ".log")
-                        : OpenBveApi.Path.CombineFile(settingsFolder, "OpenBVE Crash- " + DateTime.Now.ToString("yyyy.M.dd[HH.mm]") + ".log");
+                        ? Path.Combine(System.IO.Path.GetTempPath(), "OpenBVE Crash- " + DateTime.Now.ToString("yyyy.M.dd[HH.mm]") + ".log")
+                        : Path.CombineFile(settingsFolder, "OpenBVE Crash- " + DateTime.Now.ToString("yyyy.M.dd[HH.mm]") + ".log");
                 }
                 return crashLog;
             }
@@ -153,7 +155,7 @@ namespace OpenBve
 		                }
 	                }
 	                var playerTrain = TrainManager.PlayerTrain;
-	                if (playerTrain != null && playerTrain.Plugin != null)
+	                if (playerTrain?.Plugin != null)
 	                {
 		                var pluginTitle = playerTrain.Plugin.PluginTitle;
 		                outputFile.WriteLine("Current train plugin is: " + (pluginTitle ?? "unknown"));

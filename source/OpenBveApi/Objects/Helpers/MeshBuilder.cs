@@ -111,7 +111,7 @@ namespace OpenBveApi.Objects
 					}
 
 					TextureParameters parameters;
-					if ((Materials[i].Flags & MaterialFlags.TransparentColor) != 0)
+					if ((Materials[i].Flags & MaterialFlags.TransparentColor) != 0 || ((Materials[i].Flags & MaterialFlags.TransparentColorBmp) != 0 && !string.IsNullOrEmpty(Materials[i].DaytimeTexture) && Materials[i].DaytimeTexture.EndsWith(".bmp", StringComparison.InvariantCultureIgnoreCase)))
 					{
 						parameters = new TextureParameters(null, Materials[i].TransparentColor, transparency);
 					}

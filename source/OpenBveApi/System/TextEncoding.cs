@@ -385,6 +385,12 @@ namespace OpenBveApi
 							return Encoding.BIG5;
 						}
 						break;
+					case Encoding.Unknown:
+						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "road2.x" && fInfo.Length == 4954)
+						{
+							return Encoding.SHIFT_JIS;
+						}
+						break;
 				}
 
 				return encoding;

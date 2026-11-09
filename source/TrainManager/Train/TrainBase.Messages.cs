@@ -1,27 +1,10 @@
-using LibRender2.Screens;
-using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
-using OpenBveApi.Math;
-using OpenBveApi.Motor;
-using OpenBveApi.Routes;
-using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using RouteManager2.MessageManager;
 using RouteManager2.SignalManager;
-using RouteManager2.Stations;
-using SoundManager;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using TrainManager.BrakeSystems;
-using TrainManager.Car;
-using TrainManager.Handles;
-using TrainManager.SafetySystems;
-using SafetySystem = TrainManager.SafetySystems.SafetySystem;
 
 namespace TrainManager.Trains
 {

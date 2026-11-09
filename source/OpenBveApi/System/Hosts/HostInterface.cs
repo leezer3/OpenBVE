@@ -512,10 +512,9 @@ namespace OpenBveApi.Hosts {
 		///     <para>NOTE: Only used for object disposal calcs</para>
 		/// </param>
 		/// <param name="Rotate">The rotation matrix to apply</param>
-		/// <param name="Translate">The translation matrix to apply</param>
 		/// <param name="Parameters">The object creation parameters</param>
 		/// <returns>The index to the created object, or -1 if this call fails</returns>
-		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, ObjectCreationParameters Parameters)
+		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, ObjectCreationParameters Parameters)
 		{
 			return -1;
 		}

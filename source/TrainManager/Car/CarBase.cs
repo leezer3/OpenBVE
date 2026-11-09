@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using LibRender2;
 using LibRender2.Camera;
 using LibRender2.Cameras;
@@ -15,6 +12,9 @@ using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TrainManager.Brake;
 using TrainManager.BrakeSystems;
 using TrainManager.Car.Systems;
@@ -524,7 +524,7 @@ namespace TrainManager.Car
 							 * Set the eye position to something vaguely sensible, rather than leaving it on the rails
 							 * Whilst there will be no cab, at least it's a bit more usable like this
 							 */
-							baseTrain.Cars[i - 1].InteriorCamera = new CameraAlignment()
+							baseTrain.Cars[i - 1].InteriorCamera = new CameraAlignment
 							{
 								Position = new Vector3(0, 2, 0.5 * Length)
 							};
@@ -586,7 +586,7 @@ namespace TrainManager.Car
 			bool opened = false, closed = false, mixed = false;
 			for (int i = 0; i < Doors.Length; i++)
 			{
-				if (Left & Doors[i].Direction == -1 | Right & Doors[i].Direction == 1)
+				if (Left && Doors[i].Direction == -1 || Right && Doors[i].Direction == 1)
 				{
 					switch (Doors[i].State)
 					{
@@ -1180,6 +1180,13 @@ namespace TrainManager.Car
 			return (worldPosition, worldDirection, new Vector3(Up), worldSide, trackPosition);
 		}
 
+		/// <summary>Returns a usable jerk value, falling back to the default if unset or invalid</summary>
+		/// <remarks>A jerk of zero would prevent the acceleration from ever changing</remarks>
+		private static double GetJerkValue(double jerk)
+		{
+			return jerk > 0.0 ? jerk : 10.0;
+		}
+
 		public void UpdateSpeed(double TimeElapsed, double DecelerationDueToMotor, double DecelerationDueToBrake, out double Speed)
 		{
 
@@ -1315,11 +1322,11 @@ namespace TrainManager.Car
 					{
 						if (TractionModel.CurrentAcceleration < 0.0)
 						{
-							TractionModel.CurrentAcceleration += Math.Max(CarBrake.JerkDown, 10) * TimeElapsed;
+							TractionModel.CurrentAcceleration += GetJerkValue(CarBrake.JerkDown) * TimeElapsed;
 						}
 						else
 						{
-							TractionModel.CurrentAcceleration += Math.Max(Specs.JerkPowerUp, 10) * TimeElapsed;
+							TractionModel.CurrentAcceleration += GetJerkValue(Specs.JerkPowerUp) * TimeElapsed;
 						}
 
 						if (TractionModel.CurrentAcceleration > a)
@@ -1329,7 +1336,7 @@ namespace TrainManager.Car
 					}
 					else
 					{
-						TractionModel.CurrentAcceleration -= Math.Max(Specs.JerkPowerDown, 10) * TimeElapsed;
+						TractionModel.CurrentAcceleration -= GetJerkValue(Specs.JerkPowerDown) * TimeElapsed;
 						if (TractionModel.CurrentAcceleration < a)
 						{
 							TractionModel.CurrentAcceleration = a;
@@ -1356,11 +1363,11 @@ namespace TrainManager.Car
 					{
 						if (TractionModel.CurrentAcceleration > 0.0)
 						{
-							TractionModel.CurrentAcceleration -= Math.Max(Specs.JerkPowerDown, 10) * TimeElapsed;
+							TractionModel.CurrentAcceleration -= GetJerkValue(Specs.JerkPowerDown) * TimeElapsed;
 						}
 						else
 						{
-							TractionModel.CurrentAcceleration -= Math.Max(CarBrake.JerkUp, 10) * TimeElapsed;
+							TractionModel.CurrentAcceleration -= GetJerkValue(CarBrake.JerkUp) * TimeElapsed;
 						}
 
 						if (TractionModel.CurrentAcceleration < a)
@@ -1370,7 +1377,7 @@ namespace TrainManager.Car
 					}
 					else
 					{
-						TractionModel.CurrentAcceleration += Math.Max(CarBrake.JerkDown, 10) * TimeElapsed;
+						TractionModel.CurrentAcceleration += GetJerkValue(CarBrake.JerkDown) * TimeElapsed;
 						if (TractionModel.CurrentAcceleration > a)
 						{
 							TractionModel.CurrentAcceleration = a;

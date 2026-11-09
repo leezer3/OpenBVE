@@ -2,6 +2,7 @@
 using LibRender2.Trains;
 using OpenBveApi.Trains;
 using TrainManager.Car;
+using TrainManager.Handles;
 using TrainManager.SafetySystems;
 
 namespace TrainManager.Trains
@@ -22,6 +23,7 @@ namespace TrainManager.Trains
 		public ScriptedTrain(TrainState state) : base(state, TrainType.ScriptedTrain)
 		{
 			SafetySystems.PassAlarm = new PassAlarm(PassAlarmType.None, null);
+			Handles.Reverser = new ReverserHandle(this);
 		}
 
 		/// <summary>Disposes of the train</summary>

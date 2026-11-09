@@ -123,7 +123,6 @@
     <Compile Include="Motor\BVE5\AISoundEntry.cs" />
     <Compile Include="Motor\BVE5\AITrainSound.cs" />
     <Compile Include="Motor\BVE5\MotorSound.cs" />
-    <Compile Include="Motor\BVE5\MotorSoundTableEntry.cs" />
     <Compile Include="Motor\BVE5\SoundState.cs" />
     <Compile Include="Motor\DieselEngine\DieselEngine.cs" />
     <Compile Include="Motor\DieselEngine\GearboxOperation.cs" />

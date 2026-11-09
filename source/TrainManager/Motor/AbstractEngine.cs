@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
 using System.Collections.Generic;
 using OpenBveApi.Motor;
 using TrainManager.Car;
@@ -71,7 +72,7 @@ namespace TrainManager.Motor
 		protected TractionModel(CarBase car)
 	    {
 		    BaseCar = car;
-		    AccelerationCurves = new AccelerationCurve[0];
+		    AccelerationCurves = Array.Empty<AccelerationCurve>();
 		    Components = new Dictionary<EngineComponent, AbstractComponent>();
 	    }
 

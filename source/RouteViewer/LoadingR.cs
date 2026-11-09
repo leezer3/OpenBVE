@@ -8,6 +8,7 @@
 using System;
 using System.Diagnostics;
 using System.Runtime;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -129,7 +130,17 @@ namespace RouteViewer {
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show("The route loader encountered the following critical error: " + ex.Message, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				try
+				{
+					// The dialog only fits a summary; the full trace (with OpenBVE
+					// frames, not just the rethrow location) goes to the log file.
+					Program.FileSystem.AppendToLogFile("CRITICAL route load error: " + ex);
+				}
+				catch
+				{
+					// Diagnostics must never break loading.
+				}
+				MessageBox.Show("The route loader encountered the following critical error (" + ex.GetType().Name + "): " + ex.Message, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				Cancel = true;
 			}
 		}
@@ -170,7 +181,14 @@ namespace RouteViewer {
 						loaded = true;
 						break;
 					}
-					throw Program.CurrentHost.Plugins[i].Route.LastException;
+					// Preserve the original stack trace (plain 'throw' would reset it
+				// to this rethrow location and hide where the load failed).
+				Exception routeException = Program.CurrentHost.Plugins[i].Route.LastException;
+				if (routeException != null)
+				{
+					ExceptionDispatchInfo.Capture(routeException).Throw();
+				}
+				throw new Exception("The route plugin failed to load " + CurrentRouteFile + " without reporting an error.");
 				}
 			}
 			parseTimer.Stop();

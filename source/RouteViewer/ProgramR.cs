@@ -181,7 +181,7 @@ namespace RouteViewer
 								{
 									BveTsHacks = true, 
 									CylinderHack = false,
-									BlackTransparency =  true
+									TransparencyMode = BlackTransparencyMode.AllFiles
 								};
 								CurrentHost.Plugins[j].Object.SetCompatibilityHacks(enabledHacks);
 							}
@@ -894,6 +894,9 @@ namespace RouteViewer
 					break;
 				case Key.I:
 					Renderer.OptionInterface = !Renderer.OptionInterface;
+					break;
+				case Key.M:
+					Sounds.GlobalMute = !Sounds.GlobalMute;
 					break;
 				case Key.Plus:
 				case Key.KeypadPlus:

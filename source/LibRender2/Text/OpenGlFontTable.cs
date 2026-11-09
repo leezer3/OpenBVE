@@ -31,6 +31,8 @@ namespace LibRender2.Text
 		/// <summary>Creates a new table of characters.</summary>
 		/// <param name="font">The font.</param>
 		/// <param name="offset">The offset from codepoint U+0000.</param>
+		/// <param name="generic">The generic string format</param>
+		/// <param name="typographic">The typographic string format</param>
 		public OpenGlFontTable(Font font, int offset, StringFormat generic, StringFormat typographic)
 		{
 			/*

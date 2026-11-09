@@ -147,16 +147,18 @@ namespace Plugin
 
                     if (inflateReturnCode == ZlibConstants.Z_STREAM_END) {
                         break;
-                    } else if (inflateReturnCode == ZlibConstants.Z_NEED_DICT && dictionary != null) {
-                        //implies bytesToWrite was 0
-                        var dictionaryAdler32 = ((int)Adler.Adler32(1u, dictionary, 0, dictionary.Length));
-                        if (codec.Adler32 != dictionaryAdler32) {
-                            throw new InvalidOperationException("Compressed data is requesting a dictionary with adler32 " + codec.Adler32 + ", but the dictionary is actually " + dictionaryAdler32);
-                        }
+                    }
 
-                        codec.AssertOk("SetDictionary", codec.SetDictionary(dictionary));
+                    if (inflateReturnCode == ZlibConstants.Z_NEED_DICT && dictionary != null) {
+	                    //implies bytesToWrite was 0
+	                    int dictionaryAdler32 = (int)Adler.Adler32(1u, dictionary, 0, dictionary.Length);
+	                    if (codec.Adler32 != dictionaryAdler32) {
+		                    throw new InvalidOperationException("Compressed data is requesting a dictionary with adler32 " + codec.Adler32 + ", but the dictionary is actually " + dictionaryAdler32);
+	                    }
+
+	                    codec.AssertOk("SetDictionary", codec.SetDictionary(dictionary));
                     } else {
-                        codec.AssertOk("Inflate", inflateReturnCode);
+	                    codec.AssertOk("Inflate", inflateReturnCode);
                     }
                 }
 

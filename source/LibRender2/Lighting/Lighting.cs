@@ -2,8 +2,6 @@ using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
-using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL;
 
 namespace LibRender2.Lightings
 {

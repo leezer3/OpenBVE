@@ -496,9 +496,9 @@ namespace RouteViewer
 			return Program.Renderer.CreateStaticObject(Prototype, Position, WorldTransformation, LocalTransformation, Program.CurrentRoute.AccurateObjectDisposal, Parameters, Program.CurrentRoute.BlockLength);
 		}
 
-		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, ObjectCreationParameters Parameters)
+		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, ObjectCreationParameters Parameters)
 		{
-			return Program.Renderer.CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Translate, Program.CurrentRoute.AccurateObjectDisposal, Parameters, Program.CurrentRoute.BlockLength);
+			return Program.Renderer.CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Program.CurrentRoute.AccurateObjectDisposal, Parameters, Program.CurrentRoute.BlockLength);
 		}
 
 		public override void CreateDynamicObject(ref ObjectState internalObject)
