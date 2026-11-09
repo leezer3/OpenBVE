@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    DroidBVE - OpenBVE on Android.
+
+    NOTE: This project requires the Android workload:
+        dotnet workload install android
+    and an Android SDK. It is a skeleton (Activity + sim bootstrap + touch
+    controls); the OpenGL renderer, audio backend and menus are still TODO,
+    see ../../BuildingAndroid.md
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-android34.0</TargetFramework>
+    <SupportedOSPlatformVersion>24</SupportedOSPlatformVersion>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>DroidBVE</RootNamespace>
+    <AssemblyName>DroidBVE</AssemblyName>
+    <ApplicationId>net.openbve_project.DroidBVE</ApplicationId>
+    <ApplicationTitle>DroidBVE</ApplicationTitle>
+    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>0.1</ApplicationDisplayVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <LangVersion>7.3</LangVersion>
+    <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mobile\OpenBveApi.Mobile\OpenBveApi.Mobile.csproj" />
+    <ProjectReference Include="..\Mobile\Formats.OpenBve.Mobile\Formats.OpenBve.Mobile.csproj" />
+    <ProjectReference Include="..\Mobile\LibRender2.Mobile\LibRender2.Mobile.csproj" />
+    <ProjectReference Include="..\Mobile\SoundManager.Mobile\SoundManager.Mobile.csproj" />
+    <ProjectReference Include="..\Mobile\RouteManager2.Mobile\RouteManager2.Mobile.csproj" />
+    <ProjectReference Include="..\Mobile\TrainManager.Mobile\TrainManager.Mobile.csproj" />
+    <ProjectReference Include="..\Mobile\Route.CsvRw.Mobile\Route.CsvRw.Mobile.csproj" />
+    <ProjectReference Include="..\Mobile\Train.OpenBve.Mobile\Train.OpenBve.Mobile.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Compatibility objects + translations needed by the route parser -->
+    <AndroidAsset Include="..\..\assets\Compatibility\**" Link="assets\Compatibility\%(RecursiveDir)%(Filename)%(Extension)" />
+    <AndroidAsset Include="..\..\assets\Languages\**" Link="assets\Languages\%(RecursiveDir)%(Filename)%(Extension)" />
+    <!-- Same test content as the headless smoke test -->
+    <AndroidAsset Include="..\Mobile\OpenBve.Headless\TestData\**" Link="assets\TestData\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+</Project>
