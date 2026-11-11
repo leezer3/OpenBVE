@@ -29,7 +29,7 @@ namespace CsvRwRouteParser
 						CurrentRoute.Comment = Arguments[0];
 					}
 
-					if (CurrentRoute.Comment.IndexOf("Hmmsim", StringComparison.InvariantCultureIgnoreCase) != -1 && CurrentRoute.Comment.IndexOf(@"建議openBVE版本", StringComparison.InvariantCultureIgnoreCase) == -1) // block HKHOS 
+					if (CurrentRoute.Comment.IndexOf("Hmmsim", StringComparison.InvariantCultureIgnoreCase) != -1 && CurrentRoute.Comment.IndexOf(@"建議openBVE版本", StringComparison.InvariantCultureIgnoreCase) == -1 && CurrentRoute.Comment.IndexOf("Hong Kong Hmmsim & openBVE Studio", StringComparison.InvariantCultureIgnoreCase) != -1) // block HKHOS
 					{
 						Data.SetHmmsimProperties();
 					}
