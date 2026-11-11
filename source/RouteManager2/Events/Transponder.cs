@@ -44,7 +44,7 @@ namespace RouteManager2.Events
 
 				if (ClipToFirstRedSection)
 				{
-					if (s >= 0)
+					if (s >= 0 && s < currentRoute.Sections.Length)
 					{
 						while (true)
 						{
