@@ -232,5 +232,15 @@ namespace LibRender2
 		/// The handle of "uCurrentViewMatrix" within the shader
 		/// </summary>
 		public short CurrentViewMatrix = -1;
+
+		/// <summary>
+		/// The handle of "uDiscardColor" within the shader
+		/// </summary>
+		public short DiscardColor;
+
+		/// <summary>
+		/// The handle of "uDiscardColorEnabled" within the shader
+		/// </summary>
+		public short DiscardColorEnabled;
 	}
 }

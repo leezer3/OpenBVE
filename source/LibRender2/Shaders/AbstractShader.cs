@@ -28,6 +28,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using OpenBveApi.Colors;
 
 namespace LibRender2.Shaders
 {
@@ -173,6 +174,18 @@ namespace LibRender2.Shaders
 
 		/// <summary>Sets whether AlphaTesting is enabled</summary>
 		public virtual void SetAlphaTest(bool enabled)
+		{
+
+		}
+
+		/// <summary>Sets whether transparent color discard is enabled</summary>
+		public virtual void SetDiscardColor(bool enabled)
+		{
+
+		}
+
+		/// <summary>Sets the discard color to be used</summary>
+		public virtual void SetDiscardColor(Color24 color)
 		{
 
 		}

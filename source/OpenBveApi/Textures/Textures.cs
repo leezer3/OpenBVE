@@ -48,6 +48,8 @@ namespace OpenBveApi.Textures {
 		/// <summary>The decoded texture, or a null reference if this texture could not be decoded.</summary>
 		/// <remarks>Only set for textures registered from a path; allows the texture cache to be pre-seeded without re-reading and re-decoding the file.</remarks>
 		public readonly Texture DecodedTexture;
+		/// <summary>The texture color to discard, if using color key transparency</summary>
+		public Color24? DiscardColor;
 
 		
 		/// <summary>Gets the raw texture bytes for the selected frame index</summary>

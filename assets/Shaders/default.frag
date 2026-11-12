@@ -83,6 +83,8 @@ uniform float uFogEnd;
 uniform vec3  uFogColor;
 uniform float uFogDensity;
 uniform bool uFogIsLinear;
+uniform bool uDiscardColorEnabled;
+uniform vec3 uDiscardColor;
 out vec4 fragColor;
 
 const float SHADOW_TWO_PI = 6.28318530718;
@@ -256,9 +258,16 @@ float CalculateShadowFactor()
 void main(void)
 {
 	vec4 finalColor;
+
+	vec4 textureColor = texture(uTexture, oUv);
+	if(uDiscardColorEnabled && textureColor.xyz == uDiscardColor)
+	{
+		discard;
+	}
+
 	if((uMaterialFlags & 16) == 0)
 	{
-		finalColor = vec4(oColor.rgb, 1.0) * texture(uTexture, oUv); // NOTE: only want the RGB of the color, A is passed in as part of opacity
+		finalColor = vec4(oColor.rgb, 1.0) * textureColor; // NOTE: only want the RGB of the color, A is passed in as part of opacity
 	}
 	else
 	{

@@ -179,7 +179,9 @@ namespace LibRender2.Shaders
 				ShadowMap0 = (short)GL.GetUniformLocation(Handle, "uShadowMap0"),
 				ShadowMap1 = (short)GL.GetUniformLocation(Handle, "uShadowMap1"),
 				ShadowMap2 = (short)GL.GetUniformLocation(Handle, "uShadowMap2"),
-				CurrentViewMatrix = (short)GL.GetUniformLocation(Handle, "uCurrentViewMatrix")
+				CurrentViewMatrix = (short)GL.GetUniformLocation(Handle, "uCurrentViewMatrix"),
+				DiscardColorEnabled = (short)GL.GetUniformLocation(Handle,"uDiscardColorEnabled"),
+				DiscardColor = (short)GL.GetUniformLocation(Handle,"uDiscardColor")
 			};
 		}
 
@@ -514,6 +516,17 @@ namespace LibRender2.Shaders
 		{
 			Matrix4 matrix = ConvertToMatrix4(viewMatrix);
 			GL.ProgramUniformMatrix4(Handle, uCurrentViewMatrixLocation, false, ref matrix);
+		}
+
+		public override void SetDiscardColor(bool enabled)
+		{
+			GL.ProgramUniform1(Handle, UniformLayout.DiscardColorEnabled, enabled ? 1 : 0);
+		}
+
+		public override void SetDiscardColor(Color24 color)
+		{
+			GL.ProgramUniform3(Handle, UniformLayout.DiscardColor, color.R / 255.0f, color.G / 255.0f, color.B / 255.0f);
+			SetDiscardColor(true);
 		}
 		#endregion
 	}

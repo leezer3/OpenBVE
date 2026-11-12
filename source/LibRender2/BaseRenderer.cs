@@ -1357,7 +1357,7 @@ namespace LibRender2
 					shader.SetMaterialAmbient(material.Color);
 				}
 			}
-
+			
 			lastColor = material.Color;
 			PrimitiveType drawMode;
 
@@ -1408,6 +1408,15 @@ namespace LibRender2
 						GL.BindTexture(TextureTarget.Texture2D,
 							material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
 						LastBoundTexture = material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode];
+					}
+
+					if (material.DaytimeTexture.DiscardColor != null)
+					{
+						shader.SetDiscardColor((Color24)material.DaytimeTexture.DiscardColor);
+					}
+					else
+					{
+						shader.SetDiscardColor(false);
 					}
 				}
 				else
