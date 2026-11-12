@@ -177,6 +177,12 @@ namespace LibRender2.Shaders
 
 		}
 
+		/// <summary>Sets whether alpha-to-coverage sharpening is applied to the fragment alpha</summary>
+		public virtual void SetAlphaToCoverage(bool enabled)
+		{
+
+		}
+
 		/// <summary>Sets whether Fog is enabled</summary>
 		public virtual void SetFog(bool enabled)
 		{

@@ -199,6 +199,11 @@ namespace LibRender2
 		public short AlphaFunction;
 
 		/// <summary>
+		/// The handle of "uAlphaToCoverage" within the shader
+		/// </summary>
+		public short AlphaToCoverage = -1;
+
+		/// <summary>
 		/// The handle of "uLightSpaceMatrix0" within the shader
 		/// </summary>
 		public short LightSpaceMatrix0 = -1;

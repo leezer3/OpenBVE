@@ -56,6 +56,7 @@ uniform float             uShadowNormalBias2;
 uniform float             uShadowNormalBias3;
 
 uniform vec2              uAlphaTest;
+uniform bool              uAlphaToCoverage;
 uniform sampler2D uTexture;
 
 struct Light
@@ -274,6 +275,29 @@ void main(void)
 	
 	// Multiply material alpha by it's opacity
 	finalColor.a *= uOpacity;
+
+	/*
+	 * Alpha-to-coverage mode (see bgolus, "Anti-Aliased Alpha Test - The
+	 * Esoteric Alpha To Coverage"). Fragment alpha drives the MSAA coverage
+	 * mask, so a soft filtered alpha ramp would be quantised to the few
+	 * available sample levels, producing banding and a noisy multi-pixel
+	 * dither band. Re-centring the ramp on the clip threshold and dividing
+	 * by its screen-space derivative normalises the transition to exactly
+	 * one pixel wide: the coverage mask then approximates the geometric
+	 * edge like regular MSAA, with solid interiors and a one pixel dither
+	 * ring. Clear texels are discarded so clipping is guaranteed even if
+	 * coverage masking is unavailable.
+     * blog source reference https://bgolus.medium.com/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f
+	 */
+	if(uAlphaToCoverage)
+	{
+		finalColor.a = (finalColor.a - 0.5) / max(fwidth(finalColor.a), 0.0001) + 0.5;
+		finalColor.a = clamp(finalColor.a, 0.0, 1.0);
+		if(finalColor.a <= 0.0)
+		{
+			discard;
+		}
+	}
 
 	/*
 	 * NOTES:
