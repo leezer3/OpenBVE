@@ -1033,10 +1033,66 @@ namespace CsvRwRouteParser
 
 						int n = Data.Blocks[BlockIndex].StopPositions.Length;
 						Array.Resize(ref Data.Blocks[BlockIndex].StopPositions, n + 1);
-						Data.Blocks[BlockIndex].StopPositions[n] = new Stop(Data.TrackPosition, CurrentStation, dir, forw, backw, cars);
+						Data.Blocks[BlockIndex].StopPositions[n] = new Stop(0, Data.TrackPosition, CurrentStation, dir, forw, backw, cars);
 						CurrentStop = cars;
 					}
+					break;
+				case TrackCommand.RailStop:
+					if (CurrentStation == -1)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A stop without a station is invalid in Track.Stop" + At(Expression));
+					}
+					else
+					{
+						int railIndex = 0;
+						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailStop" + At(Expression));
+							railIndex = 0;
+						}
 
+						int dir = 0;
+						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out dir))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Direction is invalid in Track.Stop" + At(Expression));
+							dir = 0;
+						}
+
+						double backw = 5.0, forw = 5.0;
+						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out backw))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackwardTolerance is invalid in Track.Stop" + At(Expression));
+							backw = 5.0;
+						}
+						else if (backw <= 0.0)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackwardTolerance is expected to be positive in Track.Stop" + At(Expression));
+							backw = 5.0;
+						}
+
+						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out forw))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ForwardTolerance is invalid in Track.Stop" + At(Expression));
+							forw = 5.0;
+						}
+						else if (forw <= 0.0)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ForwardTolerance is expected to be positive in Track.Stop" + At(Expression));
+							forw = 5.0;
+						}
+
+						int cars = 0;
+						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[4], out cars))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Cars is invalid in Track.Stop" + At(Expression));
+							cars = 0;
+						}
+
+						int n = Data.Blocks[BlockIndex].StopPositions.Length;
+						Array.Resize(ref Data.Blocks[BlockIndex].StopPositions, n + 1);
+						Data.Blocks[BlockIndex].StopPositions[n] = new Stop(railIndex, Data.TrackPosition, CurrentStation, dir, forw, backw, cars);
+						CurrentStop = cars;
+					}
 					break;
 				case TrackCommand.Sta:
 				{

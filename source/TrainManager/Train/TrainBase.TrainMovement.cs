@@ -53,7 +53,18 @@ namespace TrainManager.Trains
 			}
 		}
 
+		public override int FrontCarTrackIndex
+		{
+			get
+			{
+				if (CurrentDirection == TrackDirection.Reverse)
+				{
+					return Cars[Cars.Length - 1].RearAxle.Follower.TrackIndex;
+				}
 
+				return Cars[0].FrontAxle.Follower.TrackIndex;
+			}
+		}
 
 		/// <inheritdoc/>
 		public override double FrontCarTrackPosition

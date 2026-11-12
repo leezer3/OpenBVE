@@ -51,16 +51,16 @@ namespace RouteManager2.Stations
 			int allCars = -1;
 			for (int i = Stops.Length - 1; i >= 0; i--)
 			{
-				if (train.NumberOfCars == Stops[i].Cars)
+				if (train.NumberOfCars == Stops[i].Cars && Stops[i].RailIndex == train.FrontCarTrackIndex)
 				{
-					 // If we have found the specified number of cars, stop searching
+					 // If we have found the specified number of cars and rail index, stop searching
 					 return i;
 				}
-				if (Stops[i].Cars == 0)
+				if (Stops[i].Cars == 0 && Stops[i].RailIndex == train.FrontCarTrackIndex)
 				{
 					allCars = j;
 				}
-				if (Stops[i].Cars != 0 && train.NumberOfCars < Stops[i].Cars)
+				if (Stops[i].Cars != 0 && train.NumberOfCars < Stops[i].Cars && Stops[i].RailIndex == train.FrontCarTrackIndex)
 				{
 					/*
 					 * The stop has greater than the specified number of cars (hence all cars will be platformed)
@@ -75,18 +75,23 @@ namespace RouteManager2.Stations
 				}
 			}
 
-			if (allCars != -1)
+			if (allCars != -1 && Stops[allCars].RailIndex == train.FrontCarTrackIndex)
 			{
 				// No specific stop point, but an all car stop- Return this
 				return allCars;
 			}
-			if (j != -1)
+			if (j != -1 && Stops[allCars].RailIndex == train.FrontCarTrackIndex)
 			{
 				// No specific stop point or all-car stop, so return the stop point with the smallest number of cars above
 				return j;
 			}
 			// Return the final stop point, as nothing better :/
-			return Stops.Length -1;
+			if (Stops[Stops.Length - 1].RailIndex == train.FrontCarTrackIndex)
+			{
+				return Stops.Length - 1;
+			}
+			// No valid stops for train after all (not on correct track)
+			return -1;
 		}
 
 		/// <summary>Gets the stop position corresponding to the train</summary>
