@@ -468,18 +468,23 @@ namespace LibRender2
 			GL.Enable(EnableCap.CullFace);
 			GL.CullFace(CullFaceMode.Front);
 			GL.Disable(EnableCap.Dither);
-			
-			// ReSharper disable once PossibleNullReferenceException
-			string openGLdll = Path.CombineFile(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "opengl32.dll");
 
-			if (File.Exists(openGLdll))
+			if (currentHost.Platform == HostPlatform.MicrosoftWindows || currentHost.Platform == HostPlatform.WINE)
 			{
-				FileVersionInfo glVersionInfo = FileVersionInfo.GetVersionInfo(openGLdll);
-				if (glVersionInfo.ProductName == @"ReShade")
+				// n.b. ReShade only relevant on Windows / WINE
+				// ReSharper disable once PossibleNullReferenceException
+				string openGLdll = Path.CombineFile(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "opengl32.dll");
+
+				if (File.Exists(openGLdll))
 				{
-					ReShadeInUse = true;
+					FileVersionInfo glVersionInfo = FileVersionInfo.GetVersionInfo(openGLdll);
+					if (glVersionInfo.ProductName == @"ReShade")
+					{
+						ReShadeInUse = true;
+					}
 				}
 			}
+
 			// icons for use in GL menus
 			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "keyboard.png"), TextureParameters.NoChange, out KeyboardTexture);
 			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "gamepad.png"), TextureParameters.NoChange, out GamepadTexture);
