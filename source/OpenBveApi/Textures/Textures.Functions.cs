@@ -44,10 +44,25 @@ namespace OpenBveApi.Textures {
 					}
 				}
 				else if (parameters.FirstColorTransparent) {
-					result = ApplyTransparentColor(result, result.Palette[0]);
+					if (result.PixelFormat == PixelFormat.RGBAlpha)
+					{
+						result = ApplyTransparentColor(result, result.Palette[0]);
+					}
+					else
+					{
+						result.DiscardColor = result.Palette[0];
+					}
 				}
 				else if (parameters.TransparentColor != null) {
-					result = ApplyTransparentColor(result, parameters.TransparentColor);
+					if (result.PixelFormat == PixelFormat.RGBAlpha)
+					{
+						result = ApplyTransparentColor(result, parameters.TransparentColor);
+					}
+					else
+					{
+						result.DiscardColor = parameters.TransparentColor;
+					}
+					
 				}
 			}
 			return result;
