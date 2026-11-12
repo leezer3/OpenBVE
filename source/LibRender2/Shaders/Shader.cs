@@ -525,7 +525,7 @@ namespace LibRender2.Shaders
 
 		public override void SetDiscardColor(Color24 color)
 		{
-			GL.ProgramUniform3(Handle, UniformLayout.DiscardColor, color.R, color.G, color.B);
+			GL.ProgramUniform3(Handle, UniformLayout.DiscardColor, color.R / 255.0f, color.G / 255.0f, color.B / 255.0f);
 			SetDiscardColor(true);
 		}
 		#endregion

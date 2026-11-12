@@ -568,6 +568,7 @@ namespace LibRender2.Textures
 
 					handle.Size = texture.Size;
 					handle.Transparency = texture.GetTransparencyType();
+					handle.DiscardColor = texture.DiscardColor;
 					// Fetch the pixel data once; the getter may lazily re-decode released instances, which must not happen per access
 					byte[] textureBytes = texture.Bytes;
 					if (texture.Width <= 0 || texture.Height <= 0 || textureBytes == null || textureBytes.Length == 0)
