@@ -1132,6 +1132,8 @@ namespace Route.Bve5
 		{
 			int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
 			RouteData.Blocks[BlockIndex].JointSound = true;
+			object Index = Statement.GetArgumentValue(ArgumentName.Index);
+			RouteData.Blocks[BlockIndex].JointSoundIndex = Index != null ? Convert.ToInt32(Index) : -1;
 		}
 	}
 }

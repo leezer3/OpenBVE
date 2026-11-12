@@ -268,7 +268,7 @@ namespace Route.Bve5
 
 					if (Data.Blocks[i].JointSound)
 					{
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new PointSoundEvent());
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new PointSoundEvent(Data.Blocks[i].JointSoundIndex));
 					}
 				}
 

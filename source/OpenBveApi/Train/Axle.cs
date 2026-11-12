@@ -19,6 +19,8 @@ namespace OpenBveApi.Trains
 		public int RunIndex;
 		/// <summary>Stores whether the point sound has been triggered</summary>
 		public bool PointSoundTriggered;
+		/// <summary>The point sound the event asks for, or -1 for the one matching the current run sound</summary>
+		public int PointSoundIndex = -1;
 		/// <summary>A reference to the base car</summary>
 		protected readonly AbstractCar baseCar;
 		

@@ -64,6 +64,7 @@ namespace Route.Bve5
 			internal List<RunSound> RunSounds;
 			internal List<FlangeSound> FlangeSounds;
 			internal bool JointSound;
+			internal int JointSoundIndex;
 		}
 
 		internal class SignalData
