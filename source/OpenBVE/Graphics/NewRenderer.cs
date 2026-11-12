@@ -11,7 +11,6 @@ using OpenBveApi.Colors;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
-using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
@@ -63,7 +62,6 @@ namespace OpenBve.Graphics
 		
 		protected override void UpdateViewport(int width, int height)
 		{
-			_programLogo = null;
 			Screen.Width = width;
 			Screen.Height = height;
 			GL.Viewport(0, 0, Screen.Width, Screen.Height);
