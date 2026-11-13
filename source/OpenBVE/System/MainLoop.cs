@@ -50,16 +50,23 @@ namespace OpenBve
 			Program.FileSystem.AppendToLogFile("User Interface Scale Factor: " + Interface.CurrentOptions.UserInterfaceScaleFactor);
 			if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 			{
-				Tolk.Load();
-				string name = Tolk.DetectScreenReader();
-				if (!string.IsNullOrEmpty(name))
+				try
 				{
-					Interface.CurrentOptions.ScreenReaderAvailable = true;
-					Program.FileSystem.AppendToLogFile("Supported screen reader driver " + name + " initialised.");
+					Tolk.Load();
+					string name = Tolk.DetectScreenReader();
+					if (!string.IsNullOrEmpty(name))
+					{
+						Interface.CurrentOptions.ScreenReaderAvailable = true;
+						Program.FileSystem.AppendToLogFile("Supported screen reader driver " + name + " initialised.");
+					}
+					else
+					{
+						Program.FileSystem.AppendToLogFile("No supported screen reader found.");
+					}
 				}
-				else
+				catch
 				{
-					Program.FileSystem.AppendToLogFile("No supported screen reader found.");
+					Program.FileSystem.AppendToLogFile("Loading the screen reader driver failed.");
 				}
 			}
 			
