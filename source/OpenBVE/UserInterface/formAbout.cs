@@ -118,16 +118,7 @@ namespace OpenBve
 
 		private void buttonClose_Click(object sender, EventArgs e)
 		{
-			if (Program.CurrentHost.MonoRuntime)
-			{
-				// Use forceful exit on Mono to stop stuff hanging around
-				Environment.Exit(0);
-			}
-			else
-			{
-				Close();	
-			}
-			
+			Close();
 		}
 	}
 }
