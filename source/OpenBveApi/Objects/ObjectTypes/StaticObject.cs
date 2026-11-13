@@ -763,20 +763,20 @@ namespace OpenBveApi.Objects
 			bool[] materialUsed = new bool[m];
 			for (int i = 0; i < f; i++)
 			{
-				/*
-				if (Mesh.Faces[i].Material < m - 1)
+				
+				if (Mesh.Faces[i].Material > m - 1)
 				{
 					/*
 					 * Our material is out of range
 					 * Rather than crashing, add a new blank material
-					 
+					 */
 					Array.Resize(ref Mesh.Materials, m + 1);
 					Mesh.Materials[m] = new MeshMaterial();
 					Mesh.Faces[i].Material = (ushort)m;
 					m++;
 					Array.Resize(ref materialUsed, m + 1);
 				}
-			*/
+			
 				materialUsed[Mesh.Faces[i].Material] = true;
 			}
 
