@@ -25,6 +25,9 @@ namespace OpenBveApi.Packages
 
 		/// <summary>The installed other items</summary>
 		public List<Package> InstalledOther;
+
+		/// <summary>The installed HUD themes</summary>
+		public List<Package> InstalledHudThemes;
 		
 		/// <summary>The database version</summary>
 		public int DatabaseVersion;
@@ -113,6 +116,18 @@ namespace OpenBveApi.Packages
 							}
 						}
 						break;
+					case PackageType.HudTheme:
+						foreach (Package p in InstalledHudThemes)
+						{
+							if (p.GUID == currentDependancy.GUID)
+							{
+								if (!p.DependantPackages.Contains(GUID))
+								{
+									p.DependantPackages.Add(GUID);
+								}
+							}
+						}
+						break;
 				}
 			}
 		}
@@ -172,6 +187,11 @@ namespace OpenBveApi.Packages
 					using (XmlReader reader = XmlReader.Create(currentDatabaseFile))
 					{
 						currentDatabase = (PackageDatabase) listReader.Deserialize(reader);
+						if (currentDatabase.InstalledHudThemes == null)
+						{
+							//Databases created before the HUD theme package type existed do not contain this list
+							currentDatabase.InstalledHudThemes = new List<Package>();
+						}
 						if (currentDatabase.DatabaseVersion > PackageDatabase.ExpectedDatabaseVersion)
 						{
 							ErrorMessage = new [] {"packages","database_newer_expected"};
@@ -203,7 +223,8 @@ namespace OpenBveApi.Packages
 				{
 					InstalledRoutes = new List<Package>(),
 					InstalledTrains = new List<Package>(),
-					InstalledOther = new List<Package>()
+					InstalledOther = new List<Package>(),
+					InstalledHudThemes = new List<Package>()
 				};
 				return false;
 			}
@@ -305,6 +326,13 @@ namespace OpenBveApi.Packages
 				if (packagesToRemove.Contains(Other.GUID))
 				{
 					brokenPackages.Add(Other);
+				}
+			}
+			foreach (Package HudTheme in currentDatabase.InstalledHudThemes)
+			{
+				if (packagesToRemove.Contains(HudTheme.GUID))
+				{
+					brokenPackages.Add(HudTheme);
 				}
 			}
 			return brokenPackages;

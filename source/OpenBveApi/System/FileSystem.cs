@@ -52,6 +52,9 @@ namespace OpenBveApi.FileSystem {
 		/// <summary>The location to which packaged other items will be installed</summary>
 		public string OtherInstallationDirectory;
 		
+		/// <summary>The location to which HUD theme packages will be installed</summary>
+		public string HudThemeInstallationDirectory;
+		
 		/// <summary>The location to which Loksim3D packages will be installed</summary>
 		public string LoksimPackageInstallationDirectory;
 
@@ -111,6 +114,7 @@ namespace OpenBveApi.FileSystem {
 			TrainInstallationDirectory = Path.CombineDirectory(Path.CombineDirectory(userDataFolder, "LegacyContent"), "Train");
 			OtherInstallationDirectory = Path.CombineDirectory(Path.CombineDirectory(userDataFolder, "LegacyContent"), "Other");
 			LoksimPackageInstallationDirectory = Path.CombineDirectory(Path.CombineDirectory(userDataFolder, "ManagedContent"), "Loksim3D");
+			HudThemeInstallationDirectory = Path.CombineDirectory(Path.CombineDirectory(userDataFolder, "ManagedContent"), "HudThemes");
 			if (currentHost.Platform == HostPlatform.MicrosoftWindows)
 			{
 				try
@@ -223,6 +227,11 @@ namespace OpenBveApi.FileSystem {
 					Directory.Exists(LoksimPackageInstallationDirectory))
 				{
 					newLines.AppendLine("LoksimPackageInstall=" + ReplacePath(LoksimPackageInstallationDirectory));
+				}
+				if (HudThemeInstallationDirectory != null &&
+					Directory.Exists(HudThemeInstallationDirectory))
+				{
+					newLines.AppendLine("HudThemePackageInstall=" + ReplacePath(HudThemeInstallationDirectory));
 				}
 				if (MSTSDirectory != null &&
 				    Directory.Exists(OtherInstallationDirectory))
@@ -426,6 +435,9 @@ namespace OpenBveApi.FileSystem {
 								break;
 							case "loksimpackageinstall":
 								system.LoksimPackageInstallationDirectory = GetAbsolutePath(value, true);
+								break;
+							case "hudthemepackageinstall":
+								system.HudThemeInstallationDirectory = GetAbsolutePath(value, true);
 								break;
 							case "mststrainset":
 								system.MSTSDirectory = GetAbsolutePath(value, true);

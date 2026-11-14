@@ -7,9 +7,30 @@ namespace OpenBve
 {
 	internal static partial class HUD
 	{
+		/// <summary>The type of gauge an element represents</summary>
+		internal enum GaugeType
+		{
+			None = 0,
+			Needle,
+			LinearGauge,
+			DigitalGauge
+		}
+
 		internal class Element
 		{
 			internal HUDSubject Subject;
+			internal GaugeType GaugeType;
+			internal Texture GaugeTexture;
+			internal Vector2 Origin;
+			internal Vector2 Direction;
+			internal double Radius;
+			internal double InitialAngle;
+			internal double LastAngle;
+			internal double Minimum;
+			internal double Maximum;
+			internal double Step;
+			internal double Width;
+			internal Color32 GaugeColor;
 			internal Vector2 Position;
 			internal Vector2 Alignment;
 			internal Image TopLeft;
@@ -37,6 +58,17 @@ namespace OpenBve
 			internal Element()
 			{
 				Subject = HUDSubject.Unknown;
+				GaugeType = GaugeType.None;
+				Origin = new Vector2(-1, -1);
+				Direction = new Vector2(1, 0);
+				Radius = 0.0;
+				InitialAngle = -120.0;
+				LastAngle = 120.0;
+				Minimum = 0.0;
+				Maximum = 1000.0;
+				Step = 0.0;
+				Width = 0.0;
+				GaugeColor = Color32.White;
 				Position = new Vector2();
 				Alignment = new Vector2(-1, -1);
 				BackgroundColor = Color32.White;

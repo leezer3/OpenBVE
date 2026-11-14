@@ -18,7 +18,9 @@ namespace OpenBve
 		/// <summary>Loads the current HUD</summary>
 		internal static void LoadHUD()
 		{
-			string uiFolder = Program.FileSystem.GetDataFolder("In-game", Interface.CurrentOptions.UserInterfaceFolder);
+			string uiFolder = System.IO.Path.IsPathRooted(Interface.CurrentOptions.UserInterfaceFolder)
+				? Interface.CurrentOptions.UserInterfaceFolder
+				: Program.FileSystem.GetDataFolder("In-game", Interface.CurrentOptions.UserInterfaceFolder);
 			string cfgFile = OpenBveApi.Path.CombineFile(uiFolder, "interface.cfg");
 			ConfigFile<HUDSection, HUDKey> cfg = new ConfigFile<HUDSection, HUDKey>(cfgFile, Program.CurrentHost);
 			Program.CurrentHost.RegisterSound(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("In-game"), "beep.wav"), 50, out var beep);
@@ -29,7 +31,7 @@ namespace OpenBve
 			while (cfg.RemainingSubBlocks > 0)
 			{
 				Block<HUDSection, HUDKey> block = cfg.ReadNextBlock();
-				if (block.Key != HUDSection.Element)
+				if (block.Key != HUDSection.Element && block.Key != HUDSection.Needle && block.Key != HUDSection.LinearGauge && block.Key != HUDSection.DigitalGauge)
 				{
 					Interface.AddMessage(MessageType.Error, false, "Unknown section encountered in HUD configuration in " + cfgFile);
 					continue;
@@ -51,50 +53,57 @@ namespace OpenBve
 					CurrentHudElements[Length - 1].Alignment.X = Math.Sign(CurrentHudElements[Length - 1].Alignment.X);
 					CurrentHudElements[Length - 1].Alignment.Y = Math.Sign(CurrentHudElements[Length - 1].Alignment.Y);
 				}
-				if (block.TryGetPathArray(HUDKey.TopLeft, ',', uiFolder, ref texturePath))
+				if (block.Key == HUDSection.Element)
 				{
-					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].TopLeft.BackgroundTexture);
-					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].TopLeft.OverlayTexture);
+					if (block.TryGetPathArray(HUDKey.TopLeft, ',', uiFolder, ref texturePath))
+					{
+						Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].TopLeft.BackgroundTexture);
+						Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].TopLeft.OverlayTexture);
+					}
+					if (block.TryGetPathArray(HUDKey.TopMiddle, ',', uiFolder, ref texturePath))
+					{
+						Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].TopMiddle.BackgroundTexture);
+						Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].TopMiddle.OverlayTexture);
+					}
+					if (block.TryGetPathArray(HUDKey.TopRight, ',', uiFolder, ref texturePath))
+					{
+						Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].TopRight.BackgroundTexture);
+						Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].TopRight.OverlayTexture);
+					}
+					if (block.TryGetPathArray(HUDKey.CenterLeft, ',', uiFolder, ref texturePath))
+					{
+						Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].CenterLeft.BackgroundTexture);
+						Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].CenterLeft.OverlayTexture);
+					}
+					if (block.TryGetPathArray(HUDKey.CenterMiddle, ',', uiFolder, ref texturePath))
+					{
+						Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].CenterMiddle.BackgroundTexture);
+						Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].CenterMiddle.OverlayTexture);
+					}
+					if (block.TryGetPathArray(HUDKey.CenterRight, ',', uiFolder, ref texturePath))
+					{
+						Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].CenterRight.BackgroundTexture);
+						Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].CenterRight.OverlayTexture);
+					}
+					if (block.TryGetPathArray(HUDKey.BottomLeft, ',', uiFolder, ref texturePath))
+					{
+						Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].BottomLeft.BackgroundTexture);
+						Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].BottomLeft.OverlayTexture);
+					}
+					if (block.TryGetPathArray(HUDKey.BottomMiddle, ',', uiFolder, ref texturePath))
+					{
+						Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].BottomMiddle.BackgroundTexture);
+						Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].BottomMiddle.OverlayTexture);
+					}
+					if (block.TryGetPathArray(HUDKey.BottomRight, ',', uiFolder, ref texturePath))
+					{
+						Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].BottomRight.BackgroundTexture);
+						Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].BottomRight.OverlayTexture);
+					}
 				}
-				if (block.TryGetPathArray(HUDKey.TopMiddle, ',', uiFolder, ref texturePath))
+				else
 				{
-					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].TopMiddle.BackgroundTexture);
-					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].TopMiddle.OverlayTexture);
-				}
-				if (block.TryGetPathArray(HUDKey.TopRight, ',', uiFolder, ref texturePath))
-				{
-					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].TopRight.BackgroundTexture);
-					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].TopRight.OverlayTexture);
-				}
-				if (block.TryGetPathArray(HUDKey.CenterLeft, ',', uiFolder, ref texturePath))
-				{
-					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].CenterLeft.BackgroundTexture);
-					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].CenterLeft.OverlayTexture);
-				}
-				if (block.TryGetPathArray(HUDKey.CenterMiddle, ',', uiFolder, ref texturePath))
-				{
-					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].CenterMiddle.BackgroundTexture);
-					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].CenterMiddle.OverlayTexture);
-				}
-				if (block.TryGetPathArray(HUDKey.CenterRight, ',', uiFolder, ref texturePath))
-				{
-					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].CenterRight.BackgroundTexture);
-					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].CenterRight.OverlayTexture);
-				}
-				if (block.TryGetPathArray(HUDKey.BottomLeft, ',', uiFolder, ref texturePath))
-				{
-					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].BottomLeft.BackgroundTexture);
-					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].BottomLeft.OverlayTexture);
-				}
-				if (block.TryGetPathArray(HUDKey.BottomMiddle, ',', uiFolder, ref texturePath))
-				{
-					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].BottomMiddle.BackgroundTexture);
-					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].BottomMiddle.OverlayTexture);
-				}
-				if (block.TryGetPathArray(HUDKey.BottomRight, ',', uiFolder, ref texturePath))
-				{
-					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].BottomRight.BackgroundTexture);
-					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].BottomRight.OverlayTexture);
+					LoadGauge(block, CurrentHudElements[Length - 1], uiFolder);
 				}
 				block.TryGetColor32(HUDKey.BackColor, ref CurrentHudElements[Length - 1].BackgroundColor);
 				block.TryGetColor32(HUDKey.OverlayColor, ref CurrentHudElements[Length - 1].OverlayColor);
@@ -154,6 +163,51 @@ namespace OpenBve
 				block.GetVector2(HUDKey.TransitionVector, ',', out CurrentHudElements[Length - 1].TransitionVector);
 			}
 			Array.Resize(ref CurrentHudElements, Length);
+		}
+
+		/// <summary>Loads the gauge specific properties of an element</summary>
+		private static void LoadGauge(Block<HUDSection, HUDKey> block, Element element, string uiFolder)
+		{
+			switch (block.Key)
+			{
+				case HUDSection.Needle:
+					element.GaugeType = GaugeType.Needle;
+					break;
+				case HUDSection.LinearGauge:
+					element.GaugeType = GaugeType.LinearGauge;
+					break;
+				case HUDSection.DigitalGauge:
+					element.GaugeType = GaugeType.DigitalGauge;
+					break;
+			}
+			if (element.GaugeType != GaugeType.DigitalGauge)
+			{
+				if (block.GetPath(HUDKey.Image, uiFolder, out string image))
+				{
+					Program.Renderer.TextureManager.RegisterTexture(image, out element.GaugeTexture);
+				}
+				else
+				{
+					Interface.AddMessage(MessageType.Error, false, "Image is required in " + block.Key + " in " + block.FileName);
+					element.GaugeType = GaugeType.None;
+					return;
+				}
+			}
+			block.TryGetVector2(HUDKey.Origin, ',', ref element.Origin);
+			block.TryGetVector2(HUDKey.Direction, ',', ref element.Direction);
+			block.TryGetValue(HUDKey.Radius, ref element.Radius);
+			block.TryGetValue(HUDKey.InitialAngle, ref element.InitialAngle);
+			block.TryGetValue(HUDKey.LastAngle, ref element.LastAngle);
+			block.TryGetValue(HUDKey.Minimum, ref element.Minimum);
+			block.TryGetValue(HUDKey.Maximum, ref element.Maximum);
+			block.TryGetValue(HUDKey.Step, ref element.Step);
+			block.TryGetValue(HUDKey.Width, ref element.Width);
+			block.TryGetColor32(HUDKey.Color, ref element.GaugeColor);
+			if (element.Maximum == element.Minimum)
+			{
+				Interface.AddMessage(MessageType.Error, false, "Minimum and Maximum must not be equal in " + block.Key + " in " + block.FileName);
+				element.GaugeType = GaugeType.None;
+			}
 		}
 	}
 }
