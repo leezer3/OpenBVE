@@ -126,7 +126,7 @@ namespace Formats.OpenBve.XML
 			{
 				if (!Path.ContainsInvalidChars(value.Value))
 				{
-
+					ReportUnknownPathVariable(value.Value, "Key " + key + " in Section " + Key + " at line " + value.Key);
 					string relativePath = value.Value;
 
 					if (Path.IsAbsolutePath(relativePath))
@@ -274,6 +274,7 @@ namespace Formats.OpenBve.XML
 			{
 				if (!Path.ContainsInvalidChars(value.Value))
 				{
+					ReportUnknownPathVariable(value.Value, "Key " + key + " in Section " + Key + " at line " + value.Key);
 					string relativePath = value.Value;
 
 					if (Path.IsAbsolutePath(relativePath))

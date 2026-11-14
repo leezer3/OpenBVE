@@ -310,8 +310,8 @@ namespace Formats.OpenBve
 			{
 				if (!Path.ContainsInvalidChars(value.Value))
 				{
-					
 					string relativePath = value.Value;
+					ReportUnknownPathVariable(relativePath, "Key " + key + " in Section " + Key + " at line " + value.Key);
 					try
 					{
 						finalPath = relativePath != string.Empty ? Path.CombineFile(absolutePath, relativePath) : string.Empty;
