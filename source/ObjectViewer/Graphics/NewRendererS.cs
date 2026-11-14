@@ -385,7 +385,7 @@ List<FaceState> opaqueFaces, alphaFaces;
 					}
 				}
 			}
-			if (CurrentInterface == InterfaceType.Menu)
+			if (CurrentInterface == InterfaceType.Menu || Game.Menu.IsSidebarMode)
 			{
 				Game.Menu.Draw(timeElapsed);
 			}
