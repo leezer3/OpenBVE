@@ -199,5 +199,32 @@ namespace TrainManager.Handles
 
 			return NotchDescriptions[Driver];
 		}
+
+		public override string GetDebugDescription(HandleState state)
+		{
+			switch (state)
+			{
+				case HandleState.Actual:
+					if (Actual == 0)
+					{
+						return "N";
+					}
+					return "P" + Actual;
+				case HandleState.Driver:
+					if (Driver == 0)
+					{
+						return "N";
+					}
+					return "P" + Driver;
+				case HandleState.Safety:
+					if (Safety == 0)
+					{
+						return "N";
+					}
+					return "P" + Safety;
+			}
+
+			return string.Empty;
+		}
 	}
 }

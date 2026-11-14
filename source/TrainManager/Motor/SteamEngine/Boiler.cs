@@ -22,8 +22,9 @@
 
 using OpenBveApi;
 using OpenBveApi.Motor;
+using TrainManager.Motor;
 
-namespace TrainManager.Motor
+namespace TrainManager.SteamEngine
 {
 	public class Boiler : AbstractComponent
 	{
@@ -32,15 +33,32 @@ namespace TrainManager.Motor
 		public readonly double MaxOutput;
 		/// <summary>The current boiler water level in Liters</summary>
 		public double WaterLevel;
+		/// <summary>The current volume of steam in the boiler in kg</summary>
+		public double CurrentSteamMass;
 		/// <summary>The current boiler pressure in PSI</summary>
 		public double CurrentPressure;
+		/// <summary>The maximum achievable pressure</summary>
+		public readonly double MaxPressure;
+		/// <summary>The total internal boiler volume</summary>
+		/// <remarks>150 cubic feet</remarks>
+		public const double Volume = 4247.53;
 
-		public Boiler(TractionModel engine, double length, double maxOutput, double startingWaterLevel, double startingPressure) : base(engine)
+		public Boiler(TractionModel engine, double length, double maxPressure, double maxOutput, double startingWaterLevel, double startingPressure) : base(engine)
 		{
 			Length = length;
+			MaxPressure = maxPressure;
 			MaxOutput = maxOutput;
 			WaterLevel = startingWaterLevel;
 			CurrentPressure = startingPressure;
+			// calculate the starting steam volume in the boiler
+			double volumePerCubicMeter = SteamTable.GetSteamDensity(CurrentPressure);
+			CurrentSteamMass = ((Volume - WaterLevel) / 1000) * volumePerCubicMeter; // kgs
+
+			double steamAvailableVolume = Volume - WaterLevel;
+			// density is mass / volume
+			double density = CurrentSteamMass / (steamAvailableVolume / 1000); // volume to m3
+			// pressure for one kilo is the same for all
+			CurrentPressure = SteamTable.GetPressure(density);
 		}
 
 		public override void Update(double timeElapsed)
@@ -49,14 +67,20 @@ namespace TrainManager.Motor
 			{
 				return;
 			}
-
-			double steamGenerated = MaxOutput * firebox.HeatOutput;
+			
+			double steamConverted = MaxOutput * firebox.HeatOutput * timeElapsed;
 			// NOTE: MSTS steam simulation bug- boiler volume fixed at 150 cubic feet (See 'Manual 2.0e.doc')
 			// for the minute, we'll run with that as this is the most likely to produce 'expected' results
-			// 1lb / sqft = 0.00694 psi
-			CurrentPressure += steamGenerated / 150.0 * 0.00694 * 2.205;
-			// drop water level (convert from pounds)
-			WaterLevel -= steamGenerated;
+			CurrentSteamMass += steamConverted;
+			double waterDensity = WaterTable.GetDensity(100); // need to add further simulation of water temp in boiler- injectors will cool temp
+			WaterLevel -= steamConverted / waterDensity;
+			// boiler volume minus water volume gives the remaining steam space
+			double steamAvailableVolume = Volume - WaterLevel;
+			// density is mass / volume
+			double density = CurrentSteamMass / (steamAvailableVolume / 1000); // volume to m3
+			// pressure for one kilo is the same for all
+			CurrentPressure = SteamTable.GetPressure(density);
+
 		}
 	}
 }

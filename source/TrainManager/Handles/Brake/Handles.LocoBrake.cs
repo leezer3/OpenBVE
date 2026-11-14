@@ -124,6 +124,32 @@ namespace TrainManager.Handles
 			
 		}
 
+		public override string GetDebugDescription(HandleState state)
+		{
+			switch (state)
+			{
+				case HandleState.Actual:
+					if (Actual == 0)
+					{
+						return "N";
+					}
+					return "B" + Actual;
+				case HandleState.Safety:
+					if (Safety == 0)
+					{
+						return "N";
+					}
+					return "B" + Safety;
+				case HandleState.Driver:
+					if (Driver == 0)
+					{
+						return "N";
+					}
+					return "B" + Safety;
+			}
+			return string.Empty;
+		}
+
 		public override void ApplySafetyState(int newState)
 		{
 			safetyState = newState;
@@ -260,6 +286,47 @@ namespace TrainManager.Handles
 
 			return NotchDescriptions[1];
 
+		}
+
+		public override string GetDebugDescription(HandleState state)
+		{
+			switch (state)
+			{
+				case HandleState.Actual:
+					switch (Actual)
+					{
+						case 0:
+							return "REL";
+						case 1:
+							return "LAP";
+						case 2:
+							return "REL";
+					}
+					return string.Empty;
+				case HandleState.Safety:
+					switch (Safety)
+					{
+						case 0:
+							return "REL";
+						case 1:
+							return "LAP";
+						case 2:
+							return "REL";
+					}
+					return string.Empty;
+				case HandleState.Driver:
+					switch (Driver)
+					{
+						case 0:
+							return "REL";
+						case 1:
+							return "LAP";
+						case 2:
+							return "REL";
+					}
+					return string.Empty;
+			}
+			return string.Empty;
 		}
 	}
 }

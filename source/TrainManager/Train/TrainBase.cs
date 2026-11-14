@@ -541,7 +541,27 @@ namespace TrainManager.Trains
 			}
 			else
 			{
-				Handles.Reverser.Actual = Handles.Reverser.Driver;
+				if (Handles.Reverser is Cutoff c)
+				{
+					// FIXME: Various parts of the physics system rely on the Reverser Actual value being an integer
+					if (c.Driver > 0)
+					{
+						c.Actual = 1;
+					}
+					else if (c.Driver == 0)
+					{
+						c.Actual = 0;
+					}
+					else
+					{
+						c.Actual = -1;
+					}
+				}
+				else
+				{
+					Handles.Reverser.Actual = Handles.Reverser.Driver;
+				}
+					
 			}
 		}
 

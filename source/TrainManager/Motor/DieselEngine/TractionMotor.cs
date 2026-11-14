@@ -43,7 +43,7 @@ namespace TrainManager.Motor
 			if (baseEngine is DieselEngine dieselEngine)
 			{
 				// n.b. assume that the engine makes no current at idle
-				if (baseEngine.BaseCar.baseTrain.Handles.Reverser.Actual != ReverserPosition.Neutral)
+				if (baseEngine.BaseCar.baseTrain.Handles.Reverser.Actual != (int)ReverserPosition.Neutral)
 				{
 					// find the max possible amps at the current engine RPM
 					CurrentAmps = maxAmps / (dieselEngine.MaxRPM - dieselEngine.IdleRPM) * (dieselEngine.CurrentRPM - dieselEngine.IdleRPM);
