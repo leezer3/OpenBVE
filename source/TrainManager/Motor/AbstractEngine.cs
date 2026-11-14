@@ -69,11 +69,12 @@ namespace TrainManager.Motor
 	    }
 
 	    /// <summary>Creates a new TractionModel</summary>
-		protected TractionModel(CarBase car)
+		protected TractionModel(CarBase car, bool providesPower = false)
 	    {
 		    BaseCar = car;
 		    AccelerationCurves = Array.Empty<AccelerationCurve>();
 		    Components = new Dictionary<EngineComponent, AbstractComponent>();
+			ProvidesPower = providesPower;
 	    }
 
 		/// <summary>Called once a frame to update the engine</summary>

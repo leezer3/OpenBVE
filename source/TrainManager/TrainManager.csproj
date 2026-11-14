@@ -69,6 +69,7 @@
     <Compile Include="Cargo\NoLoad.cs" />
     <Compile Include="Cargo\Passengers.cs" />
     <Compile Include="Cargo\RobustFreight.cs" />
+    <Compile Include="Car\Axle\BVE5Axle.cs" />
     <Compile Include="Car\Axle\BVEAxle.cs" />
     <Compile Include="Car\Bogie\Bogie.cs" />
     <Compile Include="Car\CarBase.cs" />
@@ -77,13 +78,14 @@
     <Compile Include="Car\Door.cs" />
     <Compile Include="Car\Door.DoorModes.cs" />
     <Compile Include="Car\Door.TrainDoorState.cs" />
+    <Compile Include="Car\Systems\BVE5\ReadhesionDevice.cs" />
     <Compile Include="Car\Systems\FlangeSounds.cs" />
     <Compile Include="Car\Physics.cs" />
     <Compile Include="Car\Systems\AbstractReAdhesionDevice.cs" />
     <Compile Include="Car\Systems\ConstantSpeedDevice.cs" />
     <Compile Include="Car\Systems\HoldBrake.cs" />
-    <Compile Include="Car\Systems\ReadhesionDevice.cs" />
-    <Compile Include="Car\Systems\ReadhesionDevice.Types.cs" />
+    <Compile Include="Car\Systems\BVE4\ReadhesionDevice.cs" />
+    <Compile Include="Car\Systems\BVE4\ReadhesionDevice.Types.cs" />
     <Compile Include="Car\Systems\RunSounds.cs" />
     <Compile Include="Car\Systems\Sanders.cs" />
     <Compile Include="Car\Systems\Sanders.State.cs" />
@@ -122,6 +124,9 @@
     <Compile Include="Motor\BVE4\MotorSoundTable.Entry.cs" />
     <Compile Include="Motor\BVE5\AISoundEntry.cs" />
     <Compile Include="Motor\BVE5\AITrainSound.cs" />
+    <Compile Include="Motor\BVE5\Bve5MotorCar.cs" />
+    <Compile Include="Motor\BVE5\Bve5PerformanceTable.cs" />
+    <Compile Include="Motor\BVE5\Bve5TrailerCar.cs" />
     <Compile Include="Motor\BVE5\MotorSound.cs" />
     <Compile Include="Motor\BVE5\SoundState.cs" />
     <Compile Include="Motor\DieselEngine\DieselEngine.cs" />
@@ -231,6 +236,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Compile Include="Motor\BVE5\Bve5PerformanceData.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
