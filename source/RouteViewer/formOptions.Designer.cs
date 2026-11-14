@@ -36,7 +36,7 @@ namespace RouteViewer
             this.label2 = new System.Windows.Forms.Label();
             this.AnisotropicLevel = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
-            this.AntialiasingLevel = new System.Windows.Forms.NumericUpDown();
+            this.AntialiasingLevel = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.TransparencyQuality = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -98,7 +98,7 @@ namespace RouteViewer
             this.tabControl1.SuspendLayout();
             this.tabPageOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AnisotropicLevel)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.AntialiasingLevel)).BeginInit();
+            //AntialiasingLevel is a ComboBox, so there's nothing to Begin/EndInit here
             ((System.ComponentModel.ISupportInitialize)(this.width)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.height)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownViewingDistance)).BeginInit();
@@ -269,13 +269,8 @@ namespace RouteViewer
             // AntialiasingLevel
             // 
             this.AntialiasingLevel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.AntialiasingLevel.AutoSize = false;
+            this.AntialiasingLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.AntialiasingLevel.Location = new System.Drawing.Point(160, 77);
-            this.AntialiasingLevel.Maximum = new decimal(new int[] {
-            16,
-            0,
-            0,
-            0});
             this.AntialiasingLevel.Name = "AntialiasingLevel";
             this.AntialiasingLevel.Size = new System.Drawing.Size(120, 20);
             this.AntialiasingLevel.TabIndex = 16;
@@ -1055,7 +1050,7 @@ namespace RouteViewer
             this.tabPageOptions.ResumeLayout(false);
             this.tabPageOptions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AnisotropicLevel)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.AntialiasingLevel)).EndInit();
+            //AntialiasingLevel is a ComboBox, so there's nothing to Begin/EndInit here
             ((System.ComponentModel.ISupportInitialize)(this.width)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.height)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownViewingDistance)).EndInit();
@@ -1090,7 +1085,7 @@ namespace RouteViewer
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.NumericUpDown AnisotropicLevel;
-        private System.Windows.Forms.NumericUpDown AntialiasingLevel;
+        private System.Windows.Forms.ComboBox AntialiasingLevel;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
