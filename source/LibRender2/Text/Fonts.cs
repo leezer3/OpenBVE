@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.IO;
+using FontStashSharp;
 using OpenBveApi.Hosts;
 
 namespace LibRender2.Text
@@ -28,27 +29,36 @@ namespace LibRender2.Text
 
 		private static HostInterface currentHost;
 
+		private FontSystem fontSystem;
+		private FontFamily uiFont;
+		private readonly float scaleFactor;
+
 		/// <summary>Gets the next smallest font</summary>
 		/// <param name="currentFont">The font we require the smaller version for</param>
 		/// <returns>The next smallest font</returns>
 		public OpenGlFont NextSmallestFont(OpenGlFont currentFont)
 		{
-			switch ((int)currentFont.FontSize)
+			if (currentFont == VerySmallFont || currentFont == SmallFont)
 			{
-				case 9:
-				case 12:
-					return VerySmallFont;
-				case 16:
-					return SmallFont;
-				case 21:
-					return NormalFont;
-				case 27:
-					return LargeFont;
-				case 34:
-					return VeryLargeFont;
-				default:
-					return EvenLargerFont;
+				return VerySmallFont;
 			}
+			if (currentFont == NormalFont)
+			{
+				return SmallFont;
+			}
+			if (currentFont == LargeFont)
+			{
+				return NormalFont;
+			}
+			if (currentFont == VeryLargeFont)
+			{
+				return LargeFont;
+			}
+			if (currentFont == EvenLargerFont)
+			{
+				return VeryLargeFont;
+			}
+			return EvenLargerFont;
 		}
 
 		/// <summary>Gets the next largest font</summary>
@@ -60,25 +70,29 @@ namespace LibRender2.Text
 			{
 				throw new InvalidDataException("No font was specified.");
 			}
-			switch ((int)currentFont.FontSize)
+			if (currentFont == VerySmallFont)
 			{
-				case 9:
-					return SmallFont;
-				case 12:
-					return NormalFont;
-				case 16:
-					return LargeFont;
-				case 21:
-					return VeryLargeFont;
-				default:
-					return EvenLargerFont;
+				return SmallFont;
 			}
+			if (currentFont == SmallFont)
+			{
+				return NormalFont;
+			}
+			if (currentFont == NormalFont)
+			{
+				return LargeFont;
+			}
+			if (currentFont == LargeFont)
+			{
+				return VeryLargeFont;
+			}
+			return EvenLargerFont;
 		}
 		
 		public Fonts(HostInterface host, BaseRenderer renderer, string fontName)
 		{
 			currentHost = host;
-			FontFamily uiFont = FontFamily.GenericSansSerif;
+			uiFont = FontFamily.GenericSansSerif;
 			if (!string.IsNullOrEmpty(fontName))
 			{
 				try
@@ -93,14 +107,61 @@ namespace LibRender2.Text
 				
 			}
 
-			float scaleFactor = (float)renderer.ScaleFactor.X;
-			
-			VerySmallFont = new OpenGlFont(uiFont, 9.0f * scaleFactor);
-			SmallFont = new OpenGlFont(uiFont, 12.0f * scaleFactor);
-			NormalFont = new OpenGlFont(uiFont, 16.0f * scaleFactor);
-			LargeFont = new OpenGlFont(uiFont, 21.0f * scaleFactor);
-			VeryLargeFont = new OpenGlFont(uiFont, 27.0f * scaleFactor);
-			EvenLargerFont = new OpenGlFont(uiFont, 34.0f * scaleFactor);
+			fontSystem = OpenGlFont.CreateFontSystem(FontFileResolver.GetFontData(fontName));
+			scaleFactor = (float)renderer.ScaleFactor.X;
+
+			VerySmallFont = new OpenGlFont(uiFont, 9.0f * scaleFactor, fontSystem.GetFont(9.0f * scaleFactor));
+			SmallFont = new OpenGlFont(uiFont, 12.0f * scaleFactor, fontSystem.GetFont(12.0f * scaleFactor));
+			NormalFont = new OpenGlFont(uiFont, 16.0f * scaleFactor, fontSystem.GetFont(16.0f * scaleFactor));
+			LargeFont = new OpenGlFont(uiFont, 21.0f * scaleFactor, fontSystem.GetFont(21.0f * scaleFactor));
+			VeryLargeFont = new OpenGlFont(uiFont, 27.0f * scaleFactor, fontSystem.GetFont(27.0f * scaleFactor));
+			EvenLargerFont = new OpenGlFont(uiFont, 34.0f * scaleFactor, fontSystem.GetFont(34.0f * scaleFactor));
+
+			SetUserScale(renderer.currentOptions.UserInterfaceScaleFactor);
+		}
+
+		/// <summary>Applies the user interface scale factor to all fonts.</summary>
+		internal void SetUserScale(int factor)
+		{
+			float scale = scaleFactor * System.Math.Max(factor, 1);
+
+			VerySmallFont.SetFont(9.0f * scale, fontSystem.GetFont(9.0f * scale));
+			SmallFont.SetFont(12.0f * scale, fontSystem.GetFont(12.0f * scale));
+			NormalFont.SetFont(16.0f * scale, fontSystem.GetFont(16.0f * scale));
+			LargeFont.SetFont(21.0f * scale, fontSystem.GetFont(21.0f * scale));
+			VeryLargeFont.SetFont(27.0f * scale, fontSystem.GetFont(27.0f * scale));
+			EvenLargerFont.SetFont(34.0f * scale, fontSystem.GetFont(34.0f * scale));
+		}
+
+		/// <summary>Applies the selected font family to all fonts in place.</summary>
+		/// <remarks>Everything that can throw happens before any font is replaced.</remarks>
+		public void ChangeFont(string fontName)
+		{
+			FontFamily newUiFont = FontFamily.GenericSansSerif;
+
+			if (!string.IsNullOrEmpty(fontName))
+			{
+				try
+				{
+					newUiFont = new FontFamily(fontName);
+				}
+				catch
+				{
+					currentHost.ReportProblem(ProblemType.InvalidOperation, "Failed to load font " + fontName);
+				}
+			}
+
+			FontSystem newFontSystem = OpenGlFont.CreateFontSystem(FontFileResolver.GetFontData(fontName));
+			VerySmallFont.ReplaceFont(newUiFont, newFontSystem);
+			SmallFont.ReplaceFont(newUiFont, newFontSystem);
+			NormalFont.ReplaceFont(newUiFont, newFontSystem);
+			LargeFont.ReplaceFont(newUiFont, newFontSystem);
+			VeryLargeFont.ReplaceFont(newUiFont, newFontSystem);
+			EvenLargerFont.ReplaceFont(newUiFont, newFontSystem);
+			FontSystem oldFontSystem = fontSystem;
+			fontSystem = newFontSystem;
+			uiFont = newUiFont;
+			oldFontSystem.Dispose();
 		}
 	}
 }

@@ -88,8 +88,8 @@ namespace OpenBve
 			menuControls.Add(nextStepButton);
 		}
 
-		/// <summary>Should be called when the screen resolution changes to re-position all items on the menu appropriately</summary>
-		internal void OnResize()
+		/// <summary>Refreshes the menu font and row height for the current screen height</summary>
+		internal void RefreshMenuFont()
 		{
 			// choose the text font size according to screen height
 			// the boundaries follow approximately the progression
@@ -107,6 +107,12 @@ namespace OpenBve
 			}
 
 			LineHeight = (int)(MenuFont.FontSize * LineSpacing);
+		}
+
+		/// <summary>Should be called when the screen resolution changes to re-position all items on the menu appropriately</summary>
+		internal void OnResize()
+		{
+			RefreshMenuFont();
 			int quarterWidth = (int)(Program.Renderer.Screen.Width / 4.0);
 			int quarterHeight = (int)(Program.Renderer.Screen.Height / 4.0);
 			nextStepButton.Location = new Vector2(Program.Renderer.Screen.Width - 10, Program.Renderer.Screen.Height - 10);
@@ -145,9 +151,9 @@ namespace OpenBve
 			controlTextBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0 + quarterWidth);
 			controlTextBox.Size = new Vector2(quarterWidth, quarterWidth);
 			controlTextBox.BackgroundColor = Color128.Black;
-			if (CurrMenu >= 0)
+			for (int m = 0; m < Menus.Length; m++)
 			{
-				Menus[CurrMenu].ComputeExtent(Menus[CurrMenu].Type, MenuFont, Renderer.Screen.Width / 2.0, LineHeight);
+				Menus[m].ComputeExtent(Menus[m].Type, MenuFont, Renderer.Screen.Width / 2.0, LineHeight);
 			}
 			ComputePosition();
 		}
@@ -174,6 +180,8 @@ namespace OpenBve
 			}
 			if (!IsInitialized)
 				Initialize();
+			// The window may have been resized while in game, so re-pick the font tier for the current size instead of leaving the pre-resize scale
+			RefreshMenuFont();
 			if (!replace)
 			{
 				CurrMenu++;

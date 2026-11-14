@@ -126,6 +126,7 @@ namespace LibRender2
 		public Fog Fog;
 		public Marker Marker;
 		public OpenGlString OpenGlString;
+		internal FontStashRenderer FontStashRenderer;
 		public TextureManager TextureManager;
 		public Cube Cube;
 		public Rectangle Rectangle;
@@ -436,6 +437,14 @@ namespace LibRender2
             Background = new Background(this);
 			Fog = new Fog(this);
 			OpenGlString = new OpenGlString(this); //text shader shares the rectangle fragment shader
+			try
+			{
+				FontStashRenderer = new FontStashRenderer(this);
+			}
+			catch
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Initializing the font renderer failed.");
+			}
 			TextureManager = new TextureManager(currentHost, this);
 			Cube = new Cube(this);
 			Rectangle = new Rectangle(this);
