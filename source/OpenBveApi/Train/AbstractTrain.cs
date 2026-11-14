@@ -47,9 +47,12 @@ namespace OpenBveApi.Trains
 		/// <summary>A string storing the absolute on-disk path to the current train folder</summary>
 		public string TrainFolder;
 
+		/// <summary>Gets the track index of the front car</summary>
+		public virtual int FrontCarTrackIndex => 0;
+
 		/// <summary>Gets the track position of the front car</summary>
 		public virtual double FrontCarTrackPosition => 0;
-		
+
 		/// <summary>Gets the track position of the rear car</summary>
 		public virtual double RearCarTrackPosition => 0;
 

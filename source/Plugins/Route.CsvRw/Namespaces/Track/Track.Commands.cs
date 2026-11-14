@@ -58,7 +58,7 @@
 		PLimit,
 		/// <summary>Adds a speed limit</summary>
 		Limit,
-		/// <summary>Adds a station stop point</summary>
+		/// <summary>Adds a station stop point on Rail 0</summary>
 		Stop,
 		/// <summary>Adds a station</summary>
 		Sta,
@@ -153,6 +153,8 @@
 		PowerSupply,
 		/// <summary>Ends a power supply</summary>
 		PowerSupplyEnd,
+		/// <summary>Adds a station stop point on the specified rail</summary>
+		RailStop,
 		/*
 		 * HMMSIM
 		 */

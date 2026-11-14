@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using OpenBveApi.Hosts;
 using PIEHid32Net;
 
@@ -10,7 +11,7 @@ namespace OpenBve.Input
 
 		internal JoystickManager32()
 		{
-			if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
+			if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows && RuntimeInformation.ProcessArchitecture != Architecture.Arm)
 			{
 				devices = PIEDevice.EnumeratePIE();
 			}

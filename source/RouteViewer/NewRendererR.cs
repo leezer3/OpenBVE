@@ -194,10 +194,12 @@ namespace RouteViewer
 				alphaFaces = VisibleObjects.GetSortedPolygons();
 			}
 			
+			bool alphaToCoverage = BeginAlphaToCoverage();
 			foreach (FaceState face in opaqueFaces)
 			{
 				face.Draw();
 			}
+			EndAlphaToCoverage(alphaToCoverage);
 
 			// alpha face
 			ResetOpenGlState();
@@ -482,19 +484,23 @@ namespace RouteViewer
 					for (int j = 0; j < Program.CurrentRoute.Stations[i].Stops.Length; j++)
 					{
 						const double dy = 1.4;
-						const double s = 0.2;
-						double p = Program.CurrentRoute.Stations[i].Stops[j].TrackPosition;
 						TrackFollower f = new TrackFollower(Program.CurrentHost)
 						{
 							TriggerType = EventTriggerType.None,
-							TrackPosition = p
+							TrackIndex = Program.CurrentRoute.Stations[i].Stops[j].RailIndex
 						};
-						f.UpdateAbsolute(p, true, false);
-						f.WorldPosition.X += dy * f.WorldUp.X;
-						f.WorldPosition.Y += dy * f.WorldUp.Y;
-						f.WorldPosition.Z += dy * f.WorldUp.Z;
+						f.UpdateAbsolute(Program.CurrentRoute.Stations[i].Stops[j].TrackPosition, true, false);
+						Vector3 cubePos = new Vector3(f.WorldPosition);
+						cubePos.X += dy * f.WorldUp.X;
+						cubePos.Y += dy * f.WorldUp.Y;
+						cubePos.Z += dy * f.WorldUp.Z;
 
-						Cube.Draw(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera.AbsolutePosition, StopTexture);
+						if (!CubesToDraw.ContainsKey(StopTexture))
+						{
+							CubesToDraw.Add(StopTexture, new HashSet<Vector3>());
+						}
+						CubesToDraw[StopTexture].Add(cubePos);
+						
 					}
 				}
 			}
@@ -515,11 +521,16 @@ namespace RouteViewer
 						TrackIndex = stop.TrackIndex
 					};
 					f.UpdateAbsolute(stop.TrackPosition, true, false);
-					f.WorldPosition.X += dy * f.WorldUp.X;
-					f.WorldPosition.Y += dy * f.WorldUp.Y;
-					f.WorldPosition.Z += dy * f.WorldUp.Z;
+					Vector3 cubePos = new Vector3(f.WorldPosition);
+					cubePos.X += dy * f.WorldUp.X;
+					cubePos.Y += dy * f.WorldUp.Y;
+					cubePos.Z += dy * f.WorldUp.Z;
 
-					Cube.Draw(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera.AbsolutePosition, BufferTexture);
+					if (!CubesToDraw.ContainsKey(BufferTexture))
+					{
+						CubesToDraw.Add(StopTexture, new HashSet<Vector3>());
+					}
+					CubesToDraw[BufferTexture].Add(cubePos);
 				}
 			}
 		}

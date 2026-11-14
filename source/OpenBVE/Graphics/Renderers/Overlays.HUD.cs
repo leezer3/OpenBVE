@@ -144,7 +144,7 @@ namespace OpenBve.Graphics.Renderers
 				case HUDSubject.StopNone:
 				{
 					int s = PlayerTrain.Station;
-					if (s >= 0 && Program.CurrentRoute.Stations[s].PlayerStops() && Interface.CurrentOptions.GameMode != GameMode.Expert)
+					if (s >= 0 && Program.CurrentRoute.Stations[s].PlayerStops() && Program.CurrentRoute.Stations[s].GetStopIndex(PlayerTrain) != -1 && Interface.CurrentOptions.GameMode != GameMode.Expert)
 					{
 						bool cond;
 						switch (Element.Subject)
@@ -409,16 +409,17 @@ namespace OpenBve.Graphics.Renderers
 					}
 					break;
 				case HUDSubject.DistNextStation2:
-					if (!Program.CurrentRoute.Stations[stationIndex].PlayerStops())
+					int sn = Program.CurrentRoute.Stations[stationIndex].GetStopIndex(PlayerTrain);
+					if (!Program.CurrentRoute.Stations[stationIndex].PlayerStops() || sn == -1)
 					{
 						double p0 = PlayerTrain.FrontCarTrackPosition;
 						double p1 = 0.0;
 						for (int i = stationIndex; i < Program.CurrentRoute.Stations.Length; i++)
 						{
-							if (Program.CurrentRoute.Stations[i].PlayerStops())
+							sn = Program.CurrentRoute.Stations[i].GetStopIndex(PlayerTrain);
+							if (Program.CurrentRoute.Stations[i].PlayerStops() && sn != -1)
 							{
-								int n = Program.CurrentRoute.Stations[i].GetStopIndex(PlayerTrain);
-								p1 = Program.CurrentRoute.Stations[i].Stops.Length > 0 ? Program.CurrentRoute.Stations[i].Stops[n].TrackPosition : Program.CurrentRoute.Stations[i].DefaultTrackPosition;
+								p1 = Program.CurrentRoute.Stations[i].Stops.Length > 0 ? Program.CurrentRoute.Stations[i].Stops[sn].TrackPosition : Program.CurrentRoute.Stations[i].DefaultTrackPosition;
 								break;
 							}
 						}
@@ -448,37 +449,44 @@ namespace OpenBve.Graphics.Renderers
 					}
 					else
 					{
-						int n = Program.CurrentRoute.Stations[stationIndex].GetStopIndex(PlayerTrain);
-						double p0 = PlayerTrain.FrontCarTrackPosition;
-						double p1 = Program.CurrentRoute.Stations[stationIndex].Stops.Length > 0 ? Program.CurrentRoute.Stations[stationIndex].Stops[n].TrackPosition : Program.CurrentRoute.Stations[stationIndex].DefaultTrackPosition;
-						double m = p1 - p0;
-						switch (renderer.OptionDistanceToNextStation)
+						if (sn != -1)
 						{
-							case DistanceToNextStationDisplayMode.Km:
-								if (Math.Abs(m) <= 10.0)
-								{
-									t = "Stop: " + m.ToString("0.00", Culture) + " m";
-								}
-								else
-								{
-									m /= 1000.0;
-									t = "Stop: " + m.ToString("0.000", Culture) + " km";
-								}
-								Element.TransitionState -= speed * TimeElapsed;
-								if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
-								break;
-							case DistanceToNextStationDisplayMode.Mile:
-								m /= 1609.34;
-								t = "Stop: " + m.ToString("0.0000", Culture) + " miles";
-								Element.TransitionState -= speed * TimeElapsed;
-								if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
-								break;
-							default:
-								m /= 1609.34;
-								t = "Stop: " + m.ToString("0.0000", Culture) + " miles";
-								Element.TransitionState += speed * TimeElapsed;
-								if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
-								break;
+							double p0 = PlayerTrain.FrontCarTrackPosition;
+							double p1 = Program.CurrentRoute.Stations[stationIndex].Stops.Length > 0 ? Program.CurrentRoute.Stations[stationIndex].Stops[sn].TrackPosition : Program.CurrentRoute.Stations[stationIndex].DefaultTrackPosition;
+							double m = p1 - p0;
+							switch (renderer.OptionDistanceToNextStation)
+							{
+								case DistanceToNextStationDisplayMode.Km:
+									if (Math.Abs(m) <= 10.0)
+									{
+										t = "Stop: " + m.ToString("0.00", Culture) + " m";
+									}
+									else
+									{
+										m /= 1000.0;
+										t = "Stop: " + m.ToString("0.000", Culture) + " km";
+									}
+
+									Element.TransitionState -= speed * TimeElapsed;
+									if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
+									break;
+								case DistanceToNextStationDisplayMode.Mile:
+									m /= 1609.34;
+									t = "Stop: " + m.ToString("0.0000", Culture) + " miles";
+									Element.TransitionState -= speed * TimeElapsed;
+									if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
+									break;
+								default:
+									m /= 1609.34;
+									t = "Stop: " + m.ToString("0.0000", Culture) + " miles";
+									Element.TransitionState += speed * TimeElapsed;
+									if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
+									break;
+							}
+						}
+						else
+						{
+							t = "Pass (Incorrect Track to Stop)";
 						}
 					}
 					break;

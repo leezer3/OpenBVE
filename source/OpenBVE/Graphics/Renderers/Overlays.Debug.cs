@@ -4,7 +4,6 @@ using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
-using SoundManager;
 using TrainManager.Handles;
 using TrainManager.Motor;
 
@@ -319,7 +318,7 @@ namespace OpenBve.Graphics.Renderers
 			{
 				double x = 96.0, w = 128.0;
 				// brake pipe
-				if (TrainManager.PlayerTrain.Cars[i].CarBrake is AutomaticAirBrake | TrainManager.PlayerTrain.Cars[i].CarBrake is ElectromagneticStraightAirBrake)
+				if (TrainManager.PlayerTrain.Cars[i].CarBrake is AutomaticAirBrake || TrainManager.PlayerTrain.Cars[i].CarBrake is ElectromagneticStraightAirBrake)
 				{
 					if (!heading[0])
 					{
@@ -333,7 +332,7 @@ namespace OpenBve.Graphics.Renderers
 				}
 				x += w + 8.0;
 				// auxiliary reservoir
-				if (TrainManager.PlayerTrain.Cars[i].CarBrake is AutomaticAirBrake | TrainManager.PlayerTrain.Cars[i].CarBrake is ElectromagneticStraightAirBrake)
+				if (TrainManager.PlayerTrain.Cars[i].CarBrake is AutomaticAirBrake || TrainManager.PlayerTrain.Cars[i].CarBrake is ElectromagneticStraightAirBrake)
 				{
 					if (!heading[1])
 					{

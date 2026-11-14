@@ -763,20 +763,20 @@ namespace OpenBveApi.Objects
 			bool[] materialUsed = new bool[m];
 			for (int i = 0; i < f; i++)
 			{
-				/*
-				if (Mesh.Faces[i].Material < m - 1)
+				
+				if (Mesh.Faces[i].Material > m - 1)
 				{
 					/*
 					 * Our material is out of range
 					 * Rather than crashing, add a new blank material
-					 
+					 */
 					Array.Resize(ref Mesh.Materials, m + 1);
 					Mesh.Materials[m] = new MeshMaterial();
 					Mesh.Faces[i].Material = (ushort)m;
 					m++;
 					Array.Resize(ref materialUsed, m + 1);
 				}
-			*/
+			
 				materialUsed[Mesh.Faces[i].Material] = true;
 			}
 
@@ -943,22 +943,36 @@ namespace OpenBveApi.Objects
 							Array.Resize(ref Mesh.Faces, Mesh.Faces.Length << 1);
 						}
 
-						for (int j = 0; j < n; j++)
+						/*
+ 						* Don't append split faces to the end—insert them right after their source face.
+ 						* Appending scrambles triangle order when merging faces with the same material.
+ 						* On transparent overlapping geometry, this interleaves triangles (pane1-A, pane2-A...),
+ 						* which ruins alpha blending and makes shared edges pop up visually.
+ 						*/
+						if (f > i + 1)
 						{
-							Mesh.Faces[f + j].Vertices = new MeshFaceVertex[faceCount];
-							for (int k = 0; k < faceCount; k++)
-							{
-								Mesh.Faces[f + j].Vertices[k] = Mesh.Faces[i].Vertices[faceCount + faceCount * j + k];
-							}
-
-							Mesh.Faces[f + j].Material = Mesh.Faces[i].Material;
-							Mesh.Faces[f + j].Flags = Mesh.Faces[i].Flags;
-							Mesh.Faces[i].Flags &= ~FaceFlags.FaceTypeMask;
-							Mesh.Faces[i].Flags |= faceBit;
+							Array.Copy(Mesh.Faces, i + 1, Mesh.Faces, i + 1 + n, f - i - 1);
 						}
 
+						FaceFlags newFlags = Mesh.Faces[i].Flags & ~FaceFlags.FaceTypeMask;
+						newFlags |= faceBit;
+
+						for (int j = 0; j < n; j++)
+						{
+							Mesh.Faces[i + 1 + j].Vertices = new MeshFaceVertex[faceCount];
+							for (int k = 0; k < faceCount; k++)
+							{
+								Mesh.Faces[i + 1 + j].Vertices[k] = Mesh.Faces[i].Vertices[faceCount + faceCount * j + k];
+							}
+
+							Mesh.Faces[i + 1 + j].Material = Mesh.Faces[i].Material;
+							Mesh.Faces[i + 1 + j].Flags = newFlags;
+						}
+
+						Mesh.Faces[i].Flags = newFlags;
 						Array.Resize(ref Mesh.Faces[i].Vertices, faceCount);
 						f += n;
+						i += n;
 					}
 				}
 			}

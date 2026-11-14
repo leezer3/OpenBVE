@@ -720,7 +720,6 @@ namespace OpenBve
 
 		private void buttonDepends_Click(object sender, EventArgs e)
 		{
-			//dependantPackage.Version = null;
 			switch (dependantPackage.PackageType)
 			{
 				case PackageType.Route:

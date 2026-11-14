@@ -218,11 +218,16 @@ namespace OpenBve.Graphics.Renderers
 							TrackPosition = p
 						};
 						f.UpdateAbsolute(p, true, false);
-						f.WorldPosition.X += dy * f.WorldUp.X;
-						f.WorldPosition.Y += dy * f.WorldUp.Y;
-						f.WorldPosition.Z += dy * f.WorldUp.Z;
+						Vector3 cubePos = new Vector3(f.WorldPosition);
+						cubePos.X += dy * f.WorldUp.X;
+						cubePos.Y += dy * f.WorldUp.Y;
+						cubePos.Z += dy * f.WorldUp.Z;
 
-						renderer.Cube.Draw(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, renderer.Camera.AbsolutePosition, StopTexture);
+						if (!renderer.CubesToDraw.ContainsKey(StopTexture))
+						{
+							renderer.CubesToDraw.Add(StopTexture, new HashSet<Vector3>());
+						}
+						renderer.CubesToDraw[StopTexture].Add(cubePos);
 					}
 				}
 			}
@@ -243,11 +248,16 @@ namespace OpenBve.Graphics.Renderers
 						TrackIndex = stop.TrackIndex
 					};
 					f.UpdateAbsolute(stop.TrackPosition, true, false);
-					f.WorldPosition.X += dy * f.WorldUp.X;
-					f.WorldPosition.Y += dy * f.WorldUp.Y;
-					f.WorldPosition.Z += dy * f.WorldUp.Z;
+					Vector3 cubePos = new Vector3(f.WorldPosition);
+					cubePos.X += dy * f.WorldUp.X;
+					cubePos.Y += dy * f.WorldUp.Y;
+					cubePos.Z += dy * f.WorldUp.Z;
 
-					renderer.Cube.Draw(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, renderer.Camera.AbsolutePosition, BufferTexture);
+					if (!renderer.CubesToDraw.ContainsKey(BufferTexture))
+					{
+						renderer.CubesToDraw.Add(StopTexture, new HashSet<Vector3>());
+					}
+					renderer.CubesToDraw[BufferTexture].Add(cubePos);
 				}
 			}
 		}

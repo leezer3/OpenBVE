@@ -11,7 +11,6 @@ using OpenBveApi.Colors;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
-using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
@@ -63,7 +62,6 @@ namespace OpenBve.Graphics
 		
 		protected override void UpdateViewport(int width, int height)
 		{
-			_programLogo = null;
 			Screen.Width = width;
 			Screen.Height = height;
 			GL.Viewport(0, 0, Screen.Width, Screen.Height);
@@ -215,10 +213,12 @@ namespace OpenBve.Graphics
 				overlayAlphaFaces = VisibleObjects.GetSortedPolygons(true);
 			}
 
+			bool alphaToCoverage = BeginAlphaToCoverage();
 			foreach (FaceState face in opaqueFaces)
 			{
 				face.Draw();
 			}
+			EndAlphaToCoverage(alphaToCoverage);
 
 			// alpha face
 			ResetOpenGlState();
@@ -365,10 +365,12 @@ namespace OpenBve.Graphics
 				DefaultShader.SetLightModel(Lighting.LightModel);
 
                 // overlay opaque face
+                bool overlayAlphaToCoverage = BeginAlphaToCoverage();
                 foreach (FaceState face in overlayOpaqueFaces)
 				{
 					face.Draw();
 				}
+				EndAlphaToCoverage(overlayAlphaToCoverage);
 
 				// overlay alpha face
 				ResetOpenGlState();

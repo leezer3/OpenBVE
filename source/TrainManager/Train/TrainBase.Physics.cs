@@ -185,14 +185,22 @@ namespace TrainManager.Trains
 					if (Cars[i].FrontAxle.PointSoundTriggered)
 					{
 						Cars[i].FrontAxle.PointSoundTriggered = false;
-						int bufferIndex = Cars[i].FrontAxle.RunIndex;
+						// use BVE5 point sound index if set
+						int bufferIndex = Cars[i].FrontAxle.PointSoundIndex >= 0 ? Cars[i].FrontAxle.PointSoundIndex : Cars[i].FrontAxle.RunIndex;
 						if (bufferIndex > Cars[i].FrontAxle.PointSounds.Length - 1)
 						{
-							//If the switch sound does not exist, return zero
-							//Required to handle legacy trains which don't have idx specific run sounds defined
-							bufferIndex = 0;
+							if (Cars[i].FrontAxle.PointSoundIndex == -1)
+							{
+								// Older content- shares the point / joint index, drops back to 0 if not found
+								bufferIndex = 0;
+							}
+							else
+							{
+								// BVE5: Discrete point / joint indices, skip if not found
+								continue;
+							}
 						}
-
+						
 						if (Cars[i].FrontAxle.PointSounds == null || Cars[i].FrontAxle.PointSounds.Length == 0)
 						{
 							//No point sounds defined at all

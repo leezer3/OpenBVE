@@ -720,6 +720,7 @@ namespace Route.Bve5
 						double?[] limits = new double?[d.SpeedLimits.Count];
 						d.SpeedLimits.CopyTo(limits, 0); // Yuck: Stored as nullable doubles
 						RouteData.SignalSpeeds = limits.Select(db => db ?? double.PositiveInfinity).ToArray();
+						RouteData.SignalSpeeds = limits.Select(db => db * RouteData.UnitOfSpeed ?? double.PositiveInfinity).ToArray();
 					} 
 					break;
 				}

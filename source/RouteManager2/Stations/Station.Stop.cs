@@ -14,5 +14,8 @@
 		
 		/// <summary>The number of cars this stop point applies to, or 0 for all</summary>
 		public int Cars;
+
+		/// <summary>The rail index of the stop point</summary>
+		public int RailIndex;
 	}
 }
