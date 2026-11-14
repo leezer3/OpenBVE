@@ -61,14 +61,6 @@ namespace Train.MsTs
 			{
 				throw new Exception();
 			}
-			train.Handles.Reverser = new ReverserHandle(train);
-			train.Handles.EmergencyBrake = new EmergencyHandle(train);
-			train.Handles.Power = new PowerHandle(8, train);
-			train.Handles.Brake = new BrakeHandle(8, train.Handles.EmergencyBrake, train);
-			train.Handles.LocoBrake = new LocoBrakeHandle(0, train.Handles.EmergencyBrake, train);
-			train.Handles.LocoBrakeType = LocoBrakeType.Independant;
-			train.Handles.HasLocoBrake = false;
-			train.Handles.HoldBrake = new HoldBrakeHandle(train);
 			train.Specs.AveragesPressureDistribution = true;
 			train.SafetySystems.Headlights = new LightSource(train, 2);
 			if(Directory.Exists(Plugin.FileSystem.MSTSDirectory))
