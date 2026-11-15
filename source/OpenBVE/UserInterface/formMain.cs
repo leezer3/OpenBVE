@@ -511,6 +511,12 @@ namespace OpenBve {
 			if (Interface.CurrentOptions.ShadowFilterRadius < 1.25) comboboxShadowFilterRadius.SelectedIndex = 0;
 			else if (Interface.CurrentOptions.ShadowFilterRadius < 2.0) comboboxShadowFilterRadius.SelectedIndex = 1;
 			else comboboxShadowFilterRadius.SelectedIndex = 2;
+			// Upscaler
+			// Setting the mode combobox populates the quality list with the
+			// vendor-recommended presets of the selected upscaler and syncs the
+			// sharpness slider (see comboboxUpscaler_SelectedIndexChanged)
+			comboboxUpscaler.SelectedIndex = (int)Interface.CurrentOptions.UpscalerMode;
+			checkboxUpscalerDenoise.Checked = Interface.CurrentOptions.UpscalerDenoise;
 			// Enable/disable shadow sub-controls based on resolution setting
 			bool shadowEnabled = Interface.CurrentOptions.ShadowResolution != ShadowMapResolution.Off;
 			comboboxShadowDistance.Enabled = shadowEnabled;
@@ -638,6 +644,7 @@ namespace OpenBve {
 			}
 			panelOptionsPage2.Visible = false;
 			panelOptionsPage3.Visible = false; // Deliberately hide, as changing font can glitch this into visibility
+			panelOptionsPage4.Visible = false;
 			comboBoxFont.DrawItem += comboBoxFont_DrawItem;
 		}
 
@@ -797,6 +804,65 @@ namespace OpenBve {
 			comboboxShadowCascades.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "shadows_cascades_2" });
 			comboboxShadowCascades.Items[1] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "shadows_cascades_3" });
 			comboboxShadowCascades.Items[2] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "shadows_cascades_4" });
+
+			// Upscaler
+			labelUpscaler.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "upscaler_mode" });
+			if (labelUpscaler.Text == "upscaler_mode")
+			{
+				labelUpscaler.Text = "Upscaler:";
+			}
+			labelUpscalerQuality.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "upscaler_quality" });
+			if (labelUpscalerQuality.Text == "upscaler_quality")
+			{
+				labelUpscalerQuality.Text = "Quality:";
+			}
+			labelUpscalerSharpness.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "upscaler_sharpness" });
+			if (labelUpscalerSharpness.Text == "upscaler_sharpness")
+			{
+				labelUpscalerSharpness.Text = "Sharpness:";
+			}
+			checkboxUpscalerDenoise.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "upscaler_denoise" });
+			if (checkboxUpscalerDenoise.Text == "upscaler_denoise")
+			{
+				checkboxUpscalerDenoise.Text = "Denoiser (FSR 1.0)";
+			}
+			labelUpscalerInfo.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "upscaler_info" });
+			if (labelUpscalerInfo.Text == "upscaler_info")
+			{
+				labelUpscalerInfo.Text = "Renders the world at a lower internal resolution and upscales it to the window. HUD and menus are always drawn at native resolution.";
+			}
+			if (comboboxUpscaler.Items.Count == 4)
+			{
+				comboboxUpscaler.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "upscaler_mode_off" });
+				if (comboboxUpscaler.Items[0] as string == "upscaler_mode_off")
+				{
+					comboboxUpscaler.Items[0] = "Off";
+				}
+				comboboxUpscaler.Items[1] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "upscaler_mode_fsr1" });
+				if (comboboxUpscaler.Items[1] as string == "upscaler_mode_fsr1")
+				{
+					comboboxUpscaler.Items[1] = "AMD FSR 1.0";
+				}
+				comboboxUpscaler.Items[2] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "upscaler_mode_nis" });
+				if (comboboxUpscaler.Items[2] as string == "upscaler_mode_nis")
+				{
+					comboboxUpscaler.Items[2] = "NVIDIA NIS";
+				}
+				comboboxUpscaler.Items[3] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "upscaler_mode_sgsr1" });
+				if (comboboxUpscaler.Items[3] as string == "upscaler_mode_sgsr1")
+				{
+					comboboxUpscaler.Items[3] = "Qualcomm SGSR v1";
+				}
+			}
+			// The quality preset labels follow the naming of the selected upscaler's
+			// vendor, so they are refreshed from the current mode's preset list
+			if (comboboxUpscalerQuality.Items.Count == upscalerQualityList.Length)
+			{
+				for (int i = 0; i < upscalerQualityList.Length; i++)
+				{
+					comboboxUpscalerQuality.Items[i] = GetUpscalerQualityLabel(upscalerQualityList[i]);
+				}
+			}
 			//Simulation
 			groupboxSimulation.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation"});
 			groupboxCamera.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","camera"});
@@ -1323,6 +1389,29 @@ namespace OpenBve {
 			Interface.CurrentOptions.ShadowFilterCascades = checkboxShadowFilterCascades.Checked;
 			Interface.CurrentOptions.ShadowSmooth = checkboxShadowSmooth.Checked;
 			Interface.CurrentOptions.ShadowFilterRadius = comboboxShadowFilterRadius.SelectedIndex == 0 ? 1.0 : comboboxShadowFilterRadius.SelectedIndex == 2 ? 2.5 : 1.5;
+			// Upscaler
+			if (comboboxUpscaler.SelectedIndex >= 0)
+			{
+				Interface.CurrentOptions.UpscalerMode = (UpscalerMode)comboboxUpscaler.SelectedIndex;
+			}
+			if (comboboxUpscalerQuality.SelectedIndex >= 0 && comboboxUpscalerQuality.SelectedIndex < upscalerQualityList.Length)
+			{
+				Interface.CurrentOptions.UpscalerQuality = upscalerQualityList[comboboxUpscalerQuality.SelectedIndex];
+			}
+			double upscalerSharpnessValue = trackbarUpscalerSharpness.Value / 100.0;
+			if (Interface.CurrentOptions.UpscalerMode == UpscalerMode.Nis)
+			{
+				Interface.CurrentOptions.UpscalerSharpnessNis = upscalerSharpnessValue;
+			}
+			else if (Interface.CurrentOptions.UpscalerMode == UpscalerMode.Sgsr1)
+			{
+				Interface.CurrentOptions.UpscalerSharpnessSgsr = upscalerSharpnessValue;
+			}
+			else
+			{
+				Interface.CurrentOptions.UpscalerSharpnessFsr = upscalerSharpnessValue;
+			}
+			Interface.CurrentOptions.UpscalerDenoise = checkboxUpscalerDenoise.Checked;
 			Interface.CurrentOptions.GameMode = (GameMode)comboboxMode.SelectedIndex;
 			Interface.CurrentOptions.BlackBox = checkboxBlackBox.Checked;
 			Interface.CurrentOptions.LoadingSway = checkBoxLoadingSway.Checked;
@@ -2168,7 +2257,8 @@ namespace OpenBve {
 				optionsPages = new[] {
 					new Control[] { panelOptionsLeft, panelOptionsRight },
 					new Control[] { panelOptionsPage2 },
-					new Control[] { panelOptionsPage3 }
+					new Control[] { panelOptionsPage3 },
+					new Control[] { panelOptionsPage4 }
 				};
 			}
 			currentOptionsPage = pageIndex;

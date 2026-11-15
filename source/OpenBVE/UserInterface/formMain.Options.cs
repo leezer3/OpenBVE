@@ -228,5 +228,83 @@ namespace OpenBve {
 			if (Tag != null) return;
 			Cursors.SelectedCursor(comboboxCursor, pictureboxCursor);
 		}
+
+		// =========
+		// upscaler
+		// =========
+
+                /// <summary>The quality presets of the currently selected upscaler mode</summary>
+                private UpscalerQuality[] upscalerQualityList = new UpscalerQuality[] { };
+
+                /// <summary>The localized label of an upscaler quality preset (falls back to English)</summary>
+                private string GetUpscalerQualityLabel(UpscalerQuality quality) {
+                        string key = "upscaler_quality_" + quality.ToString().ToLowerInvariant();
+                        string label = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", key });
+                        if (label == key) {
+                                label = UpscalerPresets.GetDefaultLabel(quality);
+                        }
+                        return label;
+                }
+
+                /// <summary>The stored sharpness value of the given upscaler mode</summary>
+                private double GetUpscalerSharpness(UpscalerMode mode) {
+                        switch (mode) {
+                                case UpscalerMode.Nis:
+                                        return Interface.CurrentOptions.UpscalerSharpnessNis;
+                                case UpscalerMode.Sgsr1:
+                                        return Interface.CurrentOptions.UpscalerSharpnessSgsr;
+                                default:
+                                        return Interface.CurrentOptions.UpscalerSharpnessFsr;
+                        }
+                }
+
+		private void comboboxUpscaler_SelectedIndexChanged(object sender, EventArgs e) {
+			if (comboboxUpscaler.SelectedIndex < 0) return;
+			Interface.CurrentOptions.UpscalerMode = (UpscalerMode)comboboxUpscaler.SelectedIndex;
+			UpscalerMode mode = Interface.CurrentOptions.UpscalerMode;
+			bool upscalerEnabled = mode != UpscalerMode.Off;
+			comboboxUpscalerQuality.Enabled = upscalerEnabled;
+			trackbarUpscalerSharpness.Enabled = upscalerEnabled;
+			labelUpscalerSharpnessValue.Enabled = upscalerEnabled;
+			// the RCAS denoiser is an FSR 1.0 specific option
+			checkboxUpscalerDenoise.Enabled = mode == UpscalerMode.Fsr1;
+			// snap the stored preset to the vendor-recommended list of the new mode
+			Interface.CurrentOptions.UpscalerQuality = UpscalerPresets.SnapToMode(mode, Interface.CurrentOptions.UpscalerQuality);
+			// rebuild the quality list with the vendor-recommended presets
+			upscalerQualityList = UpscalerPresets.GetQualities(mode);
+			comboboxUpscalerQuality.Items.Clear();
+			foreach (UpscalerQuality quality in upscalerQualityList) {
+				comboboxUpscalerQuality.Items.Add(GetUpscalerQualityLabel(quality));
+			}
+			int qualityIndex = Array.IndexOf(upscalerQualityList, Interface.CurrentOptions.UpscalerQuality);
+			comboboxUpscalerQuality.SelectedIndex = qualityIndex;
+			// switch the sharpness slider to the value stored for the selected upscaler
+			double sharpness = GetUpscalerSharpness(mode);
+			trackbarUpscalerSharpness.Value = Math.Max(trackbarUpscalerSharpness.Minimum, Math.Min(trackbarUpscalerSharpness.Maximum, (int)Math.Round(sharpness * 100.0)));
+			labelUpscalerSharpnessValue.Text = trackbarUpscalerSharpness.Value + @"%";
+		}
+
+		private void comboboxUpscalerQuality_SelectedIndexChanged(object sender, EventArgs e) {
+			if (comboboxUpscalerQuality.SelectedIndex < 0) return;
+			if (comboboxUpscalerQuality.SelectedIndex < upscalerQualityList.Length) {
+				Interface.CurrentOptions.UpscalerQuality = upscalerQualityList[comboboxUpscalerQuality.SelectedIndex];
+			}
+		}
+
+		private void trackbarUpscalerSharpness_Scroll(object sender, EventArgs e) {
+			labelUpscalerSharpnessValue.Text = trackbarUpscalerSharpness.Value + @"%";
+			double sharpness = trackbarUpscalerSharpness.Value / 100.0;
+			if (Interface.CurrentOptions.UpscalerMode == UpscalerMode.Nis) {
+				Interface.CurrentOptions.UpscalerSharpnessNis = sharpness;
+			} else if (Interface.CurrentOptions.UpscalerMode == UpscalerMode.Sgsr1) {
+				Interface.CurrentOptions.UpscalerSharpnessSgsr = sharpness;
+			} else {
+				Interface.CurrentOptions.UpscalerSharpnessFsr = sharpness;
+			}
+		}
+
+		private void checkboxUpscalerDenoise_CheckedChanged(object sender, EventArgs e) {
+			Interface.CurrentOptions.UpscalerDenoise = checkboxUpscalerDenoise.Checked;
+		}
 	}
 }

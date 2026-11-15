@@ -66,6 +66,16 @@ namespace RouteViewer
             this.comboBoxFPSLimit = new System.Windows.Forms.ComboBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip();
             this.tabPageShadows = new System.Windows.Forms.TabPage();
+            this.tabPageUpscaling = new System.Windows.Forms.TabPage();
+            this.comboBoxUpscaler = new System.Windows.Forms.ComboBox();
+            this.labelUpscaler = new System.Windows.Forms.Label();
+            this.comboBoxUpscalerQuality = new System.Windows.Forms.ComboBox();
+            this.labelUpscalerQuality = new System.Windows.Forms.Label();
+            this.trackBarUpscalerSharpness = new System.Windows.Forms.TrackBar();
+            this.labelUpscalerSharpness = new System.Windows.Forms.Label();
+            this.labelUpscalerSharpnessValue = new System.Windows.Forms.Label();
+            this.checkBoxUpscalerDenoise = new System.Windows.Forms.CheckBox();
+            this.labelUpscalerInfo = new System.Windows.Forms.Label();
             this.comboBoxShadowResolution = new System.Windows.Forms.ComboBox();
             this.labelShadowResolution = new System.Windows.Forms.Label();
             this.comboBoxShadowDistance = new System.Windows.Forms.ComboBox();
@@ -103,6 +113,7 @@ namespace RouteViewer
             ((System.ComponentModel.ISupportInitialize)(this.height)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownViewingDistance)).BeginInit();
             this.tabPageShadows.SuspendLayout();
+            this.tabPageUpscaling.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowStrength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarSunAzimuth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarSunElevation)).BeginInit();
@@ -118,6 +129,7 @@ namespace RouteViewer
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPageOptions);
             this.tabControl1.Controls.Add(this.tabPageShadows);
+            this.tabControl1.Controls.Add(this.tabPageUpscaling);
             this.tabControl1.Location = new System.Drawing.Point(1, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -534,6 +546,82 @@ namespace RouteViewer
             0,
             0});
             // 
+            // comboBoxUpscaler
+            // 
+            this.comboBoxUpscaler.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxUpscaler.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBoxUpscaler.FormattingEnabled = true;
+            this.comboBoxUpscaler.Items.AddRange(new object[] {
+            "Off",
+            "AMD FSR 1.0",
+            "NVIDIA NIS",
+            "Qualcomm SGSR v1"});
+            this.comboBoxUpscaler.Name = "comboBoxUpscaler";
+            // 
+            // labelUpscaler
+            // 
+            this.labelUpscaler.AutoSize = true;
+            this.labelUpscaler.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelUpscaler.Name = "labelUpscaler";
+            this.labelUpscaler.Text = "Upscaler:";
+            this.labelUpscaler.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // comboBoxUpscalerQuality
+            // 
+            this.comboBoxUpscalerQuality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxUpscalerQuality.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBoxUpscalerQuality.FormattingEnabled = true;
+            this.comboBoxUpscalerQuality.Items.AddRange(new object[] {
+            "Native AA (100%)",
+            "Ultra Quality (77%)",
+            "Quality (67%)",
+            "Balanced (59%)",
+            "Performance (50%)",
+            "Ultra Performance (33%)"});
+            this.comboBoxUpscalerQuality.Name = "comboBoxUpscalerQuality";
+            // 
+            // labelUpscalerQuality
+            // 
+            this.labelUpscalerQuality.AutoSize = true;
+            this.labelUpscalerQuality.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelUpscalerQuality.Name = "labelUpscalerQuality";
+            this.labelUpscalerQuality.Text = "Quality:";
+            this.labelUpscalerQuality.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // trackBarUpscalerSharpness
+            // 
+            this.trackBarUpscalerSharpness.Maximum = 100;
+            this.trackBarUpscalerSharpness.Name = "trackBarUpscalerSharpness";
+            this.trackBarUpscalerSharpness.TickFrequency = 25;
+            // 
+            // labelUpscalerSharpness
+            // 
+            this.labelUpscalerSharpness.AutoSize = true;
+            this.labelUpscalerSharpness.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelUpscalerSharpness.Name = "labelUpscalerSharpness";
+            this.labelUpscalerSharpness.Text = "Sharpness:";
+            this.labelUpscalerSharpness.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // labelUpscalerSharpnessValue
+            // 
+            this.labelUpscalerSharpnessValue.AutoSize = true;
+            this.labelUpscalerSharpnessValue.Name = "labelUpscalerSharpnessValue";
+            this.labelUpscalerSharpnessValue.Text = "20%";
+            // 
+            // checkBoxUpscalerDenoise
+            // 
+            this.checkBoxUpscalerDenoise.AutoSize = true;
+            this.checkBoxUpscalerDenoise.Name = "checkBoxUpscalerDenoise";
+            this.checkBoxUpscalerDenoise.Text = "Denoiser (FSR 1.0)";
+            this.checkBoxUpscalerDenoise.UseVisualStyleBackColor = true;
+            // 
+            // labelUpscalerInfo
+            // 
+            this.labelUpscalerInfo.AutoSize = true;
+            this.labelUpscalerInfo.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.labelUpscalerInfo.Name = "labelUpscalerInfo";
+            this.labelUpscalerInfo.Text = "Renders the world at a lower internal resolution and upscales it to the window. HUD and menus are always drawn at native resolution.";
+            // 
             // tabPageShadows
             // 
             this.tabPageShadows.AutoScroll = true;
@@ -623,6 +711,44 @@ namespace RouteViewer
             this.tabPageShadows.Size = new System.Drawing.Size(304, 440);
             this.tabPageShadows.TabIndex = 1;
             this.tabPageShadows.Text = "Shadow && Lighting";
+            // 
+            // tabPageUpscaling
+            // 
+            this.tabPageUpscaling.AutoScroll = true;
+            var tlpUpscaling = new System.Windows.Forms.TableLayoutPanel
+            {
+                AutoSize = true,
+                Dock = System.Windows.Forms.DockStyle.Top,
+                Padding = new System.Windows.Forms.Padding(10),
+                ColumnCount = 2,
+                ColumnStyles =
+                {
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 45F),
+                    new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55F)
+                },
+                Controls =
+                {
+                    { this.labelUpscaler, 0, 0 },
+                    { this.comboBoxUpscaler, 1, 0 },
+                    { this.labelUpscalerQuality, 0, 1 },
+                    { this.comboBoxUpscalerQuality, 1, 1 },
+                    { this.labelUpscalerSharpness, 0, 2 },
+                    { this.trackBarUpscalerSharpness, 1, 2 },
+                    { this.labelUpscalerSharpnessValue, 1, 3 },
+                    { this.checkBoxUpscalerDenoise, 1, 4 },
+                    { this.labelUpscalerInfo, 0, 5 }
+                }
+            };
+            tlpUpscaling.SetColumnSpan(this.labelUpscalerInfo, 2);
+            this.trackBarUpscalerSharpness.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabPageUpscaling.Controls.Add(tlpUpscaling);
+            this.tabPageUpscaling.Location = new System.Drawing.Point(4, 22);
+            this.tabPageUpscaling.Name = "tabPageUpscaling";
+            this.tabPageUpscaling.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageUpscaling.Size = new System.Drawing.Size(304, 440);
+            this.tabPageUpscaling.TabIndex = 2;
+            this.tabPageUpscaling.Text = "Upscaling";
+            this.tabPageUpscaling.UseVisualStyleBackColor = true;
             this.tabPageShadows.UseVisualStyleBackColor = true;
             // 
             // comboBoxShadowResolution
@@ -1060,6 +1186,8 @@ namespace RouteViewer
             ((System.ComponentModel.ISupportInitialize)(this.height)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownViewingDistance)).EndInit();
             this.tabPageShadows.ResumeLayout(false);
+            this.tabPageUpscaling.ResumeLayout(false);
+            this.tabPageUpscaling.PerformLayout();
             this.tabPageShadows.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowStrength)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarSunAzimuth)).EndInit();
@@ -1076,6 +1204,16 @@ namespace RouteViewer
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPageOptions;
         private System.Windows.Forms.TabPage tabPageShadows;
+        private System.Windows.Forms.TabPage tabPageUpscaling;
+        private System.Windows.Forms.ComboBox comboBoxUpscaler;
+        private System.Windows.Forms.Label labelUpscaler;
+        private System.Windows.Forms.ComboBox comboBoxUpscalerQuality;
+        private System.Windows.Forms.Label labelUpscalerQuality;
+        private System.Windows.Forms.TrackBar trackBarUpscalerSharpness;
+        private System.Windows.Forms.Label labelUpscalerSharpness;
+        private System.Windows.Forms.Label labelUpscalerSharpnessValue;
+        private System.Windows.Forms.CheckBox checkBoxUpscalerDenoise;
+        private System.Windows.Forms.Label labelUpscalerInfo;
         private System.Windows.Forms.ComboBox InterpolationMode;
         private System.Windows.Forms.Label InterpolationLabel;
         private System.Windows.Forms.Label label1;

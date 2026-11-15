@@ -203,6 +203,17 @@ namespace OpenBve {
             this.buttonOptionsPrevious = new System.Windows.Forms.Button();
             this.buttonOptionsNext = new System.Windows.Forms.Button();
             this.panelOptionsPage3 = new System.Windows.Forms.Panel();
+            this.panelOptionsPage4 = new System.Windows.Forms.Panel();
+            this.groupboxUpscaler = new System.Windows.Forms.GroupBox();
+            this.labelUpscaler = new System.Windows.Forms.Label();
+            this.comboboxUpscaler = new System.Windows.Forms.ComboBox();
+            this.labelUpscalerQuality = new System.Windows.Forms.Label();
+            this.comboboxUpscalerQuality = new System.Windows.Forms.ComboBox();
+            this.labelUpscalerSharpness = new System.Windows.Forms.Label();
+            this.trackbarUpscalerSharpness = new System.Windows.Forms.TrackBar();
+            this.labelUpscalerSharpnessValue = new System.Windows.Forms.Label();
+            this.checkboxUpscalerDenoise = new System.Windows.Forms.CheckBox();
+            this.labelUpscalerInfo = new System.Windows.Forms.Label();
             this.groupBoxInputDevice = new System.Windows.Forms.GroupBox();
             this.labelInputDevice = new System.Windows.Forms.Label();
             this.listviewInputDevice = new System.Windows.Forms.ListView();
@@ -559,6 +570,8 @@ namespace OpenBve {
             ((System.ComponentModel.ISupportInitialize)(this.updownShadowBias)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.updownShadowNormalBias)).BeginInit();
             this.panelOptionsPage3.SuspendLayout();
+            this.panelOptionsPage4.SuspendLayout();
+            this.groupboxUpscaler.SuspendLayout();
             this.groupBoxInputDevice.SuspendLayout();
             this.groupBoxObjectParser.SuspendLayout();
             this.groupBoxKioskMode.SuspendLayout();
@@ -1578,6 +1591,7 @@ namespace OpenBve {
             this.panelOptions.Controls.Add(this.buttonOptionsPrevious);
             this.panelOptions.Controls.Add(this.buttonOptionsNext);
             this.panelOptions.Controls.Add(this.panelOptionsPage3);
+            this.panelOptions.Controls.Add(this.panelOptionsPage4);
             this.panelOptions.Controls.Add(this.pictureboxLanguage);
             this.panelOptions.Controls.Add(this.comboboxLanguages);
             this.panelOptions.Controls.Add(this.labelOptionsTitleSeparator);
@@ -3008,6 +3022,134 @@ namespace OpenBve {
             this.panelOptionsPage3.Size = new System.Drawing.Size(683, 583);
             this.panelOptionsPage3.TabIndex = 20;
             // 
+            // panelOptionsPage4
+            // 
+            this.panelOptionsPage4.Controls.Add(this.groupboxUpscaler);
+            this.panelOptionsPage4.Location = new System.Drawing.Point(0, 72);
+            this.panelOptionsPage4.Name = "panelOptionsPage4";
+            this.panelOptionsPage4.Size = new System.Drawing.Size(683, 583);
+            this.panelOptionsPage4.TabIndex = 22;
+            // 
+            // groupboxUpscaler
+            // 
+            this.groupboxUpscaler.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupboxUpscaler.Controls.Add(this.labelUpscaler);
+            this.groupboxUpscaler.Controls.Add(this.comboboxUpscaler);
+            this.groupboxUpscaler.Controls.Add(this.labelUpscalerQuality);
+            this.groupboxUpscaler.Controls.Add(this.comboboxUpscalerQuality);
+            this.groupboxUpscaler.Controls.Add(this.labelUpscalerSharpness);
+            this.groupboxUpscaler.Controls.Add(this.trackbarUpscalerSharpness);
+            this.groupboxUpscaler.Controls.Add(this.labelUpscalerSharpnessValue);
+            this.groupboxUpscaler.Controls.Add(this.checkboxUpscalerDenoise);
+            this.groupboxUpscaler.Controls.Add(this.labelUpscalerInfo);
+            this.groupboxUpscaler.Location = new System.Drawing.Point(0, 0);
+            this.groupboxUpscaler.Name = "groupboxUpscaler";
+            this.groupboxUpscaler.Size = new System.Drawing.Size(321, 230);
+            this.groupboxUpscaler.TabIndex = 0;
+            this.groupboxUpscaler.TabStop = false;
+            this.groupboxUpscaler.Text = "Upscaling";
+            // 
+            // labelUpscaler
+            // 
+            this.labelUpscaler.AutoEllipsis = true;
+            this.labelUpscaler.Location = new System.Drawing.Point(9, 26);
+            this.labelUpscaler.Name = "labelUpscaler";
+            this.labelUpscaler.Size = new System.Drawing.Size(135, 18);
+            this.labelUpscaler.TabIndex = 0;
+            this.labelUpscaler.Text = "Upscaler:";
+            this.labelUpscaler.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // comboboxUpscaler
+            // 
+            this.comboboxUpscaler.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboboxUpscaler.FormattingEnabled = true;
+            this.comboboxUpscaler.Items.AddRange(new object[] {
+            "Off",
+            "AMD FSR 1.0",
+            "NVIDIA NIS",
+            "Qualcomm SGSR v1"});
+            this.comboboxUpscaler.Location = new System.Drawing.Point(150, 23);
+            this.comboboxUpscaler.Name = "comboboxUpscaler";
+            this.comboboxUpscaler.Size = new System.Drawing.Size(160, 21);
+            this.comboboxUpscaler.TabIndex = 1;
+            this.comboboxUpscaler.SelectedIndexChanged += new System.EventHandler(this.comboboxUpscaler_SelectedIndexChanged);
+            // 
+            // labelUpscalerQuality
+            // 
+            this.labelUpscalerQuality.AutoEllipsis = true;
+            this.labelUpscalerQuality.Location = new System.Drawing.Point(9, 56);
+            this.labelUpscalerQuality.Name = "labelUpscalerQuality";
+            this.labelUpscalerQuality.Size = new System.Drawing.Size(135, 18);
+            this.labelUpscalerQuality.TabIndex = 2;
+            this.labelUpscalerQuality.Text = "Quality:";
+            this.labelUpscalerQuality.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // comboboxUpscalerQuality
+            // 
+            this.comboboxUpscalerQuality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboboxUpscalerQuality.FormattingEnabled = true;
+            this.comboboxUpscalerQuality.Items.AddRange(new object[] {
+            "Native AA (100%)",
+            "Ultra Quality (77%)",
+            "Quality (67%)",
+            "Balanced (59%)",
+            "Performance (50%)",
+            "Ultra Performance (33%)"});
+            this.comboboxUpscalerQuality.Location = new System.Drawing.Point(150, 53);
+            this.comboboxUpscalerQuality.Name = "comboboxUpscalerQuality";
+            this.comboboxUpscalerQuality.Size = new System.Drawing.Size(160, 21);
+            this.comboboxUpscalerQuality.TabIndex = 3;
+            this.comboboxUpscalerQuality.SelectedIndexChanged += new System.EventHandler(this.comboboxUpscalerQuality_SelectedIndexChanged);
+            // 
+            // labelUpscalerSharpness
+            // 
+            this.labelUpscalerSharpness.AutoEllipsis = true;
+            this.labelUpscalerSharpness.Location = new System.Drawing.Point(9, 90);
+            this.labelUpscalerSharpness.Name = "labelUpscalerSharpness";
+            this.labelUpscalerSharpness.Size = new System.Drawing.Size(135, 18);
+            this.labelUpscalerSharpness.TabIndex = 4;
+            this.labelUpscalerSharpness.Text = "Sharpness:";
+            this.labelUpscalerSharpness.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // trackbarUpscalerSharpness
+            // 
+            this.trackbarUpscalerSharpness.Location = new System.Drawing.Point(150, 84);
+            this.trackbarUpscalerSharpness.Maximum = 100;
+            this.trackbarUpscalerSharpness.Name = "trackbarUpscalerSharpness";
+            this.trackbarUpscalerSharpness.Size = new System.Drawing.Size(110, 45);
+            this.trackbarUpscalerSharpness.TabIndex = 5;
+            this.trackbarUpscalerSharpness.TickFrequency = 25;
+            this.trackbarUpscalerSharpness.Scroll += new System.EventHandler(this.trackbarUpscalerSharpness_Scroll);
+            // 
+            // labelUpscalerSharpnessValue
+            // 
+            this.labelUpscalerSharpnessValue.AutoSize = true;
+            this.labelUpscalerSharpnessValue.Location = new System.Drawing.Point(266, 100);
+            this.labelUpscalerSharpnessValue.Name = "labelUpscalerSharpnessValue";
+            this.labelUpscalerSharpnessValue.Size = new System.Drawing.Size(27, 13);
+            this.labelUpscalerSharpnessValue.TabIndex = 6;
+            this.labelUpscalerSharpnessValue.Text = "20%";
+            // 
+            // checkboxUpscalerDenoise
+            // 
+            this.checkboxUpscalerDenoise.AutoSize = true;
+            this.checkboxUpscalerDenoise.Location = new System.Drawing.Point(9, 135);
+            this.checkboxUpscalerDenoise.Name = "checkboxUpscalerDenoise";
+            this.checkboxUpscalerDenoise.Size = new System.Drawing.Size(150, 17);
+            this.checkboxUpscalerDenoise.TabIndex = 7;
+            this.checkboxUpscalerDenoise.Text = "Denoiser (FSR 1.0)";
+            this.checkboxUpscalerDenoise.UseVisualStyleBackColor = true;
+            this.checkboxUpscalerDenoise.CheckedChanged += new System.EventHandler(this.checkboxUpscalerDenoise_CheckedChanged);
+            // 
+            // labelUpscalerInfo
+            // 
+            this.labelUpscalerInfo.Location = new System.Drawing.Point(9, 160);
+            this.labelUpscalerInfo.Name = "labelUpscalerInfo";
+            this.labelUpscalerInfo.Size = new System.Drawing.Size(301, 62);
+            this.labelUpscalerInfo.TabIndex = 8;
+            this.labelUpscalerInfo.Text = "Renders the world at a lower internal resolution and upscales it to the window. HUD and menus are always drawn at native resolution.";
+                        // 
             // groupBoxInputDevice
             // 
             this.groupBoxInputDevice.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -6551,6 +6693,9 @@ namespace OpenBve {
             ((System.ComponentModel.ISupportInitialize)(this.updownShadowBias)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.updownShadowNormalBias)).EndInit();
             this.panelOptionsPage3.ResumeLayout(false);
+            this.panelOptionsPage4.ResumeLayout(false);
+            this.groupboxUpscaler.ResumeLayout(false);
+            this.groupboxUpscaler.PerformLayout();
             this.groupBoxInputDevice.ResumeLayout(false);
             this.groupBoxObjectParser.ResumeLayout(false);
             this.groupBoxKioskMode.ResumeLayout(false);
@@ -6987,6 +7132,17 @@ namespace OpenBve {
 		private System.Windows.Forms.Button buttonOptionsPrevious;
 		private System.Windows.Forms.Button buttonOptionsNext;
 		private System.Windows.Forms.Panel panelOptionsPage3;
+		private System.Windows.Forms.Panel panelOptionsPage4;
+		private System.Windows.Forms.GroupBox groupboxUpscaler;
+		private System.Windows.Forms.Label labelUpscaler;
+		private System.Windows.Forms.ComboBox comboboxUpscaler;
+		private System.Windows.Forms.Label labelUpscalerQuality;
+		private System.Windows.Forms.ComboBox comboboxUpscalerQuality;
+		private System.Windows.Forms.Label labelUpscalerSharpness;
+		private System.Windows.Forms.TrackBar trackbarUpscalerSharpness;
+		private System.Windows.Forms.Label labelUpscalerSharpnessValue;
+		private System.Windows.Forms.CheckBox checkboxUpscalerDenoise;
+		private System.Windows.Forms.Label labelUpscalerInfo;
 		private System.Windows.Forms.GroupBox groupBoxPackageOptions;
 		private System.Windows.Forms.ComboBox comboBoxCompressionFormat;
 		private System.Windows.Forms.Label labelPackageCompression;
