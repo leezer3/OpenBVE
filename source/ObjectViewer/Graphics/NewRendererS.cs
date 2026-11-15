@@ -79,6 +79,14 @@ namespace ObjectViewer.Graphics
 			// initialize
 			ResetOpenGlState();
 
+			// With the upscaler active, the world is rendered into the
+			// low-resolution scene framebuffer; the HUD is drawn at native
+			// resolution after the upscale pass in EndScene()
+			if (Upscaler.Active)
+			{
+				Upscaler.BeginScene();
+			}
+
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			UpdateViewport(ViewportChangeMode.ChangeToScenery);
 			CurrentViewMatrix = Matrix4D.LookAt(Vector3.Zero, new Vector3(Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, -Camera.AbsoluteDirection.Z), new Vector3(Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, -Camera.AbsoluteUp.Z));
@@ -104,6 +112,10 @@ namespace ObjectViewer.Graphics
             }
             // opaque face
             PerformCSMShadowPass();
+
+			// The shadow pass resets the framebuffer binding to the default;
+			// restore the low-resolution scene target when the upscaler is active
+			RebindSceneTarget();
 
             //Setup the shader for rendering the scene
             DefaultShader.Activate();
@@ -203,6 +215,13 @@ List<FaceState> opaqueFaces, alphaFaces;
 			lastVAO = -1;
 
             // render overlays
+			// Upscale the low-resolution scene to the window and restore the
+			// native viewport before drawing the HUD.
+			if (Upscaler.Active)
+			{
+				Upscaler.EndScene();
+			}
+
             ResetOpenGlState();
 			OptionLighting = false;
 			UnsetAlphaFunc();

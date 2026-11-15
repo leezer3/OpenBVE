@@ -64,7 +64,7 @@ namespace OpenBve.Graphics
 		{
 			Screen.Width = width;
 			Screen.Height = height;
-			GL.Viewport(0, 0, Screen.Width, Screen.Height);
+			UpdateGlViewport();
 
 			Screen.AspectRatio = Screen.Width / (double)Screen.Height;
 			Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Camera.VerticalViewingAngle) * Screen.AspectRatio);
@@ -90,6 +90,14 @@ namespace OpenBve.Graphics
 			ReleaseResources();
 			// initialize
 			ResetOpenGlState();
+
+			// With the upscaler active, the world is rendered into the
+			// low-resolution scene framebuffer; the HUD is drawn at native
+			// resolution after the upscale pass in EndScene()
+			if (Upscaler.Active)
+			{
+				Upscaler.BeginScene();
+			}
 
 			if (OptionWireFrame)
 			{
@@ -122,6 +130,10 @@ namespace OpenBve.Graphics
 			UpdateViewport(ViewportChangeMode.ChangeToScenery);
 
 			PerformCSMShadowPass();
+
+			// The shadow pass resets the framebuffer binding to the default;
+			// restore the low-resolution scene target when the upscaler is active
+			RebindSceneTarget();
 
             if (Lighting.ShouldInitialize)
 			{
@@ -455,7 +467,14 @@ namespace OpenBve.Graphics
 			// render touch
 			OptionLighting = false;
 			Touch.RenderScene();
-			
+
+			// Upscale the low-resolution scene to the window and restore the
+			// native viewport. HUD, overlays and menus render at native res.
+			if (Upscaler.Active)
+			{
+				Upscaler.EndScene();
+			}
+
 			// render overlays
 			ResetOpenGlState();
 			UnsetAlphaFunc();

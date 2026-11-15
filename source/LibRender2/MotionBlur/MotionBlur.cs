@@ -32,15 +32,46 @@ namespace LibRender2.MotionBlurs
 				PixelBufferOpenGlTextureIndex = 0;
 			}
 
-			PixelBuffer = new byte[4 * renderer.Screen.Width * renderer.Screen.Height];
+			// With the upscaler active, the history buffer lives at the scene resolution
+			RenderDimensions(out int width, out int height);
+			PixelBuffer = new byte[4 * width * height];
 			int[] a = new int[1];
 
 			GL.GenTextures(1, a);
 			GL.BindTexture(TextureTarget.Texture2D, a[0]);
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMagFilter.Linear);
-			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, renderer.Screen.Width, renderer.Screen.Height, 0, PixelFormat.Rgb, PixelType.UnsignedByte, PixelBuffer);
+			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, width, height, 0, PixelFormat.Rgb, PixelType.UnsignedByte, PixelBuffer);
 			PixelBufferOpenGlTextureIndex = a[0];
-			GL.CopyTexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgb, 0, 0, renderer.Screen.Width, renderer.Screen.Height, 0);
+			if (renderer.Screen.Minimized || renderer.Screen.Width <= 0 || renderer.Screen.Height <= 0)
+			{
+				return;
+			}
+			// Only copy the current framebuffer contents when the read buffer is at least as large
+			// as the history texture (inside the low-res scene pass this is executed per frame instead)
+			if (width <= renderer.Screen.Width && height <= renderer.Screen.Height)
+			{
+				GL.CopyTexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgb, 0, 0, width, height, 0);
+			}
+		}
+
+		/// <summary>
+		/// The pixel dimensions the motion blur history buffer must use:
+		/// the low-resolution scene size when the upscaler is active,
+		/// otherwise the native window size.
+		/// </summary>
+		private void RenderDimensions(out int width, out int height)
+		{
+			if (renderer.Upscaler != null && renderer.Upscaler.Active &&
+			    renderer.Upscaler.SceneWidth > 0 && renderer.Upscaler.SceneHeight > 0)
+			{
+				width = renderer.Upscaler.SceneWidth;
+				height = renderer.Upscaler.SceneHeight;
+			}
+			else
+			{
+				width = renderer.Screen.Width;
+				height = renderer.Screen.Height;
+			}
 		}
 
 		/// <summary>This function renderers full-screen motion blur if selected</summary>
@@ -117,8 +148,9 @@ namespace LibRender2.MotionBlurs
 
 			// retrieve buffer
 			{
+				RenderDimensions(out int width, out int height);
 				GL.BindTexture(TextureTarget.Texture2D, PixelBufferOpenGlTextureIndex);
-				GL.CopyTexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgb8, 0, 0, renderer.Screen.Width, renderer.Screen.Height, 0);
+				GL.CopyTexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgb8, 0, 0, width, height, 0);
 			}
 			GL.Disable(EnableCap.Texture2D);
 		}

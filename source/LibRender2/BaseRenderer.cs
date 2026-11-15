@@ -21,6 +21,7 @@ using LibRender2.Shaders;
 using LibRender2.ShadowMapping;
 using LibRender2.Text;
 using LibRender2.Textures;
+using LibRender2.Upscaling;
 using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -352,6 +353,8 @@ namespace LibRender2
 		public GameWindow GameWindow;
 		/// <summary>The graphics mode in use</summary>
 		public GraphicsMode GraphicsMode;
+		/// <summary>The spatial upscaler (FSR 1.0 / NIS), dormant when set to Off</summary>
+		public Upscaler Upscaler;
 		public bool LoadLogo()
 		{
 			return currentHost.LoadTexture(ref _programLogo, OpenGlTextureWrapMode.ClampClamp);
@@ -443,6 +446,7 @@ namespace LibRender2
 			Loading = new Loading(this);
 			Keys = new Keys(this);
 			MotionBlur = new MotionBlur(this);
+			Upscaler = new Upscaler(this);
 
 			StaticObjectStates = new List<ObjectState>();
 			DynamicObjectStates = new List<ObjectState>();
@@ -543,6 +547,7 @@ namespace LibRender2
 				GL.DeleteTexture(nullDepthMap);
 				nullDepthMap = 0;
 			}
+			Upscaler?.Dispose();
 			GameWindow?.Dispose();
 			// terminate spinning thread
 			VisibilityThreadShouldRun = false;
@@ -1131,11 +1136,59 @@ namespace LibRender2
 			UpdateViewport(Screen.Width, Screen.Height);
 		}
 
+		/// <summary>
+		/// Applies the GL viewport for the current rendering phase:
+		/// the low-resolution scene size while the upscaler's scene pass is
+		/// active, or the native window size otherwise.
+		/// </summary>
+		public void UpdateGlViewport()
+		{
+			if (Upscaler != null && Upscaler.ScenePhaseActive)
+			{
+				GL.Viewport(0, 0, Upscaler.SceneWidth, Upscaler.SceneHeight);
+			}
+			else
+			{
+				GL.Viewport(0, 0, Screen.Width, Screen.Height);
+			}
+		}
+
+		/// <summary>
+		/// Re-binds the upscaler's low-resolution scene framebuffer when a
+		/// subsystem (e.g. the shadow pass) has reset the framebuffer binding.
+		/// No-op when the upscaler is inactive.
+		/// </summary>
+		public void RebindSceneTarget()
+		{
+			if (Upscaler != null)
+			{
+				Upscaler.RebindTarget();
+			}
+		}
+
+		/// <summary>Whether the blend stage is currently enabled</summary>
+		public bool IsBlendEnabled()
+		{
+			return blendEnabled;
+		}
+
+		/// <summary>The current blend source factor</summary>
+		public BlendingFactor GetBlendSrcFactor()
+		{
+			return blendSrcFactor;
+		}
+
+		/// <summary>The current blend destination factor</summary>
+		public BlendingFactor GetBlendDestFactor()
+		{
+			return blendDestFactor;
+		}
+
 		protected virtual void UpdateViewport(int Width, int Height)
 		{
 			Screen.Width = Width;
 			Screen.Height = Height;
-			GL.Viewport(0, 0, Screen.Width, Screen.Height);
+			UpdateGlViewport();
 
 			Screen.AspectRatio = Screen.Width / (double)Screen.Height;
 			Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Camera.VerticalViewingAngle) * Screen.AspectRatio);

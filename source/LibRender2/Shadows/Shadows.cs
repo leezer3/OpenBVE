@@ -181,7 +181,7 @@ namespace LibRender2.ShadowMapping
 			// 4. Restore state
 			GL.DepthFunc(DepthFunction.Lequal);
 			GL.CullFace(CullFaceMode.Front);
-			GL.Viewport(0, 0, renderer.Screen.Width, renderer.Screen.Height);
+			renderer.UpdateGlViewport();
 			// Shadow pass corrupts the GL texture state, so ensure we null it out
 			// so the next render pass re-binds what it needs.
 			renderer.LastBoundTexture = null;
