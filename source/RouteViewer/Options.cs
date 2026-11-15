@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using Formats.OpenBve;
 using OpenBveApi;
+using OpenBveApi.Graphics;
 using Path = OpenBveApi.Path;
 
 namespace RouteViewer
@@ -93,6 +94,12 @@ namespace RouteViewer
 				Builder.AppendLine("shadowfilterradius = " + ShadowFilterRadius.ToString(Culture));
 				Builder.AppendLine("lightazimuth = " + LightAzimuth.ToString(Culture));
 				Builder.AppendLine("lightelevation = " + LightElevation.ToString(Culture));
+				Builder.AppendLine("upscalermode = " + (int)UpscalerMode);
+				Builder.AppendLine("upscalerquality = " + (int)UpscalerQuality);
+				Builder.AppendLine("upscalersharpnessfsr = " + UpscalerSharpnessFsr.ToString("0.00", Culture));
+				Builder.AppendLine("upscalersharpnessnis = " + UpscalerSharpnessNis.ToString("0.00", Culture));
+				Builder.AppendLine("upscalersharpnesssgsr = " + UpscalerSharpnessSgsr.ToString("0.00", Culture));
+				Builder.AppendLine("upscalerdenoise = " + (UpscalerDenoise ? "true" : "false"));
 				Builder.AppendLine();
 				Builder.AppendLine("[loading]");
 				Builder.AppendLine("showlogo = " + (LoadingLogo ? "true" : "false"));
@@ -203,6 +210,49 @@ namespace RouteViewer
 							if (Interface.CurrentOptions.ShadowFilterRadius > 3.0) Interface.CurrentOptions.ShadowFilterRadius = 3.0;
 							block.TryGetValue(OptionsKey.LightAzimuth, ref Interface.CurrentOptions.LightAzimuth);
 							block.TryGetValue(OptionsKey.LightElevation, ref Interface.CurrentOptions.LightElevation);
+							// Upscaler
+							if (block.GetValue(OptionsKey.UpscalerMode, out int upscalerMode))
+							{
+								if (upscalerMode >= 0 && Enum.IsDefined(typeof(UpscalerMode), upscalerMode))
+								{
+									Interface.CurrentOptions.UpscalerMode = (UpscalerMode)upscalerMode;
+								}
+							}
+							if (block.GetValue(OptionsKey.UpscalerQuality, out int upscalerQuality))
+							{
+								if (upscalerQuality >= 0 && Enum.IsDefined(typeof(UpscalerQuality), upscalerQuality))
+								{
+									Interface.CurrentOptions.UpscalerQuality = (UpscalerQuality)upscalerQuality;
+								}
+							}
+							block.TryGetValue(OptionsKey.UpscalerSharpnessFsr, ref Interface.CurrentOptions.UpscalerSharpnessFsr);
+							if (Interface.CurrentOptions.UpscalerSharpnessFsr < 0.0)
+							{
+								Interface.CurrentOptions.UpscalerSharpnessFsr = 0.0;
+							}
+							if (Interface.CurrentOptions.UpscalerSharpnessFsr > 1.0)
+							{
+								Interface.CurrentOptions.UpscalerSharpnessFsr = 1.0;
+							}
+							block.TryGetValue(OptionsKey.UpscalerSharpnessNis, ref Interface.CurrentOptions.UpscalerSharpnessNis);
+							if (Interface.CurrentOptions.UpscalerSharpnessNis < 0.0)
+							{
+								Interface.CurrentOptions.UpscalerSharpnessNis = 0.0;
+							}
+							if (Interface.CurrentOptions.UpscalerSharpnessNis > 1.0)
+							{
+								Interface.CurrentOptions.UpscalerSharpnessNis = 1.0;
+							}
+							block.TryGetValue(OptionsKey.UpscalerSharpnessSgsr, ref Interface.CurrentOptions.UpscalerSharpnessSgsr);
+							if (Interface.CurrentOptions.UpscalerSharpnessSgsr < 0.0)
+							{
+								Interface.CurrentOptions.UpscalerSharpnessSgsr = 0.0;
+							}
+							if (Interface.CurrentOptions.UpscalerSharpnessSgsr > 1.0)
+							{
+								Interface.CurrentOptions.UpscalerSharpnessSgsr = 1.0;
+							}
+							block.GetValue(OptionsKey.UpscalerDenoise, out Interface.CurrentOptions.UpscalerDenoise);
 							break;
 						case OptionsSection.Loading:
 							block.GetValue(OptionsKey.ShowLogo, out Interface.CurrentOptions.LoadingLogo);

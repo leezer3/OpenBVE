@@ -323,6 +323,12 @@ namespace OpenBve
 				Builder.AppendLine("shadowsmooth = " + (ShadowSmooth ? "true" : "false"));
 				Builder.AppendLine("shadowfilterradius = " + ShadowFilterRadius.ToString(Culture));
 				Builder.AppendLine("fpslimit = " + FPSLimit.ToString(Culture));
+				Builder.AppendLine("upscalermode = " + (int)UpscalerMode);
+				Builder.AppendLine("upscalerquality = " + (int)UpscalerQuality);
+				Builder.AppendLine("upscalersharpnessfsr = " + UpscalerSharpnessFsr.ToString("0.00", Culture));
+				Builder.AppendLine("upscalersharpnessnis = " + UpscalerSharpnessNis.ToString("0.00", Culture));
+				Builder.AppendLine("upscalersharpnesssgsr = " + UpscalerSharpnessSgsr.ToString("0.00", Culture));
+				Builder.AppendLine("upscalerdenoise = " + (UpscalerDenoise ? "true" : "false"));
 				Builder.AppendLine();
 				Builder.AppendLine("[objectOptimization]");
 				Builder.AppendLine("basicThreshold = " + ObjectOptimizationBasicThreshold.ToString(Culture));
@@ -546,6 +552,32 @@ namespace OpenBve
 							{
 								CurrentOptions.FPSLimit = 0; // n.b. 0 is unlimited
 							}
+
+							// Upscaler
+							if (block.GetValue(OptionsKey.UpscalerMode, out int upscalerMode))
+							{
+								if (upscalerMode >= 0 && Enum.IsDefined(typeof(UpscalerMode), upscalerMode))
+								{
+									CurrentOptions.UpscalerMode = (UpscalerMode)upscalerMode;
+								}
+							}
+							if (block.GetValue(OptionsKey.UpscalerQuality, out int upscalerQuality))
+							{
+								if (upscalerQuality >= 0 && Enum.IsDefined(typeof(UpscalerQuality), upscalerQuality))
+								{
+									CurrentOptions.UpscalerQuality = (UpscalerQuality)upscalerQuality;
+								}
+							}
+							block.TryGetValue(OptionsKey.UpscalerSharpnessFsr, ref CurrentOptions.UpscalerSharpnessFsr);
+							if (CurrentOptions.UpscalerSharpnessFsr < 0.0) CurrentOptions.UpscalerSharpnessFsr = 0.0;
+							if (CurrentOptions.UpscalerSharpnessFsr > 1.0) CurrentOptions.UpscalerSharpnessFsr = 1.0;
+							block.TryGetValue(OptionsKey.UpscalerSharpnessNis, ref CurrentOptions.UpscalerSharpnessNis);
+							if (CurrentOptions.UpscalerSharpnessNis < 0.0) CurrentOptions.UpscalerSharpnessNis = 0.0;
+							if (CurrentOptions.UpscalerSharpnessNis > 1.0) CurrentOptions.UpscalerSharpnessNis = 1.0;
+							block.TryGetValue(OptionsKey.UpscalerSharpnessSgsr, ref CurrentOptions.UpscalerSharpnessSgsr);
+							if (CurrentOptions.UpscalerSharpnessSgsr < 0.0) CurrentOptions.UpscalerSharpnessSgsr = 0.0;
+							if (CurrentOptions.UpscalerSharpnessSgsr > 1.0) CurrentOptions.UpscalerSharpnessSgsr = 1.0;
+							block.GetValue(OptionsKey.UpscalerDenoise, out CurrentOptions.UpscalerDenoise);
 
 							break;
 						}
