@@ -114,6 +114,7 @@
     <Compile Include="FunctionScripts\FunctionScript.Notation.cs" />
     <Compile Include="FunctionScripts\Instructions.cs" />
     <Compile Include="Graphics\Camera.RestrictionModes.cs" />
+    <Compile Include="Graphics\UpscalerModes.cs" />
     <Compile Include="Graphics\Colors.ColorPalettes.cs" />
     <Compile Include="Graphics\Colors.Color24.cs" />
     <Compile Include="Graphics\Colors.Color32.cs" />

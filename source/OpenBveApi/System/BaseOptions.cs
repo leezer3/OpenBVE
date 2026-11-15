@@ -144,6 +144,18 @@ namespace OpenBveApi
 		public double NearClipCab = 0.025;
 		/// <summary>The near clipping plane for the base renderer</summary>
 		public double NearClipBase = 0.2;
+		/// <summary>The spatial upscaler applied to the 3D world rendering</summary>
+		public UpscalerMode UpscalerMode;
+		/// <summary>The internal render resolution preset used by the upscaler</summary>
+		public UpscalerQuality UpscalerQuality = UpscalerQuality.Quality;
+		/// <summary>FSR 1.0 RCAS sharpening amount (0.0 = off, 0.2 = FSR default, 1.0 = maximum)</summary>
+		public double UpscalerSharpnessFsr = 0.2;
+		/// <summary>NIS sharpening amount (0.0 = minimum, 0.5 = neutral, 1.0 = maximum)</summary>
+		public double UpscalerSharpnessNis = 0.5;
+		/// <summary>SGSR v1 edge sharpening amount (0.0 = minimum, 1.0 = official maximum/default)</summary>
+		public double UpscalerSharpnessSgsr = 1.0;
+		/// <summary>Whether the FSR 1.0 RCAS noise removal path is applied</summary>
+		public bool UpscalerDenoise;
 		/// <summary>The color used by the renderer when issuing GL.Clear()</summary>
 		/// <remarks>Not saved</remarks>
 		public Color24 ClearColor = new Color24(170, 170, 170);
