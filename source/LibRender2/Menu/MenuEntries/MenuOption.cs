@@ -172,6 +172,48 @@ namespace LibRender2.Menu
 				case OptionType.ShadowFilterCascades:
 					CurrentlySelectedOption = BaseMenu.CurrentOptions.ShadowFilterCascades ? 0 : 1;
 					return;
+				case OptionType.Upscaler:
+					CurrentlySelectedOption = (int)BaseMenu.CurrentOptions.UpscalerMode;
+					return;
+				case OptionType.UpscalerQuality:
+					// the entries follow the vendor-recommended preset list of the current mode
+					UpscalerQuality[] upscalerQualityPresets = UpscalerPresets.GetQualities(BaseMenu.CurrentOptions.UpscalerMode);
+					for (int i = 0; i < Entries.Length && i < upscalerQualityPresets.Length; i++)
+					{
+						if (upscalerQualityPresets[i] == BaseMenu.CurrentOptions.UpscalerQuality)
+						{
+							CurrentlySelectedOption = i;
+							return;
+						}
+					}
+					break;
+				case OptionType.UpscalerSharpness:
+					double upscalerSharpness;
+					switch (BaseMenu.CurrentOptions.UpscalerMode)
+					{
+						case UpscalerMode.Nis:
+							upscalerSharpness = BaseMenu.CurrentOptions.UpscalerSharpnessNis;
+							break;
+						case UpscalerMode.Sgsr1:
+							upscalerSharpness = BaseMenu.CurrentOptions.UpscalerSharpnessSgsr;
+							break;
+						default:
+							upscalerSharpness = BaseMenu.CurrentOptions.UpscalerSharpnessFsr;
+							break;
+					}
+					for (int i = 0; i < Entries.Length; i++)
+					{
+						double upscalerSharpnessEntry = double.Parse((string)entries[i], NumberStyles.Float, CultureInfo.InvariantCulture);
+						if (System.Math.Abs(upscalerSharpnessEntry - upscalerSharpness) < 0.001)
+						{
+							CurrentlySelectedOption = i;
+							return;
+						}
+					}
+					break;
+				case OptionType.UpscalerDenoise:
+					CurrentlySelectedOption = BaseMenu.CurrentOptions.UpscalerDenoise ? 0 : 1;
+					return;
 			}
 			CurrentlySelectedOption = 0;
 		}
@@ -321,6 +363,36 @@ namespace LibRender2.Menu
 					break;
 				case OptionType.ShadowFilterCascades:
 					BaseMenu.CurrentOptions.ShadowFilterCascades = !BaseMenu.CurrentOptions.ShadowFilterCascades;
+					break;
+				case OptionType.Upscaler:
+					BaseMenu.CurrentOptions.UpscalerMode = (UpscalerMode)CurrentlySelectedOption;
+					// snap the quality preset to the vendor-recommended list of the new mode
+					BaseMenu.CurrentOptions.UpscalerQuality = UpscalerPresets.SnapToMode(BaseMenu.CurrentOptions.UpscalerMode, BaseMenu.CurrentOptions.UpscalerQuality);
+					break;
+				case OptionType.UpscalerQuality:
+					UpscalerQuality[] upscalerQualityPresets = UpscalerPresets.GetQualities(BaseMenu.CurrentOptions.UpscalerMode);
+					if (CurrentlySelectedOption >= 0 && CurrentlySelectedOption < upscalerQualityPresets.Length)
+					{
+						BaseMenu.CurrentOptions.UpscalerQuality = upscalerQualityPresets[CurrentlySelectedOption];
+					}
+					break;
+				case OptionType.UpscalerSharpness:
+					double upscalerSharpnessValue = double.Parse((string)CurrentOption, NumberStyles.Float, CultureInfo.InvariantCulture);
+					if (BaseMenu.CurrentOptions.UpscalerMode == UpscalerMode.Nis)
+					{
+						BaseMenu.CurrentOptions.UpscalerSharpnessNis = upscalerSharpnessValue;
+					}
+					else if (BaseMenu.CurrentOptions.UpscalerMode == UpscalerMode.Sgsr1)
+					{
+						BaseMenu.CurrentOptions.UpscalerSharpnessSgsr = upscalerSharpnessValue;
+					}
+					else
+					{
+						BaseMenu.CurrentOptions.UpscalerSharpnessFsr = upscalerSharpnessValue;
+					}
+					break;
+				case OptionType.UpscalerDenoise:
+					BaseMenu.CurrentOptions.UpscalerDenoise = CurrentlySelectedOption == 0;
 					break;
 
 			}

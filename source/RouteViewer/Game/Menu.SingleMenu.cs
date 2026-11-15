@@ -142,7 +142,7 @@ namespace RouteViewer
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.Options:
-						Items = new MenuEntry[8];
+						Items = new MenuEntry[12];
 						Items[0] = new MenuCaption(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "panel", "options" }));
 						Items[1] = new MenuOption(menu, OptionType.ScreenResolution, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "resolution" }), Program.Renderer.Screen.AvailableResolutions.ToArray());
 						Items[2] = new MenuOption(menu, OptionType.FullScreen, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "display_mode_fullscreen" }), new[] { "true", "false" });
@@ -158,7 +158,11 @@ namespace RouteViewer
 						Items[4] = new MenuOption(menu, OptionType.AnisotropicLevel, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "quality_interpolation_anisotropic_level" }), new[] { "0", "2", "4", "8", "16" });
 						Items[5] = new MenuOption(menu, OptionType.AntialiasingLevel, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "quality_interpolation_antialiasing_level" }), new[] { "0", "2", "4", "8", "16" });
 						Items[6] = new MenuOption(menu, OptionType.ViewingDistance, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "quality_distance_viewingdistance" }), new[] { "400", "600", "800", "1000", "1500", "2000" });
-						Items[7] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "back" }), MenuTag.MenuBack, 0);
+						Items[7] = new MenuOption(menu, OptionType.Upscaler, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "upscaler_mode" }), new[] { "Off", "AMD FSR 1.0", "NVIDIA NIS", "Qualcomm SGSR v1" });
+						Items[8] = new MenuOption(menu, OptionType.UpscalerQuality, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "upscaler_quality" }), UpscalerPresets.GetLabels(Interface.CurrentOptions.UpscalerMode));
+						Items[9] = new MenuOption(menu, OptionType.UpscalerSharpness, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "upscaler_sharpness" }), new[] { "0", "0.2", "0.4", "0.6", "0.8", "1" });
+						Items[10] = new MenuOption(menu, OptionType.UpscalerDenoise, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "upscaler_denoise" }), new[] { "true", "false" });
+						Items[11] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "back" }), MenuTag.MenuBack, 0);
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.ErrorList:

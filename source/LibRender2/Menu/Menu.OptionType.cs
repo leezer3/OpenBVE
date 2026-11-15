@@ -48,6 +48,14 @@ namespace LibRender2.Menu
 		/// <summary>Sets the shadow quality</summary>
 		ShadowQuality,
 		/// <summary>Sets whether shadow casters are filtered per cascade</summary>
-		ShadowFilterCascades
+		ShadowFilterCascades,
+		/// <summary>Sets the spatial upscaler mode</summary>
+		Upscaler,
+		/// <summary>Sets the upscaler quality (internal render resolution)</summary>
+		UpscalerQuality,
+		/// <summary>Sets the upscaler sharpening amount</summary>
+		UpscalerSharpness,
+		/// <summary>Sets whether the FSR 1.0 denoiser path is used</summary>
+		UpscalerDenoise
 	}
 }
