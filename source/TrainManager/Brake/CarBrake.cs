@@ -1,3 +1,4 @@
+using System;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 using SoundManager;
@@ -118,7 +119,6 @@ namespace TrainManager.BrakeSystems
 				double noLoad = BrakePerformanceData.ForceTable.GetValue(currentSpeed, Notch);
 				double maxLoad = BrakePerformanceData.MaxForceTable.GetValue(currentSpeed, Notch);
 				double newtons = Extensions.LinearInterpolation(noLoad, 0, maxLoad, 1, loadingRatio);
-
 				/*
 				 * According to Newton's second law, Acceleration = Force / Mass
 				 * Load factor has already been taken into account above, so this *should* just be a simple
@@ -126,6 +126,10 @@ namespace TrainManager.BrakeSystems
 				 *
 				 * See also note in motor car properties.
 				 */
+				if (newtons == 0)
+				{
+					return 0;
+				}
 				return Car.CurrentMass / newtons;
 			}
 		
