@@ -1,6 +1,7 @@
-using System;
 using OpenBveApi.Sounds;
 using SoundManager;
+using System;
+using System.Runtime.ConstrainedExecution;
 using TrainManager.Car;
 
 namespace TrainManager.Motor
@@ -86,11 +87,23 @@ namespace TrainManager.Motor
 					 * Now multiply that by the actual acceleration as opposed to the max acceleration to find the absolute
 					 * gain
 					 */
-					if (Car.TractionModel.MaximumPossibleAcceleration != 0.0)
+					double currentAcceleration = Car.TractionModel.CurrentAcceleration;
+					if (ndir > 0)
 					{
-						double cur = Car.TractionModel.CurrentAcceleration;
-						if (cur < 0.0) cur = 0.0;
-						gain *= Math.Pow(cur / Car.TractionModel.MaximumPossibleAcceleration, 0.25);
+						if (Car.TractionModel.MaximumPossibleAcceleration != 0.0)
+						{
+							
+							if (currentAcceleration < 0.0) currentAcceleration = 0.0;
+							gain *= Math.Pow(currentAcceleration / Car.TractionModel.MaximumPossibleAcceleration, 0.25);
+						}
+					}
+					else
+					{
+						double maxDeceleration = Car.CarBrake.DecelerationAtServiceMaximumPressure(Car.baseTrain.Handles.Brake.Actual, Car.CurrentSpeed);
+						if (maxDeceleration > 0)
+						{
+							gain *= Math.Pow(Math.Min(-currentAcceleration / maxDeceleration, 1.0), 0.25);
+						}
 					}
 
 					if (SoundSources[i] != null && SoundSources[i].State != SoundSourceState.Stopped)
