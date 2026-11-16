@@ -44,10 +44,7 @@ namespace LibRender2.Primitives
 
 		/// <summary>Backing property for the text</summary>
 		private string _text;
-		/// <summary> Whether the button is currently enabled</summary>
-		public bool Enabled;
 
-		
 		/// <summary>The highlight color of the button</summary>
 		public Color128 HighlightColor;
 		/// <summary>The color of the text on the button, when enabled</summary>

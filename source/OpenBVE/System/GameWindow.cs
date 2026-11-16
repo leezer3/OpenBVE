@@ -427,15 +427,14 @@ namespace OpenBve
 			}
 			Program.Renderer.Screen.Minimized = false;
 			Screen.WindowResize(Width,Height);
+			// Refresh menu layout on every resize, not just in menu interfaces:
+			// the sidebar panel stays visible while driving
+			Game.Menu?.OnResize();
 			switch (Program.Renderer.CurrentInterface)
 			{
 				case InterfaceType.SwitchChangeMap:
 					// call the show method again to trigger resize
 					Game.SwitchChangeDialog.Show();
-					break;
-				case InterfaceType.Menu:
-				case InterfaceType.GLMainMenu:
-					Game.Menu.OnResize();
 					break;
 			}
 

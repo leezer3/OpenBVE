@@ -14,9 +14,6 @@ namespace RouteViewer
 	{
 		private ObjectOptimizationMode objectOptimizationMode;
 
-		internal bool LoadingProgressBar;
-		internal bool LoadingLogo;
-		internal bool LoadingBackground;
 		internal string RouteSearchDirectory;
 		internal int FPSLimit;
 

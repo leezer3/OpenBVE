@@ -31,24 +31,46 @@ namespace OpenBve
 				TrainManagerBase.PlayerTrain.Plugin.KeepAlive();
 				pluginKeepAliveTimer = 0;
 			}
-			double TimeElapsed = RealTimeElapsed - lastTimeElapsed;
-			lastTimeElapsed = RealTimeElapsed;
+			double TimeElapsed = RealTimeElapsed;
 			int i;
 
+			UpdateTransition(TimeElapsed);
+
 			if (CurrMenu < 0 || CurrMenu >= Menus.Length)
+			{
+				DrawSidebarToggleButton(RealTimeElapsed);
+				Renderer.PopMatrix(MatrixMode.Modelview);
+				Renderer.PopMatrix(MatrixMode.Projection);
 				return;
+			}
 
 			MenuBase menu = Menus[CurrMenu];
-			// overlay background
-			Program.Renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height), overlayColor);
+			// No fullscreen dim: the sidebar leaves the scene undimmed
+
+			if (menu.Type == MenuType.Options)
+			{
+				Program.Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(MenuBackgroundWidth, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
+				if (OptionsTabContainer != null)
+				{
+					OptionsTabContainer.Draw();
+					LibRender2.Primitives.GLDropdown.ActiveDropdown?.DrawOverlay();
+					LibRender2.Primitives.GLColorPicker.ActivePicker?.DrawOverlay();
+				}
+				// Draw the grip first so the toggle tab cuts a clean gap in the line
+				DrawSidebarResizeGrip();
+				DrawSidebarToggleButton(RealTimeElapsed);
+				Renderer.PopMatrix(MatrixMode.Modelview);
+				Renderer.PopMatrix(MatrixMode.Projection);
+				return;
+			}
 
 			
 			double itemLeft, itemX;
 			if (menu.Align == TextAlignment.TopLeft)
 			{
-				itemLeft = 0;
-				itemX = 16;
-				Program.Renderer.Rectangle.Draw(null, new Vector2(0, menuMin.Y - Border.Y), new Vector2(menuMax.X - menuMin.X + 2.0f * Border.X, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
+				itemLeft = menuMin.X;
+				itemX = menuMin.X + 16;
+				Program.Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(MenuBackgroundWidth, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
 			}
 			else
 			{
@@ -132,8 +154,10 @@ namespace OpenBve
 						menu.Align, ColourNormal, false);
 				if (menu.Items[i] is MenuOption opt)
 				{
-					Program.Renderer.OpenGlString.Draw(MenuFont, opt.CurrentOption.ToString(), new Vector2((menuMax.X - menuMin.X + 2.0f * Border.X) + 4.0f, itemY),
-						menu.Align, backgroundColor, false);
+					Color128 optColor = (i == menu.Selection) ? ColourHighlight : ColourNormal;
+					double optX = IsSidebarMode ? (menuMax.X - 120.0f) : ((menuMax.X - menuMin.X + 2.0f * Border.X) + 4.0f);
+					Program.Renderer.OpenGlString.Draw(MenuFont, opt.DisplayValue, new Vector2(optX, itemY),
+						IsSidebarMode ? TextAlignment.TopLeft : menu.Align, optColor, false);
 				}
 				itemY += LineHeight;
 				if (menu.Items[i].Icon != null)
@@ -280,6 +304,9 @@ namespace OpenBve
 					switchMapPictureBox.Draw();
 					break;
 			}
+			// Draw the grip first so the toggle tab cuts a clean gap in the line
+			DrawSidebarResizeGrip();
+			DrawSidebarToggleButton(RealTimeElapsed);
 			Renderer.PopMatrix(MatrixMode.Modelview);
 			Renderer.PopMatrix(MatrixMode.Projection);
 		}

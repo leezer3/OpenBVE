@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
@@ -22,7 +22,6 @@ namespace RouteViewer
 {
 	public sealed partial class GameMenu : AbstractMenu
 	{
-		private double lastTimeElapsed;
 		private static string SearchDirectory;
 		private static string currentFile;
 		private static RouteState RoutefileState;
@@ -36,6 +35,59 @@ namespace RouteViewer
 
 		internal GameMenu() : base(Program.Renderer, Interface.CurrentOptions)
 		{
+		}
+
+		public override void OnOptionChanged(OptionType type)
+		{
+			if (type == OptionType.ViewingDistance)
+			{
+				if (Program.CurrentRoute != null && Program.CurrentRoute.CurrentBackground != null)
+				{
+					Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = Interface.CurrentOptions.ViewingDistance;
+				}
+				Program.Renderer.UpdateViewingDistances(Interface.CurrentOptions.ViewingDistance);
+			}
+		}
+
+		public override int ObjectOptimizationIndex
+		{
+			get => (int)Interface.CurrentOptions.ObjectOptimizationMode;
+			set => Interface.CurrentOptions.ObjectOptimizationMode = (ObjectOptimizationMode)value;
+		}
+
+		public override int FPSLimitValue
+		{
+			get => Interface.CurrentOptions.FPSLimit;
+			set => Interface.CurrentOptions.FPSLimit = value;
+		}
+
+		public override void ApplySunDirection()
+		{
+			base.ApplySunDirection();
+			// RouteViewer recomputes lighting every frame from the route definitions,
+			// so propagate the manual sun there too or the next frame overwrites it
+			try
+			{
+				Vector3 pos = Renderer.Lighting.OptionLightPosition;
+				if (Program.CurrentRoute != null)
+				{
+					if (Program.CurrentRoute.LightDefinitions != null)
+					{
+						for (int i = 0; i < Program.CurrentRoute.LightDefinitions.Length; i++)
+						{
+							Program.CurrentRoute.LightDefinitions[i].LightPosition = pos;
+						}
+					}
+					if (Program.CurrentRoute.Atmosphere != null)
+					{
+						Program.CurrentRoute.Atmosphere.LightPosition = pos;
+					}
+				}
+			}
+			catch
+			{
+				// Best-effort
+			}
 		}
 
 		public override void Initialize()
@@ -71,7 +123,22 @@ namespace RouteViewer
 			routePictureBox.BackgroundColor = Color128.White;
 			SearchDirectory = Interface.CurrentOptions.RouteSearchDirectory;
 			
+			menuControls.Add(routePictureBox);
+			menuControls.Add(routeDescriptionBox);
+			InitializeOptionsTabContainer(HostApplication.RouteViewer);
 			IsInitialized = true;
+		}
+
+		public override void RepositionSidebarControls()
+		{
+			if (!IsInitialized) return;
+			base.RepositionSidebarControls();
+			double startX = menuMin.X;
+			double size = SidebarWidth - 32;
+			routePictureBox.Location = new Vector2(startX + 16, Renderer.Screen.Height - size - 150);
+			routePictureBox.Size = new Vector2(size, size);
+			routeDescriptionBox.Location = new Vector2(startX + 16, Renderer.Screen.Height - 140);
+			routeDescriptionBox.Size = new Vector2(size, 120);
 		}
 
 		public override void PushMenu(MenuType type, int data = 0, bool replace = false)
@@ -101,6 +168,13 @@ namespace RouteViewer
 				Menus[CurrMenu].Selection = 1;
 			}
 			ComputePosition();
+			if (IsSidebarMode)
+			{
+				SidebarVisible = true;
+				startOffset = currentOffset;
+				animationElapsed = 0.0;
+				isAnimating = true;
+			}
 			Renderer.CurrentInterface = InterfaceType.Menu;
 		}
 
@@ -244,10 +318,32 @@ namespace RouteViewer
 
 		public override bool ProcessMouseMove(int x, int y)
 		{
+			if (HandleSidebarResizeMove(x, y))
+			{
+				return true;
+			}
 			Program.Renderer.GameWindow.CursorVisible = true;
 			if (CurrMenu < 0)
 			{
 				return false;
+			}
+			if (Menus[CurrMenu].Type == MenuType.Options)
+			{
+				if (OptionsTabContainer != null && OptionsTabContainer.IsVisible)
+				{
+					OptionsTabContainer.MouseMove(x, y);
+					return true;
+				}
+			}
+			if (isScrubbing && scrubbingOption != null)
+			{
+				int deltaX = x - lastMouseX;
+				if (deltaX != 0)
+				{
+					scrubbingOption.ApplyScrubDelta(deltaX);
+					lastMouseX = x;
+				}
+				return true;
 			}
 			// if not in menu or during control customisation or down outside menu area, do nothing
 			if (Renderer.CurrentInterface < InterfaceType.Menu)
@@ -265,7 +361,7 @@ namespace RouteViewer
 			{
 				routeDescriptionBox.MouseMove(x, y);
 				//HACK: Use this to trigger our menu start button!
-				if (x > Renderer.Screen.Width - 200 && x < Renderer.Screen.Width - 10 && y > Renderer.Screen.Height - 40 && y < Renderer.Screen.Height - 10)
+				if (x > menuMin.X + SidebarWidth - 200 && x < menuMin.X + SidebarWidth - 10 && y > Renderer.Screen.Height - 40 && y < Renderer.Screen.Height - 10)
 				{
 					menu.Selection = int.MaxValue;
 					return true;
@@ -293,24 +389,42 @@ namespace RouteViewer
 
 		public override void Draw(double RealTimeElapsed)
 		{
-			double TimeElapsed = RealTimeElapsed - lastTimeElapsed;
-			lastTimeElapsed = RealTimeElapsed;
+			double TimeElapsed = RealTimeElapsed;
 			int i;
 
+			UpdateTransition(TimeElapsed);
+
 			if (CurrMenu < 0 || CurrMenu >= Menus.Length)
+			{
+				DrawSidebarToggleButton(RealTimeElapsed);
 				return;
+			}
 
 			MenuBase menu = Menus[CurrMenu];
-			// overlay background
-			Renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(Renderer.Screen.Width, Renderer.Screen.Height), overlayColor);
+			// No fullscreen dim: the sidebar leaves the scene undimmed
+
+			if (menu.Type == MenuType.Options)
+			{
+				Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(MenuBackgroundWidth, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
+				if (OptionsTabContainer != null)
+				{
+					OptionsTabContainer.Draw();
+					LibRender2.Primitives.GLDropdown.ActiveDropdown?.DrawOverlay();
+					LibRender2.Primitives.GLColorPicker.ActivePicker?.DrawOverlay();
+				}
+				// Draw the grip first so the toggle tab cuts a clean gap in the line
+				DrawSidebarResizeGrip();
+				DrawSidebarToggleButton(RealTimeElapsed);
+				return;
+			}
 
 
 			double itemLeft, itemX;
 			if (menu.Align == TextAlignment.TopLeft)
 			{
-				itemLeft = 0;
-				itemX = 16;
-				Renderer.Rectangle.Draw(null, new Vector2(0, menuMin.Y - Border.Y), new Vector2(menuMax.X - menuMin.X + 2.0f * Border.X, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
+				itemLeft = menuMin.X;
+				itemX = menuMin.X + 16;
+				Renderer.Rectangle.Draw(null, new Vector2(menuMin.X, menuMin.Y - Border.Y), new Vector2(MenuBackgroundWidth, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
 			}
 			else
 			{
@@ -394,8 +508,10 @@ namespace RouteViewer
 						menu.Align, ColourNormal, false);
 				if (menu.Items[i] is MenuOption opt)
 				{
-					Renderer.OpenGlString.Draw(MenuFont, opt.CurrentOption.ToString(), new Vector2((menuMax.X - menuMin.X + 2.0f * Border.X) + 4.0f, itemY),
-						menu.Align, backgroundColor, false);
+					Color128 optColor = (i == menu.Selection) ? ColourHighlight : ColourNormal;
+					double optX = IsSidebarMode ? (menuMax.X - 120.0f) : ((menuMax.X - menuMin.X + 2.0f * Border.X) + 4.0f);
+					Renderer.OpenGlString.Draw(MenuFont, opt.DisplayValue, new Vector2(optX, itemY),
+						IsSidebarMode ? TextAlignment.TopLeft : menu.Align, optColor, false);
 				}
 				itemY += LineHeight;
 				if (menu.Items[i].Icon != null)
@@ -424,16 +540,20 @@ namespace RouteViewer
 
 				if (menu.Selection == int.MaxValue && allowNextPhase) //HACK: Special value to make this work with minimum extra code
 				{
-					Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-					Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
-					Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "start", "start_start" }), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
+					Program.Renderer.Rectangle.Draw(null, new Vector2(menuMin.X + SidebarWidth - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
+					Program.Renderer.Rectangle.Draw(null, new Vector2(menuMin.X + SidebarWidth - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
+					Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "start", "start_start" }), new Vector2(menuMin.X + SidebarWidth - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
 				}
 				else
 				{
-					Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-					Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "start", "start_start" }), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Grey);
+					Program.Renderer.Rectangle.Draw(null, new Vector2(menuMin.X + SidebarWidth - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
+					Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "start", "start_start" }), new Vector2(menuMin.X + SidebarWidth - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Grey);
 				}
 			}
+
+			// Draw the grip first so the toggle tab cuts a clean gap in the line
+			DrawSidebarResizeGrip();
+			DrawSidebarToggleButton(RealTimeElapsed);
 		}
 
 		private static void routeWorkerThread_doWork(object sender, DoWorkEventArgs e)

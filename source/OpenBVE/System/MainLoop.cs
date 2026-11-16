@@ -154,6 +154,15 @@ namespace OpenBve
 			}
 			if (e.Button == MouseButton.Left)
 			{
+				if (Game.Menu != null && Game.Menu.IsSidebarMode)
+				{
+					OpenBveApi.Math.Vector4 rect = Game.Menu.GetToggleButtonRect();
+					if (e.X >= rect.X && e.X <= rect.X + rect.Z && e.Y >= rect.Y && e.Y <= rect.Y + rect.W)
+					{
+						Game.Menu.ProcessMouseDown(e.X, e.Y);
+						return;
+					}
+				}
 				switch (Program.Renderer.CurrentInterface)
 				{
 					case InterfaceType.Normal:
@@ -184,6 +193,10 @@ namespace OpenBve
 				if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
 				{
 					Program.Renderer.Touch.LeaveCheck(new Vector2(e.X, e.Y));
+				}
+				else if (Program.Renderer.CurrentInterface == InterfaceType.Menu || Program.Renderer.CurrentInterface == InterfaceType.GLMainMenu)
+				{
+					Game.Menu.ProcessMouseUp(e.X, e.Y);
 				}
 			}
 		}
