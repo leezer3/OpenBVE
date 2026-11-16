@@ -40,6 +40,12 @@
   </screenshots>
 
   <releases>
+	<release version="1.14.1.4" date="2026-11-12">
+      <url type="details">https://openbve-project.net/intro/V1.14.1.4/</url>
+    </release>
+	<release version="1.14.1.2" date="2026-10-07">
+      <url type="details">https://openbve-project.net/intro/V1.14.1.1/</url>
+    </release>
 	 <release version="1.14.0.3" date="2026-08-10">
       <url type="details">https://openbve-project.net/intro/V1.14.0.3/</url>
     </release>
