@@ -51,5 +51,10 @@
 		    // ReSharper disable once CompareOfFloatsByEqualityOperator
 		    return x0 == x1 ? y0 : y0 + (y1 - y0) * (x - x0) / (x1 - x0);
 	    }
+
+	    public static double Clamp(double value, double low, double high)
+	    {
+		    return low > high ? 0.5 * (low + high) : System.Math.Max(low, System.Math.Min(high, value));
+		}
 	}
 }

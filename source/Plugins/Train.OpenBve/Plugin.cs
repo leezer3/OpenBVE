@@ -60,6 +60,8 @@ namespace Train.OpenBve
 
 	    internal Control[] CurrentControls;
 
+	    internal TrainFormat CurrentFormat;
+
 	    internal double LastProgress;
 
 	    internal static BVEMotorSoundTable[] MotorSoundTables;
@@ -229,7 +231,7 @@ namespace Train.OpenBve
 		    IsLoading = true;
 		    CurrentControls = currentControls;
 		    TrainBase currentTrain = train as TrainBase;
-		    TrainFormat trainFormat = TrainFormat.OpenBVE;
+		    CurrentFormat = TrainFormat.OpenBVE;
 			
 		    if (currentTrain == null)
 		    {
@@ -241,11 +243,11 @@ namespace Train.OpenBve
 		    // determine format
 		    if (!currentTrain.IsPlayerTrain && File.Exists(Path.CombineFile(trainPath, "train.ai")))
 		    {
-			    trainFormat = TrainFormat.TrainAI;
+			    CurrentFormat = TrainFormat.TrainAI;
 		    }
 			else if (File.Exists(Path.CombineFile(trainPath, "vehicle.txt")))
 			{
-				trainFormat = TrainFormat.BVE5;
+				CurrentFormat = TrainFormat.BVE5;
 			}
 
             if (currentTrain.State == TrainState.Bogus)
@@ -289,7 +291,7 @@ namespace Train.OpenBve
                 }
 				
 
-				if (trainFormat == TrainFormat.BVE5)
+				if (CurrentFormat == TrainFormat.BVE5)
 				{
 					VehicleTxtParser.Parse(trainData, currentTrain);
                 }
@@ -307,7 +309,7 @@ namespace Train.OpenBve
 			    }
 		    }
 		    // add panel section
-		    if (currentTrain.IsPlayerTrain && trainFormat != TrainFormat.BVE5) {	
+		    if (currentTrain.IsPlayerTrain && CurrentFormat != TrainFormat.BVE5) {	
 			    ParsePanelConfig(currentTrain, encoding);
 			    Thread.Sleep(1);
 			    if (Cancel)
@@ -417,7 +419,7 @@ namespace Train.OpenBve
 				}
 			}
 
-			if (currentTrain.State != TrainState.Bogus && trainFormat != TrainFormat.BVE5)
+			if (currentTrain.State != TrainState.Bogus && CurrentFormat != TrainFormat.BVE5)
 			{
 				if (Cancel) return false;
 				SoundCfgParser.ParseSoundConfig(currentTrain);
