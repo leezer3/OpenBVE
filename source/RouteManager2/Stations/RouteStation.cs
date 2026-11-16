@@ -49,6 +49,10 @@ namespace RouteManager2.Stations
 		{
 			int j = -1;
 			int allCars = -1;
+			if (Stops.Length == 0)
+			{
+				return -1;
+			}
 			for (int i = Stops.Length - 1; i >= 0; i--)
 			{
 				if (train.NumberOfCars == Stops[i].Cars && Stops[i].RailIndex == train.FrontCarTrackIndex)
