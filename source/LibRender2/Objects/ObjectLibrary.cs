@@ -222,10 +222,9 @@ namespace LibRender2.Objects
 					// pixels however, so such a face does not qualify.
 					classification.BinaryAlpha = material.NighttimeTexture == null || material.NighttimeTexture == material.DaytimeTexture;
 				}
-				else if (transparencyType == TextureTransparencyType.Partial && renderer.currentOptions.TransparencyMode == TransparencyMode.Quality)
-				{
-					classification.Alpha = true;
-				}
+				// Partial means the texture is binary, it's either fully solid or fully clear.
+				// (This covers textures that use a colour key to make things transparent.)
+				// So we clip it with a simple alpha test - blending would only smear the edge.
 			}
 
 			if (!classification.Alpha)
@@ -236,10 +235,8 @@ namespace LibRender2.Objects
 				{
 					classification.Alpha = true;
 				}
-				else if (transparencyType == TextureTransparencyType.Partial && renderer.currentOptions.TransparencyMode == TransparencyMode.Quality)
-				{
-					classification.Alpha = true;
-				}
+				// Same thing here binary texture, so just clip it.
+				// Blending would create a faint, unwanted edge.
 			}
 
 			return classification;
@@ -302,6 +299,7 @@ namespace LibRender2.Objects
 		{
 			// calculate distance
 			double[] distances = new double[faces.Count];
+			double[] facings = new double[faces.Count];
 
 			Parallel.For(0, faces.Count, i =>
 			{
@@ -330,11 +328,22 @@ namespace LibRender2.Objects
 						Vector3 w0 = v0.Xyz - renderer.Camera.AbsolutePosition;
 						t = Vector3.Dot(d, w0);
 						distances[i] = -t * t;
+
+						//  Keep the sign of t (t > 0 is back-facing, t < 0 is front-facing) to break ties
+						//  between overlapping transparent surfaces. Without this, equal distances result
+						//  in random draw order and visible seam artifacts along shared edges.
+
+						facings[i] = t;
 					}
 				}
 			});
 			// sort
-			return faces.Select((face, index) => new { Face = face, Distance = distances[index] }).OrderBy(list => list.Distance).Select(list => list.Face).ToList();
+			// Primary sort: distance (far -> near). Secondary sort: back faces before front faces.
+			// Putting back faces first keeps double-sided transparent meshes blending in the right
+			// order no matter how they were inserted. The sort must stay stable so coplanar triangles
+			// in the same face don't get scrambled.
+
+			return faces.Select((face, index) => new { Face = face, Distance = distances[index], Facing = facings[index] }).OrderBy(list => list.Distance).ThenByDescending(list => list.Facing).Select(list => list.Face).ToList();
 		}
 	}
 }
