@@ -1407,6 +1407,10 @@ namespace LibRender2
 		public int AlphaDrawCalls;
 		/// <summary>The total number of draw calls issued by all shadow cascades of the current frame</summary>
 		public int ShadowDrawCalls;
+		/// <summary>Shadow draw calls issued through the per-object fallback path</summary>
+		public int ShadowFallbackDrawCalls;
+		/// <summary>Shadow draw calls issued through the instanced batching path</summary>
+		public int ShadowInstancedDrawCalls;
 		/// <summary>The number of unique meshes contributing to the visible opaque faces</summary>
 		public int OpaqueUniqueMeshes;
 		/// <summary>The maximum number of instances drawn in a single instanced batch (must match the uInstanceMatricies array size in default.vert)</summary>
@@ -2290,6 +2294,7 @@ namespace LibRender2
 
 							VAO.DrawInstanced(GetPrimitiveType(range.Flags), range.Start, range.Count, count);
 							ShadowDrawCalls++;
+							ShadowInstancedDrawCalls++;
 						}
 					}
 				}
@@ -2399,6 +2404,7 @@ namespace LibRender2
 
 					vao.Draw(GetPrimitiveType(range.Flags), range.Start, range.Count);
 					ShadowDrawCalls++;
+					ShadowFallbackDrawCalls++;
 				}
 			}
 		}

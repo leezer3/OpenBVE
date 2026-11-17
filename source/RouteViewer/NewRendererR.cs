@@ -825,7 +825,7 @@ namespace RouteViewer
 							OpenGlString.Draw(Fonts.SmallFont, $"Unique meshes: {OpaqueUniqueMeshes}", new Vector2(4, Screen.Height - 124), TextAlignment.TopLeft, Color128.White, true);
 							OpenGlString.Draw(Fonts.SmallFont, $"Opaque draw calls (actual): {OpaqueDrawCalls}", new Vector2(4, Screen.Height - 112), TextAlignment.TopLeft, Color128.White, true);
 							OpenGlString.Draw(Fonts.SmallFont, $"Alpha draw calls (actual): {AlphaDrawCalls}", new Vector2(4, Screen.Height - 100), TextAlignment.TopLeft, Color128.White, true);
-							OpenGlString.Draw(Fonts.SmallFont, $"Shadow draw calls (actual): {ShadowDrawCalls}", new Vector2(4, Screen.Height - 88), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Shadow draw calls: {ShadowDrawCalls} (inst {ShadowInstancedDrawCalls} / fb {ShadowFallbackDrawCalls})", new Vector2(4, Screen.Height - 88), TextAlignment.TopLeft, Color128.White, true);
 							OpenGlString.Draw(Fonts.SmallFont, $"Transparency: {(Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance ? "Performance" : "Quality")}", new Vector2(4, Screen.Height - 76), TextAlignment.TopLeft, Color128.White, true);
 							OpenGlString.Draw(Fonts.SmallFont, $"Instanced opaque: {(OptionInstancing ? "On" : "Off")} (F6)", new Vector2(4, Screen.Height - 64), TextAlignment.TopLeft, Color128.White, true);
 							OpenGlString.Draw(Fonts.SmallFont, $"Instanced alpha: {alphaInstancingMode} (F4)", new Vector2(4, Screen.Height - 52), TextAlignment.TopLeft, Color128.White, true);
