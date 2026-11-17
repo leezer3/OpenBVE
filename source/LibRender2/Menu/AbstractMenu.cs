@@ -241,44 +241,57 @@ namespace LibRender2.Menu
 				}
 			}
 
-			// HORIZONTAL PLACEMENT
+			// menuMin / menuMax delimit the menu itself and the border is drawn outside these edges
+			// Horizontal placement
 			switch (menu.Align)
 			{
 				case TextAlignment.TopLeft:
-					// Left aligned
 					menuMin.X = 0;
 					break;
 				default:
 					// Centered in window
-					menuMin.X = (Renderer.Screen.Width - menu.Width) / 2;     // menu left edge (border excluded)	
+					menuMin.X = (Renderer.Screen.Width - menu.Width) / 2;
 					break;
 			}
+			menuMax.X = menuMin.X + menu.Width;
 
-			menuMax.X = menuMin.X + menu.Width;               // menu right edge (border excluded)
-															  // VERTICAL PLACEMENT: centre the menu in the main window
-			menuMin.Y = (Renderer.Screen.Height - menu.Height) / 2;       // menu top edge (border excluded)
-			menuMax.Y = menuMin.Y + menu.Height;              // menu bottom edge (border excluded)
-			topItemY = menuMin.Y;                                // top edge of top item
-																 // assume all items fit in the screen
+			// Vertical placement, center the menu in the main window
+			menuMin.Y = (Renderer.Screen.Height - menu.Height) / 2;
+			menuMax.Y = menuMin.Y + menu.Height;
+
+			// Assume all items fit in the screen for now
+			topItemY = menuMin.Y;                 // top edge of top item
 			visibleItems = menu.Items.Length;
 
-			// if there are more items than can fit in the screen height,
-			// (there should be at least room for the menu top border)
+			// If there are more items than can fit in the screen height (there should be
+			// at least room for the menu top border), split the menu into chunks and
+			// display the chunk which contains the currently selected item.
 			if (menuMin.Y < Border.Y)
 			{
-				// the number of lines which fit in the screen
+				// The number of lines which fit in the screen, leaving an empty line
+				// at the top and at the bottom
 				int numOfLines = (int)(Renderer.Screen.Height - Border.Y * 2) / LineHeight;
-				visibleItems = numOfLines - 2;                  // at least an empty line at the top and at the bottom
-																// split the menu in chunks of 'visibleItems' items
-																// and display the chunk which contains the currently selected item
+				visibleItems = numOfLines - 2;
+
 				menu.TopItem = menu.Selection - (menu.Selection % visibleItems);
-				visibleItems = menu.Items.Length - menu.TopItem < visibleItems ?    // in the last chunk,
-					menu.Items.Length - menu.TopItem : visibleItems;                // display remaining items only
+
+				// In the last chunk, display the remaining items only
+				if (menu.Items.Length - menu.TopItem < visibleItems)
+				{
+					visibleItems = menu.Items.Length - menu.TopItem;
+				}
+
 				menuMin.Y = (Renderer.Screen.Height - numOfLines * LineHeight) / 2.0;
 				menuMax.Y = menuMin.Y + numOfLines * LineHeight;
-				// first menu item is drawn on second line (first line is empty
-				// on first screen and contains an ellipsis on following screens
+
+				// The first item is drawn on the second line: the first line is empty
+				// on the first screen and contains an ellipsis on following screens
 				topItemY = menuMin.Y + LineHeight;
+			}
+			else
+			{
+				// Reset a stale TopItem from a smaller layout so the first items are not skipped
+				menu.TopItem = 0;
 			}
 		}
 

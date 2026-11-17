@@ -84,7 +84,7 @@ namespace RouteManager2.Stations
 				// No specific stop point, but an all car stop- Return this
 				return allCars;
 			}
-			if (j != -1 && Stops[allCars].RailIndex == train.FrontCarTrackIndex)
+			if (j != -1 && Stops[j].RailIndex == train.FrontCarTrackIndex)
 			{
 				// No specific stop point or all-car stop, so return the stop point with the smallest number of cars above
 				return j;
