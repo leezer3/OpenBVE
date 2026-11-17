@@ -1457,14 +1457,20 @@ namespace LibRender2
 			public int Count;
 			public int Material;
 			public FaceFlags Flags;
+			// Depth-relevant material state. Faces with equal keys write identical depth, so they can
+			// share one draw call even if they use different material indices.
+			public int Alpha;
+			public MaterialFlags MaterialFlags;
+			public object Texture;
+			public OpenGlTextureWrapMode Wrap;
 		}
 
 		/// <summary>
 		/// Collapses a set of faces into the fewest contiguous index-buffer ranges. Faces occupy consecutive
-		/// indices when they are consecutive in the mesh's face array, so neighbours sharing a material and
-		/// face flags need only one draw call instead of one each.
+		/// indices when they are consecutive in the mesh's face array, so neighbours producing identical
+		/// depth output need only one draw call instead of one each.
 		/// </summary>
-		private static void BuildShadowDrawRanges(List<MeshFace> faces, List<ShadowDrawRange> ranges)
+		private static void BuildShadowDrawRanges(Mesh mesh, List<MeshFace> faces, List<ShadowDrawRange> ranges)
 		{
 			ranges.Clear();
 			if (faces == null || faces.Count == 0)
@@ -1486,8 +1492,16 @@ namespace LibRender2
 				// joined into a single primitive if their index ranges were concatenated.
 				FaceFlags type = face.Flags & FaceFlags.FaceTypeMask;
 				bool mergeable = type == FaceFlags.Triangles || type == FaceFlags.Quads;
+				MeshMaterial material = mesh.Materials[face.Material];
+				int alpha = material.Color.A;
+				MaterialFlags matFlags = material.Flags & MaterialFlags.NoShadow;
+				object tex = material.DaytimeTexture;
+				OpenGlTextureWrapMode wrap = material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp;
 				int end = face.IboStartIndex + face.Vertices.Length;
-				if (haveCurrent && currentMergeable && mergeable && current.Material == face.Material && current.Flags == face.Flags && current.Start + current.Count == face.IboStartIndex)
+				if (haveCurrent && currentMergeable && mergeable && current.Flags == face.Flags
+					&& current.Alpha == alpha && current.MaterialFlags == matFlags
+					&& current.Texture == tex && current.Wrap == wrap
+					&& current.Start + current.Count == face.IboStartIndex)
 				{
 					current.Count = end - current.Start;
 				}
@@ -1497,7 +1511,17 @@ namespace LibRender2
 					{
 						ranges.Add(current);
 					}
-					current = new ShadowDrawRange { Start = face.IboStartIndex, Count = face.Vertices.Length, Material = face.Material, Flags = face.Flags };
+					current = new ShadowDrawRange
+					{
+						Start = face.IboStartIndex,
+						Count = face.Vertices.Length,
+						Material = face.Material,
+						Flags = face.Flags,
+						Alpha = alpha,
+						MaterialFlags = matFlags,
+						Texture = tex,
+						Wrap = wrap
+					};
 					currentMergeable = mergeable;
 					haveCurrent = true;
 				}
@@ -2226,7 +2250,7 @@ namespace LibRender2
 
 					// Adjacent faces sharing a material and face flags are one contiguous index range,
 					// so a single instanced call covers all of them rather than one call per face.
-					BuildShadowDrawRanges(batch.Value, shadowDrawRanges);
+					BuildShadowDrawRanges(mesh, batch.Value, shadowDrawRanges);
 
 					for (int start = 0; start < instances.Count; start += MaxInstancesPerBatch)
 					{
@@ -2341,7 +2365,7 @@ namespace LibRender2
 					lastVAO = vao.handle;
 				}
 
-				BuildShadowDrawRanges(entry.Value, shadowDrawRanges);
+				BuildShadowDrawRanges(mesh, entry.Value, shadowDrawRanges);
 				foreach (ShadowDrawRange range in shadowDrawRanges)
 				{
 					MeshMaterial material = mesh.Materials[range.Material];
