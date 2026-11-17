@@ -1443,7 +1443,7 @@ namespace LibRender2
 
 		private readonly Dictionary<Mesh, List<ObjectState>> shadowInstancesByMesh = new Dictionary<Mesh, List<ObjectState>>();
 		private readonly Dictionary<Mesh, HashSet<ObjectState>> shadowSeenByMesh = new Dictionary<Mesh, HashSet<ObjectState>>();
-		private readonly HashSet<Mesh> shadowIneligibleMeshes = new HashSet<Mesh>();
+		private readonly HashSet<ObjectState> shadowIneligibleInstances = new HashSet<ObjectState>();
 		private readonly HashSet<ObjectState> shadowSeenInstances = new HashSet<ObjectState>();
 		private readonly Dictionary<Mesh, List<MeshFace>> shadowBatchedFaces = new Dictionary<Mesh, List<MeshFace>>();
 		private readonly Dictionary<Mesh, HashSet<int>> shadowBatchedFaceIndices = new Dictionary<Mesh, HashSet<int>>();
@@ -2133,11 +2133,11 @@ namespace LibRender2
 
 			ClearValues(shadowInstancesByMesh);
 			ClearValues(shadowSeenByMesh);
-			shadowIneligibleMeshes.Clear();
+			shadowIneligibleInstances.Clear();
 			shadowSeenInstances.Clear();
 			Dictionary<Mesh, List<ObjectState>> instancesByMesh = shadowInstancesByMesh;
 			Dictionary<Mesh, HashSet<ObjectState>> seenByMesh = shadowSeenByMesh;
-			HashSet<Mesh> ineligibleMeshes = shadowIneligibleMeshes;
+			HashSet<ObjectState> ineligibleInstances = shadowIneligibleInstances;
 			HashSet<ObjectState> seenInstances = shadowSeenInstances;
 
 			// First pass: collect the instances which can be batched, applying the per-cascade distance cull.
@@ -2164,11 +2164,10 @@ namespace LibRender2
 
 				if (seenInstances.Add(state))
 				{
-					// Animated objects need their own matrix UBO unless all their matrices are identity,
-					// in which case a shared identity UBO works for the whole batch.
+					// Only the animated object itself must fall back, not every object sharing its mesh.
 					if (state.Matricies != null && state.Matricies.Length > 0 && !HasIdentityMatricies(state))
 					{
-						ineligibleMeshes.Add(mesh);
+						ineligibleInstances.Add(state);
 					}
 					else
 					{
@@ -2200,7 +2199,7 @@ namespace LibRender2
 				ObjectState state = face?.Object;
 				Mesh mesh = state?.Prototype?.Mesh;
 
-				if (mesh == null || ineligibleMeshes.Contains(mesh) || !instancesByMesh.TryGetValue(mesh, out List<ObjectState> instances) || instances.Count < 2)
+				if (mesh == null || ineligibleInstances.Contains(state) || !instancesByMesh.TryGetValue(mesh, out List<ObjectState> instances) || instances.Count < 2)
 				{
 					fallbackFaces.Add(face);
 					continue;
