@@ -26,8 +26,7 @@ namespace LibRender2.Objects
 		private readonly List<FaceState> myOverlayOpaqueFaces;
 		private List<FaceState> myOverlayAlphaFaces;
 
-		// Reusable buffers for the per-frame alpha sort. The previous LINQ chain allocated one anonymous
-		// object per alpha face plus several sort buffers every frame - a major source of GC churn.
+		// Reusable buffers for the per-frame alpha sort (avoids LINQ allocation churn).
 		private sealed class PolygonSortScratch
 		{
 			public double[] Distances = new double[0];

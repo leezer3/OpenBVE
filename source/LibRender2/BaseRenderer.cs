@@ -526,11 +526,8 @@ namespace LibRender2
 		/// <summary>Deinitializes the renderer</summary>
 		public void DeInitialize()
 		{
-			// Flush all in-memory caches on shutdown (close window / process exit) while the GL context is still alive.
-			// Do not dispose the GameWindow here: this is also called from OnClosing, i.e. from inside
-			// GameWindow.Run(). Disposing it there makes the still-running event loop fail in
-			// NativeWindow.ProcessEvents with ObjectDisposedException. OpenTK disposes the window
-			// itself once Run() returns.
+			// Flush caches while the GL context is alive. Don't dispose GameWindow here: this runs from
+			// OnClosing inside Run(), and disposing it mid-loop throws ObjectDisposedException.
 			try
 			{
 				TextureManager?.UnloadAllTextures(false);
@@ -1420,9 +1417,7 @@ namespace LibRender2
 		/// <summary>Scratch buffer holding the packed per-instance modelview matrices</summary>
 		private readonly float[] instanceMatrixData = new float[MaxInstancesPerBatch * 16];
 
-		// Reused scratch collections for instanced batching. The render methods run sequentially on the
-		// render thread, so clearing these at the start of each call avoids allocating a fresh set of
-		// dictionaries/lists every frame (RenderShadowFaces alone runs once per cascade, twice per cascade).
+		// Reused scratch collections to avoid per-frame batching allocations.
 		private readonly Dictionary<Mesh, List<ObjectState>> opaqueInstancesByMesh = new Dictionary<Mesh, List<ObjectState>>();
 		private readonly Dictionary<Mesh, HashSet<ObjectState>> opaqueSeenByMesh = new Dictionary<Mesh, HashSet<ObjectState>>();
 		private readonly Dictionary<Mesh, byte> opaqueBlendByMesh = new Dictionary<Mesh, byte>();
@@ -1461,19 +1456,14 @@ namespace LibRender2
 			public int Count;
 			public int Material;
 			public FaceFlags Flags;
-			// Depth-relevant material state. Faces with equal keys write identical depth, so they can
-			// share one draw call even if they use different material indices.
+			// Depth-relevant material state; equal keys can share a draw call.
 			public int Alpha;
 			public MaterialFlags MaterialFlags;
 			public object Texture;
 			public OpenGlTextureWrapMode Wrap;
 		}
 
-		/// <summary>
-		/// Collapses a set of faces into the fewest contiguous index-buffer ranges. Faces occupy consecutive
-		/// indices when they are consecutive in the mesh's face array, so neighbours producing identical
-		/// depth output need only one draw call instead of one each.
-		/// </summary>
+		/// <summary>Merges faces into contiguous index ranges that share a draw call.</summary>
 		private static void BuildShadowDrawRanges(Mesh mesh, List<MeshFace> faces, List<ShadowDrawRange> ranges)
 		{
 			ranges.Clear();
@@ -1492,8 +1482,7 @@ namespace LibRender2
 				{
 					continue;
 				}
-				// Only independent-primitive modes may share a range. Strips and polygons would be
-				// joined into a single primitive if their index ranges were concatenated.
+				// Only independent primitives (triangles/quads) can share a range.
 				FaceFlags type = face.Flags & FaceFlags.FaceTypeMask;
 				bool mergeable = type == FaceFlags.Triangles || type == FaceFlags.Quads;
 				MeshMaterial material = mesh.Materials[face.Material];
@@ -2152,9 +2141,8 @@ namespace LibRender2
 
 				if (seenInstances.Add(state))
 				{
-					// Animated objects need their own matrix UBO and cannot share an instanced draw.
-					// Texture translation is deliberately ignored here: the instanced shadow path already
-					// binds an identity texture matrix, so it never affected the depth pass in the first place.
+					// Animated objects need their own matrix UBO. Texture translation is ignored because
+					// the instanced shadow path binds an identity texture matrix anyway.
 					if (state.Matricies != null && state.Matricies.Length > 0)
 					{
 						ineligibleMeshes.Add(mesh);
@@ -2255,8 +2243,6 @@ namespace LibRender2
 						lastVAO = VAO.handle;
 					}
 
-					// Adjacent faces sharing a material and face flags are one contiguous index range,
-					// so a single instanced call covers all of them rather than one call per face.
 					BuildShadowDrawRanges(mesh, batch.Value, shadowDrawRanges);
 
 					for (int start = 0; start < instances.Count; start += MaxInstancesPerBatch)
@@ -2314,8 +2300,7 @@ namespace LibRender2
 		{
 			Vector3 cameraPos = Camera.AbsolutePosition;
 
-			// Group the remaining faces by object so the per-object matrix/texture state is set once, then
-			// collapse each object's faces into contiguous index ranges (one draw call per range).
+			// Group by object so per-object state is set once and faces merge into fewer draws.
 			shadowFallbackByObject.Clear();
 			foreach (FaceState faceState in faces)
 			{
