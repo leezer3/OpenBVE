@@ -25,6 +25,46 @@ namespace LibRender2.Objects
 		private readonly List<FaceState> myAlphaFaces;
 		private readonly List<FaceState> myOverlayOpaqueFaces;
 		private List<FaceState> myOverlayAlphaFaces;
+
+		// Reusable buffers for the per-frame alpha sort. The previous LINQ chain allocated one anonymous
+		// object per alpha face plus several sort buffers every frame - a major source of GC churn.
+		private sealed class PolygonSortScratch
+		{
+			public double[] Distances = new double[0];
+			public double[] Facings = new double[0];
+			public int[] Order = new int[0];
+			public readonly IComparer<int> Compare;
+
+			public PolygonSortScratch()
+			{
+				Compare = new PolygonOrderComparer(this);
+			}
+		}
+
+		private sealed class PolygonOrderComparer : IComparer<int>
+		{
+			private readonly PolygonSortScratch scratch;
+
+			public PolygonOrderComparer(PolygonSortScratch scratch)
+			{
+				this.scratch = scratch;
+			}
+
+			public int Compare(int x, int y)
+			{
+				int c = scratch.Distances[x].CompareTo(scratch.Distances[y]);
+				if (c != 0)
+				{
+					return c;
+				}
+				c = scratch.Facings[y].CompareTo(scratch.Facings[x]);
+				return c != 0 ? c : x.CompareTo(y);
+			}
+		}
+
+		private readonly PolygonSortScratch alphaSortScratch = new PolygonSortScratch();
+		private readonly PolygonSortScratch overlaySortScratch = new PolygonSortScratch();
+
 		public readonly ReadOnlyCollection<FaceState> OpaqueFaces;  // StaticOpaque and DynamicOpaque
 		public readonly ReadOnlyCollection<FaceState> OverlayOpaqueFaces;
 		public readonly ReadOnlyCollection<FaceState> AlphaFaces;  // DynamicAlpha
@@ -288,20 +328,35 @@ namespace LibRender2.Objects
 		{
 			if (overlay)
 			{
-				myOverlayAlphaFaces = GetSortedPolygons(myOverlayAlphaFaces.AsReadOnly());
+				List<FaceState> sorted = GetSortedPolygons(myOverlayAlphaFaces.AsReadOnly(), overlaySortScratch);
+				myOverlayAlphaFaces = sorted;
 				OverlayAlphaFaces = myOverlayAlphaFaces.AsReadOnly();
 				return OverlayAlphaFaces.ToList();
 			}
-			return GetSortedPolygons(AlphaFaces);
+			return GetSortedPolygons(AlphaFaces, alphaSortScratch);
 		}
 
-		private List<FaceState> GetSortedPolygons(ReadOnlyCollection<FaceState> faces)
+		private List<FaceState> GetSortedPolygons(ReadOnlyCollection<FaceState> faces, PolygonSortScratch scratch)
 		{
 			// calculate distance
-			double[] distances = new double[faces.Count];
-			double[] facings = new double[faces.Count];
+			int count = faces.Count;
+			if (scratch.Distances.Length < count)
+			{
+				int size = scratch.Distances.Length == 0 ? Math.Max(count, 64) : scratch.Distances.Length;
+				while (size < count)
+				{
+					size *= 2;
+				}
+				scratch.Distances = new double[size];
+				scratch.Facings = new double[size];
+				scratch.Order = new int[size];
+			}
+			double[] distances = scratch.Distances;
+			double[] facings = scratch.Facings;
+			Array.Clear(distances, 0, count);
+			Array.Clear(facings, 0, count);
 
-			Parallel.For(0, faces.Count, i =>
+			Parallel.For(0, count, i =>
 			{
 				if (faces[i].Face.Vertices.Length >= 3)
 				{
@@ -343,7 +398,18 @@ namespace LibRender2.Objects
 			// order no matter how they were inserted. The sort must stay stable so coplanar triangles
 			// in the same face don't get scrambled.
 
-			return faces.Select((face, index) => new { Face = face, Distance = distances[index], Facing = facings[index] }).OrderBy(list => list.Distance).ThenByDescending(list => list.Facing).Select(list => list.Face).ToList();
+			int[] order = scratch.Order;
+			for (int i = 0; i < count; i++)
+			{
+				order[i] = i;
+			}
+			Array.Sort(order, 0, count, scratch.Compare);
+			List<FaceState> result = new List<FaceState>(count);
+			for (int i = 0; i < count; i++)
+			{
+				result.Add(faces[order[i]]);
+			}
+			return result;
 		}
 	}
 }

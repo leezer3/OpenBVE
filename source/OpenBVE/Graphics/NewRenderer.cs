@@ -204,12 +204,13 @@ namespace OpenBve.Graphics
             DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 
             ResetOpenGlState();
-			List<FaceState> opaqueFaces, alphaFaces, overlayOpaqueFaces, overlayAlphaFaces;
+			IReadOnlyList<FaceState> opaqueFaces, overlayOpaqueFaces;
+			List<FaceState> alphaFaces, overlayAlphaFaces;
 			lock (VisibleObjects.LockObject)
 			{
-				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
+				opaqueFaces = VisibleObjects.OpaqueFaces;
 				alphaFaces = VisibleObjects.GetSortedPolygons();
-				overlayOpaqueFaces = VisibleObjects.OverlayOpaqueFaces.ToList();
+				overlayOpaqueFaces = VisibleObjects.OverlayOpaqueFaces;
 				overlayAlphaFaces = VisibleObjects.GetSortedPolygons(true);
 			}
 
