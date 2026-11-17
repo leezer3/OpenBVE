@@ -1452,6 +1452,24 @@ namespace LibRender2
 		private int identityMatrixBuffer;
 		private readonly List<ShadowDrawRange> shadowDrawRanges = new List<ShadowDrawRange>();
 
+		// Clear the contents of pooled per-mesh collections but keep the entries, so the List/HashSet
+		// objects themselves are reused across frames instead of being reallocated every frame.
+		private static void ClearValues<TKey, TValue>(Dictionary<TKey, List<TValue>> dict)
+		{
+			foreach (List<TValue> value in dict.Values)
+			{
+				value.Clear();
+			}
+		}
+
+		private static void ClearValues<TKey, TValue>(Dictionary<TKey, HashSet<TValue>> dict)
+		{
+			foreach (HashSet<TValue> value in dict.Values)
+			{
+				value.Clear();
+			}
+		}
+
 		private static readonly Comparison<AlphaBatch> AlphaBatchDistanceCompare = (a, b) => b.NearestDistance.CompareTo(a.NearestDistance);
 		private static readonly Comparison<MeshFace> MeshFaceIboCompare = (a, b) => a.IboStartIndex.CompareTo(b.IboStartIndex);
 
@@ -1961,9 +1979,8 @@ namespace LibRender2
 
 			// Group the visible instances (one ObjectState per placed object) by the mesh they share.
 			// Derived from the supplied opaque faces so that it stays consistent with the caller's snapshot.
-			opaqueInstancesByMesh.Clear();
-			opaqueSeenByMesh.Clear();
-			opaqueBlendByMesh.Clear();
+			ClearValues(opaqueInstancesByMesh);
+			ClearValues(opaqueSeenByMesh);
 			opaqueIneligibleMeshes.Clear();
 			Dictionary<Mesh, List<ObjectState>> instancesByMesh = opaqueInstancesByMesh;
 			Dictionary<Mesh, HashSet<ObjectState>> seenByMesh = opaqueSeenByMesh;
@@ -1993,13 +2010,13 @@ namespace LibRender2
 					list = new List<ObjectState>();
 					instancesByMesh.Add(mesh, list);
 					seenByMesh.Add(mesh, new HashSet<ObjectState>());
-					blendByMesh.Add(mesh, state.DaytimeNighttimeBlend);
 				}
-				else if (blendByMesh[mesh] != state.DaytimeNighttimeBlend)
+				if (blendByMesh.TryGetValue(mesh, out byte prevBlend) && prevBlend != state.DaytimeNighttimeBlend)
 				{
 					// The day/night blend is a uniform, so a differing value cannot share a batch
 					ineligibleMeshes.Add(mesh);
 				}
+				blendByMesh[mesh] = state.DaytimeNighttimeBlend;
 
 				if (seenByMesh[mesh].Add(state))
 				{
@@ -2010,8 +2027,8 @@ namespace LibRender2
 			// Partition the visible opaque faces into batches (sharing a mesh) and the remainder.
 			// Every placed instance contributes the same set of faces, so each face must only be
 			// collected once per mesh- IboStartIndex uniquely identifies a face within its mesh.
-			opaqueBatchedFaces.Clear();
-			opaqueBatchedFaceIndices.Clear();
+			ClearValues(opaqueBatchedFaces);
+			ClearValues(opaqueBatchedFaceIndices);
 			opaqueFallbackFaces.Clear();
 			opaqueFallbackMeshes.Clear();
 			Dictionary<Mesh, List<MeshFace>> batchedFaces = opaqueBatchedFaces;
@@ -2114,8 +2131,8 @@ namespace LibRender2
 
 			Vector3 cameraPos = Camera.AbsolutePosition;
 
-			shadowInstancesByMesh.Clear();
-			shadowSeenByMesh.Clear();
+			ClearValues(shadowInstancesByMesh);
+			ClearValues(shadowSeenByMesh);
 			shadowIneligibleMeshes.Clear();
 			shadowSeenInstances.Clear();
 			Dictionary<Mesh, List<ObjectState>> instancesByMesh = shadowInstancesByMesh;
@@ -2171,8 +2188,8 @@ namespace LibRender2
 			}
 
 			// Partition the faces into batches (sharing a mesh) and the remainder.
-			shadowBatchedFaces.Clear();
-			shadowBatchedFaceIndices.Clear();
+			ClearValues(shadowBatchedFaces);
+			ClearValues(shadowBatchedFaceIndices);
 			shadowFallbackFaces.Clear();
 			Dictionary<Mesh, List<MeshFace>> batchedFaces = shadowBatchedFaces;
 			Dictionary<Mesh, HashSet<int>> batchedFaceIndices = shadowBatchedFaceIndices;
@@ -2308,7 +2325,7 @@ namespace LibRender2
 			Vector3 cameraPos = Camera.AbsolutePosition;
 
 			// Group by object so per-object state is set once and faces merge into fewer draws.
-			shadowFallbackByObject.Clear();
+			ClearValues(shadowFallbackByObject);
 			foreach (FaceState faceState in faces)
 			{
 				FaceState face = faceState;
@@ -2843,9 +2860,8 @@ namespace LibRender2
 			}
 
 			// Group the visible instances (one ObjectState per placed object) by the mesh they share
-			alphaInstancesByMesh.Clear();
-			alphaSeenByMesh.Clear();
-			alphaBlendByMesh.Clear();
+			ClearValues(alphaInstancesByMesh);
+			ClearValues(alphaSeenByMesh);
 			alphaIneligibleMeshes.Clear();
 			Dictionary<Mesh, List<ObjectState>> instancesByMesh = alphaInstancesByMesh;
 			Dictionary<Mesh, HashSet<ObjectState>> seenByMesh = alphaSeenByMesh;
@@ -2874,12 +2890,12 @@ namespace LibRender2
 					list = new List<ObjectState>();
 					instancesByMesh.Add(mesh, list);
 					seenByMesh.Add(mesh, new HashSet<ObjectState>());
-					blendByMesh.Add(mesh, state.DaytimeNighttimeBlend);
 				}
-				else if (blendByMesh[mesh] != state.DaytimeNighttimeBlend)
+				if (blendByMesh.TryGetValue(mesh, out byte prevBlend) && prevBlend != state.DaytimeNighttimeBlend)
 				{
 					ineligibleMeshes.Add(mesh);
 				}
+				blendByMesh[mesh] = state.DaytimeNighttimeBlend;
 
 				if (seenByMesh[mesh].Add(state))
 				{
