@@ -1774,6 +1774,42 @@ namespace LibRender2
 			CurrentShader = DefaultShader;
 		}
 
+		/// <summary>Draws the normals overlay for a whole instanced batch in a single call.</summary>
+		/// <remarks>Batched meshes are never dynamic, so the lazily built normals VAO stays valid for the batch.</remarks>
+		private void DrawNormalsInstanced(Mesh mesh, int instanceCount)
+		{
+			if (!OptionNormals || mesh == null || instanceCount <= 0 || mesh.Vertices.Length == 0)
+			{
+				return;
+			}
+
+			if (mesh.NormalsVAO == null)
+			{
+				VAOExtensions.CreateNormalsVAO(mesh, false, DefaultShader.VertexLayout, this);
+			}
+
+			if (!(mesh.NormalsVAO is VertexArrayObject normalsVao))
+			{
+				return;
+			}
+
+			Shader shader = DefaultShader;
+			shader.DisableTexturing();
+			shader.SetBrightness(1.0f);
+			shader.SetOpacity(1.0f);
+			shader.SetIsLight(false);
+			shader.SetMaterialAmbient(Color32.White);
+			shader.SetMaterialFlags(MaterialFlags.Emissive);
+
+			normalsVao.Bind();
+			lastVAO = normalsVao.handle;
+			normalsVao.DrawArraysInstanced(PrimitiveType.Lines, 0, mesh.Faces.Sum(f => f.Vertices.Length) * 2, instanceCount);
+
+			shader.SetIsLight(OptionLighting);
+			shader.SetMaterialFlags(MaterialFlags.None);
+			shader.SetMaterialAmbient(Color32.White);
+		}
+
 		/// <summary>
 		/// Draws the supplied opaque faces, batching all instances which share a mesh into a single instanced
 		/// draw call per (mesh, face) where this is provably safe.
@@ -1793,7 +1829,7 @@ namespace LibRender2
 				return;
 			}
 
-			if (!OptionInstancing || OptionWireFrame || OptionNormals || opaqueFaces.Count < 2)
+			if (!OptionInstancing || OptionWireFrame || opaqueFaces.Count < 2)
 			{
 				foreach (FaceState face in opaqueFaces)
 				{
@@ -1923,6 +1959,8 @@ namespace LibRender2
 						{
 							OpaqueDrawCalls += DrawFaceInstanced(shader, instances[start], face, count, daytimeNighttimeBlend);
 						}
+
+						DrawNormalsInstanced(batch.Key, count);
 					}
 				}
 			}
@@ -1941,7 +1979,7 @@ namespace LibRender2
 		{
 			IList<FaceState> faceList = faces is IList<FaceState> list ? list : new List<FaceState>(faces);
 
-			if (!OptionInstancing || OptionWireFrame || OptionNormals || faceList.Count < 2)
+			if (!OptionInstancing || OptionWireFrame || faceList.Count < 2)
 			{
 				RenderShadowFacesFallback(shader, faceList, maxDistanceSquared, ref lastVAO);
 				return;
@@ -2593,7 +2631,7 @@ namespace LibRender2
 				return;
 			}
 
-			if (OptionAlphaInstancing == 0 || OptionWireFrame || OptionNormals || alphaFaces.Count < 2)
+			if (OptionAlphaInstancing == 0 || OptionWireFrame || alphaFaces.Count < 2)
 			{
 				foreach (FaceState face in alphaFaces)
 				{
@@ -2797,6 +2835,8 @@ namespace LibRender2
 
 							AlphaDrawCalls += DrawFaceInstanced(shader, batch.Instances[start], face, count, daytimeNighttimeBlend);
 						}
+
+						DrawNormalsInstanced(batch.Mesh, count);
 					}
 				}
 			}

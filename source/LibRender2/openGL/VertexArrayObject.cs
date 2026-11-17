@@ -144,6 +144,12 @@ namespace LibRender2
 			GL.DrawArrays(DrawMode, Start, Count);
 		}
 
+		/// <summary>Draws the same contiguous vertex range once per instance, using gl_InstanceID for per-instance matrices.</summary>
+		public void DrawArraysInstanced(PrimitiveType DrawMode, int Start, int Count, int InstanceCount)
+		{
+			GL.DrawArraysInstanced(DrawMode, Start, Count, InstanceCount);
+		}
+
 		/// <summary>
 		/// Unbinds the VAO deactivating the VAO from use
 		/// </summary>
