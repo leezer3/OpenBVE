@@ -127,7 +127,7 @@ namespace ObjectViewer.Graphics
             {
                 groundVAO.DrawLit(new Vector3(0.0, Interface.CurrentOptions.GroundHeight, 0.0), Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(500.0, 0.05, 500.0), Camera.AbsolutePosition);
             }
-IReadOnlyList<FaceState> opaqueFaces;
+			IReadOnlyList<FaceState> opaqueFaces;
 			List<FaceState> alphaFaces;
 			lock (VisibleObjects.LockObject)
 			{

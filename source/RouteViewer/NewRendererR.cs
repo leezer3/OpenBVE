@@ -190,14 +190,14 @@ namespace RouteViewer
             DefaultShader.SetTexture(0);
             DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
             ResetOpenGlState();
-			IReadOnlyList<FaceState> opaqueFaces;
-			List<FaceState> alphaFaces;
-			lock (VisibleObjects.LockObject)
-			{
-				opaqueFaces = VisibleObjects.OpaqueFaces;
-				alphaFaces = VisibleObjects.GetSortedPolygons();
-			}
-			
+            IReadOnlyList<FaceState> opaqueFaces;
+            List<FaceState> alphaFaces;
+            lock (VisibleObjects.LockObject)
+            {
+                opaqueFaces = VisibleObjects.OpaqueFaces;
+                alphaFaces = VisibleObjects.GetSortedPolygons();
+            }
+            
 			bool alphaToCoverage = BeginAlphaToCoverage();
 			OpaqueDrawCalls = 0;
 			RenderOpaqueFaces(opaqueFaces);
