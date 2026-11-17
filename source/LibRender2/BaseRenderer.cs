@@ -1946,7 +1946,7 @@ namespace LibRender2
 		/// translation, mixed day/night blend, single instances or debug overlays- fall back to the original
 		/// one-draw-per-face path, so output is identical when batching is not possible.
 		/// </remarks>
-		public void RenderOpaqueFaces(IReadOnlyList<FaceState> opaqueFaces)
+		public void RenderOpaqueFaces(List<FaceState> opaqueFaces)
 		{
 			if (opaqueFaces == null || opaqueFaces.Count == 0)
 			{

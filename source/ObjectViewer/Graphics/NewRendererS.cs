@@ -127,11 +127,10 @@ namespace ObjectViewer.Graphics
             {
                 groundVAO.DrawLit(new Vector3(0.0, Interface.CurrentOptions.GroundHeight, 0.0), Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(500.0, 0.05, 500.0), Camera.AbsolutePosition);
             }
-			IReadOnlyList<FaceState> opaqueFaces;
-			List<FaceState> alphaFaces;
+			List<FaceState> opaqueFaces, alphaFaces;
 			lock (VisibleObjects.LockObject)
 			{
-				opaqueFaces = VisibleObjects.OpaqueFaces;
+				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
 				alphaFaces = VisibleObjects.GetSortedPolygons();
 			}
 
