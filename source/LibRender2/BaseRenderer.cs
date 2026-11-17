@@ -526,8 +526,11 @@ namespace LibRender2
 		/// <summary>Deinitializes the renderer</summary>
 		public void DeInitialize()
 		{
-			// Flush all in-memory caches on shutdown (close window / process exit).
-			// Must run before GameWindow.Dispose() while the GL context is still alive.
+			// Flush all in-memory caches on shutdown (close window / process exit) while the GL context is still alive.
+			// Do not dispose the GameWindow here: this is also called from OnClosing, i.e. from inside
+			// GameWindow.Run(). Disposing it there makes the still-running event loop fail in
+			// NativeWindow.ProcessEvents with ObjectDisposedException. OpenTK disposes the window
+			// itself once Run() returns.
 			try
 			{
 				TextureManager?.UnloadAllTextures(false);
@@ -550,7 +553,6 @@ namespace LibRender2
 				GL.DeleteTexture(nullDepthMap);
 				nullDepthMap = 0;
 			}
-			GameWindow?.Dispose();
 			// terminate spinning thread
 			VisibilityThreadShouldRun = false;
 		}
