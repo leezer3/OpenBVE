@@ -550,6 +550,11 @@ namespace LibRender2
 				GL.DeleteTexture(nullDepthMap);
 				nullDepthMap = 0;
 			}
+			if (identityMatrixBuffer != 0)
+			{
+				GL.DeleteBuffer(identityMatrixBuffer);
+				identityMatrixBuffer = 0;
+			}
 			// terminate spinning thread
 			VisibilityThreadShouldRun = false;
 		}
@@ -1444,6 +1449,7 @@ namespace LibRender2
 		private readonly Dictionary<Mesh, HashSet<int>> shadowBatchedFaceIndices = new Dictionary<Mesh, HashSet<int>>();
 		private readonly List<FaceState> shadowFallbackFaces = new List<FaceState>();
 		private readonly Dictionary<ObjectState, List<MeshFace>> shadowFallbackByObject = new Dictionary<ObjectState, List<MeshFace>>();
+		private int identityMatrixBuffer;
 		private readonly List<ShadowDrawRange> shadowDrawRanges = new List<ShadowDrawRange>();
 
 		private static readonly Comparison<AlphaBatch> AlphaBatchDistanceCompare = (a, b) => b.NearestDistance.CompareTo(a.NearestDistance);
@@ -2141,9 +2147,9 @@ namespace LibRender2
 
 				if (seenInstances.Add(state))
 				{
-					// Animated objects need their own matrix UBO. Texture translation is ignored because
-					// the instanced shadow path binds an identity texture matrix anyway.
-					if (state.Matricies != null && state.Matricies.Length > 0)
+					// Animated objects need their own matrix UBO unless all their matrices are identity,
+					// in which case a shared identity UBO works for the whole batch.
+					if (state.Matricies != null && state.Matricies.Length > 0 && !HasIdentityMatricies(state))
 					{
 						ineligibleMeshes.Add(mesh);
 					}
@@ -2224,6 +2230,7 @@ namespace LibRender2
 			}
 
 			EnsureInstanceMatrixBuffer();
+			BindIdentityMatrixBuffer();
 
 			shader.SetInstanced(true);
 			shader.SetTextureMatrix(Matrix4D.Identity);
@@ -2426,6 +2433,39 @@ namespace LibRender2
 			GL.BindBuffer(BufferTarget.UniformBuffer, instanceMatrixBuffer);
 			GL.BufferSubData(BufferTarget.UniformBuffer, IntPtr.Zero, new IntPtr(count * 16 * sizeof(float)), instanceMatrixData);
 			GL.BindBufferBase(BufferTarget.UniformBuffer, 1, instanceMatrixBuffer);
+		}
+
+		/// <summary>Checks whether every animation matrix of an object is identity</summary>
+		private static bool HasIdentityMatricies(ObjectState state)
+		{
+			for (int i = 0; i < state.Matricies.Length; i++)
+			{
+				if (!IsIdentityMatrix(state.Matricies[i]))
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		/// <summary>Binds a shared all-identity animation matrix UBO to binding 0</summary>
+		private void BindIdentityMatrixBuffer()
+		{
+			if (identityMatrixBuffer == 0)
+			{
+				var identity = new OpenTK.Matrix4[128];
+				for (int i = 0; i < identity.Length; i++)
+				{
+					identity[i] = OpenTK.Matrix4.Identity;
+				}
+				identityMatrixBuffer = GL.GenBuffer();
+				GL.BindBuffer(BufferTarget.UniformBuffer, identityMatrixBuffer);
+				unsafe
+				{
+					GL.BufferData(BufferTarget.UniformBuffer, sizeof(OpenTK.Matrix4) * identity.Length, identity, BufferUsageHint.StaticDraw);
+				}
+			}
+			GL.BindBufferBase(BufferTarget.UniformBuffer, 0, identityMatrixBuffer);
 		}
 
 		/// <summary>Checks whether a matrix is exactly the identity matrix</summary>
