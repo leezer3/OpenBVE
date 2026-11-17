@@ -30,6 +30,10 @@ namespace OpenBveApi
 		public InterpolationMode Interpolation;
 		/// <summary>The current transparency quality mode</summary>
 		public TransparencyMode TransparencyMode;
+		/// <summary>Instanced rendering of opaque faces. 0 = off, 1 = on.</summary>
+		public bool InstancedOpaque = true;
+		/// <summary>Instanced rendering of alpha faces. 0 = off, 1 = order independent, 2 = approximate.</summary>
+		public int InstancedAlpha = 1;
 		/// <summary>The level of anisotropic filtering to be applied</summary>
 		public int AnisotropicFilteringLevel;
 		/// <summary>The maximum level of anisotropic filtering supported by the system</summary>

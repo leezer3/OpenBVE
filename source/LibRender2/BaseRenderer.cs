@@ -379,6 +379,8 @@ namespace LibRender2
 			currentHost = CurrentHost;
 			currentOptions = CurrentOptions;
 			fileSystem = FileSystem;
+			OptionInstancing = currentOptions.InstancedOpaque;
+			OptionAlphaInstancing = currentOptions.InstancedAlpha;
 			Screen = new Screen(this);
 			Camera = new CameraProperties(this);
 			Lighting = new Lighting(this);

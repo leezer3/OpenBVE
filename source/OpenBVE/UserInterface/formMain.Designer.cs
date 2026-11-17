@@ -223,6 +223,9 @@ namespace OpenBve {
             this.numericUpDownKioskTimeout = new System.Windows.Forms.NumericUpDown();
             this.checkBoxEnableKiosk = new System.Windows.Forms.CheckBox();
             this.groupBoxAdvancedOptions = new System.Windows.Forms.GroupBox();
+            this.checkboxInstancedOpaque = new System.Windows.Forms.CheckBox();
+            this.labelInstancedAlpha = new System.Windows.Forms.Label();
+            this.comboboxInstancedAlpha = new System.Windows.Forms.ComboBox();
             this.checkBoxPanel2Extended = new System.Windows.Forms.CheckBox();
             this.pictureboxCursor = new System.Windows.Forms.PictureBox();
             this.labelCursor = new System.Windows.Forms.Label();
@@ -3219,6 +3222,9 @@ namespace OpenBve {
             // 
             this.groupBoxAdvancedOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxAdvancedOptions.Controls.Add(this.checkboxInstancedOpaque);
+            this.groupBoxAdvancedOptions.Controls.Add(this.labelInstancedAlpha);
+            this.groupBoxAdvancedOptions.Controls.Add(this.comboboxInstancedAlpha);
             this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxPanel2Extended);
             this.groupBoxAdvancedOptions.Controls.Add(this.pictureboxCursor);
             this.groupBoxAdvancedOptions.Controls.Add(this.labelCursor);
@@ -3232,10 +3238,43 @@ namespace OpenBve {
             this.groupBoxAdvancedOptions.ForeColor = System.Drawing.Color.Black;
             this.groupBoxAdvancedOptions.Location = new System.Drawing.Point(0, 323);
             this.groupBoxAdvancedOptions.Name = "groupBoxAdvancedOptions";
-            this.groupBoxAdvancedOptions.Size = new System.Drawing.Size(321, 189);
+            this.groupBoxAdvancedOptions.Size = new System.Drawing.Size(321, 214);
             this.groupBoxAdvancedOptions.TabIndex = 21;
             this.groupBoxAdvancedOptions.TabStop = false;
             this.groupBoxAdvancedOptions.Text = "Advanced Options";
+            // 
+            // checkboxInstancedOpaque
+            // 
+            this.checkboxInstancedOpaque.AutoSize = true;
+            this.checkboxInstancedOpaque.Location = new System.Drawing.Point(8, 128);
+            this.checkboxInstancedOpaque.Name = "checkboxInstancedOpaque";
+            this.checkboxInstancedOpaque.Size = new System.Drawing.Size(130, 17);
+            this.checkboxInstancedOpaque.TabIndex = 39;
+            this.checkboxInstancedOpaque.Text = "Instanced opaque faces";
+            this.checkboxInstancedOpaque.UseVisualStyleBackColor = true;
+            // 
+            // labelInstancedAlpha
+            // 
+            this.labelInstancedAlpha.AutoSize = true;
+            this.labelInstancedAlpha.Location = new System.Drawing.Point(8, 152);
+            this.labelInstancedAlpha.Name = "labelInstancedAlpha";
+            this.labelInstancedAlpha.Size = new System.Drawing.Size(130, 18);
+            this.labelInstancedAlpha.TabIndex = 40;
+            this.labelInstancedAlpha.Text = "Instanced alpha faces:";
+            this.labelInstancedAlpha.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // comboboxInstancedAlpha
+            // 
+            this.comboboxInstancedAlpha.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboboxInstancedAlpha.FormattingEnabled = true;
+            this.comboboxInstancedAlpha.Items.AddRange(new object[] {
+            "Off",
+            "Order-independent (OIT)",
+            "Approximate (all alpha faces)"});
+            this.comboboxInstancedAlpha.Location = new System.Drawing.Point(140, 149);
+            this.comboboxInstancedAlpha.Name = "comboboxInstancedAlpha";
+            this.comboboxInstancedAlpha.Size = new System.Drawing.Size(170, 21);
+            this.comboboxInstancedAlpha.TabIndex = 41;
             // 
             // checkBoxPanel2Extended
             // 
@@ -7041,6 +7080,9 @@ namespace OpenBve {
         private System.Windows.Forms.Button buttonAbort;
 		private System.Windows.Forms.CheckBox checkBoxLoadingSway;
 		private System.Windows.Forms.GroupBox groupBoxAdvancedOptions;
+		private System.Windows.Forms.CheckBox checkboxInstancedOpaque;
+		private System.Windows.Forms.Label labelInstancedAlpha;
+		private System.Windows.Forms.ComboBox comboboxInstancedAlpha;
 		private System.Windows.Forms.CheckBox checkBoxHacks;
 		private System.Windows.Forms.CheckBox checkBoxTransparencyFix;
 		private System.Windows.Forms.CheckBox checkBoxUnloadTextures;
