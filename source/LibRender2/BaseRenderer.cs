@@ -1416,6 +1416,37 @@ namespace LibRender2
 		/// <summary>Scratch buffer holding the packed per-instance modelview matrices</summary>
 		private readonly float[] instanceMatrixData = new float[MaxInstancesPerBatch * 16];
 
+		// Reused scratch collections for instanced batching. The render methods run sequentially on the
+		// render thread, so clearing these at the start of each call avoids allocating a fresh set of
+		// dictionaries/lists every frame (RenderShadowFaces alone runs once per cascade, twice per cascade).
+		private readonly Dictionary<Mesh, List<ObjectState>> opaqueInstancesByMesh = new Dictionary<Mesh, List<ObjectState>>();
+		private readonly Dictionary<Mesh, HashSet<ObjectState>> opaqueSeenByMesh = new Dictionary<Mesh, HashSet<ObjectState>>();
+		private readonly Dictionary<Mesh, byte> opaqueBlendByMesh = new Dictionary<Mesh, byte>();
+		private readonly HashSet<Mesh> opaqueIneligibleMeshes = new HashSet<Mesh>();
+		private readonly Dictionary<Mesh, List<MeshFace>> opaqueBatchedFaces = new Dictionary<Mesh, List<MeshFace>>();
+		private readonly Dictionary<Mesh, HashSet<int>> opaqueBatchedFaceIndices = new Dictionary<Mesh, HashSet<int>>();
+		private readonly List<FaceState> opaqueFallbackFaces = new List<FaceState>();
+		private readonly HashSet<Mesh> opaqueFallbackMeshes = new HashSet<Mesh>();
+
+		private readonly Dictionary<Mesh, List<ObjectState>> alphaInstancesByMesh = new Dictionary<Mesh, List<ObjectState>>();
+		private readonly Dictionary<Mesh, HashSet<ObjectState>> alphaSeenByMesh = new Dictionary<Mesh, HashSet<ObjectState>>();
+		private readonly Dictionary<Mesh, byte> alphaBlendByMesh = new Dictionary<Mesh, byte>();
+		private readonly HashSet<Mesh> alphaIneligibleMeshes = new HashSet<Mesh>();
+		private readonly Dictionary<Mesh, AlphaBatch> alphaBatchesByMesh = new Dictionary<Mesh, AlphaBatch>();
+		private readonly Dictionary<Mesh, HashSet<int>> alphaBatchedFaceIndices = new Dictionary<Mesh, HashSet<int>>();
+		private readonly List<FaceState> alphaFallbackFaces = new List<FaceState>();
+		private readonly List<AlphaBatch> alphaSortedBatches = new List<AlphaBatch>();
+
+		private readonly Dictionary<Mesh, List<ObjectState>> shadowInstancesByMesh = new Dictionary<Mesh, List<ObjectState>>();
+		private readonly Dictionary<Mesh, HashSet<ObjectState>> shadowSeenByMesh = new Dictionary<Mesh, HashSet<ObjectState>>();
+		private readonly HashSet<Mesh> shadowIneligibleMeshes = new HashSet<Mesh>();
+		private readonly HashSet<ObjectState> shadowSeenInstances = new HashSet<ObjectState>();
+		private readonly Dictionary<Mesh, List<MeshFace>> shadowBatchedFaces = new Dictionary<Mesh, List<MeshFace>>();
+		private readonly Dictionary<Mesh, HashSet<int>> shadowBatchedFaceIndices = new Dictionary<Mesh, HashSet<int>>();
+		private readonly List<FaceState> shadowFallbackFaces = new List<FaceState>();
+
+		private static readonly Comparison<AlphaBatch> AlphaBatchDistanceCompare = (a, b) => b.NearestDistance.CompareTo(a.NearestDistance);
+
 		/// <summary>Draws a face using the current shader</summary>
 		/// <param name="state">The FaceState to draw</param>
 		/// <param name="isDebugTouchMode">Whether debug touch mode</param>
@@ -1846,10 +1877,14 @@ namespace LibRender2
 
 			// Group the visible instances (one ObjectState per placed object) by the mesh they share.
 			// Derived from the supplied opaque faces so that it stays consistent with the caller's snapshot.
-			Dictionary<Mesh, List<ObjectState>> instancesByMesh = new Dictionary<Mesh, List<ObjectState>>();
-			Dictionary<Mesh, HashSet<ObjectState>> seenByMesh = new Dictionary<Mesh, HashSet<ObjectState>>();
-			Dictionary<Mesh, byte> blendByMesh = new Dictionary<Mesh, byte>();
-			HashSet<Mesh> ineligibleMeshes = new HashSet<Mesh>();
+			opaqueInstancesByMesh.Clear();
+			opaqueSeenByMesh.Clear();
+			opaqueBlendByMesh.Clear();
+			opaqueIneligibleMeshes.Clear();
+			Dictionary<Mesh, List<ObjectState>> instancesByMesh = opaqueInstancesByMesh;
+			Dictionary<Mesh, HashSet<ObjectState>> seenByMesh = opaqueSeenByMesh;
+			Dictionary<Mesh, byte> blendByMesh = opaqueBlendByMesh;
+			HashSet<Mesh> ineligibleMeshes = opaqueIneligibleMeshes;
 
 			foreach (FaceState face in opaqueFaces)
 			{
@@ -1891,10 +1926,14 @@ namespace LibRender2
 			// Partition the visible opaque faces into batches (sharing a mesh) and the remainder.
 			// Every placed instance contributes the same set of faces, so each face must only be
 			// collected once per mesh- IboStartIndex uniquely identifies a face within its mesh.
-			Dictionary<Mesh, List<MeshFace>> batchedFaces = new Dictionary<Mesh, List<MeshFace>>();
-			Dictionary<Mesh, HashSet<int>> batchedFaceIndices = new Dictionary<Mesh, HashSet<int>>();
-			List<FaceState> fallbackFaces = new List<FaceState>();
-			HashSet<Mesh> fallbackMeshes = new HashSet<Mesh>();
+			opaqueBatchedFaces.Clear();
+			opaqueBatchedFaceIndices.Clear();
+			opaqueFallbackFaces.Clear();
+			opaqueFallbackMeshes.Clear();
+			Dictionary<Mesh, List<MeshFace>> batchedFaces = opaqueBatchedFaces;
+			Dictionary<Mesh, HashSet<int>> batchedFaceIndices = opaqueBatchedFaceIndices;
+			List<FaceState> fallbackFaces = opaqueFallbackFaces;
+			HashSet<Mesh> fallbackMeshes = opaqueFallbackMeshes;
 
 			foreach (FaceState face in opaqueFaces)
 			{
@@ -1991,10 +2030,14 @@ namespace LibRender2
 
 			Vector3 cameraPos = Camera.AbsolutePosition;
 
-			Dictionary<Mesh, List<ObjectState>> instancesByMesh = new Dictionary<Mesh, List<ObjectState>>();
-			Dictionary<Mesh, HashSet<ObjectState>> seenByMesh = new Dictionary<Mesh, HashSet<ObjectState>>();
-			HashSet<Mesh> ineligibleMeshes = new HashSet<Mesh>();
-			HashSet<ObjectState> seenInstances = new HashSet<ObjectState>();
+			shadowInstancesByMesh.Clear();
+			shadowSeenByMesh.Clear();
+			shadowIneligibleMeshes.Clear();
+			shadowSeenInstances.Clear();
+			Dictionary<Mesh, List<ObjectState>> instancesByMesh = shadowInstancesByMesh;
+			Dictionary<Mesh, HashSet<ObjectState>> seenByMesh = shadowSeenByMesh;
+			HashSet<Mesh> ineligibleMeshes = shadowIneligibleMeshes;
+			HashSet<ObjectState> seenInstances = shadowSeenInstances;
 
 			// First pass: collect the instances which can be batched, applying the per-cascade distance cull.
 			foreach (FaceState face in faceList)
@@ -2042,9 +2085,12 @@ namespace LibRender2
 			}
 
 			// Partition the faces into batches (sharing a mesh) and the remainder.
-			Dictionary<Mesh, List<MeshFace>> batchedFaces = new Dictionary<Mesh, List<MeshFace>>();
-			Dictionary<Mesh, HashSet<int>> batchedFaceIndices = new Dictionary<Mesh, HashSet<int>>();
-			List<FaceState> fallbackFaces = new List<FaceState>();
+			shadowBatchedFaces.Clear();
+			shadowBatchedFaceIndices.Clear();
+			shadowFallbackFaces.Clear();
+			Dictionary<Mesh, List<MeshFace>> batchedFaces = shadowBatchedFaces;
+			Dictionary<Mesh, HashSet<int>> batchedFaceIndices = shadowBatchedFaceIndices;
+			List<FaceState> fallbackFaces = shadowFallbackFaces;
 
 			foreach (FaceState face in faceList)
 			{
@@ -2655,10 +2701,14 @@ namespace LibRender2
 			}
 
 			// Group the visible instances (one ObjectState per placed object) by the mesh they share
-			Dictionary<Mesh, List<ObjectState>> instancesByMesh = new Dictionary<Mesh, List<ObjectState>>();
-			Dictionary<Mesh, HashSet<ObjectState>> seenByMesh = new Dictionary<Mesh, HashSet<ObjectState>>();
-			Dictionary<Mesh, byte> blendByMesh = new Dictionary<Mesh, byte>();
-			HashSet<Mesh> ineligibleMeshes = new HashSet<Mesh>();
+			alphaInstancesByMesh.Clear();
+			alphaSeenByMesh.Clear();
+			alphaBlendByMesh.Clear();
+			alphaIneligibleMeshes.Clear();
+			Dictionary<Mesh, List<ObjectState>> instancesByMesh = alphaInstancesByMesh;
+			Dictionary<Mesh, HashSet<ObjectState>> seenByMesh = alphaSeenByMesh;
+			Dictionary<Mesh, byte> blendByMesh = alphaBlendByMesh;
+			HashSet<Mesh> ineligibleMeshes = alphaIneligibleMeshes;
 
 			foreach (FaceState face in alphaFaces)
 			{
@@ -2699,9 +2749,12 @@ namespace LibRender2
 			double cameraX = Camera.AbsolutePosition.X;
 			double cameraY = Camera.AbsolutePosition.Y;
 			double cameraZ = Camera.AbsolutePosition.Z;
-			Dictionary<Mesh, AlphaBatch> batchesByMesh = new Dictionary<Mesh, AlphaBatch>();
-			Dictionary<Mesh, HashSet<int>> batchedFaceIndices = new Dictionary<Mesh, HashSet<int>>();
-			List<FaceState> fallbackFaces = new List<FaceState>();
+			alphaBatchesByMesh.Clear();
+			alphaBatchedFaceIndices.Clear();
+			alphaFallbackFaces.Clear();
+			Dictionary<Mesh, AlphaBatch> batchesByMesh = alphaBatchesByMesh;
+			Dictionary<Mesh, HashSet<int>> batchedFaceIndices = alphaBatchedFaceIndices;
+			List<FaceState> fallbackFaces = alphaFallbackFaces;
 
 			foreach (FaceState face in alphaFaces)
 			{
@@ -2800,8 +2853,10 @@ namespace LibRender2
 			}
 
 			// Draw the batches themselves from the farthest to the nearest
-			List<AlphaBatch> sortedBatches = new List<AlphaBatch>(batchesByMesh.Values);
-			sortedBatches.Sort((a, b) => b.NearestDistance.CompareTo(a.NearestDistance));
+			alphaSortedBatches.Clear();
+			alphaSortedBatches.AddRange(batchesByMesh.Values);
+			alphaSortedBatches.Sort(AlphaBatchDistanceCompare);
+			List<AlphaBatch> sortedBatches = alphaSortedBatches;
 
 			EnsureInstanceMatrixBuffer();
 
