@@ -2152,7 +2152,10 @@ namespace LibRender2
 
 				if (seenInstances.Add(state))
 				{
-					if ((state.Matricies != null && state.Matricies.Length > 0) || !IsIdentityMatrix(state.TextureTranslation))
+					// Animated objects need their own matrix UBO and cannot share an instanced draw.
+					// Texture translation is deliberately ignored here: the instanced shadow path already
+					// binds an identity texture matrix, so it never affected the depth pass in the first place.
+					if (state.Matricies != null && state.Matricies.Length > 0)
 					{
 						ineligibleMeshes.Add(mesh);
 					}
