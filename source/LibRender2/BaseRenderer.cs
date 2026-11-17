@@ -1444,8 +1444,69 @@ namespace LibRender2
 		private readonly Dictionary<Mesh, List<MeshFace>> shadowBatchedFaces = new Dictionary<Mesh, List<MeshFace>>();
 		private readonly Dictionary<Mesh, HashSet<int>> shadowBatchedFaceIndices = new Dictionary<Mesh, HashSet<int>>();
 		private readonly List<FaceState> shadowFallbackFaces = new List<FaceState>();
+		private readonly Dictionary<ObjectState, List<MeshFace>> shadowFallbackByObject = new Dictionary<ObjectState, List<MeshFace>>();
+		private readonly List<ShadowDrawRange> shadowDrawRanges = new List<ShadowDrawRange>();
 
 		private static readonly Comparison<AlphaBatch> AlphaBatchDistanceCompare = (a, b) => b.NearestDistance.CompareTo(a.NearestDistance);
+		private static readonly Comparison<MeshFace> MeshFaceIboCompare = (a, b) => a.IboStartIndex.CompareTo(b.IboStartIndex);
+
+		/// <summary>A contiguous run of faces in a mesh's index buffer which can be drawn in a single call.</summary>
+		private struct ShadowDrawRange
+		{
+			public int Start;
+			public int Count;
+			public int Material;
+			public FaceFlags Flags;
+		}
+
+		/// <summary>
+		/// Collapses a set of faces into the fewest contiguous index-buffer ranges. Faces occupy consecutive
+		/// indices when they are consecutive in the mesh's face array, so neighbours sharing a material and
+		/// face flags need only one draw call instead of one each.
+		/// </summary>
+		private static void BuildShadowDrawRanges(List<MeshFace> faces, List<ShadowDrawRange> ranges)
+		{
+			ranges.Clear();
+			if (faces == null || faces.Count == 0)
+			{
+				return;
+			}
+			faces.Sort(MeshFaceIboCompare);
+			ShadowDrawRange current = default(ShadowDrawRange);
+			bool haveCurrent = false;
+			bool currentMergeable = false;
+			for (int i = 0; i < faces.Count; i++)
+			{
+				MeshFace face = faces[i];
+				if (face.Vertices.Length == 0)
+				{
+					continue;
+				}
+				// Only independent-primitive modes may share a range. Strips and polygons would be
+				// joined into a single primitive if their index ranges were concatenated.
+				FaceFlags type = face.Flags & FaceFlags.FaceTypeMask;
+				bool mergeable = type == FaceFlags.Triangles || type == FaceFlags.Quads;
+				int end = face.IboStartIndex + face.Vertices.Length;
+				if (haveCurrent && currentMergeable && mergeable && current.Material == face.Material && current.Flags == face.Flags && current.Start + current.Count == face.IboStartIndex)
+				{
+					current.Count = end - current.Start;
+				}
+				else
+				{
+					if (haveCurrent)
+					{
+						ranges.Add(current);
+					}
+					current = new ShadowDrawRange { Start = face.IboStartIndex, Count = face.Vertices.Length, Material = face.Material, Flags = face.Flags };
+					currentMergeable = mergeable;
+					haveCurrent = true;
+				}
+			}
+			if (haveCurrent)
+			{
+				ranges.Add(current);
+			}
+		}
 
 		/// <summary>Draws a face using the current shader</summary>
 		/// <param name="state">The FaceState to draw</param>
@@ -2153,28 +2214,32 @@ namespace LibRender2
 			{
 				foreach (KeyValuePair<Mesh, List<MeshFace>> batch in batchedFaces)
 				{
-					List<ObjectState> instances = instancesByMesh[batch.Key];
+					Mesh mesh = batch.Key;
+					List<ObjectState> instances = instancesByMesh[mesh];
+					VertexArrayObject VAO = (VertexArrayObject)mesh.VAO;
+
+					if (lastVAO != VAO.handle)
+					{
+						VAO.Bind();
+						lastVAO = VAO.handle;
+					}
+
+					// Adjacent faces sharing a material and face flags are one contiguous index range,
+					// so a single instanced call covers all of them rather than one call per face.
+					BuildShadowDrawRanges(batch.Value, shadowDrawRanges);
 
 					for (int start = 0; start < instances.Count; start += MaxInstancesPerBatch)
 					{
 						int count = Math.Min(MaxInstancesPerBatch, instances.Count - start);
 						UploadShadowInstanceMatrices(instances, start, count);
 
-						foreach (MeshFace face in batch.Value)
+						foreach (ShadowDrawRange range in shadowDrawRanges)
 						{
-							Mesh mesh = batch.Key;
-							MeshMaterial material = mesh.Materials[face.Material];
-							VertexArrayObject VAO = (VertexArrayObject)mesh.VAO;
-
-							if (lastVAO != VAO.handle)
-							{
-								VAO.Bind();
-								lastVAO = VAO.handle;
-							}
+							MeshMaterial material = mesh.Materials[range.Material];
 
 							if (OptionBackFaceCulling)
 							{
-								if ((face.Flags & FaceFlags.Face2Mask) != 0)
+								if ((range.Flags & FaceFlags.Face2Mask) != 0)
 								{
 									GL.Disable(EnableCap.CullFace);
 								}
@@ -2199,8 +2264,7 @@ namespace LibRender2
 							shader.SetMaterialAlpha(material.Color.A / 255.0f);
 							shader.SetMaterialFlags(material.Flags);
 
-							PrimitiveType drawMode = GetPrimitiveType(face.Flags);
-							VAO.DrawInstanced(drawMode, face.IboStartIndex, face.Vertices.Length, count);
+							VAO.DrawInstanced(GetPrimitiveType(range.Flags), range.Start, range.Count, count);
 							ShadowDrawCalls++;
 						}
 					}
@@ -2218,6 +2282,9 @@ namespace LibRender2
 		{
 			Vector3 cameraPos = Camera.AbsolutePosition;
 
+			// Group the remaining faces by object so the per-object matrix/texture state is set once, then
+			// collapse each object's faces into contiguous index ranges (one draw call per range).
+			shadowFallbackByObject.Clear();
 			foreach (FaceState faceState in faces)
 			{
 				FaceState face = faceState;
@@ -2226,43 +2293,40 @@ namespace LibRender2
 					continue;
 				}
 
+				ObjectState st = face.Object;
 				if (maxDistanceSquared < double.MaxValue)
 				{
-					ObjectState state = face.Object;
-					double dx = state.WorldPosition.X - cameraPos.X;
-					double dy = state.WorldPosition.Y - cameraPos.Y;
-					double dz = state.WorldPosition.Z - cameraPos.Z;
+					double dx = st.WorldPosition.X - cameraPos.X;
+					double dy = st.WorldPosition.Y - cameraPos.Y;
+					double dz = st.WorldPosition.Z - cameraPos.Z;
 					if (dx * dx + dy * dy + dz * dz > maxDistanceSquared)
 					{
 						continue;
 					}
 				}
 
-				ObjectState st = face.Object;
 				Mesh mesh = st.Prototype.Mesh;
 				MeshMaterial material = mesh.Materials[face.Face.Material];
-				if ((material.Flags & MaterialFlags.NoShadow) != 0 || material.BlendMode == MeshMaterialBlendMode.Additive)
+				if ((material.Flags & MaterialFlags.NoShadow) != 0 || material.BlendMode == MeshMaterialBlendMode.Additive || face.Face.Vertices.Length == 0)
 				{
 					continue;
 				}
 
+				if (!shadowFallbackByObject.TryGetValue(st, out List<MeshFace> objectFaces))
+				{
+					objectFaces = new List<MeshFace>();
+					shadowFallbackByObject.Add(st, objectFaces);
+				}
+				objectFaces.Add(face.Face);
+			}
+
+			foreach (KeyValuePair<ObjectState, List<MeshFace>> entry in shadowFallbackByObject)
+			{
+				ObjectState st = entry.Key;
+				Mesh mesh = st.Prototype.Mesh;
+
 				shader.SetModelMatrix(st.ModelMatrix * Camera.TranslationMatrix);
 				shader.SetTextureMatrix(st.TextureTranslation);
-
-				if (material.DaytimeTexture != null && currentHost.LoadTexture(ref material.DaytimeTexture, (OpenGlTextureWrapMode)(material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp)))
-				{
-					GL.ActiveTexture(TextureUnit.Texture0);
-					GL.BindTexture(TextureTarget.Texture2D, material.DaytimeTexture.OpenGlTextures[(int)(material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp)].Name);
-					shader.SetHasTexture(true);
-				}
-				else
-				{
-					shader.SetHasTexture(false);
-				}
-
-				shader.SetAlphaCutoff(0.5f);
-				shader.SetMaterialAlpha(material.Color.A / 255.0f);
-				shader.SetMaterialFlags(material.Flags);
 
 				if (st.Matricies != null && st.Matricies.Length > 0)
 				{
@@ -2277,21 +2341,41 @@ namespace LibRender2
 					lastVAO = vao.handle;
 				}
 
-				if (OptionBackFaceCulling)
+				BuildShadowDrawRanges(entry.Value, shadowDrawRanges);
+				foreach (ShadowDrawRange range in shadowDrawRanges)
 				{
-					if ((face.Face.Flags & FaceFlags.Face2Mask) != 0)
+					MeshMaterial material = mesh.Materials[range.Material];
+
+					if (material.DaytimeTexture != null && currentHost.LoadTexture(ref material.DaytimeTexture, (OpenGlTextureWrapMode)(material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp)))
 					{
-						GL.Disable(EnableCap.CullFace);
+						GL.ActiveTexture(TextureUnit.Texture0);
+						GL.BindTexture(TextureTarget.Texture2D, material.DaytimeTexture.OpenGlTextures[(int)(material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp)].Name);
+						shader.SetHasTexture(true);
 					}
 					else
 					{
-						GL.Enable(EnableCap.CullFace);
+						shader.SetHasTexture(false);
 					}
-				}
 
-				PrimitiveType drawMode = GetPrimitiveType(face.Face.Flags);
-				vao.Draw(drawMode, face.Face.IboStartIndex, face.Face.Vertices.Length);
-				ShadowDrawCalls++;
+					shader.SetAlphaCutoff(0.5f);
+					shader.SetMaterialAlpha(material.Color.A / 255.0f);
+					shader.SetMaterialFlags(material.Flags);
+
+					if (OptionBackFaceCulling)
+					{
+						if ((range.Flags & FaceFlags.Face2Mask) != 0)
+						{
+							GL.Disable(EnableCap.CullFace);
+						}
+						else
+						{
+							GL.Enable(EnableCap.CullFace);
+						}
+					}
+
+					vao.Draw(GetPrimitiveType(range.Flags), range.Start, range.Count);
+					ShadowDrawCalls++;
+				}
 			}
 		}
 
