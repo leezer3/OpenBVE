@@ -1403,6 +1403,8 @@ namespace LibRender2
 		public int OpaqueDrawCalls;
 		/// <summary>The number of primitive batches (draw calls) issued for alpha faces by the alpha pass of the current frame</summary>
 		public int AlphaDrawCalls;
+		/// <summary>The total number of draw calls issued by all shadow cascades of the current frame</summary>
+		public int ShadowDrawCalls;
 		/// <summary>The number of unique meshes contributing to the visible opaque faces</summary>
 		public int OpaqueUniqueMeshes;
 		/// <summary>The maximum number of instances drawn in a single instanced batch (must match the uInstanceMatricies array size in default.vert)</summary>
@@ -2151,6 +2153,7 @@ namespace LibRender2
 
 							PrimitiveType drawMode = GetPrimitiveType(face.Flags);
 							VAO.DrawInstanced(drawMode, face.IboStartIndex, face.Vertices.Length, count);
+							ShadowDrawCalls++;
 						}
 					}
 				}
@@ -2240,6 +2243,7 @@ namespace LibRender2
 
 				PrimitiveType drawMode = GetPrimitiveType(face.Face.Flags);
 				vao.Draw(drawMode, face.Face.IboStartIndex, face.Face.Vertices.Length);
+				ShadowDrawCalls++;
 			}
 		}
 

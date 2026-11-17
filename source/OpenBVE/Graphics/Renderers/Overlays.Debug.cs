@@ -208,6 +208,7 @@ namespace OpenBve.Graphics.Renderers
 					"overlay alpha faces: " + Program.Renderer.VisibleObjects.OverlayAlphaFaces.Count.ToString(Culture),
 					"opaque draw calls: " + Program.Renderer.OpaqueDrawCalls.ToString(Culture),
 					"alpha draw calls: " + Program.Renderer.AlphaDrawCalls.ToString(Culture),
+					"shadow draw calls: " + Program.Renderer.ShadowDrawCalls.ToString(Culture),
 					"textures loaded: " + renderer.TextureManager.GetNumberOfLoadedTextures().ToString(Culture) + " static, " + renderer.TextureManager.GetNumberOfLoadedAnimatedTextures() + " animated / " + texturesRegistered.ToString(Culture) + " total",
 					"",
 					"=camera",

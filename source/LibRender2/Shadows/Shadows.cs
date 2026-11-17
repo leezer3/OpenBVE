@@ -115,6 +115,8 @@ namespace LibRender2.ShadowMapping
 				return;
 			}
 
+			renderer.ShadowDrawCalls = 0;
+
 			// 1. Get light direction pointing FROM the sun TOWARD the scene
 			// Sun position is in OpenBVE coordinates (X: right, Y: up, Z: backward)
 			// Light direction needs to be negated for some components to match the shadow math.
