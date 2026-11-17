@@ -110,14 +110,14 @@ namespace LibRender2.ShadowMapping
 		/// </summary>
 		public void RenderPass()
 		{
+			renderer.ShadowDrawCalls = 0;
+			renderer.ShadowFallbackDrawCalls = 0;
+			renderer.ShadowInstancedDrawCalls = 0;
+
 			if (!Enabled || Map == null || Caster == null || DepthShader == null)
 			{
 				return;
 			}
-
-			renderer.ShadowDrawCalls = 0;
-			renderer.ShadowFallbackDrawCalls = 0;
-			renderer.ShadowInstancedDrawCalls = 0;
 
 			// 1. Get light direction pointing FROM the sun TOWARD the scene
 			// Sun position is in OpenBVE coordinates (X: right, Y: up, Z: backward)
