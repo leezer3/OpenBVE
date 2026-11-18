@@ -113,6 +113,11 @@ namespace LibRender2.ShadowMapping
 			renderer.ShadowDrawCalls = 0;
 			renderer.ShadowFallbackDrawCalls = 0;
 			renderer.ShadowInstancedDrawCalls = 0;
+			renderer.ShadowDiagSingletonMeshes = 0;
+			renderer.ShadowDiagMultiMeshes = 0;
+			renderer.ShadowDiagBatchedMeshes = 0;
+			renderer.ShadowDiagFallbackObjects = 0;
+			renderer.ShadowDiagFallbackAnimated = 0;
 
 			if (!Enabled || Map == null || Caster == null || DepthShader == null)
 			{
