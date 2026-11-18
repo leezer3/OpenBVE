@@ -107,11 +107,10 @@ vec3 safeNormalizeVec3(vec3 v) {
 	return v * inversesqrt(l2);
 }
 
-vec4 getLightResult(mat4 mv)
+vec4 getLightResult(vec3 normal)
 {
-	vNormal = safeNormalizeVec3(mat3(transpose(inverse(mv))) * vec3(iNormal.x, iNormal.y, -iNormal.z));
-	float nDotVP = max(0.0, dot(vNormal, vec3(uLight.position))); // pre-normalized on CPU in SetLightPosition
-	float nDotHV = max(0.0, dot(vNormal, normalize(vec3(oViewPos.xyz + uLight.position))));
+	float nDotVP = max(0.0, dot(normal, vec3(uLight.position))); // pre-normalized on CPU in SetLightPosition
+	float nDotHV = max(0.0, dot(normal, normalize(vec3(oViewPos.xyz + uLight.position))));
 	float pf = nDotVP == 0.0 ? 0.0 : pow(nDotHV, uMaterial.shininess);
 
 	vec4 ambient = vec4(uLight.ambient, 1.0);
@@ -276,5 +275,5 @@ void main()
 
 	oUv = (uCurrentTextureMatrix * vec4(iUv, 1.0, 1.0)).xy;
 	
-	oLightResult = uIsLight && (uMaterialFlags & 4) == 0 ? getLightResult(mv) : uMaterial.ambient;
+	oLightResult = uIsLight && (uMaterialFlags & 4) == 0 ? getLightResult(vNormal) : uMaterial.ambient;
 }
