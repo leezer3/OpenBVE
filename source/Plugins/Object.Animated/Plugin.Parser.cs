@@ -57,7 +57,7 @@ namespace Plugin
 							{
 								if (obj[j] is StaticObject s)
 								{
-									s.Dynamic = true;
+									// [Include] only places a static mesh at an offset; it has no motion, so keep it static
 									if (ObjectCount >= Result.Objects.Length)
 									{
 										Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
@@ -107,7 +107,7 @@ namespace Plugin
 								{
 									currentHost.AddMessage(MessageType.Warning, false, "Including MSTS Shape in an AnimatedObject- Contained animations may be lost. In the Section " + Block.Key + " in file " + FileName);
 									StaticObject so = (StaticObject)k;
-									so.Dynamic = true;
+									// [Include] only places a static mesh at an offset; it has no motion, so keep it static
 									if (ObjectCount >= Result.Objects.Length)
 									{
 										Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
@@ -247,7 +247,9 @@ namespace Plugin
 									 */
 									if (Result.Objects[ObjectCount].States[k].Prototype != null)
 									{
-										Result.Objects[ObjectCount].States[k].Prototype.Dynamic = true;
+										// An [Object] block with only States= (no functions) is just a grouping of
+										// static meshes; keep it static so the renderer caches its model matrix.
+										Result.Objects[ObjectCount].States[k].Prototype.Dynamic = !Result.Objects[ObjectCount].IsFreeOfFunctions();
 										for (int l = 0; l < Result.Objects[ObjectCount].States[k].Prototype.Mesh.Materials.Length; l++)
 										{
 											if (forceTextureRepeatX && forceTextureRepeatY)
