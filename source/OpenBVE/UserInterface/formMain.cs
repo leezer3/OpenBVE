@@ -506,6 +506,7 @@ namespace OpenBve {
 			updownShadowBias.Value = (decimal)Interface.CurrentOptions.ShadowBias;
 			updownShadowNormalBias.Value = (decimal)Interface.CurrentOptions.ShadowNormalBias;
 			checkboxShadowFilterCascades.Checked = Interface.CurrentOptions.ShadowFilterCascades;
+			checkboxShadowAutoCascadeResolution.Checked = Interface.CurrentOptions.ShadowAutoCascadeResolution;
 			checkboxShadowSmooth.Checked = Interface.CurrentOptions.ShadowSmooth;
 			// Map filter radius to preset: Low=1.0, Medium=1.5, High=2.5
 			if (Interface.CurrentOptions.ShadowFilterRadius < 1.25) comboboxShadowFilterRadius.SelectedIndex = 0;
@@ -516,6 +517,7 @@ namespace OpenBve {
 			comboboxShadowDistance.Enabled = shadowEnabled;
 			comboboxShadowCascades.Enabled = shadowEnabled;
 			checkboxShadowFilterCascades.Enabled = shadowEnabled;
+			checkboxShadowAutoCascadeResolution.Enabled = shadowEnabled;
 			checkboxShadowSmooth.Enabled = shadowEnabled;
 			bool softnessEnabled = shadowEnabled && checkboxShadowSmooth.Checked;
 			labelShadowSoftness.Enabled = softnessEnabled;
@@ -1321,6 +1323,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.ShadowBias = (double)updownShadowBias.Value;
 			Interface.CurrentOptions.ShadowNormalBias = (double)updownShadowNormalBias.Value;
 			Interface.CurrentOptions.ShadowFilterCascades = checkboxShadowFilterCascades.Checked;
+			Interface.CurrentOptions.ShadowAutoCascadeResolution = checkboxShadowAutoCascadeResolution.Checked;
 			Interface.CurrentOptions.ShadowSmooth = checkboxShadowSmooth.Checked;
 			Interface.CurrentOptions.ShadowFilterRadius = comboboxShadowFilterRadius.SelectedIndex == 0 ? 1.0 : comboboxShadowFilterRadius.SelectedIndex == 2 ? 2.5 : 1.5;
 			Interface.CurrentOptions.GameMode = (GameMode)comboboxMode.SelectedIndex;

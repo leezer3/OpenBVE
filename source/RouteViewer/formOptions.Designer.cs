@@ -87,6 +87,8 @@ namespace RouteViewer
             this.numericUpDownShadowNormalBias = new System.Windows.Forms.NumericUpDown();
             this.labelShadowFilterCascades = new System.Windows.Forms.Label();
             this.checkBoxShadowFilterCascades = new System.Windows.Forms.CheckBox();
+            this.labelShadowAutoCascadeResolution = new System.Windows.Forms.Label();
+            this.checkBoxShadowAutoCascadeResolution = new System.Windows.Forms.CheckBox();
             this.checkBoxShadowSmooth = new System.Windows.Forms.CheckBox();
             this.labelShadowSmooth = new System.Windows.Forms.Label();
             this.labelShadowFilterRadius = new System.Windows.Forms.Label();
@@ -569,10 +571,12 @@ namespace RouteViewer
                     { this.comboboxShadowFilterRadius, 1, 7 },
                     { this.labelShadowFilterCascades, 0, 8 },
                     { this.checkBoxShadowFilterCascades, 1, 8 },
+                    { this.labelShadowAutoCascadeResolution, 0, 9 },
+                    { this.checkBoxShadowAutoCascadeResolution, 1, 9 },
                     // Sun Direction
-                    { this.labelSunDirection, 0, 9 },
-                    { this.labelSunAzimuth, 0, 10 },
-                    { this.labelSunElevation, 0, 12 }
+                    { this.labelSunDirection, 0, 10 },
+                    { this.labelSunAzimuth, 0, 11 },
+                    { this.labelSunElevation, 0, 13 }
                 }
             };
             tlpShadows.SetColumnSpan(this.labelSunDirection, 2);
@@ -595,7 +599,7 @@ namespace RouteViewer
                 }
             };
             this.trackBarSunAzimuth.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            tlpShadows.Controls.Add(panelAzimuth, 0, 11);
+            tlpShadows.Controls.Add(panelAzimuth, 0, 12);
             tlpShadows.SetColumnSpan(panelAzimuth, 2);
             var panelElevation = new System.Windows.Forms.TableLayoutPanel
             {
@@ -614,7 +618,7 @@ namespace RouteViewer
                 }
             };
             this.trackBarSunElevation.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            tlpShadows.Controls.Add(panelElevation, 0, 13);
+            tlpShadows.Controls.Add(panelElevation, 0, 14);
             tlpShadows.SetColumnSpan(panelElevation, 2);
             this.tabPageShadows.Controls.Add(tlpShadows);
             this.tabPageShadows.Location = new System.Drawing.Point(4, 22);
@@ -919,6 +923,25 @@ namespace RouteViewer
             this.checkBoxShadowFilterCascades.TabIndex = 57;
             this.checkBoxShadowFilterCascades.UseVisualStyleBackColor = true;
             // 
+            // labelShadowAutoCascadeResolution
+            // 
+            this.labelShadowAutoCascadeResolution.AutoSize = true;
+            this.labelShadowAutoCascadeResolution.Location = new System.Drawing.Point(6, 237);
+            this.labelShadowAutoCascadeResolution.Name = "labelShadowAutoCascadeResolution";
+            this.labelShadowAutoCascadeResolution.Size = new System.Drawing.Size(148, 13);
+            this.labelShadowAutoCascadeResolution.TabIndex = 58;
+            this.labelShadowAutoCascadeResolution.Text = "Auto cascade resolution:";
+            // 
+            // checkBoxShadowAutoCascadeResolution
+            // 
+            this.checkBoxShadowAutoCascadeResolution.AutoSize = true;
+            this.checkBoxShadowAutoCascadeResolution.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.checkBoxShadowAutoCascadeResolution.Location = new System.Drawing.Point(160, 237);
+            this.checkBoxShadowAutoCascadeResolution.Name = "checkBoxShadowAutoCascadeResolution";
+            this.checkBoxShadowAutoCascadeResolution.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxShadowAutoCascadeResolution.TabIndex = 59;
+            this.checkBoxShadowAutoCascadeResolution.UseVisualStyleBackColor = true;
+            // 
             // labelNearClip
             // 
             this.labelNearClip.AutoSize = true;
@@ -1133,6 +1156,8 @@ namespace RouteViewer
         private System.Windows.Forms.Label labelShadowFilterCascades;
         private System.Windows.Forms.Label labelShadowFilterRadius;
         private System.Windows.Forms.CheckBox checkBoxShadowFilterCascades;
+        private System.Windows.Forms.Label labelShadowAutoCascadeResolution;
+        private System.Windows.Forms.CheckBox checkBoxShadowAutoCascadeResolution;
         private System.Windows.Forms.Label labelOptimizeObjects;
         private System.Windows.Forms.ComboBox comboBoxOptimizeObjects;
         private System.Windows.Forms.Label labelVSync;

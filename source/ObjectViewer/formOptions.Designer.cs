@@ -99,6 +99,8 @@ namespace ObjectViewer
             this.comboBoxShadowFilterRadius = new System.Windows.Forms.ComboBox();
             this.labelShadowFilterCascades = new System.Windows.Forms.Label();
             this.checkBoxShadowFilterCascades = new System.Windows.Forms.CheckBox();
+            this.labelShadowAutoCascadeResolution = new System.Windows.Forms.Label();
+            this.checkBoxShadowAutoCascadeResolution = new System.Windows.Forms.CheckBox();
             this.labelVSync = new System.Windows.Forms.Label();
             this.comboBoxVSync = new System.Windows.Forms.ComboBox();
             this.labelFPSLimit = new System.Windows.Forms.Label();
@@ -535,10 +537,12 @@ namespace ObjectViewer
                     { this.comboBoxShadowFilterRadius, 1, 7 },
                     { this.labelShadowFilterCascades, 0, 8 },
                     { this.checkBoxShadowFilterCascades, 1, 8 },
+                    { this.labelShadowAutoCascadeResolution, 0, 9 },
+                    { this.checkBoxShadowAutoCascadeResolution, 1, 9 },
                     // Sun Direction
-                    { this.labelSunDirection, 0, 9 },
-                    { this.labelSunAzimuth, 0, 10 },
-                    { this.labelSunElevation, 0, 12 }
+                    { this.labelSunDirection, 0, 10 },
+                    { this.labelSunAzimuth, 0, 11 },
+                    { this.labelSunElevation, 0, 13 }
                 }
             };
             tlpShadows.SetColumnSpan(this.labelSunDirection, 2);
@@ -561,7 +565,7 @@ namespace ObjectViewer
                 }
             };
             this.trackBarSunAzimuth.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            tlpShadows.Controls.Add(azimuthPanel, 0, 11);
+            tlpShadows.Controls.Add(azimuthPanel, 0, 12);
             tlpShadows.SetColumnSpan(azimuthPanel, 2);
             var elevationPanel = new System.Windows.Forms.TableLayoutPanel
             {
@@ -580,7 +584,7 @@ namespace ObjectViewer
                 }
             };
             this.trackBarSunElevation.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            tlpShadows.Controls.Add(elevationPanel, 0, 13);
+            tlpShadows.Controls.Add(elevationPanel, 0, 14);
             tlpShadows.SetColumnSpan(elevationPanel, 2);
             this.tabPageShadows.Controls.Add(tlpShadows);
             this.tabPageShadows.AutoScroll = true;
@@ -1190,6 +1194,24 @@ namespace ObjectViewer
             this.checkBoxShadowFilterCascades.TabIndex = 59;
             this.checkBoxShadowFilterCascades.UseVisualStyleBackColor = true;
             // 
+            // labelShadowAutoCascadeResolution
+            // 
+            this.labelShadowAutoCascadeResolution.AutoSize = true;
+            this.labelShadowAutoCascadeResolution.Location = new System.Drawing.Point(6, 255);
+            this.labelShadowAutoCascadeResolution.Name = "labelShadowAutoCascadeResolution";
+            this.labelShadowAutoCascadeResolution.Size = new System.Drawing.Size(148, 13);
+            this.labelShadowAutoCascadeResolution.TabIndex = 60;
+            this.labelShadowAutoCascadeResolution.Text = "Auto cascade resolution:";
+            // 
+            // checkBoxShadowAutoCascadeResolution
+            // 
+            this.checkBoxShadowAutoCascadeResolution.AutoSize = true;
+            this.checkBoxShadowAutoCascadeResolution.Location = new System.Drawing.Point(160, 255);
+            this.checkBoxShadowAutoCascadeResolution.Name = "checkBoxShadowAutoCascadeResolution";
+            this.checkBoxShadowAutoCascadeResolution.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxShadowAutoCascadeResolution.TabIndex = 61;
+            this.checkBoxShadowAutoCascadeResolution.UseVisualStyleBackColor = true;
+            // 
             // formOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1304,6 +1326,8 @@ namespace ObjectViewer
 		private System.Windows.Forms.Label labelShadowFilterCascades;
 		private System.Windows.Forms.Label labelShadowFilterRadius;
 		private System.Windows.Forms.CheckBox checkBoxShadowFilterCascades;
+		private System.Windows.Forms.Label labelShadowAutoCascadeResolution;
+		private System.Windows.Forms.CheckBox checkBoxShadowAutoCascadeResolution;
 		private System.Windows.Forms.Label labelVSync;
 		private System.Windows.Forms.ComboBox comboBoxVSync;
 		private System.Windows.Forms.Label labelFPSLimit;
