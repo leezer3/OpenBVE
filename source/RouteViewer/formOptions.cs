@@ -98,6 +98,7 @@ namespace RouteViewer
 				labelNearClip.Text = Translations.GetInterfaceString(OpenBveApi.Hosts.HostApplication.OpenBve, new[] { "options", "quality_distance_nearclip" });
 			}
 			checkBoxShadowFilterCascades.Checked = Interface.CurrentOptions.ShadowFilterCascades;
+			checkBoxShadowAutoCascadeResolution.Checked = Interface.CurrentOptions.ShadowAutoCascadeResolution;
 			checkBoxShadowSmooth.Checked = Interface.CurrentOptions.ShadowSmooth;
 			UpdateShadowControlsEnabled();
 
@@ -239,6 +240,7 @@ namespace RouteViewer
             checkBoxShadowSmooth.Enabled = enabled;
             comboboxShadowFilterRadius.Enabled = enabled && checkBoxShadowSmooth.Checked;
             checkBoxShadowFilterCascades.Enabled = enabled;
+            checkBoxShadowAutoCascadeResolution.Enabled = enabled;
         }
 
         private void comboBoxShadowResolution_SelectedIndexChanged(object sender, EventArgs e)
@@ -258,6 +260,7 @@ namespace RouteViewer
             // size changes unapplied until OK.
             comboBoxShadowDistance.SelectedIndexChanged += ShadowMapSetting_Changed;
             comboBoxShadowCascades.SelectedIndexChanged += ShadowMapSetting_Changed;
+            checkBoxShadowAutoCascadeResolution.CheckedChanged += ShadowMapSetting_Changed;
             numericUpDownShadowStrength.ValueChanged += ShadowValue_Changed;
             numericUpDownShadowBias.ValueChanged += ShadowValue_Changed;
             numericUpDownShadowNormalBias.ValueChanged += ShadowValue_Changed;
@@ -336,6 +339,7 @@ namespace RouteViewer
             Interface.CurrentOptions.ShadowBias = (double)numericUpDownShadowBias.Value;
             Interface.CurrentOptions.ShadowNormalBias = (double)numericUpDownShadowNormalBias.Value;
             Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
+            Interface.CurrentOptions.ShadowAutoCascadeResolution = checkBoxShadowAutoCascadeResolution.Checked;
         }
 
         private void ReadShadowFilter()
@@ -360,11 +364,13 @@ namespace RouteViewer
             ShadowMapResolution oldResolution = Interface.CurrentOptions.ShadowResolution;
             ShadowDistance oldDistance = Interface.CurrentOptions.ShadowDrawDistance;
             ShadowCascadeCount oldCascades = Interface.CurrentOptions.ShadowCascades;
+            bool oldAutoResolution = Interface.CurrentOptions.ShadowAutoCascadeResolution;
             ReadShadowMapSize();
             ReadShadowTweaks();
             if (Interface.CurrentOptions.ShadowResolution != oldResolution ||
                 Interface.CurrentOptions.ShadowDrawDistance != oldDistance ||
-                Interface.CurrentOptions.ShadowCascades != oldCascades)
+                Interface.CurrentOptions.ShadowCascades != oldCascades ||
+                Interface.CurrentOptions.ShadowAutoCascadeResolution != oldAutoResolution)
             {
                 Program.ShadowSettingsDirty = true;
             }
@@ -622,6 +628,7 @@ namespace RouteViewer
             Interface.CurrentOptions.ShadowBias = (double)numericUpDownShadowBias.Value;
             Interface.CurrentOptions.ShadowNormalBias = (double)numericUpDownShadowNormalBias.Value;
             Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
+            Interface.CurrentOptions.ShadowAutoCascadeResolution = checkBoxShadowAutoCascadeResolution.Checked;
             ReadShadowFilter();
 
 			// VSync and FPS Limit
@@ -651,6 +658,7 @@ namespace RouteViewer
 			bool shadowChanged = Program.PrevShadowResolution != Interface.CurrentOptions.ShadowResolution || Program.PrevShadowDistance != Interface.CurrentOptions.ShadowDrawDistance || Program.PrevShadowCascades != Interface.CurrentOptions.ShadowCascades ||
 			    Program.PrevShadowStrength != Interface.CurrentOptions.ShadowStrength || Program.PrevShadowBias != Interface.CurrentOptions.ShadowBias || Program.PrevShadowNormalBias != Interface.CurrentOptions.ShadowNormalBias ||
 			    Program.PrevShadowFilterCascades != Interface.CurrentOptions.ShadowFilterCascades ||
+			    Program.PrevShadowAutoCascadeResolution != Interface.CurrentOptions.ShadowAutoCascadeResolution ||
 			    Program.PrevShadowSmooth != Interface.CurrentOptions.ShadowSmooth || Program.PrevShadowFilterRadius != Interface.CurrentOptions.ShadowFilterRadius;
 			if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnisotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel || GraphicsModeChanged || Interface.CurrentOptions.ViewingDistance != previousViewingDistance ||
 			    shadowChanged ||

@@ -30,11 +30,6 @@ namespace RouteViewer
 	{
 		// stats
 		internal bool RenderStatsOverlay = true;
-		// per-pass CPU timing (milliseconds)
-		private readonly Stopwatch passTimer = new Stopwatch();
-		internal double ShadowPassMs;
-		internal double OpaquePassMs;
-		internal double AlphaPassMs;
 
 		// options
 		internal bool OptionInterface = true;
@@ -150,10 +145,7 @@ namespace RouteViewer
 				Program.CurrentRoute.CurrentFog = Program.CurrentRoute.PreviousFog;
 			}
 
-			passTimer.Restart();
 			PerformCSMShadowPass();
-			passTimer.Stop();
-			ShadowPassMs = passTimer.Elapsed.TotalMilliseconds;
 			DefaultShader.Activate();
 			BindCSMToDefaultShader();
 
@@ -207,16 +199,12 @@ namespace RouteViewer
             
 			bool alphaToCoverage = BeginAlphaToCoverage();
 			OpaqueDrawCalls = 0;
-			passTimer.Restart();
 			RenderOpaqueFaces(opaqueFaces);
-			passTimer.Stop();
-			OpaquePassMs = passTimer.Elapsed.TotalMilliseconds;
 			EndAlphaToCoverage(alphaToCoverage);
 
 			// alpha face
 			ResetOpenGlState();
 			AlphaDrawCalls = 0;
-			passTimer.Restart();
 
 			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 			{
@@ -239,8 +227,6 @@ namespace RouteViewer
 				GL.DepthMask(false);
 				RenderAlphaFaces(alphaFaces, qualityBlendPass: true);
 			}
-			passTimer.Stop();
-			AlphaPassMs = passTimer.Elapsed.TotalMilliseconds;
 
 			if (OptionPaths)
 			{
@@ -844,9 +830,6 @@ namespace RouteViewer
 							OpenGlString.Draw(Fonts.SmallFont, $"Instanced opaque: {(OptionInstancing ? "On" : "Off")} (F6)", new Vector2(4, Screen.Height - 80), TextAlignment.TopLeft, Color128.White, true);
 							OpenGlString.Draw(Fonts.SmallFont, $"Instanced alpha: {alphaInstancingMode} (F4)", new Vector2(4, Screen.Height - 68), TextAlignment.TopLeft, Color128.White, true);
 							OpenGlString.Draw(Fonts.SmallFont, $"Event markers: {markerCount} of {markerCandidates} ({markerDrawCalls} draw calls, {EventMarkerDistanceName})", new Vector2(4, Screen.Height - 56), TextAlignment.TopLeft, Color128.White, true);
-							OpenGlString.Draw(Fonts.SmallFont, $"Pass CPU ms: shadow {ShadowPassMs.ToString("0.0", culture)} / opaque {OpaquePassMs.ToString("0.0", culture)} / alpha {AlphaPassMs.ToString("0.0", culture)}", new Vector2(4, Screen.Height - 44), TextAlignment.TopLeft, Color128.White, true);
-							OpenGlString.Draw(Fonts.SmallFont, $"Shadow diag (all cascades): single-mesh {ShadowDiagSingletonMeshes} / multi-mesh {ShadowDiagMultiMeshes} / batched {ShadowDiagBatchedMeshes}", new Vector2(4, Screen.Height - 32), TextAlignment.TopLeft, Color128.White, true);
-							OpenGlString.Draw(Fonts.SmallFont, $"Shadow diag fallback: objects {ShadowDiagFallbackObjects} / animated {ShadowDiagFallbackAnimated}", new Vector2(4, Screen.Height - 20), TextAlignment.TopLeft, Color128.White, true);
 						}
 						
 					}

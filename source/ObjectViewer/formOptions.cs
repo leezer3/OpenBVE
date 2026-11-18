@@ -31,6 +31,7 @@ namespace ObjectViewer
 		private double initialShadowBias;
 		private double initialShadowNormalBias;
 		private bool initialShadowFilterCascades;
+		private bool initialShadowAutoCascadeResolution;
 		private bool initialShadowSmooth;
 		private double initialShadowFilterRadius;
 		private Vector3 initialOptionLightPosition;
@@ -112,6 +113,7 @@ namespace ObjectViewer
 			checkBoxAutoReload.Checked = Interface.CurrentOptions.AutoReloadObjects;
 			checkBoxProgressBar.Checked = Interface.CurrentOptions.LoadingProgressBar;
 			checkBoxShadowFilterCascades.Checked = Interface.CurrentOptions.ShadowFilterCascades;
+			checkBoxShadowAutoCascadeResolution.Checked = Interface.CurrentOptions.ShadowAutoCascadeResolution;
 			checkBoxShadowSmooth.Checked = Interface.CurrentOptions.ShadowSmooth;
 			UpdateShadowControlsEnabled();
 			checkBoxShowGround.Checked = Interface.CurrentOptions.ShowGround;
@@ -149,6 +151,7 @@ namespace ObjectViewer
 			initialShadowBias = Interface.CurrentOptions.ShadowBias;
 			initialShadowNormalBias = Interface.CurrentOptions.ShadowNormalBias;
 			initialShadowFilterCascades = Interface.CurrentOptions.ShadowFilterCascades;
+			initialShadowAutoCascadeResolution = Interface.CurrentOptions.ShadowAutoCascadeResolution;
 			initialShadowSmooth = Interface.CurrentOptions.ShadowSmooth;
 			initialShadowFilterRadius = Interface.CurrentOptions.ShadowFilterRadius;
 			initialShowGround = Interface.CurrentOptions.ShowGround;
@@ -176,6 +179,7 @@ namespace ObjectViewer
 			Interface.CurrentOptions.ShadowBias = initialShadowBias;
 			Interface.CurrentOptions.ShadowNormalBias = initialShadowNormalBias;
 			Interface.CurrentOptions.ShadowFilterCascades = initialShadowFilterCascades;
+			Interface.CurrentOptions.ShadowAutoCascadeResolution = initialShadowAutoCascadeResolution;
 			Interface.CurrentOptions.ShadowSmooth = initialShadowSmooth;
 			Interface.CurrentOptions.ShadowFilterRadius = initialShadowFilterRadius;
 			Interface.CurrentOptions.ShowGround = initialShowGround;
@@ -308,6 +312,7 @@ namespace ObjectViewer
 			checkBoxShadowSmooth.Enabled = enabled;
 			comboBoxShadowFilterRadius.Enabled = enabled && checkBoxShadowSmooth.Checked;
 			checkBoxShadowFilterCascades.Enabled = enabled;
+			checkBoxShadowAutoCascadeResolution.Enabled = enabled;
 		}
 
 		private void comboBoxShadowResolution_SelectedIndexChanged(object sender, EventArgs e)
@@ -327,6 +332,7 @@ namespace ObjectViewer
 			// size changes unapplied until OK.
 			comboBoxShadowDistance.SelectedIndexChanged += ShadowMapSetting_Changed;
 			comboBoxShadowCascades.SelectedIndexChanged += ShadowMapSetting_Changed;
+			checkBoxShadowAutoCascadeResolution.CheckedChanged += ShadowMapSetting_Changed;
 			numericUpDownShadowStrength.ValueChanged += ShadowValue_Changed;
 			numericUpDownShadowBias.ValueChanged += ShadowValue_Changed;
 			numericUpDownShadowNormalBias.ValueChanged += ShadowValue_Changed;
@@ -405,6 +411,7 @@ namespace ObjectViewer
 			Interface.CurrentOptions.ShadowBias = (double)numericUpDownShadowBias.Value;
 			Interface.CurrentOptions.ShadowNormalBias = (double)numericUpDownShadowNormalBias.Value;
 			Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
+			Interface.CurrentOptions.ShadowAutoCascadeResolution = checkBoxShadowAutoCascadeResolution.Checked;
 		}
 
 		private void ReadShadowFilter()
@@ -429,11 +436,13 @@ namespace ObjectViewer
 			ShadowMapResolution oldResolution = Interface.CurrentOptions.ShadowResolution;
 			ShadowDistance oldDistance = Interface.CurrentOptions.ShadowDrawDistance;
 			ShadowCascadeCount oldCascades = Interface.CurrentOptions.ShadowCascades;
+			bool oldAutoResolution = Interface.CurrentOptions.ShadowAutoCascadeResolution;
 			ReadShadowMapSize();
 			ReadShadowTweaks();
 			if (Interface.CurrentOptions.ShadowResolution != oldResolution ||
 				Interface.CurrentOptions.ShadowDrawDistance != oldDistance ||
-				Interface.CurrentOptions.ShadowCascades != oldCascades)
+				Interface.CurrentOptions.ShadowCascades != oldCascades ||
+				Interface.CurrentOptions.ShadowAutoCascadeResolution != oldAutoResolution)
 			{
 				Program.ShadowSettingsDirty = true;
 			}
@@ -686,6 +695,7 @@ namespace ObjectViewer
 			Interface.CurrentOptions.ShadowBias = (double)numericUpDownShadowBias.Value;
 			Interface.CurrentOptions.ShadowNormalBias = (double)numericUpDownShadowNormalBias.Value;
 			Interface.CurrentOptions.ShadowFilterCascades = checkBoxShadowFilterCascades.Checked;
+			Interface.CurrentOptions.ShadowAutoCascadeResolution = checkBoxShadowAutoCascadeResolution.Checked;
 			ReadShadowFilter();
 			
 			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));

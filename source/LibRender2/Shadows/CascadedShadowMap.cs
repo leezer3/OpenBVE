@@ -5,7 +5,7 @@ namespace LibRender2.ShadowMapping
 {
     /// <summary>
     /// Manages multiple depth-only FBOs for Cascaded Shadow Mapping.
-    /// Each cascade gets its own FBO and depth texture at the same resolution.
+    /// Each cascade gets its own FBO and depth texture; resolutions may taper with distance.
     /// </summary>
     public class CascadedShadowMap : IDisposable
     {
@@ -28,12 +28,13 @@ namespace LibRender2.ShadowMapping
         /// Creates cascaded shadow maps.
         /// </summary>
         /// <param name="cascadeCount">Number of cascades (typically 3 or 4).</param>
-        /// <param name="resolution">Resolution of each cascade's depth texture.</param>
-        public CascadedShadowMap(int cascadeCount = 3, int resolution = 2048)
+        /// <param name="resolution">Base resolution of the nearest cascade's depth texture.</param>
+        /// <param name="autoResolution">Whether farther cascades use progressively lower resolutions.</param>
+        public CascadedShadowMap(int cascadeCount = 3, int resolution = 2048, bool autoResolution = true)
         {
             CascadeCount = cascadeCount;
             Resolution = resolution;
-            Resolutions = BuildResolutions(cascadeCount, resolution);
+            Resolutions = BuildResolutions(cascadeCount, resolution, autoResolution);
             FBOs = new int[cascadeCount];
             DepthTextures = new int[cascadeCount];
 
@@ -48,8 +49,9 @@ namespace LibRender2.ShadowMapping
         /// Call this when the user changes shadow settings.
         /// </summary>
         /// <param name="newCascadeCount">New number of cascades.</param>
-        /// <param name="newResolution">New resolution per cascade.</param>
-        public void Resize(int newCascadeCount, int newResolution)
+        /// <param name="newResolution">Base resolution of the nearest cascade.</param>
+        /// <param name="autoResolution">Whether farther cascades use progressively lower resolutions.</param>
+        public void Resize(int newCascadeCount, int newResolution, bool autoResolution = true)
         {
             // Dispose old resources
             Dispose();
@@ -57,7 +59,7 @@ namespace LibRender2.ShadowMapping
             // Reallocate
             CascadeCount = newCascadeCount;
             Resolution = newResolution;
-            Resolutions = BuildResolutions(newCascadeCount, newResolution);
+            Resolutions = BuildResolutions(newCascadeCount, newResolution, autoResolution);
             FBOs = new int[newCascadeCount];
             DepthTextures = new int[newCascadeCount];
 
@@ -149,15 +151,16 @@ namespace LibRender2.ShadowMapping
         }
 
         /// <summary>
-        /// Near cascades keep the requested resolution; farther cascades use progressively
-        /// lower resolutions to cut fill rate while preserving close-up shadow quality.
+        /// When autoResolution is enabled, near cascades keep the requested resolution and
+        /// farther cascades step down to cut fill rate. Otherwise every cascade uses the
+        /// full requested resolution.
         /// </summary>
-        private static int[] BuildResolutions(int cascadeCount, int baseResolution)
+        private static int[] BuildResolutions(int cascadeCount, int baseResolution, bool autoResolution)
         {
             int[] resolutions = new int[cascadeCount];
             for (int i = 0; i < cascadeCount; i++)
             {
-                int scale = i == 0 ? 1 : (i == 1 ? 2 : 4);
+                int scale = autoResolution ? (i == 0 ? 1 : (i == 1 ? 2 : 4)) : 1;
                 int resolution = baseResolution / scale;
                 if (resolution < 512)
                 {

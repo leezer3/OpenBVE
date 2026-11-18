@@ -1415,12 +1415,6 @@ namespace LibRender2
 		public int ShadowFallbackDrawCalls;
 		/// <summary>Shadow draw calls issued through the instanced batching path</summary>
 		public int ShadowInstancedDrawCalls;
-		// Diagnostics: where shadow fallback draw calls come from (accumulated over all cascades of a frame)
-		public int ShadowDiagSingletonMeshes;
-		public int ShadowDiagMultiMeshes;
-		public int ShadowDiagBatchedMeshes;
-		public int ShadowDiagFallbackObjects;
-		public int ShadowDiagFallbackAnimated;
 		/// <summary>The number of unique meshes contributing to the visible opaque faces</summary>
 		public int OpaqueUniqueMeshes;
 		/// <summary>The maximum number of instances drawn in a single instanced batch (must match the uInstanceMatricies array size in default.vert)</summary>
@@ -2194,19 +2188,6 @@ namespace LibRender2
 				}
 			}
 
-			// Diagnostics: how many meshes have only one visible instance (cannot batch)
-			foreach (KeyValuePair<Mesh, List<ObjectState>> kv in instancesByMesh)
-			{
-				if (kv.Value.Count < 2)
-				{
-					ShadowDiagSingletonMeshes++;
-				}
-				else
-				{
-					ShadowDiagMultiMeshes++;
-				}
-			}
-
 			// Partition the faces into batches (sharing a mesh) and the remainder.
 			ClearValues(shadowBatchedFaces);
 			ClearValues(shadowBatchedFaceIndices);
@@ -2261,7 +2242,6 @@ namespace LibRender2
 			// Draw the faces which cannot be batched individually, exactly as the original path.
 			RenderShadowFacesFallback(shader, fallbackFaces, maxDistanceSquared, ref lastVAO);
 
-			ShadowDiagBatchedMeshes += batchedFaces.Count;
 			if (batchedFaces.Count == 0)
 			{
 				return;
@@ -2382,16 +2362,10 @@ namespace LibRender2
 				objectFaces.Add(face.Face);
 			}
 
-			ShadowDiagFallbackObjects += shadowFallbackByObject.Count;
 			foreach (KeyValuePair<ObjectState, List<MeshFace>> entry in shadowFallbackByObject)
 			{
 				ObjectState st = entry.Key;
 				Mesh mesh = st.Prototype.Mesh;
-
-				if (st.Matricies != null && st.Matricies.Length > 0 && !HasIdentityMatricies(st))
-				{
-					ShadowDiagFallbackAnimated++;
-				}
 
 				shader.SetModelMatrix(st.ModelMatrix * Camera.TranslationMatrix);
 				shader.SetTextureMatrix(st.TextureTranslation);

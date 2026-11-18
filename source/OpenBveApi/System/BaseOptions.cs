@@ -91,13 +91,15 @@ namespace OpenBveApi
 		/// <summary>Shadow darkness strength. 0.0 = invisible, 1.0 = full black.</summary>
 		public double ShadowStrength = 0.7;
 		/// <summary>Shadow bias to prevent shadow acne.</summary>
-		public double ShadowBias = 0.000005; // default synced to 0.000005
+		public double ShadowBias = 0.000100;
 		/// <summary>Shadow normal bias in shadow-map texels (Unity-style). Typical 0.3-1.0; higher detaches shadows.</summary>
 		public double ShadowNormalBias = 0.8;
 		/// <summary>Whether to filter shadow casters per cascade to improve performance.</summary>
 		public bool ShadowFilterCascades = true;
 		/// <summary>Whether smooth (Vogel disk + IGN) shadow filtering is enabled. If false, sharp 4-tap grid is used.</summary>
-		public bool ShadowSmooth = true;
+		public bool ShadowSmooth = false;
+		/// <summary>Whether far cascades progressively use a lower resolution. If false, every cascade uses the selected resolution.</summary>
+		public bool ShadowAutoCascadeResolution = true;
 		/// <summary>Shadow filter radius in texels for smooth mode (1.0 = sharper, 2.5 = softer).</summary>
 		public double ShadowFilterRadius = 1.5;
 

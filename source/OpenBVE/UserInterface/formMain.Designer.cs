@@ -186,6 +186,7 @@ namespace OpenBve {
             this.labelShadowResolution = new System.Windows.Forms.Label();
             this.comboboxShadowResolution = new System.Windows.Forms.ComboBox();
             this.checkboxShadowFilterCascades = new System.Windows.Forms.CheckBox();
+            this.checkboxShadowAutoCascadeResolution = new System.Windows.Forms.CheckBox();
             this.checkboxShadowSmooth = new System.Windows.Forms.CheckBox();
             this.labelShadowDistance = new System.Windows.Forms.Label();
             this.comboboxShadowDistance = new System.Windows.Forms.ComboBox();
@@ -2686,10 +2687,11 @@ namespace OpenBve {
             this.groupboxShadows.Controls.Add(this.labelShadowSoftness);
             this.groupboxShadows.Controls.Add(this.comboboxShadowFilterRadius);
             this.groupboxShadows.Controls.Add(this.checkboxShadowFilterCascades);
+            this.groupboxShadows.Controls.Add(this.checkboxShadowAutoCascadeResolution);
             this.groupboxShadows.ForeColor = System.Drawing.Color.Black;
             this.groupboxShadows.Location = new System.Drawing.Point(330, 0);
             this.groupboxShadows.Name = "groupboxShadows";
-            this.groupboxShadows.Size = new System.Drawing.Size(321, 260);
+            this.groupboxShadows.Size = new System.Drawing.Size(321, 290);
             this.groupboxShadows.TabIndex = 30;
             this.groupboxShadows.TabStop = false;
             this.groupboxShadows.Text = "Shadows";
@@ -2819,6 +2821,16 @@ namespace OpenBve {
             this.checkboxShadowFilterCascades.TabIndex = 14;
             this.checkboxShadowFilterCascades.Text = "Per-cascade culling";
             this.checkboxShadowFilterCascades.UseVisualStyleBackColor = true;
+            // 
+            // checkboxShadowAutoCascadeResolution
+            // 
+            this.checkboxShadowAutoCascadeResolution.AutoSize = true;
+            this.checkboxShadowAutoCascadeResolution.Location = new System.Drawing.Point(8, 266);
+            this.checkboxShadowAutoCascadeResolution.Name = "checkboxShadowAutoCascadeResolution";
+            this.checkboxShadowAutoCascadeResolution.Size = new System.Drawing.Size(168, 17);
+            this.checkboxShadowAutoCascadeResolution.TabIndex = 16;
+            this.checkboxShadowAutoCascadeResolution.Text = "Auto cascade resolution";
+            this.checkboxShadowAutoCascadeResolution.UseVisualStyleBackColor = true;
             // 
             // labelShadowDistance
             // 
@@ -6681,6 +6693,7 @@ namespace OpenBve {
         private System.Windows.Forms.ComboBox comboboxShadowResolution;
         private System.Windows.Forms.CheckBox checkboxShadowSmooth;
         private System.Windows.Forms.CheckBox checkboxShadowFilterCascades;
+        private System.Windows.Forms.CheckBox checkboxShadowAutoCascadeResolution;
         private System.Windows.Forms.Label labelShadowDistance;
         private System.Windows.Forms.ComboBox comboboxShadowDistance;
         private System.Windows.Forms.Label labelShadowCascades;

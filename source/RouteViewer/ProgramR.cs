@@ -85,6 +85,7 @@ namespace RouteViewer
 		internal static double PrevShadowBias;
 		internal static double PrevShadowNormalBias;
 		internal static bool PrevShadowFilterCascades;
+		internal static bool PrevShadowAutoCascadeResolution;
 		internal static bool PrevShadowSmooth;
 		internal static double PrevShadowFilterRadius;
 
@@ -470,6 +471,7 @@ namespace RouteViewer
 			PrevShadowBias = Interface.CurrentOptions.ShadowBias;
 			PrevShadowNormalBias = Interface.CurrentOptions.ShadowNormalBias;
 			PrevShadowFilterCascades = Interface.CurrentOptions.ShadowFilterCascades;
+			PrevShadowAutoCascadeResolution = Interface.CurrentOptions.ShadowAutoCascadeResolution;
 			PrevShadowSmooth = Interface.CurrentOptions.ShadowSmooth;
 			PrevShadowFilterRadius = Interface.CurrentOptions.ShadowFilterRadius;
 		}
@@ -485,6 +487,7 @@ namespace RouteViewer
 			    Math.Abs(PrevShadowStrength - Interface.CurrentOptions.ShadowStrength) > 0.01f ||
 			    Math.Abs(PrevShadowBias - Interface.CurrentOptions.ShadowBias) > 0.000001f ||
 			    Math.Abs(PrevShadowNormalBias - Interface.CurrentOptions.ShadowNormalBias) > 0.01f ||
+			    PrevShadowAutoCascadeResolution != Interface.CurrentOptions.ShadowAutoCascadeResolution ||
 			    PrevShadowSmooth != Interface.CurrentOptions.ShadowSmooth ||
 			    Math.Abs(PrevShadowFilterRadius - Interface.CurrentOptions.ShadowFilterRadius) > 0.000001f)
 			{
