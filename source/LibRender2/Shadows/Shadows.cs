@@ -87,7 +87,7 @@ namespace LibRender2.ShadowMapping
 				Caster.Resolution = resolution;
 				Caster.Resolutions = Map.Resolutions;
 				Caster.SplitLambda = 0.75;
-				Caster.DepthMargin = 150.0;
+				Caster.DepthMargin = 40.0;
 
 				if (DepthShader == null)
 				{
