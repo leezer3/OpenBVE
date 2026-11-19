@@ -122,6 +122,13 @@ namespace OpenBveApi
 		// Object Viewer ground plane
 		ShowGround,
 		GroundHeight,
-		GroundColor
+		GroundColor,
+		// Upscaling
+		UpscalerMode,
+		UpscalerQuality,
+		UpscalerSharpnessFsr,
+		UpscalerSharpnessNis,
+		UpscalerSharpnessSgsr,
+		UpscalerDenoise
     }
 }

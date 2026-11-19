@@ -17,6 +17,7 @@ namespace ObjectViewer
 	{
 		private bool suppressSunEvents = false;
 		private bool suppressShadowEvents = false;
+		private bool suppressUpscalerEvents = false;
 		private bool committed = false;
 
 		// Snapshot of the live (memory) sun + shadow state at dialog open.
@@ -98,6 +99,16 @@ namespace ObjectViewer
 
 
 			// Initialize sun direction sliders from current light position
+			// Upscaling
+			comboBoxUpscaler.SelectedIndex = (int) Interface.CurrentOptions.UpscalerMode;
+			PopulateUpscalerQuality();
+			UpdateUpscalerSharpnessFromOptions();
+			checkBoxUpscalerDenoise.Checked = Interface.CurrentOptions.UpscalerDenoise;
+			comboBoxUpscaler.SelectedIndexChanged += comboBoxUpscaler_SelectedIndexChanged;
+			comboBoxUpscalerQuality.SelectedIndexChanged += comboBoxUpscalerQuality_SelectedIndexChanged;
+			trackBarUpscalerSharpness.ValueChanged += trackBarUpscalerSharpness_ValueChanged;
+			checkBoxUpscalerDenoise.CheckedChanged += checkBoxUpscalerDenoise_CheckedChanged;
+
 			InitializeSunSliders();
 
 			// Wire up shadow resolution change to enable/disable related controls
@@ -695,6 +706,104 @@ namespace ObjectViewer
 			committed = true;
 			Program.PendingOptionsCommit = true;
 			Close();
+		}
+		/// <summary>The quality presets of the currently selected upscaler mode</summary>
+		private UpscalerQuality[] upscalerQualityList = new UpscalerQuality[] { };
+
+		/// <summary>
+		/// Rebuilds the quality combobox with the vendor-recommended presets of the
+		/// selected upscaler and snaps the stored preset to that list.
+		/// </summary>
+		private void PopulateUpscalerQuality()
+		{
+			upscalerQualityList = UpscalerPresets.GetQualities(Interface.CurrentOptions.UpscalerMode);
+			comboBoxUpscalerQuality.Items.Clear();
+			foreach (UpscalerQuality quality in upscalerQualityList)
+			{
+				comboBoxUpscalerQuality.Items.Add(UpscalerPresets.GetDefaultLabel(quality));
+			}
+			Interface.CurrentOptions.UpscalerQuality = UpscalerPresets.SnapToMode(Interface.CurrentOptions.UpscalerMode, Interface.CurrentOptions.UpscalerQuality);
+			int qualityIndex = Array.IndexOf(upscalerQualityList, Interface.CurrentOptions.UpscalerQuality);
+			suppressUpscalerEvents = true;
+			comboBoxUpscalerQuality.SelectedIndex = qualityIndex;
+			suppressUpscalerEvents = false;
+		}
+
+		private void UpdateUpscalerSharpnessFromOptions()
+		{
+			double sharpness;
+			switch (Interface.CurrentOptions.UpscalerMode)
+			{
+				case UpscalerMode.Nis:
+					sharpness = Interface.CurrentOptions.UpscalerSharpnessNis;
+					break;
+				case UpscalerMode.Sgsr1:
+					sharpness = Interface.CurrentOptions.UpscalerSharpnessSgsr;
+					break;
+				default:
+					sharpness = Interface.CurrentOptions.UpscalerSharpnessFsr;
+					break;
+			}
+			suppressUpscalerEvents = true;
+			trackBarUpscalerSharpness.Value = Math.Max(trackBarUpscalerSharpness.Minimum, Math.Min(trackBarUpscalerSharpness.Maximum, (int)Math.Round(sharpness * 100.0)));
+			suppressUpscalerEvents = false;
+			labelUpscalerSharpnessValue.Text = trackBarUpscalerSharpness.Value + "%";
+			bool upscalerEnabled = Interface.CurrentOptions.UpscalerMode != UpscalerMode.Off;
+			bool denoiseAvailable = Interface.CurrentOptions.UpscalerMode == UpscalerMode.Fsr1;
+			comboBoxUpscalerQuality.Enabled = upscalerEnabled;
+			trackBarUpscalerSharpness.Enabled = upscalerEnabled;
+			labelUpscalerSharpnessValue.Enabled = upscalerEnabled;
+			checkBoxUpscalerDenoise.Enabled = denoiseAvailable;
+		}
+
+		private void comboBoxUpscaler_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (comboBoxUpscaler.SelectedIndex < 0)
+			{
+				return;
+			}
+			Interface.CurrentOptions.UpscalerMode = (UpscalerMode)comboBoxUpscaler.SelectedIndex;
+			PopulateUpscalerQuality();
+			UpdateUpscalerSharpnessFromOptions();
+		}
+
+		private void comboBoxUpscalerQuality_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (comboBoxUpscalerQuality.SelectedIndex < 0)
+			{
+				return;
+			}
+			if (comboBoxUpscalerQuality.SelectedIndex < upscalerQualityList.Length)
+			{
+				Interface.CurrentOptions.UpscalerQuality = upscalerQualityList[comboBoxUpscalerQuality.SelectedIndex];
+			}
+		}
+
+		private void trackBarUpscalerSharpness_ValueChanged(object sender, EventArgs e)
+		{
+			if (suppressUpscalerEvents)
+			{
+				return;
+			}
+			labelUpscalerSharpnessValue.Text = trackBarUpscalerSharpness.Value + "%";
+			double sharpness = trackBarUpscalerSharpness.Value / 100.0;
+			if (Interface.CurrentOptions.UpscalerMode == UpscalerMode.Nis)
+			{
+				Interface.CurrentOptions.UpscalerSharpnessNis = sharpness;
+			}
+			else if (Interface.CurrentOptions.UpscalerMode == UpscalerMode.Sgsr1)
+			{
+				Interface.CurrentOptions.UpscalerSharpnessSgsr = sharpness;
+			}
+			else
+			{
+				Interface.CurrentOptions.UpscalerSharpnessFsr = sharpness;
+			}
+		}
+
+		private void checkBoxUpscalerDenoise_CheckedChanged(object sender, EventArgs e)
+		{
+			Interface.CurrentOptions.UpscalerDenoise = checkBoxUpscalerDenoise.Checked;
 		}
 	}
 }

@@ -80,6 +80,14 @@ namespace RouteViewer
 			// initialize
 			ResetOpenGlState();
 
+			// With the upscaler active, the world is rendered into the
+			// low-resolution scene framebuffer; the HUD is drawn at native
+			// resolution after the upscale pass in EndScene()
+			if (Upscaler.Active)
+			{
+				Upscaler.BeginScene();
+			}
+
 			if (OptionWireFrame)
 			{
 				if (Program.CurrentRoute.CurrentFog.Start < Program.CurrentRoute.CurrentFog.End)
@@ -143,6 +151,10 @@ namespace RouteViewer
 			}
 
 			PerformCSMShadowPass();
+
+			// The shadow pass resets the framebuffer binding to the default;
+			// restore the low-resolution scene target when the upscaler is active
+			RebindSceneTarget();
 			DefaultShader.Activate();
 			BindCSMToDefaultShader();
 
@@ -327,6 +339,13 @@ namespace RouteViewer
 			}
 
             // render overlays
+			// Upscale the low-resolution scene to the window and restore the
+			// native viewport before drawing the HUD.
+			if (Upscaler.Active)
+			{
+				Upscaler.EndScene();
+			}
+
             DefaultShader.Deactivate();
 
             ResetOpenGlState();

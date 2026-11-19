@@ -1171,6 +1171,54 @@
 					<trans-unit id="shadows_resolution_ultra">
 						<source>Ultra (4096×4096)</source>
 					</trans-unit>
+					<trans-unit id="upscaler_mode">
+						<source>Upscaler:</source>
+					</trans-unit>
+					<trans-unit id="upscaler_mode_off">
+						<source>Off</source>
+					</trans-unit>
+					<trans-unit id="upscaler_mode_fsr1">
+						<source>AMD FSR 1.0</source>
+					</trans-unit>
+					<trans-unit id="upscaler_mode_nis">
+						<source>NVIDIA NIS</source>
+					</trans-unit>
+					<trans-unit id="upscaler_mode_sgsr1">
+						<source>Qualcomm SGSR v1</source>
+					</trans-unit>
+					<trans-unit id="upscaler_quality">
+						<source>Quality:</source>
+					</trans-unit>
+					<trans-unit id="upscaler_quality_nativeaa">
+						<source>Native AA (100%)</source>
+					</trans-unit>
+					<trans-unit id="upscaler_quality_ultraqualityplus">
+						<source>Ultra Quality+ (85%)</source>
+					</trans-unit>
+					<trans-unit id="upscaler_quality_ultraquality">
+						<source>Ultra Quality (77%)</source>
+					</trans-unit>
+					<trans-unit id="upscaler_quality_quality">
+						<source>Quality (67%)</source>
+					</trans-unit>
+					<trans-unit id="upscaler_quality_balanced">
+						<source>Balanced (59%)</source>
+					</trans-unit>
+					<trans-unit id="upscaler_quality_performance">
+						<source>Performance (50%)</source>
+					</trans-unit>
+					<trans-unit id="upscaler_quality_ultraperformance">
+						<source>Ultra Performance (33%)</source>
+					</trans-unit>
+					<trans-unit id="upscaler_sharpness">
+						<source>Sharpness:</source>
+					</trans-unit>
+					<trans-unit id="upscaler_denoise">
+						<source>Denoiser (FSR 1.0)</source>
+					</trans-unit>
+					<trans-unit id="upscaler_info">
+						<source>Renders the world at a lower internal resolution and upscales it to the window. HUD and menus are always drawn at native resolution.</source>
+					</trans-unit>
 					<trans-unit id="shadows_distance">
 						<source>Shadow Distance:</source>
 					</trans-unit>
