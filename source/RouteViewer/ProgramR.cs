@@ -910,9 +910,6 @@ namespace RouteViewer
 				case Key.F10:
 					Renderer.RenderStatsOverlay = !Renderer.RenderStatsOverlay;
 					break;
-				case Key.F6:
-					Renderer.OptionInstancing = !Renderer.OptionInstancing;
-					break;
 				case Key.F4:
 					Renderer.OptionAlphaInstancing = (Renderer.OptionAlphaInstancing + 1) % 3;
 					break;

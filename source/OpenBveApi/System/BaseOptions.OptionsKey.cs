@@ -49,7 +49,6 @@ namespace OpenBveApi
 		AntiAliasingLevel,
 		TransparencyMode,
 		OldTransparencyMode,
-		InstancedOpaque,
 		InstancedAlpha,
 		MotionBlur,
 		FPSLimit,

@@ -1487,9 +1487,6 @@ namespace ObjectViewer {
 	            case Key.I:
 	                Renderer.OptionInterface = !Renderer.OptionInterface;
 	                break;
-	            case Key.F6:
-		            Renderer.OptionInstancing = !Renderer.OptionInstancing;
-		            break;
 	            case Key.F4:
 		            Renderer.OptionAlphaInstancing = (Renderer.OptionAlphaInstancing + 1) % 3;
 		            break;

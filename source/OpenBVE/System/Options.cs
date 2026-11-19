@@ -307,7 +307,6 @@ namespace OpenBve
 				Builder.AppendLine("antiAliasingLevel = " + AntiAliasingLevel.ToString(Culture));
 				Builder.AppendLine("transparencyMode = " + ((int)TransparencyMode).ToString(Culture));
 				Builder.AppendLine("oldtransparencymode = " + (OldTransparencyMode ? "true" : "false"));
-				Builder.AppendLine("instancedopaque = " + (InstancedOpaque ? "true" : "false"));
 				Builder.AppendLine("instancedalpha = " + InstancedAlpha.ToString(Culture));
 				Builder.AppendLine("viewingDistance = " + ViewingDistance.ToString(Culture));
 				Builder.AppendLine("nearclipscenery = " + NearClipScenery.ToString(Culture));
@@ -513,10 +512,6 @@ namespace OpenBve
 							block.TryGetValue(OptionsKey.AntiAliasingLevel, ref Interface.CurrentOptions.AntiAliasingLevel);
 							block.GetEnumValue(OptionsKey.TransparencyMode, out Interface.CurrentOptions.TransparencyMode);
 							block.GetValue(OptionsKey.OldTransparencyMode, out CurrentOptions.OldTransparencyMode);
-							if (block.GetValue(OptionsKey.InstancedOpaque, out string instOpaque))
-							{
-								Interface.CurrentOptions.InstancedOpaque = instOpaque.Trim().Equals("true", StringComparison.OrdinalIgnoreCase) || instOpaque.Trim() == "1";
-							}
 							block.TryGetValue(OptionsKey.InstancedAlpha, ref Interface.CurrentOptions.InstancedAlpha);
 							if (Interface.CurrentOptions.InstancedAlpha < 0 || Interface.CurrentOptions.InstancedAlpha > 2)
 							{

@@ -379,7 +379,6 @@ namespace LibRender2
 			currentHost = CurrentHost;
 			currentOptions = CurrentOptions;
 			fileSystem = FileSystem;
-			OptionInstancing = currentOptions.InstancedOpaque;
 			OptionAlphaInstancing = currentOptions.InstancedAlpha;
 			Screen = new Screen(this);
 			Camera = new CameraProperties(this);
@@ -1396,8 +1395,6 @@ namespace LibRender2
 		private Matrix4D lastModelViewMatrix;
 		private bool sendToShader;
 
-		/// <summary>Whether opaque faces should be drawn using instanced rendering where possible (one draw call per mesh/face instead of one per placed instance)</summary>
-		public bool OptionInstancing = true;
 		/// <summary>
 		/// Controls the batching of alpha (blended) faces:
 		/// 0 - every alpha face is drawn individually,
@@ -1968,7 +1965,7 @@ namespace LibRender2
 				return;
 			}
 
-			if (!OptionInstancing || OptionWireFrame || opaqueFaces.Count < 2)
+			if (OptionWireFrame || opaqueFaces.Count < 2)
 			{
 				foreach (FaceState face in opaqueFaces)
 				{
@@ -2125,7 +2122,7 @@ namespace LibRender2
 		{
 			IList<FaceState> faceList = faces is IList<FaceState> list ? list : new List<FaceState>(faces);
 
-			if (!OptionInstancing || OptionWireFrame || faceList.Count < 2)
+			if (OptionWireFrame || faceList.Count < 2)
 			{
 				RenderShadowFacesFallback(shader, faceList, maxDistanceSquared, ref lastVAO);
 				return;

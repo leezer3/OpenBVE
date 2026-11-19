@@ -466,7 +466,6 @@ namespace OpenBve {
 			comboboxMotionBlur.Items.AddRange(new object[] { "", "", "", "" });
 			comboboxMotionBlur.SelectedIndex = (int)Interface.CurrentOptions.MotionBlur;
 			trackbarTransparency.Value = (int)Interface.CurrentOptions.TransparencyMode;
-			checkboxInstancedOpaque.Checked = Interface.CurrentOptions.InstancedOpaque;
 			comboboxInstancedAlpha.SelectedIndex = Interface.CurrentOptions.InstancedAlpha;
 			updownTimeAccelerationFactor.Value = Interface.CurrentOptions.TimeAccelerationFactor > updownTimeAccelerationFactor.Maximum ? updownTimeAccelerationFactor.Maximum : Interface.CurrentOptions.TimeAccelerationFactor;
 			checkboxToppling.Checked = Interface.CurrentOptions.Toppling;
@@ -1267,7 +1266,6 @@ namespace OpenBve {
 			Interface.CurrentOptions.AnisotropicFilteringLevel = (int)Math.Round(updownAnisotropic.Value);
 			Interface.CurrentOptions.AntiAliasingLevel = (int)Math.Round(updownAntiAliasing.Value);
 			Interface.CurrentOptions.TransparencyMode = (TransparencyMode)trackbarTransparency.Value;
-			Interface.CurrentOptions.InstancedOpaque = checkboxInstancedOpaque.Checked;
 			Interface.CurrentOptions.InstancedAlpha = comboboxInstancedAlpha.SelectedIndex >= 0 ? comboboxInstancedAlpha.SelectedIndex : 1;
 			Interface.CurrentOptions.NearClipScenery = (double)updownNearClipScenery.Value;
 			Interface.CurrentOptions.NearClipCab = (double)updownNearClipCab.Value;
