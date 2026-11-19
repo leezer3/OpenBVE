@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, S520, The OpenBVE Project
 //
@@ -82,7 +82,7 @@ namespace Route.Bve5
 							if (!string.IsNullOrEmpty(splitLine[i]))
 							{
 								Numbers.Add(i - 1);
-								ObjectKeys.Add(splitLine[i]);
+								ObjectKeys.Add(splitLine[i].Trim());
 							}
 
 							break;
