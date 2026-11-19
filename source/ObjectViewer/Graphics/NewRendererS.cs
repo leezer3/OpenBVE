@@ -345,14 +345,14 @@ namespace ObjectViewer.Graphics
 					{
 						string alphaInstancingMode = OptionAlphaInstancing == 0 ? "Off" : OptionAlphaInstancing == 1 ? "Order independent" : "All (approximate)";
 
-						Keys.Render(4, Screen.Height - 214, 188, Fonts.SmallFont, new[] { new[] { "Renderer Statistics" } });
-						OpenGlString.Draw(Fonts.SmallFont, $"Total static objects: {objectCount}", new Vector2(4, Screen.Height - 200), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Total animated objects: {animatedObjectsUsed}", new Vector2(4, Screen.Height - 188), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Current frame rate: {FrameRate.ToString("0.0", culture)}fps", new Vector2(4, Screen.Height - 176), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Total faces: {opaqueFaces + alphaFaces}", new Vector2(4, Screen.Height - 164), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Unique meshes: {OpaqueUniqueMeshes}", new Vector2(4, Screen.Height - 152), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Draw calls: {OpaqueDrawCalls + AlphaDrawCalls + ShadowDrawCalls}", new Vector2(4, Screen.Height - 140), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, $"Instanced alpha: {alphaInstancingMode} (F4)", new Vector2(4, Screen.Height - 128), TextAlignment.TopLeft, Color128.White, true);
+						Keys.Render(4, Screen.Height - 142, 188, Fonts.SmallFont, new[] { new[] { "Renderer Statistics" } });
+						OpenGlString.Draw(Fonts.SmallFont, $"Total static objects: {objectCount}", new Vector2(4, Screen.Height - 128), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Total animated objects: {animatedObjectsUsed}", new Vector2(4, Screen.Height - 116), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Current frame rate: {FrameRate.ToString("0.0", culture)}fps", new Vector2(4, Screen.Height - 104), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Total faces: O {opaqueFaces} | A {alphaFaces}", new Vector2(4, Screen.Height - 92), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Unique meshes: {OpaqueUniqueMeshes}", new Vector2(4, Screen.Height - 80), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Draw calls: O {OpaqueDrawCalls} | A {AlphaDrawCalls} | S {ShadowDrawCalls}", new Vector2(4, Screen.Height - 68), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Instanced alpha: {alphaInstancingMode} (F4)", new Vector2(4, Screen.Height - 56), TextAlignment.TopLeft, Color128.White, true);
 					}
 				}
 			}
