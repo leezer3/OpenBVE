@@ -2326,7 +2326,8 @@ namespace LibRender2
 			Vector3 cameraPos = Camera.AbsolutePosition;
 
 			// Group by object so per-object state is set once and faces merge into fewer draws.
-			ClearValues(shadowFallbackByObject);
+			// ObjectState keys change every frame, so drop the old ones too.
+			shadowFallbackByObject.Clear();
 			foreach (FaceState faceState in faces)
 			{
 				FaceState face = faceState;
