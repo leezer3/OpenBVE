@@ -1250,11 +1250,18 @@ namespace TrainManager.Car
 						a = TractionModel.TargetAcceleration;
 						
 						// readhesion device
-						if (ReAdhesionDevice is BveReAdhesionDevice device)
+						if (ReAdhesionDevice is Bve4ReAdhesionDevice device4)
 						{
-							if (a > device.MaximumAccelerationOutput)
+							if (a > device4.MaximumAccelerationOutput)
 							{
-								a = device.MaximumAccelerationOutput;
+								a = device4.MaximumAccelerationOutput;
+							}
+						}
+						else if (ReAdhesionDevice is Bve5ReadhesionDevice device5)
+						{
+							if (a > device5.MaximumAccelerationOutput)
+							{
+								a = device5.MaximumAccelerationOutput;
 							}
 						}
 						else if (ReAdhesionDevice is Sanders sanders)

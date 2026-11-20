@@ -33,12 +33,14 @@ namespace Train.OpenBve
 		double PanelResolution = 1024.0;
 		double PanelLeft = 0.0, PanelRight = 1024.0;
 		double PanelTop = 0.0, PanelBottom = 1024.0;
+		double PanelPerspective = 1.0;
 		Vector2 PanelCenter = new Vector2(0, 512);
 		Vector2 PanelOrigin = new Vector2(0, 512);
+		bool UseBve5Rules = false;
 		
 		private string trainName;
 
-		/// <summary>Parses a BVE2 / openBVE panel.cfg file</summary>
+		/// <summary>Parses a file in the Panel2 format</summary>
 		/// <param name="panelFile">The relative path of the panel configuration file from the train</param>
 		/// <param name="trainPath">The on-disk path to the train</param>
 		/// <param name="Car">The car to add the panel to</param>
@@ -73,6 +75,22 @@ namespace Train.OpenBve
 					Block.TryGetColor24(Panel2Key.TransparentColor, ref panelTransparentColor);
 					Block.TryGetVector2(Panel2Key.Center, ',', ref PanelCenter);
 					Block.TryGetVector2(Panel2Key.Origin, ',', ref PanelOrigin);
+					Block.TryGetValue(Panel2Key.Perspective, ref PanelPerspective);
+					Block.TryGetValue(Panel2Key.Bve5, ref UseBve5Rules);
+
+					if (UseBve5Rules || Plugin.CurrentFormat == TrainFormat.BVE5)
+					{
+						/*
+						 * Note: BVE5 panels are laid out for a 4:3 view: on a wider screen the panel keeps the
+						 * height a 4:3 screen shows, and no widescreen option is available
+						 */
+						PanelResolution *= Math.Max(1.0, 0.75 * Plugin.Renderer.Screen.AspectRatio);
+						// The screen's half width and half height, in panel pixels.
+						double halfWidth = 0.5 * PanelResolution, halfHeight = 0.5 * PanelResolution / Plugin.Renderer.Screen.AspectRatio;
+						PanelCenter.X = Extensions.Clamp(PanelCenter.X, PanelLeft + halfWidth, PanelRight - halfWidth);
+						PanelCenter.Y = Extensions.Clamp(PanelCenter.Y, PanelTop + halfHeight, PanelBottom - halfHeight);
+					}
+
 					ApplyGlobalHacks();
 					double WorldWidth, WorldHeight;
 					if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)
@@ -153,7 +171,16 @@ namespace Train.OpenBve
 							string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, subjectIndex, subjectSuffix);
 							try
 							{
-								Car.CarSections[CarSectionType.Interior].Groups[GroupIndex].Elements[j].StateFunction = !string.IsNullOrEmpty(Function) ? new FunctionScript(Plugin.CurrentHost, Function, true) : new FunctionScript(Plugin.CurrentHost, f + " 1 == --", false);
+								if (UseBve5Rules)
+								{
+									// BVE5 lights on any non-zero value
+									Car.CarSections[CarSectionType.Interior].Groups[GroupIndex].Elements[j].StateFunction = !string.IsNullOrEmpty(Function) ? new FunctionScript(Plugin.CurrentHost, Function, true) : new FunctionScript(Plugin.CurrentHost, f + " 0 != --", false);
+								}
+								else
+								{
+									Car.CarSections[CarSectionType.Interior].Groups[GroupIndex].Elements[j].StateFunction = !string.IsNullOrEmpty(Function) ? new FunctionScript(Plugin.CurrentHost, Function, true) : new FunctionScript(Plugin.CurrentHost, f + " 1 == --", false);
+								}
+									
 							}
 							catch
 							{
@@ -232,8 +259,9 @@ namespace Train.OpenBve
 							double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
 							double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 							f += " " + a1.ToString(Culture) + " * " + a0.ToString(Culture) + " +";
-							if (NaturalFrequency >= 0.0 & DampingRatio >= 0.0)
+							if (NaturalFrequency >= 0.0 && ((UseBve5Rules == true && DampingRatio > 0) || (UseBve5Rules == false && DampingRatio >= 0)))
 							{
+								// Note: BVE5 treats damping ratio of zero as undamped
 								Car.CarSections[CarSectionType.Interior].Groups[GroupIndex].Elements[j].RotateZDamping = new Damping(NaturalFrequency, DampingRatio);
 							}
 							try
