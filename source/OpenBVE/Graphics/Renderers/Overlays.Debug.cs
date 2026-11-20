@@ -1,14 +1,12 @@
 using System;
 using System.Diagnostics;
-using OpenBveApi;
 using TrainManager.BrakeSystems;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
-using OpenBveApi.Motor;
 using OpenBveApi.Routes;
 using TrainManager.Handles;
-using TrainManager.SteamEngine;
+using TrainManager.Motor;
 
 namespace OpenBve.Graphics.Renderers
 {
@@ -185,97 +183,17 @@ namespace OpenBve.Graphics.Renderers
 					"visibility mode: " + Interface.CurrentOptions.ObjectDisposalMode + (Interface.CurrentOptions.ObjectDisposalMode == ObjectDisposalMode.QuadTree ? ", leaf size " + Interface.CurrentOptions.QuadTreeLeafSize + "m" : string.Empty),
 					"train plugin status: " + (TrainManager.PlayerTrain.Plugin != null ? (TrainManager.PlayerTrain.Plugin.PluginValid ? "ok" : "error") : "n/a"),
 					"train plugin message: " + (TrainManager.PlayerTrain.Plugin != null ? (TrainManager.PlayerTrain.Plugin.PluginMessage ?? "n/a") : "n/a"),
-					"traction message: " + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.Message,
+					"",
+					"=traction messages"
 				};
+				int l = cachedDebugLines.Length;
+				Array.Resize(ref cachedDebugLines, l + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.Message.Length);
+				Array.Copy(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.Message, 0, cachedDebugLines, l, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.Message.Length);
 				nextDebugLinesUpdate = Stopwatch.GetTimestamp() + Stopwatch.Frequency / 5;
 			}
 
 			string[] Lines = cachedDebugLines;
-			}
-			double mass = 0.0;
-			for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
-			{
-				mass += TrainManager.PlayerTrain.Cars[i].CurrentMass;
-			}
-
-			string rainIntensity = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Windscreen != null && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Windscreen.legacyRainEvents ? "Legacy beacon based." : TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].FrontAxle.Follower.RainIntensity + "%";
-			double elevation = Program.Renderer.Camera.AbsolutePosition.Y + Program.CurrentRoute.Atmosphere.InitialElevation;
-			double airTemperature = Program.CurrentRoute.Atmosphere.GetAirTemperature(elevation);
-			double airPressure = Program.CurrentRoute.Atmosphere.GetAirPressure(elevation, airTemperature);
-			double airDensity = Program.CurrentRoute.Atmosphere.GetAirDensity(airPressure, airTemperature);
-			int hours = (int)Program.CurrentRoute.SecondsSinceMidnight / 3600,
-				remainder = (int)Program.CurrentRoute.SecondsSinceMidnight % 3600,
-				minutes = remainder / 60,
-				seconds = remainder % 60;
-			TrainManager.PlayerTrain.Cars[0].TractionModel.Components
-				.TryGetTypedValue(EngineComponent.Boiler, out Boiler b);
-			string[] Lines = {
-				"=system",
-				"fps: " + Program.Renderer.FrameRate.ToString("0.0", Culture),
-				"time:" + hours.ToString("00") +  ":" + minutes.ToString("00") + ":" + seconds.ToString("00"),
-				"score: " + Game.CurrentScore.CurrentValue.ToString(Culture),
-				"",
-				"=train",
-				"speed: " + (Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) * 3.6).ToString("0.00", Culture) + " km/h",
-				"power (car " + car.ToString(Culture) +  "): " + (TrainManager.PlayerTrain.Cars[car].TractionModel.CurrentAcceleration < 0.0 ? TrainManager.PlayerTrain.Cars[car].TractionModel.CurrentAcceleration * Math.Sign(TrainManager.PlayerTrain.Cars[car].CurrentSpeed) : TrainManager.PlayerTrain.Cars[car].TractionModel.CurrentAcceleration * (double)TrainManager.PlayerTrain.Handles.Reverser.Actual).ToString("0.0000", Culture) + " m/s²",
-				"wheelslip (car " + car.ToString(Culture) +  "): " + TrainManager.PlayerTrain.Cars[car].FrontAxle.CurrentWheelSlip,
-				"acceleration: " + TrainManager.PlayerTrain.Specs.CurrentAverageAcceleration.ToString("0.0000", Culture) + " m/s²",
-				"position: " + TrainManager.PlayerTrain.FrontCarTrackPosition.ToString("0.00", Culture) + " m",
-				"rain intensity: " + rainIntensity,
-				"elevation: " + (Program.CurrentRoute.Atmosphere.InitialElevation + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].FrontAxle.Follower.WorldPosition.Y).ToString("0.00", Culture) + " m",
-				"temperature: " + (airTemperature - 273.15).ToString("0.00", Culture) + " °C",
-				"air pressure: " + (0.001 * airPressure).ToString("0.00", Culture) + " kPa",
-				"air density: " + airDensity.ToString("0.0000", Culture) + " kg/m³",
-				"speed of sound: " + (Program.CurrentRoute.Atmosphere.GetSpeedOfSound(airDensity) * 3.6).ToString("0.00", Culture) + " km/h",
-				"passenger ratio: " + TrainManager.PlayerTrain.CargoRatio.ToString("0.00"),
-				"total mass: " + mass.ToString("0.00", Culture) + " kg",
-				"",
-				"=route",
-				"track limit: " + (TrainManager.PlayerTrain.CurrentRouteLimit == double.PositiveInfinity ? "unlimited" : ((TrainManager.PlayerTrain.CurrentRouteLimit * 3.6).ToString("0.0", Culture) + " km/h")),
-				"signal limit: " + (TrainManager.PlayerTrain.CurrentSectionLimit == double.PositiveInfinity ? "unlimited" : ((TrainManager.PlayerTrain.CurrentSectionLimit * 3.6).ToString("0.0", Culture) + " km/h")),
-				"total static objects: " + (Program.Renderer.StaticObjectStates.Count + Program.Renderer.DynamicObjectStates.Count).ToString(Culture),
-				"total static GL_TRIANGLES: " + Program.Renderer.InfoTotalTriangles.ToString(Culture),
-				"total static GL_TRIANGLE_STRIP: " + Program.Renderer.InfoTotalTriangleStrip.ToString(Culture),
-				"total static GL_QUADS: " + Program.Renderer.InfoTotalQuads.ToString(Culture),
-				"total static GL_QUAD_STRIP: " + Program.Renderer.InfoTotalQuadStrip.ToString(Culture),
-				"total static GL_POLYGON: " + Program.Renderer.InfoTotalPolygon.ToString(Culture),
-				"total animated objects: " + ObjectManager.AnimatedWorldObjectsUsed.ToString(Culture),
-				"",
-				"=renderer",
-				"renderer type: openGL 4 (new)",
-				"opaque faces: " + Program.Renderer.VisibleObjects.OpaqueFaces.Count.ToString(Culture),
-				"alpha faces: " + Program.Renderer.VisibleObjects.AlphaFaces.Count.ToString(Culture),
-				"overlay opaque faces: " + Program.Renderer.VisibleObjects.OverlayOpaqueFaces.Count.ToString(Culture),
-				"overlay alpha faces: " + Program.Renderer.VisibleObjects.OverlayAlphaFaces.Count.ToString(Culture),
-				"textures loaded: " + renderer.TextureManager.GetNumberOfLoadedTextures().ToString(Culture) + " static, " + renderer.TextureManager.GetNumberOfLoadedAnimatedTextures() + " animated / " + texturesRegistered.ToString(Culture) + " total",
-				"",
-				"=camera",
-				"position: " + Program.Renderer.CameraTrackFollower.TrackPosition.ToString("0.00", Culture) + " m",
-				"curve radius: " + Program.Renderer.CameraTrackFollower.CurveRadius.ToString("0.00", Culture) + " m",
-				"curve cant: " + (1000.0 * Math.Abs(Program.Renderer.CameraTrackFollower.CurveCant)).ToString("0.00", Culture) + " mm" + (Program.Renderer.CameraTrackFollower.CurveCant < 0.0 ? " (left)" : Program.Renderer.CameraTrackFollower.CurveCant > 0.0 ? " (right)" : ""),
-				"pitch: " + Program.Renderer.CameraTrackFollower.Pitch.ToString("0.00", Culture),
-				"current anchor car: " + TrainManager.PlayerTrain.CameraCar,
-				"anchor car track index (front axle): " + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].FrontAxle.Follower.TrackIndex,
-				"anchor car track index (rear axle): " + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].RearAxle.Follower.TrackIndex,
-				"",
-				"=sound",
-				"sound buffers: " + soundBuffersLoaded.ToString(Culture) + " loaded / " + soundBuffersRegistered.ToString(Culture) + " total",
-				"sound sources: " + soundSourcesPlaying.ToString(Culture) + " playing / " + Interface.CurrentOptions.SoundNumber + " max playing / " + soundSourcesRegistered.ToString(Culture) + " total",
-				"log clamp factor: " + Program.Sounds.LogClampFactor.ToString("0.00"),
-				"",
-				"=debug",
-				"bvets hacks: " + (Interface.CurrentOptions.EnableBveTsHacks ? "enabled" : "disabled"),
-				"time acceleration: " + MainLoop.TimeFactor + "x",
-				"viewing distance: " + Interface.CurrentOptions.ViewingDistance + "m",
-				"visibility mode: " + Interface.CurrentOptions.ObjectDisposalMode + (Interface.CurrentOptions.ObjectDisposalMode == ObjectDisposalMode.QuadTree ? ", leaf size " + Interface.CurrentOptions.QuadTreeLeafSize + "m" : string.Empty),
-				"train plugin status: " + (TrainManager.PlayerTrain.Plugin != null ? (TrainManager.PlayerTrain.Plugin.PluginValid ? "ok" : "error") : "n/a"),
-				"train plugin message: " + (TrainManager.PlayerTrain.Plugin != null ? (TrainManager.PlayerTrain.Plugin.PluginMessage ?? "n/a") : "n/a"),
-				"",
-				"=traction messages"
-			};
-			int l = Lines.Length;
-			Array.Resize(ref Lines, l + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.Message.Length);
-			Array.Copy(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.Message, 0, Lines, l, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.Message.Length);
+			
 			double x = 4.0;
 			double y = 4.0;
 			for (int i = 0; i < Lines.Length; i++)
