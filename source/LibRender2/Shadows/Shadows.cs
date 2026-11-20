@@ -85,6 +85,7 @@ namespace LibRender2.ShadowMapping
 
 				Caster.ShadowDistance = shadowDistance;
 				Caster.Resolution = resolution;
+				Caster.Resolutions = Map.Resolutions;
 				Caster.SplitLambda = 0.75;
 				Caster.DepthMargin = 150.0;
 
@@ -132,11 +133,13 @@ namespace LibRender2.ShadowMapping
 			// NOTE: We pass renderer.CurrentViewMatrix here which reflects the camera's rotation.
 			// The Caster will use this to align the shadow frustums with the view direction.
 			Caster.Resolution = Map.Resolution;
+			Caster.Resolutions = Map.Resolutions;
 			if (renderer.currentOptions.ShadowDrawDistance == ShadowDistance.ViewingDistance)
 			{
 				Caster.ShadowDistance = renderer.currentOptions.ViewingDistance;
 			}
-			Caster.Update(lightDir, renderer.CurrentViewMatrix, renderer.CurrentProjectionMatrix, 0.1, renderer.Camera.VerticalViewingAngle, renderer.Screen.AspectRatio);
+			Caster.Update(lightDir, renderer.CurrentViewMatrix, renderer.CurrentProjectionMatrix, 0.1, Map.SlotAspects);
+			Map.EnsureLayout(Caster.AspectRatios);
 
 			// 3. Setup state for depth pass
 			renderer.CurrentShader?.Deactivate();
@@ -307,6 +310,7 @@ namespace LibRender2.ShadowMapping
 			shader.SetShadowFilterRadius(ComputeEffectiveFilterRadius());
 			shader.SetCurrentViewMatrix(renderer.CurrentViewMatrix);
 
+			Map.EnsureLayout(Caster.AspectRatios);
 			Map.BindAllCascadesForReading(TextureUnit.Texture4);
 
 			int cascadeCount = Caster.CascadeCount;
@@ -315,7 +319,7 @@ namespace LibRender2.ShadowMapping
 			float normalBiasTexels = Math.Max(MinNormalBiasTexels, Math.Min(MaxNormalBiasTexels, (float)renderer.currentOptions.ShadowNormalBias));
 			for (int i = 0; i < cascadeCount; i++)
 			{
-				shader.SetCascadeLightSpaceMatrix(i, Caster.LightSpaceMatrices[i]);
+				shader.SetCascadeLightSpaceMatrix(i, Caster.LightSpaceMatrices[i] * Map.GetAtlasScale(i));
 				shader.SetCascadeShadowMapUnit(i, 4 + i);
 				// Split distance = the view-space Z where this cascade ends.
 				shader.SetShadowSplitDistance(i, (float)Caster.SplitDistances[i]);
@@ -361,6 +365,9 @@ namespace LibRender2.ShadowMapping
 		/// <summary>
 		/// Disposes shadow resources.
 		/// </summary>
+		/// <summary>Compact CSM atlas summary for the renderer stats overlay.</summary>
+		public string GetStatsString() => Enabled && Map != null ? Map.GetStatsString() : "CSM: off";
+
 		public void Dispose()
 		{
 			Map?.Dispose();
