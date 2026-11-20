@@ -500,9 +500,10 @@ namespace Train.MsTs
 				case PanelSubject.Boiler_Water:
 					if (tractionModel.Components.TryGetTypedValue(EngineComponent.Boiler, out Boiler b))
 					{
-						lastResult = b.WaterLevel;
+						lastResult = b.WaterLevel / Boiler.Volume;
 					}
 					lastResult *= UnitConversionFactor;
+					MapResult(lastResult);
 					break;
 				case PanelSubject.Tender_Water:
 					if (tractionModel is TenderEngine tE)
@@ -515,6 +516,7 @@ namespace Train.MsTs
 						lastResult = tA.TankWaterLevel;
 					}
 					lastResult *= UnitConversionFactor;
+					MapResult(lastResult);
 					break;
 				case PanelSubject.Line_Voltage:
 					if (tractionModel.Components.TryGetTypedValue(EngineComponent.Pantograph, out Pantograph p))
