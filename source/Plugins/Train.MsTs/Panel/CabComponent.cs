@@ -515,6 +515,7 @@ namespace Train.MsTs
 								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].TranslateYDirection = new Vector3(0, 1, 0.1);
 								break;                       
 							case CabComponentStyle.Solid:
+							case CabComponentStyle.Liquid:
 								Vector2 v = new Vector2(Position);
 								// ignore area position for the minute, move Y
 								v.Y += Size.Y - AreaSize.Y;
@@ -547,6 +548,7 @@ namespace Train.MsTs
 								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].TranslateXFunction = new FunctionScript(Plugin.CurrentHost, f, false);
 								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].TranslateXDirection = new Vector3(1, 0, 0);
 								break;
+							case CabComponentStyle.Liquid:
 							case CabComponentStyle.Solid:
 								Vector2 v = new Vector2(Position);
 								// ignore area position for the minute, move X
