@@ -46,8 +46,8 @@ namespace OpenBveApi.World
 		{
 			BaseUnit = UnitOfVolume.Litres;
 			RegisterConversion(UnitOfVolume.Gallons, v => v / 3.78541, v => v * 3.78541);
-			RegisterConversion(UnitOfVolume.MetersCubed, v => v * 1000, v => v / 1000);
-			RegisterConversion(UnitOfVolume.FeetCubed, v => v * 28.317, v => v / 28.317);
+			RegisterConversion(UnitOfVolume.MetersCubed, v => v / 1000, v => v * 1000);
+			RegisterConversion(UnitOfVolume.FeetCubed, v => v / 28.317, v => v * 28.317);
 			KnownUnits = new Dictionary<string, UnitOfVolume>
 			{
 				{ "l", UnitOfVolume.Litres }, { "litres", UnitOfVolume.Litres }, { "gal", UnitOfVolume.Gallons }, { "gals", UnitOfVolume.Gallons }, { "gallons", UnitOfVolume.Gallons }, 
