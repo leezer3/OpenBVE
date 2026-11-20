@@ -93,7 +93,7 @@ namespace TrainManager.SteamEngine
 			{
 				Message[messageIdx++] = "Firebox Fuel: " + Math.Round(firebox.FuelLevel, 2) + " kg, Temp: " + Math.Round(firebox.Temperature, 2) + " °c";
 			}
-			Message[messageIdx] = "Tanks Fuel Level: " + FuelTank.CurrentLevel + "kg, Tanks Water Level: " + TankWaterLevel + "l";
+			Message[messageIdx] = "Tanks Fuel Level: " + Math.Round(FuelTank.CurrentLevel, 2) + "kg, Tanks Water Level: " + Math.Round(TankWaterLevel, 2) + "l";
 
 		}
 
