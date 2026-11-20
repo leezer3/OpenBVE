@@ -123,6 +123,7 @@ namespace ObjectViewer
 				Builder.AppendLine("shadownormalbias = " + ShadowNormalBias.ToString("0.00", Culture));
 				Builder.AppendLine("shadowfiltercascades = " + (ShadowFilterCascades ? "true" : "false"));
 				Builder.AppendLine("shadowsmooth = " + (ShadowSmooth ? "true" : "false"));
+				Builder.AppendLine("shadowautocascaderesolution = " + (ShadowAutoCascadeResolution ? "true" : "false"));
 				Builder.AppendLine("shadowfilterradius = " + ShadowFilterRadius.ToString(Culture));
 				Builder.AppendLine("lightazimuth = " + LightAzimuth.ToString(Culture));
 				Builder.AppendLine("lightelevation = " + LightElevation.ToString(Culture));
@@ -251,6 +252,10 @@ namespace ObjectViewer
 							if (block.GetValue(OptionsKey.ShadowSmooth, out string smoothVal))
 							{
 								Interface.CurrentOptions.ShadowSmooth = smoothVal.Trim().Equals("true", StringComparison.OrdinalIgnoreCase) || smoothVal.Trim() == "1";
+							}
+							if (block.GetValue(OptionsKey.ShadowAutoCascadeResolution, out string autoResVal))
+							{
+								Interface.CurrentOptions.ShadowAutoCascadeResolution = autoResVal.Trim().Equals("true", StringComparison.OrdinalIgnoreCase) || autoResVal.Trim() == "1";
 							}
 							block.TryGetValue(OptionsKey.ShadowFilterRadius, ref Interface.CurrentOptions.ShadowFilterRadius);
 							if (Interface.CurrentOptions.ShadowFilterRadius < 0.5) Interface.CurrentOptions.ShadowFilterRadius = 0.5;

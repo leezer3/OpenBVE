@@ -186,6 +186,7 @@ namespace OpenBve {
             this.labelShadowResolution = new System.Windows.Forms.Label();
             this.comboboxShadowResolution = new System.Windows.Forms.ComboBox();
             this.checkboxShadowFilterCascades = new System.Windows.Forms.CheckBox();
+            this.checkboxShadowAutoCascadeResolution = new System.Windows.Forms.CheckBox();
             this.checkboxShadowSmooth = new System.Windows.Forms.CheckBox();
             this.labelShadowDistance = new System.Windows.Forms.Label();
             this.comboboxShadowDistance = new System.Windows.Forms.ComboBox();
@@ -223,6 +224,8 @@ namespace OpenBve {
             this.numericUpDownKioskTimeout = new System.Windows.Forms.NumericUpDown();
             this.checkBoxEnableKiosk = new System.Windows.Forms.CheckBox();
             this.groupBoxAdvancedOptions = new System.Windows.Forms.GroupBox();
+            this.labelInstancedAlpha = new System.Windows.Forms.Label();
+            this.comboboxInstancedAlpha = new System.Windows.Forms.ComboBox();
             this.checkBoxPanel2Extended = new System.Windows.Forms.CheckBox();
             this.pictureboxCursor = new System.Windows.Forms.PictureBox();
             this.labelCursor = new System.Windows.Forms.Label();
@@ -2328,7 +2331,7 @@ namespace OpenBve {
             this.groupboxSimulation.Controls.Add(this.checkboxCollisions);
             this.groupboxSimulation.Controls.Add(this.checkboxToppling);
             this.groupboxSimulation.ForeColor = System.Drawing.Color.Black;
-            this.groupboxSimulation.Location = new System.Drawing.Point(330, 485);
+            this.groupboxSimulation.Location = new System.Drawing.Point(330, 521);
             this.groupboxSimulation.Name = "groupboxSimulation";
             this.groupboxSimulation.Size = new System.Drawing.Size(321, 80);
             this.groupboxSimulation.TabIndex = 11;
@@ -2451,7 +2454,7 @@ namespace OpenBve {
             this.panelOptionsPage2.Controls.Add(this.groupboxSimulation);
             this.panelOptionsPage2.Location = new System.Drawing.Point(0, 72);
             this.panelOptionsPage2.Name = "panelOptionsPage2";
-            this.panelOptionsPage2.Size = new System.Drawing.Size(683, 583);
+            this.panelOptionsPage2.Size = new System.Drawing.Size(683, 620);
             this.panelOptionsPage2.TabIndex = 21;
             // 
             // groupboxDistance
@@ -2683,10 +2686,11 @@ namespace OpenBve {
             this.groupboxShadows.Controls.Add(this.labelShadowSoftness);
             this.groupboxShadows.Controls.Add(this.comboboxShadowFilterRadius);
             this.groupboxShadows.Controls.Add(this.checkboxShadowFilterCascades);
+            this.groupboxShadows.Controls.Add(this.checkboxShadowAutoCascadeResolution);
             this.groupboxShadows.ForeColor = System.Drawing.Color.Black;
             this.groupboxShadows.Location = new System.Drawing.Point(330, 0);
             this.groupboxShadows.Name = "groupboxShadows";
-            this.groupboxShadows.Size = new System.Drawing.Size(321, 260);
+            this.groupboxShadows.Size = new System.Drawing.Size(321, 280);
             this.groupboxShadows.TabIndex = 30;
             this.groupboxShadows.TabStop = false;
             this.groupboxShadows.Text = "Shadows";
@@ -2698,9 +2702,9 @@ namespace OpenBve {
             this.groupboxCamera.Controls.Add(this.labelCameraTransitionSpeed);
             this.groupboxCamera.Controls.Add(this.updownCameraTransitionSpeed);
             this.groupboxCamera.ForeColor = System.Drawing.Color.Black;
-            this.groupboxCamera.Location = new System.Drawing.Point(330, 265);
+            this.groupboxCamera.Location = new System.Drawing.Point(330, 291);
             this.groupboxCamera.Name = "groupboxCamera";
-            this.groupboxCamera.Size = new System.Drawing.Size(321, 120);
+            this.groupboxCamera.Size = new System.Drawing.Size(321, 100);
             this.groupboxCamera.TabIndex = 22;
             this.groupboxCamera.TabStop = false;
             this.groupboxCamera.Text = "Camera options";
@@ -2790,7 +2794,7 @@ namespace OpenBve {
             // checkboxShadowSmooth
             // 
             this.checkboxShadowSmooth.AutoSize = true;
-            this.checkboxShadowSmooth.Location = new System.Drawing.Point(8, 195);
+            this.checkboxShadowSmooth.Location = new System.Drawing.Point(8, 189);
             this.checkboxShadowSmooth.Name = "checkboxShadowSmooth";
             this.checkboxShadowSmooth.Size = new System.Drawing.Size(110, 17);
             this.checkboxShadowSmooth.TabIndex = 13;
@@ -2801,7 +2805,7 @@ namespace OpenBve {
             // labelShadowSoftness
             // 
             this.labelShadowSoftness.AutoSize = true;
-            this.labelShadowSoftness.Location = new System.Drawing.Point(8, 220);
+            this.labelShadowSoftness.Location = new System.Drawing.Point(8, 208);
             this.labelShadowSoftness.Name = "labelShadowSoftness";
             this.labelShadowSoftness.Size = new System.Drawing.Size(50, 13);
             this.labelShadowSoftness.TabIndex = 15;
@@ -2810,17 +2814,27 @@ namespace OpenBve {
             // checkboxShadowFilterCascades
             // 
             this.checkboxShadowFilterCascades.AutoSize = true;
-            this.checkboxShadowFilterCascades.Location = new System.Drawing.Point(8, 245);
+            this.checkboxShadowFilterCascades.Location = new System.Drawing.Point(8, 233);
             this.checkboxShadowFilterCascades.Name = "checkboxShadowFilterCascades";
             this.checkboxShadowFilterCascades.Size = new System.Drawing.Size(150, 17);
             this.checkboxShadowFilterCascades.TabIndex = 14;
             this.checkboxShadowFilterCascades.Text = "Per-cascade culling";
             this.checkboxShadowFilterCascades.UseVisualStyleBackColor = true;
             // 
+            // checkboxShadowAutoCascadeResolution
+            // 
+            this.checkboxShadowAutoCascadeResolution.AutoSize = true;
+            this.checkboxShadowAutoCascadeResolution.Location = new System.Drawing.Point(8, 253);
+            this.checkboxShadowAutoCascadeResolution.Name = "checkboxShadowAutoCascadeResolution";
+            this.checkboxShadowAutoCascadeResolution.Size = new System.Drawing.Size(168, 17);
+            this.checkboxShadowAutoCascadeResolution.TabIndex = 16;
+            this.checkboxShadowAutoCascadeResolution.Text = "Auto cascade resolution";
+            this.checkboxShadowAutoCascadeResolution.UseVisualStyleBackColor = true;
+            // 
             // labelShadowDistance
             // 
             this.labelShadowDistance.AutoSize = true;
-            this.labelShadowDistance.Location = new System.Drawing.Point(8, 50);
+            this.labelShadowDistance.Location = new System.Drawing.Point(8, 45);
             this.labelShadowDistance.Name = "labelShadowDistance";
             this.labelShadowDistance.Size = new System.Drawing.Size(94, 13);
             this.labelShadowDistance.TabIndex = 2;
@@ -2836,7 +2850,7 @@ namespace OpenBve {
             "Far (500m)",
             "Very Far (800m)",
             "Follow Viewing Distance"});
-            this.comboboxShadowDistance.Location = new System.Drawing.Point(120, 47);
+            this.comboboxShadowDistance.Location = new System.Drawing.Point(120, 42);
             this.comboboxShadowDistance.Name = "comboboxShadowDistance";
             this.comboboxShadowDistance.Size = new System.Drawing.Size(168, 21);
             this.comboboxShadowDistance.TabIndex = 3;
@@ -2844,7 +2858,7 @@ namespace OpenBve {
             // labelShadowCascades
             // 
             this.labelShadowCascades.AutoSize = true;
-            this.labelShadowCascades.Location = new System.Drawing.Point(8, 78);
+            this.labelShadowCascades.Location = new System.Drawing.Point(8, 71);
             this.labelShadowCascades.Name = "labelShadowCascades";
             this.labelShadowCascades.Size = new System.Drawing.Size(99, 13);
             this.labelShadowCascades.TabIndex = 4;
@@ -2858,7 +2872,7 @@ namespace OpenBve {
             "2 Cascades (Fastest)",
             "3 Cascades (Balanced)",
             "4 Cascades (Best Quality)"});
-            this.comboboxShadowCascades.Location = new System.Drawing.Point(120, 75);
+            this.comboboxShadowCascades.Location = new System.Drawing.Point(120, 68);
             this.comboboxShadowCascades.Name = "comboboxShadowCascades";
             this.comboboxShadowCascades.Size = new System.Drawing.Size(168, 21);
             this.comboboxShadowCascades.TabIndex = 5;
@@ -2866,7 +2880,7 @@ namespace OpenBve {
             // labelShadowStrength
             // 
             this.labelShadowStrength.AutoSize = true;
-            this.labelShadowStrength.Location = new System.Drawing.Point(8, 106);
+            this.labelShadowStrength.Location = new System.Drawing.Point(8, 100);
             this.labelShadowStrength.Name = "labelShadowStrength";
             this.labelShadowStrength.Size = new System.Drawing.Size(92, 13);
             this.labelShadowStrength.TabIndex = 6;
@@ -2874,7 +2888,7 @@ namespace OpenBve {
             // 
             // trackbarShadowStrength
             // 
-            this.trackbarShadowStrength.Location = new System.Drawing.Point(120, 103);
+            this.trackbarShadowStrength.Location = new System.Drawing.Point(120, 97);
             this.trackbarShadowStrength.Maximum = 100;
             this.trackbarShadowStrength.Name = "trackbarShadowStrength";
             this.trackbarShadowStrength.Size = new System.Drawing.Size(130, 45);
@@ -2886,7 +2900,7 @@ namespace OpenBve {
             // labelShadowStrengthValue
             // 
             this.labelShadowStrengthValue.AutoSize = true;
-            this.labelShadowStrengthValue.Location = new System.Drawing.Point(255, 106);
+            this.labelShadowStrengthValue.Location = new System.Drawing.Point(255, 100);
             this.labelShadowStrengthValue.Name = "labelShadowStrengthValue";
             this.labelShadowStrengthValue.Size = new System.Drawing.Size(27, 13);
             this.labelShadowStrengthValue.TabIndex = 8;
@@ -2895,7 +2909,7 @@ namespace OpenBve {
             // labelShadowBias
             // 
             this.labelShadowBias.AutoSize = true;
-            this.labelShadowBias.Location = new System.Drawing.Point(8, 154);
+            this.labelShadowBias.Location = new System.Drawing.Point(8, 144);
             this.labelShadowBias.Name = "labelShadowBias";
             this.labelShadowBias.Size = new System.Drawing.Size(72, 13);
             this.labelShadowBias.TabIndex = 8;
@@ -2909,7 +2923,7 @@ namespace OpenBve {
             0,
             0,
             393216});
-            this.updownShadowBias.Location = new System.Drawing.Point(120, 151);
+            this.updownShadowBias.Location = new System.Drawing.Point(120, 141);
             this.updownShadowBias.Maximum = new decimal(new int[] {
             1,
             0,
@@ -2928,7 +2942,7 @@ namespace OpenBve {
             // labelShadowNormalBias
             // 
             this.labelShadowNormalBias.AutoSize = true;
-            this.labelShadowNormalBias.Location = new System.Drawing.Point(8, 178);
+            this.labelShadowNormalBias.Location = new System.Drawing.Point(8, 168);
             this.labelShadowNormalBias.Name = "labelShadowNormalBias";
             this.labelShadowNormalBias.Size = new System.Drawing.Size(66, 13);
             this.labelShadowNormalBias.TabIndex = 10;
@@ -2942,7 +2956,7 @@ namespace OpenBve {
             0,
             0,
             65536});
-            this.updownShadowNormalBias.Location = new System.Drawing.Point(120, 175);
+            this.updownShadowNormalBias.Location = new System.Drawing.Point(120, 165);
             this.updownShadowNormalBias.Maximum = new decimal(new int[] {
             10,
             0,
@@ -2966,7 +2980,7 @@ namespace OpenBve {
             "Low",
             "Medium",
             "High"});
-            this.comboboxShadowFilterRadius.Location = new System.Drawing.Point(120, 220);
+            this.comboboxShadowFilterRadius.Location = new System.Drawing.Point(140, 206);
             this.comboboxShadowFilterRadius.Name = "comboboxShadowFilterRadius";
             this.comboboxShadowFilterRadius.Size = new System.Drawing.Size(113, 21);
             this.comboboxShadowFilterRadius.TabIndex = 12;
@@ -3118,7 +3132,7 @@ namespace OpenBve {
             this.groupBoxObjectParser.Controls.Add(this.labelXparser);
             this.groupBoxObjectParser.Controls.Add(this.comboBoxXparser);
             this.groupBoxObjectParser.ForeColor = System.Drawing.Color.Black;
-            this.groupBoxObjectParser.Location = new System.Drawing.Point(330, 370);
+            this.groupBoxObjectParser.Location = new System.Drawing.Point(330, 401);
             this.groupBoxObjectParser.Name = "groupBoxObjectParser";
             this.groupBoxObjectParser.Size = new System.Drawing.Size(321, 110);
             this.groupBoxObjectParser.TabIndex = 23;
@@ -3219,6 +3233,8 @@ namespace OpenBve {
             // 
             this.groupBoxAdvancedOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxAdvancedOptions.Controls.Add(this.labelInstancedAlpha);
+            this.groupBoxAdvancedOptions.Controls.Add(this.comboboxInstancedAlpha);
             this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxPanel2Extended);
             this.groupBoxAdvancedOptions.Controls.Add(this.pictureboxCursor);
             this.groupBoxAdvancedOptions.Controls.Add(this.labelCursor);
@@ -3232,15 +3248,38 @@ namespace OpenBve {
             this.groupBoxAdvancedOptions.ForeColor = System.Drawing.Color.Black;
             this.groupBoxAdvancedOptions.Location = new System.Drawing.Point(0, 323);
             this.groupBoxAdvancedOptions.Name = "groupBoxAdvancedOptions";
-            this.groupBoxAdvancedOptions.Size = new System.Drawing.Size(321, 189);
+            this.groupBoxAdvancedOptions.Size = new System.Drawing.Size(321, 230);
             this.groupBoxAdvancedOptions.TabIndex = 21;
             this.groupBoxAdvancedOptions.TabStop = false;
             this.groupBoxAdvancedOptions.Text = "Advanced Options";
             // 
+            // labelInstancedAlpha
+            // 
+            this.labelInstancedAlpha.AutoSize = true;
+            this.labelInstancedAlpha.Location = new System.Drawing.Point(8, 188);
+            this.labelInstancedAlpha.Name = "labelInstancedAlpha";
+            this.labelInstancedAlpha.Size = new System.Drawing.Size(130, 18);
+            this.labelInstancedAlpha.TabIndex = 40;
+            this.labelInstancedAlpha.Text = "Instanced alpha faces:";
+            this.labelInstancedAlpha.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // comboboxInstancedAlpha
+            // 
+            this.comboboxInstancedAlpha.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboboxInstancedAlpha.FormattingEnabled = true;
+            this.comboboxInstancedAlpha.Items.AddRange(new object[] {
+            "Off",
+            "Order-independent (OIT)",
+            "Approximate (all alpha faces)"});
+            this.comboboxInstancedAlpha.Location = new System.Drawing.Point(140, 185);
+            this.comboboxInstancedAlpha.Name = "comboboxInstancedAlpha";
+            this.comboboxInstancedAlpha.Size = new System.Drawing.Size(150, 21);
+            this.comboboxInstancedAlpha.TabIndex = 41;
+            // 
             // checkBoxPanel2Extended
             // 
             this.checkBoxPanel2Extended.AutoSize = true;
-            this.checkBoxPanel2Extended.Location = new System.Drawing.Point(8, 164);
+            this.checkBoxPanel2Extended.Location = new System.Drawing.Point(8, 208);
             this.checkBoxPanel2Extended.Name = "checkBoxPanel2Extended";
             this.checkBoxPanel2Extended.Size = new System.Drawing.Size(159, 17);
             this.checkBoxPanel2Extended.TabIndex = 20;
@@ -6642,6 +6681,7 @@ namespace OpenBve {
         private System.Windows.Forms.ComboBox comboboxShadowResolution;
         private System.Windows.Forms.CheckBox checkboxShadowSmooth;
         private System.Windows.Forms.CheckBox checkboxShadowFilterCascades;
+        private System.Windows.Forms.CheckBox checkboxShadowAutoCascadeResolution;
         private System.Windows.Forms.Label labelShadowDistance;
         private System.Windows.Forms.ComboBox comboboxShadowDistance;
         private System.Windows.Forms.Label labelShadowCascades;
@@ -7041,6 +7081,8 @@ namespace OpenBve {
         private System.Windows.Forms.Button buttonAbort;
 		private System.Windows.Forms.CheckBox checkBoxLoadingSway;
 		private System.Windows.Forms.GroupBox groupBoxAdvancedOptions;
+		private System.Windows.Forms.Label labelInstancedAlpha;
+		private System.Windows.Forms.ComboBox comboboxInstancedAlpha;
 		private System.Windows.Forms.CheckBox checkBoxHacks;
 		private System.Windows.Forms.CheckBox checkBoxTransparencyFix;
 		private System.Windows.Forms.CheckBox checkBoxUnloadTextures;

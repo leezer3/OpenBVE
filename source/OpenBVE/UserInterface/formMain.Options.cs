@@ -66,6 +66,7 @@ namespace OpenBve {
 			updownShadowBias.Enabled = shadowEnabled;
 			updownShadowNormalBias.Enabled = shadowEnabled;
 			checkboxShadowFilterCascades.Enabled = shadowEnabled;
+			checkboxShadowAutoCascadeResolution.Enabled = shadowEnabled;
 			checkboxShadowSmooth.Enabled = shadowEnabled;
 			bool softnessEnabled = shadowEnabled && checkboxShadowSmooth.Checked;
 			labelShadowSoftness.Enabled = softnessEnabled;

@@ -384,6 +384,47 @@ namespace OpenBveApi.Hosts {
 			return false;
 		}
 
+		/// <summary>Loads a static object, sharing the prototype with every other reference to the same file</summary>
+		/// <param name="Path">The absolute on-disk path to the object</param>
+		/// <param name="Encoding">The detected text encoding</param>
+		/// <param name="Object">The handle to the object</param>
+		/// <returns>Whether loading the object was successful</returns>
+		/// <remarks>The returned object is the cached prototype rather than a private copy, so that repeated
+		/// references to the same file share a single mesh (and therefore a single set of GPU buffers).
+		/// This allows the renderer to draw such references using instancing.
+		/// The mesh must not be modified, as any change would affect every reference to the file.</remarks>
+		public virtual bool LoadSharedStaticObject(string Path, System.Text.Encoding Encoding, out StaticObject Object)
+		{
+			ValueTuple<string, bool, DateTime> key = ValueTuple.Create(Path.ToLowerInvariant(), false, File.GetLastWriteTime(Path));
+			lock (cacheLock)
+			{
+				if (StaticObjectCache.TryGetValue(key, out StaticObject proto))
+				{
+					Object = proto;
+					return true;
+				}
+			}
+
+			// Not yet cached: load the object normally, which populates the cache.
+			if (!LoadObject(Path, Encoding, out UnifiedObject loaded) || !(loaded is StaticObject staticObject))
+			{
+				Object = null;
+				return false;
+			}
+
+			lock (cacheLock)
+			{
+				if (StaticObjectCache.TryGetValue(key, out StaticObject proto))
+				{
+					Object = proto;
+					return true;
+				}
+			}
+
+			Object = staticObject;
+			return true;
+		}
+
 		/// <summary>Loads a static object</summary>
 		/// <param name="Path">The absolute on-disk path to the object</param>
 		/// <param name="Encoding">The detected text encoding</param>

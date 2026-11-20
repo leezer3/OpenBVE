@@ -49,6 +49,7 @@ namespace OpenBveApi
 		AntiAliasingLevel,
 		TransparencyMode,
 		OldTransparencyMode,
+		InstancedAlpha,
 		MotionBlur,
 		FPSLimit,
 		ShadowResolution,
@@ -59,6 +60,7 @@ namespace OpenBveApi
 		ShadowNormalBias,
 		ShadowFilterCascades,
 		ShadowSmooth,
+		ShadowAutoCascadeResolution,
 		ShadowFilterRadius,
 		LightAzimuth,
 

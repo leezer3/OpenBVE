@@ -466,6 +466,7 @@ namespace OpenBve {
 			comboboxMotionBlur.Items.AddRange(new object[] { "", "", "", "" });
 			comboboxMotionBlur.SelectedIndex = (int)Interface.CurrentOptions.MotionBlur;
 			trackbarTransparency.Value = (int)Interface.CurrentOptions.TransparencyMode;
+			comboboxInstancedAlpha.SelectedIndex = Interface.CurrentOptions.InstancedAlpha;
 			updownTimeAccelerationFactor.Value = Interface.CurrentOptions.TimeAccelerationFactor > updownTimeAccelerationFactor.Maximum ? updownTimeAccelerationFactor.Maximum : Interface.CurrentOptions.TimeAccelerationFactor;
 			checkboxToppling.Checked = Interface.CurrentOptions.Toppling;
 			checkboxCollisions.Checked = Interface.CurrentOptions.Collisions;
@@ -506,6 +507,7 @@ namespace OpenBve {
 			updownShadowBias.Value = (decimal)Interface.CurrentOptions.ShadowBias;
 			updownShadowNormalBias.Value = (decimal)Interface.CurrentOptions.ShadowNormalBias;
 			checkboxShadowFilterCascades.Checked = Interface.CurrentOptions.ShadowFilterCascades;
+			checkboxShadowAutoCascadeResolution.Checked = Interface.CurrentOptions.ShadowAutoCascadeResolution;
 			checkboxShadowSmooth.Checked = Interface.CurrentOptions.ShadowSmooth;
 			// Map filter radius to preset: Low=1.0, Medium=1.5, High=2.5
 			if (Interface.CurrentOptions.ShadowFilterRadius < 1.25) comboboxShadowFilterRadius.SelectedIndex = 0;
@@ -516,6 +518,7 @@ namespace OpenBve {
 			comboboxShadowDistance.Enabled = shadowEnabled;
 			comboboxShadowCascades.Enabled = shadowEnabled;
 			checkboxShadowFilterCascades.Enabled = shadowEnabled;
+			checkboxShadowAutoCascadeResolution.Enabled = shadowEnabled;
 			checkboxShadowSmooth.Enabled = shadowEnabled;
 			bool softnessEnabled = shadowEnabled && checkboxShadowSmooth.Checked;
 			labelShadowSoftness.Enabled = softnessEnabled;
@@ -1263,6 +1266,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.AnisotropicFilteringLevel = (int)Math.Round(updownAnisotropic.Value);
 			Interface.CurrentOptions.AntiAliasingLevel = (int)Math.Round(updownAntiAliasing.Value);
 			Interface.CurrentOptions.TransparencyMode = (TransparencyMode)trackbarTransparency.Value;
+			Interface.CurrentOptions.InstancedAlpha = comboboxInstancedAlpha.SelectedIndex >= 0 ? comboboxInstancedAlpha.SelectedIndex : 1;
 			Interface.CurrentOptions.NearClipScenery = (double)updownNearClipScenery.Value;
 			Interface.CurrentOptions.NearClipCab = (double)updownNearClipCab.Value;
 			Interface.CurrentOptions.NearClipBase = (double)updownNearClipBase.Value;
@@ -1321,6 +1325,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.ShadowBias = (double)updownShadowBias.Value;
 			Interface.CurrentOptions.ShadowNormalBias = (double)updownShadowNormalBias.Value;
 			Interface.CurrentOptions.ShadowFilterCascades = checkboxShadowFilterCascades.Checked;
+			Interface.CurrentOptions.ShadowAutoCascadeResolution = checkboxShadowAutoCascadeResolution.Checked;
 			Interface.CurrentOptions.ShadowSmooth = checkboxShadowSmooth.Checked;
 			Interface.CurrentOptions.ShadowFilterRadius = comboboxShadowFilterRadius.SelectedIndex == 0 ? 1.0 : comboboxShadowFilterRadius.SelectedIndex == 2 ? 2.5 : 1.5;
 			Interface.CurrentOptions.GameMode = (GameMode)comboboxMode.SelectedIndex;

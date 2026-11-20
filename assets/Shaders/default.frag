@@ -89,9 +89,9 @@ out vec4 fragColor;
 const float SHADOW_TWO_PI = 6.28318530718;
 const float SHADOW_MIN_RADIUS = 0.5;
 const float SHADOW_MAX_RADIUS = 3.0;
-const float SHADOW_MIN_BLEND = 5.0;
-const float SHADOW_MAX_BLEND = 25.0;
-const float SHADOW_BLEND_FRACTION = 0.1;
+const float SHADOW_MIN_BLEND = 8.0;
+const float SHADOW_MAX_BLEND = 40.0;
+const float SHADOW_BLEND_FRACTION = 0.2;
 const float SHADOW_BIAS_GUARD_TEXELS = 4.0;
 const float SHADOW_BIAS_EPSILON = 0.00002;
 

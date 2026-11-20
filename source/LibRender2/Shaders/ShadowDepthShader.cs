@@ -38,6 +38,7 @@ namespace LibRender2.Shaders
 		private readonly int uMaterialAlpha; // Uniform location for material color alpha
 		private readonly int uMaterialFlags;
 		private readonly int uTextureMatrix;
+		private readonly int uInstanced;
 
 		public ShadowDepthShader(BaseRenderer Renderer,  string vertexShaderName, string fragmentShaderName, bool isFromStream = false) : base(Renderer, vertexShaderName, fragmentShaderName, isFromStream, false)
 		{
@@ -49,6 +50,13 @@ namespace LibRender2.Shaders
 				GL.UniformBlockBinding(Handle, matrixBlockIndex, 0);
 			}
 
+			// Bind the per-instance matrix block to binding point 1, matching BaseRenderer's instance buffer.
+			int instanceMatrixBlockIndex = GL.GetUniformBlockIndex(Handle, "uInstanceMatricies");
+			if (instanceMatrixBlockIndex != -1)
+			{
+				GL.UniformBlockBinding(Handle, instanceMatrixBlockIndex, 1);
+			}
+
 			// Cache uniform locations
 			uLightSpaceMatrix = GL.GetUniformLocation(Handle, "uLightSpaceMatrix");
 			uModelMatrix = GL.GetUniformLocation(Handle, "uModelMatrix");
@@ -58,6 +66,7 @@ namespace LibRender2.Shaders
 			uMaterialAlpha = GL.GetUniformLocation(Handle, "uMaterialAlpha"); // Cache the material alpha location
 			uMaterialFlags = GL.GetUniformLocation(Handle, "uMaterialFlags");
 			uTextureMatrix = GL.GetUniformLocation(Handle, "uTextureMatrix");
+			uInstanced = GL.GetUniformLocation(Handle, "uInstanced");
 		}
 
 		public void SetLightSpaceMatrix(OpenBveApi.Math.Matrix4D m)
@@ -76,6 +85,15 @@ namespace LibRender2.Shaders
 		{
 			OpenTK.Matrix4 matrix = ConvertToMatrix4(m);
 			GL.UniformMatrix4(uTextureMatrix, false, ref matrix);
+		}
+
+		/// <summary>Selects whether the vertex shader should read the per-instance matrix block (via gl_InstanceID) instead of the uniform model matrix.</summary>
+		public void SetInstanced(bool enabled)
+		{
+			if (uInstanced != -1)
+			{
+				GL.Uniform1(uInstanced, enabled ? 1 : 0);
+			}
 		}
 
 		public void SetTexture(int unit)

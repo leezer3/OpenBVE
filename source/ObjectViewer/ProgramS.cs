@@ -1487,6 +1487,9 @@ namespace ObjectViewer {
 	            case Key.I:
 	                Renderer.OptionInterface = !Renderer.OptionInterface;
 	                break;
+	            case Key.F4:
+		            Renderer.OptionAlphaInstancing = (Renderer.OptionAlphaInstancing + 1) % 3;
+		            break;
                 case Key.F8:
 	                if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 	                {

@@ -25,6 +25,9 @@ namespace LibRender2.ShadowMapping
         /// <summary>Active shadow map resolution (used for texel snapping).</summary>
         public int Resolution { get; set; } = 2048;
 
+        /// <summary>Optional per-cascade resolutions; when set, overrides <see cref="Resolution"/> per cascade.</summary>
+        public int[] Resolutions { get; set; }
+
         /// <summary>Per-cascade light-space VP matrices.</summary>
         public Matrix4D[] LightSpaceMatrices { get; private set; }
 
@@ -129,7 +132,8 @@ namespace LibRender2.ShadowMapping
                 // === Texel snapping to prevent shadow swimming on camera move ===
                 // Snap the light-space center to texel boundaries
                 // Each texel covers (2*orthoSize / Resolution) world units
-                double worldTexelSize = (orthoSize * 2.0) / (double)Resolution;
+                int cascadeResolution = (Resolutions != null && i < Resolutions.Length) ? Resolutions[i] : Resolution;
+                double worldTexelSize = (orthoSize * 2.0) / (double)cascadeResolution;
 
                 // Transform center into light view space to snap it
                 Vector3 centerLS = TransformPoint(center, lightView);
@@ -157,7 +161,8 @@ namespace LibRender2.ShadowMapping
 
                 // Z-Bias: Convert physical texel size into a Depth Buffer fraction.
                 // This ensures we push the depth exactly enough to cure acne, but no more.
-                double texelWorldSize = (orthoSize * 2.0) / (double)Resolution;
+                int cascadeResolution2 = (Resolutions != null && i < Resolutions.Length) ? Resolutions[i] : Resolution;
+                double texelWorldSize = (orthoSize * 2.0) / (double)cascadeResolution2;
                 double depthRange = zFar - zNear;
                 double baseBias = texelWorldSize / depthRange;
                 CascadeBiases[i] = (float)baseBias;

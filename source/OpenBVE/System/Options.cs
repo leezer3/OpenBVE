@@ -307,6 +307,7 @@ namespace OpenBve
 				Builder.AppendLine("antiAliasingLevel = " + AntiAliasingLevel.ToString(Culture));
 				Builder.AppendLine("transparencyMode = " + ((int)TransparencyMode).ToString(Culture));
 				Builder.AppendLine("oldtransparencymode = " + (OldTransparencyMode ? "true" : "false"));
+				Builder.AppendLine("instancedalpha = " + InstancedAlpha.ToString(Culture));
 				Builder.AppendLine("viewingDistance = " + ViewingDistance.ToString(Culture));
 				Builder.AppendLine("nearclipscenery = " + NearClipScenery.ToString(Culture));
 				Builder.AppendLine("nearclipcab = " + NearClipCab.ToString(Culture));
@@ -321,6 +322,7 @@ namespace OpenBve
 				Builder.AppendLine("shadownormalbias = " + ShadowNormalBias.ToString(Culture));
 				Builder.AppendLine("shadowfiltercascades = " + (ShadowFilterCascades ? "true" : "false"));
 				Builder.AppendLine("shadowsmooth = " + (ShadowSmooth ? "true" : "false"));
+				Builder.AppendLine("shadowautocascaderesolution = " + (ShadowAutoCascadeResolution ? "true" : "false"));
 				Builder.AppendLine("shadowfilterradius = " + ShadowFilterRadius.ToString(Culture));
 				Builder.AppendLine("fpslimit = " + FPSLimit.ToString(Culture));
 				Builder.AppendLine();
@@ -510,6 +512,11 @@ namespace OpenBve
 							block.TryGetValue(OptionsKey.AntiAliasingLevel, ref Interface.CurrentOptions.AntiAliasingLevel);
 							block.GetEnumValue(OptionsKey.TransparencyMode, out Interface.CurrentOptions.TransparencyMode);
 							block.GetValue(OptionsKey.OldTransparencyMode, out CurrentOptions.OldTransparencyMode);
+							block.TryGetValue(OptionsKey.InstancedAlpha, ref Interface.CurrentOptions.InstancedAlpha);
+							if (Interface.CurrentOptions.InstancedAlpha < 0 || Interface.CurrentOptions.InstancedAlpha > 2)
+							{
+								Interface.CurrentOptions.InstancedAlpha = 1;
+							}
 							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.QuadLeafSize, ref Interface.CurrentOptions.QuadTreeLeafSize, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.NearClipScenery, ref Interface.CurrentOptions.NearClipScenery, NumberRange.Positive);
@@ -537,6 +544,10 @@ namespace OpenBve
 							if (block.GetValue(OptionsKey.ShadowSmooth, out string smoothVal))
 							{
 								Interface.CurrentOptions.ShadowSmooth = smoothVal.Trim().Equals("true", StringComparison.OrdinalIgnoreCase) || smoothVal.Trim() == "1";
+							}
+							if (block.GetValue(OptionsKey.ShadowAutoCascadeResolution, out string autoResVal))
+							{
+								Interface.CurrentOptions.ShadowAutoCascadeResolution = autoResVal.Trim().Equals("true", StringComparison.OrdinalIgnoreCase) || autoResVal.Trim() == "1";
 							}
 							block.TryGetValue(OptionsKey.ShadowFilterRadius, ref CurrentOptions.ShadowFilterRadius);
 							if (CurrentOptions.ShadowFilterRadius < 0.5) CurrentOptions.ShadowFilterRadius = 0.5;

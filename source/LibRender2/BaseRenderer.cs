@@ -151,6 +151,8 @@ namespace LibRender2
 		/// <summary>Holds the last openGL error</summary>
 		/// <remarks>Is only used in debug builds, hence the pragma</remarks>
 		private ErrorCode lastError;
+		/// <summary>The last openGL error which was reported to the user / log</summary>
+		private ErrorCode lastReportedError = ErrorCode.NoError;
 #if RELEASE
 #pragma warning restore 0219, CS0169
 #endif
@@ -159,7 +161,12 @@ namespace LibRender2
 		public AbstractShader CurrentShader;
 
 		public Shader DefaultShader;
-		
+
+		/// <summary>Shader used by the rail path overlay, created on first use.</summary>
+		public LineShader LineShader;
+		/// <summary>Set if the rail path shader could not be created, to avoid retrying every frame.</summary>
+		private bool lineShaderFailed;
+
 		/// <summary>Manages the Cascaded Shadow Mapping (CSM) system.</summary>
 		public Shadows Shadows;
 
@@ -372,6 +379,7 @@ namespace LibRender2
 			currentHost = CurrentHost;
 			currentOptions = CurrentOptions;
 			fileSystem = FileSystem;
+			OptionAlphaInstancing = currentOptions.InstancedAlpha;
 			Screen = new Screen(this);
 			Camera = new CameraProperties(this);
 			Lighting = new Lighting(this);
@@ -519,8 +527,8 @@ namespace LibRender2
 		/// <summary>Deinitializes the renderer</summary>
 		public void DeInitialize()
 		{
-			// Flush all in-memory caches on shutdown (close window / process exit).
-			// Must run before GameWindow.Dispose() while the GL context is still alive.
+			// Flush caches while the GL context is alive. Don't dispose GameWindow here: this runs from
+			// OnClosing inside Run(), and disposing it mid-loop throws ObjectDisposedException.
 			try
 			{
 				TextureManager?.UnloadAllTextures(false);
@@ -543,7 +551,11 @@ namespace LibRender2
 				GL.DeleteTexture(nullDepthMap);
 				nullDepthMap = 0;
 			}
-			GameWindow?.Dispose();
+			if (identityMatrixBuffer != 0)
+			{
+				GL.DeleteBuffer(identityMatrixBuffer);
+				identityMatrixBuffer = 0;
+			}
 			// terminate spinning thread
 			VisibilityThreadShouldRun = false;
 		}
@@ -1150,9 +1162,23 @@ namespace LibRender2
 			{
 				lastError = GL.GetError();
 
-				if (lastError != ErrorCode.NoError)
+				if (lastError != ErrorCode.NoError && lastError != lastReportedError)
 				{
-					throw new InvalidOperationException($"OpenGL Error: {lastError}");
+					// Report the error once per distinct code instead of throwing:
+					// throwing here killed the process with nothing at all written to
+					// disk, which made GL state bugs impossible to diagnose from a
+					// user report (see RouteViewer event markers hanging / vanishing)
+					lastReportedError = lastError;
+					const string message = "OpenGL error detected whilst resetting shader state: ";
+					try
+					{
+						fileSystem?.AppendToLogFile(message + lastError);
+					}
+					catch
+					{
+						// ignored- logging must never be able to throw
+					}
+					currentHost.AddMessage(MessageType.Warning, false, message + lastError);
 				}
 			}
 #endif
@@ -1368,6 +1394,159 @@ namespace LibRender2
 		private Matrix4D lastModelMatrix;
 		private Matrix4D lastModelViewMatrix;
 		private bool sendToShader;
+
+		/// <summary>
+		/// Controls the batching of alpha (blended) faces:
+		/// 0 - every alpha face is drawn individually,
+		/// 1 - only faces whose blending cannot depend upon the draw order are batched,
+		/// 2 - every batchable face is batched, at the cost of an approximate back to front order.
+		/// </summary>
+		public int OptionAlphaInstancing = 1;
+		/// <summary>The number of primitive batches (draw calls) issued for opaque faces by the last call to RenderOpaqueFaces</summary>
+		public int OpaqueDrawCalls;
+		/// <summary>The number of primitive batches (draw calls) issued for alpha faces by the alpha pass of the current frame</summary>
+		public int AlphaDrawCalls;
+		/// <summary>The total number of draw calls issued by all shadow cascades of the current frame</summary>
+		public int ShadowDrawCalls;
+		/// <summary>Shadow draw calls issued through the per-object fallback path</summary>
+		public int ShadowFallbackDrawCalls;
+		/// <summary>Shadow draw calls issued through the instanced batching path</summary>
+		public int ShadowInstancedDrawCalls;
+		/// <summary>The number of unique meshes contributing to the visible opaque faces</summary>
+		public int OpaqueUniqueMeshes;
+		/// <summary>The maximum number of instances drawn in a single instanced batch (must match the uInstanceMatricies array size in default.vert)</summary>
+		private const int MaxInstancesPerBatch = 256;
+		/// <summary>The OpenGL uniform buffer used to pass per-instance modelview matrices to the shader</summary>
+		private int instanceMatrixBuffer;
+		/// <summary>Scratch buffer holding the packed per-instance modelview matrices</summary>
+		private readonly float[] instanceMatrixData = new float[MaxInstancesPerBatch * 16];
+
+		// Reused scratch collections to avoid per-frame batching allocations.
+		private readonly Dictionary<Mesh, List<ObjectState>> opaqueInstancesByMesh = new Dictionary<Mesh, List<ObjectState>>();
+		private readonly Dictionary<Mesh, HashSet<ObjectState>> opaqueSeenByMesh = new Dictionary<Mesh, HashSet<ObjectState>>();
+		private readonly Dictionary<Mesh, byte> opaqueBlendByMesh = new Dictionary<Mesh, byte>();
+		private readonly HashSet<Mesh> opaqueIneligibleMeshes = new HashSet<Mesh>();
+		private readonly Dictionary<Mesh, List<MeshFace>> opaqueBatchedFaces = new Dictionary<Mesh, List<MeshFace>>();
+		private readonly Dictionary<Mesh, HashSet<int>> opaqueBatchedFaceIndices = new Dictionary<Mesh, HashSet<int>>();
+		private readonly List<FaceState> opaqueFallbackFaces = new List<FaceState>();
+		private readonly HashSet<Mesh> opaqueFallbackMeshes = new HashSet<Mesh>();
+
+		private readonly Dictionary<Mesh, List<ObjectState>> alphaInstancesByMesh = new Dictionary<Mesh, List<ObjectState>>();
+		private readonly Dictionary<Mesh, HashSet<ObjectState>> alphaSeenByMesh = new Dictionary<Mesh, HashSet<ObjectState>>();
+		private readonly Dictionary<Mesh, byte> alphaBlendByMesh = new Dictionary<Mesh, byte>();
+		private readonly HashSet<Mesh> alphaIneligibleMeshes = new HashSet<Mesh>();
+		private readonly Dictionary<Mesh, AlphaBatch> alphaBatchesByMesh = new Dictionary<Mesh, AlphaBatch>();
+		private readonly Dictionary<Mesh, HashSet<int>> alphaBatchedFaceIndices = new Dictionary<Mesh, HashSet<int>>();
+		private readonly List<FaceState> alphaFallbackFaces = new List<FaceState>();
+		private readonly List<AlphaBatch> alphaSortedBatches = new List<AlphaBatch>();
+
+		private readonly Dictionary<Mesh, List<ObjectState>> shadowInstancesByMesh = new Dictionary<Mesh, List<ObjectState>>();
+		private readonly Dictionary<Mesh, HashSet<ObjectState>> shadowSeenByMesh = new Dictionary<Mesh, HashSet<ObjectState>>();
+		private readonly HashSet<ObjectState> shadowIneligibleInstances = new HashSet<ObjectState>();
+		private readonly HashSet<ObjectState> shadowSeenInstances = new HashSet<ObjectState>();
+		private readonly Dictionary<Mesh, List<MeshFace>> shadowBatchedFaces = new Dictionary<Mesh, List<MeshFace>>();
+		private readonly Dictionary<Mesh, HashSet<int>> shadowBatchedFaceIndices = new Dictionary<Mesh, HashSet<int>>();
+		private readonly List<FaceState> shadowFallbackFaces = new List<FaceState>();
+		private readonly Dictionary<ObjectState, List<MeshFace>> shadowFallbackByObject = new Dictionary<ObjectState, List<MeshFace>>();
+		private int identityMatrixBuffer;
+		private readonly List<ShadowDrawRange> shadowDrawRanges = new List<ShadowDrawRange>();
+
+		// Clear the contents of pooled per-mesh collections but keep the entries, so the List/HashSet
+		// objects themselves are reused across frames instead of being reallocated every frame.
+		private static void ClearValues<TKey, TValue>(Dictionary<TKey, List<TValue>> dict)
+		{
+			foreach (List<TValue> value in dict.Values)
+			{
+				value.Clear();
+			}
+		}
+
+		private static void ClearValues<TKey, TValue>(Dictionary<TKey, HashSet<TValue>> dict)
+		{
+			foreach (HashSet<TValue> value in dict.Values)
+			{
+				value.Clear();
+			}
+		}
+
+		private static readonly Comparison<AlphaBatch> AlphaBatchDistanceCompare = (a, b) => b.NearestDistance.CompareTo(a.NearestDistance);
+		private static readonly Comparison<MeshFace> MeshFaceIboCompare = (a, b) => a.IboStartIndex.CompareTo(b.IboStartIndex);
+
+		/// <summary>A contiguous run of faces in a mesh's index buffer which can be drawn in a single call.</summary>
+		private struct ShadowDrawRange
+		{
+			public int Start;
+			public int Count;
+			public int Material;
+			public FaceFlags Flags;
+			// Depth-relevant material state; equal keys can share a draw call.
+			public int Alpha;
+			public MaterialFlags MaterialFlags;
+			public object Texture;
+			public OpenGlTextureWrapMode Wrap;
+		}
+
+		/// <summary>Merges faces into contiguous index ranges that share a draw call.</summary>
+		private static void BuildShadowDrawRanges(Mesh mesh, List<MeshFace> faces, List<ShadowDrawRange> ranges)
+		{
+			ranges.Clear();
+			if (faces == null || faces.Count == 0)
+			{
+				return;
+			}
+			faces.Sort(MeshFaceIboCompare);
+			ShadowDrawRange current = default(ShadowDrawRange);
+			bool haveCurrent = false;
+			bool currentMergeable = false;
+			for (int i = 0; i < faces.Count; i++)
+			{
+				MeshFace face = faces[i];
+				if (face.Vertices.Length == 0)
+				{
+					continue;
+				}
+				// Only independent primitives (triangles/quads) can share a range.
+				FaceFlags type = face.Flags & FaceFlags.FaceTypeMask;
+				bool mergeable = type == FaceFlags.Triangles || type == FaceFlags.Quads;
+				MeshMaterial material = mesh.Materials[face.Material];
+				int alpha = material.Color.A;
+				MaterialFlags matFlags = material.Flags & MaterialFlags.NoShadow;
+				object tex = material.DaytimeTexture;
+				OpenGlTextureWrapMode wrap = material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp;
+				int end = face.IboStartIndex + face.Vertices.Length;
+				if (haveCurrent && currentMergeable && mergeable && current.Flags == face.Flags
+					&& current.Alpha == alpha && current.MaterialFlags == matFlags
+					&& current.Texture == tex && current.Wrap == wrap
+					&& current.Start + current.Count == face.IboStartIndex)
+				{
+					current.Count = end - current.Start;
+				}
+				else
+				{
+					if (haveCurrent)
+					{
+						ranges.Add(current);
+					}
+					current = new ShadowDrawRange
+					{
+						Start = face.IboStartIndex,
+						Count = face.Vertices.Length,
+						Material = face.Material,
+						Flags = face.Flags,
+						Alpha = alpha,
+						MaterialFlags = matFlags,
+						Texture = tex,
+						Wrap = wrap
+					};
+					currentMergeable = mergeable;
+					haveCurrent = true;
+				}
+			}
+			if (haveCurrent)
+			{
+				ranges.Add(current);
+			}
+		}
 
 		/// <summary>Draws a face using the current shader</summary>
 		/// <param name="state">The FaceState to draw</param>
@@ -1678,6 +1857,1253 @@ namespace LibRender2
 				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 			}
 			lastObjectState = state;
+		}
+
+		/// <summary>Renders the rail path overlay using the line shader.</summary>
+		/// <param name="keys">The rail keys to render.</param>
+		public void RenderRailPaths(IEnumerable<int> keys)
+		{
+			if (LineShader == null)
+			{
+				if (lineShaderFailed)
+				{
+					return;
+				}
+
+				try
+				{
+					LineShader = new LineShader(this);
+				}
+				catch (Exception ex)
+				{
+					// A broken rail path shader must not take the renderer down
+					lineShaderFailed = true;
+					fileSystem?.AppendToLogFile("ERROR: Disabling rail path rendering after the following exception: " + ex);
+					currentHost.AddMessage(MessageType.Error, false, "Rail paths have been disabled after an error: " + ex.Message);
+					return;
+				}
+			}
+
+			LineShader.Activate();
+			LineShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
+			/*
+			 * Matches the fixed-function setup this replaces: load the view matrix, then
+			 * multiply by the camera translation. The shader negates Z to match the
+			 * convention used by the other world-space shaders.
+			 */
+			LineShader.SetCurrentModelViewMatrix(Camera.TranslationMatrix * CurrentViewMatrix);
+
+			foreach (int key in keys)
+			{
+				if (trackColors.TryGetValue(key, out RailPath path))
+				{
+					path.Render();
+				}
+			}
+
+			LineShader.Deactivate();
+			/*
+			 * Deactivate does not clear CurrentShader, and the rest of the frame expects
+			 * the default shader to be current even while it is not bound (alpha
+			 * functions and ResetOpenGlState are applied through it).
+			 */
+			CurrentShader = DefaultShader;
+		}
+
+		/// <summary>Draws the normals overlay for a whole instanced batch in a single call.</summary>
+		/// <remarks>Batched meshes are never dynamic, so the lazily built normals VAO stays valid for the batch.</remarks>
+		private void DrawNormalsInstanced(Mesh mesh, int instanceCount)
+		{
+			if (!OptionNormals || mesh == null || instanceCount <= 0 || mesh.Vertices.Length == 0)
+			{
+				return;
+			}
+
+			if (mesh.NormalsVAO == null)
+			{
+				VAOExtensions.CreateNormalsVAO(mesh, false, DefaultShader.VertexLayout, this);
+			}
+
+			if (!(mesh.NormalsVAO is VertexArrayObject normalsVao))
+			{
+				return;
+			}
+
+			Shader shader = DefaultShader;
+			shader.DisableTexturing();
+			shader.SetBrightness(1.0f);
+			shader.SetOpacity(1.0f);
+			shader.SetIsLight(false);
+			shader.SetMaterialAmbient(Color32.White);
+			shader.SetMaterialFlags(MaterialFlags.Emissive);
+
+			normalsVao.Bind();
+			lastVAO = normalsVao.handle;
+			normalsVao.DrawArraysInstanced(PrimitiveType.Lines, 0, mesh.Faces.Sum(f => f.Vertices.Length) * 2, instanceCount);
+
+			shader.SetIsLight(OptionLighting);
+			shader.SetMaterialFlags(MaterialFlags.None);
+			shader.SetMaterialAmbient(Color32.White);
+		}
+
+		/// <summary>
+		/// Draws the supplied opaque faces, batching all instances which share a mesh into a single instanced
+		/// draw call per (mesh, face) where this is provably safe.
+		/// </summary>
+		/// <remarks>
+		/// BVE5/BVE6 routes place thousands of copies of the same structure (rails, sleepers, ballast, catenary)
+		/// along the track. Optimisation collapses each prototype to one face per material, but the renderer still
+		/// issues one draw call per placed instance. This method collapses those instances into instanced draws.
+		/// Faces which cannot be batched safely- glow attenuation, animation matrices, per-instance texture
+		/// translation, mixed day/night blend, single instances or debug overlays- fall back to the original
+		/// one-draw-per-face path, so output is identical when batching is not possible.
+		/// </remarks>
+		public void RenderOpaqueFaces(List<FaceState> opaqueFaces)
+		{
+			if (opaqueFaces == null || opaqueFaces.Count == 0)
+			{
+				return;
+			}
+
+			if (OptionWireFrame || opaqueFaces.Count < 2)
+			{
+				foreach (FaceState face in opaqueFaces)
+				{
+					OpaqueDrawCalls++;
+					face.Draw();
+				}
+
+				return;
+			}
+
+			// Group the visible instances (one ObjectState per placed object) by the mesh they share.
+			// Derived from the supplied opaque faces so that it stays consistent with the caller's snapshot.
+			ClearValues(opaqueInstancesByMesh);
+			ClearValues(opaqueSeenByMesh);
+			opaqueIneligibleMeshes.Clear();
+			Dictionary<Mesh, List<ObjectState>> instancesByMesh = opaqueInstancesByMesh;
+			Dictionary<Mesh, HashSet<ObjectState>> seenByMesh = opaqueSeenByMesh;
+			Dictionary<Mesh, byte> blendByMesh = opaqueBlendByMesh;
+			HashSet<Mesh> ineligibleMeshes = opaqueIneligibleMeshes;
+
+			foreach (FaceState face in opaqueFaces)
+			{
+				ObjectState state = face.Object;
+
+				if (state?.Prototype?.Mesh == null || state.Prototype.Mesh.VAO == null)
+				{
+					continue;
+				}
+
+				Mesh mesh = state.Prototype.Mesh;
+
+				if ((state.Matricies != null && state.Matricies.Length > 0) || !IsIdentityMatrix(state.TextureTranslation))
+				{
+					// The per-instance state which is not carried by the model matrix differs from the rest of the batch
+					ineligibleMeshes.Add(mesh);
+					continue;
+				}
+
+				if (!instancesByMesh.TryGetValue(mesh, out List<ObjectState> list))
+				{
+					list = new List<ObjectState>();
+					instancesByMesh.Add(mesh, list);
+					seenByMesh.Add(mesh, new HashSet<ObjectState>());
+				}
+				if (blendByMesh.TryGetValue(mesh, out byte prevBlend) && prevBlend != state.DaytimeNighttimeBlend)
+				{
+					// The day/night blend is a uniform, so a differing value cannot share a batch
+					ineligibleMeshes.Add(mesh);
+				}
+				blendByMesh[mesh] = state.DaytimeNighttimeBlend;
+
+				if (seenByMesh[mesh].Add(state))
+				{
+					list.Add(state);
+				}
+			}
+
+			// Partition the visible opaque faces into batches (sharing a mesh) and the remainder.
+			// Every placed instance contributes the same set of faces, so each face must only be
+			// collected once per mesh- IboStartIndex uniquely identifies a face within its mesh.
+			ClearValues(opaqueBatchedFaces);
+			ClearValues(opaqueBatchedFaceIndices);
+			opaqueFallbackFaces.Clear();
+			opaqueFallbackMeshes.Clear();
+			Dictionary<Mesh, List<MeshFace>> batchedFaces = opaqueBatchedFaces;
+			Dictionary<Mesh, HashSet<int>> batchedFaceIndices = opaqueBatchedFaceIndices;
+			List<FaceState> fallbackFaces = opaqueFallbackFaces;
+			HashSet<Mesh> fallbackMeshes = opaqueFallbackMeshes;
+
+			foreach (FaceState face in opaqueFaces)
+			{
+				Mesh mesh = face.Object?.Prototype?.Mesh;
+
+				if (mesh == null || ineligibleMeshes.Contains(mesh) || !instancesByMesh.TryGetValue(mesh, out List<ObjectState> instances) || instances.Count < 2 || !CanBatchFace(mesh, face.Face))
+				{
+					fallbackFaces.Add(face);
+
+					if (mesh != null)
+					{
+						fallbackMeshes.Add(mesh);
+					}
+
+					continue;
+				}
+
+				if (!batchedFaces.TryGetValue(mesh, out List<MeshFace> faces))
+				{
+					faces = new List<MeshFace>();
+					batchedFaces.Add(mesh, faces);
+					batchedFaceIndices.Add(mesh, new HashSet<int>());
+				}
+
+				if (batchedFaceIndices[mesh].Add(face.Face.IboStartIndex))
+				{
+					faces.Add(face.Face);
+				}
+			}
+
+			foreach (FaceState face in fallbackFaces)
+			{
+				OpaqueDrawCalls++;
+				face.Draw();
+			}
+
+			OpaqueUniqueMeshes = batchedFaces.Count + fallbackMeshes.Count;
+
+			if (batchedFaces.Count == 0)
+			{
+				return;
+			}
+
+			EnsureInstanceMatrixBuffer();
+
+			Shader shader = DefaultShader;
+			shader.SetInstanced(true);
+			// Batched faces only share a batch when their texture translation is identity
+			shader.SetCurrentTextureMatrix(Matrix4D.Identity);
+			// The uniform modelview matrices are unused while instancing, so ensure they are recomputed afterwards
+			lastObjectState = null;
+
+			try
+			{
+				foreach (KeyValuePair<Mesh, List<MeshFace>> batch in batchedFaces)
+				{
+					List<ObjectState> instances = instancesByMesh[batch.Key];
+					byte daytimeNighttimeBlend = blendByMesh[batch.Key];
+
+					for (int start = 0; start < instances.Count; start += MaxInstancesPerBatch)
+					{
+						int count = Math.Min(MaxInstancesPerBatch, instances.Count - start);
+						UploadInstanceMatrices(instances, start, count);
+
+						foreach (MeshFace face in batch.Value)
+						{
+							OpaqueDrawCalls += DrawFaceInstanced(shader, instances[start], face, count, daytimeNighttimeBlend);
+						}
+
+						DrawNormalsInstanced(batch.Key, count);
+					}
+				}
+			}
+			finally
+			{
+				shader.SetInstanced(false);
+				lastObjectState = null;
+			}
+		}
+
+		/// <summary>
+		/// Renders the supplied faces into the shadow map, batching instances which share a mesh into
+		/// instanced draw calls where this is provably safe. Visually equivalent to the per-face path.
+		/// </summary>
+		public void RenderShadowFaces(ShadowDepthShader shader, IEnumerable<FaceState> faces, double maxDistanceSquared, ref int lastVAO)
+		{
+			IList<FaceState> faceList = faces is IList<FaceState> list ? list : new List<FaceState>(faces);
+
+			if (OptionWireFrame || faceList.Count < 2)
+			{
+				RenderShadowFacesFallback(shader, faceList, maxDistanceSquared, ref lastVAO);
+				return;
+			}
+
+			Vector3 cameraPos = Camera.AbsolutePosition;
+
+			ClearValues(shadowInstancesByMesh);
+			ClearValues(shadowSeenByMesh);
+			shadowIneligibleInstances.Clear();
+			shadowSeenInstances.Clear();
+			Dictionary<Mesh, List<ObjectState>> instancesByMesh = shadowInstancesByMesh;
+			Dictionary<Mesh, HashSet<ObjectState>> seenByMesh = shadowSeenByMesh;
+			HashSet<ObjectState> ineligibleInstances = shadowIneligibleInstances;
+			HashSet<ObjectState> seenInstances = shadowSeenInstances;
+
+			// First pass: collect the instances which can be batched, applying the per-cascade distance cull.
+			foreach (FaceState face in faceList)
+			{
+				ObjectState state = face?.Object;
+				if (state?.Prototype?.Mesh == null || state.Prototype.Mesh.VAO == null || state.DisableShadowCasting)
+				{
+					continue;
+				}
+
+				if (maxDistanceSquared < double.MaxValue)
+				{
+					double dx = state.WorldPosition.X - cameraPos.X;
+					double dy = state.WorldPosition.Y - cameraPos.Y;
+					double dz = state.WorldPosition.Z - cameraPos.Z;
+					if (dx * dx + dy * dy + dz * dz > maxDistanceSquared)
+					{
+						continue;
+					}
+				}
+
+				Mesh mesh = state.Prototype.Mesh;
+
+				if (seenInstances.Add(state))
+				{
+					// Only the animated object itself must fall back, not every object sharing its mesh.
+					if (state.Matricies != null && state.Matricies.Length > 0 && !HasIdentityMatricies(state))
+					{
+						ineligibleInstances.Add(state);
+					}
+					else
+					{
+						if (!instancesByMesh.TryGetValue(mesh, out List<ObjectState> list2))
+						{
+							list2 = new List<ObjectState>();
+							instancesByMesh.Add(mesh, list2);
+							seenByMesh.Add(mesh, new HashSet<ObjectState>());
+						}
+
+						if (seenByMesh[mesh].Add(state))
+						{
+							list2.Add(state);
+						}
+					}
+				}
+			}
+
+			// Partition the faces into batches (sharing a mesh) and the remainder.
+			ClearValues(shadowBatchedFaces);
+			ClearValues(shadowBatchedFaceIndices);
+			shadowFallbackFaces.Clear();
+			Dictionary<Mesh, List<MeshFace>> batchedFaces = shadowBatchedFaces;
+			Dictionary<Mesh, HashSet<int>> batchedFaceIndices = shadowBatchedFaceIndices;
+			List<FaceState> fallbackFaces = shadowFallbackFaces;
+
+			foreach (FaceState face in faceList)
+			{
+				ObjectState state = face?.Object;
+				Mesh mesh = state?.Prototype?.Mesh;
+
+				if (mesh == null || ineligibleInstances.Contains(state) || !instancesByMesh.TryGetValue(mesh, out List<ObjectState> instances) || instances.Count < 2)
+				{
+					fallbackFaces.Add(face);
+					continue;
+				}
+
+				if (face.Face.Material < 0 || face.Face.Material >= mesh.Materials.Length)
+				{
+					fallbackFaces.Add(face);
+					continue;
+				}
+
+				MeshMaterial material = mesh.Materials[face.Face.Material];
+				if ((material.Flags & MaterialFlags.NoShadow) != 0 || material.BlendMode == MeshMaterialBlendMode.Additive)
+				{
+					fallbackFaces.Add(face);
+					continue;
+				}
+
+				if (face.Face.Vertices.Length == 0)
+				{
+					fallbackFaces.Add(face);
+					continue;
+				}
+
+				if (!batchedFaces.TryGetValue(mesh, out List<MeshFace> faces2))
+				{
+					faces2 = new List<MeshFace>();
+					batchedFaces.Add(mesh, faces2);
+					batchedFaceIndices.Add(mesh, new HashSet<int>());
+				}
+
+				if (batchedFaceIndices[mesh].Add(face.Face.IboStartIndex))
+				{
+					faces2.Add(face.Face);
+				}
+			}
+
+			// Draw the faces which cannot be batched individually, exactly as the original path.
+			RenderShadowFacesFallback(shader, fallbackFaces, maxDistanceSquared, ref lastVAO);
+
+			if (batchedFaces.Count == 0)
+			{
+				return;
+			}
+
+			EnsureInstanceMatrixBuffer();
+			BindIdentityMatrixBuffer();
+
+			shader.SetInstanced(true);
+			shader.SetTextureMatrix(Matrix4D.Identity);
+			lastObjectState = null;
+
+			try
+			{
+				foreach (KeyValuePair<Mesh, List<MeshFace>> batch in batchedFaces)
+				{
+					Mesh mesh = batch.Key;
+					List<ObjectState> instances = instancesByMesh[mesh];
+					VertexArrayObject VAO = (VertexArrayObject)mesh.VAO;
+
+					if (lastVAO != VAO.handle)
+					{
+						VAO.Bind();
+						lastVAO = VAO.handle;
+					}
+
+					BuildShadowDrawRanges(mesh, batch.Value, shadowDrawRanges);
+
+					for (int start = 0; start < instances.Count; start += MaxInstancesPerBatch)
+					{
+						int count = Math.Min(MaxInstancesPerBatch, instances.Count - start);
+						UploadShadowInstanceMatrices(instances, start, count);
+
+						foreach (ShadowDrawRange range in shadowDrawRanges)
+						{
+							MeshMaterial material = mesh.Materials[range.Material];
+
+							if (OptionBackFaceCulling)
+							{
+								if ((range.Flags & FaceFlags.Face2Mask) != 0)
+								{
+									GL.Disable(EnableCap.CullFace);
+								}
+								else
+								{
+									GL.Enable(EnableCap.CullFace);
+								}
+							}
+
+							if (material.DaytimeTexture != null && currentHost.LoadTexture(ref material.DaytimeTexture, (OpenGlTextureWrapMode)(material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp)))
+							{
+								GL.ActiveTexture(TextureUnit.Texture0);
+								GL.BindTexture(TextureTarget.Texture2D, material.DaytimeTexture.OpenGlTextures[(int)(material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp)].Name);
+								shader.SetHasTexture(true);
+							}
+							else
+							{
+								shader.SetHasTexture(false);
+							}
+
+							shader.SetAlphaCutoff(0.5f);
+							shader.SetMaterialAlpha(material.Color.A / 255.0f);
+							shader.SetMaterialFlags(material.Flags);
+
+							VAO.DrawInstanced(GetPrimitiveType(range.Flags), range.Start, range.Count, count);
+							ShadowDrawCalls++;
+							ShadowInstancedDrawCalls++;
+						}
+					}
+				}
+			}
+			finally
+			{
+				shader.SetInstanced(false);
+				lastObjectState = null;
+			}
+		}
+
+		/// <summary>Per-face fallback used by <see cref="RenderShadowFaces"/> when instancing is unavailable or unsafe.</summary>
+		private void RenderShadowFacesFallback(ShadowDepthShader shader, IEnumerable<FaceState> faces, double maxDistanceSquared, ref int lastVAO)
+		{
+			Vector3 cameraPos = Camera.AbsolutePosition;
+
+			// Group by object so per-object state is set once and faces merge into fewer draws.
+			// ObjectState keys change every frame, so drop the old ones too.
+			shadowFallbackByObject.Clear();
+			foreach (FaceState faceState in faces)
+			{
+				FaceState face = faceState;
+				if (face?.Object?.Prototype?.Mesh?.VAO == null || face.Object.DisableShadowCasting)
+				{
+					continue;
+				}
+
+				ObjectState st = face.Object;
+				if (maxDistanceSquared < double.MaxValue)
+				{
+					double dx = st.WorldPosition.X - cameraPos.X;
+					double dy = st.WorldPosition.Y - cameraPos.Y;
+					double dz = st.WorldPosition.Z - cameraPos.Z;
+					if (dx * dx + dy * dy + dz * dz > maxDistanceSquared)
+					{
+						continue;
+					}
+				}
+
+				Mesh mesh = st.Prototype.Mesh;
+				MeshMaterial material = mesh.Materials[face.Face.Material];
+				if ((material.Flags & MaterialFlags.NoShadow) != 0 || material.BlendMode == MeshMaterialBlendMode.Additive || face.Face.Vertices.Length == 0)
+				{
+					continue;
+				}
+
+				if (!shadowFallbackByObject.TryGetValue(st, out List<MeshFace> objectFaces))
+				{
+					objectFaces = new List<MeshFace>();
+					shadowFallbackByObject.Add(st, objectFaces);
+				}
+				objectFaces.Add(face.Face);
+			}
+
+			foreach (KeyValuePair<ObjectState, List<MeshFace>> entry in shadowFallbackByObject)
+			{
+				ObjectState st = entry.Key;
+				Mesh mesh = st.Prototype.Mesh;
+
+				shader.SetModelMatrix(st.ModelMatrix * Camera.TranslationMatrix);
+				shader.SetTextureMatrix(st.TextureTranslation);
+
+				if (st.Matricies != null && st.Matricies.Length > 0)
+				{
+					shader.SetCurrentAnimationMatricies(st);
+					GL.BindBufferBase(BufferTarget.UniformBuffer, 0, st.MatrixBufferIndex);
+				}
+
+				VertexArrayObject vao = (VertexArrayObject)mesh.VAO;
+				if (vao.handle != lastVAO)
+				{
+					vao.Bind();
+					lastVAO = vao.handle;
+				}
+
+				BuildShadowDrawRanges(mesh, entry.Value, shadowDrawRanges);
+				foreach (ShadowDrawRange range in shadowDrawRanges)
+				{
+					MeshMaterial material = mesh.Materials[range.Material];
+
+					if (material.DaytimeTexture != null && currentHost.LoadTexture(ref material.DaytimeTexture, (OpenGlTextureWrapMode)(material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp)))
+					{
+						GL.ActiveTexture(TextureUnit.Texture0);
+						GL.BindTexture(TextureTarget.Texture2D, material.DaytimeTexture.OpenGlTextures[(int)(material.WrapMode ?? OpenGlTextureWrapMode.ClampClamp)].Name);
+						shader.SetHasTexture(true);
+					}
+					else
+					{
+						shader.SetHasTexture(false);
+					}
+
+					shader.SetAlphaCutoff(0.5f);
+					shader.SetMaterialAlpha(material.Color.A / 255.0f);
+					shader.SetMaterialFlags(material.Flags);
+
+					if (OptionBackFaceCulling)
+					{
+						if ((range.Flags & FaceFlags.Face2Mask) != 0)
+						{
+							GL.Disable(EnableCap.CullFace);
+						}
+						else
+						{
+							GL.Enable(EnableCap.CullFace);
+						}
+					}
+
+					vao.Draw(GetPrimitiveType(range.Flags), range.Start, range.Count);
+					ShadowDrawCalls++;
+					ShadowFallbackDrawCalls++;
+				}
+			}
+		}
+
+		/// <summary>Packs and uploads world-space matrices for a range of shadow instances to the instance matrix buffer</summary>
+		private void UploadShadowInstanceMatrices(IList<ObjectState> instances, int start, int count)
+		{
+			for (int i = 0; i < count; i++)
+			{
+				ObjectState state = instances[start + i];
+				Matrix4D world = state.ModelMatrix * Camera.TranslationMatrix;
+				int offset = i * 16;
+				instanceMatrixData[offset] = (float)world.Row0.X;
+				instanceMatrixData[offset + 1] = (float)world.Row0.Y;
+				instanceMatrixData[offset + 2] = (float)world.Row0.Z;
+				instanceMatrixData[offset + 3] = (float)world.Row0.W;
+				instanceMatrixData[offset + 4] = (float)world.Row1.X;
+				instanceMatrixData[offset + 5] = (float)world.Row1.Y;
+				instanceMatrixData[offset + 6] = (float)world.Row1.Z;
+				instanceMatrixData[offset + 7] = (float)world.Row1.W;
+				instanceMatrixData[offset + 8] = (float)world.Row2.X;
+				instanceMatrixData[offset + 9] = (float)world.Row2.Y;
+				instanceMatrixData[offset + 10] = (float)world.Row2.Z;
+				instanceMatrixData[offset + 11] = (float)world.Row2.W;
+				instanceMatrixData[offset + 12] = (float)world.Row3.X;
+				instanceMatrixData[offset + 13] = (float)world.Row3.Y;
+				instanceMatrixData[offset + 14] = (float)world.Row3.Z;
+				instanceMatrixData[offset + 15] = (float)world.Row3.W;
+			}
+
+			GL.BindBuffer(BufferTarget.UniformBuffer, instanceMatrixBuffer);
+			GL.BufferSubData(BufferTarget.UniformBuffer, IntPtr.Zero, new IntPtr(count * 16 * sizeof(float)), instanceMatrixData);
+			GL.BindBufferBase(BufferTarget.UniformBuffer, 1, instanceMatrixBuffer);
+		}
+
+		/// <summary>Checks whether every animation matrix of an object is identity</summary>
+		private static bool HasIdentityMatricies(ObjectState state)
+		{
+			for (int i = 0; i < state.Matricies.Length; i++)
+			{
+				if (!IsIdentityMatrix(state.Matricies[i]))
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		/// <summary>Binds a shared all-identity animation matrix UBO to binding 0</summary>
+		private void BindIdentityMatrixBuffer()
+		{
+			if (identityMatrixBuffer == 0)
+			{
+				var identity = new OpenTK.Matrix4[128];
+				for (int i = 0; i < identity.Length; i++)
+				{
+					identity[i] = OpenTK.Matrix4.Identity;
+				}
+				identityMatrixBuffer = GL.GenBuffer();
+				GL.BindBuffer(BufferTarget.UniformBuffer, identityMatrixBuffer);
+				unsafe
+				{
+					GL.BufferData(BufferTarget.UniformBuffer, sizeof(OpenTK.Matrix4) * identity.Length, identity, BufferUsageHint.StaticDraw);
+				}
+			}
+			GL.BindBufferBase(BufferTarget.UniformBuffer, 0, identityMatrixBuffer);
+		}
+
+		/// <summary>Checks whether a matrix is exactly the identity matrix</summary>
+		private static bool IsIdentityMatrix(Matrix4D matrix)
+		{
+			return matrix.Row0.X == 1.0 && matrix.Row0.Y == 0.0 && matrix.Row0.Z == 0.0 && matrix.Row0.W == 0.0 &&
+			       matrix.Row1.X == 0.0 && matrix.Row1.Y == 1.0 && matrix.Row1.Z == 0.0 && matrix.Row1.W == 0.0 &&
+			       matrix.Row2.X == 0.0 && matrix.Row2.Y == 0.0 && matrix.Row2.Z == 1.0 && matrix.Row2.W == 0.0 &&
+			       matrix.Row3.X == 0.0 && matrix.Row3.Y == 0.0 && matrix.Row3.Z == 0.0 && matrix.Row3.W == 1.0;
+		}
+
+		/// <summary>Checks whether a face can be drawn as part of an instanced batch</summary>
+		private static bool CanBatchFace(Mesh mesh, MeshFace face)
+		{
+			if (face.Vertices.Length == 0 || face.Material < 0 || face.Material >= mesh.Materials.Length)
+			{
+				return false;
+			}
+
+			MeshMaterial material = mesh.Materials[face.Material];
+			// Glow attenuation is derived per instance from the model matrix, so it cannot share a single batch
+			return material.GlowAttenuationData == 0 && material.BlendMode != MeshMaterialBlendMode.Additive;
+		}
+
+		/// <summary>Creates the uniform buffer used to upload per-instance matrices, if it does not yet exist</summary>
+		private void EnsureInstanceMatrixBuffer()
+		{
+			if (instanceMatrixBuffer != 0)
+			{
+				return;
+			}
+
+			instanceMatrixBuffer = GL.GenBuffer();
+			GL.BindBuffer(BufferTarget.UniformBuffer, instanceMatrixBuffer);
+			GL.BufferData(BufferTarget.UniformBuffer, new IntPtr(MaxInstancesPerBatch * 16 * sizeof(float)), IntPtr.Zero, BufferUsageHint.DynamicDraw);
+			GL.BindBuffer(BufferTarget.UniformBuffer, 0);
+		}
+
+		/// <summary>Packs and uploads the modelview matrices for a range of instances to the instance matrix buffer</summary>
+		private void UploadInstanceMatrices(IList<ObjectState> instances, int start, int count)
+		{
+			for (int i = 0; i < count; i++)
+			{
+				ObjectState state = instances[start + i];
+				Matrix4D modelView = state.ModelMatrix * Camera.TranslationMatrix * CurrentViewMatrix;
+				int offset = i * 16;
+				instanceMatrixData[offset] = (float)modelView.Row0.X;
+				instanceMatrixData[offset + 1] = (float)modelView.Row0.Y;
+				instanceMatrixData[offset + 2] = (float)modelView.Row0.Z;
+				instanceMatrixData[offset + 3] = (float)modelView.Row0.W;
+				instanceMatrixData[offset + 4] = (float)modelView.Row1.X;
+				instanceMatrixData[offset + 5] = (float)modelView.Row1.Y;
+				instanceMatrixData[offset + 6] = (float)modelView.Row1.Z;
+				instanceMatrixData[offset + 7] = (float)modelView.Row1.W;
+				instanceMatrixData[offset + 8] = (float)modelView.Row2.X;
+				instanceMatrixData[offset + 9] = (float)modelView.Row2.Y;
+				instanceMatrixData[offset + 10] = (float)modelView.Row2.Z;
+				instanceMatrixData[offset + 11] = (float)modelView.Row2.W;
+				instanceMatrixData[offset + 12] = (float)modelView.Row3.X;
+				instanceMatrixData[offset + 13] = (float)modelView.Row3.Y;
+				instanceMatrixData[offset + 14] = (float)modelView.Row3.Z;
+				instanceMatrixData[offset + 15] = (float)modelView.Row3.W;
+			}
+
+			UploadInstanceMatrices(count);
+		}
+
+		/// <summary>Uploads the instance matrices currently packed in the staging array to the instance matrix buffer</summary>
+		/// <param name="count">The number of matrices to upload</param>
+		private void UploadInstanceMatrices(int count)
+		{
+			GL.BindBuffer(BufferTarget.UniformBuffer, instanceMatrixBuffer);
+			GL.BufferSubData(BufferTarget.UniformBuffer, IntPtr.Zero, new IntPtr(count * 16 * sizeof(float)), instanceMatrixData);
+#pragma warning disable CS0618
+			GL.BindBufferBase(BufferTarget.UniformBuffer, 1, instanceMatrixBuffer);
+#pragma warning restore CS0618
+		}
+
+		/// <summary>Draws a batch of marker cubes sharing a texture and an orientation in as few instanced calls as possible</summary>
+		/// <param name="positions">The world-space positions of the markers</param>
+		/// <param name="direction">The direction vector used for every marker</param>
+		/// <param name="up">The up vector used for every marker</param>
+		/// <param name="side">The side vector used for every marker</param>
+		/// <param name="size">The size of every marker in metres</param>
+		/// <param name="camera">The camera position</param>
+		/// <param name="texture">The texture applied to every marker</param>
+		/// <returns>The number of draw calls issued</returns>
+		/// <remarks>Visually equivalent to calling Cube.Draw for every position (the positions are drawn in the same order), but the shader is
+		/// reset and the texture loaded once per batch and the markers are drawn MaxInstancesPerBatch at a time.</remarks>
+		public int DrawMarkerCubes(IList<Vector3> positions, Vector3 direction, Vector3 up, Vector3 side, double size, Vector3 camera, Texture texture)
+		{
+			if (positions == null || positions.Count == 0)
+			{
+				return 0;
+			}
+
+			DefaultShader.Activate();
+			ResetShader(DefaultShader);
+			DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
+
+			if (texture != null && currentHost.LoadTexture(ref texture, OpenGlTextureWrapMode.ClampClamp))
+			{
+				GL.Enable(EnableCap.Texture2D);
+				GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
+			}
+			else
+			{
+				GL.Disable(EnableCap.Texture2D);
+			}
+
+			EnsureInstanceMatrixBuffer();
+
+			Shader shader = DefaultShader;
+			Matrix4D orientation = Matrix4D.Scale(size) * (Matrix4D)new Transformation(direction, up, side);
+			int drawCalls = 0;
+			shader.SetInstanced(true);
+			// The uniform modelview matrices are unused whilst instancing, so ensure they are recomputed afterwards
+			lastObjectState = null;
+
+			try
+			{
+				for (int start = 0; start < positions.Count; start += MaxInstancesPerBatch)
+				{
+					int count = Math.Min(MaxInstancesPerBatch, positions.Count - start);
+
+					for (int i = 0; i < count; i++)
+					{
+						Vector3 p = positions[start + i];
+						Matrix4D modelView = orientation * Matrix4D.CreateTranslation(p.X - camera.X, p.Y - camera.Y, -p.Z + camera.Z) * CurrentViewMatrix;
+						int offset = i * 16;
+						instanceMatrixData[offset] = (float)modelView.Row0.X;
+						instanceMatrixData[offset + 1] = (float)modelView.Row0.Y;
+						instanceMatrixData[offset + 2] = (float)modelView.Row0.Z;
+						instanceMatrixData[offset + 3] = (float)modelView.Row0.W;
+						instanceMatrixData[offset + 4] = (float)modelView.Row1.X;
+						instanceMatrixData[offset + 5] = (float)modelView.Row1.Y;
+						instanceMatrixData[offset + 6] = (float)modelView.Row1.Z;
+						instanceMatrixData[offset + 7] = (float)modelView.Row1.W;
+						instanceMatrixData[offset + 8] = (float)modelView.Row2.X;
+						instanceMatrixData[offset + 9] = (float)modelView.Row2.Y;
+						instanceMatrixData[offset + 10] = (float)modelView.Row2.Z;
+						instanceMatrixData[offset + 11] = (float)modelView.Row2.W;
+						instanceMatrixData[offset + 12] = (float)modelView.Row3.X;
+						instanceMatrixData[offset + 13] = (float)modelView.Row3.Y;
+						instanceMatrixData[offset + 14] = (float)modelView.Row3.Z;
+						instanceMatrixData[offset + 15] = (float)modelView.Row3.W;
+					}
+
+					UploadInstanceMatrices(count);
+					Cube.DrawInstanced(count);
+					drawCalls++;
+				}
+			}
+			finally
+			{
+				shader.SetInstanced(false);
+				lastObjectState = null;
+			}
+
+			GL.Disable(EnableCap.Texture2D);
+
+			return drawCalls;
+		}
+
+		/// <summary>Draws a single face for every instance in the currently uploaded batch</summary>
+		/// <returns>The number of draw calls issued</returns>
+		/// <remarks>Mirrors the per-face portion of RenderFace, minus the model matrix handling (supplied per instance) and glow/normals debug output (batched faces never use them).</remarks>
+		private int DrawFaceInstanced(Shader shader, ObjectState representative, MeshFace face, int instanceCount, byte daytimeNighttimeBlend)
+		{
+			int drawCalls = 0;
+			Mesh mesh = representative.Prototype.Mesh;
+			MeshMaterial material = mesh.Materials[face.Material];
+			VertexArrayObject VAO = (VertexArrayObject)mesh.VAO;
+
+			if (lastVAO != VAO.handle)
+			{
+				VAO.Bind();
+				lastVAO = VAO.handle;
+			}
+
+			if (!OptionBackFaceCulling || (face.Flags & FaceFlags.Face2Mask) != 0)
+			{
+				GL.Disable(EnableCap.CullFace);
+			}
+			else if ((face.Flags & FaceFlags.Face2Mask) == 0)
+			{
+				GL.Enable(EnableCap.CullFace);
+			}
+
+			// lighting
+			shader.SetMaterialFlags(material.Flags);
+
+			if (OptionLighting)
+			{
+				if (material.Color != lastColor)
+				{
+					shader.SetMaterialAmbient(material.Color);
+					shader.SetMaterialDiffuse(material.Color);
+					shader.SetMaterialSpecular((material.Flags & MaterialFlags.Specular) != 0 ? material.SpecularColor : material.Color);
+				}
+
+				if ((material.Flags & MaterialFlags.Emissive) != 0)
+				{
+					shader.SetMaterialEmission(material.EmissiveColor);
+				}
+
+				shader.SetMaterialShininess(1.0f);
+			}
+			else
+			{
+				if (material.Color != lastColor)
+				{
+					shader.SetMaterialAmbient(material.Color);
+				}
+			}
+
+			lastColor = material.Color;
+			PrimitiveType drawMode;
+
+			switch (face.Flags & FaceFlags.FaceTypeMask)
+			{
+				case FaceFlags.Triangles:
+					drawMode = PrimitiveType.Triangles;
+					break;
+				case FaceFlags.TriangleStrip:
+					drawMode = PrimitiveType.TriangleStrip;
+					break;
+				case FaceFlags.Quads:
+					drawMode = PrimitiveType.Quads;
+					break;
+				case FaceFlags.QuadStrip:
+					drawMode = PrimitiveType.QuadStrip;
+					break;
+				default:
+					drawMode = PrimitiveType.Polygon;
+					break;
+			}
+
+			float blendFactor = inv255 * daytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
+
+			if (blendFactor > 1.0)
+			{
+				blendFactor = 1.0f;
+			}
+
+			// daytime polygon
+			{
+				if (material.DaytimeTexture != null && currentHost.LoadTexture(ref material.DaytimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
+				{
+					if (LastBoundTexture != material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode])
+					{
+						GL.BindTexture(TextureTarget.Texture2D, material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
+						LastBoundTexture = material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode];
+					}
+				}
+				else
+				{
+					shader.DisableTexturing();
+				}
+
+				float factor;
+
+				if (material.BlendMode == MeshMaterialBlendMode.Additive)
+				{
+					factor = 1.0f;
+					GL.Enable(EnableCap.Blend);
+					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
+					shader.SetFog(false);
+				}
+				else if (material.NighttimeTexture == null || material.NighttimeTexture == material.DaytimeTexture)
+				{
+					factor = 1.0f - 0.7f * blendFactor;
+				}
+				else
+				{
+					factor = 1.0f;
+				}
+
+				shader.SetBrightness(factor);
+				float alphaFactor = 1.0f;
+				if (material.NighttimeTexture != null && (material.Flags & MaterialFlags.CrossFadeTexture) != 0)
+				{
+					alphaFactor = 1.0f - blendFactor;
+				}
+				shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
+
+				drawCalls++;
+				VAO.DrawInstanced(drawMode, face.IboStartIndex, face.Vertices.Length, instanceCount);
+			}
+
+			// nighttime polygon
+			if (blendFactor != 0 && material.NighttimeTexture != null && material.NighttimeTexture != material.DaytimeTexture && currentHost.LoadTexture(ref material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
+			{
+				if (LastBoundTexture != material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode])
+				{
+					GL.BindTexture(TextureTarget.Texture2D, material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
+					LastBoundTexture = material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode];
+				}
+
+				GL.Enable(EnableCap.Blend);
+				shader.SetAlphaTest(true);
+				shader.SetAlphaFunction(AlphaFunction.Greater, 0.0f);
+				shader.SetOpacity(inv255 * material.Color.A * blendFactor);
+
+				drawCalls++;
+				VAO.DrawInstanced(drawMode, face.IboStartIndex, face.Vertices.Length, instanceCount);
+				RestoreBlendFunc();
+				RestoreAlphaFunc();
+			}
+
+			if (material.BlendMode == MeshMaterialBlendMode.Additive)
+			{
+				RestoreBlendFunc();
+				shader.SetFog(Fog.Enabled);
+			}
+
+			return drawCalls;
+		}
+
+		/// <summary>Holds the state required to draw every instance of a mesh's faces within a single batched alpha pass</summary>
+		private sealed class AlphaBatch
+		{
+			/// <summary>The mesh shared by every face and instance in the batch</summary>
+			public Mesh Mesh;
+			/// <summary>The distinct instances (placed objects) to draw, ordered from the farthest to the nearest</summary>
+			public ObjectState[] Instances;
+			/// <summary>The distinct faces of the mesh which are to be drawn</summary>
+			public List<MeshFace> Faces;
+			/// <summary>The distance of the nearest instance from the camera, used to order the batches themselves</summary>
+			public double NearestDistance;
+		}
+
+		/// <summary>
+		/// Draws the supplied alpha (blended) faces, batching every instance which shares a mesh into a single
+		/// instanced draw call per (mesh, face).
+		/// </summary>
+		/// <param name="alphaFaces">The alpha faces to draw</param>
+		/// <param name="opaqueCutoutPass">
+		/// True when drawing the first pass of the intermediate / quality transparency modes, in which only fully
+		/// opaque pixels are written and the draw order is therefore irrelevant.
+		/// </param>
+		/// <param name="qualityBlendPass">
+		/// True when drawing the second pass of the intermediate / quality transparency modes, in which the alpha
+		/// test is disabled for additively blended faces and the fully opaque pixels of every face are discarded.
+		/// </param>
+		/// <remarks>
+		/// By default only faces whose blending cannot depend upon the draw order are batched (see
+		/// <see cref="FaceState.AdditiveBlend"/> and <see cref="FaceState.BinaryAlpha"/>), so that the image is
+		/// identical to the individual draw path. Everything else falls back to individual sorted draws.
+		/// Batches are drawn back to front by their nearest instance, and the instances within a batch are
+		/// themselves ordered back to front.
+		/// </remarks>
+		public void RenderAlphaFaces(List<FaceState> alphaFaces, bool opaqueCutoutPass = false, bool qualityBlendPass = false)
+		{
+			if (alphaFaces == null || alphaFaces.Count == 0)
+			{
+				return;
+			}
+
+			if (OptionAlphaInstancing == 0 || OptionWireFrame || alphaFaces.Count < 2)
+			{
+				foreach (FaceState face in alphaFaces)
+				{
+					if (opaqueCutoutPass && !IsAlphaCutoutFace(face.Object?.Prototype?.Mesh, face.Face))
+					{
+						// Not selected by this pass at all
+						continue;
+					}
+
+					AlphaDrawCalls++;
+					face.Draw();
+				}
+
+				return;
+			}
+
+			// Group the visible instances (one ObjectState per placed object) by the mesh they share
+			ClearValues(alphaInstancesByMesh);
+			ClearValues(alphaSeenByMesh);
+			alphaIneligibleMeshes.Clear();
+			Dictionary<Mesh, List<ObjectState>> instancesByMesh = alphaInstancesByMesh;
+			Dictionary<Mesh, HashSet<ObjectState>> seenByMesh = alphaSeenByMesh;
+			Dictionary<Mesh, byte> blendByMesh = alphaBlendByMesh;
+			HashSet<Mesh> ineligibleMeshes = alphaIneligibleMeshes;
+
+			foreach (FaceState face in alphaFaces)
+			{
+				ObjectState state = face.Object;
+
+				if (state?.Prototype?.Mesh == null || state.Prototype.Mesh.VAO == null)
+				{
+					continue;
+				}
+
+				Mesh mesh = state.Prototype.Mesh;
+
+				if ((state.Matricies != null && state.Matricies.Length > 0) || !IsIdentityMatrix(state.TextureTranslation))
+				{
+					ineligibleMeshes.Add(mesh);
+					continue;
+				}
+
+				if (!instancesByMesh.TryGetValue(mesh, out List<ObjectState> list))
+				{
+					list = new List<ObjectState>();
+					instancesByMesh.Add(mesh, list);
+					seenByMesh.Add(mesh, new HashSet<ObjectState>());
+				}
+				if (blendByMesh.TryGetValue(mesh, out byte prevBlend) && prevBlend != state.DaytimeNighttimeBlend)
+				{
+					ineligibleMeshes.Add(mesh);
+				}
+				blendByMesh[mesh] = state.DaytimeNighttimeBlend;
+
+				if (seenByMesh[mesh].Add(state))
+				{
+					list.Add(state);
+				}
+			}
+
+			// Partition the alpha faces into batches (sharing a mesh) and the remainder
+			double cameraX = Camera.AbsolutePosition.X;
+			double cameraY = Camera.AbsolutePosition.Y;
+			double cameraZ = Camera.AbsolutePosition.Z;
+			alphaBatchesByMesh.Clear();
+			alphaBatchedFaceIndices.Clear();
+			alphaFallbackFaces.Clear();
+			Dictionary<Mesh, AlphaBatch> batchesByMesh = alphaBatchesByMesh;
+			Dictionary<Mesh, HashSet<int>> batchedFaceIndices = alphaBatchedFaceIndices;
+			List<FaceState> fallbackFaces = alphaFallbackFaces;
+
+			foreach (FaceState face in alphaFaces)
+			{
+				Mesh mesh = face.Object?.Prototype?.Mesh;
+
+				// The first pass of the intermediate / quality modes only draws the fully opaque pixels of the
+				// selected faces, so faces which it does not select are skipped entirely
+				if (mesh == null || (opaqueCutoutPass && !IsAlphaCutoutFace(mesh, face.Face)))
+				{
+					continue;
+				}
+
+				if (!opaqueCutoutPass && !IsAlphaBatchingSafe(face, qualityBlendPass) && OptionAlphaInstancing < 2)
+				{
+					// Blended faces whose result depends upon the draw order must be drawn individually
+					fallbackFaces.Add(face);
+					continue;
+				}
+
+				if (ineligibleMeshes.Contains(mesh) || !instancesByMesh.TryGetValue(mesh, out List<ObjectState> instances) || instances.Count < 2 || !CanBatchAlphaFace(mesh, face.Face))
+				{
+					fallbackFaces.Add(face);
+					continue;
+				}
+
+				if (!batchesByMesh.TryGetValue(mesh, out AlphaBatch batch))
+				{
+					// Build the ordered instance list for this mesh- instance order within a single draw call is
+					// the order in which the GPU blends the instances, so the farthest must come first
+					ObjectState[] batchInstances = instances.ToArray();
+					double[] distances = new double[batchInstances.Length];
+					double nearest = double.MaxValue;
+
+					for (int i = 0; i < batchInstances.Length; i++)
+					{
+						double dx = batchInstances[i].WorldPosition.X - cameraX;
+						double dy = batchInstances[i].WorldPosition.Y - cameraY;
+						double dz = batchInstances[i].WorldPosition.Z - cameraZ;
+						double d = dx * dx + dy * dy + dz * dz;
+						distances[i] = d;
+
+						if (d < nearest)
+						{
+							nearest = d;
+						}
+					}
+
+					Array.Sort(distances, batchInstances);
+					Array.Reverse(batchInstances);
+
+					batch = new AlphaBatch
+					{
+						Mesh = mesh,
+						Instances = batchInstances,
+						Faces = new List<MeshFace>(),
+						NearestDistance = nearest
+					};
+
+					batchesByMesh.Add(mesh, batch);
+					batchedFaceIndices.Add(mesh, new HashSet<int>());
+				}
+
+				if (batchedFaceIndices[mesh].Add(face.Face.IboStartIndex))
+				{
+					batch.Faces.Add(face.Face);
+				}
+			}
+
+			// Faces which cannot be batched (glow sprites, animated instances, meshes with a single instance)
+			// are drawn individually, as before
+			foreach (FaceState face in fallbackFaces)
+			{
+				if (qualityBlendPass)
+				{
+					// Mirrors the per-face handling of additively blended faces, which are drawn
+					// without an alpha test. This also covers faces which could not be batched.
+					Mesh mesh = face.Object?.Prototype?.Mesh;
+
+					if (mesh != null && face.Face.Material >= 0 && face.Face.Material < mesh.Materials.Length && mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
+					{
+						UnsetAlphaFunc();
+					}
+					else
+					{
+						SetAlphaFunc();
+					}
+				}
+
+				AlphaDrawCalls++;
+				face.Draw();
+			}
+
+			if (batchesByMesh.Count == 0)
+			{
+				return;
+			}
+
+			// Draw the batches themselves from the farthest to the nearest
+			alphaSortedBatches.Clear();
+			alphaSortedBatches.AddRange(batchesByMesh.Values);
+			alphaSortedBatches.Sort(AlphaBatchDistanceCompare);
+			List<AlphaBatch> sortedBatches = alphaSortedBatches;
+
+			EnsureInstanceMatrixBuffer();
+
+			Shader shader = DefaultShader;
+			shader.SetInstanced(true);
+			shader.SetCurrentTextureMatrix(Matrix4D.Identity);
+			lastObjectState = null;
+
+			try
+			{
+				for (int i = 0; i < sortedBatches.Count; i++)
+				{
+					AlphaBatch batch = sortedBatches[i];
+					byte daytimeNighttimeBlend = blendByMesh[batch.Mesh];
+
+					for (int start = 0; start < batch.Instances.Length; start += MaxInstancesPerBatch)
+					{
+						int count = Math.Min(MaxInstancesPerBatch, batch.Instances.Length - start);
+						UploadInstanceMatrices(batch.Instances, start, count);
+
+						foreach (MeshFace face in batch.Faces)
+						{
+							if (qualityBlendPass)
+							{
+								// Mirrors the caller's per-face handling of additively blended faces, which are
+								// drawn without an alpha test. Set unconditionally, as drawing a nighttime polygon
+								// restores the alpha function itself.
+								if (batch.Mesh.Materials[face.Material].BlendMode == MeshMaterialBlendMode.Additive)
+								{
+									UnsetAlphaFunc();
+								}
+								else
+								{
+									SetAlphaFunc();
+								}
+							}
+
+							AlphaDrawCalls += DrawFaceInstanced(shader, batch.Instances[start], face, count, daytimeNighttimeBlend);
+						}
+
+						DrawNormalsInstanced(batch.Mesh, count);
+					}
+				}
+			}
+			finally
+			{
+				shader.SetInstanced(false);
+				lastObjectState = null;
+			}
+		}
+
+		/// <summary>Checks whether batching an alpha face can be proven not to change the resulting image</summary>
+		/// <param name="face">The face to check</param>
+		/// <param name="qualityBlendPass">Whether the second pass of the intermediate / quality transparency modes is being drawn</param>
+		private static bool IsAlphaBatchingSafe(FaceState face, bool qualityBlendPass)
+		{
+			if (face.AdditiveBlend)
+			{
+				// Additive blending is commutative, so the order never matters
+				return true;
+			}
+
+			// A binary alpha contributes only fully opaque pixels, which the second pass of the intermediate /
+			// quality modes discards, so the face cannot affect the image at all in that pass
+			return qualityBlendPass && face.BinaryAlpha;
+		}
+
+		/// <summary>Checks whether an alpha face can be drawn as part of an instanced batch</summary>
+		private static bool CanBatchAlphaFace(Mesh mesh, MeshFace face)
+		{
+			if (face.Vertices.Length == 0 || face.Material < 0 || face.Material >= mesh.Materials.Length)
+			{
+				return false;
+			}
+
+			// Glow attenuation is derived per instance from the model matrix, so it cannot share a batch
+			return mesh.Materials[face.Material].GlowAttenuationData == 0;
+		}
+
+		/// <summary>Checks whether a face is drawn by the first pass of the intermediate / quality transparency modes</summary>
+		/// <remarks>This must match the predicate used by the caller to select the faces for that pass</remarks>
+		private static bool IsAlphaCutoutFace(Mesh mesh, MeshFace face)
+		{
+			if (mesh == null || face.Vertices.Length == 0 || face.Material < 0 || face.Material >= mesh.Materials.Length)
+			{
+				return false;
+			}
+
+			MeshMaterial material = mesh.Materials[face.Material];
+			return material.BlendMode == MeshMaterialBlendMode.Normal && material.GlowAttenuationData == 0 && material.Color.A == 255;
 		}
 
 		/// <summary>Sets the current MouseCursor</summary>
