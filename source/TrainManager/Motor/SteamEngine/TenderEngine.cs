@@ -82,7 +82,7 @@ namespace TrainManager.SteamEngine
 			{
 				Message[messageIdx++] = "Firebox Fuel: " + Math.Round(firebox.FuelLevel, 2) + " kg, Temp: " + Math.Round(firebox.Temperature, 2) + " °c";
 			}
-			Message[messageIdx] = "Tender Fuel Level: " + Tender.FuelTank.CurrentLevel + "kg, Tender Water Level: " + Tender.WaterLevel + "l";
+			Message[messageIdx] = "Tender Fuel Level: " + Math.Round(Tender.FuelTank.CurrentLevel, 2) + "kg, Tender Water Level: " + Math.Round(Tender.WaterLevel, 2) + "l";
 		}
 
 		// TODO: PLACEHOLDER VALUES
