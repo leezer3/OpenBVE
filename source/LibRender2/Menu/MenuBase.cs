@@ -97,12 +97,18 @@ namespace LibRender2.Menu
 		/// <summary>Computes the on-screen extent of the menu</summary>
 		public void ComputeExtent(MenuType menuType, OpenGlFont menuFont, double MaxWidth, double LineHeight)
 		{
+			// Start from a clean slate, otherwise the width only ever grows: resizing the window
+			// down (e.g. unmaximising) would leave the menu panels at their previous, larger extent
+			Width = 0;
+			ItemWidth = 0;
+
 			for (int i = 0; i < Items.Length; i++)
 			{
 				if (Items[i] == null)
 				{
 					continue;
 				}
+				Items[i].DisplayLength = 0;
 				Vector2 size = menuFont.MeasureString(Items[i].Text);
 				if (Items[i].Icon != null)
 				{

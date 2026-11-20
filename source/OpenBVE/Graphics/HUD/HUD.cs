@@ -107,7 +107,6 @@ namespace OpenBve
 				}
 				if (block.GetValue(HUDKey.TextSize, out int s))
 				{
-					s += Interface.CurrentOptions.UserInterfaceScaleFactor - 1;
 					switch (s)
 					{
 						case 0:

@@ -285,6 +285,7 @@ namespace LibRender2.Menu
 					string currentOption = (string)CurrentOption;
 					currentOption = currentOption.Trim('x');
 					BaseMenu.CurrentOptions.UserInterfaceScaleFactor = int.Parse(currentOption, NumberStyles.Integer);
+					BaseMenu.Renderer.Fonts?.SetUserScale(BaseMenu.CurrentOptions.UserInterfaceScaleFactor);
 					break;
 				case OptionType.NumberOfSounds:
 					BaseMenu.CurrentOptions.SoundNumber = int.Parse((string)CurrentOption, NumberStyles.Integer);
