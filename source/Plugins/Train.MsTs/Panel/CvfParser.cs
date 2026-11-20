@@ -36,7 +36,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using OpenBveApi.World;
 using TrainManager.Car;
 
 namespace Train.MsTs
@@ -514,6 +513,8 @@ namespace Train.MsTs
 						case Units.Liters:
 							Code = car.Index + " tenderwaterindex";
 							break;
+						default:
+							throw new Exception(subjectUnits + " is not a valid unit for " + subject);
 					}
 					break;
 				case PanelSubject.Boiler_Water:
@@ -535,6 +536,8 @@ namespace Train.MsTs
 						case Units.Liters:
 							Code = car.Index + " fuellevelindex";
 							break;
+						default:
+							throw new Exception(subjectUnits + " is not a valid unit for " + subject);
 					}
 					break;
 				case PanelSubject.Accelerometer:

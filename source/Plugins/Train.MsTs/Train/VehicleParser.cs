@@ -229,6 +229,7 @@ namespace Train.MsTs
 							if (currentCar.Index > 0)
 							{
 								CarBase previousCar = currentCar.baseTrain.Cars[currentCar.Index - 1];
+								// ReSharper disable once CompareOfFloatsByEqualityOperator
 								if (previousCar.TractionModel is Tender previousTender && previousTender.MaxWaterLevel == -1)
 								{
 									// recreate, as values are stored in the ENG

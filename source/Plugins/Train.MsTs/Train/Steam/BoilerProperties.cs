@@ -31,7 +31,7 @@ namespace Train.MsTs
 	{
 		/// <summary>The length of the boiler in M</summary>
 		internal double Length = 5;
-		/// <summary>The max steam output of the boier in lb/h</summary>
+		/// <summary>The max steam output of the boiler in lb/h</summary>
 		internal double MaxOutput = 32500; // no default specified in techdocs
 		/// <summary>The max pressure of the boiler in PSI</summary>
 		internal double MaxPressure = 180; // no default specified in techdocs
