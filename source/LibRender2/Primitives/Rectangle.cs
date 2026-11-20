@@ -147,7 +147,19 @@ namespace LibRender2.Primitives
 			}
 		}
 
-		private void DrawWithShader(Texture texture, Vector2 point, Vector2 size, Color128? color, Vector2 coordinates, OpenGlTextureWrapMode? wrapMode = null)
+		/// <summary>Draws a simple 2D rectangle rotated around a specified screen point.</summary>
+		/// <param name="texture">The texture, or a null reference.</param>
+		/// <param name="point">The top-left coordinates in pixels.</param>
+		/// <param name="size">The size in pixels.</param>
+		/// <param name="color">The color, or a null reference.</param>
+		/// <param name="rotationOrigin">The screen point to rotate around.</param>
+		/// <param name="rotation">The rotation in radians, clockwise.</param>
+		public void Draw(Texture texture, Vector2 point, Vector2 size, Color128? color, Vector2 rotationOrigin, double rotation)
+		{
+			DrawWithShader(texture, point, size, color, Vector2.One, null, rotationOrigin, rotation);
+		}
+
+		private void DrawWithShader(Texture texture, Vector2 point, Vector2 size, Color128? color, Vector2 coordinates, OpenGlTextureWrapMode? wrapMode = null, Vector2? rotationOrigin = null, double rotation = 0.0)
 		{
 			Shader.Activate();
 			if (wrapMode == null)
@@ -172,6 +184,7 @@ namespace LibRender2.Primitives
 			Shader.SetPoint(point);
 			Shader.SetSize(size);
 			Shader.SetCoordinates(coordinates);
+			Shader.SetRotation(rotationOrigin ?? new Vector2(), rotation);
 			/*
 			 * In order to call GL.DrawArrays with procedural data within the shader,
 			 * we first need to bind a dummy VAO

@@ -212,6 +212,9 @@
     <Compile Include="Graphics\Renderers\Overlays.HUD.cs">
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
+    <Compile Include="Graphics\Renderers\Overlays.HUD.Gauge.cs">
+      <DependentUpon>Overlays.cs</DependentUpon>
+    </Compile>
     <Compile Include="Graphics\Renderers\Overlays.ScoreMessages.cs">
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>

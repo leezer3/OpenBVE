@@ -4,8 +4,18 @@ uniform mat4 uCurrentModelViewMatrix;
 uniform vec2 uPoint;
 uniform vec2 uSize;
 uniform vec2 uCoordinates;
+uniform vec2 uRotationOrigin;
+uniform float uRotation;
 out vec2 textureCoord;
 vec4 viewPos = vec4(0,0,0,0);
+
+vec2 rotateScreenPoint(vec2 p)
+{
+	vec2 d = p - uRotationOrigin;
+	float c = cos(uRotation);
+	float s = sin(uRotation);
+	return uRotationOrigin + vec2(d.x * c - d.y * s, d.x * s + d.y * c);
+}
 
 void main()
 {
@@ -40,5 +50,9 @@ void main()
 		textureCoord = uCoordinates;
 	}
 
+	if(uRotation != 0.0)
+	{
+		viewPos.xy = rotateScreenPoint(viewPos.xy);
+	}
 	gl_Position = uCurrentProjectionMatrix * viewPos;
 }
