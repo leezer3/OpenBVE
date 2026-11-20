@@ -1105,6 +1105,9 @@
 					<trans-unit id="quality_interpolation_antialiasing_level">
 						<source>Level of anti-aliasing:</source>
 					</trans-unit>
+					<trans-unit id="quality_interpolation_antialiasing_off">
+						<source>Off</source>
+					</trans-unit>
 					<trans-unit id="quality_interpolation_transparency">
 						<source>Transparency:</source>
 					</trans-unit>

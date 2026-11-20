@@ -127,7 +127,7 @@ namespace OpenBve {
             this.updownFullscreenWidth = new System.Windows.Forms.NumericUpDown();
             this.labelFullscreenWidth = new System.Windows.Forms.Label();
             this.groupboxInterpolation = new System.Windows.Forms.GroupBox();
-            this.updownAntiAliasing = new System.Windows.Forms.NumericUpDown();
+            this.updownAntiAliasing = new System.Windows.Forms.ComboBox();
             this.labelAntiAliasing = new System.Windows.Forms.Label();
             this.labelTransparencyQuality = new System.Windows.Forms.Label();
             this.labelTransparencyPerformance = new System.Windows.Forms.Label();
@@ -537,7 +537,7 @@ namespace OpenBve {
             ((System.ComponentModel.ISupportInitialize)(this.updownFullscreenHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.updownFullscreenWidth)).BeginInit();
             this.groupboxInterpolation.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.updownAntiAliasing)).BeginInit();
+            //updownAntiAliasing is a ComboBox, so there's nothing to Begin/EndInit here
             ((System.ComponentModel.ISupportInitialize)(this.updownAnisotropic)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackbarTransparency)).BeginInit();
             this.panelOptionsRight.SuspendLayout();
@@ -1988,12 +1988,8 @@ namespace OpenBve {
             // updownAntiAliasing
             // 
             this.updownAntiAliasing.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.updownAntiAliasing.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.updownAntiAliasing.Location = new System.Drawing.Point(156, 64);
-            this.updownAntiAliasing.Maximum = new decimal(new int[] {
-            16,
-            0,
-            0,
-            0});
             this.updownAntiAliasing.Name = "updownAntiAliasing";
             this.updownAntiAliasing.Size = new System.Drawing.Size(152, 20);
             this.updownAntiAliasing.TabIndex = 5;
@@ -6559,7 +6555,7 @@ namespace OpenBve {
             ((System.ComponentModel.ISupportInitialize)(this.updownFullscreenWidth)).EndInit();
             this.groupboxInterpolation.ResumeLayout(false);
             this.groupboxInterpolation.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.updownAntiAliasing)).EndInit();
+            //updownAntiAliasing is a ComboBox, so there's nothing to Begin/EndInit here
             ((System.ComponentModel.ISupportInitialize)(this.updownAnisotropic)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackbarTransparency)).EndInit();
             this.panelOptionsRight.ResumeLayout(false);
@@ -6670,7 +6666,7 @@ namespace OpenBve {
 
         }
         private System.Windows.Forms.Label labelAntiAliasing;
-		private System.Windows.Forms.NumericUpDown updownAntiAliasing;
+		private System.Windows.Forms.ComboBox updownAntiAliasing;
 		private System.Windows.Forms.ListView listviewRouteFiles;
 		private System.Windows.Forms.CheckBox checkboxTrainDefault;
         private System.Windows.Forms.Label labelTransparencyPerformance;
