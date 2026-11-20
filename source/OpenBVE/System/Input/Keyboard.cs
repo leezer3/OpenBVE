@@ -11,6 +11,21 @@ namespace OpenBve
 		/// <summary>Called when a KeyDown event is generated</summary>
 		internal static void KeyDownEvent(object sender, KeyboardKeyEventArgs e)
 		{
+			switch (e.Key)
+			{
+				case Key.ShiftLeft:
+				case Key.ShiftRight:
+					PushHeldModifier(KeyboardModifier.Shift);
+					break;
+				case Key.ControlLeft:
+				case Key.ControlRight:
+					PushHeldModifier(KeyboardModifier.Ctrl);
+					break;
+				case Key.AltLeft:
+				case Key.AltRight:
+					PushHeldModifier(KeyboardModifier.Alt);
+					break;
+			}
 			if (Interface.CurrentOptions.KioskMode && Program.Renderer.CurrentInterface != InterfaceType.GLMainMenu)
 			{
 				//If in kiosk mode, reset the timer and disable AI on keypress
@@ -34,9 +49,11 @@ namespace OpenBve
 			if (e.Shift) CurrentKeyboardModifier |= KeyboardModifier.Shift;
 			if (e.Control) CurrentKeyboardModifier |= KeyboardModifier.Ctrl;
 			if (e.Alt) CurrentKeyboardModifier |= KeyboardModifier.Alt;
+			HeldKeyboardModifiers |= CurrentKeyboardModifier;
+			int capturedModifierOrder = ModifierOrder.GetRank(HeldModifierSequence, HeldModifierSequenceCount, CurrentKeyboardModifier);
 			if (Program.Renderer.CurrentInterface >= InterfaceType.Menu && Game.Menu.IsCustomizingControl())
 			{
-				Game.Menu.SetControlKbdCustomData((OpenBveApi.Input.Key)e.Key, CurrentKeyboardModifier);
+				Game.Menu.SetControlKbdCustomData((OpenBveApi.Input.Key)e.Key, CurrentKeyboardModifier, capturedModifierOrder);
 				return;
 			}
 			//Traverse the controls array
@@ -47,7 +64,7 @@ namespace OpenBve
 				//Compare the current and previous keyboard states
 				//Only process if they are different
 				if (!Enum.IsDefined(typeof(OpenBveApi.Input.Key), Interface.CurrentControls[i].Key)) continue;
-				if ((OpenBveApi.Input.Key)e.Key == Interface.CurrentControls[i].Key && Interface.CurrentControls[i].Modifier == CurrentKeyboardModifier)
+				if ((OpenBveApi.Input.Key)e.Key == Interface.CurrentControls[i].Key && Interface.CurrentControls[i].Modifier == CurrentKeyboardModifier && (Interface.CurrentControls[i].ModifierOrder == 0 || Interface.CurrentControls[i].ModifierOrder == capturedModifierOrder))
 				{
 
 					Interface.CurrentControls[i].AnalogState = 1.0;
@@ -103,8 +120,26 @@ namespace OpenBve
 			{
 				TrainManager.PlayerTrain.Plugin.RawKeyUp((OpenBveApi.Input.Key)e.Key);
 			}
-			//We don't need to check for modifiers on key up
+			//Track held modifiers so mouse bindings requiring them can be matched
 			BlockKeyRepeat = true;
+			switch (e.Key)
+			{
+				case Key.ShiftLeft:
+				case Key.ShiftRight:
+					HeldKeyboardModifiers &= ~KeyboardModifier.Shift;
+					RemoveHeldModifier(KeyboardModifier.Shift);
+					break;
+				case Key.ControlLeft:
+				case Key.ControlRight:
+					HeldKeyboardModifiers &= ~KeyboardModifier.Ctrl;
+					RemoveHeldModifier(KeyboardModifier.Ctrl);
+					break;
+				case Key.AltLeft:
+				case Key.AltRight:
+					HeldKeyboardModifiers &= ~KeyboardModifier.Alt;
+					RemoveHeldModifier(KeyboardModifier.Alt);
+					break;
+			}
 			//Traverse the controls array
 			for (int i = 0; i < Interface.CurrentControls.Length; i++)
 			{

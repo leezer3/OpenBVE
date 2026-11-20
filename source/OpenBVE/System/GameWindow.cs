@@ -274,8 +274,8 @@ namespace OpenBve
 			
 			MainLoop.UpdateControlRepeats(RealTimeElapsed);
 			MainLoop.ProcessKeyboard();
-			MainLoop.UpdateMouse(RealTimeElapsed);
 			MainLoop.ProcessControls(TimeElapsed);
+			MainLoop.UpdateMouse(RealTimeElapsed);
 			if (Program.Joysticks.AttachedJoysticks.TryGetTypedValue(AbstractRailDriver.Guid, out AbstractRailDriver railDriver))
 			{
 				if (Interface.CurrentOptions.RailDriverMPH)
