@@ -725,6 +725,7 @@ namespace OpenBve
 						string[] Files = Directory.GetFiles(selectedFolder);
 						Array.Sort(Folders);
 						Array.Sort(Files);
+						bool checkDirectories = selectedFolder.StartsWith(Program.FileSystem.MSTSDirectory);
 						for (int i = 0; i < Folders.Length; i++)
 						{
 							try
@@ -735,13 +736,18 @@ namespace OpenBve
 									string folderName = System.IO.Path.GetFileName(Folders[i]);
 									if (!string.IsNullOrEmpty(folderName) && folderName[0] != '.')
 									{
-										string File = Path.CombineFile(Folders[i], "train.dat");
 										ListViewItem Item = listView.Items.Add(folderName);
-										if (!System.IO.File.Exists(File))
+										Item.ImageKey = @"folder";
+										if (checkDirectories)
 										{
-											File = Path.CombineFile(Folders[i], "train.xml");
+											string File = Path.CombineFile(Folders[i], "train.dat");
+											
+											if (!System.IO.File.Exists(File))
+											{
+												File = Path.CombineFile(Folders[i], "train.xml");
+											}
+											Item.ImageKey = System.IO.File.Exists(File) ? "train" : "folder";
 										}
-										Item.ImageKey = System.IO.File.Exists(File) ? "train" : "folder";
 										Item.Tag = Folders[i];
 									}
 								}
