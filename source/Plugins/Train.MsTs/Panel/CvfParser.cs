@@ -521,7 +521,7 @@ namespace Train.MsTs
 					// However, just to be difficult, the boiler water returns a value between 0 and 1
 					// Presumably this has to do with the steam circuit calculations
 					// https://openrails.org/files/OR_Steam%20Model_03_02_2014.pdf
-					Code = "1";
+					Code = car.Index + " boilerlevelindex";
 					break;
 				case PanelSubject.Steam_Pr:
 					Code = car.Index + " boilerpressureindex";

@@ -2406,6 +2406,32 @@ namespace OpenBve {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					case Instructions.BoilerLevelOfCar:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								if (Train.Cars[j].TractionModel.Components.TryGetTypedValue(EngineComponent.Boiler, out Boiler b))
+								{
+									Function.Stack[s - 1] = b.WaterLevel / Boiler.Volume; // TODO: Constant value at the minute
+								}
+								else
+								{
+									Function.Stack[s - 1] = 0.0;
+								}
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						break;
 					case Instructions.BoilerPressureOfCar:
 						if (Train != null)
 						{

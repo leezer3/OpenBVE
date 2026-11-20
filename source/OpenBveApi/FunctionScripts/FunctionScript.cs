@@ -1108,6 +1108,11 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.TenderWaterOfCar;
 							n++; break;
+						case "boilerlevelindex":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.BoilerLevelOfCar;
+							n++; break;
 						case "boilerpressureindex":
 							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);

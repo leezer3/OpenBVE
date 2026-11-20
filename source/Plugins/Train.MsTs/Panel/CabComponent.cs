@@ -478,6 +478,14 @@ namespace Train.MsTs
 						worldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * 1.0 / Plugin.Renderer.Screen.AspectRatio;
 						worldWidth = worldHeight * Plugin.Renderer.Screen.AspectRatio;
 					}
+
+					elementIndex = -1;
+					if (CabviewFileParser.FileName.ToLowerInvariant().EndsWith("scotsman.cvf") && panelSubject == PanelSubject.Boiler_Water && Orientation == 0 && DirIncrease == true)
+					{
+						// MSTS default Scotsman has bug in CVF, causing boiler water gauge to go L-R rather than D-U as intended
+						Orientation = 1;
+					}
+
 					if (Orientation == 1)
 					{
 						
@@ -492,7 +500,7 @@ namespace Train.MsTs
 						switch(Style)
 						{
 							case CabComponentStyle.Pointer:
-								int e = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], new Vector2(Position.X, Position.Y - AreaSize.Y), AreaSize, Vector2.Null, (componentLayer + 200) * CabviewFileParser.StackDistance, PanelPosition, DaytimeTexture, NightTimeTexture, Color32.White);
+								elementIndex = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], new Vector2(Position.X, Position.Y - AreaSize.Y), AreaSize, Vector2.Null, (componentLayer + 200) * CabviewFileParser.StackDistance, PanelPosition, DaytimeTexture, NightTimeTexture, Color32.White);
 								f = CabviewFileParser.GetStackLanguageFromSubject(currentCar, panelSubject, Units);
 								double t0 = (0 * Maximum - translationTotal * Minimum) / (Maximum - Minimum);
 								double t1 = (translationTotal - 0) / (Maximum - Minimum);
@@ -502,20 +510,20 @@ namespace Train.MsTs
 									(t0, t1) = (t1, t0);
 								}
 								f += " " + t1.ToString(culture) + " * " + t0.ToString(culture) + " +"; 
-								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[e].TranslateYFunction = new FunctionScript(Plugin.CurrentHost, f, false);
+								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].TranslateYFunction = new FunctionScript(Plugin.CurrentHost, f, false);
 								// FIXME: Panel overall direction seems to be slightly off from vertical (so element 'drops' under the panel on down translation if we don't pull forwards)
-								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[e].TranslateYDirection = new Vector3(0, 1, 0.1);
+								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].TranslateYDirection = new Vector3(0, 1, 0.1);
 								break;                       
 							case CabComponentStyle.Solid:
 								Vector2 v = new Vector2(Position);
 								// ignore area position for the minute, move Y
 								v.Y += Size.Y - AreaSize.Y;
-								e = CabviewFileParser.CreateScalableYElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], v, Size, AreaSize, (componentLayer + 200) * CabviewFileParser.StackDistance, PanelPosition, DaytimeTexture, NightTimeTexture, Color32.White, DirIncrease);
+								elementIndex = CabviewFileParser.CreateScalableYElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], v, Size, AreaSize, (componentLayer + 200) * CabviewFileParser.StackDistance, PanelPosition, DaytimeTexture, NightTimeTexture, Color32.White, DirIncrease);
 								f = CabviewFileParser.GetStackLanguageFromSubject(currentCar, panelSubject, Units);
 								double s0 = (minSizeMultiplier * Maximum - maxSizeMultiplier * Minimum) / (Maximum - Minimum);
 								double s1 = (maxSizeMultiplier - minSizeMultiplier) / (Maximum - Minimum);
 								f += " " + s1.ToString(culture) + " * " + s0.ToString(culture) + " +";
-								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[e].ScaleYFunction = new FunctionScript(Plugin.CurrentHost, f, false);
+								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].ScaleYFunction = new FunctionScript(Plugin.CurrentHost, f, false);
 								break;
 							default:
 								throw new Exception(Style + " is not valid for a " + Type);
@@ -527,20 +535,64 @@ namespace Train.MsTs
 						// horizontal
 						double x0 = (Position.X / 320 - 0.5) * worldWidth; // half of reference 640px panel width...
 						double x1 = ((Position.X + Size.Y) / 320 - 0.5) * worldWidth;
-						double translationTotal = x1 - x0;
+						double translationTotal = (x1 - x0) * 0.2; // FIXME: why do we need this??
+						double minSizeMultiplier = 1.0;
+						double maxSizeMultiplier = (Size.X / AreaSize.X) * 0.9;
 						switch (Style)
 						{
 							case CabComponentStyle.Pointer:
-								int e = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Position + AreaPosition, AreaSize, Vector2.Null, componentLayer * CabviewFileParser.StackDistance, PanelPosition, DaytimeTexture, NightTimeTexture, Color32.White);
+								elementIndex = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Position + AreaPosition, AreaSize, Vector2.Null, componentLayer * CabviewFileParser.StackDistance, PanelPosition, DaytimeTexture, NightTimeTexture, Color32.White);
 								f = CabviewFileParser.GetStackLanguageFromSubject(currentCar, panelSubject, Units);
 								f += " " + translationTotal.ToString(culture) + " * 0.5 *";
-								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[e].TranslateXFunction = new FunctionScript(Plugin.CurrentHost, f, false);
-								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[e].TranslateXDirection = new Vector3(1, 0, 0);
+								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].TranslateXFunction = new FunctionScript(Plugin.CurrentHost, f, false);
+								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].TranslateXDirection = new Vector3(1, 0, 0);
+								break;
+							case CabComponentStyle.Solid:
+								Vector2 v = new Vector2(Position);
+								// ignore area position for the minute, move X
+								v.X += Size.X - AreaSize.X;
+								elementIndex = CabviewFileParser.CreateScalableYElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], v, Size, AreaSize, (componentLayer + 200) * CabviewFileParser.StackDistance, PanelPosition, DaytimeTexture, NightTimeTexture, Color32.White, DirIncrease);
+								f = CabviewFileParser.GetStackLanguageFromSubject(currentCar, panelSubject, Units);
+								double s0 = (minSizeMultiplier * Maximum - maxSizeMultiplier * Minimum) / (Maximum - Minimum);
+								double s1 = (maxSizeMultiplier - minSizeMultiplier) / (Maximum - Minimum);
+								f += " " + s1.ToString(culture) + " * " + s0.ToString(culture) + " +";
+								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].ScaleXFunction = new FunctionScript(Plugin.CurrentHost, f, false);
 								break;
 							default:
 								throw new Exception(Style + " is not valid for a " + Type);
 						}
 					}
+
+					// build color arrays and mappings
+					currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].Colors = new Color24[NegativeColors.Length + PositiveColors.Length];
+					FrameMappings = new FrameMapping[PositiveColors.Length + NegativeColors.Length];
+					int colorMappingIndex = 0;
+					for (int i = 0; i < NegativeColors.Length; i++)
+					{
+						if (NegativeColors[i] != null)
+						{
+							FrameMappings[colorMappingIndex].MappingValue = NegativeColors[i].Item1;
+							FrameMappings[colorMappingIndex].FrameKey = i;
+							currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].Colors[i] = NegativeColors[i].Item2;
+							colorMappingIndex++;
+						}
+					}
+
+
+					for (int i = 0; i < PositiveColors.Length; i++)
+					{
+						if (PositiveColors[i] != null)
+						{
+							FrameMappings[i + NegativeColors.Length].MappingValue = PositiveColors[i].Item1;
+							FrameMappings[i + NegativeColors.Length].FrameKey = i + NegativeColors.Length;
+							currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].Colors[i + NegativeColors.Length] = PositiveColors[i].Item2;
+						}
+					}
+
+					Array.Resize(ref FrameMappings, colorMappingIndex + 1);
+
+					// create color functions
+					currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].ColorFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, Units, FrameMappings);
 
 					break;
 			}
