@@ -62,7 +62,7 @@ namespace LibRender2.ShadowMapping
             }
 
             Console.WriteLine(
-                $"[CSM] Resized to {newCascadeCount} cascades at {newResolution}×{newResolution}");
+                $"[CSM] Resized to {newCascadeCount} cascades at {newResolution}├ù{newResolution}");
         }
 
         private void CreateCascade(int index)
@@ -70,10 +70,12 @@ namespace LibRender2.ShadowMapping
             // Generate depth texture
             DepthTextures[index] = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, DepthTextures[index]);
+            // 16-bit depth halves shadow VRAM; the tight ortho depth range in the caster
+            // keeps precision within a fraction of a texel.
             GL.TexImage2D(TextureTarget.Texture2D, 0,
-                PixelInternalFormat.DepthComponent24,
+                PixelInternalFormat.DepthComponent16,
                 Resolution, Resolution, 0,
-                PixelFormat.DepthComponent, PixelType.UnsignedInt, IntPtr.Zero);
+                PixelFormat.DepthComponent, PixelType.UnsignedShort, IntPtr.Zero);
             GL.TexParameter(TextureTarget.Texture2D,
                 TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D,
@@ -129,7 +131,7 @@ namespace LibRender2.ShadowMapping
 
         /// <summary>
         /// Binds all cascade depth textures sequentially starting from the given texture unit.
-        /// E.g., if baseUnit = TextureUnit.Texture4, cascade 0 → unit 4, cascade 1 → unit 5, etc.
+        /// E.g., if baseUnit = TextureUnit.Texture4, cascade 0 ΓåÆ unit 4, cascade 1 ΓåÆ unit 5, etc.
         /// </summary>
         public void BindAllCascadesForReading(TextureUnit baseUnit)
         {
