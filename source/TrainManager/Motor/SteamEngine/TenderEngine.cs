@@ -125,7 +125,7 @@ namespace TrainManager.SteamEngine
 			{
 				if (BaseCar.baseTrain.Handles.Reverser is Cutoff cutoff)
 				{
-					if (Math.Abs(cutoff.Actual) < cutoff.IneffectiveRange)
+					if (Math.Abs(cutoff.Driver) < cutoff.IneffectiveRange)
 					{
 						// within ineffective range, return zero
 						return 0;
