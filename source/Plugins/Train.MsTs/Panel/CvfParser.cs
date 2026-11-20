@@ -36,7 +36,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using OpenBveApi.World;
 using TrainManager.Car;
 
 namespace Train.MsTs
@@ -514,13 +513,15 @@ namespace Train.MsTs
 						case Units.Liters:
 							Code = car.Index + " tenderwaterindex";
 							break;
+						default:
+							throw new Exception(subjectUnits + " is not a valid unit for " + subject);
 					}
 					break;
 				case PanelSubject.Boiler_Water:
 					// However, just to be difficult, the boiler water returns a value between 0 and 1
 					// Presumably this has to do with the steam circuit calculations
 					// https://openrails.org/files/OR_Steam%20Model_03_02_2014.pdf
-					Code = "1";
+					Code = car.Index + " boilerlevelindex";
 					break;
 				case PanelSubject.Steam_Pr:
 					Code = car.Index + " boilerpressureindex";
@@ -535,6 +536,8 @@ namespace Train.MsTs
 						case Units.Liters:
 							Code = car.Index + " fuellevelindex";
 							break;
+						default:
+							throw new Exception(subjectUnits + " is not a valid unit for " + subject);
 					}
 					break;
 				case PanelSubject.Accelerometer:
@@ -547,6 +550,19 @@ namespace Train.MsTs
 					break;
 				case PanelSubject.RPM:
 					Code = car.Index + " enginerpmindex";
+					break;
+				case PanelSubject.Traction_Braking:
+					switch (subjectUnits)
+					{
+						// F = ma
+						case Units.Kilo_Newtons:
+							Code = car.Index + " decelerationmotorindex carmass *";							
+							break;
+					}
+					break;
+				case PanelSubject.Steamchest_Pr:
+				case PanelSubject.Steamheat_Pressure:
+					Code = "0";
 					break;
 				default:
 					Code = "0";
