@@ -139,13 +139,17 @@ namespace Train.MsTs
 						InitialAngle = -(365 - InitialAngle);
 					}
 
-					//Get final position from the 640px panel (Yuck...)
+					// must use the un-modified size / position values to find the rotational origin within the texture
+					Vector2 rotationOrigin = new Vector2(0.5 * DaytimeTexture.Width / Size.X, PivotPoint / Size.Y); 
+
+					// now convert the size / position values to panel-space coordinates
 					Position.X *= rW;
 					Position.Y *= rH;
+
 					Size.X *= rW;
 					Size.Y *= rH;
-					PivotPoint *= rH;
-					elementIndex = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Position, Size, new Vector2((0.5 * Size.X) / (DaytimeTexture.Width * rW), PivotPoint / (DaytimeTexture.Height * rH)), componentLayer * CabviewFileParser.StackDistance, PanelPosition, DaytimeTexture, NightTimeTexture, Color32.White);
+
+					elementIndex = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Position, Size, rotationOrigin, componentLayer * CabviewFileParser.StackDistance, PanelPosition, DaytimeTexture, NightTimeTexture, Color32.White);
 					currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].RotateZDirection = new Vector3(0.0, 0.0, -1.0);
 					currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].RotateXDirection = DirIncrease ? new Vector3(1.0, 0.0, 0.0) : new Vector3(-1.0, 0.0, 0.0);
 					currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].RotateYDirection = Vector3.Cross(currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].RotateZDirection, currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].RotateXDirection);
