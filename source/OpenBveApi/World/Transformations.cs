@@ -1,4 +1,4 @@
-﻿using OpenBveApi.Math;
+using OpenBveApi.Math;
 
 namespace OpenBveApi.World
 {
@@ -81,6 +81,10 @@ namespace OpenBveApi.World
 		/// </param>
 		public Transformation(Transformation Transformation, double Yaw, double Pitch, double Roll)
 		{
+			if (Transformation == null)
+			{
+				Transformation = NullTransformation;
+			}
 			X = new Vector3(Transformation.X);
 			Y = new Vector3(Transformation.Y);
 			Z = new Vector3(Transformation.Z);
@@ -99,6 +103,14 @@ namespace OpenBveApi.World
 		/// <param name="secondTransformation">The transformation to apply second</param>
 		public Transformation(Transformation firstTransformation, Transformation secondTransformation)
 		{
+			if (firstTransformation == null)
+			{
+				firstTransformation = NullTransformation;
+			}
+			if (secondTransformation == null)
+			{
+				secondTransformation = NullTransformation;
+			}
 			X = new Vector3(firstTransformation.X);
 			Y = new Vector3(firstTransformation.Y);
 			Z = new Vector3(firstTransformation.Z);
@@ -133,6 +145,10 @@ namespace OpenBveApi.World
 		/// <param name="t">The transformation to convert</param>
 		public static explicit operator Matrix4D(Transformation t)
 		{
+			if (t == null)
+			{
+				return Matrix4D.NoTransformation;
+			}
 			// X, Y and Z represent the basis vector.
 			// Arrange them in row-major to create a change-of-basis matrix.
 			// And converting from the left-handed coordinate system to the right-handed coordinate system by reversing the Z axis.
