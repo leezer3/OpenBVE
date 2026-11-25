@@ -46,6 +46,8 @@ namespace TrainManager.SteamEngine
 		/// <summary>Holds the last updated track position</summary>
 		private double lastTrackPosition;
 
+		public double CurrentPressure;
+
 		private readonly double CylinderVolume;
 
 		public CylinderChest(TractionModel engine, double diameter, double strokeLength, int totalNumber) : base(engine)
@@ -84,6 +86,7 @@ namespace TrainManager.SteamEngine
 				{
 					// zero distance, or greater distance than sensible in one frame
 					SteamMassFlow = 0;
+					CurrentPressure = baseEngine.BaseCar.baseTrain.Handles.Power.Actual == 0 ? 0 : boiler.CurrentPressure;
 					return;
 				}
 
@@ -98,13 +101,38 @@ namespace TrainManager.SteamEngine
 				double ascendingStrokes = Math.Max(Math.Abs(CurrentPistonPosition) / 2 - 0.5, 0);
 
 				CurrentPistonPosition %= 1;
-				
+
+				if (baseEngine.Components.TryGetTypedValue(EngineComponent.CylinderCocks, out CylinderCocks cylinderCocks) && cylinderCocks.Active)
+				{
+					// pressure loss through open cylinder cocks with power applied
+					CurrentPressure = boiler.CurrentPressure * 0.7;
+				}
+				else
+				{
+					
+					if (baseEngine.BaseCar.CurrentSpeed < 0.05 && baseEngine.BaseCar.baseTrain.Handles.Power.Actual == 0)
+					{
+						// very minimal speed (rolling?), no power
+						CurrentPressure = 0;
+					}
+					else
+					{
+						// otherwise pressure is that of the boiler
+						// (when regulator is shut off, compression keeps pressure in the cylinder)
+						// NOTE: no simulation of valve events, which would produce a 'bounce' up and down
+						CurrentPressure = boiler.CurrentPressure;
+					}
+						
+				}
+
 				if (ascendingStrokes == 0 || baseEngine.BaseCar.baseTrain.Handles.Power.Actual == 0)
 				{
 					// no ascending strokes this frame or zero regulator, so steam mass flow is zero
 					// however return here so we keep the flow number in the debug
 					return;
 				}
+
+				
 
 				SteamMassFlow = SteamTable.GetSteamDensity(boiler.CurrentPressure) * CylinderVolume;
 				SteamMassFlow *= ascendingStrokes;

@@ -2454,6 +2454,28 @@ namespace OpenBve {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					case Instructions.SteamChestPressureOfCar:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								if ((Train.Cars[j].TractionModel is TenderEngine || Train.Cars[j].TractionModel is TankEngine) && Train.Cars[j].TractionModel.Components.TryGetTypedValue(EngineComponent.CylinderChest, out CylinderChest cc))
+								{
+									Function.Stack[s - 1] = cc.CurrentPressure;
+								}
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						break;
 					case Instructions.TrackNumber:
 						Function.Stack[s] = 0.0;
 						if (Train != null)

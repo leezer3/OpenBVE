@@ -561,6 +561,8 @@ namespace Train.MsTs
 					}
 					break;
 				case PanelSubject.Steamchest_Pr:
+					Code = car.Index + " steamchestpressureindex";
+					break;
 				case PanelSubject.Steamheat_Pressure:
 					Code = "0";
 					break;
