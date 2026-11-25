@@ -40,6 +40,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using OpenBveApi.Hosts;
+using OpenBveApi.Routes;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
@@ -423,8 +424,9 @@ namespace Train.MsTs
 			}
 
 			currentCar.FrontAxle = new MSTSAxle(Plugin.CurrentHost, train, currentCar, friction ?? new Friction(), adhesion ?? new Adhesion(currentCar, currentEngineType == EngineType.Steam));
+			currentCar.FrontAxle.Follower.TriggerType = EventTriggerType.OtherCarFrontAxle;
 			currentCar.RearAxle = new MSTSAxle(Plugin.CurrentHost, train, currentCar, friction ?? new Friction(), adhesion ?? new Adhesion(currentCar, currentEngineType == EngineType.Steam));
-
+			currentCar.RearAxle.Follower.TriggerType = EventTriggerType.OtherCarRearAxle;
 			if (soundFiles.Count > 0)
 			{
 				for (int i = 0; i < soundFiles.Count; i++)

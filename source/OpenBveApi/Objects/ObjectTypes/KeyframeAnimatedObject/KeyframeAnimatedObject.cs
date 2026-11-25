@@ -63,6 +63,10 @@ namespace OpenBveApi.Objects
 		internal double currentTrackPosition;
 		/// <summary>Whether the object is reversed</summary>
 		internal bool IsReversed;
+		/// <summary>The index of the track the front axle is running on</summary>
+		internal int FrontAxleTrackIndex;
+		/// <summary>The index of the track the rear axle is running on</summary>
+		internal int RearAxleTrackIndex;
 
 		/// <summary>Creates an empty KeyFrameAnimatedObject</summary>
 		/// <param name="currentHost">The host application interface</param>
@@ -191,7 +195,8 @@ namespace OpenBveApi.Objects
 			if (BaseCar != null)
 			{
 				dynamic dynamicCar = BaseCar; // HACK: get the track follower onto the right track index!
-				trackFollower.TrackIndex = dynamicCar.FrontAxle.Follower.TrackIndex;
+				FrontAxleTrackIndex = dynamicCar.FrontAxle.Follower.TrackIndex;
+				RearAxleTrackIndex = dynamicCar.RearAxle.Follower.TrackIndex;
 				frontAxlePosition = dynamicCar.FrontAxle.Follower.WorldPosition;
 				rearAxlePosition = dynamicCar.RearAxle.Follower.WorldPosition;
 				currentTrackPosition = trackPosition;

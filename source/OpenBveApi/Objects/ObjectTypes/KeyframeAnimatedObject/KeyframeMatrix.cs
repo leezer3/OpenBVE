@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
 using OpenBveApi.Math;
 
 namespace OpenBveApi.Objects
@@ -65,6 +66,7 @@ namespace OpenBveApi.Objects
 				{
 					// This somewhat misuses a single track follower, but it works OK
 					// Y rotation is not handled (other than by the main model matrix moving)
+					containerObject.trackFollower.TrackIndex = Name.Equals("BOGIE2", StringComparison.InvariantCultureIgnoreCase) ? containerObject.RearAxleTrackIndex : containerObject.FrontAxleTrackIndex;
 					Vector3 v1 = containerObject.rearAxlePosition - containerObject.frontAxlePosition;
 					containerObject.trackFollower.UpdateAbsolute(containerObject.currentTrackPosition + zTranslation + containerObject.Pivots[Name].FrontPoint, true, false);
 					Vector3 w1 = containerObject.trackFollower.WorldPosition;
