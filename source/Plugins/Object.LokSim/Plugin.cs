@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, Christopher Lees, The OpenBVE Project
 //
@@ -79,8 +79,8 @@ namespace Plugin
 								new AnimatedObject(Plugin.currentHost, (StaticObject)unifiedObject)
 							},
 						};
-						aoc.Objects[0].RotateXFunction = new FunctionScript(currentHost, "billboardx", true);
-						aoc.Objects[0].RotateXDirection = Vector3.Down;
+						aoc.Objects[0].RotateYFunction = new FunctionScript(currentHost, "billboardy * 0.5", true);
+						aoc.Objects[0].RotateYDirection = Vector3.Down;
 						unifiedObject = aoc;
 					}
 				}
