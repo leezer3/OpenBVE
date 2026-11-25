@@ -35,6 +35,8 @@ namespace TrainManager.SteamEngine
 		private readonly double MaxFuelLevel;
 		/// <summary>The ideal fuel level in the firebox</summary>
 		private readonly double IdealFuelLevel;
+		/// <summary>The modifier for blast effect</summary>
+		private readonly double BlastEffectModifier;
 		/// <summary>The current firebox temperature in °C</summary>
 		public double Temperature;
 		/// <summary>The current fuel level in the firebox</summary>
@@ -61,7 +63,7 @@ namespace TrainManager.SteamEngine
 		/// <remarks>Updated whenever fuel is added to the fire</remarks>
 		private double burnRate;
 
-		public Firebox(TractionModel engine, FireboxFuel fuel, double maxFuelLevel, double shovelMass, double currentFuelLevel, double idealFuelLevel,
+		public Firebox(TractionModel engine, FireboxFuel fuel, double maxFuelLevel, double shovelMass, double blastEffectModifier, double currentFuelLevel, double idealFuelLevel,
 			double currentTemperature) : base(engine)
 		{
 			SpecificHeat = FuelTable.Values[fuel].SpecificHeat;
@@ -76,6 +78,7 @@ namespace TrainManager.SteamEngine
 			doorClosePressed = false;
 			ShovelMass = shovelMass;
 			burnRate = FuelLevel / BurnTime;
+			BlastEffectModifier = blastEffectModifier;
 		}
 
 		public override void Update(double timeElapsed)
@@ -106,6 +109,18 @@ namespace TrainManager.SteamEngine
 
 			// blast effect from regulator causes draft through firebox doors
 			efficiencyModifier *= baseEngine.BaseCar.baseTrain.Handles.Power.Actual / (double)baseEngine.BaseCar.baseTrain.Handles.Power.MaximumDriverNotch * DoorState;
+			
+			if (BlastEffectModifier > 0)
+			{
+				// apply blast effect modifier if set
+				efficiencyModifier *= BlastEffectModifier;
+			}
+			else
+			{
+				// otherwise efficiency is full (no blast effect)
+				efficiencyModifier = 1.0;
+			}
+
 			// assume that combustion is at approx 50% efficiency minimum
 			efficiencyModifier = Math.Max(0.5, efficiencyModifier);
 

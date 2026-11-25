@@ -29,6 +29,7 @@ namespace TrainManager.SteamEngine
 		internal static Dictionary<FireboxFuel, FuelProperties> Values = new Dictionary<FireboxFuel, FuelProperties>
 		{
 			{ FireboxFuel.Coal, new FuelProperties(1000, 18000, 0.33) },
+			{ FireboxFuel.CoalDust, new FuelProperties(1000, 500, 0.33) },
 			{ FireboxFuel.Wood, new FuelProperties(700, 5400, 0.48) },
 			// assume kerosene or similar heavy oil
 			{ FireboxFuel.Oil, new FuelProperties(1600, 1, 0.7)}
@@ -57,6 +58,8 @@ namespace TrainManager.SteamEngine
 	{
 		/// <summary>Standard anthracite steam coal</summary>
 		Coal,
+		/// <summary>Pulverised coal dust</summary>
+		CoalDust,
 		/// <summary>Dried wood or similar</summary>
 		Wood,
 		/// <summary>Heavy fuel oil, e.g. kerosene</summary>

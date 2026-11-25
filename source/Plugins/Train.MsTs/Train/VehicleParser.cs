@@ -1369,8 +1369,8 @@ namespace Train.MsTs
 							// Fire condition
 							// Coal quality
 							// NOTE: Max fuel / water levels are set by MaxTenderCoalMass and MaxTenderWaterMass
-							SteamProperties.StartingFireTemp = block.ReadSingle();
-							SteamProperties.StartingFireMass = block.ReadSingle();
+							SteamProperties.Firebox.StartingFireTemp = block.ReadSingle();
+							SteamProperties.Firebox.StartingFireMass = block.ReadSingle();
 							SteamProperties.Boiler.StartingWater = block.ReadSingle();
 							SteamProperties.Boiler.StartingWater /= 2.205; // convert to L
 							SteamProperties.Boiler.StartingPressure = block.ReadSingle();
@@ -1479,13 +1479,20 @@ namespace Train.MsTs
 					SteamProperties.Injectors[1].MaxWater = SteamProperties.Injectors[0].MaxWater.Clamp(0, 1);
 					break;
 				case KujuTokenID.MaxFireMass:
-					SteamProperties.MaxFireMass = block.ReadSingle(UnitOfWeight.Kilograms);
+					SteamProperties.Firebox.MaxFireMass = block.ReadSingle(UnitOfWeight.Kilograms);
 					break;
 				case KujuTokenID.IdealFireMass:
-					SteamProperties.IdealFireMass = block.ReadSingle(UnitOfWeight.Kilograms);
+					SteamProperties.Firebox.IdealFireMass = block.ReadSingle(UnitOfWeight.Kilograms);
 					break;
 				case KujuTokenID.ShovelCoalMass:
-					SteamProperties.ShovelCoalMass = block.ReadSingle(UnitOfWeight.Kilograms);
+					SteamProperties.Firebox.ShovelCoalMass = block.ReadSingle(UnitOfWeight.Kilograms);
+					break;
+				case KujuTokenID.BlastExponent:
+					SteamProperties.Firebox.BlastExponent = block.ReadSingle();
+					break;
+				case KujuTokenID.DraftingEffect:
+					// NOTE: this multiplier actually seems to affect the amount of energy released when burning 1kg of fuel
+					SteamProperties.Firebox.DraftingExponent = block.ReadSingle();
 					break;
 				case KujuTokenID.NumCylinders:
 					SteamProperties.Cylinders.TotalNumber = block.ReadInt32();

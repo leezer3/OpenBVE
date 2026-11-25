@@ -86,6 +86,7 @@
     <Compile Include="Train\Friction.cs" />
     <Compile Include="Train\Steam\BoilerProperties.cs" />
     <Compile Include="Train\Steam\CylinderProperties.cs" />
+    <Compile Include="Train\Steam\FireboxProperties.cs" />
     <Compile Include="Train\Steam\InjectorProperties.cs" />
     <Compile Include="Train\MSTSAxle.cs" />
     <Compile Include="Train\Steam\SteamEngineProperties.cs" />
