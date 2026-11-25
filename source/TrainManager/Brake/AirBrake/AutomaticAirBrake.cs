@@ -158,7 +158,7 @@ namespace TrainManager.BrakeSystems
 				}
 				else if (AuxiliaryReservoir.CurrentPressure > BrakeCylinder.CurrentPressure + Tolerance)
 				{
-					// refill brake cylinder from auxillary reservoir
+					// refill brake cylinder from auxiliary reservoir
 					double u = (AuxiliaryReservoir.CurrentPressure - BrakeCylinder.CurrentPressure - Tolerance) / Tolerance;
 					if (u > 1.0) u = 1.0;
 					double f = AuxiliaryReservoir.BrakeCylinderCoefficient;
@@ -202,7 +202,7 @@ namespace TrainManager.BrakeSystems
 				double u = (BrakePipe.CurrentPressure - AuxiliaryReservoir.CurrentPressure - Tolerance) / Tolerance;
 				if (u > 1.0) u = 1.0;
 				{
-					// refill auxillary reservoir from brake pipe
+					// refill auxiliary reservoir from brake pipe
 					double r = AuxiliaryReservoir.ChargeRate;
 					double d = BrakePipe.CurrentPressure - AuxiliaryReservoir.CurrentPressure;
 					double m = AuxiliaryReservoir.MaximumPressure;

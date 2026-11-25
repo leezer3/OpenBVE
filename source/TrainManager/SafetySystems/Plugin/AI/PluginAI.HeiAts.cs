@@ -28,7 +28,7 @@ using OpenBveApi.Runtime;
 namespace TrainManager.SafetySystems
 {
 	/// <summary>An AI to control the Hei_ats.dll plugin found in Hirakami railway trains</summary>
-	class HeiAtsAI : PluginAI
+	internal class HeiAtsAI : PluginAI
 	{
 		internal HeiAtsAI(Plugin plugin)
 		{

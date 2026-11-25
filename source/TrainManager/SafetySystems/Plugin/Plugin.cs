@@ -586,6 +586,8 @@ namespace TrainManager.SafetySystems
 		}
 
 		/// <summary>Called when a touch event occurs.</summary>
+		/// <remarks>This method is not used (broken), but part of a shipped API so cannot be removed</remarks>
+		[Obsolete]
 		public virtual void TouchEvent(int groupIndex, int commandIndex)
 		{
 			// Ignored other than by .Net plugins

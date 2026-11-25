@@ -29,7 +29,7 @@ using OpenBveApi.Trains;
 namespace TrainManager.SafetySystems
 {
 	/// <summary>An AI to control the TASC plugin used by some MTR trains for automatic operation</summary>
-	class MTRAutoAI : PluginAI
+	internal class MTRAutoAI : PluginAI
 	{
 		internal MTRAutoAI(Plugin plugin)
 		{

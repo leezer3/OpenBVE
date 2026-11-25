@@ -231,7 +231,7 @@ namespace TrainManager.Trains
 				//Bogie for rear axle
 				Cars[i].RearBogie.FrontAxle.Follower.TrackPosition = Cars[i].RearAxle.Follower.TrackPosition - 0.5 * Cars[i].RearBogie.Length + Cars[i].RearBogie.FrontAxle.Position;
 				Cars[i].RearBogie.RearAxle.Follower.TrackPosition = Cars[i].RearAxle.Follower.TrackPosition - 0.5 * Cars[i].RearBogie.Length + Cars[i].RearBogie.RearAxle.Position;
-				//Beacon reciever (AWS, ATC etc.)
+				//Beacon receiver (AWS, ATC etc.)
 				Cars[i].BeaconReceiver.TrackPosition = trackPosition - 0.5 * Cars[i].Length + Cars[i].BeaconReceiverPosition;
 				trackPosition -= Cars[i].Length;
 				if (i < Cars.Length - 1)

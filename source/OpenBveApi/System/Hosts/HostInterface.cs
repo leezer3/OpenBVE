@@ -330,7 +330,7 @@ namespace OpenBveApi.Hosts {
 		/// <returns>Whether the extension could be determined</returns>
 		public bool DetermineStaticObjectExtension(ref string FilePath)
 		{
-			if (System.IO.File.Exists(FilePath) || Path.HasExtension(FilePath))
+			if (File.Exists(FilePath) || Path.HasExtension(FilePath))
 			{
 				return true;
 			}
@@ -340,7 +340,7 @@ namespace OpenBveApi.Hosts {
 			{
 				string testPath = Path.CombineFile(Path.GetDirectoryName(FilePath), $"{Path.GetFileName(FilePath)}{extension}");
 
-				if (System.IO.File.Exists(testPath))
+				if (File.Exists(testPath))
 				{
 					FilePath = testPath;
 					return true;
@@ -452,6 +452,9 @@ namespace OpenBveApi.Hosts {
 			return false;
 		}
 
+		/// <summary>Stores a Static Object in the cache</summary>
+		/// <param name="key">The filesystem path and last modified time</param>
+		/// <param name="obj">The Static Object</param>
 		protected void StoreStaticObject(ValueTuple<string, bool, DateTime> key, StaticObject obj)
 		{
 			lock (cacheLock)
@@ -460,6 +463,9 @@ namespace OpenBveApi.Hosts {
 			}
 		}
 
+		/// <summary>Stores an Animated Object in the cache</summary>
+		/// <param name="lowerPath">The case invariant filesystem path</param>
+		/// <param name="obj">The Animated Object</param>
 		protected void StoreAnimatedObject(string lowerPath, AnimatedObjectCollection obj)
 		{
 			lock (cacheLock)
@@ -468,6 +474,10 @@ namespace OpenBveApi.Hosts {
 			}
 		}
 
+		/// <summary>Reports a failure adding an object to the path</summary>
+		/// <param name="set">The failure list</param>
+		/// <param name="path">The object path</param>
+		/// <returns>True if this is the first unique failure for this file</returns>
 		protected bool ReportFailure(HashSet<string> set, string path)
 		{
 			lock (cacheLock)
@@ -476,6 +486,9 @@ namespace OpenBveApi.Hosts {
 			}
 		}
 
+		/// <summary>Reports that a file is missing</summary>
+		/// <param name="path">The file path</param>
+		/// <returns>True if this is the first unique failure for this file</returns>
 		protected bool ReportMissingFile(string path)
 		{
 			lock (cacheLock)
