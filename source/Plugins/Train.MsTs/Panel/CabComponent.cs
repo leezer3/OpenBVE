@@ -32,6 +32,7 @@ using OpenBveApi.Textures;
 using System;
 using System.Globalization;
 using System.IO;
+using OpenBveApi.Objects;
 using TrainManager.Car;
 
 namespace Train.MsTs
@@ -163,6 +164,7 @@ namespace Train.MsTs
 					// backstop by default e.g. ammeter when using dynamic brakes
 					currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].RotateZFunction.Minimum = InitialAngle;
 					currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].RotateZFunction.Maximum = LastAngle;
+					currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].RotateZDamping = new Damping(21, 1);
 					break;
 				case CabComponentType.Lever:
 					/*
