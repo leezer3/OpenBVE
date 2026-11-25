@@ -4,6 +4,9 @@
 	public enum HUDSection
 	{
 		Unknown = 0,
-		Element
+		Element,
+		Needle,
+		LinearGauge,
+		DigitalGauge
 	}
 }

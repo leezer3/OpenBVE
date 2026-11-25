@@ -108,6 +108,8 @@ namespace OpenBve {
             this.labelHUDSmall = new System.Windows.Forms.Label();
             this.trackBarHUDSize = new System.Windows.Forms.TrackBar();
             this.labelHUDScale = new System.Windows.Forms.Label();
+            this.labelHUDTheme = new System.Windows.Forms.Label();
+            this.comboBoxHUDTheme = new System.Windows.Forms.ComboBox();
             this.comboboxVSync = new System.Windows.Forms.ComboBox();
             this.labelVSync = new System.Windows.Forms.Label();
             this.comboBoxFPSLimit = new System.Windows.Forms.ComboBox();
@@ -470,6 +472,7 @@ namespace OpenBve {
             this.buttonCreateProceed = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.radioButtonQ2Other = new System.Windows.Forms.RadioButton();
+            this.radioButtonQ2HudTheme = new System.Windows.Forms.RadioButton();
             this.radioButtonQ2Train = new System.Windows.Forms.RadioButton();
             this.radioButtonQ2Route = new System.Windows.Forms.RadioButton();
             this.labelPackageType = new System.Windows.Forms.Label();
@@ -1613,6 +1616,8 @@ namespace OpenBve {
             this.groupboxDisplayMode.Controls.Add(this.labelHUDSmall);
             this.groupboxDisplayMode.Controls.Add(this.trackBarHUDSize);
             this.groupboxDisplayMode.Controls.Add(this.labelHUDScale);
+            this.groupboxDisplayMode.Controls.Add(this.labelHUDTheme);
+            this.groupboxDisplayMode.Controls.Add(this.comboBoxHUDTheme);
             this.groupboxDisplayMode.Controls.Add(this.comboboxVSync);
             this.groupboxDisplayMode.Controls.Add(this.labelVSync);
             this.groupboxDisplayMode.Controls.Add(this.comboBoxFPSLimit);
@@ -1622,7 +1627,7 @@ namespace OpenBve {
             this.groupboxDisplayMode.ForeColor = System.Drawing.Color.Black;
             this.groupboxDisplayMode.Location = new System.Drawing.Point(0, 0);
             this.groupboxDisplayMode.Name = "groupboxDisplayMode";
-            this.groupboxDisplayMode.Size = new System.Drawing.Size(316, 215);
+            this.groupboxDisplayMode.Size = new System.Drawing.Size(316, 266);
             this.groupboxDisplayMode.TabIndex = 4;
             this.groupboxDisplayMode.TabStop = false;
             this.groupboxDisplayMode.Text = "Display mode";
@@ -1632,7 +1637,7 @@ namespace OpenBve {
             this.comboBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxFont.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFont.FormattingEnabled = true;
-            this.comboBoxFont.Location = new System.Drawing.Point(45, 181);
+            this.comboBoxFont.Location = new System.Drawing.Point(45, 239);
             this.comboBoxFont.Name = "comboBoxFont";
             this.comboBoxFont.Size = new System.Drawing.Size(264, 21);
             this.comboBoxFont.TabIndex = 14;
@@ -1640,7 +1645,7 @@ namespace OpenBve {
             // 
             // labelFontName
             // 
-            this.labelFontName.Location = new System.Drawing.Point(8, 174);
+            this.labelFontName.Location = new System.Drawing.Point(8, 232);
             this.labelFontName.Name = "labelFontName";
             this.labelFontName.Size = new System.Drawing.Size(50, 36);
             this.labelFontName.TabIndex = 13;
@@ -1683,6 +1688,27 @@ namespace OpenBve {
             this.trackBarHUDSize.Size = new System.Drawing.Size(220, 45);
             this.trackBarHUDSize.TabIndex = 9;
             this.trackBarHUDSize.Value = 1;
+            this.trackBarHUDSize.ValueChanged += new System.EventHandler(this.trackBarHUDSize_ValueChanged);
+            // 
+            // labelHUDTheme
+            // 
+            this.labelHUDTheme.Location = new System.Drawing.Point(8, 202);
+            this.labelHUDTheme.Name = "labelHUDTheme";
+            this.labelHUDTheme.Size = new System.Drawing.Size(74, 20);
+            this.labelHUDTheme.TabIndex = 15;
+            this.labelHUDTheme.Text = "HUD Theme:";
+            this.labelHUDTheme.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // comboBoxHUDTheme
+            // 
+            this.comboBoxHUDTheme.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxHUDTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxHUDTheme.FormattingEnabled = true;
+            this.comboBoxHUDTheme.Location = new System.Drawing.Point(129, 201);
+            this.comboBoxHUDTheme.Name = "comboBoxHUDTheme";
+            this.comboBoxHUDTheme.Size = new System.Drawing.Size(180, 21);
+            this.comboBoxHUDTheme.TabIndex = 16;
+            this.comboBoxHUDTheme.SelectedIndexChanged += new System.EventHandler(this.comboBoxHUDTheme_SelectedIndexChanged);
             // 
             // labelHUDScale
             // 
@@ -1776,7 +1802,7 @@ namespace OpenBve {
             this.groupboxWindow.Controls.Add(this.updownWindowWidth);
             this.groupboxWindow.Controls.Add(this.labelWindowWidth);
             this.groupboxWindow.ForeColor = System.Drawing.Color.Black;
-            this.groupboxWindow.Location = new System.Drawing.Point(0, 218);
+            this.groupboxWindow.Location = new System.Drawing.Point(0, 269);
             this.groupboxWindow.Name = "groupboxWindow";
             this.groupboxWindow.Size = new System.Drawing.Size(316, 80);
             this.groupboxWindow.TabIndex = 5;
@@ -1864,7 +1890,7 @@ namespace OpenBve {
             this.groupboxFullscreen.Controls.Add(this.updownFullscreenWidth);
             this.groupboxFullscreen.Controls.Add(this.labelFullscreenWidth);
             this.groupboxFullscreen.ForeColor = System.Drawing.Color.Black;
-            this.groupboxFullscreen.Location = new System.Drawing.Point(0, 301);
+            this.groupboxFullscreen.Location = new System.Drawing.Point(0, 352);
             this.groupboxFullscreen.Name = "groupboxFullscreen";
             this.groupboxFullscreen.Size = new System.Drawing.Size(316, 104);
             this.groupboxFullscreen.TabIndex = 6;
@@ -5746,7 +5772,8 @@ namespace OpenBve {
             this.comboBoxPackageType.Items.AddRange(new object[] {
             "Routes",
             "Trains",
-            "Other"});
+            "Other",
+            "HUD Themes"});
             this.comboBoxPackageType.Location = new System.Drawing.Point(8, 61);
             this.comboBoxPackageType.Name = "comboBoxPackageType";
             this.comboBoxPackageType.Size = new System.Drawing.Size(221, 21);
@@ -6183,11 +6210,12 @@ namespace OpenBve {
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.radioButtonQ2Other);
+            this.groupBox1.Controls.Add(this.radioButtonQ2HudTheme);
             this.groupBox1.Controls.Add(this.radioButtonQ2Train);
             this.groupBox1.Controls.Add(this.radioButtonQ2Route);
             this.groupBox1.Location = new System.Drawing.Point(8, 69);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(265, 24);
+            this.groupBox1.Size = new System.Drawing.Size(360, 24);
             this.groupBox1.TabIndex = 19;
             this.groupBox1.TabStop = false;
             // 
@@ -6203,6 +6231,19 @@ namespace OpenBve {
             this.radioButtonQ2Other.Text = "Other";
             this.radioButtonQ2Other.UseVisualStyleBackColor = true;
             this.radioButtonQ2Other.CheckedChanged += new System.EventHandler(this.Q2_CheckedChanged);
+            // 
+            // radioButtonQ2HudTheme
+            // 
+            this.radioButtonQ2HudTheme.AutoSize = true;
+            this.radioButtonQ2HudTheme.ForeColor = System.Drawing.Color.Black;
+            this.radioButtonQ2HudTheme.Location = new System.Drawing.Point(176, 1);
+            this.radioButtonQ2HudTheme.Name = "radioButtonQ2HudTheme";
+            this.radioButtonQ2HudTheme.Size = new System.Drawing.Size(83, 17);
+            this.radioButtonQ2HudTheme.TabIndex = 20;
+            this.radioButtonQ2HudTheme.TabStop = true;
+            this.radioButtonQ2HudTheme.Text = "HUD Theme";
+            this.radioButtonQ2HudTheme.UseVisualStyleBackColor = true;
+            this.radioButtonQ2HudTheme.CheckedChanged += new System.EventHandler(this.Q2_CheckedChanged);
             // 
             // radioButtonQ2Train
             // 
@@ -6991,6 +7032,7 @@ namespace OpenBve {
 		private System.Windows.Forms.RadioButton radioButtonQ2Route;
 		private System.Windows.Forms.Label labelPackageType;
 		private System.Windows.Forms.RadioButton radioButtonQ2Other;
+		private System.Windows.Forms.RadioButton radioButtonQ2HudTheme;
 		private System.Windows.Forms.Panel panelReplacePackage;
 		private System.Windows.Forms.Label packageToReplaceLabel;
 		private System.Windows.Forms.DataGridView dataGridViewReplacePackage;
@@ -7117,6 +7159,8 @@ namespace OpenBve {
 		private System.Windows.Forms.Label labelHUDSmall;
 		private System.Windows.Forms.TrackBar trackBarHUDSize;
 		private System.Windows.Forms.Label labelHUDScale;
+		private System.Windows.Forms.Label labelHUDTheme;
+		private System.Windows.Forms.ComboBox comboBoxHUDTheme;
 		private System.Windows.Forms.GroupBox groupBoxObjectParser;
 		private System.Windows.Forms.Label labelXparser;
 		private System.Windows.Forms.ComboBox comboBoxXparser;
