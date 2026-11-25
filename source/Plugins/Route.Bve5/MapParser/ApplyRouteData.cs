@@ -38,6 +38,7 @@ using RouteManager2.SignalManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Route.Bve5
@@ -67,6 +68,209 @@ namespace Route.Bve5
 
 			int NextBlockIndex = BlockIndex + 1;
 			return GetTrackCoordinate(Blocks[BlockIndex].StartingDistance, Blocks[BlockIndex].Rails[RailKey].Position.X, Blocks[NextBlockIndex].StartingDistance, Blocks[NextBlockIndex].Rails[RailKey].Position.X, Blocks[BlockIndex].Rails[RailKey].RadiusH, Distance);
+		}
+
+		/// <summary>Progress slice reserved for Pass 1+2, right before the commit loop takes over at 0.6667.</summary>
+		private const double PrecomputeProgressStart = 0.60;
+		private const double PrecomputeProgressEnd = 0.6667;
+		/// <summary>Share of the precompute slice spent in the sequential Pass 1 walk (the rest is Pass 2).</summary>
+		private const double PrecomputePass1Share = 0.2;
+
+		/// <summary>Where a block starts: its world position and travel direction.</summary>
+		/// <remarks>Recorded by the sequential geometry walk (Pass 1) so that placement math (Pass 2) can run in parallel.</remarks>
+		private struct BlockStart
+		{
+			internal Vector3 Position;
+			internal Vector2 Direction;
+		}
+
+		/// <summary>Precomputed placement math for a non-spanning structure.</summary>
+		private struct StructureTransform
+		{
+			internal Vector3 WorldPosition;
+			internal Transformation RailTransformation;
+			internal bool IsValid;
+			internal ObjectState PreparedState;
+		}
+
+		/// <summary>Per-block placement math, shaped like the block data so the commit loop can index it directly.</summary>
+		private sealed class BlockTransforms
+		{
+			internal Dictionary<string, List<StructureTransform>> StructureTransformsByRailKey;
+		}
+
+		/// <summary>
+		/// Pass 1+2: walks the track geometry sequentially to record where each block starts,
+		/// then computes structure placement math (position, rail transform and prepared renderer state).
+		/// The math phase runs in parallel when there is enough work; it only reads block
+		/// data and performs pure math, so it has no observable side effects.
+		/// </summary>
+		private static BlockTransforms[] PrecomputeObjectTransforms(RouteData Data, bool PreviewOnly)
+		{
+			BlockTransforms[] blockTransforms = new BlockTransforms[Data.Blocks.Count];
+			if (PreviewOnly || plugin.Cancel || Data.Blocks.Count == 0)
+			{
+				return blockTransforms;
+			}
+
+			// Find the blocks that actually place structures. Routes with little work skip
+			// precomputing entirely, so the commit loop uses the original direct path
+			// with zero added overhead.
+			List<int> blocksWithObjects = new List<int>();
+			long placeableObjectCount = 0;
+			for (int i = 0; i < Data.Blocks.Count; i++)
+			{
+				Block block = Data.Blocks[i];
+				long blockObjects = 0;
+				if (block.FreeObjects != null)
+				{
+					foreach (List<FreeObj> objects in block.FreeObjects.Values)
+					{
+						blockObjects += objects.Count;
+					}
+				}
+				if (blockObjects != 0)
+				{
+					blocksWithObjects.Add(i);
+					placeableObjectCount += blockObjects;
+				}
+			}
+			if (Environment.ProcessorCount <= 1 || placeableObjectCount < 1000 || plugin.Cancel)
+			{
+				return blockTransforms;
+			}
+
+			// Pass 1: sequential geometry walk (mirrors the Direction/Position walk of the commit loop)
+			BlockStart[] blockStarts = new BlockStart[Data.Blocks.Count];
+			if (!CaptureBlockStarts(Data, blockStarts))
+			{
+				return blockTransforms;
+			}
+			if (plugin.Cancel)
+			{
+				return blockTransforms;
+			}
+
+			// Pass 2: placement math, over non-empty blocks only
+			ObjectDisposalMode disposalMode = Plugin.CurrentRoute.AccurateObjectDisposal;
+			double blockLength = Plugin.CurrentRoute.BlockLength;
+			int finishedBlocks = 0;
+			int reportEvery = Math.Max(1, blocksWithObjects.Count / 40);
+			int dop = ComputeStructureLoadDop();
+			ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = dop };
+			Parallel.For(0, blocksWithObjects.Count, options, n =>
+			{
+				int i = blocksWithObjects[n];
+				if (!plugin.Cancel)
+				{
+					blockTransforms[i] = ComputeBlockObjectTransforms(Data, blockStarts, i, disposalMode, blockLength);
+				}
+				int doneBlocks = Interlocked.Increment(ref finishedBlocks);
+				if (doneBlocks % reportEvery == 0 || doneBlocks == blocksWithObjects.Count)
+				{
+					ReportPrecomputeProgress(doneBlocks, blocksWithObjects.Count);
+				}
+			});
+			return blockTransforms;
+		}
+
+		/// <summary>Moves the progress bar through the Pass 2 share of the precompute slice.</summary>
+		private static void ReportPrecomputeProgress(int doneBlocks, int totalBlocks)
+		{
+			double pass2Fraction = (double)doneBlocks / totalBlocks;
+			plugin.CurrentProgress = PrecomputeProgressStart + (PrecomputeProgressEnd - PrecomputeProgressStart) * (PrecomputePass1Share + (1.0 - PrecomputePass1Share) * pass2Fraction);
+		}
+
+		/// <summary>Repeats the commit loop's Direction/Position walk to record where each block starts.</summary>
+		/// <returns>False when cancelled midway, true when every block was recorded.</returns>
+		private static bool CaptureBlockStarts(RouteData Data, BlockStart[] blockStarts)
+		{
+			Vector3 position = Vector3.Zero;
+			Vector2 direction = new Vector2(0.0, 1.0);
+			for (int i = 0; i < Data.Blocks.Count; i++)
+			{
+				if ((i & 1023) == 0)
+				{
+					if (plugin.Cancel)
+					{
+						return false;
+					}
+					plugin.CurrentProgress = PrecomputeProgressStart + (PrecomputeProgressEnd - PrecomputeProgressStart) * PrecomputePass1Share * i / Data.Blocks.Count;
+				}
+				direction.Normalize();
+				blockStarts[i].Position = position;
+				blockStarts[i].Direction = direction;
+
+				double startingDistance = Data.Blocks[i].StartingDistance;
+				double endingDistance = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].StartingDistance : startingDistance + InterpolateInterval;
+				double blockInterval = endingDistance - startingDistance;
+
+				if (Data.Blocks[i].Turn != 0.0)
+				{
+					direction.Rotate(-Math.Atan(Data.Blocks[i].Turn));
+				}
+				CalcTransformation(Data.Blocks[i].CurrentTrackState.CurveRadius, Data.Blocks[i].Pitch, blockInterval, ref direction, out double a, out double c, out double h);
+				position.X += direction.X * c;
+				position.Y += h;
+				position.Z += direction.Y * c;
+				direction.Rotate(-a);
+			}
+			return true;
+		}
+
+		/// <summary>Computes placement math for a single block. Read-only: safe to run on any thread.</summary>
+		private static BlockTransforms ComputeBlockObjectTransforms(RouteData Data, BlockStart[] blockStarts, int index, ObjectDisposalMode disposalMode, double blockLength)
+		{
+			Block block = Data.Blocks[index];
+			BlockTransforms blockTransforms = null;
+
+			if (block.FreeObjects != null && block.FreeObjects.Count != 0)
+			{
+				double startingDistance = block.StartingDistance;
+				double endingDistance = index < Data.Blocks.Count - 1 ? Data.Blocks[index + 1].StartingDistance : startingDistance + InterpolateInterval;
+				foreach (KeyValuePair<string, List<FreeObj>> pair in block.FreeObjects)
+				{
+					string railKey = pair.Key;
+					List<FreeObj> objects = pair.Value;
+					List<StructureTransform> transforms = new List<StructureTransform>(objects.Count);
+					for (int k = 0; k < objects.Count; k++)
+					{
+						StructureTransform transform = new StructureTransform();
+						FreeObj freeObj = objects[k];
+						if (freeObj.Span <= 0.0)
+						{
+							Vector3 wpos;
+							Transformation railTransformation;
+							transform.IsValid = GetRailTransformation(railKey, blockStarts[index].Position, Data.Blocks, index, freeObj, blockStarts[index].Direction, out wpos, out railTransformation);
+							if (transform.IsValid)
+							{
+								transform.WorldPosition = wpos;
+								transform.RailTransformation = railTransformation;
+								if (Data.Objects.TryGetValue(freeObj.Key, out UnifiedObject prototype) && prototype is StaticObject staticPrototype)
+								{
+									Vector3 finalPosition = wpos + freeObj.Position * railTransformation;
+									Transformation localTransformation = new Transformation(freeObj.Yaw, freeObj.Pitch, freeObj.Roll);
+									ObjectCreationParameters parameters = new ObjectCreationParameters(freeObj.TrackPosition, freeObj.Position.Z, startingDistance, endingDistance);
+									transform.PreparedState = Plugin.CurrentHost.PrepareStaticObject(staticPrototype, finalPosition, railTransformation, localTransformation, parameters, disposalMode, blockLength);
+								}
+							}
+						}
+						// Spanning entries keep the default value; the commit loop queues them before reading the placement.
+						transforms.Add(transform);
+					}
+					if (blockTransforms == null)
+					{
+						blockTransforms = new BlockTransforms();
+					}
+					if (blockTransforms.StructureTransformsByRailKey == null)
+					{
+						blockTransforms.StructureTransformsByRailKey = new Dictionary<string, List<StructureTransform>>();
+					}
+					blockTransforms.StructureTransformsByRailKey.Add(railKey, transforms);
+				}
+			}
+
+			return blockTransforms;
 		}
 
 		private static void ApplyRouteData(string FileName, bool PreviewOnly, RouteData Data)
@@ -154,14 +358,21 @@ namespace Route.Bve5
 			}
 
 			// process blocks
-			double progressFactor = Data.Blocks.Count == 0 ? 0.5 : 0.5 / Data.Blocks.Count;
+			// The commit loop owns the 0.6667-0.95 slice; spans/repeaters below own 0.95-1.0.
+			// (0.5/count overshoots past 1.0, so the bar visibly jumps back at the spans phase.)
+			double progressFactor = Data.Blocks.Count == 0 ? 0.2833 : 0.2833 / Data.Blocks.Count;
 			List<SpanJob> deferredSpans = new List<SpanJob>();
+			// Pass 1+2 (see PrecomputeObjectTransforms): structure placement math is computed up-front,
+			// in parallel when worthwhile. The commit loop below stays sequential to preserve event order.
+			BlockTransforms[] precomputedTransforms = PrecomputeObjectTransforms(Data, PreviewOnly);
 			for (int i = 0; i < Data.Blocks.Count; i++)
 			{
 				plugin.CurrentProgress = 0.6667 + i * progressFactor;
 				if ((i & 15) == 0)
 				{
-					System.Threading.Thread.Sleep(1);
+					// Yield the remainder of the quantum without forcing a timer-tick wait:
+					// Sleep(1) costs ~11ms per call at the default Windows timer resolution.
+					System.Threading.Thread.Sleep(0);
 					if (plugin.Cancel) return;
 				}
 
@@ -340,6 +551,11 @@ namespace Route.Bve5
 					{
 						// free objects (repeaters are queued separately)
 						string railKey = Data.Blocks[i].Rails.ElementAt(j).Key;
+						List<StructureTransform> railStructureTransforms = null;
+						if (precomputedTransforms[i] != null && precomputedTransforms[i].StructureTransformsByRailKey != null)
+						{
+							precomputedTransforms[i].StructureTransformsByRailKey.TryGetValue(railKey, out railStructureTransforms);
+						}
 						if (Data.Blocks[i].FreeObjects.ContainsKey(railKey))
 						{
 							for (int k = 0; k < Data.Blocks[i].FreeObjects[railKey].Count; k++)
@@ -353,7 +569,25 @@ namespace Route.Bve5
 									continue;
 								}
 								string key = freeObj.Key;
-								if (!GetRailTransformation(railKey, Position, Data.Blocks, i, freeObj, Direction, out Vector3 wpos, out Transformation Transformation))
+								Vector3 wpos;
+								Transformation Transformation;
+								if (railStructureTransforms != null && k < railStructureTransforms.Count && railStructureTransforms[k].IsValid)
+								{
+									StructureTransform precomputed = railStructureTransforms[k];
+									if (precomputed.PreparedState != null)
+									{
+										Plugin.CurrentHost.CommitStaticObject(precomputed.PreparedState);
+										continue;
+									}
+									wpos = precomputed.WorldPosition;
+									Transformation = precomputed.RailTransformation;
+								}
+								else if (railStructureTransforms != null && k < railStructureTransforms.Count)
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unknown transform type encountered for object " + freeObj.Key + " at track position " + StartingDistance);
+									continue;
+								}
+								else if (!GetRailTransformation(railKey, Position, Data.Blocks, i, freeObj, Direction, out wpos, out Transformation))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unknown transform type encountered for object " + freeObj.Key + " at track position " + StartingDistance);
 									continue;

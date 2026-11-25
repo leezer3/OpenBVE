@@ -501,6 +501,17 @@ namespace RouteViewer
 			return Program.Renderer.CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Program.CurrentRoute.AccurateObjectDisposal, Parameters, Program.CurrentRoute.BlockLength);
 		}
 
+		public override ObjectState PrepareStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectCreationParameters Parameters, ObjectDisposalMode AccurateObjectDisposal, double BlockLength)
+		{
+			Matrix4D Rotate = (Matrix4D)new Transformation(LocalTransformation ?? Transformation.NullTransformation, WorldTransformation);
+			return LibRender2.BaseRenderer.ComputeStaticObjectState(Position, Prototype, LocalTransformation, Rotate, AccurateObjectDisposal, Parameters, BlockLength);
+		}
+
+		public override int CommitStaticObject(ObjectState state)
+		{
+			return Program.Renderer.CommitStaticObjectState(state);
+		}
+
 		public override void CreateDynamicObject(ref ObjectState internalObject)
 		{
 			Program.Renderer.CreateDynamicObject(ref internalObject);
