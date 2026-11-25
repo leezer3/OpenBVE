@@ -11,6 +11,9 @@
 
 *.dll binary
 *.exe binary
+*.ttf binary
+*.otf binary
+*.ttc binary
 *.so binary
 *.dylib binary
 *.snk binary

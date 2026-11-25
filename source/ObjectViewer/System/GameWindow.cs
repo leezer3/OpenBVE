@@ -369,6 +369,11 @@ namespace ObjectViewer
         {
 	        Program.Renderer.Screen.Width = Width;
 	        Program.Renderer.Screen.Height = Height;
+            // Keep the menu font tier in step with the window size instead of leaving the pre-resize scale
+            if (GameMenu.Instance != null && Program.Renderer.Fonts != null)
+            {
+                GameMenu.Instance.RefreshMenuFont();
+            }
             Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 			Program.Renderer.Rectangle.Update();
 			Program.Renderer.OpenGlString.Update();
