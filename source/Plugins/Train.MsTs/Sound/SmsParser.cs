@@ -41,6 +41,7 @@ using TrainManager.Handles;
 using TrainManager.Motor;
 using TrainManager.MsTsSounds;
 using TrainManager.SafetySystems;
+using TrainManager.SteamEngine;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace Train.MsTs
@@ -576,8 +577,8 @@ namespace Train.MsTs
 								{
 									if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
 									{
-										cylinderCocks.OpenSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
-										cylinderCocks.CloseSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+										cylinderCocks.ActivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+										cylinderCocks.DeactivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
 									}
 									else
 									{
@@ -597,6 +598,54 @@ namespace Train.MsTs
 									{
 										blowers.LoopSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
 									}
+								}
+								break;
+							case SoundTrigger.SteamSafetyValveOn:
+								if (car.TractionModel.Components.TryGetTypedValue(EngineComponent.SafetyValve, out SafetyValve safetyValve))
+								{
+									if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
+									{
+										safetyValve.ActivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+									}
+									else
+									{
+										safetyValve.LoopSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+									}
+								}
+								break;
+							case SoundTrigger.SteamSafetyValveOff:
+								if (car.TractionModel.Components.TryGetTypedValue(EngineComponent.SafetyValve, out safetyValve))
+								{
+									if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
+									{
+										safetyValve.DeactivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+									}
+								}
+								break;
+							case SoundTrigger.SteamEjector1On:
+							case SoundTrigger.SteamEjector2On:
+							case SoundTrigger.SteamEjector1Off:
+							case SoundTrigger.SteamEjector2Off:
+								// Despite the name in the SMS, these are the injectors....
+								AbstractComponent injector = car.TractionModel.Components[currentSoundSet.CurrentTrigger == SoundTrigger.SteamEjector1On || currentSoundSet.CurrentTrigger == SoundTrigger.SteamEjector1Off ? EngineComponent.SteamInjector1 : EngineComponent.SteamInjector2];
+								if (injector == null)
+								{
+									break;
+								}
+								if (currentSoundSet.CurrentTrigger == SoundTrigger.SteamEjector1On || currentSoundSet.CurrentTrigger == SoundTrigger.SteamEjector2On)
+								{
+									if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
+									{
+										injector.ActivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+									}
+									else
+									{
+										injector.LoopSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+									}
+								}
+								else
+								{
+									injector.DeactivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
 								}
 								break;
 							case SoundTrigger.DoorOpen:

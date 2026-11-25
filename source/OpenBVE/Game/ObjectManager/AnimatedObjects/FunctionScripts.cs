@@ -12,6 +12,7 @@ using TrainManager.Car.Systems;
 using TrainManager.Handles;
 using TrainManager.Motor;
 using TrainManager.SafetySystems;
+using TrainManager.SteamEngine;
 using TrainManager.Trains;
 
 namespace OpenBve {
@@ -927,8 +928,28 @@ namespace OpenBve {
 						s++; break;
 						// handles
 					case Instructions.ReverserNotch:
-						if (Train != null) {
-							Function.Stack[s] = (double)Train.Handles.Reverser.Driver;
+						if (Train != null)
+						{
+							if (Train.Handles.Reverser is Cutoff co)
+							{
+								if (co.Actual == 0)
+								{
+									Function.Stack[s] = 0;
+								}
+								else if (co.Actual > 0)
+								{
+									Function.Stack[s] = (double)co.Driver / co.ForwardMax;
+								}
+								else
+								{
+									Function.Stack[s] = (double)co.Driver / -co.ReverseMax;
+								}
+							}
+							else
+							{
+								Function.Stack[s] = (double)Train.Handles.Reverser.Driver;
+							}
+							
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -2286,7 +2307,7 @@ namespace OpenBve {
 							{
 								if (Train.Cars[j].TractionModel.Components.TryGetTypedValue(EngineComponent.CylinderCocks, out CylinderCocks cc))
 								{
-									Function.Stack[s - 1] = cc.Opened ? 1 : 0;
+									Function.Stack[s - 1] = cc.Active ? 1 : 0;
 								}
 								else
 								{
@@ -2313,6 +2334,32 @@ namespace OpenBve {
 								if (Train.Cars[j].TractionModel.Components.TryGetTypedValue(EngineComponent.Blowers, out Blowers b))
 								{
 									Function.Stack[s - 1] = b.Active ? 1 : 0;
+								}
+								else
+								{
+									Function.Stack[s - 1] = 0.0;
+								}
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						break;
+					case Instructions.BlowoffStateOfCar:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								if (Train.Cars[j].TractionModel.Components.TryGetTypedValue(EngineComponent.SafetyValve, out SafetyValve sv))
+								{
+									Function.Stack[s - 1] = sv.Active ? 1 : 0;
 								}
 								else
 								{
@@ -2359,6 +2406,32 @@ namespace OpenBve {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					case Instructions.BoilerLevelOfCar:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								if (Train.Cars[j].TractionModel.Components.TryGetTypedValue(EngineComponent.Boiler, out Boiler b))
+								{
+									Function.Stack[s - 1] = b.WaterLevel / Boiler.Volume; // TODO: Constant value at the minute
+								}
+								else
+								{
+									Function.Stack[s - 1] = 0.0;
+								}
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						break;
 					case Instructions.BoilerPressureOfCar:
 						if (Train != null)
 						{
@@ -2369,6 +2442,28 @@ namespace OpenBve {
 								if ((Train.Cars[j].TractionModel is TenderEngine || Train.Cars[j].TractionModel is TankEngine) && Train.Cars[j].TractionModel.Components.TryGetTypedValue(EngineComponent.Boiler, out Boiler b))
 								{
 									Function.Stack[s - 1] = b.CurrentPressure;
+								}
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						break;
+					case Instructions.SteamChestPressureOfCar:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								if ((Train.Cars[j].TractionModel is TenderEngine || Train.Cars[j].TractionModel is TankEngine) && Train.Cars[j].TractionModel.Components.TryGetTypedValue(EngineComponent.CylinderChest, out CylinderChest cc))
+								{
+									Function.Stack[s - 1] = cc.CurrentPressure;
 								}
 							}
 							else
